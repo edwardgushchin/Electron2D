@@ -1,6 +1,6 @@
 # Scene domain
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 ## Responsibility
 
@@ -48,6 +48,7 @@ The Control branch uses shared [`RecursiveBehavior`](../classes/RecursiveBehavio
 - `ProcessPhase`: stable physics/process lane selection for `Timer`.
 - `SceneTreeTimer`: lightweight one-shot delay advanced by the selected frame lane with optional Engine time-scale bypass, and automatically disposed after timeout.
 - `GroupCallFlags`: immediate/reverse/deferred/unique policy for typed group operations.
+- `Animation`, `AnimationLibrary`, `AnimationMixer` and `AnimationPlayer`: reusable typed property keys, relative node bindings, named playback, reverse/seek/queues/sections and automatic phases. [Scene animation](../components/scene-animation.md) records managed and rendered checks; capture, weighted mixing, other track families and persistence remain separate.
 - `Tween` and tweeners: typed SceneTree-driven sequential/parallel interpolation, callbacks, waits, nested timelines, looping, pause/lane/time-scale policy, and completion events. Every own Tween and Tweener member and type row now has a pinned semantic audit, including 96 easing samples and near-limit Int64. Inherited lifetime roles, native cadence and other domains retain their separate coverage status.
 - `PackedScene`: `Resource` that captures any reusable typed owned-node hierarchy, from one composed game object through a complete level, and reconstructs independent detached instances.
 - `SceneState`: live read-only typed metadata view for current packed data.

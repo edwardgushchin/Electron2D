@@ -365,7 +365,8 @@ def reason_for_type(item, lookup):
         ("Physics2D", r"Physics|Collision|RigidBody2D|StaticBody2D|CharacterBody2D|Area2D|Joint2D|RayCast2D|ShapeCast2D|Shape2D|SpringArm2D", "next type-specific 2D physics operation beyond the implemented Box2D-backed scene-body slice (ADR 0012)"),
         ("Audio", r"Audio|Sound|Microphone", "first audio mixing and playback slice"),
         ("Navigation2D", r"Navigation", "first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052)"),
-        ("Animation", r"Animation|Skeleton2D|Bone2D", "first scene animation slice"),
+        ("Animation", r"Animation", "typed weighted multi-source mixing/capture on the implemented value-track timeline"),
+        ("Skeleton", r"Skeleton2D|Bone2D", "typed 2D bone hierarchy, rest/pose transforms and skinning integration"),
         ("Tiles", r"Tile|Atlas", "first tile and atlas resource slice after 2D rendering"),
         ("Networking", r"Multiplayer|PacketPeer|ENet|WebRTC|WebSocket|HTTP|TLS|DTLS|TCP|UDP|IP$|SocketServer|StreamPeer|UDSServer|UPNP", "first networking and multiplayer slice"),
         ("Assets", r"ResourceLoader|ResourceSaver|CompressedTexture|StreamTexture|ImageTexture|Font|Video|PackedData|ImageFormatLoader|GLTF|FBX", "first type-specific asset format and native-backed integration beyond the existing image-texture loader (ADR 0013/0023)"),
@@ -610,6 +611,8 @@ def render():
             updated = "2026-10-02"
         if name in {"MultiMesh", "MultiMeshInstance2D", "Mesh", "CanvasItem", "RenderingServer", "AudioStreamSynchronized", "AudioStreamPlaybackSynchronized", "AudioStreamInteractive", "AudioStreamPlaybackInteractive", "AudioStreamPlayback"}:
             updated = "2026-10-03"
+        if name in {"Animation", "AnimationLibrary", "AnimationMixer", "AnimationPlayer"}:
+            updated = "2026-10-04"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

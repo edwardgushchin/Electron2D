@@ -572,3 +572,17 @@ Private SplitContainer Slot/Dragger/SourceState and reusable scratch records are
 Private polyphonic Voice entries own bounded pending/active/retired state and prepared scratch, documented on the playback page.
 
 The existing AudioServer/FAudioContext also own live output selection and cached driver chunk/queue duration through [AudioServer.Output.cs](../src/Servers/Audio/AudioServer.Output.cs), [FAudioContext.Output.cs](../src/Servers/Audio/FAudioContext.Output.cs) and [the native bridge](../tools/audio-native/output.c). No new public backend type is introduced.
+
+## Scene animation
+
+| Domain | Component | Production type | Source | Documentation | State |
+| --- | --- | --- | --- | --- | --- |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation`](classes/Animation.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Reusable typed property-key timelines, timing, interpolation and markers. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationLibrary`](classes/AnimationLibrary.md) | [`AnimationLibrary.cs`](../src/Scene/Resources/AnimationLibrary.cs) | Current | Named borrowed animation resources with replacement, rename and forwarded changes. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationMixer`](classes/AnimationMixer.md) | [`AnimationMixer.cs`](../src/Scene/Animation/AnimationMixer.cs) | Current | Scene animation namespaces, typed target caches and idle/physics/manual scheduling. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationPlayer`](classes/AnimationPlayer.md) | [`AnimationPlayer.cs`](../src/Scene/Animation/AnimationPlayer.cs) | Current | Named clip playback, reverse, seek, queues, marker sections and endpoint loops. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation.FindMode`](classes/Animation.FindMode.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Typed key/update mode; complete domain boundaries remain in coverage. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation.InterpolationType`](classes/Animation.InterpolationType.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Typed key/update mode; complete domain boundaries remain in coverage. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation.TrackType`](classes/Animation.TrackType.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Typed key/update mode; complete domain boundaries remain in coverage. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation.UpdateMode`](classes/Animation.UpdateMode.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Typed key/update mode; complete domain boundaries remain in coverage. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationMixer.AnimationCallbackModeProcess`](classes/AnimationMixer.AnimationCallbackModeProcess.md) | [`AnimationMixer.cs`](../src/Scene/Animation/AnimationMixer.cs) | Current | Typed key/update mode; complete domain boundaries remain in coverage. |

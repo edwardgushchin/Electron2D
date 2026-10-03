@@ -2300,6 +2300,888 @@
       "godot": "Tween::enum_value:TweenProcessMode.TWEEN_PROCESS_PHYSICS",
       "electron2d": "enumValue:Electron2D.ProcessPhase.Physics()",
       "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "class:Animation",
+      "electron2d": "T:Electron2D.Animation",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum:FindMode",
+      "electron2d": "T:Electron2D.Animation.FindMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum:InterpolationType",
+      "electron2d": "T:Electron2D.Animation.InterpolationType",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Capture/other track enum members and full generic interpolation edge profiles (integer rounding, nonlinear values, ping-pong edge controls and out-of-duration keys) remain applicable unfinished work."
+    },
+    {
+      "godot": "Animation::enum:LoopMode",
+      "electron2d": "T:Electron2D.SpriteFrames.LoopMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum:TrackType",
+      "electron2d": "T:Electron2D.Animation.TrackType",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Capture/other track enum members and full generic interpolation edge profiles (integer rounding, nonlinear values, ping-pong edge controls and out-of-duration keys) remain applicable unfinished work."
+    },
+    {
+      "godot": "Animation::enum:UpdateMode",
+      "electron2d": "T:Electron2D.Animation.UpdateMode",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Capture/other track enum members and full generic interpolation edge profiles (integer rounding, nonlinear values, ping-pong edge controls and out-of-duration keys) remain applicable unfinished work."
+    },
+    {
+      "godot": "Animation::enum_value:FindMode.FIND_MODE_APPROX",
+      "electron2d": "enumValue:Electron2D.Animation.FindMode.Approx()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:FindMode.FIND_MODE_EXACT",
+      "electron2d": "enumValue:Electron2D.Animation.FindMode.Exact()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:FindMode.FIND_MODE_NEAREST",
+      "electron2d": "enumValue:Electron2D.Animation.FindMode.Nearest()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:InterpolationType.INTERPOLATION_CUBIC",
+      "electron2d": "enumValue:Electron2D.Animation.InterpolationType.Cubic()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:InterpolationType.INTERPOLATION_CUBIC_ANGLE",
+      "electron2d": "enumValue:Electron2D.Animation.InterpolationType.CubicAngle()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:InterpolationType.INTERPOLATION_LINEAR",
+      "electron2d": "enumValue:Electron2D.Animation.InterpolationType.Linear()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:InterpolationType.INTERPOLATION_LINEAR_ANGLE",
+      "electron2d": "enumValue:Electron2D.Animation.InterpolationType.LinearAngle()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:InterpolationType.INTERPOLATION_NEAREST",
+      "electron2d": "enumValue:Electron2D.Animation.InterpolationType.Nearest()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:LoopMode.LOOP_LINEAR",
+      "electron2d": "enumValue:Electron2D.SpriteFrames.LoopMode.Linear()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:LoopMode.LOOP_NONE",
+      "electron2d": "enumValue:Electron2D.SpriteFrames.LoopMode.None()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:LoopMode.LOOP_PINGPONG",
+      "electron2d": "enumValue:Electron2D.SpriteFrames.LoopMode.PingPong()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:TrackType.TYPE_VALUE",
+      "electron2d": "enumValue:Electron2D.Animation.TrackType.Value()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:UpdateMode.UPDATE_CONTINUOUS",
+      "electron2d": "enumValue:Electron2D.Animation.UpdateMode.Continuous()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::enum_value:UpdateMode.UPDATE_DISCRETE",
+      "electron2d": "enumValue:Electron2D.Animation.UpdateMode.Discrete()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:add_marker(StringName:,float:)",
+      "electron2d": "method:Electron2D.Animation.AddMarker(System.String,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:add_track(int:Animation.TrackType,int:)",
+      "electron2d": "method:Electron2D.Animation.AddTrack`2(PropertyDescriptor<TOwner, TValue>,System.Int32,Func<TValue, TValue, System.Double, TValue>)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Generic property-value tracks execute through typed descriptors; method/B\u00e9zier/audio/nested-animation track storage and evaluation remain unimplemented."
+    },
+    {
+      "godot": "Animation::method:clear()",
+      "electron2d": "method:Electron2D.Animation.Clear()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:copy_track(int:,Animation:)",
+      "electron2d": "method:Electron2D.Animation.CopyTrack(System.Int32,Electron2D.Animation)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Generic property-value tracks execute through typed descriptors; method/B\u00e9zier/audio/nested-animation track storage and evaluation remain unimplemented."
+    },
+    {
+      "godot": "Animation::method:find_track(NodePath:,int:Animation.TrackType)",
+      "electron2d": "method:Electron2D.Animation.FindTrack(System.String,Electron2D.Animation.TrackType)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Generic property-value tracks execute through typed descriptors; method/B\u00e9zier/audio/nested-animation track storage and evaluation remain unimplemented."
+    },
+    {
+      "godot": "Animation::method:get_marker_at_time(float:)",
+      "electron2d": "method:Electron2D.Animation.GetMarkerAtTime(System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:get_marker_color(StringName:)",
+      "electron2d": "method:Electron2D.Animation.GetMarkerColor(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:get_marker_names()",
+      "electron2d": "method:Electron2D.Animation.GetMarkerNames()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:get_marker_time(StringName:)",
+      "electron2d": "method:Electron2D.Animation.GetMarkerTime(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:get_next_marker(float:)",
+      "electron2d": "method:Electron2D.Animation.GetNextMarker(System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:get_prev_marker(float:)",
+      "electron2d": "method:Electron2D.Animation.GetPrevMarker(System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:get_track_count()",
+      "electron2d": "method:Electron2D.Animation.GetTrackCount()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:has_marker(StringName:)",
+      "electron2d": "method:Electron2D.Animation.HasMarker(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:remove_marker(StringName:)",
+      "electron2d": "method:Electron2D.Animation.RemoveMarker(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:remove_track(int:)",
+      "electron2d": "method:Electron2D.Animation.RemoveTrack(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:set_marker_color(StringName:,Color:)",
+      "electron2d": "method:Electron2D.Animation.SetMarkerColor(System.String,Electron2D.Color)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_find_key(int:,float:,int:Animation.FindMode,bool:,bool:)",
+      "electron2d": "method:Electron2D.Animation.TrackFindKey(System.Int32,System.Double,Electron2D.Animation.FindMode,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_get_interpolation_loop_wrap(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetInterpolationLoopWrap(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_get_interpolation_type(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetInterpolationType(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_get_key_count(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetKeyCount(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_get_key_time(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetKeyTime(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_get_key_transition(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetKeyTransition(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_get_key_value(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetKeyValue`1(System.Int32,System.Int32)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Generic property-value tracks execute through typed descriptors; method/B\u00e9zier/audio/nested-animation track storage and evaluation remain unimplemented."
+    },
+    {
+      "godot": "Animation::method:track_get_path(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetPath(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_get_type(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetType(System.Int32)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Generic property-value tracks execute through typed descriptors; method/B\u00e9zier/audio/nested-animation track storage and evaluation remain unimplemented."
+    },
+    {
+      "godot": "Animation::method:track_insert_key(int:,float:,Variant:,float:)",
+      "electron2d": "method:Electron2D.Animation.TrackInsertKey`1(System.Int32,System.Double,TValue,System.Double)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Generic property-value tracks execute through typed descriptors; method/B\u00e9zier/audio/nested-animation track storage and evaluation remain unimplemented."
+    },
+    {
+      "godot": "Animation::method:track_is_compressed(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackIsCompressed(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_is_enabled(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackIsEnabled(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_is_imported(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackIsImported(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_move_down(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackMoveDown(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_move_to(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.TrackMoveTo(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_move_up(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackMoveUp(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_remove_key(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.TrackRemoveKey(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_remove_key_at_time(int:,float:)",
+      "electron2d": "method:Electron2D.Animation.TrackRemoveKeyAtTime(System.Int32,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_set_enabled(int:,bool:)",
+      "electron2d": "method:Electron2D.Animation.TrackSetEnabled(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_set_imported(int:,bool:)",
+      "electron2d": "method:Electron2D.Animation.TrackSetImported(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_set_interpolation_loop_wrap(int:,bool:)",
+      "electron2d": "method:Electron2D.Animation.TrackSetInterpolationLoopWrap(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_set_interpolation_type(int:,int:Animation.InterpolationType)",
+      "electron2d": "method:Electron2D.Animation.TrackSetInterpolationType(System.Int32,Electron2D.Animation.InterpolationType)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_set_key_time(int:,int:,float:)",
+      "electron2d": "method:Electron2D.Animation.TrackSetKeyTime(System.Int32,System.Int32,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_set_key_transition(int:,int:,float:)",
+      "electron2d": "method:Electron2D.Animation.TrackSetKeyTransition(System.Int32,System.Int32,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_set_key_value(int:,int:,Variant:)",
+      "electron2d": "method:Electron2D.Animation.TrackSetKeyValue`1(System.Int32,System.Int32,TValue)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Generic property-value tracks execute through typed descriptors; method/B\u00e9zier/audio/nested-animation track storage and evaluation remain unimplemented."
+    },
+    {
+      "godot": "Animation::method:track_set_path(int:,NodePath:)",
+      "electron2d": "method:Electron2D.Animation.TrackSetPath(System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:track_swap(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.TrackSwap(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:value_track_get_update_mode(int:)",
+      "electron2d": "method:Electron2D.Animation.ValueTrackGetUpdateMode(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::method:value_track_interpolate(int:,float:,bool:)",
+      "electron2d": "method:Electron2D.Animation.ValueTrackInterpolate`1(System.Int32,System.Double,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Capture/other track enum members and full generic interpolation edge profiles (integer rounding, nonlinear values, ping-pong edge controls and out-of-duration keys) remain applicable unfinished work."
+    },
+    {
+      "godot": "Animation::method:value_track_set_update_mode(int:,int:Animation.UpdateMode)",
+      "electron2d": "method:Electron2D.Animation.ValueTrackSetUpdateMode(System.Int32,Electron2D.Animation.UpdateMode)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::property:length",
+      "electron2d": "property:Electron2D.Animation.Length()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::property:loop_mode",
+      "electron2d": "property:Electron2D.Animation.LoopMode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "Animation::property:step",
+      "electron2d": "property:Electron2D.Animation.Step()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "class:AnimationLibrary",
+      "electron2d": "T:Electron2D.AnimationLibrary",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::method:add_animation(StringName:,Animation:)",
+      "electron2d": "method:Electron2D.AnimationLibrary.AddAnimation(System.String,Electron2D.Animation)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::method:get_animation(StringName:)",
+      "electron2d": "method:Electron2D.AnimationLibrary.GetAnimation(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::method:get_animation_list()",
+      "electron2d": "method:Electron2D.AnimationLibrary.GetAnimationList()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::method:get_animation_list_size()",
+      "electron2d": "method:Electron2D.AnimationLibrary.GetAnimationListSize()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::method:has_animation(StringName:)",
+      "electron2d": "method:Electron2D.AnimationLibrary.HasAnimation(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::method:remove_animation(StringName:)",
+      "electron2d": "method:Electron2D.AnimationLibrary.RemoveAnimation(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::method:rename_animation(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationLibrary.RenameAnimation(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::signal:animation_added(StringName:)",
+      "electron2d": "event:Electron2D.AnimationLibrary.AnimationAdded()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::signal:animation_changed(StringName:)",
+      "electron2d": "event:Electron2D.AnimationLibrary.AnimationChanged()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::signal:animation_removed(StringName:)",
+      "electron2d": "event:Electron2D.AnimationLibrary.AnimationRemoved()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationLibrary::signal:animation_renamed(StringName:,StringName:)",
+      "electron2d": "event:Electron2D.AnimationLibrary.AnimationRenamed()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "class:AnimationMixer",
+      "electron2d": "T:Electron2D.AnimationMixer",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::enum:AnimationCallbackModeProcess",
+      "electron2d": "T:Electron2D.AnimationMixer.AnimationCallbackModeProcess",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::enum_value:AnimationCallbackModeProcess.ANIMATION_CALLBACK_MODE_PROCESS_IDLE",
+      "electron2d": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeProcess.Idle()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::enum_value:AnimationCallbackModeProcess.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL",
+      "electron2d": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeProcess.Manual()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::enum_value:AnimationCallbackModeProcess.ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS",
+      "electron2d": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeProcess.Physics()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:add_animation_library(StringName:,AnimationLibrary:)",
+      "electron2d": "method:Electron2D.AnimationMixer.AddAnimationLibrary(System.String,Electron2D.AnimationLibrary)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:advance(float:)",
+      "electron2d": "method:Electron2D.AnimationMixer.Advance(System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:clear_caches()",
+      "electron2d": "method:Electron2D.AnimationMixer.ClearCaches()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:find_animation(Animation:)",
+      "electron2d": "method:Electron2D.AnimationMixer.FindAnimation(Electron2D.Animation)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:find_animation_library(Animation:)",
+      "electron2d": "method:Electron2D.AnimationMixer.FindAnimationLibrary(Electron2D.Animation)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:get_animation(StringName:)",
+      "electron2d": "method:Electron2D.AnimationMixer.GetAnimation(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:get_animation_library(StringName:)",
+      "electron2d": "method:Electron2D.AnimationMixer.GetAnimationLibrary(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:get_animation_library_list()",
+      "electron2d": "method:Electron2D.AnimationMixer.GetAnimationLibraryList()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:get_animation_list()",
+      "electron2d": "method:Electron2D.AnimationMixer.GetAnimationList()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:has_animation(StringName:)",
+      "electron2d": "method:Electron2D.AnimationMixer.HasAnimation(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:has_animation_library(StringName:)",
+      "electron2d": "method:Electron2D.AnimationMixer.HasAnimationLibrary(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:remove_animation_library(StringName:)",
+      "electron2d": "method:Electron2D.AnimationMixer.RemoveAnimationLibrary(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::method:rename_animation_library(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationMixer.RenameAnimationLibrary(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::property:active",
+      "electron2d": "property:Electron2D.AnimationMixer.Active()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::property:callback_mode_process",
+      "electron2d": "property:Electron2D.AnimationMixer.CallbackModeProcess()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::property:root_node",
+      "electron2d": "property:Electron2D.AnimationMixer.RootNode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::signal:animation_finished(StringName:)",
+      "electron2d": "event:Electron2D.AnimationMixer.AnimationFinished()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::signal:animation_libraries_updated()",
+      "electron2d": "event:Electron2D.AnimationMixer.AnimationLibrariesUpdated()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::signal:animation_list_changed()",
+      "electron2d": "event:Electron2D.AnimationMixer.AnimationListChanged()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::signal:animation_started(StringName:)",
+      "electron2d": "event:Electron2D.AnimationMixer.AnimationStarted()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationMixer::signal:caches_cleared()",
+      "electron2d": "event:Electron2D.AnimationMixer.CachesCleared()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "class:AnimationPlayer",
+      "electron2d": "T:Electron2D.AnimationPlayer",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::enum:AnimationProcessCallback",
+      "electron2d": "T:Electron2D.AnimationMixer.AnimationCallbackModeProcess",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::enum_value:AnimationProcessCallback.ANIMATION_PROCESS_IDLE",
+      "electron2d": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeProcess.Idle()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::enum_value:AnimationProcessCallback.ANIMATION_PROCESS_MANUAL",
+      "electron2d": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeProcess.Manual()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::enum_value:AnimationProcessCallback.ANIMATION_PROCESS_PHYSICS",
+      "electron2d": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeProcess.Physics()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:animation_get_next(StringName:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.AnimationGetNext(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:animation_set_next(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.AnimationSetNext(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:clear_queue()",
+      "electron2d": "method:Electron2D.AnimationPlayer.ClearQueue()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:get_playing_speed()",
+      "electron2d": "method:Electron2D.AnimationPlayer.GetPlayingSpeed()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:get_process_callback()",
+      "electron2d": "method:Electron2D.AnimationPlayer.GetProcessCallback()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:get_queue()",
+      "electron2d": "method:Electron2D.AnimationPlayer.GetQueue()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:get_root()",
+      "electron2d": "method:Electron2D.AnimationPlayer.GetRoot()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:get_section_end_time()",
+      "electron2d": "method:Electron2D.AnimationPlayer.GetSectionEndTime()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:get_section_start_time()",
+      "electron2d": "method:Electron2D.AnimationPlayer.GetSectionStartTime()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:has_section()",
+      "electron2d": "method:Electron2D.AnimationPlayer.HasSection()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:is_animation_active()",
+      "electron2d": "method:Electron2D.AnimationPlayer.IsAnimationActive()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:is_playing()",
+      "electron2d": "method:Electron2D.AnimationPlayer.IsPlaying()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:pause()",
+      "electron2d": "method:Electron2D.AnimationPlayer.Pause()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:play(StringName:,float:,float:,bool:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.Play(System.String,System.Double,System.Double,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Zero-blend single-clip execution is implemented; positive custom blend explicitly fails before mutation until weighted accumulation/capture exists."
+    },
+    {
+      "godot": "AnimationPlayer::method:play_backwards(StringName:,float:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.PlayBackwards(System.String,System.Double)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Zero-blend single-clip execution is implemented; positive custom blend explicitly fails before mutation until weighted accumulation/capture exists."
+    },
+    {
+      "godot": "AnimationPlayer::method:play_section(StringName:,float:,float:,float:,float:,bool:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.PlaySection(System.String,System.Double,System.Double,System.Double,System.Double,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Zero-blend single-clip execution is implemented; positive custom blend explicitly fails before mutation until weighted accumulation/capture exists."
+    },
+    {
+      "godot": "AnimationPlayer::method:play_section_backwards(StringName:,float:,float:,float:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.PlaySectionBackwards(System.String,System.Double,System.Double,System.Double)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Zero-blend single-clip execution is implemented; positive custom blend explicitly fails before mutation until weighted accumulation/capture exists."
+    },
+    {
+      "godot": "AnimationPlayer::method:play_section_with_markers(StringName:,StringName:,StringName:,float:,float:,bool:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.PlaySectionWithMarkers(System.String,System.String,System.String,System.Double,System.Double,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Zero-blend single-clip execution is implemented; positive custom blend explicitly fails before mutation until weighted accumulation/capture exists."
+    },
+    {
+      "godot": "AnimationPlayer::method:play_section_with_markers_backwards(StringName:,StringName:,StringName:,float:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.PlaySectionWithMarkersBackwards(System.String,System.String,System.String,System.Double)",
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Zero-blend single-clip execution is implemented; positive custom blend explicitly fails before mutation until weighted accumulation/capture exists."
+    },
+    {
+      "godot": "AnimationPlayer::method:queue(StringName:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.Queue(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:reset_section()",
+      "electron2d": "method:Electron2D.AnimationPlayer.ResetSection()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:seek(float:,bool:,bool:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.Seek(System.Double,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:set_process_callback(int:AnimationPlayer.AnimationProcessCallback)",
+      "electron2d": "method:Electron2D.AnimationPlayer.SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:set_root(NodePath:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.SetRoot(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:set_section(float:,float:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.SetSection(System.Double,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:set_section_with_markers(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.SetSectionWithMarkers(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::method:stop(bool:)",
+      "electron2d": "method:Electron2D.AnimationPlayer.Stop(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::property:assigned_animation",
+      "electron2d": "property:Electron2D.AnimationPlayer.AssignedAnimation()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::property:autoplay",
+      "electron2d": "property:Electron2D.AnimationPlayer.Autoplay()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::property:current_animation",
+      "electron2d": "property:Electron2D.AnimationPlayer.CurrentAnimation()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::property:current_animation_length",
+      "electron2d": "property:Electron2D.AnimationPlayer.CurrentAnimationLength()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::property:current_animation_position",
+      "electron2d": "property:Electron2D.AnimationPlayer.CurrentAnimationPosition()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::property:speed_scale",
+      "electron2d": "property:Electron2D.AnimationPlayer.SpeedScale()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::signal:animation_changed(StringName:,StringName:)",
+      "electron2d": "event:Electron2D.AnimationPlayer.AnimationChanged()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
+    },
+    {
+      "godot": "AnimationPlayer::signal:current_animation_changed(StringName:)",
+      "electron2d": "event:Electron2D.AnimationPlayer.CurrentAnimationChanged()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed."
     }
   ],
   "extras": [
@@ -3452,6 +4334,91 @@
       "electron2d": "method:Electron2D.GridContainer.CreateSceneInstanceFactory()",
       "state": "Implemented",
       "reason": "ADR 0081 with 0003/0008/0023: typed construction, intrinsic grid minimum, inherited sort notification, stored column/separation descriptors and exact-type scene factory project the existing grid-container concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Animation..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationLibrary..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationMixer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationPlayer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Animation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Animation.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Animation.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Animation.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationLibrary.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationLibrary.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationLibrary.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationMixer.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationMixer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationMixer.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationPlayer.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationPlayer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationPlayer.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 with existing Resource/Node lifetime and typed-property contracts: exact-type construction, immutable metadata discovery, graph-preserving resource copies, internal process notification or deterministic borrowed-subscription cleanup projects the implemented scene animation concept."
     }
   ],
   "statusGroups": [
@@ -5915,6 +6882,327 @@
       "reason": "Three-dimensional listening is outside the 2D product boundary (ADR 0004).",
       "godot": [
         "Viewport::property:audio_listener_enable_3d"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed.",
+      "godot": [
+        "class:Animation",
+        "class:AnimationMixer",
+        "class:AnimationPlayer"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed.",
+      "godot": [
+        "Animation::enum:FindMode",
+        "Animation::enum:LoopMode",
+        "Animation::enum_value:FindMode.FIND_MODE_APPROX",
+        "Animation::enum_value:FindMode.FIND_MODE_EXACT",
+        "Animation::enum_value:FindMode.FIND_MODE_NEAREST",
+        "Animation::enum_value:InterpolationType.INTERPOLATION_CUBIC",
+        "Animation::enum_value:InterpolationType.INTERPOLATION_CUBIC_ANGLE",
+        "Animation::enum_value:InterpolationType.INTERPOLATION_LINEAR",
+        "Animation::enum_value:InterpolationType.INTERPOLATION_LINEAR_ANGLE",
+        "Animation::enum_value:InterpolationType.INTERPOLATION_NEAREST",
+        "Animation::enum_value:LoopMode.LOOP_LINEAR",
+        "Animation::enum_value:LoopMode.LOOP_NONE",
+        "Animation::enum_value:LoopMode.LOOP_PINGPONG",
+        "Animation::enum_value:TrackType.TYPE_VALUE",
+        "Animation::enum_value:UpdateMode.UPDATE_CONTINUOUS",
+        "Animation::enum_value:UpdateMode.UPDATE_DISCRETE",
+        "Animation::method:add_marker(StringName:,float:)",
+        "Animation::method:clear()",
+        "Animation::method:get_marker_at_time(float:)",
+        "Animation::method:get_marker_color(StringName:)",
+        "Animation::method:get_marker_names()",
+        "Animation::method:get_marker_time(StringName:)",
+        "Animation::method:get_next_marker(float:)",
+        "Animation::method:get_prev_marker(float:)",
+        "Animation::method:get_track_count()",
+        "Animation::method:has_marker(StringName:)",
+        "Animation::method:remove_marker(StringName:)",
+        "Animation::method:remove_track(int:)",
+        "Animation::method:set_marker_color(StringName:,Color:)",
+        "Animation::method:track_find_key(int:,float:,int:Animation.FindMode,bool:,bool:)",
+        "Animation::method:track_get_interpolation_loop_wrap(int:)",
+        "Animation::method:track_get_interpolation_type(int:)",
+        "Animation::method:track_get_key_count(int:)",
+        "Animation::method:track_get_key_time(int:,int:)",
+        "Animation::method:track_get_key_transition(int:,int:)",
+        "Animation::method:track_get_path(int:)",
+        "Animation::method:track_is_compressed(int:)",
+        "Animation::method:track_is_enabled(int:)",
+        "Animation::method:track_is_imported(int:)",
+        "Animation::method:track_move_down(int:)",
+        "Animation::method:track_move_to(int:,int:)",
+        "Animation::method:track_move_up(int:)",
+        "Animation::method:track_remove_key(int:,int:)",
+        "Animation::method:track_remove_key_at_time(int:,float:)",
+        "Animation::method:track_set_enabled(int:,bool:)",
+        "Animation::method:track_set_imported(int:,bool:)",
+        "Animation::method:track_set_interpolation_loop_wrap(int:,bool:)",
+        "Animation::method:track_set_interpolation_type(int:,int:Animation.InterpolationType)",
+        "Animation::method:track_set_key_time(int:,int:,float:)",
+        "Animation::method:track_set_key_transition(int:,int:,float:)",
+        "Animation::method:track_set_path(int:,NodePath:)",
+        "Animation::method:track_swap(int:,int:)",
+        "Animation::method:value_track_get_update_mode(int:)",
+        "Animation::method:value_track_set_update_mode(int:,int:Animation.UpdateMode)",
+        "Animation::property:length",
+        "Animation::property:loop_mode",
+        "Animation::property:step",
+        "class:AnimationLibrary",
+        "AnimationLibrary::method:add_animation(StringName:,Animation:)",
+        "AnimationLibrary::method:get_animation(StringName:)",
+        "AnimationLibrary::method:get_animation_list()",
+        "AnimationLibrary::method:get_animation_list_size()",
+        "AnimationLibrary::method:has_animation(StringName:)",
+        "AnimationLibrary::method:remove_animation(StringName:)",
+        "AnimationLibrary::method:rename_animation(StringName:,StringName:)",
+        "AnimationLibrary::signal:animation_added(StringName:)",
+        "AnimationLibrary::signal:animation_changed(StringName:)",
+        "AnimationLibrary::signal:animation_removed(StringName:)",
+        "AnimationLibrary::signal:animation_renamed(StringName:,StringName:)",
+        "AnimationMixer::enum:AnimationCallbackModeProcess",
+        "AnimationMixer::enum_value:AnimationCallbackModeProcess.ANIMATION_CALLBACK_MODE_PROCESS_IDLE",
+        "AnimationMixer::enum_value:AnimationCallbackModeProcess.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL",
+        "AnimationMixer::enum_value:AnimationCallbackModeProcess.ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS",
+        "AnimationMixer::method:add_animation_library(StringName:,AnimationLibrary:)",
+        "AnimationMixer::method:advance(float:)",
+        "AnimationMixer::method:clear_caches()",
+        "AnimationMixer::method:find_animation(Animation:)",
+        "AnimationMixer::method:find_animation_library(Animation:)",
+        "AnimationMixer::method:get_animation(StringName:)",
+        "AnimationMixer::method:get_animation_library(StringName:)",
+        "AnimationMixer::method:get_animation_library_list()",
+        "AnimationMixer::method:get_animation_list()",
+        "AnimationMixer::method:has_animation(StringName:)",
+        "AnimationMixer::method:has_animation_library(StringName:)",
+        "AnimationMixer::method:remove_animation_library(StringName:)",
+        "AnimationMixer::method:rename_animation_library(StringName:,StringName:)",
+        "AnimationMixer::property:active",
+        "AnimationMixer::property:callback_mode_process",
+        "AnimationMixer::property:root_node",
+        "AnimationMixer::signal:animation_finished(StringName:)",
+        "AnimationMixer::signal:animation_libraries_updated()",
+        "AnimationMixer::signal:animation_list_changed()",
+        "AnimationMixer::signal:animation_started(StringName:)",
+        "AnimationMixer::signal:caches_cleared()",
+        "AnimationPlayer::enum:AnimationProcessCallback",
+        "AnimationPlayer::enum_value:AnimationProcessCallback.ANIMATION_PROCESS_IDLE",
+        "AnimationPlayer::enum_value:AnimationProcessCallback.ANIMATION_PROCESS_MANUAL",
+        "AnimationPlayer::enum_value:AnimationProcessCallback.ANIMATION_PROCESS_PHYSICS",
+        "AnimationPlayer::method:animation_get_next(StringName:)",
+        "AnimationPlayer::method:animation_set_next(StringName:,StringName:)",
+        "AnimationPlayer::method:clear_queue()",
+        "AnimationPlayer::method:get_playing_speed()",
+        "AnimationPlayer::method:get_process_callback()",
+        "AnimationPlayer::method:get_queue()",
+        "AnimationPlayer::method:get_root()",
+        "AnimationPlayer::method:get_section_end_time()",
+        "AnimationPlayer::method:get_section_start_time()",
+        "AnimationPlayer::method:has_section()",
+        "AnimationPlayer::method:is_animation_active()",
+        "AnimationPlayer::method:is_playing()",
+        "AnimationPlayer::method:pause()",
+        "AnimationPlayer::method:queue(StringName:)",
+        "AnimationPlayer::method:reset_section()",
+        "AnimationPlayer::method:seek(float:,bool:,bool:)",
+        "AnimationPlayer::method:set_process_callback(int:AnimationPlayer.AnimationProcessCallback)",
+        "AnimationPlayer::method:set_root(NodePath:)",
+        "AnimationPlayer::method:set_section(float:,float:)",
+        "AnimationPlayer::method:set_section_with_markers(StringName:,StringName:)",
+        "AnimationPlayer::method:stop(bool:)",
+        "AnimationPlayer::property:assigned_animation",
+        "AnimationPlayer::property:autoplay",
+        "AnimationPlayer::property:current_animation",
+        "AnimationPlayer::property:current_animation_length",
+        "AnimationPlayer::property:current_animation_position",
+        "AnimationPlayer::property:speed_scale",
+        "AnimationPlayer::signal:animation_changed(StringName:,StringName:)",
+        "AnimationPlayer::signal:current_animation_changed(StringName:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Capture/other track enum members and full generic interpolation edge profiles (integer rounding, nonlinear values, ping-pong edge controls and out-of-duration keys) remain applicable unfinished work.",
+      "godot": [
+        "Animation::enum:InterpolationType",
+        "Animation::enum:TrackType",
+        "Animation::enum:UpdateMode",
+        "Animation::method:value_track_interpolate(int:,float:,bool:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Loop-crossing flags are consumed by audio and nested-animation track execution; their typed event-track schedulers are not implemented yet (ADR 0093).",
+      "godot": [
+        "Animation::enum:LoopedFlag",
+        "Animation::enum_value:LoopedFlag.LOOPED_FLAG_END",
+        "Animation::enum_value:LoopedFlag.LOOPED_FLAG_NONE",
+        "Animation::enum_value:LoopedFlag.LOOPED_FLAG_START"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0093: value-property authoring/playback now executes. This applicable member remains unimplemented; it is not blocked on the first scene animation slice.",
+      "godot": [
+        "Animation::enum_value:TrackType.TYPE_ANIMATION",
+        "Animation::enum_value:TrackType.TYPE_AUDIO",
+        "Animation::enum_value:TrackType.TYPE_BEZIER",
+        "Animation::enum_value:TrackType.TYPE_METHOD",
+        "Animation::enum_value:UpdateMode.UPDATE_CAPTURE",
+        "Animation::method:animation_track_get_key_animation(int:,int:)",
+        "Animation::method:animation_track_insert_key(int:,float:,StringName:)",
+        "Animation::method:animation_track_set_key_animation(int:,int:,StringName:)",
+        "Animation::method:audio_track_get_key_end_offset(int:,int:)",
+        "Animation::method:audio_track_get_key_start_offset(int:,int:)",
+        "Animation::method:audio_track_get_key_stream(int:,int:)",
+        "Animation::method:audio_track_insert_key(int:,float:,Resource:,float:,float:)",
+        "Animation::method:audio_track_is_use_blend(int:)",
+        "Animation::method:audio_track_set_key_end_offset(int:,int:,float:)",
+        "Animation::method:audio_track_set_key_start_offset(int:,int:,float:)",
+        "Animation::method:audio_track_set_key_stream(int:,int:,Resource:)",
+        "Animation::method:audio_track_set_use_blend(int:,bool:)",
+        "Animation::method:bezier_track_get_key_in_handle(int:,int:)",
+        "Animation::method:bezier_track_get_key_out_handle(int:,int:)",
+        "Animation::method:bezier_track_get_key_value(int:,int:)",
+        "Animation::method:bezier_track_insert_key(int:,float:,float:,Vector2:,Vector2:)",
+        "Animation::method:bezier_track_interpolate(int:,float:)",
+        "Animation::method:bezier_track_set_key_in_handle(int:,int:,Vector2:,float:)",
+        "Animation::method:bezier_track_set_key_out_handle(int:,int:,Vector2:,float:)",
+        "Animation::method:bezier_track_set_key_value(int:,int:,float:)",
+        "Animation::method:method_track_get_name(int:,int:)",
+        "Animation::method:method_track_get_params(int:,int:)",
+        "Animation::method:optimize(float:,float:,int:)",
+        "Animation::property:capture_included",
+        "AnimationMixer::enum:AnimationCallbackModeMethod",
+        "AnimationMixer::enum_value:AnimationCallbackModeMethod.ANIMATION_CALLBACK_MODE_METHOD_DEFERRED",
+        "AnimationMixer::enum_value:AnimationCallbackModeMethod.ANIMATION_CALLBACK_MODE_METHOD_IMMEDIATE",
+        "AnimationMixer::property:audio_max_polyphony",
+        "AnimationMixer::property:callback_mode_method",
+        "AnimationPlayer::enum:AnimationMethodCallMode",
+        "AnimationPlayer::enum_value:AnimationMethodCallMode.ANIMATION_METHOD_CALL_DEFERRED",
+        "AnimationPlayer::enum_value:AnimationMethodCallMode.ANIMATION_METHOD_CALL_IMMEDIATE",
+        "AnimationPlayer::method:get_method_call_mode()",
+        "AnimationPlayer::method:set_method_call_mode(int:AnimationPlayer.AnimationMethodCallMode)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Three-dimensional transform/blend-shape tracks have no 2D node role under ADR 0004; generic value tracks animate Entity properties separately.",
+      "godot": [
+        "Animation::enum_value:TrackType.TYPE_BLEND_SHAPE",
+        "Animation::enum_value:TrackType.TYPE_POSITION_3D",
+        "Animation::enum_value:TrackType.TYPE_ROTATION_3D",
+        "Animation::enum_value:TrackType.TYPE_SCALE_3D",
+        "Animation::method:blend_shape_track_insert_key(int:,float:,float:)",
+        "Animation::method:blend_shape_track_interpolate(int:,float:,bool:)",
+        "Animation::method:position_track_insert_key(int:,float:,Vector3:)",
+        "Animation::method:position_track_interpolate(int:,float:,bool:)",
+        "Animation::method:rotation_track_insert_key(int:,float:,Quaternion:)",
+        "Animation::method:rotation_track_interpolate(int:,float:,bool:)",
+        "Animation::method:scale_track_insert_key(int:,float:,Vector3:)",
+        "Animation::method:scale_track_interpolate(int:,float:,bool:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Generic property-value tracks execute through typed descriptors; method/B\u00e9zier/audio/nested-animation track storage and evaluation remain unimplemented.",
+      "godot": [
+        "Animation::method:add_track(int:Animation.TrackType,int:)",
+        "Animation::method:copy_track(int:,Animation:)",
+        "Animation::method:find_track(NodePath:,int:Animation.TrackType)",
+        "Animation::method:track_get_key_value(int:,int:)",
+        "Animation::method:track_get_type(int:)",
+        "Animation::method:track_insert_key(int:,float:,Variant:,float:)",
+        "Animation::method:track_set_key_value(int:,int:,Variant:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Pinned compression only applies to 3D position/rotation/scale and blend-shape tracks; those families are excluded by ADR 0004. Typed 2D value tracks are not compressed by this reference API.",
+      "godot": [
+        "Animation::method:compress(int:,int:,float:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Requires typed weighted multi-source property accumulation and capture state on the implemented Animation/Mixer foundation; single-clip Player does not supply that dependency (ADR 0093).",
+      "godot": [
+        "AnimationMixer::enum:AnimationCallbackModeDiscrete",
+        "AnimationMixer::enum_value:AnimationCallbackModeDiscrete.ANIMATION_CALLBACK_MODE_DISCRETE_DOMINANT",
+        "AnimationMixer::enum_value:AnimationCallbackModeDiscrete.ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS",
+        "AnimationMixer::enum_value:AnimationCallbackModeDiscrete.ANIMATION_CALLBACK_MODE_DISCRETE_RECESSIVE",
+        "AnimationMixer::method:_post_process_key_value(Animation:,int:,Variant:,int:,int:)",
+        "AnimationMixer::method:capture(StringName:,float:,int:Tween.TransitionType,int:Tween.EaseType)",
+        "AnimationMixer::property:callback_mode_discrete",
+        "AnimationMixer::property:deterministic"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Pinned root-motion extraction is a 3D transform-track contract. Those tracks have no accepted 2D role under ADR 0004; animating Entity properties through value tracks remains applicable and implemented.",
+      "godot": [
+        "AnimationMixer::method:get_root_motion_position()",
+        "AnimationMixer::method:get_root_motion_position_accumulator()",
+        "AnimationMixer::method:get_root_motion_rotation()",
+        "AnimationMixer::method:get_root_motion_rotation_accumulator()",
+        "AnimationMixer::method:get_root_motion_scale()",
+        "AnimationMixer::method:get_root_motion_scale_accumulator()",
+        "AnimationMixer::property:root_motion_local",
+        "AnimationMixer::property:root_motion_track"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Requires AnimationLibrary/track persistence and a ResourceSaver/scene-save execution path; owned animation-node packing currently fails explicitly (ADR 0093).",
+      "godot": [
+        "AnimationMixer::property:reset_on_save"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "Per-frame event fan-out is excluded by ADR 0002. Advance and existing Node process callbacks supply typed update execution without per-frame mixer events.",
+      "godot": [
+        "AnimationMixer::signal:mixer_applied()",
+        "AnimationMixer::signal:mixer_updated()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Requires typed weighted multi-source accumulation/capture, which is absent from the current single-clip mixer profile (ADR 0093).",
+      "godot": [
+        "AnimationPlayer::method:get_blend_time(StringName:,StringName:)",
+        "AnimationPlayer::method:play_with_capture(StringName:,float:,float:,float:,bool:,int:Tween.TransitionType,int:Tween.EaseType)",
+        "AnimationPlayer::method:set_blend_time(StringName:,StringName:,float:)",
+        "AnimationPlayer::property:playback_auto_capture",
+        "AnimationPlayer::property:playback_auto_capture_duration",
+        "AnimationPlayer::property:playback_auto_capture_ease_type",
+        "AnimationPlayer::property:playback_auto_capture_transition_type",
+        "AnimationPlayer::property:playback_default_blend_time"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0093 typed scene-property timeline profile. SceneAnimationTests verifies keys/curves/markers, libraries/copies, direction/sections/queues, phases/pause/lifetime/reentry and zero warmed allocations; Linux Wayland GPU/compatibility hosts verify actual animated pixels. Other track families, capture/multi-source blending and persistence are not claimed. Zero-blend single-clip execution is implemented; positive custom blend explicitly fails before mutation until weighted accumulation/capture exists.",
+      "godot": [
+        "AnimationPlayer::method:play(StringName:,float:,float:,bool:)",
+        "AnimationPlayer::method:play_backwards(StringName:,float:)",
+        "AnimationPlayer::method:play_section(StringName:,float:,float:,float:,float:,bool:)",
+        "AnimationPlayer::method:play_section_backwards(StringName:,float:,float:,float:)",
+        "AnimationPlayer::method:play_section_with_markers(StringName:,StringName:,StringName:,float:,float:,bool:)",
+        "AnimationPlayer::method:play_section_with_markers_backwards(StringName:,StringName:,StringName:,float:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Requires the accepted rendered movie/capture host and its completion policy; ordinary window playback is implemented but no movie host exists (ADR 0090).",
+      "godot": [
+        "AnimationPlayer::property:movie_quit_on_finish"
       ]
     }
   ]

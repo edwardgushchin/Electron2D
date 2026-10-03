@@ -21,9 +21,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimatedSprite2D](classes/AnimatedSprite2D.md) | Node2D | Implemented | 22 |
 | [AnimatedSprite3D](classes/AnimatedSprite3D.md) | SpriteBase3D | Excluded | 18 |
 | [AnimatedTexture](classes/AnimatedTexture.md) | Texture2D | Implemented | 11 |
-| [Animation](classes/Animation.md) | Resource | Blocked | 114 |
-| [AnimationLibrary](classes/AnimationLibrary.md) | Resource | Blocked | 11 |
-| [AnimationMixer](classes/AnimationMixer.md) | Node | Blocked | 49 |
+| [Animation](classes/Animation.md) | Resource | Partial | 114 |
+| [AnimationLibrary](classes/AnimationLibrary.md) | Resource | Implemented | 11 |
+| [AnimationMixer](classes/AnimationMixer.md) | Node | Partial | 49 |
 | [AnimationNode](classes/AnimationNode.md) | Resource | Blocked | 33 |
 | [AnimationNodeAdd2](classes/AnimationNodeAdd2.md) | AnimationNodeSync | Blocked | 0 |
 | [AnimationNodeAdd3](classes/AnimationNodeAdd3.md) | AnimationNodeSync | Blocked | 0 |
@@ -44,7 +44,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationNodeTimeScale](classes/AnimationNodeTimeScale.md) | AnimationNode | Blocked | 0 |
 | [AnimationNodeTimeSeek](classes/AnimationNodeTimeSeek.md) | AnimationNode | Blocked | 1 |
 | [AnimationNodeTransition](classes/AnimationNodeTransition.md) | AnimationNodeSync | Blocked | 10 |
-| [AnimationPlayer](classes/AnimationPlayer.md) | AnimationMixer | Blocked | 53 |
+| [AnimationPlayer](classes/AnimationPlayer.md) | AnimationMixer | Partial | 53 |
 | [AnimationRootNode](classes/AnimationRootNode.md) | AnimationNode | Blocked | 0 |
 | [AnimationTree](classes/AnimationTree.md) | AnimationMixer | Blocked | 12 |
 | [Area2D](classes/Area2D.md) | CollisionObject2D | Partial | 35 |

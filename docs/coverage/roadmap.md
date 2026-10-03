@@ -4,8 +4,8 @@ Last updated: 2026-10-03
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1326 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 896 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
+1. Close 1346 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 935 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -20,6 +20,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [PhysicsServer2D](classes/PhysicsServer2D.md) | 44 | 9 |
 | [Window](classes/Window.md) | 42 | 34 |
 | [Object](classes/Object.md) | 32 | 22 |
+| [Animation](classes/Animation.md) | 29 | 11 |
 | [Engine](classes/Engine.md) | 16 | 18 |
 | [Input](classes/Input.md) | 12 | 31 |
 | [TranslationServer](classes/TranslationServer.md) | 12 | 21 |
@@ -30,6 +31,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Font](classes/Font.md) | 9 | 0 |
 | [SceneTree](classes/SceneTree.md) | 8 | 19 |
 | [Viewport](classes/Viewport.md) | 5 | 15 |
+| [AnimationPlayer](classes/AnimationPlayer.md) | 5 | 6 |
+| [AnimationMixer](classes/AnimationMixer.md) | 5 | 0 |
 | [Material](classes/Material.md) | 3 | 0 |
 | [FileAccess](classes/FileAccess.md) | 2 | 66 |
 | [Resource](classes/Resource.md) | 2 | 22 |
@@ -88,7 +91,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 43 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
-| Animation: trigger is the first scene animation slice. | 28 |
+| Animation: trigger is the typed weighted multi-source mixing/capture on the implemented value-track timeline. | 22 |
 | Navigation2D: trigger is the first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052). | 10 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 10 |
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
@@ -106,6 +109,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed networking-security integration slice with a portable crypto backend (ADR 0021). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
 | ADR 0091 maps Script and CSharpScript to one future concrete C# Script : Resource, preserving applicable inherited/own capabilities and typed creation without a provider subclass. Trigger: first real script-resource loader/editor/authoring slice with compiled-type registration, source/build association, usable typed metadata, factories and lifetime/failure verification. Ordinary Node callbacks do not implement this resource API; no production Script exists. | 2 |
+| Skeleton: trigger is the typed 2D bone hierarchy, rest/pose transforms and skinning integration. | 2 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
 | Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028). | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |

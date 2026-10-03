@@ -1,6 +1,6 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 This file routes architecture work to bounded domain decision documents. Read this index, the affected document, and only cross-domain documents explicitly referenced by relevant ADRs. Class, component, and domain documents remain authoritative for implemented behavior.
 
@@ -13,6 +13,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Core configuration, data, and I/O | [core-data-io.md](core-data-io.md) | 0018, 0019, 0020, 0022, 0048, 0049 |
 | Core math | [core-math.md](core-math.md) | 0024, 0025, 0026, 0029, 0032, 0033, 0034, 0035 |
 | Scene | [scene.md](scene.md) | 0006, 0008, 0011, 0023, 0031, 0036, 0037 |
+| Scene animation | [scene-animation.md](scene-animation.md) | 0093 |
 | Resources | [resources.md](resources.md) | 0013, 0014, 0039 |
 | Localization | [localization.md](localization.md) | 0007 |
 | Rendering | [rendering.md](rendering.md) | 0028, 0046, 0078, 0079, 0080, 0081, 0082, 0083 |

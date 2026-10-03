@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-04
 
+The first reusable [scene animation](../components/scene-animation.md) slice executes typed property keys through Animation/AnimationLibrary/AnimationMixer/AnimationPlayer, including reverse, sections, queues, loop crossings and real Linux Wayland GPU/compatibility pixels. Library own rows are Implemented; wider track/mixing/capture/persistence families and full interpolation edge profiles retain their exact states. SceneAnimationTests measures zero allocation on 256 warmed ordinary, angular and discrete-loop passes.
+
 This is the entry point for the living, bidirectional comparison between the official stable Godot API and the Electron2D production API. The register accounts for upstream declarations even when they are outside Electron2D's 2D product, and for Electron2D declarations that have no upstream counterpart. It is a census and roadmap, not a claim that every listed member is implemented.
 
 The current official baseline is [Godot 4.7.2 stable](https://godotengine.org/article/maintenance-release-godot-4-7-2/), released 2026-08-18, at source commit [`ed1daf0bf001b61586d9930840f2f1394092c079`](https://github.com/godotengine/godot/tree/ed1daf0bf001b61586d9930840f2f1394092c079). Retrieved 2026-09-22. The source is the class-reference XML under `doc/classes/`, `modules/*/doc_classes/`, and `platform/*/doc_classes/`; declarations were extracted without prose descriptions. The upstream source's MIT terms are preserved in [ReferenceData-LICENSE.txt](../../licence/ReferenceData-LICENSE.txt).
