@@ -85,3 +85,5 @@ The internal player shares [AudioStreamPlayer transitions](AudioStreamPlayer.md#
 Typed interactive SwitchToClipParameter is stored/restored in PackedScene along with Stream, using the same private player parameter path; name selection and an empty cancellation retain exact string types. See [interactive streams](../components/audio-playback.md#interactive-streams).
 
 [Dynamic polyphonic voices](../components/audio-playback.md#dynamic-polyphony) now integrate with this audio ownership/control path; native children inherit enclosing scene mix/pause/spatial controls and retain their own requested bus. Retired sample/input ownership stays owner-affine until cleanup.
+
+[Playlist playback](../components/audio-playback.md#playlist-playback) now executes timed sequences/shuffle/fades through this audio contract, including scene/native fallback, prepared input controls and owner cleanup.

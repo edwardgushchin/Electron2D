@@ -155,6 +155,8 @@ The Electron2D public types are now [PhysicsServer](../classes/PhysicsServer.md)
 
 [Dynamic polyphonic playback](../components/audio-playback.md#dynamic-polyphony) closes all nine own rows of AudioStreamPolyphonic/AudioStreamPlaybackPolyphonic, with creation-time capacity, independent Int64 IDs, Stream/Sample/default/native bus controls, corrected live ramps/sample controls and bounded ownership. Native scene/input integration, failure containment and warmed checks execute. Inherited usage tagging/general parameter/editor/platform dependencies retain their declaring rows.
 
+[Playlist playback](../components/audio-playback.md#playlist-playback) implements all ten own AudioStreamPlaylist/AudioStreamPlaybackPlaylist rows with exact resource metadata/slot/configuration, streamed sequence/shuffle/fade/loop/seek, transactional ownership and queued controls. Source modulo/cursor/batch-transition/padding/cleanup defects are corrected explicitly. Native/host/warmed evidence stays separate from physical and other-platform acceptance; inherited usage tagging/general parameter/editor/file-authoring gaps retain their declaring rows.
+
 ## State vocabulary
 
 Each row has exactly one state. Typed-C# adaptation is a *mapping description* and may accompany any state.

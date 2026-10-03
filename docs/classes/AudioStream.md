@@ -68,3 +68,5 @@ The procedural [AudioStreamGenerator](AudioStreamGenerator.md)/[AudioStreamGener
 [AudioStreamSynchronized](AudioStreamSynchronized.md) consumes protected duration/BPM/beat/bar/loop hooks and combines child output. Known composites share graph-cycle and bounded callback validation. Factories of microphone-containing composites preflight the audio owner needed for child cleanup; pure prepared PCM mixing retains caller/audio-thread coordination.
 
 Interactive parents now prepare child controls on the audio owner, including paused microphone input and request capacity, then schedule selected child Start/Stop under the shared audio gate. Public microphone controls/disposal retain owner checks; preparation alone does not record. Mixed interactive/randomizer/synchronized graphs share cycle/owner validation. See [interactive streams](../components/audio-playback.md#interactive-streams) for timing, lifecycle, native evidence and limits.
+
+[Playlist playback](../components/audio-playback.md#playlist-playback) now executes timed sequences/shuffle/fades through this audio contract, including scene/native fallback, prepared input controls and owner cleanup.

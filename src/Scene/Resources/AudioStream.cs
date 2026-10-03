@@ -21,7 +21,7 @@ public abstract class AudioStream : Resource
     internal virtual void AppendPlaybackChildren(Stack<AudioStream> pending) => AppendChildren(pending);
     internal void EnsurePlaybackOwner()
     {
-        if (this is not (AudioStreamMicrophone or AudioStreamRandomizer or AudioStreamSynchronized or AudioStreamInteractive)) return;
+        if (this is not (AudioStreamMicrophone or AudioStreamRandomizer or AudioStreamSynchronized or AudioStreamInteractive or AudioStreamPlaylist)) return;
         lock (GraphGate)
         {
             var pending = new Stack<AudioStream>(); var visited = new HashSet<AudioStream>(ReferenceEqualityComparer.Instance); pending.Push(this);

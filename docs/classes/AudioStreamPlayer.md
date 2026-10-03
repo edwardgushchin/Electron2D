@@ -120,3 +120,5 @@ Reducing polyphony at the next Play transfers removed slots' copied outgoing fad
 AudioStreamPlayer inherits Node and plays streams independently of scene position, including music and UI sounds. Use [AudioStreamEmitter](AudioStreamEmitter.md) for a positioned scene source with distance attenuation, stereo panning and listener/Area routing. The emitter inherits Entity and reuses this player through a private child; their public responsibilities and APIs stay distinct under [ADR 0047](../decisions/audio.md#adr-0047).
 
 [Dynamic polyphonic voices](../components/audio-playback.md#dynamic-polyphony) now integrate with this audio ownership/control path; native children inherit enclosing scene mix/pause/spatial controls and retain their own requested bus. Retired sample/input ownership stays owner-affine until cleanup.
+
+[Playlist playback](../components/audio-playback.md#playlist-playback) now executes timed sequences/shuffle/fades through this audio contract, including scene/native fallback, prepared input controls and owner cleanup.
