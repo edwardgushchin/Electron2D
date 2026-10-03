@@ -54,7 +54,7 @@ public sealed partial class AudioServer : ElectronObject
     public static AudioServer Instance => Singleton.Value;
     internal void Check()
     {
-        ThrowIfDisposed(); CheckEffectReentrancy(); var thread = Environment.CurrentManagedThreadId; Interlocked.CompareExchange(ref _owner, thread, 0); if (thread != Volatile.Read(ref _owner)) throw new InvalidOperationException("Audio configuration requires its owner thread.");
+        ThrowIfDisposed(); CheckAudioReentrancy(); var thread = Environment.CurrentManagedThreadId; Interlocked.CompareExchange(ref _owner, thread, 0); if (thread != Volatile.Read(ref _owner)) throw new InvalidOperationException("Audio configuration requires its owner thread.");
     }
     private Bus GetBus(int index) { Check(); if ((uint)index >= (uint)_buses.Count) throw new ArgumentOutOfRangeException(nameof(index)); return _buses[index]; }
     /// <summary>Gets or sets the number of bus records, including the required Master.</summary>
@@ -203,10 +203,10 @@ public sealed partial class AudioServer : ElectronObject
     public double GetTimeToNextMix() { Check(); return _native is null ? 0 : Math.Max(0, _native.QuantumFrames / (double)_native.MixRate - _native.SinceMix); }
     /// <summary>Locks configuration for an explicit caller-owned critical section.</summary>
     /// <remarks>Pair with Unlock in finally; this protects the owned bus/playback state, not arbitrary game code.</remarks>
-    public void Lock() { ThrowIfDisposed(); CheckEffectReentrancy(); Monitor.Enter(_gate); }
+    public void Lock() { ThrowIfDisposed(); CheckAudioReentrancy(); Monitor.Enter(_gate); }
     /// <summary>Releases one matching configuration lock.</summary>
     /// <exception cref="SynchronizationLockException">The calling thread owns no matching lock.</exception>
-    public void Unlock() { CheckEffectReentrancy(); Monitor.Exit(_gate); }
+    public void Unlock() { CheckAudioReentrancy(); Monitor.Exit(_gate); }
     internal void EnsureNative()
     {
         Check(); if (_native is not null) return; _native = new FAudioContext(gate: _gate);

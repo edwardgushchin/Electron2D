@@ -1,6 +1,6 @@
 # AudioStreamPlayback
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Declaration:** `public abstract class Electron2D.AudioStreamPlayback` · **Source:** [AudioStream.cs](../../src/Scene/Resources/AudioStream.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -63,3 +63,8 @@ Caller-owned independent playback. Start/Seek accept finite seconds, including n
 Assignments update policy for subsequent source mixing; they do not reset time/history. Parameterless playbacks do not consume it. Use a descriptor from Stream.GetParameterList with AudioStreamPlayer.SetParameter for owned player voices; changing a borrowed playback directly requires synchronization with its owner.
 
 The procedural [AudioStreamGenerator](AudioStreamGenerator.md)/[AudioStreamGeneratorPlayback](AudioStreamGeneratorPlayback.md) supplies bounded producer queues and continuous underrun silence through this inherited contract; its class pages record exact rate/control/lifetime boundaries.
+
+
+## Player mixing threads
+
+When a scene player owns this playback, ordinary OnMix calls run on the native output thread. Pause and Stop prepare one final fading block on the scene owner before cursor freeze/source Stop; both paths share the context gate. Custom mixing callbacks must support these serialized threads and cannot reenter AudioServer configuration, Lock/Unlock or their owner player mutation/disposal. Passive rate/speed reads remain available. See [stream transitions](../components/audio-playback.md#stream-transitions). Caller-driven MixAudio retains its existing thread/ownership contract.

@@ -1,6 +1,6 @@
 # AudioStreamPlayer2D
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -75,4 +75,9 @@ The private player provides the same borrowed-resource, polyphony, cursor, event
 
 ## Verification and limits
 
-[AudioSpatialTests](../../tests/Electron2D.Tests/AudioSpatialTests.cs) covers typed scene storage, listener selection, centered/right/attenuated PCM, Area bus capture, route recovery, and 64 warmed spatial point-query/matrix updates without managed allocation or custom FAudio allocator calls. Linux Wayland GPU and compatibility hosts use the SDL dummy audio driver; physical listening and other platforms remain unverified. Native stream start/stop/pause/gain ramps, native sample registration, and editor-hint autoplay suppression retain the [base player's precise dependencies](../coverage/classes/AudioStreamPlayer.md). [Own coverage](../coverage/classes/AudioStreamPlayer2D.md) marks those members Partial.
+[AudioSpatialTests](../../tests/Electron2D.Tests/AudioSpatialTests.cs) covers typed scene storage, listener selection, centered/right/attenuated PCM, Area bus capture, route recovery, and 64 warmed spatial point-query/matrix updates without managed allocation or custom FAudio allocator calls. Linux Wayland GPU and compatibility hosts use the SDL dummy audio driver; physical listening and other platforms remain unverified. Shared stream start/stop/pause/gain transitions now execute through the internal player. Native sample registration and editor-hint autoplay suppression retain the [base player's precise dependencies](../coverage/classes/AudioStreamPlayer.md). [Own coverage](../coverage/classes/AudioStreamPlayer2D.md) keeps those dependencies Partial.
+
+
+## Stream transitions
+
+The internal player shares [AudioStreamPlayer transitions](AudioStreamPlayer.md#stream-transitions), including 64-frame initial lookahead, full attack, gain/pan interpolation, synchronous final-block preparation before pause/stop, frozen paused cursors and copied outgoing fades for Seek/oldest replacement. VolumeDB rejects an unrepresentable linear gain before mutation. The public signatures, scene storage and borrowed stream ownership stay intact. [AudioTransitionTests](../../tests/Electron2D.Tests/AudioTransitionTests.cs) exercises two successive spatial Window hosts on each current Wayland renderer and distinguishes PCM/cursor/cleanup evidence from physical listening and other targets.

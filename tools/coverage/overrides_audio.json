@@ -2978,8 +2978,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Current native stream operation executes; reference start/stop/pause/gain transition ramps still require prepared ramp state and discontinuity tests. Cursor, ownership and seek/polyphony semantics are checked (ADR 0047).",
+      "state": "Implemented",
+      "reason": "ADR 0047: 64-frame lookahead preserves full attack, gain/pause/resume/stop use frame/native-quantum linear interpolation, and seek/oldest replacement retain outgoing PCM independently of disposed playback. Final pause/stop blocks are prepared on the owner before synchronous callbacks/cursor freeze; invalid gain and callback reentrancy reject. AudioTransitionTests covers prepared and actual native PCM plus allocation; physical listening and other platforms remain unverified.",
       "godot": [
         "AudioStreamPlayer::method:play(float:)",
         "AudioStreamPlayer::method:seek(float:)",
@@ -3044,12 +3044,11 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified. SDL3 input/microphone and Input generator frequency now execute. Remaining rows retain concrete sample, parameter, effects, output-device, editor or transition-ramp dependencies.",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified. SDL3 input/microphone, Input generator frequency and player transitions now execute. Remaining rows retain concrete sample, parameter, effects, output-device or editor dependencies.",
       "godot": [
         "class:AudioServer",
         "class:AudioStream",
-        "class:AudioStreamPlayback",
-        "class:AudioStreamPlayer"
+        "class:AudioStreamPlayback"
       ]
     },
     {
@@ -3538,16 +3537,10 @@
     },
     {
       "state": "Partial",
-      "reason": "Spatial output executes; inherited stream start/stop/pause/gain ramps require prepared transition state, sample playback needs sample registration, and editor autoplay suppression needs an editor-hint host (ADR 0047).",
+      "reason": "Spatial output and shared stream transitions execute. Sample playback needs prepared sample storage/registration; editor autoplay suppression needs the Engine editor-hint lifecycle and first editor host (ADR 0047).",
       "godot": [
-        "AudioStreamPlayer2D::method:play(float:)",
-        "AudioStreamPlayer2D::method:seek(float:)",
-        "AudioStreamPlayer2D::method:stop()",
         "AudioStreamPlayer2D::property:autoplay",
         "AudioStreamPlayer2D::property:playback_type",
-        "AudioStreamPlayer2D::property:stream_paused",
-        "AudioStreamPlayer2D::property:volume_db",
-        "AudioStreamPlayer2D::property:volume_linear",
         "class:AudioStreamPlayer2D"
       ]
     },
@@ -3584,6 +3577,25 @@
         "AudioEffectPhaser::property:range_min_hz",
         "AudioEffectPhaser::property:rate_hz",
         "class:AudioEffectPhaser"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: 64-frame lookahead preserves full attack, gain/pause/resume/stop use frame/native-quantum linear interpolation, and seek/oldest replacement retain outgoing PCM independently of disposed playback. Final pause/stop blocks are prepared on the owner before synchronous callbacks/cursor freeze; invalid gain and callback reentrancy reject. AudioTransitionTests covers prepared and actual native PCM plus allocation; physical listening and other platforms remain unverified.",
+      "godot": [
+        "AudioStreamPlayer2D::method:play(float:)",
+        "AudioStreamPlayer2D::method:seek(float:)",
+        "AudioStreamPlayer2D::method:stop()",
+        "AudioStreamPlayer2D::property:stream_paused",
+        "AudioStreamPlayer2D::property:volume_db",
+        "AudioStreamPlayer2D::property:volume_linear"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0047: native stream/bus output, procedural/recording sources and prepared lookahead/transition PCM execute. Remaining player dependencies are sample registration and editor-hint autoplay suppression. Physical listening and other platforms remain unverified.",
+      "godot": [
+        "class:AudioStreamPlayer"
       ]
     }
   ]

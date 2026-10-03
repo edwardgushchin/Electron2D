@@ -1,6 +1,6 @@
 # AudioServer
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Declaration:** `public sealed partial class Electron2D.AudioServer` · **Source:** [AudioServer.cs](../../src/Servers/Audio/AudioServer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -212,3 +212,6 @@ Bypass defaults false. It passes PCM around all public effects without changing 
 Public processing precedes final bus gain because the native submix's ordinary volume occurs before its native effects. An engine-owned final gain FAPO preserves the required order, finite-output validation and post-volume meter. Active stereo pairs retain silent blocks for tails; prepared AudioBusesChannelDisableThresholdDB/Time control expiry by actual mixed frames. Capture opts into inactive silence. An exception in processing/silence hooks or borrowed-resource disposal clears that failed effect block and latches silence until structural recreation. SceneTree reports collected errors once on its owner while still dispatching ordinary frame callbacks. Gain failures similarly silence output; changing gain clears that failure state.
 
 AudioEffectTests checks native ordered PCM, raw capture versus final output, mute/bypass/enable, direct pair projection, activity/tails, factory/reentrancy/disposal failures, graph identity, closure/reopen and warmed managed/custom allocator limits. Public Window hosts and cross-platform/physical limits are described in the [component](../components/audio-playback.md#bus-effects).
+
+
+Source OnMix callbacks share the effect-processing configuration guard during both native output and owner-thread final transition preparation. They cannot mutate/rebuild the graph or call Lock/Unlock. Passive output-rate/speed reads remain available; see [stream transitions](../components/audio-playback.md#stream-transitions).

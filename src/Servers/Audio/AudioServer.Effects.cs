@@ -4,10 +4,10 @@ public sealed partial class AudioServer
 {
     private sealed record BusEffect(AudioEffect Resource, bool Enabled = true);
     private bool _effectCallback;
-    [ThreadStatic] private static int _effectProcessing;
-    internal static void EnterEffectProcessing() => _effectProcessing++;
-    internal static void ExitEffectProcessing() => _effectProcessing--;
-    private void CheckEffectReentrancy() { if (_effectProcessing != 0 || Environment.CurrentManagedThreadId == _owner && _effectCallback) throw new InvalidOperationException("Effect callbacks cannot reenter audio configuration."); }
+    [ThreadStatic] private static int _audioProcessing;
+    internal static void EnterAudioProcessing() => _audioProcessing++;
+    internal static void ExitAudioProcessing() => _audioProcessing--;
+    private void CheckAudioReentrancy() { if (_audioProcessing != 0 || Environment.CurrentManagedThreadId == _owner && _effectCallback) throw new InvalidOperationException("Audio callbacks cannot reenter audio configuration."); }
     internal AudioEffectInstance CreateEffectInstance(AudioEffect effect)
     {
         _effectCallback = true; try { return effect.Instantiate(); } finally { _effectCallback = false; }

@@ -2,7 +2,9 @@ namespace Electron2D;
 
 /// <summary>Plays borrowed non-spatial streams through native audio buses.</summary>
 /// <remarks>Node configuration and events require the scene owner thread. Stream mixing runs on the native audio
-/// thread through bounded prepared buffers. The node owns its playbacks/voices and never disposes its stream.</remarks>
+/// thread through bounded prepared buffers. Stop and pause prepare their final PCM block on the owner thread;
+/// custom mixing callbacks must support both serialized paths and cannot reenter audio configuration.
+/// The node owns its playbacks/voices and never disposes its stream.</remarks>
 public class AudioStreamPlayer : Node
 {
     /// <summary>Selects where non-spatial stereo audio is routed.</summary>
@@ -53,14 +55,18 @@ public class AudioStreamPlayer : Node
         set { EnsureMutable(); if (_autoplay == value) return; _autoplay = value; }
     }
     /// <summary>Gets or sets StreamPaused configuration.</summary>
-    /// <value>False without active voices; pauses/resumes existing voices without advancing cursors. New Play uses tree pause policy.</value>
+    /// <value>False without active voices; pauses after preparing one final block, then retains cursors; resume ramps from silence. New Play uses tree pause policy.</value>
     /// <exception cref="ArgumentOutOfRangeException">The numeric or enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner/capture-owned or native configuration fails.</exception>
     /// <exception cref="ObjectDisposedException">The player is disposed.</exception>
+    /// <exception cref="AggregateException">One or more final-block callbacks fail; all active voices are still paused.</exception>
     public bool StreamPaused
     {
         get { Check(); foreach (var voice in _voices) if (voice.Playing) return voice.Paused; return false; }
-        set { EnsureMutable(); foreach (var voice in _voices) if (voice.Playing) voice.Pause(value || !IsInsideTree || !CanProcess()); }
+        set
+        {
+            EnsureMutable(); PauseVoices(value || !IsInsideTree || !CanProcess());
+        }
     }
     /// <summary>Gets or sets Bus configuration.</summary>
     /// <value>Master initially; absent names query and route as Master while retaining their requested identity.</value>
@@ -74,13 +80,14 @@ public class AudioStreamPlayer : Node
     }
     /// <summary>Gets or sets VolumeDB configuration.</summary>
     /// <value>Zero dB initially; negative infinity silences volume-scaled channels. The center/surround low-frequency route retains unity player gain.</value>
+    /// <remarks>Gain interpolates across the next native block; values whose linear gain exceeds finite float storage reject before mutation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The numeric or enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner/capture-owned or native configuration fails.</exception>
     /// <exception cref="ObjectDisposedException">The player is disposed.</exception>
     public float VolumeDB
     {
         get { Check(); return _volumeDB; }
-        set { EnsureMutable(); if (float.IsNaN(value) || float.IsPositiveInfinity(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_volumeDB == value) return; _volumeDB = value; RefreshVolume(); }
+        set { EnsureMutable(); if (float.IsNaN(value) || float.IsPositiveInfinity(value) || !float.IsFinite((float)Mathf.DBToLinear(value))) throw new ArgumentOutOfRangeException(nameof(value)); if (_volumeDB == value) return; _volumeDB = value; RefreshVolume(); }
     }
     /// <summary>Gets or sets PitchScale configuration.</summary>
     /// <value>One initially; finite strictly positive values only.</value>
@@ -123,9 +130,19 @@ public class AudioStreamPlayer : Node
         set { EnsureMutable(); if (value is < AudioServer.PlaybackType.Default or >= AudioServer.PlaybackType.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_type == value) return; _type = value; ReleaseVoices(); }
     }
     /// <summary>Gets or sets linear gain.</summary>
-    /// <value>One initially; zero maps to negative infinity dB.</value>
+    /// <value>One initially; zero maps to negative infinity dB. Edits interpolate across the next native block.</value>
     /// <exception cref="ArgumentOutOfRangeException">The gain is negative or nonfinite.</exception>
-    public float VolumeLinear { get => (float)Mathf.DBToLinear(VolumeDB); set { if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value)); VolumeDB = (float)Mathf.LinearToDB(value); } }
+    public float VolumeLinear
+    {
+        get => (float)Mathf.DBToLinear(VolumeDB);
+        set
+        {
+            if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+            var db = (float)Mathf.LinearToDB(value);
+            if (!float.IsFinite((float)Mathf.DBToLinear(db))) db = MathF.BitDecrement(db);
+            VolumeDB = db;
+        }
+    }
     /// <summary>Gets or sets whether any voice is playing.</summary>
     /// <value>Setting true starts at zero; setting false stops all voices.</value>
     public bool Playing { get => IsPlaying(); set { if (value) Play(); else Stop(); } }
@@ -146,7 +163,8 @@ public class AudioStreamPlayer : Node
     }
     /// <summary>Creates one fresh playback and starts a voice at a requested stream time, replacing the oldest when capacity is full.</summary>
     /// <remarks>Native slots are prepared lazily and reused. A replaced slot disposes its old borrowed playback handle.
-    /// Stream callbacks cannot reenter player mutation or disposal while an audio operation is in progress.</remarks>
+    /// Start retains full attack after 64 silent lookahead frames. Replaced slots preserve an outgoing PCM fade
+    /// independently of their disposed playback. Stream callbacks cannot reenter player mutation or disposal while an audio operation is in progress.</remarks>
     /// <param name="fromPosition">Finite seconds; zero initially.</param>
     /// <exception cref="InvalidOperationException">The node is detached or native output is unavailable.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The time is nonfinite.</exception>
@@ -168,14 +186,18 @@ public class AudioStreamPlayer : Node
                 else voice.ReplacePlayback(playback);
             }
             catch { if (voice is null || !ReferenceEquals(voice.Playback, playback)) playback.Dispose(); throw; }
-            _ages[index] = checked(++_sequence); voice.Play(fromPosition); voice.Pause(!CanProcess());
+            _ages[index] = checked(++_sequence); voice.Play(fromPosition); PauseVoice(voice, !CanProcess());
         }
         finally { _audioOperation = false; }
     }
     /// <summary>Stops active voices and starts one voice at the requested time.</summary>
+    /// <remarks>The outgoing prepared fade overlaps the new attack; paused players remain unchanged.</remarks>
     /// <param name="toPosition">Finite seconds.</param>
     public void Seek(double toPosition) { EnsureMutable(); if (!double.IsFinite(toPosition)) throw new ArgumentOutOfRangeException(nameof(toPosition)); if (IsPlaying()) { Stop(); Play(toPosition); } }
     /// <summary>Stops all voices without emitting Finished.</summary>
+    /// <remarks>Logical playback stops synchronously. One prepared linear fade block may still reach output;
+    /// scene/resource teardown releases that transient storage immediately.</remarks>
+    /// <exception cref="AggregateException">Final-block mixing or source Stop fails; logical voices are still stopped.</exception>
     public void Stop()
     {
         EnsureMutable(); _audioOperation = true; try { StopVoices(); } finally { _audioOperation = false; }
@@ -185,6 +207,16 @@ public class AudioStreamPlayer : Node
         List<Exception>? errors = null;
         foreach (var voice in _voices) try { StopVoice(voice); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Audio stopping failed.", errors);
+    }
+    private void PauseVoices(bool paused)
+    {
+        List<Exception>? errors = null;
+        foreach (var voice in _voices) if (voice.Playing) try { PauseVoice(voice, paused); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Audio pausing failed.", errors);
+    }
+    private void PauseVoice(FAudioStreamVoice voice, bool paused)
+    {
+        var previous = _audioOperation; _audioOperation = true; try { voice.Pause(paused); } finally { _audioOperation = previous; }
     }
     private void StopVoice(FAudioStreamVoice voice)
     {
@@ -271,11 +303,18 @@ public class AudioStreamPlayer : Node
     }
     private void TrimVoices()
     {
+        List<Exception>? errors = null;
         while (_voices.Count > _maximum)
         {
             var index = 0; for (var i = 1; i < _voices.Count; i++) if (_ages[i] < _ages[index]) index = i;
-            var voice = _voices[index]; voice.Dispose(); voice.Playback.Dispose(); _voices.RemoveAt(index); _ages.RemoveAt(index);
+            var voice = _voices[index];
+            try { StopVoice(voice); } catch (Exception error) { CollectException(ref errors, error); }
+            try { voice.MoveTailTo(_voices[index == 0 ? 1 : 0]); } catch (Exception error) { CollectException(ref errors, error); }
+            try { voice.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { voice.Playback.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
+            _voices.RemoveAt(index); _ages.RemoveAt(index);
         }
+        ThrowCollected("Audio voice trimming failed.", errors);
     }
     internal void ReleaseVoices()
     {
@@ -303,12 +342,12 @@ public class AudioStreamPlayer : Node
                 {
                     if (!_registered) { AudioServer.Instance.Attach(this); _registered = true; }
                     SetInternalProcessing(true, false);
-                    foreach (var voice in _voices) if (voice.Playing) voice.Pause(!CanProcess());
+                    PauseVoices(!CanProcess());
                     if (_autoplay) Play();
                 }
-                else if (what == NotificationExitTree) { foreach (var voice in _voices) if (voice.Playing) voice.Pause(true); }
+                else if (what == NotificationExitTree) { PauseVoices(true); }
                 else if (what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled)
-                { foreach (var voice in _voices) if (voice.Playing) voice.Pause(!CanProcess()); }
+                { PauseVoices(!CanProcess()); }
                 else if (what == NotificationInternalProcess)
                 {
                     var ended = false;

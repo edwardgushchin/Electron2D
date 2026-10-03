@@ -142,6 +142,9 @@ public abstract class AudioStreamPlayback : ElectronObject
         var count = OnMix(buffer, rateScale); if ((uint)count > (uint)buffer.Length) throw new InvalidOperationException("Audio mixing returned an invalid frame count."); return count;
     }
     /// <summary>Fills the prepared stereo frame span and reports frames before the first silence.</summary>
+    /// <remarks>Player-owned mixing runs on the native output thread or, for final pause/stop preparation,
+    /// the scene owner, serialized by the native context gate. Mixing callbacks cannot reenter audio graph
+    /// configuration or owner player mutation/disposal. Caller-driven mixing retains caller coordination.</remarks>
     /// <param name="buffer">Prepared caller-owned output storage.</param>
     /// <param name="rateScale">Finite nonnegative playback-rate multiplier.</param>
     /// <returns>Mixed frame count, between zero and buffer.Length.</returns>

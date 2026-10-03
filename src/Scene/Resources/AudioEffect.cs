@@ -50,13 +50,13 @@ public abstract class AudioEffectInstance : ElectronObject
             if (source.Length != destination.Length) throw new ArgumentException("Effect input and output lengths must match.");
             foreach (var frame in source) if (!float.IsFinite(frame.X) || !float.IsFinite(frame.Y)) throw new ArgumentException("Effect input must be finite.", nameof(source));
             _processing = true;
-            AudioServer.EnterEffectProcessing();
+            AudioServer.EnterAudioProcessing();
             try
             {
                 OnProcess(source, destination);
                 foreach (var frame in destination) if (!float.IsFinite(frame.X) || !float.IsFinite(frame.Y)) throw new ArgumentException("Effect output must be finite.", nameof(destination));
             }
-            finally { AudioServer.ExitEffectProcessing(); _processing = false; }
+            finally { AudioServer.ExitAudioProcessing(); _processing = false; }
         }
     }
     /// <summary>Transforms a complete stereo block, including aliased input and output.</summary>
@@ -71,7 +71,7 @@ public abstract class AudioEffectInstance : ElectronObject
         lock (_gate)
         {
             ThrowIfDisposed(); if (_processing) throw new InvalidOperationException("Effect processing is reentrant.");
-            _processing = true; AudioServer.EnterEffectProcessing(); try { return OnProcessSilence(); } finally { AudioServer.ExitEffectProcessing(); _processing = false; }
+            _processing = true; AudioServer.EnterAudioProcessing(); try { return OnProcessSilence(); } finally { AudioServer.ExitAudioProcessing(); _processing = false; }
         }
     }
     /// <summary>Selects processing while the bus input is silent.</summary>

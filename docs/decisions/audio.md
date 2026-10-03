@@ -9,7 +9,7 @@ Decisions in this log: [0047](#adr-0047).
 <a id="adr-0047"></a>
 ## ADR 0047: Use FAudio over SDL3 with managed audio decoders
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ### Status
 
@@ -96,3 +96,8 @@ AudioEffectPhaser executes through the same FAudio effect chain with a shared si
 - Use SDL_mixer solely for decoding: rejected because the selected managed decoders cover the required source formats without a second native audio extension.
 - Bind native libogg/libvorbis, dr_mp3 and qoa.h separately: rejected because managed implementations cover the selected formats without additional native packaging and per-codec interop.
 - Build a custom mixer before validating the selected backend: rejected because FAudio already supplies a mix graph suited to the required bus roles.
+
+
+### Prepared scene-player transitions
+
+Scene players preserve the initial full attack after 64 silent lookahead frames and use frame/native-quantum linear coefficients for live gain, pause/resume and stop. This follows the reference transition contract with the actual FAudio quantum. Stop/pause prepare one final PCM block on the owner before source Stop/cursor freeze, using the same context gate as native mixing. That explicit serialized control path preserves synchronous callback failures and safe pooled playback replacement; copied outgoing PCM is independent of disposed child playback. Seek and oldest replacement overlap the copied fade and new attack; teardown discards transient output. Source mix callbacks on either thread cannot reenter audio configuration/Lock/Unlock or owner player mutation/disposal. Finite-tail accumulation, representable stored gain and immediate solo/LFE gating are verified separately from steady gain interpolation. Output-channel PCM expansion implements independent coefficient ramps before a matching identity FAudio send; no vendor changes or new public backend types are required. Native sample storage and editor-hint autoplay suppression retain their existing dependencies.

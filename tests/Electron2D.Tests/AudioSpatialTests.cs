@@ -71,8 +71,11 @@ internal static class AudioSpatialTests
             switch (_phase++)
             {
                 case 0:
+                    var size = window.GetVisibleRect().Size;
+                    player.Position = size * .5f; listener.Position = area.Position = new(size.X, size.Y * .5f);
+                    player.RefreshSpatial(queryArea: true);
                     AudioEffectTests.CheckOutput(native, new(.1f, -.15f));
-                    player.Attenuation = 0; player.Position = new(160, 48);
+                    player.Attenuation = 0; player.Position = listener.Position;
                     break;
                 case 1:
                     AudioEffectTests.CheckOutput(native, new(.075f, -.1875f));
@@ -87,11 +90,11 @@ internal static class AudioSpatialTests
                             for (var channel = 2; channel < native.Channels; channel++)
                                 Check(Math.Abs(pcm[frame + channel]) < .0001f, "Spatial source uses the front stereo pair on a multichannel output.");
                     }
-                    player.MaxDistance = 10; player.Position = new(80, 48);
+                    player.MaxDistance = 10; player.Position = window.GetVisibleRect().Size * .5f;
                     break;
                 case 3:
                     AudioEffectTests.CheckOutput(native, Vector2.Zero);
-                    player.Position = new(160, 48); player.MaxDistance = 2000; player.AreaMask = 1; area.AudioBusOverride = true;
+                    player.Position = listener.Position; player.MaxDistance = 2000; player.AreaMask = 1; area.AudioBusOverride = true;
                     break;
                 case 4:
                     capture.ClearBuffer(); AudioEffectTests.Wait(native, 8);
@@ -110,7 +113,7 @@ internal static class AudioSpatialTests
                     player.Stop(); listener.ClearCurrent(); Check(window.GetAudioListener2D() is null, "Explicit listener release.");
                     listener.MakeCurrent(); window.RemoveChild(listener); Check(listener.Current, "Current request survives scene exit.");
                     window.AddChild(listener); Check(ReferenceEquals(window.GetAudioListener2D(), listener), "Current request restores on reentry."); listener.ClearCurrent();
-                    _autoplay = new AudioStreamPlayer2D { Name = "AutoplaySpatial", Stream = player.Stream, Autoplay = true, Position = new(80, 48) }; window.AddChild(_autoplay);
+                    _autoplay = new AudioStreamPlayer2D { Name = "AutoplaySpatial", Stream = player.Stream, Autoplay = true, Position = window.GetVisibleRect().Size * .5f }; window.AddChild(_autoplay);
                     break;
                 case 6:
                     Check(_autoplay!.IsPlaying(), "Spatial autoplay begins on the first fixed step.");
