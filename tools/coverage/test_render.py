@@ -364,7 +364,16 @@ def main():
                          ("StaticBody2D", "StaticBody"), ("RigidBody2D", "RigidBody")):
         assert f"../../classes/{target}.md" in class_rows[name]
         assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D"} else " | Partial | ") in class_rows[name]
-    assert "cryptography utility contract" in class_rows["AESContext"]
+    crypto_rows = 0
+    for name in ("Crypto", "HashingContext", "HMACContext", "AESContext"):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
+                if row.startswith("| [`")]
+        assert rows and all(" | Implemented | " in row for row in rows), name
+        assert "CryptoTests" in rows[0] and "BCL" in rows[0], name
+        crypto_rows += len(rows)
+    assert crypto_rows == 33
+    assert "Electron2D.HashType" in pages[CLASS_PAGES / "HashingContext.md"]
+    assert "Electron2D.AESMode" in pages[CLASS_PAGES / "AESContext.md"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     button_rows = 0
     for name in ("BaseButton", "ButtonGroup", "Button", "CheckBox", "CheckButton", "TextureButton", "Shortcut", "InputEventShortcut"):

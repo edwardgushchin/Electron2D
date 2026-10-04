@@ -5,7 +5,7 @@ Last updated: 2026-10-03
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Close 1338 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 950 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [Crypto](classes/Crypto.md), [PacketPeerDTLS](classes/PacketPeerDTLS.md), [UPNP](classes/UPNP.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
+2. Complete 940 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [PacketPeerDTLS](classes/PacketPeerDTLS.md), [UPNP](classes/UPNP.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -104,7 +104,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
 | ADR 0094: The typed MultiplayerPeer contract now executes. Requires an ENet-capable native backend/packaging and typed ENet host/packet-peer/reliability ownership; plain UDP and WS do not supply ENet protocol. | 3 |
-| Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |

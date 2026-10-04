@@ -186,3 +186,7 @@ Remarks: This method can run concurrently in multiple callers and can race with 
 ## Verification and limits
 
 [TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) exercises the TLS/security resource contract, native Linux OpenSSL 3 streams, independent .NET SslStream interoperability and warmed managed-allocation boundaries. Other-platform TLS backend/packaging, system-wide trust variation, native OpenSSL allocation totals, routed throughput and owner acceptance remain separate. See [coverage](../coverage/classes/CryptoKey.md).
+
+## Cryptographic operation integration
+
+[Crypto](Crypto.md) generates private RSA resources and imports independent RSA/EC snapshots under this resource lock for signing/verification/encryption/certificate generation. Snapshot ownership ends after each operation; it can coexist with TLS retention without permitting resource replacement/disposal. CryptoTests verifies generated key save/load, independent asymmetric wires and signing while an active TLS session retains the key. See [the component](../components/crypto.md).

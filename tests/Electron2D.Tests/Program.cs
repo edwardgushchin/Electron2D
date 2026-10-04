@@ -11,6 +11,8 @@ using EngineTimer = Electron2D.Timer;
 
 NativeLibraryTests.Run();
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CRYPTO") == "1") { CryptoTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MULTIPLAYER") == "1") { MultiplayerTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WEBSOCKET") == "1") { WebSocketTests.Run(); return; }
@@ -491,6 +493,7 @@ TLSTests.Run();
 HTTPTests.Run();
 WebSocketTests.Run();
 MultiplayerTests.Run();
+CryptoTests.Run();
 AnimationStateMachineTests.Run();
 AudioGeneratorTests.Run();
 AudioInputTests.Run();

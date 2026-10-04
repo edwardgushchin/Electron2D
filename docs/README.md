@@ -55,6 +55,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Domain: [Networking](domains/networking.md)
 - Component: [Native streams and packets](components/networking.md)
 - Component: [TLS and security resources](components/tls.md)
+- Component: [Cryptographic operations](components/crypto.md)
 - Component: [HTTP transfers and stream compression](components/http.md)
 - Component: [WebSocket messages](components/websocket.md)
 - Component: [Multiplayer transports](components/multiplayer.md)

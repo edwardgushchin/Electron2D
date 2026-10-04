@@ -36,7 +36,7 @@ public class CryptoKey : Resource
         catch (Exception error) when (error is CryptographicException or ArgumentException) { using var ec = ECDsa.Create(); ec.ImportFromPem(key); encoded = publicOnly ? ec.ExportSubjectPublicKeyInfo() : ec.ExportPkcs8PrivateKey(); elliptic = true; }
         Commit(encoded, publicOnly, elliptic);
     }
-    private void LoadDER(ReadOnlySpan<byte> data, bool publicOnly)
+    internal void LoadDER(ReadOnlySpan<byte> data, bool publicOnly)
     {
         byte[] encoded; bool elliptic;
         try
@@ -79,6 +79,21 @@ public class CryptoKey : Resource
                 return PemEncoding.WriteString("PUBLIC KEY", encoded);
             }
             return PemEncoding.WriteString(publicOnly ? "PUBLIC KEY" : "PRIVATE KEY", _encoded);
+        }
+    }
+    internal AsymmetricAlgorithm CreateAlgorithm(bool privateRequired = false)
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed(); if (_encoded.Length == 0 || privateRequired && _publicOnly) throw new CryptographicException("The operation requires a loaded key with the correct public/private role.");
+            AsymmetricAlgorithm algorithm = _elliptic ? ECDsa.Create() : RSA.Create();
+            try
+            {
+                if (algorithm is RSA rsa) { if (_publicOnly) rsa.ImportSubjectPublicKeyInfo(_encoded, out _); else rsa.ImportPkcs8PrivateKey(_encoded, out _); }
+                else { var ec = (ECDsa)algorithm; if (_publicOnly) ec.ImportSubjectPublicKeyInfo(_encoded, out _); else ec.ImportPkcs8PrivateKey(_encoded, out _); }
+                return algorithm;
+            }
+            catch { algorithm.Dispose(); throw; }
         }
     }
     internal byte[] RetainPrivateKey() { lock (_gate) { ThrowIfDisposed(); if (_encoded.Length == 0 || _publicOnly) throw new CryptographicException("TLS requires a private key."); var copy = (byte[])_encoded.Clone(); _uses++; return copy; } }

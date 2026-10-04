@@ -9,7 +9,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [@GDScript](classes/@GDScript.md) | — | Excluded | 56 |
 | [@GlobalScope](classes/@GlobalScope.md) | — | Partial | 705 |
 | [AABB](classes/AABB.md) | — | Excluded | 34 |
-| [AESContext](classes/AESContext.md) | RefCounted | Blocked | 10 |
+| [AESContext](classes/AESContext.md) | RefCounted | Implemented | 10 |
 | [AStar2D](classes/AStar2D.md) | RefCounted | Implemented | 27 |
 | [AStar3D](classes/AStar3D.md) | RefCounted | Excluded | 27 |
 | [AStarGrid2D](classes/AStarGrid2D.md) | RefCounted | Implemented | 43 |
@@ -204,7 +204,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md) | Shape2D | Implemented | 2 |
 | [ConvexPolygonShape3D](classes/ConvexPolygonShape3D.md) | Shape3D | Excluded | 1 |
 | [CopyTransformModifier3D](classes/CopyTransformModifier3D.md) | BoneConstraint3D | Excluded | 39 |
-| [Crypto](classes/Crypto.md) | RefCounted | Unimplemented | 9 |
+| [Crypto](classes/Crypto.md) | RefCounted | Implemented | 9 |
 | [CryptoKey](classes/CryptoKey.md) | Resource | Implemented | 5 |
 | [Cubemap](classes/Cubemap.md) | ImageTextureLayered | Excluded | 1 |
 | [CubemapArray](classes/CubemapArray.md) | ImageTextureLayered | Excluded | 1 |
@@ -360,14 +360,14 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Partial | 2 |
 | [HBoxContainer](classes/HBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Implemented | 0 |
-| [HMACContext](classes/HMACContext.md) | RefCounted | Blocked | 3 |
+| [HMACContext](classes/HMACContext.md) | RefCounted | Implemented | 3 |
 | [HScrollBar](classes/HScrollBar.md) | ScrollBar | Implemented | 2 |
 | [HSeparator](classes/HSeparator.md) | Separator | Blocked | 0 |
 | [HSlider](classes/HSlider.md) | Slider | Implemented | 0 |
 | [HSplitContainer](classes/HSplitContainer.md) | SplitContainer | Implemented | 0 |
 | [HTTPClient](classes/HTTPClient.md) | RefCounted | Implemented | 103 |
 | [HTTPRequest](classes/HTTPRequest.md) | Node | Implemented | 32 |
-| [HashingContext](classes/HashingContext.md) | RefCounted | Blocked | 7 |
+| [HashingContext](classes/HashingContext.md) | RefCounted | Implemented | 7 |
 | [HeightMapShape3D](classes/HeightMapShape3D.md) | Shape3D | Excluded | 6 |
 | [HingeJoint3D](classes/HingeJoint3D.md) | Joint3D | Excluded | 28 |
 | [IKModifier3D](classes/IKModifier3D.md) | SkeletonModifier3D | Excluded | 5 |

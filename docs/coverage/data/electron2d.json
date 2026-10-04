@@ -1,5 +1,38 @@
 [
   {
+    "id": "T:Electron2D.AESContext",
+    "kind": "type",
+    "declaringType": "Electron2D.AESContext",
+    "name": "AESContext",
+    "signature": "public class Electron2D.AESContext",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AESMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AESMode",
+    "name": "AESMode",
+    "signature": "public enum Electron2D.AESMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AStar",
     "kind": "type",
     "declaringType": "Electron2D.AStar",
@@ -2846,6 +2879,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Crypto",
+    "kind": "type",
+    "declaringType": "Electron2D.Crypto",
+    "name": "Crypto",
+    "signature": "public class Electron2D.Crypto",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CryptoKey",
     "kind": "type",
     "declaringType": "Electron2D.CryptoKey",
@@ -3708,6 +3756,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.HMACContext",
+    "kind": "type",
+    "declaringType": "Electron2D.HMACContext",
+    "name": "HMACContext",
+    "signature": "public class Electron2D.HMACContext",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.HScrollBar",
     "kind": "type",
     "declaringType": "Electron2D.HScrollBar",
@@ -3849,6 +3912,39 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HashType",
+    "kind": "type",
+    "declaringType": "Electron2D.HashType",
+    "name": "HashType",
+    "signature": "public enum Electron2D.HashType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HashingContext",
+    "kind": "type",
+    "declaringType": "Electron2D.HashingContext",
+    "name": "HashingContext",
+    "signature": "public class Electron2D.HashingContext",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -9527,6 +9623,19 @@
     "value": "32"
   },
   {
+    "id": "constructor:Electron2D.AESContext..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AESContext",
+    "name": ".ctor",
+    "signature": "public AESContext()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AStar..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AStar",
@@ -11363,6 +11472,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Crypto..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Crypto",
+    "name": ".ctor",
+    "signature": "public Crypto()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CryptoKey..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CryptoKey",
@@ -11661,6 +11783,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.HMACContext..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HMACContext",
+    "name": ".ctor",
+    "signature": "public HMACContext()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.HScrollBar..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.HScrollBar",
@@ -11718,6 +11853,19 @@
     "declaringType": "Electron2D.HTTPRequest",
     "name": ".ctor",
     "signature": "public HTTPRequest()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.HashingContext..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HashingContext",
+    "name": ".ctor",
+    "signature": "public HashingContext()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -14362,6 +14510,71 @@
     "parameters": [],
     "returnType": null,
     "value": null
+  },
+  {
+    "id": "enumValue:Electron2D.AESMode.CBCDecrypt()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AESMode",
+    "name": "CBCDecrypt",
+    "signature": "public const Electron2D.AESMode CBCDecrypt = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AESMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AESMode.CBCEncrypt()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AESMode",
+    "name": "CBCEncrypt",
+    "signature": "public const Electron2D.AESMode CBCEncrypt = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AESMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AESMode.ECBDecrypt()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AESMode",
+    "name": "ECBDecrypt",
+    "signature": "public const Electron2D.AESMode ECBDecrypt = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AESMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AESMode.ECBEncrypt()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AESMode",
+    "name": "ECBEncrypt",
+    "signature": "public const Electron2D.AESMode ECBEncrypt = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AESMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AESMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AESMode",
+    "name": "Max",
+    "signature": "public const Electron2D.AESMode Max = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AESMode",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.AStarGrid.CellShape.IsometricDown()",
@@ -20017,6 +20230,45 @@
     "parameters": [],
     "returnType": "Electron2D.HTTPStatus",
     "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.HashType.MD5()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HashType",
+    "name": "MD5",
+    "signature": "public const Electron2D.HashType MD5 = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HashType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.HashType.SHA1()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HashType",
+    "name": "SHA1",
+    "signature": "public const Electron2D.HashType SHA1 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HashType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.HashType.SHA256()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HashType",
+    "name": "SHA256",
+    "signature": "public const Electron2D.HashType SHA256 = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HashType",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.HorizontalAlignment.Center()",
@@ -32542,6 +32794,155 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AESContext.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AESContext",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AESContext.Finish()",
+    "kind": "method",
+    "declaringType": "Electron2D.AESContext",
+    "name": "Finish",
+    "signature": "public System.Void Finish()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AESContext.GetIVState()",
+    "kind": "method",
+    "declaringType": "Electron2D.AESContext",
+    "name": "GetIVState",
+    "signature": "public System.Byte[] GetIVState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AESContext.GetIVState(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AESContext",
+    "name": "GetIVState",
+    "signature": "public System.Int32 GetIVState(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AESContext.Start(Electron2D.AESMode,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AESContext",
+    "name": "Start",
+    "signature": "public System.Void Start(Electron2D.AESMode mode, System.ReadOnlySpan\u003CSystem.Byte\u003E key, System.ReadOnlySpan\u003CSystem.Byte\u003E iv = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.AESMode",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "iv",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AESContext.Update(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AESContext",
+    "name": "Update",
+    "signature": "public System.Byte[] Update(System.ReadOnlySpan\u003CSystem.Byte\u003E source)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AESContext.Update(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AESContext",
+    "name": "Update",
+    "signature": "public System.Int32 Update(System.ReadOnlySpan\u003CSystem.Byte\u003E source, System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AESContext.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.AESContext",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -58086,6 +58487,274 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Crypto.ConstantTimeCompare(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "ConstantTimeCompare",
+    "signature": "public System.Boolean ConstantTimeCompare(System.ReadOnlySpan\u003CSystem.Byte\u003E trusted, System.ReadOnlySpan\u003CSystem.Byte\u003E received)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "trusted",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "received",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.Decrypt(Electron2D.CryptoKey,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "Decrypt",
+    "signature": "public System.Byte[] Decrypt(Electron2D.CryptoKey key, System.ReadOnlySpan\u003CSystem.Byte\u003E ciphertext)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "Electron2D.CryptoKey",
+        "default": null
+      },
+      {
+        "name": "ciphertext",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.Encrypt(Electron2D.CryptoKey,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "Encrypt",
+    "signature": "public System.Byte[] Encrypt(Electron2D.CryptoKey key, System.ReadOnlySpan\u003CSystem.Byte\u003E plaintext)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "Electron2D.CryptoKey",
+        "default": null
+      },
+      {
+        "name": "plaintext",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.GenerateRSA(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "GenerateRSA",
+    "signature": "public Electron2D.CryptoKey GenerateRSA(System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CryptoKey",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.GenerateRandomBytes(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "GenerateRandomBytes",
+    "signature": "public System.Byte[] GenerateRandomBytes(System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.GenerateRandomBytes(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "GenerateRandomBytes",
+    "signature": "public System.Void GenerateRandomBytes(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.GenerateSelfSignedCertificate(Electron2D.CryptoKey,System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "GenerateSelfSignedCertificate",
+    "signature": "public Electron2D.X509Certificate GenerateSelfSignedCertificate(Electron2D.CryptoKey key, System.String issuerName = \u0022CN=myserver,O=myorganisation,C=IT\u0022, System.String notBefore = \u002220140101000000\u0022, System.String notAfter = \u002220340101000000\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "Electron2D.CryptoKey",
+        "default": null
+      },
+      {
+        "name": "issuerName",
+        "type": "System.String",
+        "default": "\u0022CN=myserver,O=myorganisation,C=IT\u0022"
+      },
+      {
+        "name": "notBefore",
+        "type": "System.String",
+        "default": "\u002220140101000000\u0022"
+      },
+      {
+        "name": "notAfter",
+        "type": "System.String",
+        "default": "\u002220340101000000\u0022"
+      }
+    ],
+    "returnType": "Electron2D.X509Certificate",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.HMACDigest(Electron2D.HashType,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "HMACDigest",
+    "signature": "public System.Byte[] HMACDigest(Electron2D.HashType hashType, System.ReadOnlySpan\u003CSystem.Byte\u003E key, System.ReadOnlySpan\u003CSystem.Byte\u003E message)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "hashType",
+        "type": "Electron2D.HashType",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "message",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.Sign(Electron2D.HashType,System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.CryptoKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "Sign",
+    "signature": "public System.Byte[] Sign(Electron2D.HashType hashType, System.ReadOnlySpan\u003CSystem.Byte\u003E hash, Electron2D.CryptoKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "hashType",
+        "type": "Electron2D.HashType",
+        "default": null
+      },
+      {
+        "name": "hash",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.CryptoKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Crypto.Verify(Electron2D.HashType,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.CryptoKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.Crypto",
+    "name": "Verify",
+    "signature": "public System.Boolean Verify(Electron2D.HashType hashType, System.ReadOnlySpan\u003CSystem.Byte\u003E hash, System.ReadOnlySpan\u003CSystem.Byte\u003E signature, Electron2D.CryptoKey key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "hashType",
+        "type": "Electron2D.HashType",
+        "default": null
+      },
+      {
+        "name": "hash",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "signature",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.CryptoKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CryptoKey.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.CryptoKey",
@@ -66172,6 +66841,113 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.HMACContext.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.HMACContext",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HMACContext.Finish()",
+    "kind": "method",
+    "declaringType": "Electron2D.HMACContext",
+    "name": "Finish",
+    "signature": "public System.Byte[] Finish()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HMACContext.Finish(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HMACContext",
+    "name": "Finish",
+    "signature": "public System.Int32 Finish(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HMACContext.Start(Electron2D.HashType,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HMACContext",
+    "name": "Start",
+    "signature": "public System.Void Start(Electron2D.HashType hashType, System.ReadOnlySpan\u003CSystem.Byte\u003E key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "hashType",
+        "type": "Electron2D.HashType",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HMACContext.Update(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HMACContext",
+    "name": "Update",
+    "signature": "public System.Void Update(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HMACContext.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.HMACContext",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.HScrollBar.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.HScrollBar",
@@ -66835,6 +67611,108 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HashingContext.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.HashingContext",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HashingContext.Finish()",
+    "kind": "method",
+    "declaringType": "Electron2D.HashingContext",
+    "name": "Finish",
+    "signature": "public System.Byte[] Finish()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HashingContext.Finish(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HashingContext",
+    "name": "Finish",
+    "signature": "public System.Int32 Finish(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HashingContext.Start(Electron2D.HashType)",
+    "kind": "method",
+    "declaringType": "Electron2D.HashingContext",
+    "name": "Start",
+    "signature": "public System.Void Start(Electron2D.HashType type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "Electron2D.HashType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HashingContext.Update(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HashingContext",
+    "name": "Update",
+    "signature": "public System.Void Update(System.ReadOnlySpan\u003CSystem.Byte\u003E chunk)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "chunk",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HashingContext.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.HashingContext",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
