@@ -170,11 +170,18 @@ public abstract partial class Viewport
 
     internal override void OnTreeMembershipChanged(bool entering)
     {
-        base.OnTreeMembershipChanged(entering);
-        if (!entering) return;
+        if (!entering)
+        {
+            List<Exception>? errors = null;
+            try { Tree?.ReleaseGUIViewport(this); } catch (Exception error) { CollectException(ref errors, error); }
+            try { base.OnTreeMembershipChanged(false); } catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Viewport detachment callbacks failed.", errors); return;
+        }
+        Tree!.RegisterGUIViewport(this);
+        base.OnTreeMembershipChanged(true);
         UpdateTextureSampling(filter: true); UpdateTextureSampling(filter: false);
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(TargetProperties).Concat(ViewportSamplingProperties).Concat(CanvasRenderingProperties).Concat(CanvasTransformProperties).Concat(ViewportDragProperties).Concat(ViewportAudioProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GUIProperties).Concat(TargetProperties).Concat(ViewportSamplingProperties).Concat(CanvasRenderingProperties).Concat(CanvasTransformProperties).Concat(ViewportDragProperties).Concat(ViewportAudioProperties);
 }

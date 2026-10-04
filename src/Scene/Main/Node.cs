@@ -52,6 +52,11 @@ public partial class Node : ElectronObject
     /// <summary>Identifies the notification sent after descendants exit and before this node leaves its tree.</summary>
     public const int NotificationExitTree = 11;
 
+    /// <summary>Identifies pointer entry into an embedded viewport.</summary>
+    public const int NotificationVPMouseEnter = 1010;
+    /// <summary>Identifies pointer exit from an embedded viewport.</summary>
+    public const int NotificationVPMouseExit = 1011;
+
     /// <summary>Identifies the child-first notification sent when a node becomes ready.</summary>
     public const int NotificationReady = 13;
 

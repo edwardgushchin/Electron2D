@@ -16,12 +16,12 @@ public abstract partial class Viewport : Node
     /// <remarks>Subscribers run synchronously on the scene owner thread. Desktop movement does not notify.</remarks>
     public event Action? SizeChanged;
 
-    /// <summary>Occurs when this root viewport gives keyboard focus to a control.</summary>
+    /// <summary>Occurs when this viewport gives keyboard focus to a control.</summary>
     /// <remarks>Delivered after the previous control loses focus and before the new control's focus notification.
     /// Releasing focus does not raise this event.</remarks>
     public event Action<Control>? GUIFocusChanged;
 
-    /// <summary>Returns the control with keyboard focus in this root viewport, or null.</summary>
+    /// <summary>Returns the control with keyboard focus in this viewport, or null.</summary>
     /// <returns>The borrowed focused control, or null when no control is focused or the viewport is detached.</returns>
     /// <exception cref="InvalidOperationException">The attached scene is accessed off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
@@ -31,7 +31,7 @@ public abstract partial class Viewport : Node
         return Tree?.GetGUIFocusOwner(this);
     }
 
-    /// <summary>Releases keyboard focus from this root viewport's control, if any.</summary>
+    /// <summary>Releases keyboard focus from this viewport's control, if any.</summary>
     /// <exception cref="InvalidOperationException">The attached scene is accessed off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public void ReleaseGUIFocus()
@@ -44,13 +44,13 @@ public abstract partial class Viewport : Node
     /// <remarks>Stops later scene input callbacks without changing the global polling state.</remarks>
     /// <exception cref="InvalidOperationException">The viewport is detached, no input is being dispatched, or the caller is not the owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport or scene tree is disposed.</exception>
-    public void SetInputAsHandled() => GetInputTree().SetInputAsHandled();
+    public void SetInputAsHandled() => GetInputTree().SetViewportInputAsHandled(this);
 
     /// <summary>Reports whether the current scene input event has been handled.</summary>
     /// <returns>The active event's handled state; the state resets for each event.</returns>
     /// <exception cref="InvalidOperationException">The viewport is detached, no input is being dispatched, or the caller is not the owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport or scene tree is disposed.</exception>
-    public bool IsInputHandled() => GetInputTree().IsInputHandled();
+    public bool IsInputHandled() => GetInputTree().IsViewportInputHandled(this);
 
     /// <summary>Delivers a borrowed input event directly to this viewport's scene.</summary>
     /// <param name="inputEvent">A live event, retained and disposed by the caller.</param>

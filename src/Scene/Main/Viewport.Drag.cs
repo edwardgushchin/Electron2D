@@ -28,7 +28,7 @@ public abstract partial class Viewport
         return Tree?.GetGUIDragData(this);
     }
 
-    /// <summary>Reports whether this root viewport is preparing or carrying a GUI drag.</summary>
+    /// <summary>Reports whether this connected viewport section is preparing or carrying a GUI drag.</summary>
     /// <returns>True during an active drag or while its source callback prepares one.</returns>
     public bool IsGUIDragging()
     {
@@ -45,21 +45,22 @@ public abstract partial class Viewport
     }
 
     /// <summary>Gets a description of the active drag for a host accessibility layer.</summary>
-    /// <returns>The explicit description, or a localized generic drag label when empty.</returns>
+    /// <returns>The connected section root's description, or a localized generic drag label when empty.</returns>
     public string GetGUIDragDescription()
     {
         ThrowIfDisposed(); Tree?.EnsureOwnerThread();
-        return _guiDragDescription.Length == 0 ? Tr("Drag-and-drop data") : _guiDragDescription;
+        var description = (Tree?.GUISectionViewport(this) ?? this)._guiDragDescription;
+        return description.Length == 0 ? Tr("Drag-and-drop data") : description;
     }
 
     /// <summary>Sets an active drag's host-facing description.</summary>
-    /// <param name="description">The nonnull description to retain until drag completion.</param>
+    /// <param name="description">The nonnull description stored on this viewport; connected getters read the section root.</param>
     public void SetGUIDragDescription(string description)
     {
         EnsureMutable(); ArgumentNullException.ThrowIfNull(description); _guiDragDescription = description;
     }
 
-    /// <summary>Cancels this root viewport's active drag, destroying its preview.</summary>
+    /// <summary>Cancels this connected viewport section's active drag, destroying its preview.</summary>
     public void CancelGUIDrag()
     {
         ThrowIfDisposed(); Tree?.EnsureOwnerThread();

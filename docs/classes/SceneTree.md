@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-09-30
+Last updated: 2026-10-04
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -845,3 +845,5 @@ Shared [scene/server joint resources](../components/physics-joints.md) use the e
 
 
 The process-frame path collects pending native bus effect/gain failures before running its usual callbacks. It attempts ordinary frame dispatch even when those failures exist, then reports the combined error. Each failed effect reports once and remains silent until structural recreation; native exceptions never cross the callback boundary. AudioEffectTests and its failed public Engine.Run host verify this integration.
+
+Embedded GUI integration is implemented in [SceneTree.GUIState.cs](../../src/Scene/Main/SceneTree.GUIState.cs) and [ViewportGUIState](ViewportGUIState.md). The tree owns a viewport-state map and restores a prepared value scope after synchronous callbacks. Focus/hover/capture/input snapshots/tooltips stay independent; connected sections borrow shared drag state. Only direct container forwarding nests scene input. Parent snapshots and handled-owner state survive child dispatch and failure. Detachment attempts GUI and base lifetime cleanup even after callback errors.

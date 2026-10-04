@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 ## Scope and owned types
 
@@ -121,3 +121,5 @@ Final self-contained linux-x64 verification: `dotnet publish tests/Electron2D.Te
 ## Reused captured action batches
 
 SceneTree.Defer and deferred group operations enqueue under the existing lifetime/work lock. Two action queues swap roles when a nonempty batch is captured; the owner drains the captured queue outside the lock and recycles its capacity. Work enqueued by a callback or another thread after capture waits for another flush. Later capacity growth and user callbacks can allocate. [BoxContainerTests](../../tests/Electron2D.Tests/BoxContainerTests.cs) verifies next-batch/cross-thread semantics and zero bytes over 64 prepared batch cycles, alongside the existing concurrent disposal and lifetime tests. Queued deletions retain their separate ownership mechanism.
+
+[Embedded viewport containers and GUI](canvas-rendering.md#embedded-viewport-containers-and-gui) now execute native SubViewportContainer composition, stretch/shrink, independent GUI state and connected input/drag routing. Public input reentry remains rejected; native subwindows, multiview, editor/file workflows and other-platform acceptance remain separate.

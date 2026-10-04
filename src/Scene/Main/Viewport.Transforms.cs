@@ -52,22 +52,28 @@ public abstract partial class Viewport
     public Transform GetFinalTransform() => StretchTransform * GlobalCanvasTransform;
 
     /// <summary>Returns the transform from viewport coordinates to its containing window.</summary>
-    /// <returns>GetFinalTransform for the supported native root window.</returns>
-    /// <remarks>The native root's desktop position is not part of this query. A standalone offscreen viewport returns its final transform without a native desktop position; embedded container transforms require their separate integration.</remarks>
+    /// <returns>GetFinalTransform for a root/standalone viewport, or the complete embedded container chain to the containing client area.</returns>
+    /// <remarks>The native root's desktop position is not part of this query. A standalone offscreen viewport returns its final transform without a native desktop position; embedded transforms include container placement and StretchShrink.</remarks>
     /// <exception cref="InvalidOperationException">An attached viewport is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
-    public Transform GetScreenTransform() => GetFinalTransform();
+    public Transform GetScreenTransform()
+    {
+        CheckTransformQuery();
+        return Parent is SubViewportContainer container && container.GetViewport() is { } parent
+            ? parent.GetScreenTransform() * container.GetGlobalTransformWithCanvas() * container.ViewportScale * GetFinalTransform()
+            : GetFinalTransform();
+    }
 
     /// <summary>Returns the current pointer position in viewport coordinates.</summary>
     /// <returns>The native client pointer transformed by the inverse final transform; zero when it is singular.</returns>
-    /// <remarks>Requires a native root Window. Does not alter input polling or use the last event supplied to PushInput.
+    /// <remarks>Requires a containing native Window. Does not alter input polling or use the last event supplied to PushInput.
     /// Fractional client coordinates are retained. CanvasTransform is not removed by this query.</remarks>
-    /// <exception cref="InvalidOperationException">No native root window is active, or the caller is not its owner.</exception>
+    /// <exception cref="InvalidOperationException">No containing native window is active, or the caller is not its owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Vector2 GetMousePosition()
     {
         CheckTransformQuery();
-        if (this is not Window window) throw new InvalidOperationException("Pointer queries require an active native Window.");
+        var window = GetWindow() ?? throw new InvalidOperationException("Pointer queries require an active containing native Window.");
         var position = window.GetClientMousePosition();
         var transform = GetScreenTransform();
         return transform.Determinant() == 0 ? Vector2.Zero : transform.AffineInverse() * position;
@@ -79,7 +85,7 @@ public abstract partial class Viewport
     /// coordinates to integer units. Platform input policy may prevent movement even when the request is supported.</remarks>
     /// <exception cref="ArgumentException">The input or transformed position is nonfinite or outside native integer coordinates.</exception>
     /// <exception cref="NotSupportedException">The active backend does not support pointer warping.</exception>
-    /// <exception cref="InvalidOperationException">No native root window is active, or the caller is not its owner.</exception>
+    /// <exception cref="InvalidOperationException">No containing native window is active, or the caller is not its owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public void WarpMouse(Vector2 position)
     {

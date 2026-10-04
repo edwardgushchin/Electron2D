@@ -37,14 +37,6 @@ public sealed partial class SceneTree : MainLoop
     private readonly int _ownerThreadId = Environment.CurrentManagedThreadId;
     private readonly HashSet<GroupOperationKey> _uniqueGroupOperations = [];
     private readonly List<Node> _scheduleTraversal = [];
-    private readonly List<Node> _inputTraversal = [];
-    private Control? _guiFocus;
-    private Control? _guiMouseCapture;
-    private uint _guiMouseCaptureMask;
-    private readonly Dictionary<int, WeakReference<Control>> _guiTouchCapture = [];
-    private readonly Stack<WeakReference<Control>> _guiTouchSlots = [];
-    private readonly List<int> _guiTouchReleaseKeys = [];
-    private bool _guiFocusHidden;
     private readonly List<ScheduledNode> _scheduledNodes = [];
     private readonly List<SceneTreeTimer> _timerSnapshot = [];
     private readonly List<SceneTreeTimer> _timers = [];
@@ -60,7 +52,11 @@ public sealed partial class SceneTree : MainLoop
     private bool _constructionComplete;
     private bool _isChangingPause;
     private bool _isDispatchingInput;
-    private bool _inputHandled;
+    private bool _inputHandled
+    {
+        get => _inputViewport is { } viewport && (viewport.IsDisposed || !ReferenceEquals(viewport.Tree, this)) || InputGUI(_inputViewport).InputHandled;
+        set { if (_inputViewport is null || !_inputViewport.IsDisposed && ReferenceEquals(_inputViewport.Tree, this)) InputGUI(_inputViewport).InputHandled = value; }
+    }
     private bool _paused;
     private Node? _editedSceneRoot;
     private bool _debugPathsHint;
@@ -110,6 +106,8 @@ public sealed partial class SceneTree : MainLoop
             throw new ArgumentException("A SceneTree root cannot be queued for deletion.", nameof(root));
 
         Root = root;
+        _gui.Section = _gui;
+        if (root is Viewport guiViewport) _gui = GUIState(guiViewport);
         var readied = new List<Node>();
         _activationReadied = readied;
         _activeExecution = 1;
@@ -565,42 +563,46 @@ public sealed partial class SceneTree : MainLoop
     internal bool HasGUIFocus(Control control, bool ignoreHiddenFocus)
     {
         EnsureOwnerThread();
-        return ReferenceEquals(_guiFocus, control) && (!ignoreHiddenFocus || !_guiFocusHidden);
+        using var scope = SelectGUI(control.GetViewport());
+        return ReferenceEquals(_gui.GuiFocus, control) && (!ignoreHiddenFocus || !_gui.GuiFocusHidden);
     }
 
     internal Control? GetGUIFocusOwner(Viewport viewport)
     {
         EnsureOwnerThread();
-        return ReferenceEquals(Root, viewport) ? _guiFocus : null;
+        using var scope = SelectGUI(viewport); return _gui.GuiFocus;
     }
 
     internal void ReleaseGUIFocus(Viewport viewport)
     {
         EnsureOwnerThread();
-        if (ReferenceEquals(Root, viewport) && _guiFocus is { } focused)
+        using var scope = SelectGUI(viewport);
+        if (_gui.GuiFocus is { } focused)
             ReleaseGUIFocus(focused);
     }
 
     internal void SetGUIFocus(Control control, bool hideFocus)
     {
         EnsureOwnerThread();
-        if (Root is not Viewport viewport || !ReferenceEquals(control.GetViewport(), viewport) ||
-            !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || !control.CanReceiveGUIFocus)
+        using var scope = SelectGUI(control.GetViewport());
+        if (control.GetViewport() is not { } viewport || !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || !control.CanReceiveGUIFocus)
             return;
-        if (ReferenceEquals(_guiFocus, control))
+        if (ReferenceEquals(_gui.GuiFocus, control))
         {
-            if (_guiFocusHidden != hideFocus) { _guiFocusHidden = hideFocus; control.QueueRedraw(); }
+            if (_gui.GuiFocusHidden != hideFocus) { _gui.GuiFocusHidden = hideFocus; control.QueueRedraw(); }
             return;
         }
-        var previous = _guiFocus;
-        _guiFocus = control;
-        _guiFocusHidden = hideFocus;
+        var previous = _gui.GuiFocus;
+        _gui.GuiFocus = control;
+        _gui.GuiFocusHidden = hideFocus;
         List<Exception>? errors = null;
+        if (viewport.Parent is SubViewportContainer container)
+            try { container.GrabFocus(hideFocus); } catch (Exception error) { CollectException(ref errors, error); }
         try { previous?.NotifyFocusExited(); } catch (Exception error) { CollectException(ref errors, error); }
-        if (ReferenceEquals(_guiFocus, control))
+        if (ReferenceEquals(_gui.GuiFocus, control))
         {
             try { viewport.NotifyGUIFocusChanged(control); } catch (Exception error) { CollectException(ref errors, error); }
-            if (ReferenceEquals(_guiFocus, control))
+            if (ReferenceEquals(_gui.GuiFocus, control))
                 try { control.NotifyFocusEntered(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         ThrowCollected("GUI focus callbacks failed.", errors);
@@ -609,19 +611,15 @@ public sealed partial class SceneTree : MainLoop
     internal void ReleaseGUIFocus(Control control)
     {
         EnsureOwnerThread();
-        if (ReferenceEquals(_guiMouseCapture, control)) { _guiMouseCapture = null; _guiMouseCaptureMask = 0; }
-        if (!ReferenceEquals(_guiFocus, control)) return;
-        _guiFocus = null;
-        _guiFocusHidden = false;
+        using var scope = SelectGUI(control.GetViewport());
+        if (ReferenceEquals(_gui.GuiMouseCapture, control)) { _gui.GuiMouseCapture = null; _gui.GuiMouseCaptureMask = 0; }
+        if (!ReferenceEquals(_gui.GuiFocus, control)) return;
+        _gui.GuiFocus = null;
+        _gui.GuiFocusHidden = false;
         control.NotifyFocusExited();
     }
 
-    internal void RefreshGUIFocus()
-    {
-        EnsureOwnerThread();
-        if (_guiFocus is { } focused && !focused.CanReceiveGUIFocus)
-            ReleaseGUIFocus(focused);
-    }
+    internal void RefreshGUIFocus() { EnsureOwnerThread(); RefreshAllGUI(hover: false); }
 
     /// <summary>Returns every current node in a group in depth-first pre-order.</summary>
     /// <param name="group">The nonblank, case-sensitive group name.</param>
@@ -862,17 +860,31 @@ public sealed partial class SceneTree : MainLoop
         finally { if (!ReferenceEquals(localized, inputEvent)) localized.Dispose(); }
     }
 
+    internal void DispatchEmbeddedViewportInput(SubViewportContainer container, SubViewport viewport, InputEvent input)
+    {
+        if (!_isDispatchingInput || !ReferenceEquals(container.GetViewport(), _inputViewport) || !ReferenceEquals(viewport.Parent, container) || !ReferenceEquals(viewport.Tree, this))
+            throw new InvalidOperationException("Embedded input forwarding requires its active parent viewport dispatch.");
+        if (viewport.GUIDisableInput) return;
+        var localized = viewport.MakeViewportInputLocal(input);
+        try { DispatchLocalInputEvent(localized, viewport, embedded: true); }
+        finally { if (!ReferenceEquals(localized, input)) localized.Dispose(); }
+    }
     private Viewport? _inputViewport;
-    private void DispatchLocalInputEvent(InputEvent @event, Viewport? inputViewport = null)
+    private void DispatchLocalInputEvent(InputEvent @event, Viewport? inputViewport = null, bool embedded = false)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(@event);
         @event.EnsureUsable();
         EnsureOwnerThread();
         EnsureAcceptingWork();
-        BeginExecution();
+        if (inputViewport?.GUIDisableInput == true) return;
+        var previousViewport = _inputViewport; var previousDispatch = _isDispatchingInput;
+        using var guiScope = SelectGUI(inputViewport);
+        if (!embedded) BeginExecution();
         _isDispatchingInput = true;
-        _inputHandled = false;
+        var inputOwner = InputGUI(inputViewport);
+        _gui.InputHandled = false;
+        if (!embedded) inputOwner.InputHandled = false;
         List<Exception>? errors = null;
 
         try
@@ -881,7 +893,7 @@ public sealed partial class SceneTree : MainLoop
             CaptureInputNodes();
             DispatchInputStage(@event, InputStage.Input, ref errors);
 
-            if (inputViewport is { } hoverViewport && @event is InputEventMouse hoverMouse)
+            if (!embedded && inputViewport is { } hoverViewport && @event is InputEventMouse hoverMouse)
                 UpdateGUIHover(hoverViewport, hoverMouse.Position, ref errors);
 
             if (!_inputHandled && inputViewport is { } viewport)
@@ -899,16 +911,17 @@ public sealed partial class SceneTree : MainLoop
             if (!_inputHandled)
                 DispatchInputStage(@event, InputStage.Unhandled, ref errors);
 
-            if (_guiHoverRefreshPending && _guiHoverKnown && _guiHoverViewport is { } refreshViewport)
-                UpdateGUIHover(refreshViewport, _guiHoverPosition, ref errors);
+            if (_gui.GuiHoverRefreshPending && _gui.GuiHoverKnown && _gui.GuiHoverViewport is { } refreshViewport)
+                UpdateGUIHover(refreshViewport, _gui.GuiHoverPosition, ref errors);
         }
         finally
         {
-            _inputTraversal.Clear();
-            _inputViewport = null;
-            _inputHandled = false;
-            _isDispatchingInput = false;
-            EndExecution();
+            _gui.InputTraversal.Clear();
+            if (!embedded) inputOwner.InputHandled = false;
+            _inputViewport = previousViewport;
+            _gui.InputHandled = false;
+            _isDispatchingInput = previousDispatch;
+            if (!embedded) EndExecution();
         }
 
         ThrowCollected("One or more scene input callbacks failed.", errors);
@@ -1267,7 +1280,7 @@ public sealed partial class SceneTree : MainLoop
 
             if (!physics) FlushTransformNotifications(ref errors);
             ProcessTimers(delta, unscaledDelta, physics, ref errors);
-            if (!physics) ProcessTooltip(unscaledDelta, ref errors);
+            if (!physics) ProcessGUITooltips(unscaledDelta, ref errors);
             ProcessTweens(delta, unscaledDelta, physics, ref errors);
             FlushDeferredCore(ref errors, flushTransforms: true);
             if (captureInterpolation) CapturePhysicsInterpolation(start: false, ref errors);
@@ -1378,7 +1391,7 @@ public sealed partial class SceneTree : MainLoop
 
     private void CaptureInputNodes()
     {
-        _inputTraversal.Clear();
+        _gui.InputTraversal.Clear();
         _scheduleTraversal.Clear();
         _scheduleTraversal.Add(Root);
 
@@ -1387,7 +1400,7 @@ public sealed partial class SceneTree : MainLoop
             var last = _scheduleTraversal.Count - 1;
             var node = _scheduleTraversal[last];
             _scheduleTraversal.RemoveAt(last);
-            _inputTraversal.Add(node);
+            _gui.InputTraversal.Add(node);
 
             var children = node.AllChildren;
             for (var index = children.Count - 1; index >= 0; index--)
@@ -1399,9 +1412,9 @@ public sealed partial class SceneTree : MainLoop
 
     private void DispatchInputStage(InputEvent @event, InputStage stage, ref List<Exception>? errors)
     {
-        for (var index = _inputTraversal.Count - 1; index >= 0 && !_inputHandled; index--)
+        for (var index = _gui.InputTraversal.Count - 1; index >= 0 && !_inputHandled; index--)
         {
-            var node = _inputTraversal[index];
+            var node = _gui.InputTraversal[index];
             if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess() || _inputViewport is not null && !ReferenceEquals(node.GetViewport(), _inputViewport))
                 continue;
 
@@ -1446,8 +1459,8 @@ public sealed partial class SceneTree : MainLoop
     {
         if (inputEvent is InputEventMouse mouse)
         {
-            _guiDragPointer = mouse.Position;
-            if (_guiDragPayload is not null && mouse is InputEventMouseButton dragButton)
+            _gui.Section.GuiDragPointer = PointInViewport(viewport, _gui.Section.Viewport ?? viewport, mouse.Position);
+            if (_gui.Section.GuiDragPayload is not null && ReferenceEquals(_gui.Section.DragViewport, viewport) && mouse is InputEventMouseButton dragButton)
             {
                 if (dragButton.ButtonIndex == MouseButton.Left ||
                     dragButton.ButtonIndex == MouseButton.Right && dragButton.Pressed)
@@ -1457,31 +1470,31 @@ public sealed partial class SceneTree : MainLoop
                     return;
                 }
             }
-            if (_guiDragPayload is not null && mouse is InputEventMouseMotion)
+            if (_gui.Section.GuiDragPayload is not null && mouse is InputEventMouseMotion)
                 UpdateGUIDrag(viewport, mouse.Position, ref errors);
-            else if (_guiDragPayload is null && mouse is InputEventMouseMotion motion && !_guiDragAttempted &&
-                _guiMouseCapture is { } source && (_guiMouseCaptureMask & 1) != 0 &&
+            else if (_gui.Section.GuiDragPayload is null && mouse is InputEventMouseMotion motion && !_gui.GuiDragAttempted &&
+                _gui.GuiMouseCapture is { } source && (_gui.GuiMouseCaptureMask & 1) != 0 &&
                 (motion.ButtonMask & MouseButtonMask.Left) != 0)
             {
                 if (!motion.Relative.IsFinite())
                 {
-                    _guiDragAttempted = true;
+                    _gui.GuiDragAttempted = true;
                     CollectException(ref errors, new ArgumentException("Drag movement must be finite.", nameof(inputEvent)));
                 }
                 else
                 {
-                    _guiDragTravel += motion.Relative;
-                    if (_guiDragTravel.Length() > viewport.GUIDragThreshold)
+                    _gui.GuiDragTravel += motion.Relative;
+                    if (_gui.GuiDragTravel.Length() > viewport.GUIDragThreshold)
                     {
-                        _guiDragAttempted = true;
-                        BeginAutomaticGUIDrag(viewport, source, mouse.Position - _guiDragTravel, ref errors);
-                        if (_guiDragPayload is not null) UpdateGUIDrag(viewport, mouse.Position, ref errors);
+                        _gui.GuiDragAttempted = true;
+                        BeginAutomaticGUIDrag(viewport, source, mouse.Position - _gui.GuiDragTravel, ref errors);
+                        if (_gui.Section.GuiDragPayload is not null) UpdateGUIDrag(viewport, mouse.Position, ref errors);
                     }
                 }
             }
-            var captured = _guiMouseCapture;
+            var captured = _gui.GuiMouseCapture;
             if (captured is not null && (!ReferenceEquals(captured.Tree, this) || !captured.IsVisibleInTree || captured.EffectiveMouseFilter == MouseFilter.Ignore))
-            { captured = _guiMouseCapture = null; _guiMouseCaptureMask = 0; }
+            { captured = _gui.GuiMouseCapture = null; _gui.GuiMouseCaptureMask = 0; }
 
             Control? target;
             var press = mouse is InputEventMouseButton { Pressed: true };
@@ -1496,19 +1509,19 @@ public sealed partial class SceneTree : MainLoop
                     var bit = (int)button.ButtonIndex is > 0 and <= 32 ? 1u << ((int)button.ButtonIndex - 1) : 0;
                     if (button.Pressed)
                     {
-                        target = _guiMouseCaptureMask != 0 && (_guiMouseCaptureMask & bit) == 0
+                        target = _gui.GuiMouseCaptureMask != 0 && (_gui.GuiMouseCaptureMask & bit) == 0
                             ? captured : FindMouseControl(viewport, mouse.Position, ref errors);
                         if (target is null) return;
-                        _guiMouseCapture = target; _guiMouseCaptureMask |= bit;
+                        _gui.GuiMouseCapture = target; _gui.GuiMouseCaptureMask |= bit;
                         if (button.ButtonIndex == MouseButton.Left)
-                        { _guiDragTravel = Vector2.Zero; _guiDragAttempted = false; }
+                        { _gui.GuiDragTravel = Vector2.Zero; _gui.GuiDragAttempted = false; }
                     }
                     else
                     {
-                        target = captured; _guiMouseCaptureMask &= ~bit;
-                        if (_guiMouseCaptureMask == 0) _guiMouseCapture = null;
+                        target = captured; _gui.GuiMouseCaptureMask &= ~bit;
+                        if (_gui.GuiMouseCaptureMask == 0) _gui.GuiMouseCapture = null;
                         if (button.ButtonIndex == MouseButton.Left)
-                        { _guiDragTravel = Vector2.Zero; _guiDragAttempted = false; }
+                        { _gui.GuiDragTravel = Vector2.Zero; _gui.GuiDragAttempted = false; }
                     }
                 }
             }
@@ -1541,10 +1554,10 @@ public sealed partial class SceneTree : MainLoop
             {
                 target = FindMouseControl(viewport, touch.Position, ref errors);
                 if (target is null) return;
-                if (!_guiTouchCapture.TryGetValue(touch.Index, out var slot))
+                if (!_gui.GuiTouchCapture.TryGetValue(touch.Index, out var slot))
                 {
-                    slot = _guiTouchSlots.Count == 0 ? new WeakReference<Control>(target) : _guiTouchSlots.Pop();
-                    _guiTouchCapture.Add(touch.Index, slot);
+                    slot = _gui.GuiTouchSlots.Count == 0 ? new WeakReference<Control>(target) : _gui.GuiTouchSlots.Pop();
+                    _gui.GuiTouchCapture.Add(touch.Index, slot);
                 }
                 slot.SetTarget(target);
             }
@@ -1571,13 +1584,13 @@ public sealed partial class SceneTree : MainLoop
         }
 
         if (inputEvent is not (InputEventKey or InputEventJoypadButton or InputEventJoypadMotion or InputEventAction)) return;
-        if (_guiDragPayload is not null && inputEvent.IsAction("ui_cancel", true))
+        if (_gui.Section.GuiDragPayload is not null && inputEvent.IsAction("ui_cancel", true))
         {
-            CompleteGUIDrag(viewport, _guiDragPointer, attemptDrop: false, ref errors);
+            CompleteGUIDrag(viewport, _gui.Section.GuiDragPointer, attemptDrop: false, ref errors);
             SetInputAsHandled();
             return;
         }
-        var focused = _guiFocus;
+        var focused = _gui.GuiFocus;
         if (focused is not null && (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || !focused.CanReceiveGUIFocus || !ReferenceEquals(focused.GetViewport(), viewport)))
         {
             try { ReleaseGUIFocus(focused); } catch (Exception error) { CollectException(ref errors, error); }
@@ -1643,23 +1656,24 @@ public sealed partial class SceneTree : MainLoop
 
     private Control? GetGUITouchCapture(Viewport viewport, int index)
     {
-        if (!_guiTouchCapture.TryGetValue(index, out var weak)) return null;
+        if (!_gui.GuiTouchCapture.TryGetValue(index, out var weak)) return null;
         if (weak.TryGetTarget(out var control) && !control.IsDisposed && ReferenceEquals(control.Tree, this) &&
             ReferenceEquals(control.GetViewport(), viewport) && control.IsVisibleInTree && control.EffectiveMouseFilter != MouseFilter.Ignore) return control;
         ReleaseGUITouchIndex(index); return null;
     }
     private void ReleaseGUITouchIndex(int index)
     {
-        if (!_guiTouchCapture.Remove(index, out var weak)) return;
-        weak.SetTarget(null!); _guiTouchSlots.Push(weak);
+        if (!_gui.GuiTouchCapture.Remove(index, out var weak)) return;
+        weak.SetTarget(null!); _gui.GuiTouchSlots.Push(weak);
     }
     internal void ReleaseGUITouchFocus(Control control)
     {
-        _guiTouchReleaseKeys.Clear();
-        foreach (var pair in _guiTouchCapture)
-            if (!pair.Value.TryGetTarget(out var target) || ReferenceEquals(target, control)) _guiTouchReleaseKeys.Add(pair.Key);
-        foreach (var index in _guiTouchReleaseKeys) ReleaseGUITouchIndex(index);
-        _guiTouchReleaseKeys.Clear();
+        using var scope = SelectGUI(control.GetViewport());
+        _gui.GuiTouchReleaseKeys.Clear();
+        foreach (var pair in _gui.GuiTouchCapture)
+            if (!pair.Value.TryGetTarget(out var target) || ReferenceEquals(target, control)) _gui.GuiTouchReleaseKeys.Add(pair.Key);
+        foreach (var index in _gui.GuiTouchReleaseKeys) ReleaseGUITouchIndex(index);
+        _gui.GuiTouchReleaseKeys.Clear();
     }
 
     private Control? FindMouseControl(Viewport viewport, Vector2 point, ref List<Exception>? errors)
@@ -1667,9 +1681,9 @@ public sealed partial class SceneTree : MainLoop
         Control? best = null;
         var bestLayer = int.MinValue;
         var bestZ = int.MinValue;
-        for (var index = _inputTraversal.Count - 1; index >= 0; index--)
+        for (var index = _gui.InputTraversal.Count - 1; index >= 0; index--)
         {
-            if (_inputTraversal[index] is not Control control || control.IsDisposed || !ReferenceEquals(control.Tree, this) ||
+            if (_gui.InputTraversal[index] is not Control control || control.IsDisposed || !ReferenceEquals(control.Tree, this) ||
                 !control.IsVisibleInTree || control.EffectiveMouseFilter == MouseFilter.Ignore || !ReferenceEquals(control.GetViewport(), viewport)) continue;
             try
             {

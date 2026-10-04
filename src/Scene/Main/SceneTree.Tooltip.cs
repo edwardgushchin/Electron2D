@@ -2,15 +2,7 @@ namespace Electron2D;
 
 public sealed partial class SceneTree
 {
-    private Control? _tooltipControl, _tooltipOwner;
-    private CanvasLayer? _tooltipLayer;
-    private PanelContainer? _tooltipPanel;
-    private Vector2 _tooltipPosition;
-    private string _shownTooltipText = string.Empty;
-    private double _tooltipRemaining;
-    private bool _tooltipScheduled;
-    private ulong _tooltipGeneration;
-    internal PanelContainer? TooltipPanel => _tooltipPanel;
+    internal PanelContainer? TooltipPanel => _gui.TooltipPanel;
 
     internal bool IsTooltipControl(Control control) => IsTooltipNode(control);
     internal static bool IsTooltipNode(Node node)
@@ -23,9 +15,9 @@ public sealed partial class SceneTree
     internal void CancelTooltip(bool rootDisposing = false)
     {
         EnsureOwnerThread();
-        _tooltipGeneration++; _tooltipScheduled = false; _tooltipControl = null; _tooltipOwner = null;
-        _shownTooltipText = string.Empty;
-        var layer = _tooltipLayer; _tooltipLayer = null; _tooltipPanel = null;
+        _gui.TooltipGeneration++; _gui.TooltipScheduled = false; _gui.TooltipControl = null; _gui.TooltipOwner = null;
+        _gui.ShownTooltipText = string.Empty;
+        var layer = _gui.TooltipLayer; _gui.TooltipLayer = null; _gui.TooltipPanel = null;
         if (layer is not { IsDisposed: false }) return;
         if (!rootDisposing) QueueDelete(layer);
         else if (!Root.IsAncestorOf(layer)) layer.Dispose();
@@ -40,26 +32,26 @@ public sealed partial class SceneTree
         { CancelTooltip(); return; }
         if (input is not InputEventMouse && input.IsActionType() && InputMap.Instance.HasAction("ui_cancel") && input.IsActionPressed("ui_cancel"))
         {
-            var shown = _tooltipPanel is not null; CancelTooltip();
+            var shown = _gui.TooltipPanel is not null; CancelTooltip();
             if (shown) SetInputAsHandled();
             return;
         }
         if (input is not InputEventMouseMotion motion) return;
         if (motion.ButtonMask != MouseButtonMask.None) { CancelTooltip(); return; }
-        var target = _guiHoverTarget;
+        var target = _gui.GuiHoverTarget;
         if (!IsLiveTooltipTarget(target)) { CancelTooltip(); return; }
-        if (_tooltipLayer is not null)
+        if (_gui.TooltipLayer is not null)
         {
             var text = TrimTooltipEdges(FindTooltip(target!, motion.Position, out _, out _));
-            if (text.SequenceEqual(_shownTooltipText.AsSpan())) return;
+            if (text.SequenceEqual(_gui.ShownTooltipText.AsSpan())) return;
             CancelTooltip();
         }
         if (!target!.CanProcess()) return;
-        if (!ReferenceEquals(target, _tooltipControl) || _tooltipPosition.DistanceSquaredTo(motion.Position) > 25)
+        if (!ReferenceEquals(target, _gui.TooltipControl) || _gui.TooltipPosition.DistanceSquaredTo(motion.Position) > 25)
         {
-            _tooltipControl = target; _tooltipPosition = motion.Position;
-            _tooltipRemaining = ProjectSettings.Instance.GetWithOverride(ProjectSettings.TooltipDelaySeconds);
-            _tooltipScheduled = true; _tooltipGeneration++;
+            _gui.TooltipControl = target; _gui.TooltipPosition = motion.Position;
+            _gui.TooltipRemaining = ProjectSettings.Instance.GetWithOverride(ProjectSettings.TooltipDelaySeconds);
+            _gui.TooltipScheduled = true; _gui.TooltipGeneration++;
         }
     }
 
@@ -67,11 +59,11 @@ public sealed partial class SceneTree
     {
         try
         {
-            if (_tooltipControl is not null && !IsLiveTooltipTarget(_tooltipControl)) { CancelTooltip(); return; }
-            if (!_tooltipScheduled) return;
-            _tooltipRemaining -= unscaledDelta;
-            if (_tooltipRemaining >= 0) return;
-            _tooltipScheduled = false;
+            if (_gui.TooltipControl is not null && !IsLiveTooltipTarget(_gui.TooltipControl)) { CancelTooltip(); return; }
+            if (!_gui.TooltipScheduled) return;
+            _gui.TooltipRemaining -= unscaledDelta;
+            if (_gui.TooltipRemaining >= 0) return;
+            _gui.TooltipScheduled = false;
             ShowScheduledTooltip();
         }
         catch (Exception error) { CollectException(ref errors, error); }
@@ -93,18 +85,18 @@ public sealed partial class SceneTree
 
     private void ShowScheduledTooltip()
     {
-        var target = _tooltipControl;
-        if (!IsLiveTooltipTarget(target) || Root is not Viewport viewport) return;
-        var generation = _tooltipGeneration;
-        var rawText = FindTooltip(target!, _guiHoverKnown ? _guiHoverPosition : _tooltipPosition, out var owner, out var localPosition);
+        var target = _gui.TooltipControl;
+        if (!IsLiveTooltipTarget(target) || _gui.Viewport is not { } viewport) return;
+        var generation = _gui.TooltipGeneration;
+        var rawText = FindTooltip(target!, _gui.GuiHoverKnown ? _gui.GuiHoverPosition : _gui.TooltipPosition, out var owner, out var localPosition);
         var trimmed = TrimTooltipEdges(rawText);
         var text = trimmed.Length == rawText.Length ? rawText : trimmed.ToString();
-        if (generation != _tooltipGeneration || !IsLiveTooltipTarget(target)) return;
+        if (generation != _gui.TooltipGeneration || !IsLiveTooltipTarget(target)) return;
         Control? content = owner.CreateTooltipControl(text);
         if (content is not null && (content.IsDisposed || content.Parent is not null || content.Tree is not null ||
             ReferenceEquals(content, owner) || content.IsAncestorOf(owner)))
             throw new InvalidOperationException("A custom tooltip must return a fresh detached control.");
-        if (generation != _tooltipGeneration || !IsLiveTooltipTarget(target)) { content?.Dispose(); return; }
+        if (generation != _gui.TooltipGeneration || !IsLiveTooltipTarget(target)) { content?.Dispose(); return; }
         if (content is { Visible: false }) { content.Dispose(); return; }
         if (content is null && text.Length == 0) return;
 
@@ -130,24 +122,24 @@ public sealed partial class SceneTree
                 FocusBehaviorRecursive = RecursiveBehavior.Disabled
             };
             layer.AddChild(panel); panel.AddChild(content);
-            _tooltipLayer = layer; _tooltipPanel = panel; _tooltipOwner = owner; _shownTooltipText = text;
+            _gui.TooltipLayer = layer; _gui.TooltipPanel = panel; _gui.TooltipOwner = owner; _gui.ShownTooltipText = text;
             owner.AddChild(layer);
-            if (generation != _tooltipGeneration || layer.IsDisposed || !IsLiveTooltipTarget(target))
+            if (generation != _gui.TooltipGeneration || layer.IsDisposed || !IsLiveTooltipTarget(target))
             { if (!layer.IsDisposed) layer.Dispose(); return; }
 
             if (!ReferenceEquals(content.Parent, panel)) throw new InvalidOperationException("Tooltip content left its presenter during entry.");
             var size = panel.GetCombinedMinimumSize().Ceil();
-            if (generation != _tooltipGeneration || layer.IsDisposed || !IsLiveTooltipTarget(target)) return;
+            if (generation != _gui.TooltipGeneration || layer.IsDisposed || !IsLiveTooltipTarget(target)) return;
             panel.Size = size;
-            if (generation != _tooltipGeneration || layer.IsDisposed || !IsLiveTooltipTarget(target)) return;
+            if (generation != _gui.TooltipGeneration || layer.IsDisposed || !IsLiveTooltipTarget(target)) return;
             var bounds = viewport.GetVisibleRect();
             var offset = ProjectSettings.Instance.GetWithOverride(ProjectSettings.TooltipPositionOffset);
-            var position = _tooltipPosition + offset;
+            var position = _gui.TooltipPosition + offset;
             for (var axis = 0; axis < 2; axis++)
             {
                 if (position[axis] + size[axis] > bounds.End[axis])
                 {
-                    position[axis] = _tooltipPosition[axis] - size[axis] - offset[axis];
+                    position[axis] = _gui.TooltipPosition[axis] - size[axis] - offset[axis];
                     if (position[axis] < bounds.Position[axis]) position[axis] = bounds.End[axis] - size[axis];
                 }
                 else if (position[axis] < bounds.Position[axis]) position[axis] = bounds.Position[axis];
@@ -157,7 +149,7 @@ public sealed partial class SceneTree
         }
         catch (Exception error)
         {
-            if (ReferenceEquals(_tooltipLayer, layer)) { _tooltipLayer = null; _tooltipPanel = null; _tooltipOwner = null; }
+            if (ReferenceEquals(_gui.TooltipLayer, layer)) { _gui.TooltipLayer = null; _gui.TooltipPanel = null; _gui.TooltipOwner = null; }
             Exception? cleanupError = null;
             try
             {

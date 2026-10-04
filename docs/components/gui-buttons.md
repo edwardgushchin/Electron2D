@@ -1,6 +1,6 @@
 # GUI buttons and shortcuts
 
-Last updated: 2026-09-27
+Last updated: 2026-10-04
 
 The component turns pointer, touch, action and shortcut input into themed application actions. It owns [BaseButton](../classes/BaseButton.md), [ButtonGroup](../classes/ButtonGroup.md), [Button](../classes/Button.md), [CheckBox](../classes/CheckBox.md), [CheckButton](../classes/CheckButton.md) and [TextureButton](../classes/TextureButton.md). [Shortcut](../classes/Shortcut.md) and [InputEventShortcut](../classes/InputEventShortcut.md) integrate the input-resource and scene-routing boundary. It reuses Control, Theme, Font, StyleBox, Texture and BitMap; it adds no backend or managed dependency.
 
@@ -25,3 +25,5 @@ The focused managed suites cover shortcut identity and alternatives, weak contex
 Warmed local button/group state, routed shortcuts and reusable hover buffers allocate zero managed bytes in their measured checks. Full routed pointer input deliberately retains the existing temporary Resource-copy ownership contract under [ADR 0038](../decisions/input.md#adr-0038): 64 measured cycles allocate 180,736 bytes, exactly equal to independently measuring their three localized event copies per cycle. The test rejects allocations beyond those copies; this is not a zero-allocation claim for complete pointer dispatch. Native allocations, broad-GUI performance, other-platform execution and owner acceptance remain separate gates.
 
 MenuButton and OptionButton require a real PopupMenu; LinkButton URI activation requires the OS URL-opening service. Independent native popup windows, accessibility semantics, drag/drop and scroll gesture ownership remain separate domains. The current root tooltip host does not claim those APIs. [ADR 0083](../decisions/rendering.md#adr-0083) owns themes, [ADR 0046](../decisions/rendering.md#adr-0046) owns text and [ADR 0023](../decisions/scene.md#adr-0023) owns typed scene storage.
+
+Embedded Controls now reuse the same button/focus/tooltip hooks in independent viewport contexts. Connected SubViewportContainer sections forward input and share drag targets/previews; native cursor/keyboard focus pixels are checked by SubViewportContainerTests. Temporary input Resource-copy and native/other-platform limits remain unchanged.

@@ -14,7 +14,7 @@ Last updated: 2026-10-04
 
 Provides a window or offscreen canvas rectangle and scene input boundary.
 
-Root `Window` presentation and single-layer `SubViewport` targets now execute, including logical-size stretch. Embedded viewport containers and non-root GUI contexts retain separate dependencies. Canvas transforms, sampling and pixel-snapping policies are connected to each selected viewport target. Incoming window input is converted to viewport coordinates.
+Root `Window` presentation and single-layer `SubViewport` targets now execute, including logical-size stretch. Embedded viewport containers and independent GUI contexts now execute through SubViewportContainer. Canvas transforms, sampling and pixel-snapping policies are connected to each selected viewport target. Incoming window input is converted to viewport coordinates.
 
 Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Current Camera updates notify attached [Parallax](Parallax.md) nodes of the adjusted screen origin. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a native Window as a child are rejected; SubViewport children execute. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
 
@@ -31,7 +31,7 @@ if (inputEvent.IsActionPressed("confirm"))
 
 This stops later scene input stages. It does not change Input polling state. `PushInput` retains caller ownership and accepts client coordinates by default, or viewport coordinates with `inLocalCoordinates: true`. Positional conversion creates a temporary event owned by dispatch.
 
-The root viewport owns keyboard focus for its controls. `GetGUIFocusOwner()` returns the current borrowed control; `ReleaseGUIFocus()` clears it. A new owner raises `GUIFocusChanged` before that control's focus notification and event. Unhandled Tab and directional actions can move focus to visible controls with `FocusMode.All` or an explicit path.
+Each viewport owns keyboard focus for its controls; embedded focus also focuses its containing container chain. `GetGUIFocusOwner()` returns the current borrowed control; `ReleaseGUIFocus()` clears it. A new owner raises `GUIFocusChanged` before that control's focus notification and event. Unhandled Tab and directional actions can move focus to visible controls with `FocusMode.All` or an explicit path.
 
 ## 2D audio listening
 
@@ -86,7 +86,7 @@ Returns StretchTransform followed by GlobalCanvasTransform. The supported root w
 
 `public Transform GetScreenTransform()`
 
-Returns GetFinalTransform for the native root window. Screen here is the containing window coordinate space: it does not include desktop placement. The same query guards apply. Standalone offscreen viewports return their final transform without an actual desktop presentation; container transforms remain separate.
+Returns GetFinalTransform for the native root window. Screen here is the containing window coordinate space: it does not include desktop placement. The same query guards apply. Standalone offscreen viewports return their final transform without an actual desktop presentation; embedded transforms include the complete container/shrink chain.
 
 ### GetMousePosition
 
@@ -169,7 +169,7 @@ Disabled by default. Enabled repeats, Mirror reflects alternate tiles; ParentNod
 
 Construction samples the active ProjectSettings.AnisotropicFilteringLevel override (normally 2 = Anisotropy4X). Later project changes do not mutate the viewport. Live changes affect the next submission. Only anisotropic CanvasItem filters use this limit; Disabled retains ordinary mip filtering. Supported limits are disabled, 2, 4, 8 and 16 samples. Precision depends on the GPU driver. Arbitrary material parameters retain their existing fixed sampler profile.
 
-All three properties are stored by PackedScene. Undefined/negative/Max enum writes throw ArgumentOutOfRangeException before mutation; scene capture and off-owner writes throw InvalidOperationException; disposed access throws ObjectDisposedException. They neither allocate GPU resources nor open a window until normal rendering consumes the state. Nested/offscreen viewport activation remains unsupported.
+All three properties are stored by PackedScene. Undefined/negative/Max enum writes throw ArgumentOutOfRangeException before mutation; scene capture and off-owner writes throw InvalidOperationException; disposed access throws ObjectDisposedException. They neither allocate GPU resources nor open a window until normal rendering consumes the state. Independent single-layer offscreen viewport activation and embedded containers execute; multiview and native subwindows retain separate prerequisites.
 
 ## Typed GUI drag
 
@@ -177,7 +177,7 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 | --- | --- | --- |
 | `public int GUIDragThreshold { get; set; }` | Project setting, normally 10 | Signed local-pixel travel that an automatic left-held drag must exceed. |
 
-The constructor samples the active `ProjectSettings.DefaultGUIDragThreshold` once. Negative values attempt on the first motion; an equal travel length does not start a drag. The threshold is a stored typed scene property. The root Viewport alone owns the current drag; a nested viewport does not gain drag routing merely by exposing these methods.
+The constructor samples the active `ProjectSettings.DefaultGUIDragThreshold` once. Negative values attempt on the first motion; an equal travel length does not start a drag. The threshold is a stored typed scene property. The connected viewport section owns drag payload/preview/result; threshold travel and capture remain local to the initiating viewport.
 
 ## Methods
 
@@ -187,7 +187,7 @@ The constructor samples the active `ProjectSettings.DefaultGUIDragThreshold` onc
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`protected override void OnNotification(int what)`](#onnotification) | Resets camera presentation history on the inherited interpolation notification. |
 | [`public Camera? GetCamera()`](#getcamera) | Returns the borrowed active camera, or null. |
-| [`public Control? GetGUIFocusOwner()`](#getguifocusowner) | Returns the root viewport's borrowed focused control, or null. |
+| [`public Control? GetGUIFocusOwner()`](#getguifocusowner) | Returns the viewport's borrowed focused control, or null. |
 | [`public DragPayload? GetGUIDragData()`](#getguidragdata) | Returns the active borrowed payload or null. |
 | [`public string GetGUIDragDescription()`](#getguidragdescription) / [`void SetGUIDragDescription(string description)`](#setguidragdescription) | Reads or changes the description retained until completion. |
 | [`public bool IsGUIDragging()`](#isguidragging) / [`bool IsGUIDragSuccessful()`](#isguidragsuccessful) | Reports active/preparing state and the retained last result. |
@@ -214,7 +214,7 @@ Extends Node descriptors with three typed stored sampling properties, two stored
 ## Method Descriptions
 
 <a id="getguidragdata"></a><a id="isguidragging"></a><a id="isguidragsuccessful"></a>
-`GetGUIDragData` exposes the exact borrowed [DragPayload](DragPayload.md) identity while active and null after completion. `IsGUIDragging` is also true while a source callback prepares payload and preview. `IsGUIDragSuccessful` retains the last completed result until another drop or cancellation completes; a newly started drag does not clear it. Cancellation and a throwing delivery report false. Detached or non-root viewports return null/false.
+`GetGUIDragData` exposes the exact borrowed [DragPayload](DragPayload.md) identity while active and null after completion. `IsGUIDragging` is also true while a source callback prepares payload and preview. `IsGUIDragSuccessful` retains the last completed result until another drop or cancellation completes; a newly started drag does not clear it. Cancellation and a throwing delivery report false. Detached viewports return null/false; attached embedded viewports read their connected section.
 
 <a id="getguidragdescription"></a><a id="setguidragdescription"></a><a id="cancelguidrag"></a>
 `SetGUIDragDescription` rejects null and stores host-facing text until the drag ends. `GetGUIDragDescription` returns that text or the localized generic "Drag-and-drop data" label when empty. `CancelGUIDrag` ends an active root drag, clears payload/description and the tree-owned preview, and delivers `Node.NotificationDragEnd` after state commits. Attached access obeys scene owner-thread rules. `GUIDragTests` checks cancellation, threshold and scene capture; [native drag rendering tests](../../tests/Electron2D.Tests/GUIDragRenderingTests.cs) check GPU/compatibility preview pixels and cursor selection. Nested and cross-window routes remain blocked by separate ownership work.
@@ -241,7 +241,7 @@ Returns the client rectangle in viewport coordinates.
 <a id="getguifocusowner"></a>
 ### `public Control? GetGUIFocusOwner()`
 
-Returns the borrowed keyboard focus owner in the root viewport, or null while unfocused or detached. Attached access requires the scene owner thread; disposed access throws ObjectDisposedException. The result is a live Control reference, not a snapshot.
+Returns the borrowed keyboard focus owner in this viewport, or null while unfocused or detached. Attached access requires the scene owner thread; disposed access throws ObjectDisposedException. The result is a live Control reference, not a snapshot.
 
 <a id="isinputhandled"></a>
 ### `public bool IsInputHandled()`
@@ -278,7 +278,7 @@ Does not update global Input state or emulate pointer devices. Dispatch uses the
 <a id="releaseguifocus"></a>
 ### `public void ReleaseGUIFocus()`
 
-Clears the root viewport's focused control and sends NotificationFocusExit, then FocusExited, to that control. It does nothing while detached or already unfocused. It does not raise GUIFocusChanged. Attached access requires the scene owner thread; disposed access throws ObjectDisposedException. A callback failure propagates as AggregateException after the state is cleared.
+Clears this viewport's focused control and sends NotificationFocusExit, then FocusExited, to that control. It does nothing while detached or already unfocused. It does not raise GUIFocusChanged. Attached access requires the scene owner thread; disposed access throws ObjectDisposedException. A callback failure propagates as AggregateException after the state is cleared.
 
 <a id="setinputashandled"></a>
 ### `public void SetInputAsHandled()`
@@ -313,7 +313,7 @@ Subscribers run synchronously on the scene owner thread. Desktop movement does n
 
 ## Lifecycle, verification and limits
 
-See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) covers managed root GUI focus ownership, transition order, release, callback failures and owner-thread rejection. Physical-input/visual acceptance and other platforms remain unverified. Root rendering, Control rectangle layout and root viewport pointer/focus routing are implemented; root content scaling, layered targets, non-root GUI and nested native windows remain incomplete; independent single-layer offscreen targets execute. Native Wayland rejects Position and may constrain geometry; native window focus requests obey compositor policy.
+See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) covers managed root GUI focus ownership, transition order, release, callback failures and owner-thread rejection. Physical-input/visual acceptance and other platforms remain unverified. Root rendering, Control rectangle layout and root viewport pointer/focus routing are implemented; root content scaling, layered targets, nested native windows remain incomplete; independent single-layer offscreen targets execute. Native Wayland rejects Position and may constrain geometry; native window focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
 
@@ -429,3 +429,91 @@ System.InvalidOperationException: The attached scene is queried off-owner.
 Validates caller-specific disposal preconditions before this caller attempts the disposal transition.
 
 Remarks: This method can run concurrently in multiple callers and can race with another caller starting disposal. Overrides must therefore be side-effect-free and tolerate repeated execution.
+
+## Embedded GUI contexts
+
+[SubViewportContainer](SubViewportContainer.md) now composes native offscreen targets and routes nested input. Each viewport owns independent focus/hover/capture/tooltip state; connected sections share drag payload, target and preview. Focusing a child also focuses its containing container chain for nonpositional routing. Handled input uses the receiving viewport when HandleInputLocally=true and the containing Window/topmost viewport otherwise. Public queries retain their attached owner/disposal guards and active-input requirement. Container-owned native size and shrink/local-final transforms are explicit in [the component](../components/canvas-rendering.md#embedded-viewport-containers-and-gui).
+
+## Property summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public System.Boolean GUIDisableInput { get; set; }` | Gets or sets whether this viewport ignores input dispatch. |
+| `public System.Boolean HandleInputLocally { get; set; }` | Gets or sets whether handled input belongs to this viewport instead of its containing window or topmost viewport. |
+
+## Property Descriptions
+
+<a id="member-c337292ff1b5"></a>
+### GUIDisableInput
+
+`public System.Boolean GUIDisableInput { get; set; }`
+
+Gets or sets whether this viewport ignores input dispatch.
+
+Value: False initially. Disabling clears hover and mouse capture; focus remains stored.
+
+System.InvalidOperationException: Mutation is off-owner or capture-owned.
+
+System.ObjectDisposedException: This viewport is disposed.
+
+<a id="member-60fb342693f1"></a>
+### HandleInputLocally
+
+`public System.Boolean HandleInputLocally { get; set; }`
+
+Gets or sets whether handled input belongs to this viewport instead of its containing window or topmost viewport.
+
+Value: True initially. SubViewportContainer sets false on direct children.
+
+System.InvalidOperationException: Mutation is off-owner or capture-owned.
+
+System.ObjectDisposedException: This viewport is disposed.
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public Electron2D.Control GUIGetHoveredControl()` | Returns this viewport's currently hovered control. |
+| `public System.Void NotifyMouseEntered()` | Notifies this viewport that its pointer entered the displayed area. |
+| `public System.Void NotifyMouseExited()` | Notifies this viewport that its pointer left, clearing embedded hover and tooltips. |
+
+## Method Descriptions
+
+<a id="member-ff418be6d4c0"></a>
+### GUIGetHoveredControl
+
+`public Electron2D.Control GUIGetHoveredControl()`
+
+Returns this viewport's currently hovered control.
+
+Returns: A borrowed control, or null when detached or outside its canvas.
+
+System.InvalidOperationException: The attached scene is queried off-owner.
+
+System.ObjectDisposedException: This viewport is disposed.
+
+<a id="member-1c90a117f24f"></a>
+### NotifyMouseEntered
+
+`public System.Void NotifyMouseEntered()`
+
+Notifies this viewport that its pointer entered the displayed area.
+
+Remarks: Equal entry notifications are silent. The notification records entry even while detached; embedded containers also refresh hover at transformed positions.
+
+System.InvalidOperationException: The scene is accessed off-owner.
+
+System.ObjectDisposedException: This viewport is disposed.
+
+<a id="member-b5fad30a8f78"></a>
+### NotifyMouseExited
+
+`public System.Void NotifyMouseExited()`
+
+Notifies this viewport that its pointer left, clearing embedded hover and tooltips.
+
+System.InvalidOperationException: The scene is accessed off-owner.
+
+System.ObjectDisposedException: This viewport is disposed.
+
+GetGUIDragDescription reads the connected section root; SetGUIDragDescription stores on its receiving viewport, matching the distinct source roles. Drag completion clears the section root description. Standalone viewport sections remain independent; native subwindow sharing/routing retains its own prerequisite.

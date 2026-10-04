@@ -1418,3 +1418,26 @@ ProcessMode transition snapshots now reuse preorder lists separately for each ac
 Node.EnsureMutable retains its disposal/capture/tree-thread guards and then dispatches the virtual ValidateMutation hook. This lets subclasses with retained native ownership reject mutations after tree exit; AudioLifetimeTests checks detached audio registration and rejection before state changes.
 
 SubViewport children are now allowed; native Window children still reject. GetWindow finds the containing Window across offscreen viewport boundaries, while GetViewport retains the nearest viewport. Root/native scene input skips nested viewport descendants; explicit PushInput routes its own scene scope. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.
+
+## Constant summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public const System.Int32 NotificationVPMouseEnter = 1010` | Identifies pointer entry into an embedded viewport. |
+| `public const System.Int32 NotificationVPMouseExit = 1011` | Identifies pointer exit from an embedded viewport. |
+
+## Constant Descriptions
+
+<a id="member-8df3365d1c51"></a>
+### NotificationVPMouseEnter
+
+`public const System.Int32 NotificationVPMouseEnter = 1010`
+
+Identifies pointer entry into an embedded viewport.
+
+<a id="member-25e717c6e08a"></a>
+### NotificationVPMouseExit
+
+`public const System.Int32 NotificationVPMouseExit = 1011`
+
+Identifies pointer exit from an embedded viewport.

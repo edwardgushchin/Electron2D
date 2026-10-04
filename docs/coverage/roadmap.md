@@ -4,8 +4,8 @@ Last updated: 2026-10-03
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1337 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 889 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
+1. Close 1335 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 884 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -16,7 +16,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 513 | 18 |
 | [FontFile](classes/FontFile.md) | 76 | 0 |
-| [Node](classes/Node.md) | 60 | 63 |
+| [Node](classes/Node.md) | 58 | 63 |
 | [PhysicsServer2D](classes/PhysicsServer2D.md) | 44 | 9 |
 | [Window](classes/Window.md) | 40 | 36 |
 | [Object](classes/Object.md) | 32 | 22 |
@@ -29,11 +29,11 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [ProjectSettings](classes/ProjectSettings.md) | 9 | 44 |
 | [Font](classes/Font.md) | 9 | 0 |
 | [SceneTree](classes/SceneTree.md) | 8 | 19 |
-| [Viewport](classes/Viewport.md) | 5 | 15 |
 | [AnimationPlayer](classes/AnimationPlayer.md) | 5 | 0 |
 | [Material](classes/Material.md) | 3 | 0 |
 | [FileAccess](classes/FileAccess.md) | 2 | 66 |
 | [Resource](classes/Resource.md) | 2 | 22 |
+| [Viewport](classes/Viewport.md) | 2 | 13 |
 | [DirAccess](classes/DirAccess.md) | 1 | 39 |
 | [Texture2D](classes/Texture.md#godot-texture2d) | 1 | 22 |
 | [Polygon2D](classes/Polygon2D.md) | 1 | 13 |
@@ -89,7 +89,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 43 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 42 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
 | Navigation2D: trigger is the first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052). | 10 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 10 |

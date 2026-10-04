@@ -6479,6 +6479,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SubViewportContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "SubViewportContainer",
+    "signature": "public class Electron2D.SubViewportContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SubtweenTweener",
     "kind": "type",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -8773,6 +8788,32 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "15"
+  },
+  {
+    "id": "constant:Electron2D.Node.NotificationVPMouseEnter()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationVPMouseEnter",
+    "signature": "public const System.Int32 NotificationVPMouseEnter = 1010",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "1010"
+  },
+  {
+    "id": "constant:Electron2D.Node.NotificationVPMouseExit()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationVPMouseExit",
+    "signature": "public const System.Int32 NotificationVPMouseExit = 1011",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "1011"
   },
   {
     "id": "constant:Electron2D.Node.NotificationWmAbout()",
@@ -12682,6 +12723,19 @@
     "declaringType": "Electron2D.SubViewport",
     "name": ".ctor",
     "signature": "public SubViewport()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SubViewportContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": ".ctor",
+    "signature": "public SubViewportContainer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -90220,6 +90274,211 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SubViewportContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.GetAllowedSizeFlagsHorizontal()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "GetAllowedSizeFlagsHorizontal",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsHorizontal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.GetAllowedSizeFlagsVertical()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "GetAllowedSizeFlagsVertical",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsVertical()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.OnGetCursorShape(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "OnGetCursorShape",
+    "signature": "protected override Electron2D.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.OnInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "OnInput",
+    "signature": "protected override System.Void OnInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.OnUnhandledInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "OnUnhandledInput",
+    "signature": "protected override System.Void OnUnhandledInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewportContainer.PropagateInputEvent(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "PropagateInputEvent",
+    "signature": "protected virtual System.Boolean PropagateInputEvent(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SubtweenTweener.SetDelay(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -98594,6 +98853,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GUIGetHoveredControl()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GUIGetHoveredControl",
+    "signature": "public Electron2D.Control GUIGetHoveredControl()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetAudioListener2D()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -98805,6 +99077,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.NotifyMouseEntered()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "NotifyMouseEntered",
+    "signature": "public System.Void NotifyMouseEntered()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.NotifyMouseExited()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "NotifyMouseExited",
+    "signature": "public System.Void NotifyMouseExited()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -122183,6 +122481,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SubViewportContainer.MouseTarget()",
+    "kind": "property",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "MouseTarget",
+    "signature": "public System.Boolean MouseTarget { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SubViewportContainer.Stretch()",
+    "kind": "property",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "Stretch",
+    "signature": "public System.Boolean Stretch { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SubViewportContainer.StretchShrink()",
+    "kind": "property",
+    "declaringType": "Electron2D.SubViewportContainer",
+    "name": "StretchShrink",
+    "signature": "public System.Int32 StretchShrink { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.TextBIDIRange.Direction()",
     "kind": "property",
     "declaringType": "Electron2D.TextBIDIRange",
@@ -123769,6 +124106,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Viewport.GUIDisableInput()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GUIDisableInput",
+    "signature": "public System.Boolean GUIDisableInput { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Viewport.GUIDragThreshold()",
     "kind": "property",
     "declaringType": "Electron2D.Viewport",
@@ -123792,6 +124142,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.HandleInputLocally()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "HandleInputLocally",
+    "signature": "public System.Boolean HandleInputLocally { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -30,7 +30,7 @@ Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and p
 
 A zero additional scale is accepted. When visual-only is false it makes the logical transform singular, so coordinate queries requiring an inverse fail under the ordinary CanvasItem contract.
 
-The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, project Theme loading, additional container types, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+Each viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, project Theme loading, additional container types, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md) and [AspectRatioContainer](AspectRatioContainer.md) now consume the same bound minimum, fill/shrink flags and deferred Container fitting; the margin and aspect variants also use maximum propagation and RTL alignment respectively.
 
@@ -59,7 +59,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | --- | --- |
 | `public Vector2 Position { get; set; }` | Upper-left layout position before pivot and scale. |
 | `public Vector2 Size { get; set; }` | Finite requested size, clamped to the effective minimum and maximum. |
-| `public bool ClipContents { get; set; }` | False by default; clips direct canvas descendants and their root-viewport pointer targeting to this rectangle. |
+| `public bool ClipContents { get; set; }` | False by default; clips direct canvas descendants and their viewport-local pointer targeting to this rectangle. |
 | `public Vector2 CustomMinimumSize { get; set; }` | Finite caller-supplied minimum; combines with intrinsic size and zero. |
 | `public Vector2 CustomMaximumSize { get; set; }` | Finite caller-supplied maximum; negative components normalize to unbounded `-1`. |
 | `public bool PropagateMaximumSize { get; set; }` | Passes enabled maximum bounds to direct child controls unless they are top-level. |
@@ -144,9 +144,9 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public bool CanDropData(Vector2 atPosition, DragPayload payload)` / `protected virtual bool OnCanDropData(Vector2 atPosition, DragPayload payload)` | Tests a candidate target at finite local coordinates. |
 | `public void DropData(Vector2 atPosition, DragPayload payload)` / `protected virtual void OnDropData(Vector2 atPosition, DragPayload payload)` | Delivers an accepted payload. |
 | `public void SetDragForwarding(Func<Vector2, DragPayload?>? getData, Func<Vector2, DragPayload, bool>? canDrop, Action<Vector2, DragPayload>? drop)` | Replaces supplied virtual hooks with typed delegates. |
-| `public void ForceDrag(DragPayload payload, Control? preview = null)` | Starts an attached root-viewport drag immediately. |
+| `public void ForceDrag(DragPayload payload, Control? preview = null)` | Starts an attached connected-section drag immediately. |
 | `public void SetDragPreview(Control preview)` | Transfers a detached parentless preview to the active drag. |
-| `public bool IsDragSuccessful()` | Reports the last completed root-viewport drag result. |
+| `public bool IsDragSuccessful()` | Reports the last completed connected-section drag result. |
 | `protected override void OnNotification(int what)` | Connects/disconnects layout sources, raises Resized after NotificationResized, and receives focus notifications. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Supplies stored layout, transform and GUI input policy. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Creates exact Control instances for PackedScene. |
@@ -264,7 +264,7 @@ Moves to a new direct parent. With the default option, it validates the destinat
 
 ### `OnNotification(int what)`, `GetPropertyDescriptors()`, `CreateSceneInstanceFactory()`, `Dispose(bool disposing)`
 
-OnNotification subscribes to the direct canvas parent's geometry or root viewport size at canvas entry, disconnects at exit, releases focus when hidden or detached, and emits Resized after NotificationResized. The focus notifications 43/44 pass through this protected hook before the corresponding event. GetPropertyDescriptors stores rectangle, transform, anchors, offsets, mouse filter, wheel policy, focus mode and focus paths for PackedScene. The factory creates exact Control instances. Disposal removes borrowed event subscriptions and clears the control events.
+OnNotification subscribes to the direct canvas parent's geometry or containing viewport size at canvas entry, disconnects at exit, releases focus when hidden or detached, and emits Resized after NotificationResized. The focus notifications 43/44 pass through this protected hook before the corresponding event. GetPropertyDescriptors stores rectangle, transform, anchors, offsets, mouse filter, wheel policy, focus mode and focus paths for PackedScene. The factory creates exact Control instances. Disposal removes borrowed event subscriptions and clears the control events.
 
 ### `Resized`, `NotificationResized`
 
@@ -288,7 +288,7 @@ Offset-transform checks verify defaults, disabled-value retention, resize-depend
 
 ### GUI input behavior
 
-The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through canvas ancestors, delivering to eligible Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. Mouse-button presses retain their target through a pressed-button mask; additional buttons share the capture until the final release. Wheel presses are momentary and never claim mouse-button capture. Touch-style left-button input can pass a stopping descendant directly to its ScrollContainer ancestor. Touch contacts capture independently by index; drag and release reach the capture outside its rectangle, and uncaptured drag and gestures use hit testing. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Unhandled `ui_*` actions traverse focus after GUI delivery. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker and respects clipping ancestors. Nested viewport routes remain incomplete. Processing gates apply to hit/captured and focused GUI targets.
+The top hit Control in a viewport receives a temporary local pointer event. The viewport GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through canvas ancestors, delivering to eligible Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. Mouse-button presses retain their target through a pressed-button mask; additional buttons share the capture until the final release. Wheel presses are momentary and never claim mouse-button capture. Touch-style left-button input can pass a stopping descendant directly to its ScrollContainer ancestor. Touch contacts capture independently by index; drag and release reach the capture outside its rectangle, and uncaptured drag and gestures use hit testing. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Unhandled `ui_*` actions traverse focus after GUI delivery. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker and respects clipping ancestors. Nested viewport routes remain incomplete. Processing gates apply to hit/captured and focused GUI targets.
 
 `FocusNext` and `FocusPrevious` take precedence over automatic traversal; an invalid path returns null. Directional paths can chain through ineligible controls, with cycle protection, then fall back to spatial search. Automatic traversal accepts visible `All` controls in scene order within the root viewport; explicit paths may select visible `Click` controls. Directional search uses global axis-aligned rectangles, not the full reference ranking or scroll clipping. Navigation happens after focused GUI callbacks if they leave the event unhandled. Analog navigation acts on a new press transition rather than every held motion event. No native keyboard or controller navigation has been verified for this slice.
 
@@ -439,3 +439,5 @@ Receives trimmed untranslated text, including an empty string. Return null for t
 The current root-viewport host displays tooltips through an internal CanvasLayer and PanelContainer, with TooltipPanel/TooltipLabel theme variations. Mouse motion schedules an unscaled delay; movement beyond five pixels or a new target resets it before display. Text changes, pointer presses, gestures, ui_cancel, departure and target visibility/lifetime changes cancel old content. Native independent popup windows remain a separate capability. [ControlTooltipTests](../../tests/Electron2D.Tests/ControlTooltipTests.cs) covers the concrete host and ownership contract.
 
 [TooltipRenderingTests](../../tests/Electron2D.Tests/TooltipRenderingTests.cs) verifies real glyphs and custom contents above a maximum-index game layer, edge placement, native pointer transparency and 64 warmed active modulation frames with zero managed allocation on Linux Wayland GPU/compatibility. The dummy compatibility probe uses Nearest sampling, respecting its documented linear-filter limitation. Other platforms, native allocator counts and owner acceptance remain unverified.
+
+Controls in a SubViewport now use its independent GUI context. GrabFocus also focuses containing SubViewportContainer controls so native keyboard/committed text reaches the embedded focus. Cursor/drop targeting follows the connected section and MouseTarget policy. Public PushInput reentry remains rejected; temporary positional event copies retain ADR 0038 ownership.

@@ -192,7 +192,7 @@ public partial class Control
         (Tree ?? throw new InvalidOperationException("A control must belong to a scene tree to accept input.")).SetInputAsHandled();
     }
 
-    /// <summary>Requests keyboard focus for this visible control in a root viewport.</summary>
+    /// <summary>Requests keyboard focus for this visible control in its viewport. Embedded focus also focuses containing viewport controls.</summary>
     /// <param name="hideFocus">Whether <see cref="HasFocus"/> should ignore this focus when requested.</param>
     public void GrabFocus(bool hideFocus = false)
     {

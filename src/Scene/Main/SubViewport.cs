@@ -25,8 +25,8 @@ public enum ViewportUpdateMode
     Always = 4,
 }
 /// <summary>Renders an independent scene canvas into a live viewport texture without creating a window.</summary>
-/// <remarks>Scene processing remains on the existing SceneTree clock. Native input is isolated from this
-/// viewport; explicit PushInput supplies its local events. Targets belong to the active rendering server.
+/// <remarks>Scene processing remains on the existing SceneTree clock. Standalone native input is isolated from this
+/// viewport; explicit PushInput or an attached SubViewportContainer supplies its events. Targets belong to the active rendering server.
 /// Ordinary texture drawing and materials sample completed native images without per-frame CPU copies.</remarks>
 public sealed class SubViewport : Viewport
 {
@@ -39,11 +39,11 @@ public sealed class SubViewport : Viewport
     private void Check() { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); }
     /// <summary>Gets or sets native pixel dimensions, clamping each axis to at least two.</summary>
     /// <value>512 by 512 initially.</value>
-    /// <remarks>Native target recreation is a cold operation. Backend size limits are checked before allocation.
+    /// <remarks>A stretched SubViewportContainer owns native size and rejects manual Size writes. Native target recreation is a cold operation. Backend size limits are checked before allocation.
     /// A committed size change notifies texture consumers and SizeChanged even after a failing observer.</remarks>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     /// <exception cref="InvalidOperationException">Mutation occurs off-owner or during native submission.</exception>
-    public Vector2i Size { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _size; } set { Check(); value = new(Math.Max(2, value.X), Math.Max(2, value.Y)); if (_size == value) return; _size = value; ChangedSize(); } }
+    public Vector2i Size { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _size; } set { Check(); if (Parent is SubViewportContainer { Stretch: true }) throw new InvalidOperationException("A stretched container owns its child viewport size."); SetContainerSize(value); } }
     /// <summary>Gets or sets logical canvas size metadata; a zero vector uses native size.</summary>
     /// <value>Zero initially; finite signed integer axes retain their values.</value>
     /// <remarks>Stretch requires both override axes to be positive. Geometry, controls and camera bounds use the visible logical rectangle.</remarks>
@@ -69,9 +69,11 @@ public sealed class SubViewport : Viewport
     public ViewportUpdateMode RenderTargetUpdateMode { get { ThrowIfDisposed(); return _update; } set { Check(); Animation.Valid(value); _update = value; } }
     internal void Submitted() { if (_clear == ViewportClearMode.Once) _clear = ViewportClearMode.Never; if (_update == ViewportUpdateMode.Once) _update = ViewportUpdateMode.Disabled; }
     internal override Transform StretchTransform => _stretch && _override.X > 0 && _override.Y > 0 ? new(new Vector2((float)_size.X / _override.X, 0), new(0, (float)_size.Y / _override.Y), Vector2.Zero) : Transform.Identity;
+    internal void SetContainerSize(Vector2i value) { Check(); value = new(Math.Max(2, value.X), Math.Max(2, value.Y)); if (_size == value) return; _size = value; ChangedSize(); }
     private void ChangedSize()
     {
-        InvalidateViewportRecording(); NotifySizeChanged();
+        InvalidateViewportRecording();
+        try { NotifySizeChanged(); } finally { if (Parent is SubViewportContainer container) { container.UpdateMinimumSize(); container.QueueRedraw(); } }
     }
     /// <inheritdoc />
     public override Rect2 GetVisibleRect() { ThrowIfDisposed(); return new(Vector2.Zero, _override == Vector2i.Zero ? _size : _override); }

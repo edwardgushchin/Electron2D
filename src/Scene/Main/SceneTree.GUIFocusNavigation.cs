@@ -5,7 +5,7 @@ public sealed partial class SceneTree
     private void NavigateGUIFocus(Viewport viewport, InputEvent inputEvent)
     {
         if (inputEvent is not InputEventJoypadMotion && !inputEvent.IsPressed()) return;
-        var from = _guiFocus;
+        var from = _gui.GuiFocus;
         if (from is null)
             for (var index = 0; index < viewport.GetChildCount(includeInternal: true); index++)
                 if (viewport.GetChild(index, includeInternal: true) is Control { TopLevel: false, IsVisibleInTree: true } control)
@@ -31,7 +31,7 @@ public sealed partial class SceneTree
             SetGUIFocus(next, hideFocus: false);
             SetInputAsHandled();
         }
-        else if (_guiFocusHidden && _guiFocus is { } focused)
+        else if (_gui.GuiFocusHidden && _gui.GuiFocus is { } focused)
             SetGUIFocus(focused, hideFocus: false);
     }
 }

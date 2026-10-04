@@ -1,6 +1,6 @@
 # Scene tree component
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 ## Scope
 
@@ -108,3 +108,5 @@ Canvas transform notifications use dedicated owner-thread queues. Physics delive
 The queue reuses each CanvasItem's LinkedListNode and one tree-owned list; normal enqueue, cancellation, force and phase delivery allocate no per-change objects. Finalization and activation rollback clear the list and active delivery cursor. [Transform notification checks](../../tests/Electron2D.Tests/CanvasTransformNotificationTests.cs) cover ordering, exceptions, removal, reentry, ownership and allocation.
 
 Reusable [scene animation](scene-animation.md) uses Node internal idle/physics callbacks, before the node's public callback. Manual AnimationMixer mode does not create an automatic callback or separate clock.
+
+[Embedded viewport containers and GUI](canvas-rendering.md#embedded-viewport-containers-and-gui) now execute native SubViewportContainer composition, stretch/shrink, independent GUI state and connected input/drag routing. Public input reentry remains rejected; native subwindows, multiview, editor/file workflows and other-platform acceptance remain separate.
