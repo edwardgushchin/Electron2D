@@ -1892,127 +1892,127 @@
       "electron2d": "property:Electron2D.Viewport.CanvasTransform()",
       "godot": "Viewport::property:canvas_transform",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "property:Electron2D.Viewport.GlobalCanvasTransform()",
       "godot": "Viewport::property:global_canvas_transform",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetFinalTransform()",
       "godot": "Viewport::method:get_final_transform()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetScreenTransform()",
       "godot": "Viewport::method:get_screen_transform()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetMousePosition()",
       "godot": "Viewport::method:get_mouse_position()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.Viewport.WarpMouse(Electron2D.Vector2)",
       "godot": "Viewport::method:warp_mouse(Vector2:)",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetViewportRect()",
       "godot": "CanvasItem::method:get_viewport_rect()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetCanvasTransform()",
       "godot": "CanvasItem::method:get_canvas_transform()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetGlobalTransformWithCanvas()",
       "godot": "CanvasItem::method:get_global_transform_with_canvas()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetViewportTransform()",
       "godot": "CanvasItem::method:get_viewport_transform()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetScreenTransform()",
       "godot": "CanvasItem::method:get_screen_transform()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetGlobalMousePosition()",
       "godot": "CanvasItem::method:get_global_mouse_position()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetLocalMousePosition()",
       "godot": "CanvasItem::method:get_local_mouse_position()",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.MakeCanvasPositionLocal(Electron2D.Vector2)",
       "godot": "CanvasItem::method:make_canvas_position_local(Vector2:)",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.MakeInputLocal(Electron2D.InputEvent)",
       "godot": "CanvasItem::method:make_input_local(InputEvent:)",
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
     },
     {
       "electron2d": "property:Electron2D.CanvasItem.VisibilityLayer()",
       "godot": "CanvasItem::property:visibility_layer",
       "state": "Implemented",
-      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent single-layer SubViewport and borrowed viewport RID identities now execute; layered output remains a separate dependency, other native platforms unverified."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.GetVisibilityLayerBit(System.Int32)",
       "godot": "CanvasItem::method:get_visibility_layer_bit(int:)",
       "state": "Implemented",
-      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent single-layer SubViewport and borrowed viewport RID identities now execute; layered output remains a separate dependency, other native platforms unverified."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.SetVisibilityLayerBit(System.Int32,System.Boolean)",
       "godot": "CanvasItem::method:set_visibility_layer_bit(int:,bool:)",
       "state": "Implemented",
-      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent single-layer SubViewport and borrowed viewport RID identities now execute; layered output remains a separate dependency, other native platforms unverified."
     },
     {
       "electron2d": "property:Electron2D.Viewport.CanvasCullMask()",
       "godot": "Viewport::property:canvas_cull_mask",
       "state": "Implemented",
-      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent single-layer SubViewport and borrowed viewport RID identities now execute; layered output remains a separate dependency, other native platforms unverified."
     },
     {
       "electron2d": "method:Electron2D.Viewport.GetCanvasCullMaskBit(System.Int32)",
       "godot": "Viewport::method:get_canvas_cull_mask_bit(int:)",
       "state": "Implemented",
-      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent single-layer SubViewport and borrowed viewport RID identities now execute; layered output remains a separate dependency, other native platforms unverified."
     },
     {
       "electron2d": "method:Electron2D.Viewport.SetCanvasCullMaskBit(System.Int32,System.Boolean)",
       "godot": "Viewport::method:set_canvas_cull_mask_bit(int:,bool:)",
       "state": "Implemented",
-      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent single-layer SubViewport and borrowed viewport RID identities now execute; layered output remains a separate dependency, other native platforms unverified."
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.ForceUpdateTransform()",
@@ -4994,6 +4994,210 @@
       "electron2d": "event:Electron2D.AnimationNodeStateMachineTransition.AdvanceConditionChanged()",
       "state": "Implemented",
       "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportClearMode",
+      "electron2d": "T:Electron2D.ViewportClearMode",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportUpdateMode",
+      "electron2d": "T:Electron2D.ViewportUpdateMode",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportClearMode.VIEWPORT_CLEAR_ALWAYS",
+      "electron2d": "enumValue:Electron2D.ViewportClearMode.Always()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportClearMode.VIEWPORT_CLEAR_NEVER",
+      "electron2d": "enumValue:Electron2D.ViewportClearMode.Never()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportClearMode.VIEWPORT_CLEAR_ONLY_NEXT_FRAME",
+      "electron2d": "enumValue:Electron2D.ViewportClearMode.Once()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_ALWAYS",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.Always()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_DISABLED",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.Disabled()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_ONCE",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.Once()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_WHEN_PARENT_VISIBLE",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.WhenParentVisible()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_WHEN_VISIBLE",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.WhenVisible()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_get_texture(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportGetTexture(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "class:SubViewport",
+      "electron2d": "T:Electron2D.SubViewport",
+      "state": "Partial",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps. Class remains Partial only for ViewCount: first real layered/multiview render-target storage and per-view sampling/producer integration."
+    },
+    {
+      "godot": "SubViewport::enum:ClearMode",
+      "electron2d": "T:Electron2D.ViewportClearMode",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum:UpdateMode",
+      "electron2d": "T:Electron2D.ViewportUpdateMode",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum_value:ClearMode.CLEAR_MODE_ALWAYS",
+      "electron2d": "enumValue:Electron2D.ViewportClearMode.Always()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum_value:ClearMode.CLEAR_MODE_NEVER",
+      "electron2d": "enumValue:Electron2D.ViewportClearMode.Never()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum_value:ClearMode.CLEAR_MODE_ONCE",
+      "electron2d": "enumValue:Electron2D.ViewportClearMode.Once()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum_value:UpdateMode.UPDATE_ALWAYS",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.Always()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum_value:UpdateMode.UPDATE_DISABLED",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.Disabled()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum_value:UpdateMode.UPDATE_ONCE",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.Once()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum_value:UpdateMode.UPDATE_WHEN_PARENT_VISIBLE",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.WhenParentVisible()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::enum_value:UpdateMode.UPDATE_WHEN_VISIBLE",
+      "electron2d": "enumValue:Electron2D.ViewportUpdateMode.WhenVisible()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::property:render_target_clear_mode",
+      "electron2d": "property:Electron2D.SubViewport.RenderTargetClearMode()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::property:render_target_update_mode",
+      "electron2d": "property:Electron2D.SubViewport.RenderTargetUpdateMode()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::property:size",
+      "electron2d": "property:Electron2D.SubViewport.Size()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::property:size_2d_override",
+      "electron2d": "property:Electron2D.SubViewport.Size2DOverride()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "SubViewport::property:size_2d_override_stretch",
+      "electron2d": "property:Electron2D.SubViewport.Size2DOverrideStretch()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "Viewport::method:get_texture()",
+      "electron2d": "method:Electron2D.Viewport.GetTexture()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "Viewport::method:get_viewport_rid()",
+      "electron2d": "method:Electron2D.Viewport.GetViewportRID()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "Viewport::property:transparent_bg",
+      "electron2d": "property:Electron2D.Viewport.TransparentBG()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "class:ViewportTexture",
+      "electron2d": "T:Electron2D.ViewportTexture",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "ViewportTexture::property:viewport_path",
+      "electron2d": "property:Electron2D.ViewportTexture.ViewportPath()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "godot": "Window::method:show()",
+      "electron2d": "method:Electron2D.Window.Show()",
+      "state": "Partial",
+      "reason": "Executable root native visibility path, exercised together with offscreen hidden rendering in SubViewportTests. Embedded/multiple windows and platform owner acceptance retain ADR 0040 prerequisites. On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path."
+    },
+    {
+      "godot": "Window::method:hide()",
+      "electron2d": "method:Electron2D.Window.Hide()",
+      "state": "Partial",
+      "reason": "Executable root native visibility path, exercised together with offscreen hidden rendering in SubViewportTests. Embedded/multiple windows and platform owner acceptance retain ADR 0040 prerequisites. On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path."
     }
   ],
   "extras": [
@@ -7211,6 +7415,96 @@
       "electron2d": "method:Electron2D.AnimationNodeStateMachineTransition.GetPropertyDescriptors()",
       "state": "Implemented",
       "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.SubViewport..ctor()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ViewportTexture..ctor()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.SubViewport.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.SubViewport.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.SubViewport.GetVisibleRect()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.Viewport.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.ViewportTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.ViewportTexture.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.ViewportTexture.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.ViewportTexture.GetHeight()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.ViewportTexture.GetImage()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.ViewportTexture.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.ViewportTexture.GetWidth()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "method:Electron2D.ViewportTexture.OnSetupLocalToScene()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "property:Electron2D.ViewportTexture.HasAlpha()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "property:Electron2D.ViewportTexture.HasMipmaps()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "property:Electron2D.ViewportTexture.MipmapCount()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
+    },
+    {
+      "electron2d": "property:Electron2D.ViewportTexture.PixelFormat()",
+      "state": "Implemented",
+      "reason": "Typed C# viewport/resource constructor, inherited exact texture metadata/readback override or scene-factory/lifecycle projection under ADRs 0008/0014/0028. ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps."
     }
   ],
   "statusGroups": [
@@ -8304,7 +8598,7 @@
     },
     {
       "state": "Partial",
-      "reason": "The base mouse payload, source-value storage, root viewport localization and CanvasLayer GUI coordinates are executable and tested. Independent nested/offscreen viewport routing remains absent (ADRs 0008/0038). Warmed GUI delivery still allocates 134144 managed bytes for 128 events in a one-control/one-layer Linux .NET 8 probe, violating ADR 0014; reconcile its zero-allocation rule with disposable caller-visible event copies, then verify active and idle dispatch. Inherited and concrete button/motion gaps retain their own rows.",
+      "reason": "The base mouse payload, source-value storage, root viewport localization and CanvasLayer GUI coordinates are executable and tested. Explicit single-layer SubViewport PushInput is isolated and localized; native container forwarding and non-root GUI context remain absent (ADRs 0008/0038). Warmed GUI delivery still allocates 134144 managed bytes for 128 events in a one-control/one-layer Linux .NET 8 probe, violating ADR 0014; reconcile its zero-allocation rule with disposable caller-visible event copies, then verify active and idle dispatch. Inherited and concrete button/motion gaps retain their own rows.",
       "godot": [
         "class:InputEventMouse"
       ]
@@ -8855,7 +9149,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Executable root native window, scene input and canvas rendering boundary; offscreen targets, embedded/multiple windows, GUI, theme and content scaling remain incomplete. ADRs 0004, 0008, 0028.",
+      "reason": "Executable root native window, scene input and canvas rendering boundary; offscreen targets, embedded/multiple windows, GUI, theme and content scaling remain incomplete. ADRs 0004, 0008, 0028. On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path.",
       "godot": [
         "class:Viewport",
         "class:Window"
@@ -8959,8 +9253,6 @@
         "Viewport::method:get_positional_shadow_atlas_quadrant_subdiv(int:)",
         "Viewport::method:get_render_info(int:Viewport.RenderInfoType,int:Viewport.RenderInfo)",
         "Viewport::method:get_stretch_transform()",
-        "Viewport::method:get_texture()",
-        "Viewport::method:get_viewport_rid()",
         "Viewport::method:set_positional_shadow_atlas_quadrant_subdiv(int:,int:Viewport.PositionalShadowAtlasQuadrantSubdiv)",
         "Viewport::property:debug_draw",
         "Viewport::property:disable_3d",
@@ -8983,7 +9275,6 @@
         "Viewport::property:sdf_oversize",
         "Viewport::property:sdf_scale",
         "Viewport::property:texture_mipmap_bias",
-        "Viewport::property:transparent_bg",
         "Viewport::property:use_debanding",
         "Viewport::property:use_hdr_2d",
         "Viewport::property:use_occlusion_culling",
@@ -9019,7 +9310,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Implemented root-window/input behavior is exercised by WindowRuntimeTests with dummy and Wayland. Root rendering/canvas transforms are integrated; full parity still depends on multiwindow, content scaling and GUI; native platform-specific requests retain DisplayServer limits. ADRs 0008, 0021 and 0028.",
+      "reason": "Implemented root-window/input behavior is exercised by WindowRuntimeTests with dummy and Wayland. Root rendering/canvas transforms are integrated; full parity still depends on multiwindow, content scaling and GUI; native platform-specific requests retain DisplayServer limits. ADRs 0008, 0021 and 0028. On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path.",
       "godot": [
         "Viewport::method:get_visible_rect()",
         "Viewport::method:is_input_handled()",
@@ -9093,10 +9384,8 @@
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS",
         "Window::method:_get_contents_minimum_size()",
         "Window::method:get_contents_minimum_size()",
-        "Window::method:hide()",
         "Window::method:move_to_foreground()",
         "Window::method:reset_size()",
-        "Window::method:show()",
         "Window::property:auto_translate",
         "Window::property:exclude_from_capture",
         "Window::property:extend_to_title",
@@ -9440,7 +9729,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection.",
+      "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection.",
       "godot": [
         "CanvasItem::method:get_canvas_transform()",
         "CanvasItem::method:get_global_mouse_position()",
@@ -9462,7 +9751,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified.",
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent single-layer SubViewport and borrowed viewport RID identities now execute; layered output remains a separate dependency, other native platforms unverified.",
       "godot": [
         "CanvasItem::method:get_visibility_layer_bit(int:)",
         "CanvasItem::method:set_visibility_layer_bit(int:,bool:)",
@@ -9506,7 +9795,7 @@
         "class:VisibleOnScreenNotifier2D"
       ],
       "state": "Partial",
-      "reason": "ADR 0078: the complete runtime screen detector executes on the current retained canvases; editor-only ShowRect remains Blocked until self-hosted editor canvas gizmo drawing. Independent offscreen viewport support follows the existing renderer lifecycle gate."
+      "reason": "ADR 0078: the complete runtime screen detector executes on the current retained canvases; editor-only ShowRect remains Blocked until self-hosted editor canvas gizmo drawing. Single-layer offscreen viewport support now executes through SubViewportTests; multiview and editor checks retain separate gates."
     },
     {
       "godot": [
@@ -10287,6 +10576,71 @@
       "reason": "ADRs 0001/0005/0093 replace dynamic member-addressed expressions with Func<AnimationTree,bool> typed predicates. Exact typed receivers may be captured directly; a string-resolved expression base Node path has no role in this accepted typed contract. AdvanceExpression itself executes and is mapped separately.",
       "godot": [
         "AnimationTree::property:advance_expression_base_node"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps.",
+      "godot": [
+        "RenderingServer::enum:ViewportClearMode",
+        "RenderingServer::enum:ViewportUpdateMode",
+        "RenderingServer::enum_value:ViewportClearMode.VIEWPORT_CLEAR_ALWAYS",
+        "RenderingServer::enum_value:ViewportClearMode.VIEWPORT_CLEAR_NEVER",
+        "RenderingServer::enum_value:ViewportClearMode.VIEWPORT_CLEAR_ONLY_NEXT_FRAME",
+        "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_ALWAYS",
+        "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_DISABLED",
+        "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_ONCE",
+        "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_WHEN_PARENT_VISIBLE",
+        "RenderingServer::enum_value:ViewportUpdateMode.VIEWPORT_UPDATE_WHEN_VISIBLE",
+        "RenderingServer::method:viewport_get_texture(RID:)",
+        "SubViewport::enum:ClearMode",
+        "SubViewport::enum:UpdateMode",
+        "SubViewport::enum_value:ClearMode.CLEAR_MODE_ALWAYS",
+        "SubViewport::enum_value:ClearMode.CLEAR_MODE_NEVER",
+        "SubViewport::enum_value:ClearMode.CLEAR_MODE_ONCE",
+        "SubViewport::enum_value:UpdateMode.UPDATE_ALWAYS",
+        "SubViewport::enum_value:UpdateMode.UPDATE_DISABLED",
+        "SubViewport::enum_value:UpdateMode.UPDATE_ONCE",
+        "SubViewport::enum_value:UpdateMode.UPDATE_WHEN_PARENT_VISIBLE",
+        "SubViewport::enum_value:UpdateMode.UPDATE_WHEN_VISIBLE",
+        "SubViewport::property:render_target_clear_mode",
+        "SubViewport::property:render_target_update_mode",
+        "SubViewport::property:size",
+        "SubViewport::property:size_2d_override",
+        "SubViewport::property:size_2d_override_stretch",
+        "Viewport::method:get_texture()",
+        "Viewport::method:get_viewport_rid()",
+        "Viewport::property:transparent_bg",
+        "class:ViewportTexture",
+        "ViewportTexture::property:viewport_path"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADRs 0008/0028 executable single-layer native offscreen targets. SubViewportTests verifies authoring/defaults/guards, stable RID views, scene-local copies, resize observer failure, input/stretch isolation and AA recording invalidation. GPU/compatibility Engine.Run hosts verify clear/update/resize/transparency/visibility, dependent textures, external layers, prior-frame feedback, hidden root and detached cleanup; 64 warm active/64 idle frames with stable native dimensions distinguish managed memory from explicit readback/native driver allocation. GPU uniform/server RID sampling is separately exercised. Container/non-root GUI, layered/multiview, browser/other-platform, file/editor and human acceptance remain exact gaps. Class remains Partial only for ViewCount: first real layered/multiview render-target storage and per-view sampling/producer integration.",
+      "godot": [
+        "class:SubViewport"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first layered/multiview native render-target storage and a real per-view sampling/producer contract. Current canvas/ViewportTexture output is single-layer; view_count is not exposed as inert metadata. Enter this property with that target-layer slice under ADR 0028.",
+      "godot": [
+        "SubViewport::property:view_count"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable root native visibility path, exercised together with offscreen hidden rendering in SubViewportTests. Embedded/multiple windows and platform owner acceptance retain ADR 0040 prerequisites. On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path.",
+      "godot": [
+        "Window::method:show()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable root native visibility path, exercised together with offscreen hidden rendering in SubViewportTests. Embedded/multiple windows and platform owner acceptance retain ADR 0040 prerequisites. On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path.",
+      "godot": [
+        "Window::method:hide()"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -214,13 +214,13 @@ Root canvas replay starts with `framebufferScale * window.GetFinalTransform() * 
 
 ## Canvas mask submission
 
-Before ordering/traversing a canvas branch, RenderingServer independently tests CanvasItem.VisibilityLayer against the root Viewport.CanvasCullMask. Nested Y-sort collection prunes rejected intermediaries before flattening. Separate roots and CanvasLayer groups retain their normal ordering. Pending drawing still records, and zero masks still clear/present frames. Only submitted batches participate in shader capability rejection. See [mask semantics and native checks](../components/canvas-rendering.md#canvas-visibility-masks).
+Before ordering/traversing a canvas branch, RenderingServer independently tests CanvasItem.VisibilityLayer against the selected Viewport.CanvasCullMask. Nested Y-sort collection prunes rejected intermediaries before flattening. Separate roots and CanvasLayer groups retain their normal ordering. Pending drawing still records, and zero masks still clear/present frames. Only submitted batches participate in shader capability rejection. See [mask semantics and native checks](../components/canvas-rendering.md#canvas-visibility-masks).
 
 ## Canvas render time
 
 After FramePreDraw, RenderingServer advances its per-run clock by the captured scaled process step and wraps it by the active [RenderingTimeRolloverSeconds](ProjectSettings.md#renderingtimerolloverseconds). CanvasItem evaluates ordered interval/transform commands against that value each frame. Disabled rendering or an invisible root skips both submission and clock advancement. Tree pause leaves time advancing; TimeScale zero freezes it. The GPU backend sends the same clock to optional reserved TIME uniforms; see [shader render time](../components/shader-materials.md#render-time). See [canvas timing verification](../components/canvas-rendering.md#animation-intervals-and-rectangles).
 
-Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, independent offscreen viewports and editor gizmo drawing remain outside this verification.
+Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, layered offscreen targets and editor gizmo drawing remain outside this verification; single-layer offscreen integration has separate SubViewportTests evidence.
 
 ## Texture RID verification
 
@@ -778,3 +778,37 @@ Changes the visible prefix of an owned resource without reallocating.
 multiMesh: Owned instance identity.
 
 visible: Minus one or a count through capacity.
+
+## Offscreen target integration
+
+[Offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) use independent native images and stable borrowed identities. Native root presentation remains owned by Engine.Run.
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public Electron2D.RID ViewportGetTexture(Electron2D.RID viewport)` | Returns the borrowed live texture identity associated with a scene viewport. |
+
+## Method Descriptions
+
+<a id="member-f6270f86144d"></a>
+### ViewportGetTexture
+
+`public Electron2D.RID ViewportGetTexture(Electron2D.RID viewport)`
+
+Returns the borrowed live texture identity associated with a scene viewport.
+
+viewport: A live identity returned by Viewport.GetViewportRID.
+
+Returns: The stable resource texture RID.
+
+System.ArgumentException: The identity does not resolve to a live viewport.
+
+System.InvalidOperationException: The call is off the renderer owner thread.
+
+System.ObjectDisposedException: The renderer is disposed.
+
+
+Native canvas texture/program/material caches now span the complete multi-target frame. Texture2DGet resolves completed ViewportTexture images explicitly; ordinary viewport canvas/material sampling uses native storage. Readback/native submission mutation guards remain separate. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.
+
+Its private CanvasFrame owns reusable per-target node/order/geometry/batch buffers, transform maps and sampler scratch. Dependency recursion therefore preserves consumer buffers; frame completion clears borrowed references while retaining capacity.

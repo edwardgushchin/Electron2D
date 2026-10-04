@@ -3,10 +3,10 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-/// <summary>Renders the active root window's retained two-dimensional canvas commands.</summary>
+/// <summary>Renders retained two-dimensional window and offscreen canvas commands.</summary>
 /// <remarks>Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
-/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Lights, general canvas clipping, offscreen public viewports and device recovery
+/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Independent single-layer viewport targets and texture dependencies execute on both backends. Lights, general canvas clipping and device recovery
 /// are not integrated. Owned two-dimensional texture RIDs support copied images, compatible updates, replacement,
 /// placeholders and explicit free; resource texture RIDs remain borrowed. Screen notifier bounds and processing enablers follow submitted canvas culling. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
 public sealed partial class RenderingServer : ElectronObject
@@ -20,14 +20,14 @@ public sealed partial class RenderingServer : ElectronObject
     private readonly CanvasBackend _backend;
     private readonly Window _window;
     private readonly int _ownerThread = Environment.CurrentManagedThreadId;
-    private readonly List<CanvasItem> _nodes = [];
-    private readonly List<CanvasVertex> _vertices = [];
-    private readonly List<CanvasBatch> _batches = [];
-    private readonly List<RenderEntry> _order = [];
-    private readonly Dictionary<CanvasItem, Transform> _repeatTransforms = [];
-    private readonly Dictionary<CanvasItem, Transform> _canvasTransforms = [];
+    private List<CanvasItem> _nodes = [];
+    private List<CanvasVertex> _vertices = [];
+    private List<CanvasBatch> _batches = [];
+    private List<RenderEntry> _order = [];
+    private Dictionary<CanvasItem, Transform> _repeatTransforms = [];
+    private Dictionary<CanvasItem, Transform> _canvasTransforms = [];
     private float _interpolationFraction = 1f;
-    private readonly List<YSortEntry> _ySort = [];
+    private List<YSortEntry> _ySort = [];
     private readonly List<AnimatedTexture> _animatedChanges = [];
     private long _canvasStacking;
     private bool _canvasTooltipOverlay;
@@ -42,6 +42,7 @@ public sealed partial class RenderingServer : ElectronObject
     private RenderingServer(Window window, CanvasBackend backend)
     {
         _window = window;
+        _viewport = window;
         _backend = backend;
         _clearColor = ProjectSettings.Instance.GetWithOverride(ProjectSettings.DefaultClearColor);
     }
@@ -129,100 +130,173 @@ public sealed partial class RenderingServer : ElectronObject
 
     internal double CanvasTime { get; private set; }
 
+    private sealed class CanvasFrame(Viewport viewport)
+    {
+        internal readonly Viewport Viewport = viewport;
+        internal readonly List<CanvasItem> Nodes = [];
+        internal readonly List<CanvasVertex> Vertices = [];
+        internal readonly List<CanvasBatch> Batches = [];
+        internal readonly List<RenderEntry> Order = [];
+        internal readonly Dictionary<CanvasItem, Transform> Repeats = [], Transforms = [];
+        internal readonly List<YSortEntry> YSort = [];
+        internal readonly Texture?[] TextureScratch = new Texture?[16];
+        internal int State;
+        internal bool Wanted, Drawn;
+    }
+    private Viewport _viewport;
+    private readonly Dictionary<Viewport, CanvasFrame> _canvasFrames = new(ReferenceEqualityComparer.Instance);
+    private readonly List<CanvasFrame> _activeFrames = [];
+    private void UseFrame(CanvasFrame frame)
+    { _viewport = frame.Viewport; _nodes = frame.Nodes; _vertices = frame.Vertices; _batches = frame.Batches; _order = frame.Order; _repeatTransforms = frame.Repeats; _canvasTransforms = frame.Transforms; _ySort = frame.YSort; }
+    private Color FrameClear(Viewport viewport) => viewport.TransparentBG ? default : _clearColor with { A = 1 };
+    private void CaptureViewports(Node node)
+    {
+        if (node is Viewport viewport && (ReferenceEquals(viewport, _window) || viewport is SubViewport))
+        {
+            if (!_canvasFrames.TryGetValue(viewport, out var frame)) _canvasFrames.Add(viewport, frame = new(viewport));
+            viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = false; _activeFrames.Add(frame);
+            var size = ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : ((SubViewport)viewport).Size;
+            if (size.X > 0 && size.Y > 0) _backend.Target(viewport, size, FrameClear(viewport));
+        }
+        for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) CaptureViewports(node.GetChild(i, includeInternal: true));
+    }
+    internal void InvalidateViewportRecordings(Viewport viewport)
+    { EnsureOwner(); InvalidateViewportRecordings(_window, viewport); }
+    private static void InvalidateViewportRecordings(Node node, Viewport viewport)
+    { if (node is CanvasItem item && ReferenceEquals(item.CanvasViewport, viewport)) item.QueueRedraw(); for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) InvalidateViewportRecordings(node.GetChild(i, includeInternal: true), viewport); }
+    internal void SetWindowVisible(DisplayServer display, bool visible) { EnsureViewportMutation(); _backend.SetWindowVisible(display, visible); }
+    internal void EnsureViewportMutation() { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot mutate during native submission."); }
+    internal void ReleaseViewport(Viewport viewport) { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot be released during native submission."); _backend.ReleaseTarget(viewport); _canvasFrames.Remove(viewport); viewport.RenderingOwner = null; }
+    internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : ((SubViewport)viewport).Size; }
+    internal Image? ReadbackViewport(Viewport viewport)
+    { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
     internal void Render(SceneTree tree, double step)
     {
-        EnsureOwner();
-        if (!_renderLoopEnabled || !_window.Visible) return;
+        EnsureOwner(); if (!_renderLoopEnabled) return;
         if (_rendering) throw new InvalidOperationException("Canvas rendering cannot be re-entered.");
         _rendering = true;
         try
         {
             AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
             FramePreDraw?.Invoke();
-            if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step))
-                throw new InvalidOperationException("The render clock step is invalid.");
+            if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step)) throw new InvalidOperationException("The render clock step is invalid.");
             CanvasTime = (CanvasTime + step) % ProjectSettings.Instance.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
             _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.Instance.PhysicsInterpolationFraction : 1f;
-            _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _vertices.Clear(); _batches.Clear();
-            Capture(tree.Root);
-            foreach (var node in _nodes)
-                if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.IsVisibleInTree)
-                    node.PrepareCanvas();
-            var pixels = _backend.GetPixelSize();
-            var client = _window.Size;
-            if (pixels.X <= 0 || pixels.Y <= 0) return;
-            var framebufferTransform = new Transform(0f, new Vector2((float)pixels.X / client.X, (float)pixels.Y / client.Y), 0f, Vector2.Zero);
-            // Drawing callbacks may change parenting, visibility or sibling order.
-            _nodes.Clear();
-            Capture(tree.Root);
-            foreach (var node in _nodes)
-                if (node is VisibleOnScreenNotifier notifier) notifier.ScreenCandidate = false;
-            foreach (var node in _nodes)
-                if (node.GetParentItem() is null)
-                {
-                    var layer = node.GetCanvasLayerNode();
-                    if (layer is not null && !ReferenceEquals(layer.CanvasViewport, _window)) continue;
-                    _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex(includeInternal: true);
-                    _canvasTooltipOverlay = SceneTree.IsTooltipNode(node);
-                    _canvasID = layer?.InstanceID ?? 0;
-                    OrderCanvas(node, framebufferTransform * _window.GetCanvasRenderTransform(layer, _interpolationFraction));
-                }
-            _order.Sort(static (x, y) =>
-            {
-                var order = x.TooltipOverlay.CompareTo(y.TooltipOverlay); if (order != 0) return order;
-                order = x.Stacking.CompareTo(y.Stacking); if (order != 0) return order;
-                order = x.CanvasID.CompareTo(y.CanvasID); if (order != 0) return order;
-                order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
-            });
-            _submittingTextures = true;
-            foreach (var item in _order)
-            {
-                CanvasItem? repeatSource = null;
-                for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.GetParentItem())
-                    if ((ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero) ||
-                        (ancestor is ParallaxLayer layer && layer.RepeatPeriod != Vector2.Zero))
-                    {
-                        repeatSource = ancestor;
-                        break;
-                    }
-                if (repeatSource is null)
-                {
-                    var clip = GetClip(item.Node, pixels);
-                    if ((clip is null || clip.Value.HasArea()) && !HasEmptyOwnClip(item.Node, pixels))
-                    {
-                        AppendScreenCanvas(item.Node, item.Transform, clip, pixels);
-                    }
-                    continue;
-                }
-                var size = repeatSource is Parallax current ? current.RepeatSize : ((ParallaxLayer)repeatSource).RepeatPeriod;
-                var times = repeatSource is Parallax repeated ? repeated.RepeatTimes : 1;
-                var sourceTransform = _repeatTransforms[repeatSource];
-                var start = size * -(times / 2);
-                var countX = size.X == 0 ? 0 : times;
-                var countY = size.Y == 0 ? 0 : times;
-                var repeatedClip = GetClip(item.Node, pixels, repeatSource);
-                if (repeatedClip is { } empty && !empty.HasArea() || HasEmptyOwnClip(item.Node, pixels, repeatSource)) continue;
-                for (long y = 0; y <= countY; y++)
-                    for (long x = 0; x <= countX; x++)
-                    {
-                        var transform = item.Transform;
-                        var displacement = repeatSource is Parallax
-                            ? start + new Vector2(x * size.X, y * size.Y)
-                            : new Vector2(x * size.X, y * size.Y);
-                        transform.Origin += sourceTransform.BasisXform(displacement);
-                        if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
-                        AppendScreenCanvas(item.Node, transform, repeatedClip, pixels);
-                    }
-            }
-            foreach (var batch in _batches)
-                if (batch.Material is not null && _backend.Method != "gpu")
-                    throw new NotSupportedException("A shader material requires GPU rendering; compatibility fallback cannot draw it.");
-            _backend.Draw(CollectionsMarshal.AsSpan(_vertices), CollectionsMarshal.AsSpan(_batches), _clearColor, present: true, CanvasTime);
-            _submittingTextures = false;
-            DispatchScreenVisibility(tree);
+            _activeFrames.Clear(); CaptureViewports(tree.Root);
+            if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); Capture(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.IsVisibleInTree) node.PrepareCanvas(); }
+            _activeFrames.Clear(); CaptureViewports(tree.Root);
+            foreach (var viewport in _canvasFrames.Keys) if (viewport.IsDisposed || !ReferenceEquals(viewport.Tree, tree)) { _backend.ReleaseTarget(viewport); viewport.RenderingOwner = null; _canvasFrames.Remove(viewport); }
+            _backend.BeginFrame();
+            if (_window.Visible && _canvasFrames.TryGetValue(_window, out var root)) { root.Wanted = true; SubmitFrame(root, tree); }
+            for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (frame.Viewport is SubViewport sub && sub.RenderTargetUpdateMode is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
+            _backend.EndFrame();
+            foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); DispatchScreenVisibility(tree); }
             FramePostDraw?.Invoke();
         }
-        finally { _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear(); _submittingTextures = false; _rendering = false; }
+        finally
+        {
+            foreach (var frame in _activeFrames) { frame.Nodes.Clear(); frame.Vertices.Clear(); frame.Batches.Clear(); Array.Clear(frame.TextureScratch); frame.Order.Clear(); frame.Repeats.Clear(); frame.Transforms.Clear(); frame.YSort.Clear(); }
+            _activeFrames.Clear(); _submittingTextures = false; _rendering = false;
+        }
+    }
+    private void SubmitTexture(Texture? texture, SceneTree tree)
+    {
+        while (texture is AtlasTexture atlas) texture = atlas.RenderingTexture;
+        if (texture is not ViewportTexture view || view.Bound is not { } viewport || !_canvasFrames.TryGetValue(viewport, out var frame) || !ReferenceEquals(viewport.Tree, tree)) return;
+        if (viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled }) return;
+        frame.Wanted = true; SubmitFrame(frame, tree);
+    }
+    private void SubmitFrame(CanvasFrame frame, SceneTree tree)
+    {
+        if (frame.State != 0 || !frame.Wanted || frame.Viewport.IsDisposed || !ReferenceEquals(frame.Viewport.Tree, tree)) return;
+        if (frame.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled }) return;
+        frame.State = 1; BuildFrame(frame, tree);
+        foreach (var batch in frame.Batches)
+        {
+            SubmitTexture(batch.Texture, tree);
+            if (batch.Material is { } material)
+            {
+                material.CopyTextures(frame.TextureScratch);
+                for (var i = 0; i < material.Textures.Length; i++) SubmitTexture(frame.TextureScratch[i], tree);
+                Array.Clear(frame.TextureScratch);
+            }
+        }
+        foreach (var child in _activeFrames) if (child.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.WhenParentVisible } && ReferenceEquals(child.Viewport.Parent?.GetViewport(), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
+        var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
+        _submittingTextures = true;
+        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible, CanvasTime); }
+        finally { _submittingTextures = false; }
+        if (frame.Viewport is SubViewport completed) completed.Submitted();
+        frame.State = 2; frame.Drawn = true;
+    }
+    private void BuildFrame(CanvasFrame frame, SceneTree tree)
+    {
+        UseFrame(frame); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
+        var viewport = frame.Viewport; var pixels = _backend.FindTarget(viewport)!.Size;
+        var framebufferTransform = ReferenceEquals(viewport, _window) ? new Transform(0f, new Vector2((float)pixels.X / _window.Size.X, (float)pixels.Y / _window.Size.Y), 0f, Vector2.Zero) : Transform.Identity;
+        // Drawing callbacks may change parenting, visibility or sibling order.
+        _nodes.Clear();
+        Capture(tree.Root);
+        for (var i = _nodes.Count - 1; i >= 0; i--) if (!ReferenceEquals(_nodes[i].CanvasViewport, viewport)) _nodes.RemoveAt(i);
+        foreach (var node in _nodes)
+            if (node is VisibleOnScreenNotifier notifier) notifier.ScreenCandidate = false;
+        foreach (var node in _nodes)
+            if (node.GetParentItem() is null)
+            {
+                var layer = node.GetCanvasLayerNode();
+                if (layer is not null && !ReferenceEquals(layer.CanvasViewport, _viewport)) continue;
+                _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex(includeInternal: true);
+                _canvasTooltipOverlay = SceneTree.IsTooltipNode(node);
+                _canvasID = layer?.InstanceID ?? 0;
+                OrderCanvas(node, framebufferTransform * _viewport.GetCanvasRenderTransform(layer, _interpolationFraction));
+            }
+        _order.Sort(static (x, y) =>
+        {
+            var order = x.TooltipOverlay.CompareTo(y.TooltipOverlay); if (order != 0) return order;
+            order = x.Stacking.CompareTo(y.Stacking); if (order != 0) return order;
+            order = x.CanvasID.CompareTo(y.CanvasID); if (order != 0) return order;
+            order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
+        });
+        _submittingTextures = true;
+        foreach (var item in _order)
+        {
+            CanvasItem? repeatSource = null;
+            for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.GetParentItem())
+                if ((ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero) ||
+                    (ancestor is ParallaxLayer layer && layer.RepeatPeriod != Vector2.Zero))
+                {
+                    repeatSource = ancestor;
+                    break;
+                }
+            if (repeatSource is null)
+            {
+                var clip = GetClip(item.Node, pixels);
+                if ((clip is null || clip.Value.HasArea()) && !HasEmptyOwnClip(item.Node, pixels))
+                {
+                    AppendScreenCanvas(item.Node, item.Transform, clip, pixels);
+                }
+                continue;
+            }
+            var size = repeatSource is Parallax current ? current.RepeatSize : ((ParallaxLayer)repeatSource).RepeatPeriod;
+            var times = repeatSource is Parallax repeated ? repeated.RepeatTimes : 1;
+            var sourceTransform = _repeatTransforms[repeatSource];
+            var start = size * -(times / 2);
+            var countX = size.X == 0 ? 0 : times;
+            var countY = size.Y == 0 ? 0 : times;
+            var repeatedClip = GetClip(item.Node, pixels, repeatSource);
+            if (repeatedClip is { } empty && !empty.HasArea() || HasEmptyOwnClip(item.Node, pixels, repeatSource)) continue;
+            for (long y = 0; y <= countY; y++)
+                for (long x = 0; x <= countX; x++)
+                {
+                    var transform = item.Transform;
+                    var displacement = repeatSource is Parallax
+                        ? start + new Vector2(x * size.X, y * size.Y)
+                        : new Vector2(x * size.X, y * size.Y);
+                    transform.Origin += sourceTransform.BasisXform(displacement);
+                    if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
+                    AppendScreenCanvas(item.Node, transform, repeatedClip, pixels);
+                }
+        }
     }
 
     private void Capture(Node node)
@@ -233,12 +307,12 @@ public sealed partial class RenderingServer : ElectronObject
 
     private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
     {
-        if (!item.IsVisibleInTree || (item.VisibilityLayer & _window.CanvasCullMask) == 0) return;
+        if (!item.IsVisibleInTree || (item.VisibilityLayer & _viewport.CanvasCullMask) == 0) return;
         if (item is ParallaxLayer layer) _repeatTransforms[layer] = transform;
         if (!alreadyYSorted)
         {
             var local = item.GetInterpolatedVisualTransform(_interpolationFraction);
-            if (_window.SnapTransformsToPixel)
+            if (_viewport.SnapTransformsToPixel)
             {
                 transform.Origin = CanvasGeometry.Snap(transform.Origin);
                 local.Origin = CanvasGeometry.Snap(local.Origin);
@@ -331,16 +405,16 @@ public sealed partial class RenderingServer : ElectronObject
     {
         for (var index = 0; index < parent.GetChildCount(includeInternal: true); index++)
         {
-            if (parent.GetChild(index, includeInternal: true) is not CanvasItem { TopLevel: false } child || !child.Visible || (child.VisibilityLayer & _window.CanvasCullMask) == 0) continue;
+            if (parent.GetChild(index, includeInternal: true) is not CanvasItem { TopLevel: false } child || !child.Visible || (child.VisibilityLayer & _viewport.CanvasCullMask) == 0) continue;
             var local = child.GetInterpolatedVisualTransform(_interpolationFraction);
-            if (_window.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
+            if (_viewport.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
             var transform = parentTransform * local;
             _ySort.Add(new(child, transform, _ySort.Count));
             if (child.YSortEnabled) CollectYSort(child, transform);
         }
     }
 
-    internal Image Readback() { EnsureOwner(); return _backend.Readback(); }
+    internal Image Readback() { EnsureOwner(); return _backend.Readback(_backend.FindTarget(_window) ?? throw new InvalidOperationException("No canvas frame has completed.")); }
     internal nint GetNativeHandle(DisplayServer.HandleType type) { EnsureOwner(); return _backend.GetNativeHandle(type); }
     internal void Close() { _closing = true; Dispose(); }
 
@@ -366,7 +440,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             finally
             {
-                FramePreDraw = FramePostDraw = null;
+                FramePreDraw = FramePostDraw = null; foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
                 _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 if (ReferenceEquals(Instance, this)) Volatile.Write(ref _instance, null);
             }

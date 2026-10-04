@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-10-01
+Last updated: 2026-10-04
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -120,3 +120,5 @@ The current GPU integration accepts float-sampled images up to 16384 pixels per 
 Attached buttons can hold internal renderer-cache residency counts for their known state textures. These counts coexist with font glyph retention and are released on replacement, tree exit and control disposal. They do not own the texture or prevent its disposal, and backend entries do not reference the control. Unleased unused entries still use ordinary eviction; native allocation on first preparation or format-changing replacement remains possible.
 
 RenderingServer proxies borrow resource RID links. They observe live pixel changes and source disposal, while retaining their own stable identity until renderer free/shutdown. The alias does not own this resource; replay samples the resolved root storage.
+
+ViewportTexture supplies live native target storage and explicit caller-owned GetImage readback; ordinary drawing does not require CPU pixels. Atlas/server RID drawing follows the existing texture path. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.

@@ -122,7 +122,7 @@ internal sealed class ServerTexture : Texture
         return IsProxy && !_proxySizeOverride && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is { } source
             ? ProxySize(source) : new(Size.X, Size.Y);
     }
-    public override Image? GetImage() => CapturePixels()?.CopyImage();
+    public override Image? GetImage() => IsProxy && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is ViewportTexture view ? view.GetImage() : CapturePixels()?.CopyImage();
     public override Image.Format PixelFormat => IsProxy ? CapturePixels()?.Source.Format ?? _proxyFormat : base.PixelFormat;
     internal override TexturePixels? CapturePixels()
     {

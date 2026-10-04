@@ -2,9 +2,10 @@ namespace Electron2D;
 
 public partial class StyleBoxFlat
 {
-    private void BuildGeometry(Rect2 rect)
+    private void BuildGeometry(Rect2 rect, float recordingFactor = 1)
     {
         _triangles.Clear();
+        var aaSize = _antiAliasingSize / recordingFactor;
         var border = _borders[0] > 0 || _borders[1] > 0 || _borders[2] > 0 || _borders[3] > 0;
         var shadow = _shadowSize > 0;
         if (!border && !_drawCenter && !shadow) return;
@@ -32,7 +33,7 @@ public partial class StyleBoxFlat
         var borderStyle = style;
         if (aa)
             for (var side = 0; side < 4; side++)
-                if (_borders[side] > 0) borderStyle = borderStyle.GrowSide((Side)side, -_antiAliasingSize);
+                if (_borders[side] > 0) borderStyle = borderStyle.GrowSide((Side)side, -aaSize);
         if (shadow)
         {
             var shadowInner = new Rect2(style.Position + _shadowOffset, style.Size);
@@ -48,8 +49,8 @@ public partial class StyleBoxFlat
             for (var side = 0; side < 4; side++)
             {
                 var hasBorder = border && _borders[side] > 0;
-                aaBorder[side] = hasBorder ? _antiAliasingSize : 0;
-                aaFill[side] = hasBorder ? 0 : _antiAliasingSize;
+                aaBorder[side] = hasBorder ? aaSize : 0;
+                aaFill[side] = hasBorder ? 0 : aaSize;
             }
             if (_drawCenter)
             {
@@ -69,7 +70,7 @@ public partial class StyleBoxFlat
                 Rounded(borderStyle, radii, outerTransparent, outerColored, _borderColor, transparentBorder);
             }
         }
-        var uvRect = style.Grow(aa ? _antiAliasingSize : 0);
+        var uvRect = style.Grow(aa ? aaSize : 0);
         for (var index = 0; index < _triangles.Count; index++)
         {
             var vertex = _triangles[index];

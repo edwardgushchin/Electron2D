@@ -1,8 +1,8 @@
 namespace Electron2D;
 
-/// <summary>Provides the root window's client rectangle and scene input boundary.</summary>
-/// <remarks>Only a root <see cref="Window"/> is currently supported. Offscreen render targets, content scaling,
-/// and embedded viewports are not implemented. Canvas transforms, sampling and pixel-snapping policies apply to the root renderer. Window input is localized through the inverse final transform.</remarks>
+/// <summary>Provides a window or offscreen canvas rectangle and scene input boundary.</summary>
+/// <remarks>A root <see cref="Window"/> owns native presentation; <see cref="SubViewport"/> supplies independent
+/// canvas targets and optional logical stretch. Canvas transforms, sampling and pixel-snapping policies apply to each target. Window input is localized through the inverse final transform.</remarks>
 public abstract partial class Viewport : Node
 {
     private protected Viewport() => _guiDragThreshold = ProjectSettings.Instance.GetWithOverride(ProjectSettings.DefaultGUIDragThreshold);
@@ -69,7 +69,13 @@ public abstract partial class Viewport : Node
         var tree = GetInputTree(); tree.DispatchViewportInput(this, inputEvent, inLocalCoordinates);
     }
 
-    internal void NotifySizeChanged() => SizeChanged?.Invoke();
+    internal void NotifySizeChanged()
+    {
+        List<Exception>? errors = null;
+        try { TextureSizeChanged(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        if (SizeChanged is { } handlers) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        AnimationNode.ThrowCollected("Viewport size notification failed.", errors);
+    }
     internal void NotifyGUIFocusChanged(Control control) => GUIFocusChanged?.Invoke(control);
 
     private SceneTree GetInputTree()
@@ -79,10 +85,17 @@ public abstract partial class Viewport : Node
     }
 
     /// <inheritdoc />
+    protected override void ValidateDisposal() { base.ValidateDisposal(); RenderingOwner?.EnsureViewportMutation(); }
+
+    /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            RenderingOwner?.ReleaseViewport(this);
+            ReleaseViewportRID();
+            TextureSizeUpdated = null;
+            _texture = null;
             SizeChanged = null;
             GUIFocusChanged = null;
             _audioListener = null;

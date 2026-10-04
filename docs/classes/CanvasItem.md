@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Inherits:** [Node](Node.md)
 
@@ -1013,7 +1013,7 @@ Local notifications are attached-only, synchronous and enabled by NotifyLocalTra
 
 [The component audit](../components/scene-hierarchy.md#transform-invalidation-and-delivery) records exact source semantics, safe phases, reentry policy and tests. Hidden, masked or processing-disabled canvas items can still receive queued notifications. No interpolation, physics backend or UI implementation is implied.
 
-Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, independent offscreen viewports and editor gizmo drawing remain outside this verification.
+Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, layered offscreen targets and editor gizmo drawing remain outside this verification; single-layer offscreen integration has separate SubViewportTests evidence.
 
 ## Font drawing
 
@@ -1218,3 +1218,5 @@ multiMesh: Borrowed or owned logical instance identity.
 texture: Optional live texture identity.
 
 System.ArgumentException: An identity is missing or disposed.
+
+Offscreen canvas selection and external CanvasLayer targets now choose their actual rendering viewport for default sampling and vertex snapping. Submitted masks/camera/final transforms and notifier bounds are per target. Native root visibility does not hide an independent offscreen canvas. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.

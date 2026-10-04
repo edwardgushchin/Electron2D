@@ -4,6 +4,14 @@ public sealed partial class RenderingServer
 {
     private readonly List<RID> _ownedTextureRIDs = [];
 
+    /// <summary>Returns the borrowed live texture identity associated with a scene viewport.</summary>
+    /// <param name="viewport">A live identity returned by Viewport.GetViewportRID.</param>
+    /// <returns>The stable resource texture RID.</returns>
+    /// <exception cref="ArgumentException">The identity does not resolve to a live viewport.</exception>
+    /// <exception cref="InvalidOperationException">The call is off the renderer owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
+    public RID ViewportGetTexture(RID viewport) { EnsureOwner(); return Viewport.ResolveViewportRID(viewport).GetTexture().GetRID(); }
+
     /// <summary>Creates a caller-owned two-dimensional rendering texture from copied image pixels.</summary>
     /// <param name="image">A live nonempty image in a supported sampling format.</param>
     /// <returns>A stable texture RID valid until FreeRID or renderer shutdown.</returns>
@@ -111,7 +119,7 @@ public sealed partial class RenderingServer
             source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
             if (source is null) return null;
         }
-        return (source.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels).CopyImage();
+        return source is ViewportTexture view ? view.GetImage() : (source.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels).CopyImage();
     }
 
     /// <summary>Updates an owned two-dimensional texture while preserving its allocation parameters.</summary>

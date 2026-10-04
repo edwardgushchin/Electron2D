@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -82,3 +82,5 @@ Idempotently waits for device idle, releases caches, samplers, target/buffers/sh
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
 
 Named AtlasTexture bindings resolve to the terminal source before texture-cache lookup. Views therefore share the native allocation with direct source use, sample full source storage, observe updates, and reject empty/disposed chains before submission. Region/margin remapping belongs to virtual canvas drawing, not named material binding.
+
+On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path.

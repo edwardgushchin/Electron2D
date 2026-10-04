@@ -128,6 +128,10 @@ public partial class Window : Viewport
 
     /// <summary>Gets or sets the root window's native visibility.</summary>
     /// <value>True by default. A native failure leaves managed visibility unchanged.</value>
+    /// <remarks>GPU work drains and root swapchain storage releases before hiding. Showing reclaims
+    /// presentation storage; independent offscreen targets remain live. The current Wayland Vulkan
+    /// profile rejects remapping a previously presented surface until native unmap acknowledgement is available.</remarks>
+    /// <exception cref="NotSupportedException">The active profile cannot safely remap a previously presented window.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     /// <exception cref="AggregateException">Visibility callbacks fail after the new visibility commits.</exception>
@@ -138,7 +142,11 @@ public partial class Window : Viewport
         {
             EnsureMutable();
             if (_visible == value) return;
-            _display?.SetWindowVisible(value);
+            if (_display is { } display)
+            {
+                if (_renderer is { } renderer) renderer.SetWindowVisible(display, value);
+                else display.SetWindowVisible(value);
+            }
             _visible = value;
             List<Exception>? errors = null;
             try { VisibilityChanged?.Invoke(); }
@@ -154,6 +162,7 @@ public partial class Window : Viewport
     }
 
     /// <summary>Shows this window, acquiring no native resources before Engine.Run.</summary>
+    /// <exception cref="NotSupportedException">The active Wayland Vulkan profile cannot safely remap a previously presented surface.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     /// <exception cref="AggregateException">Visibility callbacks fail after the new visibility commits.</exception>

@@ -6,12 +6,9 @@ namespace Electron2D;
 internal sealed class CompatibilityCanvasBackend : CanvasBackend
 {
     private readonly RenderHandle _renderer;
-    private RenderHandle? _target;
-    private Vector2i _targetSize;
     private SDL.Vertex[] _vertices = [];
     private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels)> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
-    private bool _hasFrame;
     private (nint Context, nint EGLDisplay, nint EGLConfig, nint GLXVisualID, nint GLXFBConfig) _graphics;
     internal override string Method => "compatibility";
     internal override string Driver { get; }
@@ -113,7 +110,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         return new(width, height);
     }
 
-    internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time)
     {
         foreach (var batch in batches)
             if (batch.ShaderCode is not null)
@@ -123,9 +120,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 if (batch.Blend != BlendMode.Mix)
                     throw new NotSupportedException($"The software compatibility renderer cannot execute {batch.Blend} canvas blending.");
         var renderer = _renderer.DangerousGetHandle();
-        var size = GetPixelSize();
-        if (size.X <= 0 || size.Y <= 0) return;
-        _usedTextures.Clear();
+        var size = output.Size;
         foreach (var batch in batches)
             if (batch.Texture is { } texture)
             {
@@ -135,30 +130,18 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                     throw new NotSupportedException("The compatibility renderer cannot sample texture mipmaps or use anisotropic filtering.");
                 if (batch.Repeat == TextureRepeat.Mirror)
                     throw new NotSupportedException("The compatibility renderer cannot use mirrored texture repeat.");
-                if (_usedTextures.Add(texture)) PrepareTexture(texture);
-                var image = _textures[texture].Pixels.Source;
-                if (batch.Repeat == TextureRepeat.Enabled && ((image.Width & (image.Width - 1)) != 0 || (image.Height & (image.Height - 1)) != 0) &&
+                if (texture is not ViewportTexture && _usedTextures.Add(texture)) PrepareTexture(texture);
+                var dimensions = texture.GetSize();
+                if (batch.Repeat == TextureRepeat.Enabled && (((int)dimensions.X & ((int)dimensions.X - 1)) != 0 || ((int)dimensions.Y & ((int)dimensions.Y - 1)) != 0) &&
                     !SDL.GetBooleanProperty(SDL.GetRendererProperties(renderer), SDL.Props.RendererTextureWrappingBoolean, false))
                     throw new NotSupportedException("This compatibility driver cannot repeat textures whose dimensions are not powers of two.");
             }
-        foreach (var pair in _textures)
-            if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); }
-        if (_targetSize != size)
-        {
-            var target = new RenderHandle(SDL.CreateTexture(renderer, (BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888), SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, _renderer);
-            try { Check(SDL.SetTextureBlendMode(target.DangerousGetHandle(), SDL.BlendMode.None), "set framebuffer copy blending"); }
-            catch { target.Dispose(); throw; }
-            _target?.Dispose();
-            _target = target;
-            _targetSize = size;
-            _hasFrame = false;
-        }
-        Check(SDL.SetRenderTarget(renderer, _target!.DangerousGetHandle()), "bind canvas framebuffer");
+        Check(SDL.SetRenderTarget(renderer, output.Next.DangerousGetHandle()), "bind canvas framebuffer");
         try
         {
             Check(SDL.SetRenderClipRect(renderer, 0), "reset canvas clipping");
-            Check(SDL.SetRenderDrawColorFloat(renderer, clear.R, clear.G, clear.B, clear.A), "set clear color");
-            Check(SDL.RenderClear(renderer), "clear canvas framebuffer");
+            if (clearEnabled) { Check(SDL.SetRenderDrawColorFloat(renderer, clear.R, clear.G, clear.B, clear.A), "set clear color"); Check(SDL.RenderClear(renderer), "clear canvas framebuffer"); }
+            else { Check(SDL.SetTextureBlendMode(output.Current.DangerousGetHandle(), SDL.BlendMode.None), "preserve framebuffer blending"); Check(SDL.RenderTexture(renderer, output.Current.DangerousGetHandle(), 0, 0), "preserve completed canvas image"); }
             if (_vertices.Length < vertices.Length) Array.Resize(ref _vertices, Math.Max(vertices.Length, _vertices.Length * 2));
             for (var i = 0; i < vertices.Length; i++)
             {
@@ -185,7 +168,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 }
                 var mode = batch.Repeat == TextureRepeat.Enabled ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp;
                 Check(SDL.SetRenderTextureAddressMode(renderer, mode, mode), "set texture addressing");
-                var texture = batch.Texture is null ? 0 : _textures[batch.Texture].Handle.DangerousGetHandle();
+                var texture = batch.Texture is null ? 0 : TextureHandle(batch.Texture);
                 var blend = CanvasBlend(batch.Blend);
                 if (texture == 0) Check(SDL.SetRenderDrawBlendMode(renderer, blend), "set canvas geometry blending");
                 else Check(SDL.SetTextureBlendMode(texture, blend), "set canvas texture blending");
@@ -196,7 +179,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 for (var first = batch.First; first < batch.First + batch.Count; first += step)
                     Check(SDL.RenderGeometry(renderer, texture, _vertices.AsSpan(first, step), step, 0, 0), "draw canvas geometry");
             }
-            _hasFrame = true;
+            output.Commit();
         }
         finally
         {
@@ -204,8 +187,27 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
             finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
         }
         if (!present) return;
-        Check(SDL.RenderTexture(renderer, _target.DangerousGetHandle(), 0, 0), "copy canvas to window");
+        Check(SDL.SetTextureBlendMode(output.Current.DangerousGetHandle(), SDL.BlendMode.None), "set presentation copy blending");
+        Check(SDL.RenderTexture(renderer, output.Current.DangerousGetHandle(), 0, 0), "copy canvas to window");
         Check(SDL.RenderPresent(renderer), "present canvas");
+    }
+
+    internal override void BeginFrame() => _usedTextures.Clear();
+    internal override void EndFrame() { foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); } }
+    private nint TextureHandle(Texture texture)
+    {
+        if (texture is ViewportTexture view) { var viewport = view.Bound ?? throw new InvalidOperationException("The sampled viewport texture is unresolved."); return (FindTarget(viewport) ?? throw new InvalidOperationException("The sampled viewport has no native target.")).Current.DangerousGetHandle(); }
+        return _textures[texture].Handle.DangerousGetHandle();
+    }
+    internal override RenderHandle CreateTarget(Vector2i size, Color clear)
+    {
+        var renderer = _renderer.DangerousGetHandle(); var target = new RenderHandle(SDL.CreateTexture(renderer, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, _renderer);
+        try
+        {
+            Check(SDL.SetTextureBlendMode(target.DangerousGetHandle(), SDL.BlendMode.None), "set framebuffer copy blending"); Check(SDL.SetRenderTarget(renderer, target.DangerousGetHandle()), "initialize canvas target"); Check(SDL.SetRenderClipRect(renderer, 0), "clear initial target clipping"); Check(SDL.SetRenderDrawColorFloat(renderer, clear.R, clear.G, clear.B, clear.A), "set initial target color"); Check(SDL.RenderClear(renderer), "clear initial canvas target"); return target;
+        }
+        catch { target.Dispose(); throw; }
+        finally { Check(SDL.SetRenderTarget(renderer, 0), "restore initialization target"); }
     }
 
     private static SDL.BlendMode CanvasBlend(BlendMode blend)
@@ -256,11 +258,11 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         _textures[texture] = (handle, pixels);
     }
 
-    internal override Image Readback()
+    internal override Image Readback(CanvasRenderTarget output)
     {
-        if (!_hasFrame) throw new InvalidOperationException("No canvas frame has completed.");
+        if (!output.HasFrame) throw new InvalidOperationException("No canvas frame has completed.");
         var renderer = _renderer.DangerousGetHandle();
-        Check(SDL.SetRenderTarget(renderer, _target!.DangerousGetHandle()), "bind readback target");
+        Check(SDL.SetRenderTarget(renderer, output.Current.DangerousGetHandle()), "bind readback target");
         try
         {
             using var surface = new RenderHandle(SDL.RenderReadPixels(renderer, null), SDL.DestroySurface);
@@ -277,6 +279,6 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     {
         _graphics = default;
         foreach (var texture in _textures.Values) texture.Handle.Dispose();
-        _textures.Clear(); _usedTextures.Clear(); _target?.Dispose(); _renderer.Dispose();
+        _textures.Clear(); _usedTextures.Clear(); ReleaseTargets(); _renderer.Dispose();
     }
 }

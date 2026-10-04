@@ -1,8 +1,8 @@
 namespace Electron2D;
 
-/// <summary>Describes a two-dimensional texture with a logical size and readable image data.</summary>
+/// <summary>Describes a two-dimensional texture with a logical size and image or native target storage.</summary>
 /// <remarks>Custom implementations provide GetWidth, GetHeight and GetImage, and emit Changed when their pixels change.
-/// The renderer caches a copied image until Changed. Consumers borrow textures; GPU resources belong to the renderer.</remarks>
+/// The renderer caches a copied image until Changed. Consumers borrow textures; GPU resources belong to the renderer. ViewportTexture uses live native targets and explicit GetImage readback.</remarks>
 public abstract class Texture : Resource
 {
     // Font caches and attached controls retain their known state textures without retaining their owners.

@@ -36,14 +36,16 @@ internal static class CanvasGeometry
 
     private static void AppendTexture(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color color, bool snapVertices)
     {
-        var pixels = command.Texture!.CapturePixels() ?? throw new InvalidOperationException("The drawn texture has no readable image.");
+        var texture = command.Texture!; var pixels = texture is ViewportTexture ? null : texture.CapturePixels() ?? throw new InvalidOperationException("The drawn texture has no readable image.");
+        var dimensions = texture is ViewportTexture ? texture.GetSize() : new Vector2(pixels!.Source.Width, pixels.Source.Height);
+        if (dimensions.X <= 0 || dimensions.Y <= 0) return;
         var size = command.B.Abs();
         var source = new Rect2(command.Source.Position, command.Source.Size.Abs());
         if (size.X == 0 || size.Y == 0 || !source.HasArea() && !command.ConstantSource) return;
         if (command.Transpose) size = new Vector2(size.Y, size.X);
         var flipX = (command.B.X < 0) != (command.Source.Size.X < 0);
         var flipY = (command.B.Y < 0) != (command.Source.Size.Y < 0);
-        var halfPixel = new Vector2(0.5f / pixels.Source.Width, 0.5f / pixels.Source.Height);
+        var halfPixel = new Vector2(0.5f / dimensions.X, 0.5f / dimensions.Y);
         var border = halfPixel / source.Size;
         if (command.Transpose) border = new Vector2(border.Y, border.X);
         Span<float> xs = stackalloc float[4];

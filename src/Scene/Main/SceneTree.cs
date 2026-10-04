@@ -858,11 +858,12 @@ public sealed partial class SceneTree : MainLoop
         ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); EnsureExecutionAvailable();
         if (!ReferenceEquals(viewport.Tree, this)) throw new InvalidOperationException("Viewport is not attached to this tree.");
         var localized = inLocalCoordinates ? inputEvent : viewport.MakeViewportInputLocal(inputEvent);
-        try { DispatchLocalInputEvent(localized); }
+        try { DispatchLocalInputEvent(localized, viewport); }
         finally { if (!ReferenceEquals(localized, inputEvent)) localized.Dispose(); }
     }
 
-    private void DispatchLocalInputEvent(InputEvent @event)
+    private Viewport? _inputViewport;
+    private void DispatchLocalInputEvent(InputEvent @event, Viewport? inputViewport = null)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(@event);
@@ -876,13 +877,14 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
+            _inputViewport = inputViewport;
             CaptureInputNodes();
             DispatchInputStage(@event, InputStage.Input, ref errors);
 
-            if (Root is Viewport hoverViewport && @event is InputEventMouse hoverMouse)
+            if (inputViewport is { } hoverViewport && @event is InputEventMouse hoverMouse)
                 UpdateGUIHover(hoverViewport, hoverMouse.Position, ref errors);
 
-            if (!_inputHandled && Root is Viewport viewport)
+            if (!_inputHandled && inputViewport is { } viewport)
             {
                 try { UpdateTooltipInput(@event); } catch (Exception error) { CollectException(ref errors, error); }
                 if (!_inputHandled) DispatchGUIInput(viewport, @event, ref errors);
@@ -903,6 +905,7 @@ public sealed partial class SceneTree : MainLoop
         finally
         {
             _inputTraversal.Clear();
+            _inputViewport = null;
             _inputHandled = false;
             _isDispatchingInput = false;
             EndExecution();
@@ -1399,7 +1402,7 @@ public sealed partial class SceneTree : MainLoop
         for (var index = _inputTraversal.Count - 1; index >= 0 && !_inputHandled; index--)
         {
             var node = _inputTraversal[index];
-            if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess())
+            if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess() || _inputViewport is not null && !ReferenceEquals(node.GetViewport(), _inputViewport))
                 continue;
 
             var enabled = stage switch

@@ -38,6 +38,8 @@ public abstract partial class CanvasItem : Node
         return _globalTransform;
     }
 
+    internal Viewport? CanvasViewport => _canvasLayer?.CanvasViewport ?? GetViewport();
+
     internal CanvasItem? GetParentItem() => TopLevel ? null : Parent as CanvasItem;
 
     /// <summary>Reports a change that may affect this item's local drawing bounds.</summary>
@@ -379,7 +381,7 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Gets whether this node is active and locally visible through its direct canvas ancestor chain.</summary>
     /// <value><see langword="true"/> only inside a tree when this node and its direct canvas visibility chain are visible.
-    /// A direct CanvasLayer parent supplies its own visibility; other non-canvas boundaries use the containing window.</value>
+    /// A direct CanvasLayer parent supplies its own visibility; other non-canvas boundaries use the selected viewport: root window visibility or an independent offscreen canvas.</value>
     /// <remarks>This logical query does not account for VisibilityLayer or Viewport.CanvasCullMask.</remarks>
     /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
     public bool IsVisibleInTree => IsInsideTree && Visible && _parentVisible;
@@ -547,7 +549,7 @@ public abstract partial class CanvasItem : Node
     {
         CanvasItem item => item.IsVisibleInTree,
         CanvasLayer layer => layer.Visible,
-        _ => GetWindow()?.Visible ?? true,
+        _ => GetViewport() is not Window window || window.Visible,
     };
 
     private void ApplyVisibilityChange()

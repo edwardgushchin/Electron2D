@@ -45,15 +45,15 @@ public abstract partial class Viewport
     }
 
     /// <summary>Returns the transform from viewport coordinates to the containing client area.</summary>
-    /// <returns>GlobalCanvasTransform for the current root-window runtime, whose content stretch is identity.</returns>
+    /// <returns>StretchTransform followed by GlobalCanvasTransform; native root content stretch is identity.</returns>
     /// <remarks>Does not include CanvasTransform, native desktop placement or framebuffer pixel density.</remarks>
     /// <exception cref="InvalidOperationException">An attached viewport is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
-    public Transform GetFinalTransform() => GlobalCanvasTransform;
+    public Transform GetFinalTransform() => StretchTransform * GlobalCanvasTransform;
 
     /// <summary>Returns the transform from viewport coordinates to its containing window.</summary>
     /// <returns>GetFinalTransform for the supported native root window.</returns>
-    /// <remarks>The native root's desktop position is not part of this query. Embedded and offscreen viewports are not supported.</remarks>
+    /// <remarks>The native root's desktop position is not part of this query. A standalone offscreen viewport returns its final transform without a native desktop position; embedded container transforms require their separate integration.</remarks>
     /// <exception cref="InvalidOperationException">An attached viewport is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Transform GetScreenTransform() => GetFinalTransform();

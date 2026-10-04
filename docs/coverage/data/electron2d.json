@@ -6398,6 +6398,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SubViewport",
+    "kind": "type",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "SubViewport",
+    "signature": "public sealed class Electron2D.SubViewport",
+    "visibility": "public",
+    "baseType": "Electron2D.Viewport",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SubtweenTweener",
     "kind": "type",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -7238,6 +7253,57 @@
     "declaringType": "Electron2D.Viewport.DefaultCanvasItemTextureRepeat",
     "name": "DefaultCanvasItemTextureRepeat",
     "signature": "public enum Electron2D.Viewport.DefaultCanvasItemTextureRepeat",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ViewportClearMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ViewportClearMode",
+    "name": "ViewportClearMode",
+    "signature": "public enum Electron2D.ViewportClearMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ViewportTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "ViewportTexture",
+    "signature": "public sealed class Electron2D.ViewportTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ViewportUpdateMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ViewportUpdateMode",
+    "name": "ViewportUpdateMode",
+    "signature": "public enum Electron2D.ViewportUpdateMode",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -12519,6 +12585,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.SubViewport..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SubViewport",
+    "name": ".ctor",
+    "signature": "public SubViewport()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.TextBIDIRange..ctor(System.Int32,System.Int32,Electron2D.TextDirection)",
     "kind": "constructor",
     "declaringType": "Electron2D.TextBIDIRange",
@@ -13132,6 +13211,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ViewportTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": ".ctor",
+    "signature": "public ViewportTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -25984,6 +26076,110 @@
     "parameters": [],
     "returnType": "Electron2D.Viewport.DefaultCanvasItemTextureRepeat",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ViewportClearMode.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ViewportClearMode",
+    "name": "Always",
+    "signature": "public const Electron2D.ViewportClearMode Always = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportClearMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ViewportClearMode.Never()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ViewportClearMode",
+    "name": "Never",
+    "signature": "public const Electron2D.ViewportClearMode Never = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportClearMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ViewportClearMode.Once()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ViewportClearMode",
+    "name": "Once",
+    "signature": "public const Electron2D.ViewportClearMode Once = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportClearMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ViewportUpdateMode.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ViewportUpdateMode",
+    "name": "Always",
+    "signature": "public const Electron2D.ViewportUpdateMode Always = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportUpdateMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ViewportUpdateMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ViewportUpdateMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ViewportUpdateMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportUpdateMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ViewportUpdateMode.Once()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ViewportUpdateMode",
+    "name": "Once",
+    "signature": "public const Electron2D.ViewportUpdateMode Once = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportUpdateMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ViewportUpdateMode.WhenParentVisible()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ViewportUpdateMode",
+    "name": "WhenParentVisible",
+    "signature": "public const Electron2D.ViewportUpdateMode WhenParentVisible = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportUpdateMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ViewportUpdateMode.WhenVisible()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ViewportUpdateMode",
+    "name": "WhenVisible",
+    "signature": "public const Electron2D.ViewportUpdateMode WhenVisible = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportUpdateMode",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.WindowFlag.AlwaysOnTop()",
@@ -84783,6 +84979,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportGetTexture(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportGetTexture",
+    "signature": "public Electron2D.RID ViewportGetTexture(Electron2D.RID viewport)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Resource.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Resource",
@@ -89715,6 +89930,45 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewport.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewport.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SubViewport.GetVisibleRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "GetVisibleRect",
+    "signature": "public override Electron2D.Rect2 GetVisibleRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -98228,6 +98482,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GetTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetTexture",
+    "signature": "public Electron2D.ViewportTexture GetTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportTexture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.GetViewportRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetViewportRID",
+    "signature": "public Electron2D.RID GetViewportRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetVisibleRect()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -98392,6 +98672,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.WarpMouse(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -98407,6 +98700,142 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ViewportTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ViewportTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ViewportTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ViewportTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ViewportTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ViewportTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ViewportTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ViewportTexture.OnSetupLocalToScene()",
+    "kind": "method",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "OnSetupLocalToScene",
+    "signature": "protected override System.Void OnSetupLocalToScene()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -121363,6 +121792,71 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SubViewport.RenderTargetClearMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "RenderTargetClearMode",
+    "signature": "public Electron2D.ViewportClearMode RenderTargetClearMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportClearMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SubViewport.RenderTargetUpdateMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "RenderTargetUpdateMode",
+    "signature": "public Electron2D.ViewportUpdateMode RenderTargetUpdateMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ViewportUpdateMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SubViewport.Size()",
+    "kind": "property",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "Size",
+    "signature": "public Electron2D.Vector2i Size { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SubViewport.Size2DOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "Size2DOverride",
+    "signature": "public Electron2D.Vector2i Size2DOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SubViewport.Size2DOverrideStretch()",
+    "kind": "property",
+    "declaringType": "Electron2D.SubViewport",
+    "name": "Size2DOverrideStretch",
+    "signature": "public System.Boolean Size2DOverrideStretch { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.TextBIDIRange.Direction()",
     "kind": "property",
     "declaringType": "Electron2D.TextBIDIRange",
@@ -122998,6 +123492,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.TransparentBG()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "TransparentBG",
+    "signature": "public System.Boolean TransparentBG { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ViewportTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ViewportTexture.HasMipmaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "HasMipmaps",
+    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ViewportTexture.MipmapCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "MipmapCount",
+    "signature": "public System.Int32 MipmapCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ViewportTexture.PixelFormat()",
+    "kind": "property",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "PixelFormat",
+    "signature": "public Electron2D.Image.Format PixelFormat { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.Format",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ViewportTexture.ViewportPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.ViewportTexture",
+    "name": "ViewportPath",
+    "signature": "public System.String ViewportPath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

@@ -1,6 +1,6 @@
 # CompatibilityCanvasBackend
 
-Last updated: 2026-09-23
+Last updated: 2026-10-04
 
 - Declaration: `internal sealed class CompatibilityCanvasBackend : CanvasBackend`
 - Source: [CompatibilityCanvasBackend.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.cs)
@@ -91,3 +91,5 @@ Clears exposed identities and releases texture cache, target and renderer. SafeH
 The software driver truncates fractional vertex positions before rasterization. Transform snapping does not eliminate every fraction introduced by scale/rotation; final vertex snapping rounds primitive corners in shared geometry before SDL receives them. Edge precision remains backend-specific; see [pixel snapping](../components/canvas-rendering.md#pixel-snapping).
 
 The pinned SDL software triangle input truncates source UVs to integer texels as well as destination vertices. Half-texel clipping boundaries can therefore shift the boundary between adjacent atlas colors: AtlasTextureTests explicitly checks the software/hardware difference and the shared edge sample. This is a fallback precision limit under ADR 0028; it does not promise identical nearest-sampling pixels across drivers. See [SDL software geometry input](https://github.com/libsdl-org/SDL/blob/release-3.4.16/src/render/software/SDL_render_sw.c).
+
+Offscreen canvases now use independently owned completed/write target pairs. Native caches span every selected target in one frame. Viewport textures use their native image and dimensions directly; GetImage readback remains an explicit cold operation. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets).

@@ -1,6 +1,6 @@
 # CanvasLayer
 
-Last updated: 2026-09-27
+Last updated: 2026-10-04
 
 - Declaration: `public class CanvasLayer : Node`
 - Source: [CanvasLayer.cs](../../src/Scene/Main/CanvasLayer.cs)
@@ -221,7 +221,7 @@ Gets or sets the borrowed viewport used instead of the containing viewport.
 
 **Value:** Null initially. Null or a non-Viewport node restores the containing viewport.
 
-**Remarks:** Runtime-only, not packed. Attached targets must be active in the same tree. Independent native windows, embedded viewports and offscreen targets are not integrated with the renderer.
+**Remarks:** Runtime-only, not packed. Attached targets must be active in the same tree. Root Window and independent single-layer SubViewport targets are integrated; additional native windows and embedded containers retain their separate prerequisites.
 
 **NotSupportedException:** The target is not active in this tree.
 
@@ -327,8 +327,10 @@ Typed exceptions replace native error fallthrough and reject arithmetic overflow
 
 [CanvasLayerTests](../../tests/Electron2D.Tests/CanvasLayerTests.cs) covers defaults, decomposition, signed/singular transforms, packing, owner/capture/disposal guards, callback failure/reentry, nested/neutral/TopLevel membership, input copies, finite overflow, even/odd viewport snapping and zero-allocation queries. [CanvasLayerRenderingTests](../../tests/Electron2D.Tests/CanvasLayerRenderingTests.cs) covers six ordering/visibility frames and eight transform/camera/input/snapping frames per path. Native checks passed on Linux Wayland compatibility/GPU including HLSL/GLSL, and dummy/software; warmed layer rendering allocates zero managed bytes in the measured interval. Physical input, visual owner acceptance and other platforms are not claimed.
 
-GetCanvas's opaque identity awaits the first backend-neutral renderer resource-identity/lifetime slice, together with CanvasItem.GetCanvas and the corresponding low-level server operations. No fake identity is exposed. CustomViewport remains partial until independent/offscreen/nested viewport rendering and multiple native windows are implemented. Editor UI and embedded-window stacking require those actual capabilities; layer 1024 alone does not implement them. The class remains Partial in coverage for these dependencies. Existing Node gaps remain recorded on their declaring type.
+GetCanvas's opaque identity awaits the first backend-neutral renderer resource-identity/lifetime slice, together with CanvasItem.GetCanvas and the corresponding low-level server operations. No fake identity is exposed. CustomViewport targets an independent single-layer SubViewport; it remains Partial for embedded/nested containers and multiple native windows. Editor UI and embedded-window stacking require those actual capabilities; layer 1024 alone does not implement them. The class remains Partial in coverage for these dependencies. Existing Node gaps remain recorded on their declaring type.
 
 CanvasItem visibility masks inside every layer are tested against the destination Viewport.CanvasCullMask. The layer starts an independent canvas group, so masks on scene ancestors outside that group do not suppress it. Layer Visible remains a separate logical condition; see [mask culling](../components/canvas-rendering.md#canvas-visibility-masks).
 
 The internal root-tooltip presenter is sorted above game canvas layers, including the public maximum layer index. This internal role is not a public CanvasLayer setting and is not preserved by ordinary scene copies. Normal canvas layer ordering remains unchanged.
+
+CustomViewport can now target a live SubViewport in the same scene. Its canvas items render into that target even when physically parented elsewhere, and target recording-scale changes invalidate their retained style geometry. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.

@@ -538,7 +538,7 @@ public partial class Node : ElectronObject
     /// <summary>Finds this node's containing window, including itself.</summary>
     /// <returns>The nearest window ancestor, or null in a hierarchy without a window.</returns>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public Window? GetWindow() => GetViewport() as Window;
+    public Window? GetWindow() { ThrowIfDisposed(); for (Node? node = this; node is not null; node = node.Parent) if (node is Window window) return window; return null; }
 
     /// <summary>Gets or sets the pause policy used by both process callback lanes.</summary>
     /// <value><see cref="ProcessMode.Inherit"/> by default.</value>
@@ -2400,8 +2400,8 @@ public partial class Node : ElectronObject
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
         child.EnsureNotSceneCapture();
-        if (child is Viewport)
-            throw new NotSupportedException("Child viewports require multiwindow or offscreen rendering support.");
+        if (child is Viewport and not SubViewport)
+            throw new NotSupportedException("Child native windows require multiwindow rendering support.");
         Tree?.EnsureOwnerThread();
 
         if (ReferenceEquals(child, this))

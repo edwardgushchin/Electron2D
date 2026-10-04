@@ -312,7 +312,7 @@ public abstract partial class CanvasItem
     {
         if (_canvasCommands is null) return;
         var color = InheritedModulate * _selfModulate;
-        var viewport = GetViewport();
+        var viewport = CanvasViewport;
         var filter = TextureFilterInTree;
         if (filter == TextureFilter.ParentNode) filter = viewport?.TextureFilterInTree ?? TextureFilter.Linear;
         var inheritedRepeat = TextureRepeatInTree;
@@ -334,7 +334,7 @@ public abstract partial class CanvasItem
             {
                 var source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
                 if (source is null) continue;
-                if (source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
+                if (source is not ViewportTexture && source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
                 replay = command with { Texture = source };
             }
             if (replay.MultiMesh is { } instances)

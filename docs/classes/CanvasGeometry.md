@@ -1,6 +1,6 @@
 # CanvasGeometry
 
-Last updated: 2026-09-23
+Last updated: 2026-10-04
 
 - Declaration: `internal static class CanvasGeometry`
 - Source: [CanvasGeometry.cs](../../src/Servers/Rendering/CanvasGeometry.cs)
@@ -42,3 +42,5 @@ Appends geometry without clearing prior output. Applies color multiplication, lo
 `internal static Vector2 Snap(Vector2 point)` computes floor(point + 0.5), including negative half values. Append can snap final primitive corners after transformation. Texture UV clipping cuts are then interpolated on the two snapped triangles, with cells split at their diagonal; rounding those artificial cuts would distort UVs. This also handles rounded quadrilaterals that cease to be parallelograms. Normalized UVs receive the 0.00001 precision offset before source-border clamping. Collapsed texture triangles are skipped. Untextured line/outline/antialias triangles snap after their normal tessellation. No heap scratch storage is introduced.
 
 CanvasPixelSnapTests checks the exact corners, diagonal/interior interpolation, summed area, clipped UV bounds, negative ties, lines/outlines/antialiasing, transpose/reflection and zero warmed allocations. Native checks belong to the canvas component.
+
+Offscreen canvases now use independently owned completed/write target pairs. Native caches span every selected target in one frame. Viewport textures use their native image and dimensions directly; GetImage readback remains an explicit cold operation. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets).

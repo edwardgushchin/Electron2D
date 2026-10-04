@@ -1,22 +1,22 @@
 # Viewport
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Inherits:** [Node](Node.md)
 
-**Inherited By:** [Window](Window.md)
+**Inherited By:** [Window](Window.md), [SubViewport](SubViewport.md)
 
-- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs), [Viewport.Audio.cs](../../src/Scene/Main/Viewport.Audio.cs)
+- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Targets.cs](../../src/Scene/Main/Viewport.Targets.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs), [Viewport.Audio.cs](../../src/Scene/Main/Viewport.Audio.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
 
 ## Description
 
-Provides the root window's client rectangle and scene input boundary.
+Provides a window or offscreen canvas rectangle and scene input boundary.
 
-Only a root `Window` is currently supported. Offscreen render targets, content scaling, and embedded viewports are not implemented. Canvas transforms, sampling and pixel-snapping policies are connected to the root renderer. Incoming window input is converted to viewport coordinates.
+Root `Window` presentation and single-layer `SubViewport` targets now execute, including logical-size stretch. Embedded viewport containers and non-root GUI contexts retain separate dependencies. Canvas transforms, sampling and pixel-snapping policies are connected to each selected viewport target. Incoming window input is converted to viewport coordinates.
 
-Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Current Camera updates notify attached [Parallax](Parallax.md) nodes of the adjusted screen origin. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
+Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Current Camera updates notify attached [Parallax](Parallax.md) nodes of the adjusted screen origin. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a native Window as a child are rejected; SubViewport children execute. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
 
 A current physics-interpolated Camera retains previous and current `CanvasTransform` values for the renderer. Public `CanvasTransform`, input conversion and camera logical queries keep the latest value. Camera switching, reset and scene-wide policy changes discard the historical presentation pose.
 
@@ -40,7 +40,7 @@ The root viewport owns keyboard focus for its controls. `GetGUIFocusOwner()` ret
 | `public bool AudioListenerEnable2D { get; set; }` | Enables source audibility from this viewport; false while detached, automatically true for a `SceneTree` root. Stored by `PackedScene`. |
 | `public AudioListener? GetAudioListener2D()` | Returns the borrowed current [AudioListener](AudioListener.md), or null for the client-center listening point. |
 
-A spatial player's canvas transform maps its position into the viewport. An explicit listener supplies its scene position and rotation; otherwise the client center supplies the origin. Disabling 2D listening silences spatial players in this viewport. Both operations enforce owner-thread and disposed checks; mutation also rejects scene capture. Only the root Window viewport is currently supported. [AudioStreamEmitter](AudioStreamEmitter.md) describes attenuation, panning and Area routing.
+A spatial player's canvas transform maps its position into the viewport. An explicit listener supplies its scene position and rotation; otherwise the client center supplies the origin. Disabling 2D listening silences spatial players in this viewport. Both operations enforce owner-thread and disposed checks; mutation also rejects scene capture. Root Window and SubViewport share the viewport-scoped listener lookup; native spatial audio checks remain the existing root-host evidence. [AudioStreamEmitter](AudioStreamEmitter.md) describes attenuation, panning and Area routing.
 
 ## Canvas transforms and pointer coordinates
 
@@ -80,13 +80,13 @@ Identity by default. Maps viewport coordinates into the native client area after
 
 `public Transform GetFinalTransform()`
 
-Returns GlobalCanvasTransform. The supported root window has identity content stretch; CanvasTransform, desktop position and framebuffer density are excluded. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException.
+Returns StretchTransform followed by GlobalCanvasTransform. The supported root window has identity content stretch; CanvasTransform, desktop position and framebuffer density are excluded. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException.
 
 ### GetScreenTransform
 
 `public Transform GetScreenTransform()`
 
-Returns GetFinalTransform for the native root window. Screen here is the containing window coordinate space: it does not include desktop placement. The same query guards apply. Embedded/offscreen viewports remain absent.
+Returns GetFinalTransform for the native root window. Screen here is the containing window coordinate space: it does not include desktop placement. The same query guards apply. Standalone offscreen viewports return their final transform without an actual desktop presentation; container transforms remain separate.
 
 ### GetMousePosition
 
@@ -313,7 +313,7 @@ Subscribers run synchronously on the scene owner thread. Desktop movement does n
 
 ## Lifecycle, verification and limits
 
-See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) covers managed root GUI focus ownership, transition order, release, callback failures and owner-thread rejection. Physical-input/visual acceptance and other platforms remain unverified. Root rendering, Control rectangle layout and root viewport pointer/focus routing are implemented; content scaling, offscreen targets, complete interactive GUI and nested windows remain absent. Native Wayland rejects Position and may constrain geometry; native window focus requests obey compositor policy.
+See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) covers managed root GUI focus ownership, transition order, release, callback failures and owner-thread rejection. Physical-input/visual acceptance and other platforms remain unverified. Root rendering, Control rectangle layout and root viewport pointer/focus routing are implemented; root content scaling, layered targets, non-root GUI and nested native windows remain incomplete; independent single-layer offscreen targets execute. Native Wayland rejects Position and may constrain geometry; native window focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
 
@@ -335,7 +335,7 @@ Defaults to `uint.MaxValue`; all 32 bits and zero are valid. Stored by PackedSce
 
 Zero suppresses geometry while clear, frame callbacks and presentation continue. Culling does not change logical visibility, input, processing, scene order or pending OnDraw. Changes reuse retained commands and affect submission after drawing callbacks. Compatibility shader capability rejection applies only to submitted geometry, so a fully culled shader material does not fail until it is selected for drawing.
 
-Live detached configuration is allowed. Attached access requires the owner thread; off-owner access or mutation during scene capture throws InvalidOperationException. Disposed access throws ObjectDisposedException. Independent/offscreen viewport rendering remains absent. See [CanvasItem.VisibilityLayer](CanvasItem.md#visibilitylayer) and the [source audit and verification](../components/canvas-rendering.md#canvas-visibility-masks).
+Live detached configuration is allowed. Attached access requires the owner thread; off-owner access or mutation during scene capture throws InvalidOperationException. Disposed access throws ObjectDisposedException. Independent single-layer offscreen viewport rendering now executes; multiview/layered targets and embedded containers remain separate gates. See [CanvasItem.VisibilityLayer](CanvasItem.md#visibilitylayer) and the [source audit and verification](../components/canvas-rendering.md#canvas-visibility-masks).
 
 ### GetCanvasCullMaskBit
 
@@ -353,3 +353,79 @@ Sets or clears the zero-based bit 0 through 31 without changing other bits. Inva
 window.CanvasCullMask = 0;
 window.SetCanvasCullMaskBit(31, true);
 ```
+
+## Offscreen target integration
+
+[Offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) use independent native images and stable borrowed identities. Native root presentation remains owned by Engine.Run.
+
+## Property summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public System.Boolean TransparentBG { get; set; }` | Gets or sets whether this viewport clears to transparent black instead of opaque clear color. |
+
+## Property Descriptions
+
+<a id="member-7c84db03f95f"></a>
+### TransparentBG
+
+`public System.Boolean TransparentBG { get; set; }`
+
+Gets or sets whether this viewport clears to transparent black instead of opaque clear color.
+
+Value: False initially.
+
+Remarks: Never clear retains prior pixels; changing this policy alone does not erase them.
+
+System.ObjectDisposedException: The viewport is disposed.
+
+System.InvalidOperationException: Mutation occurs off-owner or during native submission.
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public Electron2D.ViewportTexture GetTexture()` | Returns this viewport's live scene-local texture view. |
+| `public Electron2D.RID GetViewportRID()` | Returns this viewport's stable borrowed logical rendering identity. |
+| `protected override System.Void ValidateDisposal()` | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
+
+## Method Descriptions
+
+<a id="member-c2c7c0066a04"></a>
+### GetTexture
+
+`public Electron2D.ViewportTexture GetTexture()`
+
+Returns this viewport's live scene-local texture view.
+
+Returns: A borrowed resource retaining stable RID identity while the target image changes.
+
+Remarks: The view remains independent of native target allocation. Ordinary drawing samples native images; GetImage explicitly synchronizes and copies completed pixels. Target loss makes the view unresolved.
+
+System.ObjectDisposedException: The viewport is disposed.
+
+System.InvalidOperationException: The attached scene is queried off-owner.
+
+<a id="member-f48ca651b666"></a>
+### GetViewportRID
+
+`public Electron2D.RID GetViewportRID()`
+
+Returns this viewport's stable borrowed logical rendering identity.
+
+Returns: An identity independent of native target resize/recreation.
+
+Remarks: RenderingServer.ViewportGetTexture resolves its live texture. Node disposal releases the identity; caller-side server FreeRID does not own the viewport.
+
+System.ObjectDisposedException: The viewport is disposed.
+
+System.InvalidOperationException: The attached scene is queried off-owner.
+
+<a id="member-a10f3b2ea84c"></a>
+### ValidateDisposal
+
+`protected override System.Void ValidateDisposal()`
+
+Validates caller-specific disposal preconditions before this caller attempts the disposal transition.
+
+Remarks: This method can run concurrently in multiple callers and can race with another caller starting disposal. Overrides must therefore be side-effect-free and tolerate repeated execution.

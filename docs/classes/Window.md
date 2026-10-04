@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -278,7 +278,7 @@ Uses GetFlag and SetFlag. Enabling it fails for an active Wayland top-level wind
 <a id="show"></a>
 ### `public void Show()`
 
-Assigns Visible to true. No native resources are acquired while detached. See [Visible](#visible) for owner-thread, native failure and callback exception behavior.
+Assigns Visible to true. The current Wayland Vulkan profile rejects remapping a previously presented root with NotSupportedException before mutation; native presentation-completion/unmap acknowledgement is the dependency. No native resources are acquired while detached. See [Visible](#visible) for owner-thread, native failure and callback exception behavior.
 
 <a id="hide"></a>
 ### `public void Hide()`
@@ -554,7 +554,7 @@ The managed snapshot remains valid after delivery. Subscribers run on the owner 
 
 ## Lifecycle, verification and limits
 
-See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance of this new API, other platforms, content scaling, offscreen targets, complete GUI and nested windows remain unverified or absent. Root viewport Control pointer/focus routing has managed checks; it has no native GUI acceptance yet. Native tests also cover mode/flag application, IME enable/disable, borrowed native drop-memory lifetime, managed path retention and window-signal failure cleanup. Dummy tests do not verify native flag changes because that backend accepts setters without applying them. Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
+See the [Window runtime component](../components/window-runtime.md) for ownership, native startup/cleanup failure behavior and exact executable checks. WindowRuntimeTests passed with SDL dummy and native Wayland; native events were injected. Physical-input/visual acceptance of this new API, other platforms, root content scaling, layered offscreen targets, remaining GUI and nested native windows remain unverified or absent; independent single-layer targets have separate SubViewportTests evidence. Root viewport Control pointer/focus routing has managed checks; it has no native GUI acceptance yet. Native tests also cover mode/flag application, IME enable/disable, borrowed native drop-memory lifetime, managed path retention and window-signal failure cleanup. Dummy tests do not verify native flag changes because that backend accepts setters without applying them. Wayland rejects Position and may constrain geometry; focus requests obey compositor policy.
 
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
 
@@ -629,3 +629,9 @@ Source: [Window.Theme.cs](../../src/Scene/Main/Window.Theme.cs). All six data ca
 **Stored state and cleanup:** Theme/variation are typed stored properties. Actual local overrides use typed descriptors; a null descriptor value means removal, not a null resource override. Fresh Control/Window instances reconstruct missing override descriptors only through the six reserved prefixes and exact captured value types; other unknown/mismatched schemas remain rejected. Exact scene packing follows existing resource graph/local-to-scene rules. Cleanup removes theme/global/resource subscriptions and cached references; externally owned resources are never disposed by node cleanup. First-use query keys and capacity growth may allocate; warmed behavior is measured separately.
 
 [ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified. [ThemeFontTests](../../tests/Electron2D.Tests/ThemeFontTests.cs) verifies font defaults/overrides, deferred updates, failures, packing and 64 warmed cycles with zero managed bytes. Project Theme loading and remaining built-in GUI defaults remain separate under [ADR 0083](../decisions/rendering.md#adr-0083).
+
+GetTexture/GetViewportRID supply stable borrowed identities for native root output. Root remains the only native window; SubViewport children have independent canvases. TransparentBG selects transparent target clearing; native compositor window transparency remains a separate display capability. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.
+
+Native GPU visibility changes drain work and release the swapchain before hiding; supported showing recreates it; previously presented Wayland Vulkan surfaces reject remapping until native unmap acknowledgement is implemented. Independent offscreen targets stay available while root presentation is hidden. The dependency host verifies this on Linux Wayland.
+
+On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path.

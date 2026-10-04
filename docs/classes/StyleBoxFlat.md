@@ -1,6 +1,6 @@
 # StyleBoxFlat
 
-Last updated: 2026-09-27
+Last updated: 2026-10-04
 
 **Inherits:** [StyleBox](StyleBox.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -113,3 +113,5 @@ GetDrawRect only applies expansion and, for positive ShadowSize, merges the expa
 Inherited style ownership, lifetime, lock and draw-thread rules apply. Mutation commits before callbacks; custom drawing requires the target's active recording scope. Invalid enum/finite inputs and computed nonfinite geometry fail explicitly. Warm tessellation buffers are reused, with capacity growth outside the measured steady state.
 
 [StyleBoxFlatTests](../../tests/Electron2D.Tests/StyleBoxFlatTests.cs) verifies defaults, Corner identities, equal-write event ordering, clamps/guards, content/draw bounds, hooks, exact resource copies, scene-local behavior, callback failures and concurrency. The [independent C++ fixture](../../tests/Electron2D.Tests/Fixtures/StyleBoxFlatGeometry.json) covers 15 sharp/rounded/unequal/oversized/blended/hollow/AA/shadow/skew/signed/degenerate profiles; triangle ordering, vertex positions, colors and UVs match within 0.00005, and draw rectangles match exactly. Sixty-four warmed mutation/geometry-recording/replay cycles allocate zero managed bytes. [StyleBoxFlatRenderingTests](../../tests/Electron2D.Tests/StyleBoxFlatRenderingTests.cs) verifies three visible mutation states covering rounded corners, borders, center suppression, border blend, offset shadow, skew, AA and expansion on Linux Wayland GPU/compatibility. Each backend also passes 64 warmed mutation/recording/render frames with zero managed bytes measured from ProcessFrameStarted through FramePostDraw. Native allocator counts, broad GUI performance, nonunit oversampling, other platforms and owner acceptance remain unverified. Font data, project Theme-file loading, other GUI defaults/consumers, nonunit oversampling, text shaping and broader platform/owner acceptance remain separate. See [coverage](../coverage/classes/StyleBoxFlat.md) and [ADR 0082](../decisions/rendering.md#adr-0082).
+
+AA feather uses AntiAliasingSize divided by the active viewport recording factor. Offscreen override/stretch changes invalidate retained geometry, including externally targeted CanvasLayer items; root factor remains one. SubViewportTests checks factor-two geometry bounds and automatic rerecording. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.

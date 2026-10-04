@@ -304,7 +304,8 @@ public partial class StyleBoxFlat : StyleBox
             ThrowIfDisposed();
             try
             {
-                BuildGeometry(rect);
+                var scale = canvasItem.CanvasViewport?.StretchTransform.Scale ?? Vector2.One;
+                BuildGeometry(rect, MathF.Max(MathF.Abs(scale.X), MathF.Abs(scale.Y)));
                 if (_triangles.Count != 0) canvasItem.DrawTriangleArray(CollectionsMarshal.AsSpan(_triangles), null);
             }
             finally { _triangles.Clear(); }

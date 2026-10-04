@@ -834,7 +834,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [StyleBoxFlat](classes/StyleBoxFlat.md) | StyleBox | Implemented | 33 |
 | [StyleBoxLine](classes/StyleBoxLine.md) | StyleBox | Implemented | 5 |
 | [StyleBoxTexture](classes/StyleBoxTexture.md) | StyleBox | Implemented | 24 |
-| [SubViewport](classes/SubViewport.md) | Viewport | Blocked | 16 |
+| [SubViewport](classes/SubViewport.md) | Viewport | Partial | 16 |
 | [SubViewportContainer](classes/SubViewportContainer.md) | Container | Blocked | 5 |
 | [SubtweenTweener](classes/SubtweenTweener.md) | Tweener | Implemented | 1 |
 | [SurfaceTool](classes/SurfaceTool.md) | RefCounted | Blocked | 46 |
@@ -921,7 +921,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VideoStreamPlayer](classes/VideoStreamPlayer.md) | Control | Blocked | 19 |
 | [VideoStreamTheora](classes/VideoStreamTheora.md) | VideoStream | Blocked | 0 |
 | [Viewport](classes/Viewport.md) | Node | Partial | 200 |
-| [ViewportTexture](classes/ViewportTexture.md) | Texture2D | Blocked | 1 |
+| [ViewportTexture](classes/ViewportTexture.md) | Texture2D | Implemented | 1 |
 | [VirtualJoystick](classes/VirtualJoystick.md) | Control | Blocked | 27 |
 | [VisibleOnScreenEnabler2D](classes/VisibleOnScreenEnabler2D.md) | VisibleOnScreenNotifier2D | Implemented | 6 |
 | [VisibleOnScreenEnabler3D](classes/VisibleOnScreenEnabler3D.md) | VisibleOnScreenNotifier3D | Excluded | 6 |
