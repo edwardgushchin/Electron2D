@@ -315,4 +315,63 @@ Occurs when an established client loses its server.
 
 ## Verification and limits
 
-[SceneMultiplayerTests](../../tests/Electron2D.Tests/SceneMultiplayerTests.cs) verifies public Node/SceneTree WS/WSS relay/RPC/authentication and managed provider hooks, lifetime/validation/failure recovery and prepared active/idle allocation boundaries. General dynamic object decoding is excluded. Spawner/synchronizer/property-schema replication and its packet limits remain exact dependent capabilities; they are absent from implemented member tables. Foreign hosts/routed throughput/native allocator totals and human/rendered/editor/agent acceptance are separate gates.
+[SceneMultiplayerTests](../../tests/Electron2D.Tests/SceneMultiplayerTests.cs) verifies public Node/SceneTree WS/WSS relay/RPC/authentication and managed provider hooks, lifetime/validation/failure recovery and prepared active/idle allocation boundaries. General dynamic object decoding is excluded. Typed spawner/synchronizer/property-schema replication and packet batching now execute through the scene replication component. File scene authoring remains a separate resource-format dependency. Foreign hosts/routed throughput/native allocator totals and human/rendered/editor/agent acceptance are separate gates.
+
+## Scene replication integration
+
+Concrete typed node/spawner and node/synchronizer configuration overloads now execute; [the component](../components/scene-replication.md) defines protocol/ownership/failure details and packet batching. File scene authoring remains a resource-format dependency.
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public abstract System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)` | Registers an authored spawn object and its owning spawner. |
+| `public abstract System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)` | Registers a synchronized root and its typed configuration owner. |
+| `public abstract System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)` | Removes a local spawned object and its matching configuration. |
+| `public abstract System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)` | Removes a synchronized root/configuration pair. |
+
+## Method Descriptions
+
+<a id="member-7687de605a1c"></a>
+### ObjectConfigurationAdd
+
+`public abstract System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)`
+
+Registers an authored spawn object and its owning spawner.
+
+node: Local spawn node, possibly before insertion.
+
+spawner: Authoritative typed configuration.
+
+<a id="member-eea1139e6928"></a>
+### ObjectConfigurationAdd
+
+`public abstract System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)`
+
+Registers a synchronized root and its typed configuration owner.
+
+node: Root node.
+
+synchronizer: Attached synchronization component.
+
+<a id="member-eb1747081377"></a>
+### ObjectConfigurationRemove
+
+`public abstract System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)`
+
+Removes a local spawned object and its matching configuration.
+
+node: Tracked node.
+
+spawner: Matching spawner.
+
+<a id="member-3eaae08acc75"></a>
+### ObjectConfigurationRemove
+
+`public abstract System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)`
+
+Removes a synchronized root/configuration pair.
+
+node: Root node.
+
+synchronizer: Matching component.

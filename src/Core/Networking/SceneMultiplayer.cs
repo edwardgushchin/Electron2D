@@ -2,11 +2,11 @@ using System.Buffers.Binary;
 using System.Text;
 namespace Electron2D;
 
-/// <summary>Polls admitted scene peers, typed RPCs, authentication and custom packets with server relay.</summary>
+/// <summary>Polls scene peers, typed RPCs, spawning/property replication, authentication and custom packets with server relay.</summary>
 /// <remarks>The transport remains caller-owned. Packet/authentication spans are borrowed during callbacks.
 /// Root paths locate nodes; immutable typed RPC tokens replace reflection. Preparation/path discovery allocates,
 /// while repeated ready span/message processing reuses bounded buffers. Calls/disposal require the owner thread.</remarks>
-public class SceneMultiplayer : MultiplayerAPI
+public partial class SceneMultiplayer : MultiplayerAPI
 {
     private MultiplayerPeer? _peer;
     private readonly Dictionary<int, PendingMultiplayerPeer> _pending = [];
@@ -36,7 +36,9 @@ public class SceneMultiplayer : MultiplayerAPI
             CheckMultiplayer(); if (_sending) throw new InvalidOperationException("Cannot replace a transport during outgoing encoding."); if (ReferenceEquals(value, _peer)) return;
             if (value is not null && value.GetConnectionStatus() == MultiplayerConnectionStatus.Disconnected) throw new InvalidOperationException("A supplied transport must be connecting or connected.");
             var send = value is null || value is OfflineMultiplayerPeer ? Array.Empty<byte>() : new byte[_capacity]; var receive = send.Length == 0 ? Array.Empty<byte>() : new byte[_capacity]; var relay = send.Length == 0 ? Array.Empty<byte>() : new byte[_capacity];
-            Unsubscribe(); var old = _peer; var owned = _ownsOffline; _ownsOffline = false; ClearCore(); _peer = value; _send = send; _receive = receive; _relay = relay; Subscribe(); _last = value?.GetConnectionStatus() ?? MultiplayerConnectionStatus.Disconnected; if (owned) old?.Dispose();
+            Unsubscribe(); var old = _peer; var owned = _ownsOffline; _ownsOffline = false; List<Exception>? errors = null; try { ClearCore(); } catch (Exception error) { (errors ??= []).Add(error); }
+            _peer = value; _send = send; _receive = receive; _relay = relay; Subscribe(); _last = value?.GetConnectionStatus() ?? MultiplayerConnectionStatus.Disconnected; if (owned) try { old?.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
+            if (errors is not null) throw new AggregateException(errors);
         }
     }
     /// <summary>Gets or sets the complete encoded message budget prepared on transport assignment.</summary><value>65536 initially; 64 through 64 MiB. Change while no live network transport is configured.</value>
@@ -71,7 +73,7 @@ public class SceneMultiplayer : MultiplayerAPI
     public override int GetRemoteSenderID() { CheckMultiplayer(); return _sender; }
     /// <summary>Clears admitted/pending/path state without closing the borrowed transport.</summary>
     public void Clear() { CheckMultiplayer(); if (_sending) throw new InvalidOperationException("Cannot reset during outgoing encoding."); ClearCore(); }
-    private void ClearCore() { _generation++; _pending.Clear(); _connected.Clear(); InvalidatePaths(); _last = MultiplayerConnectionStatus.Disconnected; }
+    private void ClearCore() { _generation++; _pending.Clear(); _connected.Clear(); InvalidatePaths(); _last = MultiplayerConnectionStatus.Disconnected; ResetReplicationNetwork(); }
     internal void InvalidatePaths() { _outPaths.Clear(); _inPaths.Clear(); }
     /// <inheritdoc />
     public override void ObjectConfigurationAdd(string rootPath) => RootPath = rootPath;
@@ -90,6 +92,7 @@ public class SceneMultiplayer : MultiplayerAPI
     private void Admit(int id)
     {
         if (id <= 0 || id == GetUniqueID() || !_connected.Add(id)) return;
+        ReplicationPeerAdded(id);
         _sendPeers.EnsureCapacity(_connected.Count + _pending.Count); var generation = _generation; List<Exception>? errors = null;
         if (RelaySupported && IsServer())
         {
@@ -109,7 +112,7 @@ public class SceneMultiplayer : MultiplayerAPI
     {
         if (_pending.Remove(id)) { if (notify) Emit(PeerAuthenticationFailed, id); return; }
         if (!_connected.Remove(id)) return;
-        InvalidatePaths(); List<Exception>? errors = null;
+        InvalidatePaths(); List<Exception>? errors = null; try { ReplicationPeerRemoved(id); } catch (Exception error) { (errors ??= []).Add(error); }
         if (RelaySupported && IsServer())
         {
             Span<byte> message = stackalloc byte[6]; message[0] = 7; message[1] = 2; BinaryPrimitives.WriteInt32LittleEndian(message[2..], id);
@@ -164,7 +167,7 @@ public class SceneMultiplayer : MultiplayerAPI
     /// <inheritdoc />
     public override void Poll()
     {
-        CheckMultiplayer(); if (_polling) throw new InvalidOperationException("Multiplayer polling cannot reenter."); _polling = true; List<Exception>? errors = null;
+        CheckMultiplayer(); if (_polling || _resettingReplication) throw new InvalidOperationException("Multiplayer polling cannot reenter or run during cleanup."); _polling = true; List<Exception>? errors = null;
         try
         {
             UpdateStatus(); var peer = _peer; if (peer is null || _last == MultiplayerConnectionStatus.Disconnected) return; var generation = _generation;
@@ -192,7 +195,7 @@ public class SceneMultiplayer : MultiplayerAPI
                 _expired.Clear(); var now = Environment.TickCount64; foreach (var entry in _pending) if (now - entry.Value.Start >= _timeout * 1000) _expired.Add(entry.Key);
                 for (var i = 0; i < _expired.Count && generation == _generation; i++) { var id = _expired[i]; if (!_pending.Remove(id)) continue; try { peer.DisconnectPeer(id, true); } catch (Exception e) { (errors ??= []).Add(e); } try { Emit(PeerAuthenticationFailed, id); } catch (Exception e) { (errors ??= []).Add(e); } }
             }
-            if (generation == _generation) UpdateStatus();
+            if (generation == _generation) { ReplicationFrame(); UpdateStatus(); }
         }
         finally { _sender = 0; _polling = false; if (errors is not null) throw new AggregateException(errors); }
     }
@@ -205,6 +208,7 @@ public class SceneMultiplayer : MultiplayerAPI
         {
             if (packet[0] == 3) { if (packet.Length < 2) throw new InvalidDataException("Empty custom packet."); List<Exception>? errors = null; foreach (var callback in Delegate.EnumerateInvocationList(PeerPacket)) try { callback(sender, packet[1..]); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
             else if (packet[0] == 0) ReceiveRPC(sender, packet);
+            else if (packet[0] is 4 or 5 or 6 or 22) ReceiveReplication(sender, packet);
             else throw new InvalidDataException("Unknown or unavailable scene command.");
         }
         finally { _sender = previous; }
@@ -246,7 +250,7 @@ public class SceneMultiplayer : MultiplayerAPI
             if (options.Mode == RPCMode.Disabled) throw new InvalidOperationException("RPC is disabled."); if (peer == localID && !options.CallLocal) throw new InvalidOperationException("This RPC does not permit a local-only call."); var path = PathFor(node);
             if (peer != localID && _connected.Count > 0)
             {
-                var count = method.GetEncodedSize(arguments); var total = checked(7 + path.Length + count); if (total > _send.Length) throw new ArgumentException("RPC arguments exceed prepared message storage."); _send[0] = 0; BinaryPrimitives.WriteUInt32LittleEndian(_send.AsSpan(1), method.ID); BinaryPrimitives.WriteUInt16LittleEndian(_send.AsSpan(5), (ushort)path.Length); path.CopyTo(_send.AsSpan(7)); method.Encode(arguments, _send.AsSpan(7 + path.Length, count)); try { SendCommand(peer, _send.AsSpan(0, total), options.TransferMode, options.Channel); } catch (Exception error) { sendError = error; }
+                var count = method.GetEncodedSize(arguments); var total = checked(7 + path.Length + count); if (total > _send.Length) throw new ArgumentException("RPC arguments exceed prepared message storage."); _send[0] = 0; BinaryPrimitives.WriteUInt32LittleEndian(_send.AsSpan(1), method.ID); BinaryPrimitives.WriteUInt16LittleEndian(_send.AsSpan(5), (ushort)path.Length); path.CopyTo(_send.AsSpan(7)); method.Encode(arguments, _send.AsSpan(7 + path.Length, count)); try { SendRPCCommand(node, peer, _send.AsSpan(0, total), options.TransferMode, options.Channel); } catch (Exception error) { sendError = error; }
             }
             else if (peer > 0 && peer != localID) throw new ArgumentException("RPC target is not admitted.", nameof(peer));
         }
@@ -267,6 +271,8 @@ public class SceneMultiplayer : MultiplayerAPI
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {
         foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<SceneMultiplayer, int>(nameof(MaxSyncPacketSize), p => p.MaxSyncPacketSize, (p, v) => p.MaxSyncPacketSize = v, _ => 1350);
+        yield return new PropertyDescriptor<SceneMultiplayer, int>(nameof(MaxDeltaPacketSize), p => p.MaxDeltaPacketSize, (p, v) => p.MaxDeltaPacketSize = v, _ => 65535);
         yield return new PropertyDescriptor<SceneMultiplayer, int>(nameof(MaxPacketBytes), p => p.MaxPacketBytes, (p, v) => p.MaxPacketBytes = v, _ => 65536);
         yield return new PropertyDescriptor<SceneMultiplayer, string>(nameof(RootPath), p => p.RootPath, (p, v) => p.RootPath = v, _ => "");
         yield return new PropertyDescriptor<SceneMultiplayer, double>(nameof(AuthTimeout), p => p.AuthTimeout, (p, v) => p.AuthTimeout = v, _ => 3);
@@ -277,7 +283,7 @@ public class SceneMultiplayer : MultiplayerAPI
     /// <inheritdoc />
     protected override void ValidateDisposal() { base.ValidateDisposal(); if (_polling || _sending) throw new InvalidOperationException("Multiplayer cannot dispose during message dispatch."); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { Unsubscribe(); if (_ownsOffline) _peer?.Dispose(); _peer = null; ClearCore(); PeerAuthenticating = null; PeerAuthenticationFailed = null; PeerPacket = null; _send = _receive = _relay = []; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { try { if (disposing) { Unsubscribe(); try { if (_ownsOffline) _peer?.Dispose(); } finally { _peer = null; try { ClearCore(); } finally { _localSpawns.Clear(); _synchronizers.Clear(); _spawnSnapshot.Clear(); _syncSnapshot.Clear(); _receiptGroups.Clear(); PeerAuthenticating = null; PeerAuthenticationFailed = null; PeerPacket = null; _send = _receive = _relay = []; } } } } finally { base.Dispose(disposing); } }
 }
 internal struct PendingMultiplayerPeer(long start, MultiplayerPacketHandler callback) { internal readonly long Start = start; internal readonly MultiplayerPacketHandler Callback = callback; internal bool Local, Remote; }
 internal sealed record MultiplayerPathCache(Node Node, byte[] Path);

@@ -374,15 +374,21 @@ def main():
     assert crypto_rows == 33
     assert "Electron2D.HashType" in pages[CLASS_PAGES / "HashingContext.md"]
     assert "Electron2D.AESMode" in pages[CLASS_PAGES / "AESContext.md"]
-    for name, expected in (("MultiplayerAPI", {"Implemented": 20, "Partial": 3}),
-                           ("MultiplayerAPIExtension", {"Implemented": 7, "Partial": 3}),
-                           ("SceneMultiplayer", {"Implemented": 14, "Partial": 1, "Blocked": 2, "Excluded": 1})):
+    for name, expected in (("MultiplayerAPI", {"Implemented": 23}),
+                           ("MultiplayerAPIExtension", {"Implemented": 10}),
+                           ("SceneMultiplayer", {"Implemented": 17, "Excluded": 1})):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
                 if row.startswith("| [`")]
         assert len(rows) == sum(expected.values()), name
         assert {state: sum(f" | {state} | " in row for row in rows)
                 for state in expected} == expected, name
-    assert "concrete MultiplayerSynchronizer" in pages[CLASS_PAGES / "SceneMultiplayer.md"]
+    for name, expected in (("MultiplayerSpawner", {"Implemented": 8, "Partial": 3}),
+                           ("MultiplayerSynchronizer", {"Implemented": 19}),
+                           ("SceneReplicationConfig", {"Implemented": 18})):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert len(rows) == sum(expected.values()), name
+        assert {state: sum(f" | {state} | " in row for row in rows) for state in expected} == expected, name
+    assert "typed PackedScene disk format" in pages[CLASS_PAGES / "MultiplayerSpawner.md"]
     assert "Electron2D.RPCMode" in pages[CLASS_PAGES / "MultiplayerAPI.md"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     button_rows = 0

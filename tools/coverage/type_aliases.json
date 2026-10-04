@@ -159,6 +159,8 @@
     "MultiplayerPeer.TransferMode": "TransferMode",
     "HashingContext.HashType": "HashType",
     "AESContext.Mode": "AESMode",
-    "MultiplayerAPI.RPCMode": "RPCMode"
+    "MultiplayerAPI.RPCMode": "RPCMode",
+    "MultiplayerSynchronizer.VisibilityUpdateMode": "VisibilityUpdateMode",
+    "SceneReplicationConfig.ReplicationMode": "ReplicationMode"
   }
 }

@@ -60,6 +60,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Component: [WebSocket messages](components/websocket.md)
 - Component: [Multiplayer transports](components/multiplayer.md)
 - Component: [Typed scene multiplayer](components/scene-multiplayer.md)
+- Component: [Scene spawning and replication](components/scene-replication.md)
 - Component: [Object lifecycle](components/object-lifecycle.md)
 - Component: [Typed event connections](components/event-connections.md)
 - Component: [Typed editor properties](components/editor-properties.md)

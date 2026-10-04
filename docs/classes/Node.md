@@ -1543,3 +1543,5 @@ id: Positive peer identity.
 recursive: True applies to current descendants; later children retain their own default/configuration.
 
 Remarks: This local configuration does not replicate itself; participants must agree separately.
+
+SetMultiplayerAuthority is now virtual so MultiplayerSynchronizer stops/rebinds its concrete configuration around authority changes. Spawner/synchronizer lifecycle and [typed replication](../components/scene-replication.md) reuse the existing attached owner/capture guards; authority does not automatically replicate. In-memory source provenance stays internal.

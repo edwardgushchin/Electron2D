@@ -80,6 +80,10 @@ internal static class SceneMultiplayerTests
         public override int GetRemoteSenderID() { CheckMultiplayer(); return 0; }
         public override void ObjectConfigurationAdd(string path) { CheckMultiplayer(); Root = path; }
         public override void ObjectConfigurationRemove(string path) { CheckMultiplayer(); Check(path == Root, "Custom root configuration."); Root = ""; }
+        public override void ObjectConfigurationAdd(Node node, MultiplayerSpawner spawner) { CheckMultiplayer(); }
+        public override void ObjectConfigurationRemove(Node node, MultiplayerSpawner spawner) { CheckMultiplayer(); }
+        public override void ObjectConfigurationAdd(Node node, MultiplayerSynchronizer synchronizer) { CheckMultiplayer(); }
+        public override void ObjectConfigurationRemove(Node node, MultiplayerSynchronizer synchronizer) { CheckMultiplayer(); }
         public override void RPC<TNode, T>(int peer, TNode node, RPCMethod<TNode, T> method, T arguments)
         { CheckMultiplayer(); var storage = new byte[method.GetEncodedSize(arguments)]; method.Encode(arguments, storage); method.InvokeEncoded(node, storage); Count++; }
     }

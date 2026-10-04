@@ -460,12 +460,12 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MultiMesh](classes/MultiMesh.md) | Resource | Implemented | 31 |
 | [MultiMeshInstance2D](classes/MultiMeshInstance2D.md) | Node2D | Implemented | 3 |
 | [MultiMeshInstance3D](classes/MultiMeshInstance3D.md) | GeometryInstance3D | Excluded | 1 |
-| [MultiplayerAPI](classes/MultiplayerAPI.md) | RefCounted | Partial | 22 |
-| [MultiplayerAPIExtension](classes/MultiplayerAPIExtension.md) | MultiplayerAPI | Partial | 9 |
+| [MultiplayerAPI](classes/MultiplayerAPI.md) | RefCounted | Implemented | 22 |
+| [MultiplayerAPIExtension](classes/MultiplayerAPIExtension.md) | MultiplayerAPI | Implemented | 9 |
 | [MultiplayerPeer](classes/MultiplayerPeer.md) | PacketPeer | Implemented | 26 |
 | [MultiplayerPeerExtension](classes/MultiplayerPeerExtension.md) | MultiplayerPeer | Implemented | 23 |
-| [MultiplayerSpawner](classes/MultiplayerSpawner.md) | Node | Blocked | 10 |
-| [MultiplayerSynchronizer](classes/MultiplayerSynchronizer.md) | Node | Blocked | 18 |
+| [MultiplayerSpawner](classes/MultiplayerSpawner.md) | Node | Partial | 10 |
+| [MultiplayerSynchronizer](classes/MultiplayerSynchronizer.md) | Node | Implemented | 18 |
 | [Mutex](classes/Mutex.md) | RefCounted | Blocked | 3 |
 | [NativeMenu](classes/NativeMenu.md) | Object | Blocked | 82 |
 | [NavigationAgent2D](classes/NavigationAgent2D.md) | Node | Blocked | 56 |
@@ -745,8 +745,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RigidBody2D](classes/RigidBody2D.md) | PhysicsBody2D | Partial | 54 |
 | [RigidBody3D](classes/RigidBody3D.md) | PhysicsBody3D | Excluded | 51 |
 | [RootMotionView](classes/RootMotionView.md) | VisualInstance3D | Excluded | 5 |
-| [SceneMultiplayer](classes/SceneMultiplayer.md) | MultiplayerAPI | Partial | 17 |
-| [SceneReplicationConfig](classes/SceneReplicationConfig.md) | Resource | Blocked | 17 |
+| [SceneMultiplayer](classes/SceneMultiplayer.md) | MultiplayerAPI | Implemented | 17 |
+| [SceneReplicationConfig](classes/SceneReplicationConfig.md) | Resource | Implemented | 17 |
 | [SceneState](classes/SceneState.md) | RefCounted | Partial | 28 |
 | [SceneTree](classes/SceneTree.md) | MainLoop | Partial | 51 |
 | [SceneTreeTimer](classes/SceneTreeTimer.md) | RefCounted | Implemented | 2 |

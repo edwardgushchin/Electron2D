@@ -2,6 +2,7 @@ namespace Electron2D;
 
 public partial class Node
 {
+    internal PackedScene? SpawnSceneIdentity;
     private int _multiplayerAuthority = 1;
     private Dictionary<uint, RPCRegistration>? _rpcMethods;
     /// <summary>Gets the interface assigned to the nearest containing scene branch.</summary><value>The default interface or most specific custom override; detached access fails.</value>
@@ -9,7 +10,7 @@ public partial class Node
     /// <summary>Gets the local node's configured multiplayer authority.</summary><returns>Server identity one initially.</returns>
     public int GetMultiplayerAuthority() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _multiplayerAuthority; }
     /// <summary>Sets a positive authority identity, optionally recursively for current descendants.</summary><param name="id">Positive peer identity.</param><param name="recursive">True applies to current descendants; later children retain their own default/configuration.</param><remarks>This local configuration does not replicate itself; participants must agree separately.</remarks>
-    public void SetMultiplayerAuthority(int id, bool recursive = true) { EnsureMutable(); if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id)); _multiplayerAuthority = id; if (recursive) foreach (var child in _children) child.SetMultiplayerAuthority(id, true); }
+    public virtual void SetMultiplayerAuthority(int id, bool recursive = true) { EnsureMutable(); if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id)); _multiplayerAuthority = id; if (recursive) foreach (var child in _children) child.SetMultiplayerAuthority(id, true); }
     /// <summary>Reports whether this node's authority matches its assigned interface identity.</summary><returns>False for detached nodes.</returns>
     public bool IsMultiplayerAuthority() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return Tree is not null && Multiplayer.GetUniqueID() == _multiplayerAuthority; }
     /// <summary>Configures a typed callable and its invocation policy.</summary><param name="method">Immutable receiver/codec token, unique per node by ID.</param><param name="options">Policy; null removes the configuration.</param><remarks>Tokens/closures are borrowed configuration. Configure derived nodes in their typed scene factory/constructor for scene reconstruction.</remarks>

@@ -129,6 +129,7 @@ public sealed class PackedScene : Resource
             root.Notify(Node.NotificationSceneInstantiated);
             ValidateInstantiatedHierarchy(data, nodes);
             EndSceneInstantiation(nodes, createdCount);
+            root.SpawnSceneIdentity = this;
             return root;
         }
         catch (Exception instantiationError)

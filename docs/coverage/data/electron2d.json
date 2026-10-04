@@ -5259,6 +5259,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MultiplayerSpawner",
+    "kind": "type",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "MultiplayerSpawner",
+    "signature": "public class Electron2D.MultiplayerSpawner",
+    "visibility": "public",
+    "baseType": "Electron2D.Node",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.MultiplayerSynchronizer",
+    "kind": "type",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "MultiplayerSynchronizer",
+    "signature": "public class Electron2D.MultiplayerSynchronizer",
+    "visibility": "public",
+    "baseType": "Electron2D.Node",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NinePatchRect",
     "kind": "type",
     "declaringType": "Electron2D.NinePatchRect",
@@ -6384,6 +6414,50 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ReplicationMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ReplicationMode",
+    "name": "ReplicationMode",
+    "signature": "public enum Electron2D.ReplicationMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ReplicationProperty",
+    "kind": "type",
+    "declaringType": "Electron2D.ReplicationProperty",
+    "name": "ReplicationProperty",
+    "signature": "public abstract class Electron2D.ReplicationProperty",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ReplicationProperty\u003CTNode, T\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.ReplicationProperty\u003CTNode, T\u003E",
+    "name": "ReplicationProperty\u00602",
+    "signature": "public sealed class Electron2D.ReplicationProperty\u003CTNode, T\u003E",
+    "visibility": "public",
+    "baseType": "Electron2D.ReplicationProperty",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Resource",
     "kind": "type",
     "declaringType": "Electron2D.Resource",
@@ -6506,6 +6580,21 @@
     "signature": "public class Electron2D.SceneMultiplayer",
     "visibility": "public",
     "baseType": "Electron2D.MultiplayerAPI",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SceneReplicationConfig",
+    "kind": "type",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "SceneReplicationConfig",
+    "signature": "public class Electron2D.SceneReplicationConfig",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -6827,6 +6916,32 @@
     "interfaces": [
       "System.IDisposable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SpawnFactory",
+    "kind": "type",
+    "declaringType": "Electron2D.SpawnFactory",
+    "name": "SpawnFactory",
+    "signature": "public class Electron2D.SpawnFactory",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SpawnFactory\u003CT\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.SpawnFactory\u003CT\u003E",
+    "name": "SpawnFactory\u00601",
+    "signature": "public sealed class Electron2D.SpawnFactory\u003CT\u003E",
+    "visibility": "public",
+    "baseType": "Electron2D.SpawnFactory",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -8161,6 +8276,24 @@
     "declaringType": "Electron2D.ViewportUpdateMode",
     "name": "ViewportUpdateMode",
     "signature": "public enum Electron2D.ViewportUpdateMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisibilityUpdateMode",
+    "kind": "type",
+    "declaringType": "Electron2D.VisibilityUpdateMode",
+    "name": "VisibilityUpdateMode",
+    "signature": "public enum Electron2D.VisibilityUpdateMode",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -12604,6 +12737,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.MultiplayerSpawner..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": ".ctor",
+    "signature": "public MultiplayerSpawner()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MultiplayerSynchronizer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": ".ctor",
+    "signature": "public MultiplayerSynchronizer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.NinePatchRect..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.NinePatchRect",
@@ -13642,6 +13801,60 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.ReplicationProperty\u003CTNode, T\u003E..ctor(System.UInt32,Func\u003CTNode, T\u003E,Action\u003CTNode, T\u003E,Func\u003CT, System.Int32\u003E,RPCEncoder\u003CT\u003E,RPCDecoder\u003CT\u003E,System.Int32,System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ReplicationProperty\u003CTNode, T\u003E",
+    "name": ".ctor",
+    "signature": "public ReplicationProperty(System.UInt32 id, Func\u003CTNode, T\u003E get, Action\u003CTNode, T\u003E set, Func\u003CT, System.Int32\u003E size, RPCEncoder\u003CT\u003E encode, RPCDecoder\u003CT\u003E decode, System.Int32 maxEncodedBytes = 65535, System.String nodePath = \u0022.\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "get",
+        "type": "Func\u003CTNode, T\u003E",
+        "default": null
+      },
+      {
+        "name": "set",
+        "type": "Action\u003CTNode, T\u003E",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Func\u003CT, System.Int32\u003E",
+        "default": null
+      },
+      {
+        "name": "encode",
+        "type": "RPCEncoder\u003CT\u003E",
+        "default": null
+      },
+      {
+        "name": "decode",
+        "type": "RPCDecoder\u003CT\u003E",
+        "default": null
+      },
+      {
+        "name": "maxEncodedBytes",
+        "type": "System.Int32",
+        "default": "65535"
+      },
+      {
+        "name": "nodePath",
+        "type": "System.String",
+        "default": "\u0022.\u0022"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Resource..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Resource",
@@ -13673,6 +13886,19 @@
     "declaringType": "Electron2D.SceneMultiplayer",
     "name": ".ctor",
     "signature": "public SceneMultiplayer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SceneReplicationConfig..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": ".ctor",
+    "signature": "public SceneReplicationConfig()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13851,6 +14077,69 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SpawnFactory..ctor(System.UInt32,System.Func\u003CElectron2D.Node\u003E)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SpawnFactory",
+    "name": ".ctor",
+    "signature": "public SpawnFactory(System.UInt32 id, System.Func\u003CElectron2D.Node\u003E factory)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "System.Func\u003CElectron2D.Node\u003E",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SpawnFactory\u003CT\u003E..ctor(System.UInt32,Func\u003CT, Electron2D.Node\u003E,Func\u003CT, System.Int32\u003E,RPCEncoder\u003CT\u003E,RPCDecoder\u003CT\u003E)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SpawnFactory\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public SpawnFactory(System.UInt32 id, Func\u003CT, Electron2D.Node\u003E factory, Func\u003CT, System.Int32\u003E size, RPCEncoder\u003CT\u003E encode, RPCDecoder\u003CT\u003E decode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CT, Electron2D.Node\u003E",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Func\u003CT, System.Int32\u003E",
+        "default": null
+      },
+      {
+        "name": "encode",
+        "type": "RPCEncoder\u003CT\u003E",
+        "default": null
+      },
+      {
+        "name": "decode",
+        "type": "RPCDecoder\u003CT\u003E",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -27107,6 +27396,45 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.ReplicationMode.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ReplicationMode",
+    "name": "Always",
+    "signature": "public const Electron2D.ReplicationMode Always = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ReplicationMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ReplicationMode.Never()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ReplicationMode",
+    "name": "Never",
+    "signature": "public const Electron2D.ReplicationMode Never = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ReplicationMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ReplicationMode.OnChange()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ReplicationMode",
+    "name": "OnChange",
+    "signature": "public const Electron2D.ReplicationMode OnChange = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ReplicationMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.ResourceLoader.CacheMode.Ignore()",
     "kind": "enumValue",
     "declaringType": "Electron2D.ResourceLoader.CacheMode",
@@ -29889,6 +30217,45 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.VisibilityUpdateMode.Idle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisibilityUpdateMode",
+    "name": "Idle",
+    "signature": "public const Electron2D.VisibilityUpdateMode Idle = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisibilityUpdateMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisibilityUpdateMode.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisibilityUpdateMode",
+    "name": "None",
+    "signature": "public const Electron2D.VisibilityUpdateMode None = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisibilityUpdateMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisibilityUpdateMode.Physics()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisibilityUpdateMode",
+    "name": "Physics",
+    "signature": "public const Electron2D.VisibilityUpdateMode Physics = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisibilityUpdateMode",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.WebSocketState.Closed()",
     "kind": "enumValue",
     "declaringType": "Electron2D.WebSocketState",
@@ -31636,6 +32003,71 @@
     "declaringType": "Electron2D.MultiplayerPeer",
     "name": "PeerDisconnected",
     "signature": "public event System.Action\u003CSystem.Int32\u003E PeerDisconnected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerSpawner.Despawned()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "Despawned",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E Despawned",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerSpawner.Spawned()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "Spawned",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E Spawned",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerSynchronizer.DeltaSynchronized()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "DeltaSynchronized",
+    "signature": "public event System.Action DeltaSynchronized",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerSynchronizer.Synchronized()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "Synchronized",
+    "signature": "public event System.Action Synchronized",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerSynchronizer.VisibilityChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "VisibilityChanged",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E VisibilityChanged",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -80433,6 +80865,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.MultiplayerAPI.ObjectConfigurationAdd(Electron2D.Node,Electron2D.MultiplayerSpawner)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ObjectConfigurationAdd",
+    "signature": "public abstract System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "spawner",
+        "type": "Electron2D.MultiplayerSpawner",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.ObjectConfigurationAdd(Electron2D.Node,Electron2D.MultiplayerSynchronizer)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ObjectConfigurationAdd",
+    "signature": "public abstract System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "synchronizer",
+        "type": "Electron2D.MultiplayerSynchronizer",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.MultiplayerAPI.ObjectConfigurationAdd(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.MultiplayerAPI",
@@ -80445,6 +80925,54 @@
       {
         "name": "rootPath",
         "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.ObjectConfigurationRemove(Electron2D.Node,Electron2D.MultiplayerSpawner)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ObjectConfigurationRemove",
+    "signature": "public abstract System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "spawner",
+        "type": "Electron2D.MultiplayerSpawner",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.ObjectConfigurationRemove(Electron2D.Node,Electron2D.MultiplayerSynchronizer)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ObjectConfigurationRemove",
+    "signature": "public abstract System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "synchronizer",
+        "type": "Electron2D.MultiplayerSynchronizer",
         "default": null
       }
     ],
@@ -80864,6 +81392,413 @@
         "name": "id",
         "type": "System.Int32",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.AddSpawnableScene(Electron2D.PackedScene)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "AddSpawnableScene",
+    "signature": "public System.Void AddSpawnableScene(Electron2D.PackedScene scene)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "scene",
+        "type": "Electron2D.PackedScene",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.ClearSpawnableScenes()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "ClearSpawnableScenes",
+    "signature": "public System.Void ClearSpawnableScenes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.GetSpawnableScene(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "GetSpawnableScene",
+    "signature": "public Electron2D.PackedScene GetSpawnableScene(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PackedScene",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.GetSpawnableSceneCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "GetSpawnableSceneCount",
+    "signature": "public System.Int32 GetSpawnableSceneCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.Spawn()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "Spawn",
+    "signature": "public Electron2D.Node Spawn()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.Spawn\u00601(T)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "Spawn",
+    "signature": "public Electron2D.Node Spawn\u003CT\u003E(T data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.AddVisibilityFilter(System.Func\u003CSystem.Int32, System.Boolean\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "AddVisibilityFilter",
+    "signature": "public System.Void AddVisibilityFilter(System.Func\u003CSystem.Int32, System.Boolean\u003E filter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filter",
+        "type": "System.Func\u003CSystem.Int32, System.Boolean\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.GetVisibilityFor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "GetVisibilityFor",
+    "signature": "public System.Boolean GetVisibilityFor(System.Int32 peer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peer",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.RemoveVisibilityFilter(System.Func\u003CSystem.Int32, System.Boolean\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "RemoveVisibilityFilter",
+    "signature": "public System.Void RemoveVisibilityFilter(System.Func\u003CSystem.Int32, System.Boolean\u003E filter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filter",
+        "type": "System.Func\u003CSystem.Int32, System.Boolean\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.SetMultiplayerAuthority(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "SetMultiplayerAuthority",
+    "signature": "public override System.Void SetMultiplayerAuthority(System.Int32 id, System.Boolean recursive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "recursive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.SetVisibilityFor(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "SetVisibilityFor",
+    "signature": "public System.Void SetVisibilityFor(System.Int32 peer, System.Boolean visible)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peer",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "visible",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSynchronizer.UpdateVisibility(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "UpdateVisibility",
+    "signature": "public System.Void UpdateVisibility(System.Int32 forPeer = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "forPeer",
+        "type": "System.Int32",
+        "default": "0"
       }
     ],
     "returnType": "System.Void",
@@ -82175,7 +83110,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "SetMultiplayerAuthority",
-    "signature": "public System.Void SetMultiplayerAuthority(System.Int32 id, System.Boolean recursive = true)",
+    "signature": "public virtual System.Void SetMultiplayerAuthority(System.Int32 id, System.Boolean recursive = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -94594,6 +95529,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneMultiplayer.ObjectConfigurationAdd(Electron2D.Node,Electron2D.MultiplayerSpawner)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "ObjectConfigurationAdd",
+    "signature": "public override System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "spawner",
+        "type": "Electron2D.MultiplayerSpawner",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.ObjectConfigurationAdd(Electron2D.Node,Electron2D.MultiplayerSynchronizer)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "ObjectConfigurationAdd",
+    "signature": "public override System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "synchronizer",
+        "type": "Electron2D.MultiplayerSynchronizer",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneMultiplayer.ObjectConfigurationAdd(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.SceneMultiplayer",
@@ -94606,6 +95589,54 @@
       {
         "name": "rootPath",
         "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.ObjectConfigurationRemove(Electron2D.Node,Electron2D.MultiplayerSpawner)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "ObjectConfigurationRemove",
+    "signature": "public override System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "spawner",
+        "type": "Electron2D.MultiplayerSpawner",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.ObjectConfigurationRemove(Electron2D.Node,Electron2D.MultiplayerSynchronizer)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "ObjectConfigurationRemove",
+    "signature": "public override System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "synchronizer",
+        "type": "Electron2D.MultiplayerSynchronizer",
         "default": null
       }
     ],
@@ -94746,6 +95777,356 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.AddProperty(Electron2D.ReplicationProperty,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "AddProperty",
+    "signature": "public System.Void AddProperty(Electron2D.ReplicationProperty property, System.Int32 index = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.GetProperties()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "GetProperties",
+    "signature": "public Electron2D.ReplicationProperty[] GetProperties()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ReplicationProperty[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.HasProperty(Electron2D.ReplicationProperty)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "HasProperty",
+    "signature": "public System.Boolean HasProperty(Electron2D.ReplicationProperty property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertyGetIndex(Electron2D.ReplicationProperty)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertyGetIndex",
+    "signature": "public System.Int32 PropertyGetIndex(Electron2D.ReplicationProperty property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertyGetReplicationMode(Electron2D.ReplicationProperty)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertyGetReplicationMode",
+    "signature": "public Electron2D.ReplicationMode PropertyGetReplicationMode(Electron2D.ReplicationProperty property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ReplicationMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertyGetSpawn(Electron2D.ReplicationProperty)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertyGetSpawn",
+    "signature": "public System.Boolean PropertyGetSpawn(Electron2D.ReplicationProperty property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertyGetSync(Electron2D.ReplicationProperty)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertyGetSync",
+    "signature": "public System.Boolean PropertyGetSync(Electron2D.ReplicationProperty property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertyGetWatch(Electron2D.ReplicationProperty)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertyGetWatch",
+    "signature": "public System.Boolean PropertyGetWatch(Electron2D.ReplicationProperty property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertySetReplicationMode(Electron2D.ReplicationProperty,Electron2D.ReplicationMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertySetReplicationMode",
+    "signature": "public System.Void PropertySetReplicationMode(Electron2D.ReplicationProperty property, Electron2D.ReplicationMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.ReplicationMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertySetSpawn(Electron2D.ReplicationProperty,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertySetSpawn",
+    "signature": "public System.Void PropertySetSpawn(Electron2D.ReplicationProperty property, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertySetSync(Electron2D.ReplicationProperty,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertySetSync",
+    "signature": "public System.Void PropertySetSync(Electron2D.ReplicationProperty property, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.PropertySetWatch(Electron2D.ReplicationProperty,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "PropertySetWatch",
+    "signature": "public System.Void PropertySetWatch(Electron2D.ReplicationProperty property, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneReplicationConfig.RemoveProperty(Electron2D.ReplicationProperty)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneReplicationConfig",
+    "name": "RemoveProperty",
+    "signature": "public System.Void RemoveProperty(Electron2D.ReplicationProperty property)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.ReplicationProperty",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -97342,6 +98723,44 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpawnFactory.Instantiate(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpawnFactory",
+    "name": "Instantiate",
+    "signature": "public Electron2D.Node Instantiate(System.ReadOnlySpan\u003CSystem.Byte\u003E arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "arguments",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpawnFactory\u003CT\u003E.Encode(T)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpawnFactory\u003CT\u003E",
+    "name": "Encode",
+    "signature": "public System.Byte[] Encode(T data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
     "value": null
   },
   {
@@ -129277,6 +130696,123 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.MultiplayerSpawner.SpawnFunction()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "SpawnFunction",
+    "signature": "public Electron2D.SpawnFactory SpawnFunction { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SpawnFactory",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiplayerSpawner.SpawnLimit()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "SpawnLimit",
+    "signature": "public System.UInt32 SpawnLimit { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiplayerSpawner.SpawnPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "SpawnPath",
+    "signature": "public System.String SpawnPath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiplayerSynchronizer.DeltaInterval()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "DeltaInterval",
+    "signature": "public System.Double DeltaInterval { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiplayerSynchronizer.PublicVisibility()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "PublicVisibility",
+    "signature": "public System.Boolean PublicVisibility { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiplayerSynchronizer.ReplicationConfig()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "ReplicationConfig",
+    "signature": "public Electron2D.SceneReplicationConfig ReplicationConfig { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SceneReplicationConfig",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiplayerSynchronizer.ReplicationInterval()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "ReplicationInterval",
+    "signature": "public System.Double ReplicationInterval { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiplayerSynchronizer.RootPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "RootPath",
+    "signature": "public System.String RootPath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiplayerSynchronizer.VisibilityUpdateMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerSynchronizer",
+    "name": "VisibilityUpdateMode",
+    "signature": "public Electron2D.VisibilityUpdateMode VisibilityUpdateMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisibilityUpdateMode",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.NinePatchRect.AxisStretchHorizontal()",
     "kind": "property",
     "declaringType": "Electron2D.NinePatchRect",
@@ -133424,6 +134960,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ReplicationProperty.ID()",
+    "kind": "property",
+    "declaringType": "Electron2D.ReplicationProperty",
+    "name": "ID",
+    "signature": "public System.UInt32 ID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ReplicationProperty.MaxEncodedBytes()",
+    "kind": "property",
+    "declaringType": "Electron2D.ReplicationProperty",
+    "name": "MaxEncodedBytes",
+    "signature": "public System.Int32 MaxEncodedBytes { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ReplicationProperty.NodePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.ReplicationProperty",
+    "name": "NodePath",
+    "signature": "public System.String NodePath { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Resource.IsBuiltIn()",
     "kind": "property",
     "declaringType": "Electron2D.Resource",
@@ -133801,11 +135376,37 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SceneMultiplayer.MaxDeltaPacketSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "MaxDeltaPacketSize",
+    "signature": "public System.Int32 MaxDeltaPacketSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.SceneMultiplayer.MaxPacketBytes()",
     "kind": "property",
     "declaringType": "Electron2D.SceneMultiplayer",
     "name": "MaxPacketBytes",
     "signature": "public System.Int32 MaxPacketBytes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneMultiplayer.MaxSyncPacketSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "MaxSyncPacketSize",
+    "signature": "public System.Int32 MaxSyncPacketSize { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -134435,6 +136036,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Slider.TickPosition",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpawnFactory.ID()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpawnFactory",
+    "name": "ID",
+    "signature": "public System.UInt32 ID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
     "value": null
   },
   {

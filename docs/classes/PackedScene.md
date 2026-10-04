@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Inherits:** [Resource](Resource.md)
 
@@ -271,3 +271,7 @@ Theme/variation and actual override entries are captured independently of comput
 ## Typed node-reference restoration
 
 Stored Node properties such as Control.ShortcutContext are captured as relative paths without retaining source nodes. Normal properties and groups restore before parenting; owners and the full hierarchy are then established, followed by a second pass for node references. Forward and sibling references resolve to each new instance independently. Missing paths yield null, incompatible declared types fail reconstruction and invoke existing rollback. SceneState string queries expose the stored path (empty for null). See [StoredNodeReferenceValue](StoredNodeReferenceValue.md) and [ShortcutTests](../../tests/Electron2D.Tests/ShortcutTests.cs).
+
+## Replication provenance
+
+Successful instances carry an internal reference to their source template, enabling automatic direct-child recognition by [MultiplayerSpawner](MultiplayerSpawner.md) even with an empty ResourcePath. The template remains borrowed immutable authoring data; this does not add disk serialization. Factories still return default detached nodes without precreated children. SceneReplicationTests executes automatic template spawning and pre-Ready initial state through native WS/WSS.

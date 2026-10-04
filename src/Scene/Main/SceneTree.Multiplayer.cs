@@ -30,23 +30,26 @@ public partial class SceneTree
     }
     private readonly Dictionary<Node, MultiplayerAPI> _multiplayerNodes = [];
     private void InvalidateMultiplayerPaths() { _multiplayerNodes.Clear(); if (_defaultMultiplayer is SceneMultiplayer scene) scene.InvalidatePaths(); foreach (var custom in _customMultiplayer.Values) if (custom is SceneMultiplayer branch) branch.InvalidatePaths(); }
-    /// <summary>Assigns a borrowed interface to the default or an existing absolute scene branch.</summary><param name="multiplayer">Live owner-thread interface; null removes a custom branch or creates a new default.</param><param name="rootPath">Empty selects default; an absolute existing node path selects a branch.</param><remarks>One interface can belong to only one tree/branch. Replacement detaches the old interface; only tree-created defaults are disposed by the tree.</remarks>
+    /// <summary>Assigns a borrowed interface to the default or an existing absolute scene branch.</summary><param name="multiplayer">Live owner-thread interface; null removes a custom branch or creates a new default.</param><param name="rootPath">Empty selects default; an absolute existing node path selects a branch.</param><remarks>One interface can belong to only one tree/branch. Replacement commits the new interface, detaches the old one and rebinds producers despite cleanup failure. Only tree-created defaults are disposed by the tree. Removing a custom mapping is allowed after its branch leaves.</remarks>
     public void SetMultiplayer(MultiplayerAPI? multiplayer, string rootPath = "")
     {
-        ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); ArgumentNullException.ThrowIfNull(rootPath);
+        ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); ArgumentNullException.ThrowIfNull(rootPath); List<Exception>? errors = null;
         if (rootPath.Length > 0)
         {
-            if (!rootPath.StartsWith('/')) throw new ArgumentException("Multiplayer branch path must be absolute.", nameof(rootPath)); Root.GetNode(rootPath);
+            if (!rootPath.StartsWith('/')) throw new ArgumentException("Multiplayer branch path must be absolute.", nameof(rootPath)); if (multiplayer is not null) Root.GetNode(rootPath);
             if (_customMultiplayer.TryGetValue(rootPath, out var current) && ReferenceEquals(current, multiplayer)) return;
-            current?.ValidateDetachment(); multiplayer?.Attach(this, rootPath); if (multiplayer is null) _customMultiplayer.Remove(rootPath); else _customMultiplayer[rootPath] = multiplayer; _multiplayerNodes.Clear(); if (current is not null) current.Detach();
+            current?.ValidateDetachment(); multiplayer?.Attach(this, rootPath); if (multiplayer is null) _customMultiplayer.Remove(rootPath); else _customMultiplayer[rootPath] = multiplayer; _multiplayerNodes.Clear(); if (current is not null) try { current.Detach(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         else
         {
             if (ReferenceEquals(multiplayer, _defaultMultiplayer)) return; _defaultMultiplayer?.ValidateDetachment(); var owned = multiplayer is null; multiplayer ??= MultiplayerAPI.CreateDefaultInterface();
             try { multiplayer.Attach(this, Root.GetPath()); } catch { if (owned) multiplayer.Dispose(); throw; }
-            var old = _defaultMultiplayer; var dispose = _ownsDefaultMultiplayer; _defaultMultiplayer = multiplayer; _ownsDefaultMultiplayer = owned; _multiplayerNodes.Clear(); try { old?.Detach(); } finally { if (dispose) old?.Dispose(); }
+            var old = _defaultMultiplayer; var dispose = _ownsDefaultMultiplayer; _defaultMultiplayer = multiplayer; _ownsDefaultMultiplayer = owned; _multiplayerNodes.Clear(); try { old?.Detach(); } catch (Exception error) { CollectException(ref errors, error); }
+            if (dispose) try { old?.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         _multiplayerNodes.Clear();
+        foreach (var node in Root.EnumerateDepthFirst().ToArray()) { if (node.IsDisposed || !ReferenceEquals(node.Tree, this)) continue; try { if (node is MultiplayerSpawner spawner) spawner.Rebind(); else if (node is MultiplayerSynchronizer sync) sync.Rebind(); } catch (Exception error) { CollectException(ref errors, error); } }
+        ThrowCollected("Multiplayer replacement cleanup/configuration failed after committing the new interface.", errors);
     }
     private void PollMultiplayer(ref List<Exception>? errors)
     {

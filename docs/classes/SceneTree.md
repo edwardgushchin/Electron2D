@@ -901,3 +901,5 @@ multiplayer: Live owner-thread interface; null removes a custom branch or create
 rootPath: Empty selects default; an absolute existing node path selects a branch.
 
 Remarks: One interface can belong to only one tree/branch. Replacement detaches the old interface; only tree-created defaults are disposed by the tree.
+
+Branch replacement now rebinds existing spawner/synchronizer configurations after committing the new interface, and continues all rebind/cleanup stages after observer failure. Removing an existing custom mapping remains possible after its branch node has left the scene. Native replication tests exercise real idle-frame spawn/state/visibility flow; no rendered/editor acceptance is inferred.

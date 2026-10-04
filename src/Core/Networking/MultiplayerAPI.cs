@@ -39,6 +39,14 @@ public abstract class MultiplayerAPI : ElectronObject
     public abstract void ObjectConfigurationAdd(string rootPath);
     /// <summary>Removes the currently matching root configuration.</summary><param name="rootPath">The configured root path.</param>
     public abstract void ObjectConfigurationRemove(string rootPath);
+    /// <summary>Registers an authored spawn object and its owning spawner.</summary><param name="node">Local spawn node, possibly before insertion.</param><param name="spawner">Authoritative typed configuration.</param>
+    public abstract void ObjectConfigurationAdd(Node node, MultiplayerSpawner spawner);
+    /// <summary>Removes a local spawned object and its matching configuration.</summary><param name="node">Tracked node.</param><param name="spawner">Matching spawner.</param>
+    public abstract void ObjectConfigurationRemove(Node node, MultiplayerSpawner spawner);
+    /// <summary>Registers a synchronized root and its typed configuration owner.</summary><param name="node">Root node.</param><param name="synchronizer">Attached synchronization component.</param>
+    public abstract void ObjectConfigurationAdd(Node node, MultiplayerSynchronizer synchronizer);
+    /// <summary>Removes a synchronized root/configuration pair.</summary><param name="node">Root node.</param><param name="synchronizer">Matching component.</param>
+    public abstract void ObjectConfigurationRemove(Node node, MultiplayerSynchronizer synchronizer);
     /// <summary>Occurs when a client is admitted by the server.</summary>
     public event Action? ConnectedToServer;
     /// <summary>Occurs when transport connection establishment fails.</summary>

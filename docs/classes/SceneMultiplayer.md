@@ -6,7 +6,7 @@ Last updated: 2026-10-04
 
 ## Description
 
-Polls admitted scene peers, typed RPCs, authentication and custom packets with server relay.
+Polls admitted scene peers, typed RPCs, authentication, custom packets and typed scene spawning/property replication with server relay.
 
 The transport remains caller-owned. Packet/authentication spans are borrowed during callbacks. Root paths locate nodes; immutable typed RPC tokens replace reflection. Preparation/path discovery allocates, while repeated ready span/message processing reuses bounded buffers. Calls/disposal require the owner thread.
 
@@ -329,4 +329,90 @@ Delivers custom bytes with original sender identity; storage is borrowed only du
 
 ## Verification and limits
 
-[SceneMultiplayerTests](../../tests/Electron2D.Tests/SceneMultiplayerTests.cs) verifies public Node/SceneTree WS/WSS relay/RPC/authentication and managed provider hooks, lifetime/validation/failure recovery and prepared active/idle allocation boundaries. General dynamic object decoding is excluded. Spawner/synchronizer/property-schema replication and its packet limits remain exact dependent capabilities; they are absent from implemented member tables. Foreign hosts/routed throughput/native allocator totals and human/rendered/editor/agent acceptance are separate gates.
+[SceneMultiplayerTests](../../tests/Electron2D.Tests/SceneMultiplayerTests.cs) verifies public Node/SceneTree WS/WSS relay/RPC/authentication and managed provider hooks, lifetime/validation/failure recovery and prepared active/idle allocation boundaries. General dynamic object decoding is excluded. Typed spawner/synchronizer/property-schema replication and packet batching now execute through the scene replication component. File scene authoring remains a separate resource-format dependency. Foreign hosts/routed throughput/native allocator totals and human/rendered/editor/agent acceptance are separate gates.
+
+## Scene replication integration
+
+Concrete typed node/spawner and node/synchronizer configuration overloads now execute; [the component](../components/scene-replication.md) defines protocol/ownership/failure details and packet batching. File scene authoring remains a resource-format dependency.
+
+## Property summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public System.Int32 MaxDeltaPacketSize { get; set; }` | Gets or sets the maximum whole encoded change-only synchronization packet size. |
+| `public System.Int32 MaxSyncPacketSize { get; set; }` | Gets or sets the maximum whole encoded periodic synchronization packet size. |
+
+## Property Descriptions
+
+<a id="member-b8582ec15f0b"></a>
+### MaxDeltaPacketSize
+
+`public System.Int32 MaxDeltaPacketSize { get; set; }`
+
+Gets or sets the maximum whole encoded change-only synchronization packet size.
+
+Value: 65535 initially; at least 128 bytes. Complete synchronizer groups are batched without splitting their properties.
+
+<a id="member-f70962acf93d"></a>
+### MaxSyncPacketSize
+
+`public System.Int32 MaxSyncPacketSize { get; set; }`
+
+Gets or sets the maximum whole encoded periodic synchronization packet size.
+
+Value: 1350 initially; at least 128 bytes, bounded by 64 MiB and actual prepared/transport capacity.
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public override System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)` | Registers an authored spawn object and its owning spawner. |
+| `public override System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)` | Registers an authored spawn object and its owning spawner. |
+| `public override System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)` | Removes a local spawned object and its matching configuration. |
+| `public override System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)` | Removes a local spawned object and its matching configuration. |
+
+## Method Descriptions
+
+<a id="member-74de44aa95a0"></a>
+### ObjectConfigurationAdd
+
+`public override System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)`
+
+Registers an authored spawn object and its owning spawner.
+
+node: Local spawn node, possibly before insertion.
+
+spawner: Authoritative typed configuration.
+
+<a id="member-d81ff1080dc1"></a>
+### ObjectConfigurationAdd
+
+`public override System.Void ObjectConfigurationAdd(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)`
+
+Registers an authored spawn object and its owning spawner.
+
+node: Local spawn node, possibly before insertion.
+
+spawner: Authoritative typed configuration.
+
+<a id="member-19a218d267c3"></a>
+### ObjectConfigurationRemove
+
+`public override System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSpawner spawner)`
+
+Removes a local spawned object and its matching configuration.
+
+node: Tracked node.
+
+spawner: Matching spawner.
+
+<a id="member-dbfd85e321ae"></a>
+### ObjectConfigurationRemove
+
+`public override System.Void ObjectConfigurationRemove(Electron2D.Node node, Electron2D.MultiplayerSynchronizer synchronizer)`
+
+Removes a local spawned object and its matching configuration.
+
+node: Tracked node.
+
+spawner: Matching spawner.
