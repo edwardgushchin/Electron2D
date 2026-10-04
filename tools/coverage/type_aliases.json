@@ -146,6 +146,10 @@
     "AnimationNodeBlendSpace2D.BlendMode": "AnimationBlendMode",
     "AnimationNodeBlendSpace2D.SyncMode": "AnimationSyncMode",
     "AnimationNodeOneShot.MixMode": "AnimationMixMode",
-    "AnimationNodeOneShot.OneShotRequest": "AnimationOneShotRequest"
+    "AnimationNodeOneShot.OneShotRequest": "AnimationOneShotRequest",
+    "HTTPClient.Method": "HTTPMethod",
+    "HTTPClient.Status": "HTTPStatus",
+    "HTTPClient.ResponseCode": "HTTPResponseCode",
+    "HTTPRequest.Result": "HTTPRequestResult"
   }
 }

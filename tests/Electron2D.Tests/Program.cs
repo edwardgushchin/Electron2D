@@ -11,6 +11,8 @@ using EngineTimer = Electron2D.Timer;
 
 NativeLibraryTests.Run();
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HTTP") == "1") { HTTPTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TLS") == "1") { TLSTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NETWORKING") == "1") { NetworkingTests.Run(); return; }
@@ -482,6 +484,7 @@ SubViewportContainerTests.Run();
 LineEditTests.Run();
 NetworkingTests.Run();
 TLSTests.Run();
+HTTPTests.Run();
 AnimationStateMachineTests.Run();
 AudioGeneratorTests.Run();
 AudioInputTests.Run();

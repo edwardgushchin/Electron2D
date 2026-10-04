@@ -113,3 +113,5 @@ enabled: Whether to bypass Nagle aggregation.
 ## Verification and limits
 
 [NetworkingTests](../../tests/Electron2D.Tests/NetworkingTests.cs) verifies the exercised native Linux x64 IPv4/IPv6 loopback and UDS paths, binary/framing/queue edges, lifecycle, owner checks, scene request/reply and warmed allocation boundaries. Native allocator totals, other hosts/browser transport, real routed traffic, network throughput and owner acceptance remain unverified. Dynamic-value wire encoding is excluded under ADR 0001; raw typed bytes are executable. See [coverage](../coverage/classes/StreamPeerTCP.md).
+
+HTTP address-fallback verification fixes local-port capture during implicit binding: the native endpoint is queried before starting nonblocking connect, so later Poll retains the pending connection failure for candidate fallback. HTTPTests exercises localhost with an IPv4 listener; existing native TCP/IPv6 tests remain applicable.

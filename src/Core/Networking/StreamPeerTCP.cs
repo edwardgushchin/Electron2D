@@ -4,7 +4,7 @@ namespace Electron2D;
 
 /// <summary>Transfers ordered binary stream data through a native TCP connection.</summary>
 /// <remarks>Bind accepts an IP literal or wildcard. ConnectToHost resolves a name before starting a nonblocking
-/// connect. Poll is required while connecting and for FIN/error detection. Timeout is sampled from project settings.</remarks>
+/// connect. The local port is captured at binding without querying pending connection state. Poll is required while connecting and for FIN/error detection. Timeout is sampled from project settings.</remarks>
 public class StreamPeerTCP : StreamPeerSocket
 {
     private string _host = "";
@@ -26,10 +26,10 @@ public class StreamPeerTCP : StreamPeerSocket
         var address = NetworkSockets.Resolve(host); if (NativeSocket is null)
         {
             var socket = NetworkSockets.Create(address.AddressFamily, SocketType.Stream);
-            try { socket.Bind(new IPEndPoint(address.AddressFamily == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any, 0)); SetSocket(socket, StreamSocketStatus.None); } catch { socket.Dispose(); throw; }
+            try { socket.Bind(new IPEndPoint(address.AddressFamily == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any, 0)); _localPort = ((IPEndPoint)socket.LocalEndPoint!).Port; SetSocket(socket, StreamSocketStatus.None); } catch { socket.Dispose(); throw; }
         }
         _host = NetworkSockets.Host(address); _port = port;
-        Connect(NetworkSockets.Endpoint(NativeSocket!, address, port), ProjectSettings.Instance.Get(ProjectSettings.TCPConnectTimeoutSeconds)); _localPort = NativeSocket?.LocalEndPoint is IPEndPoint local ? local.Port : 0;
+        Connect(NetworkSockets.Endpoint(NativeSocket!, address, port), ProjectSettings.Instance.Get(ProjectSettings.TCPConnectTimeoutSeconds));
     }
     /// <summary>Returns the selected remote IP, or empty after disconnection.</summary><returns>A normalized IP literal.</returns>
     public string GetConnectedHost() { CheckStream(); return NativeSocket is null ? "" : _host; }

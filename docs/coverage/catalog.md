@@ -365,8 +365,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [HSeparator](classes/HSeparator.md) | Separator | Blocked | 0 |
 | [HSlider](classes/HSlider.md) | Slider | Implemented | 0 |
 | [HSplitContainer](classes/HSplitContainer.md) | SplitContainer | Implemented | 0 |
-| [HTTPClient](classes/HTTPClient.md) | RefCounted | Unimplemented | 103 |
-| [HTTPRequest](classes/HTTPRequest.md) | Node | Blocked | 32 |
+| [HTTPClient](classes/HTTPClient.md) | RefCounted | Implemented | 103 |
+| [HTTPRequest](classes/HTTPRequest.md) | Node | Implemented | 32 |
 | [HashingContext](classes/HashingContext.md) | RefCounted | Blocked | 7 |
 | [HeightMapShape3D](classes/HeightMapShape3D.md) | Shape3D | Excluded | 6 |
 | [HingeJoint3D](classes/HingeJoint3D.md) | Joint3D | Excluded | 28 |
@@ -822,7 +822,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [StreamPeer](classes/StreamPeer.md) | RefCounted | Implemented | 34 |
 | [StreamPeerBuffer](classes/StreamPeerBuffer.md) | StreamPeer | Implemented | 7 |
 | [StreamPeerExtension](classes/StreamPeerExtension.md) | StreamPeer | Implemented | 5 |
-| [StreamPeerGZIP](classes/StreamPeerGZIP.md) | StreamPeer | Unimplemented | 4 |
+| [StreamPeerGZIP](classes/StreamPeerGZIP.md) | StreamPeer | Implemented | 4 |
 | [StreamPeerSocket](classes/StreamPeerSocket.md) | StreamPeer | Implemented | 8 |
 | [StreamPeerTCP](classes/StreamPeerTCP.md) | StreamPeerSocket | Implemented | 6 |
 | [StreamPeerTLS](classes/StreamPeerTLS.md) | StreamPeer | Implemented | 12 |

@@ -3753,6 +3753,108 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.HTTPClient",
+    "kind": "type",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "HTTPClient",
+    "signature": "public class Electron2D.HTTPClient",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HTTPMethod",
+    "kind": "type",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "HTTPMethod",
+    "signature": "public enum Electron2D.HTTPMethod",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HTTPRequest",
+    "kind": "type",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "HTTPRequest",
+    "signature": "public class Electron2D.HTTPRequest",
+    "visibility": "public",
+    "baseType": "Electron2D.Node",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HTTPRequestResult",
+    "kind": "type",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "HTTPRequestResult",
+    "signature": "public enum Electron2D.HTTPRequestResult",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HTTPResponseCode",
+    "kind": "type",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "HTTPResponseCode",
+    "signature": "public enum Electron2D.HTTPResponseCode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HTTPStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "HTTPStatus",
+    "signature": "public enum Electron2D.HTTPStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.HorizontalAlignment",
     "kind": "type",
     "declaringType": "Electron2D.HorizontalAlignment",
@@ -6535,6 +6637,21 @@
     "declaringType": "Electron2D.StreamPeerBuffer",
     "name": "StreamPeerBuffer",
     "signature": "public class Electron2D.StreamPeerBuffer",
+    "visibility": "public",
+    "baseType": "Electron2D.StreamPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StreamPeerGZIP",
+    "kind": "type",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "StreamPeerGZIP",
+    "signature": "public class Electron2D.StreamPeerGZIP",
     "visibility": "public",
     "baseType": "Electron2D.StreamPeer",
     "interfaces": [
@@ -11425,6 +11542,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.HTTPClient..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": ".ctor",
+    "signature": "public HTTPClient()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.HTTPRequest..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": ".ctor",
+    "signature": "public HTTPRequest()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Image..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Image",
@@ -13094,6 +13237,19 @@
     "declaringType": "Electron2D.StreamPeerBuffer",
     "name": ".ctor",
     "signature": "public StreamPeerBuffer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StreamPeerGZIP..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": ".ctor",
+    "signature": "public StreamPeerGZIP()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -18416,6 +18572,1241 @@
     "parameters": [],
     "returnType": "Electron2D.GrowDirection",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Connect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Connect",
+    "signature": "public const Electron2D.HTTPMethod Connect = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Delete()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Delete",
+    "signature": "public const Electron2D.HTTPMethod Delete = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Get()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Get",
+    "signature": "public const Electron2D.HTTPMethod Get = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Head()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Head",
+    "signature": "public const Electron2D.HTTPMethod Head = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Max",
+    "signature": "public const Electron2D.HTTPMethod Max = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Options()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Options",
+    "signature": "public const Electron2D.HTTPMethod Options = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Patch()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Patch",
+    "signature": "public const Electron2D.HTTPMethod Patch = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Post()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Post",
+    "signature": "public const Electron2D.HTTPMethod Post = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Put()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Put",
+    "signature": "public const Electron2D.HTTPMethod Put = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPMethod.Trace()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPMethod",
+    "name": "Trace",
+    "signature": "public const Electron2D.HTTPMethod Trace = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPMethod",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.BodyDecompressFailed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "BodyDecompressFailed",
+    "signature": "public const Electron2D.HTTPRequestResult BodyDecompressFailed = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.BodySizeLimitExceeded()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "BodySizeLimitExceeded",
+    "signature": "public const Electron2D.HTTPRequestResult BodySizeLimitExceeded = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.CantConnect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "CantConnect",
+    "signature": "public const Electron2D.HTTPRequestResult CantConnect = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.CantResolve()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "CantResolve",
+    "signature": "public const Electron2D.HTTPRequestResult CantResolve = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.ChunkedBodySizeMismatch()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "ChunkedBodySizeMismatch",
+    "signature": "public const Electron2D.HTTPRequestResult ChunkedBodySizeMismatch = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.ConnectionError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "ConnectionError",
+    "signature": "public const Electron2D.HTTPRequestResult ConnectionError = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.DownloadFileCantOpen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "DownloadFileCantOpen",
+    "signature": "public const Electron2D.HTTPRequestResult DownloadFileCantOpen = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.DownloadFileWriteError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "DownloadFileWriteError",
+    "signature": "public const Electron2D.HTTPRequestResult DownloadFileWriteError = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.NoResponse()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "NoResponse",
+    "signature": "public const Electron2D.HTTPRequestResult NoResponse = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.RedirectLimitReached()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "RedirectLimitReached",
+    "signature": "public const Electron2D.HTTPRequestResult RedirectLimitReached = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.RequestFailed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "RequestFailed",
+    "signature": "public const Electron2D.HTTPRequestResult RequestFailed = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.Success()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "Success",
+    "signature": "public const Electron2D.HTTPRequestResult Success = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.TLSHandshakeError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "TLSHandshakeError",
+    "signature": "public const Electron2D.HTTPRequestResult TLSHandshakeError = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPRequestResult.Timeout()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPRequestResult",
+    "name": "Timeout",
+    "signature": "public const Electron2D.HTTPRequestResult Timeout = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPRequestResult",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Accepted()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Accepted",
+    "signature": "public const Electron2D.HTTPResponseCode Accepted = 202",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "202"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.AlreadyReported()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "AlreadyReported",
+    "signature": "public const Electron2D.HTTPResponseCode AlreadyReported = 208",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "208"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.BadGateway()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "BadGateway",
+    "signature": "public const Electron2D.HTTPResponseCode BadGateway = 502",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "502"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.BadRequest()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "BadRequest",
+    "signature": "public const Electron2D.HTTPResponseCode BadRequest = 400",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "400"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Conflict()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Conflict",
+    "signature": "public const Electron2D.HTTPResponseCode Conflict = 409",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "409"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Continue()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Continue",
+    "signature": "public const Electron2D.HTTPResponseCode Continue = 100",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "100"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Created()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Created",
+    "signature": "public const Electron2D.HTTPResponseCode Created = 201",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "201"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.ExpectationFailed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "ExpectationFailed",
+    "signature": "public const Electron2D.HTTPResponseCode ExpectationFailed = 417",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "417"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.FailedDependency()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "FailedDependency",
+    "signature": "public const Electron2D.HTTPResponseCode FailedDependency = 424",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "424"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Forbidden()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Forbidden",
+    "signature": "public const Electron2D.HTTPResponseCode Forbidden = 403",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "403"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Found()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Found",
+    "signature": "public const Electron2D.HTTPResponseCode Found = 302",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "302"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.GatewayTimeout()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "GatewayTimeout",
+    "signature": "public const Electron2D.HTTPResponseCode GatewayTimeout = 504",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "504"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Gone()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Gone",
+    "signature": "public const Electron2D.HTTPResponseCode Gone = 410",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "410"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.HTTPVersionNotSupported()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "HTTPVersionNotSupported",
+    "signature": "public const Electron2D.HTTPResponseCode HTTPVersionNotSupported = 505",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "505"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.ImATeapot()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "ImATeapot",
+    "signature": "public const Electron2D.HTTPResponseCode ImATeapot = 418",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "418"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.ImUsed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "ImUsed",
+    "signature": "public const Electron2D.HTTPResponseCode ImUsed = 226",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "226"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.InsufficientStorage()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "InsufficientStorage",
+    "signature": "public const Electron2D.HTTPResponseCode InsufficientStorage = 507",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "507"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.InternalServerError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "InternalServerError",
+    "signature": "public const Electron2D.HTTPResponseCode InternalServerError = 500",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "500"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.LengthRequired()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "LengthRequired",
+    "signature": "public const Electron2D.HTTPResponseCode LengthRequired = 411",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "411"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Locked()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Locked",
+    "signature": "public const Electron2D.HTTPResponseCode Locked = 423",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "423"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.LoopDetected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "LoopDetected",
+    "signature": "public const Electron2D.HTTPResponseCode LoopDetected = 508",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "508"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.MethodNotAllowed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "MethodNotAllowed",
+    "signature": "public const Electron2D.HTTPResponseCode MethodNotAllowed = 405",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "405"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.MisdirectedRequest()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "MisdirectedRequest",
+    "signature": "public const Electron2D.HTTPResponseCode MisdirectedRequest = 421",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "421"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.MovedPermanently()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "MovedPermanently",
+    "signature": "public const Electron2D.HTTPResponseCode MovedPermanently = 301",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "301"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.MultiStatus()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "MultiStatus",
+    "signature": "public const Electron2D.HTTPResponseCode MultiStatus = 207",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "207"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.MultipleChoices()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "MultipleChoices",
+    "signature": "public const Electron2D.HTTPResponseCode MultipleChoices = 300",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "300"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.NetworkAuthRequired()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "NetworkAuthRequired",
+    "signature": "public const Electron2D.HTTPResponseCode NetworkAuthRequired = 511",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "511"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.NoContent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "NoContent",
+    "signature": "public const Electron2D.HTTPResponseCode NoContent = 204",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "204"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.NonAuthoritativeInformation()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "NonAuthoritativeInformation",
+    "signature": "public const Electron2D.HTTPResponseCode NonAuthoritativeInformation = 203",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "203"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.NotAcceptable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "NotAcceptable",
+    "signature": "public const Electron2D.HTTPResponseCode NotAcceptable = 406",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "406"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.NotExtended()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "NotExtended",
+    "signature": "public const Electron2D.HTTPResponseCode NotExtended = 510",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "510"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.NotFound()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "NotFound",
+    "signature": "public const Electron2D.HTTPResponseCode NotFound = 404",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "404"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.NotImplemented()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "NotImplemented",
+    "signature": "public const Electron2D.HTTPResponseCode NotImplemented = 501",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "501"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.NotModified()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "NotModified",
+    "signature": "public const Electron2D.HTTPResponseCode NotModified = 304",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "304"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.OK()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "OK",
+    "signature": "public const Electron2D.HTTPResponseCode OK = 200",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "200"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.PartialContent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "PartialContent",
+    "signature": "public const Electron2D.HTTPResponseCode PartialContent = 206",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "206"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.PaymentRequired()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "PaymentRequired",
+    "signature": "public const Electron2D.HTTPResponseCode PaymentRequired = 402",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "402"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.PermanentRedirect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "PermanentRedirect",
+    "signature": "public const Electron2D.HTTPResponseCode PermanentRedirect = 308",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "308"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.PreconditionFailed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "PreconditionFailed",
+    "signature": "public const Electron2D.HTTPResponseCode PreconditionFailed = 412",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "412"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.PreconditionRequired()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "PreconditionRequired",
+    "signature": "public const Electron2D.HTTPResponseCode PreconditionRequired = 428",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "428"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Processing()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Processing",
+    "signature": "public const Electron2D.HTTPResponseCode Processing = 102",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "102"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.ProxyAuthenticationRequired()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "ProxyAuthenticationRequired",
+    "signature": "public const Electron2D.HTTPResponseCode ProxyAuthenticationRequired = 407",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "407"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.RequestEntityTooLarge()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "RequestEntityTooLarge",
+    "signature": "public const Electron2D.HTTPResponseCode RequestEntityTooLarge = 413",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "413"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.RequestHeaderFieldsTooLarge()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "RequestHeaderFieldsTooLarge",
+    "signature": "public const Electron2D.HTTPResponseCode RequestHeaderFieldsTooLarge = 431",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "431"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.RequestTimeout()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "RequestTimeout",
+    "signature": "public const Electron2D.HTTPResponseCode RequestTimeout = 408",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "408"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.RequestURITooLong()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "RequestURITooLong",
+    "signature": "public const Electron2D.HTTPResponseCode RequestURITooLong = 414",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "414"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.RequestedRangeNotSatisfiable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "RequestedRangeNotSatisfiable",
+    "signature": "public const Electron2D.HTTPResponseCode RequestedRangeNotSatisfiable = 416",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "416"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.ResetContent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "ResetContent",
+    "signature": "public const Electron2D.HTTPResponseCode ResetContent = 205",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "205"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.SeeOther()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "SeeOther",
+    "signature": "public const Electron2D.HTTPResponseCode SeeOther = 303",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "303"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.ServiceUnavailable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "ServiceUnavailable",
+    "signature": "public const Electron2D.HTTPResponseCode ServiceUnavailable = 503",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "503"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.SwitchProxy()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "SwitchProxy",
+    "signature": "public const Electron2D.HTTPResponseCode SwitchProxy = 306",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "306"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.SwitchingProtocols()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "SwitchingProtocols",
+    "signature": "public const Electron2D.HTTPResponseCode SwitchingProtocols = 101",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "101"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.TemporaryRedirect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "TemporaryRedirect",
+    "signature": "public const Electron2D.HTTPResponseCode TemporaryRedirect = 307",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "307"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.TooManyRequests()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "TooManyRequests",
+    "signature": "public const Electron2D.HTTPResponseCode TooManyRequests = 429",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "429"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.Unauthorized()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "Unauthorized",
+    "signature": "public const Electron2D.HTTPResponseCode Unauthorized = 401",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "401"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.UnavailableForLegalReasons()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "UnavailableForLegalReasons",
+    "signature": "public const Electron2D.HTTPResponseCode UnavailableForLegalReasons = 451",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "451"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.UnprocessableEntity()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "UnprocessableEntity",
+    "signature": "public const Electron2D.HTTPResponseCode UnprocessableEntity = 422",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "422"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.UnsupportedMediaType()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "UnsupportedMediaType",
+    "signature": "public const Electron2D.HTTPResponseCode UnsupportedMediaType = 415",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "415"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.UpgradeRequired()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "UpgradeRequired",
+    "signature": "public const Electron2D.HTTPResponseCode UpgradeRequired = 426",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "426"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.UseProxy()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "UseProxy",
+    "signature": "public const Electron2D.HTTPResponseCode UseProxy = 305",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "305"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPResponseCode.VariantAlsoNegotiates()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPResponseCode",
+    "name": "VariantAlsoNegotiates",
+    "signature": "public const Electron2D.HTTPResponseCode VariantAlsoNegotiates = 506",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": "506"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.Body()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "Body",
+    "signature": "public const Electron2D.HTTPStatus Body = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.CantConnect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "CantConnect",
+    "signature": "public const Electron2D.HTTPStatus CantConnect = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.CantResolve()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "CantResolve",
+    "signature": "public const Electron2D.HTTPStatus CantResolve = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.Connected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "Connected",
+    "signature": "public const Electron2D.HTTPStatus Connected = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.Connecting()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "Connecting",
+    "signature": "public const Electron2D.HTTPStatus Connecting = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.ConnectionError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "ConnectionError",
+    "signature": "public const Electron2D.HTTPStatus ConnectionError = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.Disconnected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "Disconnected",
+    "signature": "public const Electron2D.HTTPStatus Disconnected = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.Requesting()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "Requesting",
+    "signature": "public const Electron2D.HTTPStatus Requesting = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.Resolving()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "Resolving",
+    "signature": "public const Electron2D.HTTPStatus Resolving = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.HTTPStatus.TLSHandshakeError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.HTTPStatus",
+    "name": "TLSHandshakeError",
+    "signature": "public const Electron2D.HTTPStatus TLSHandshakeError = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": "9"
   },
   {
     "id": "enumValue:Electron2D.HorizontalAlignment.Center()",
@@ -28932,6 +30323,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.ElectronObject\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.HTTPRequest.RequestCompleted()",
+    "kind": "event",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "RequestCompleted",
+    "signature": "public event System.Action\u003CElectron2D.HTTPRequestResult, Electron2D.HTTPResponseCode, System.String[], System.Byte[]\u003E RequestCompleted",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.HTTPRequestResult, Electron2D.HTTPResponseCode, System.String[], System.Byte[]\u003E",
     "value": null
   },
   {
@@ -64415,6 +65819,634 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.HTTPClient.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "Close",
+    "signature": "public System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.ConnectToHost(System.String,System.Int32,Electron2D.TLSOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "ConnectToHost",
+    "signature": "public System.Void ConnectToHost(System.String host, System.Int32 port = -1, Electron2D.TLSOptions tlsOptions = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "tlsOptions",
+        "type": "Electron2D.TLSOptions",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.GetResponseBodyLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "GetResponseBodyLength",
+    "signature": "public System.Int64 GetResponseBodyLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.GetResponseCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "GetResponseCode",
+    "signature": "public Electron2D.HTTPResponseCode GetResponseCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPResponseCode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.GetResponseHeaders()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "GetResponseHeaders",
+    "signature": "public System.String[] GetResponseHeaders()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.GetResponseHeadersAsDictionary()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "GetResponseHeadersAsDictionary",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E GetResponseHeadersAsDictionary()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.GetStatus()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "GetStatus",
+    "signature": "public Electron2D.HTTPStatus GetStatus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.HasResponse()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "HasResponse",
+    "signature": "public System.Boolean HasResponse()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.IsResponseChunked()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "IsResponseChunked",
+    "signature": "public System.Boolean IsResponseChunked()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "Poll",
+    "signature": "public System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.QueryStringFromDict(System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, System.String\u003E\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "QueryStringFromDict",
+    "signature": "public static System.String QueryStringFromDict(System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, System.String\u003E\u003E values)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "values",
+        "type": "System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, System.String\u003E\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.QueryStringFromDict(System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, System.String[]\u003E\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "QueryStringFromDict",
+    "signature": "public static System.String QueryStringFromDict(System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, System.String[]\u003E\u003E values)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "values",
+        "type": "System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, System.String[]\u003E\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.ReadResponseBodyChunk()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "ReadResponseBodyChunk",
+    "signature": "public System.Byte[] ReadResponseBodyChunk()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.ReadResponseBodyChunk(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "ReadResponseBodyChunk",
+    "signature": "public System.Int32 ReadResponseBodyChunk(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.Request(Electron2D.HTTPMethod,System.String,System.Collections.Generic.IEnumerable\u003CSystem.String\u003E,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "Request",
+    "signature": "public System.Void Request(Electron2D.HTTPMethod method, System.String url, System.Collections.Generic.IEnumerable\u003CSystem.String\u003E headers, System.String body = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "Electron2D.HTTPMethod",
+        "default": null
+      },
+      {
+        "name": "url",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "headers",
+        "type": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "body",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.RequestRaw(Electron2D.HTTPMethod,System.String,System.Collections.Generic.IEnumerable\u003CSystem.String\u003E,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "RequestRaw",
+    "signature": "public System.Void RequestRaw(Electron2D.HTTPMethod method, System.String url, System.Collections.Generic.IEnumerable\u003CSystem.String\u003E headers, System.ReadOnlySpan\u003CSystem.Byte\u003E body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "Electron2D.HTTPMethod",
+        "default": null
+      },
+      {
+        "name": "url",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "headers",
+        "type": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "body",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.SetHTTPProxy(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "SetHTTPProxy",
+    "signature": "public System.Void SetHTTPProxy(System.String host, System.Int32 port)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.SetHTTPSProxy(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "SetHTTPSProxy",
+    "signature": "public System.Void SetHTTPSProxy(System.String host, System.Int32 port)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPClient.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.CancelRequest()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "CancelRequest",
+    "signature": "public System.Void CancelRequest()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.GetBodySize()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "GetBodySize",
+    "signature": "public System.Int64 GetBodySize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.GetDownloadedBytes()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "GetDownloadedBytes",
+    "signature": "public System.Int64 GetDownloadedBytes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.GetHTTPClientStatus()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "GetHTTPClientStatus",
+    "signature": "public Electron2D.HTTPStatus GetHTTPClientStatus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HTTPStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.Request(System.String,System.Collections.Generic.IEnumerable\u003CSystem.String\u003E,Electron2D.HTTPMethod,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "Request",
+    "signature": "public System.Void Request(System.String url, System.Collections.Generic.IEnumerable\u003CSystem.String\u003E customHeaders = null, Electron2D.HTTPMethod method = Get, System.String requestData = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "url",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "customHeaders",
+        "type": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E",
+        "default": "null"
+      },
+      {
+        "name": "method",
+        "type": "Electron2D.HTTPMethod",
+        "default": "Get"
+      },
+      {
+        "name": "requestData",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.RequestRaw(System.String,System.Collections.Generic.IEnumerable\u003CSystem.String\u003E,Electron2D.HTTPMethod,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "RequestRaw",
+    "signature": "public System.Void RequestRaw(System.String url, System.Collections.Generic.IEnumerable\u003CSystem.String\u003E customHeaders = null, Electron2D.HTTPMethod method = Get, System.ReadOnlySpan\u003CSystem.Byte\u003E requestData = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "url",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "customHeaders",
+        "type": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E",
+        "default": "null"
+      },
+      {
+        "name": "method",
+        "type": "Electron2D.HTTPMethod",
+        "default": "Get"
+      },
+      {
+        "name": "requestData",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.SetHTTPProxy(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "SetHTTPProxy",
+    "signature": "public System.Void SetHTTPProxy(System.String host, System.Int32 port)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.SetHTTPSProxy(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "SetHTTPSProxy",
+    "signature": "public System.Void SetHTTPSProxy(System.String host, System.Int32 port)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HTTPRequest.SetTLSOptions(Electron2D.TLSOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "SetTLSOptions",
+    "signature": "public System.Void SetTLSOptions(Electron2D.TLSOptions options)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "options",
+        "type": "Electron2D.TLSOptions",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Image.AdjustBCS(System.Single,System.Single,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
@@ -92690,6 +94722,173 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.StreamPeerGZIP.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerGZIP.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerGZIP.Finish()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "Finish",
+    "signature": "public System.Void Finish()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerGZIP.GetAvailableBytes()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "GetAvailableBytes",
+    "signature": "public override System.Int32 GetAvailableBytes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerGZIP.IsFinished()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "IsFinished",
+    "signature": "public System.Boolean IsFinished()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerGZIP.ReadCore(System.Span\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "ReadCore",
+    "signature": "protected override System.Int32 ReadCore(System.Span\u003CSystem.Byte\u003E destination, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerGZIP.StartCompression(System.Boolean,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "StartCompression",
+    "signature": "public System.Void StartCompression(System.Boolean useDeflate = false, System.Int32 bufferSize = 65535)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "useDeflate",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "bufferSize",
+        "type": "System.Int32",
+        "default": "65535"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerGZIP.StartDecompression(System.Boolean,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "StartDecompression",
+    "signature": "public System.Void StartDecompression(System.Boolean useDeflate = false, System.Int32 bufferSize = 65535)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "useDeflate",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "bufferSize",
+        "type": "System.Int32",
+        "default": "65535"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerGZIP.WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerGZIP",
+    "name": "WriteCore",
+    "signature": "protected override System.Int32 WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.StreamPeerSocket.DisconnectFromHost()",
     "kind": "method",
     "declaringType": "Electron2D.StreamPeerSocket",
@@ -118969,6 +121168,149 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPClient.BlockingModeEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "BlockingModeEnabled",
+    "signature": "public System.Boolean BlockingModeEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPClient.Connection()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "Connection",
+    "signature": "public Electron2D.StreamPeer Connection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamPeer",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPClient.MaxResponseHeaderBytes()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "MaxResponseHeaderBytes",
+    "signature": "public System.Int32 MaxResponseHeaderBytes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPClient.ReadChunkSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPClient",
+    "name": "ReadChunkSize",
+    "signature": "public System.Int32 ReadChunkSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPRequest.AcceptGZIP()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "AcceptGZIP",
+    "signature": "public System.Boolean AcceptGZIP { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPRequest.BodySizeLimit()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "BodySizeLimit",
+    "signature": "public System.Int64 BodySizeLimit { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPRequest.DownloadChunkSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "DownloadChunkSize",
+    "signature": "public System.Int32 DownloadChunkSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPRequest.DownloadFile()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "DownloadFile",
+    "signature": "public System.String DownloadFile { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPRequest.MaxRedirects()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "MaxRedirects",
+    "signature": "public System.Int32 MaxRedirects { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPRequest.Timeout()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "Timeout",
+    "signature": "public System.Double Timeout { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.HTTPRequest.UseThreads()",
+    "kind": "property",
+    "declaringType": "Electron2D.HTTPRequest",
+    "name": "UseThreads",
+    "signature": "public System.Boolean UseThreads { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
