@@ -101,7 +101,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
-| Animation: trigger is the executable typed state-machine/playback/transition resources, including grouped ancestry and expression evaluation, on the implemented AnimationTree/BlendSpace/action graph; track event schedulers and persistence remain separate. | 4 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
 | Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
@@ -124,6 +123,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092). | 2 |
 | Trigger: typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice. | 2 |
+| Animation: trigger is the first missing type-specific animation resource utility or persistence slice on the executable graph/state-machine/BlendSpace/action foundation (ADR 0093); applicable event tracks already execute. | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: concrete applicable 2D mesh import/library entry model, owned resource graphs and loader/authoring format integration over the implemented mesh resources (ADRs 0013/0092); audit 3D-only entry fields separately. | 1 |

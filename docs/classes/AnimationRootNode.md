@@ -6,7 +6,7 @@ Last updated: 2026-10-04
 
 **Inherits:** [AnimationNode](AnimationNode.md).
 
-**Inherited By:** [AnimationNodeAnimation](AnimationNodeAnimation.md), [AnimationNodeBlendTree](AnimationNodeBlendTree.md), [AnimationNodeBlendSpace1D](AnimationNodeBlendSpace1D.md), [AnimationNodeBlendSpace2D](AnimationNodeBlendSpace2D.md).
+**Inherited By:** [AnimationNodeAnimation](AnimationNodeAnimation.md), [AnimationNodeBlendTree](AnimationNodeBlendTree.md), [AnimationNodeBlendSpace1D](AnimationNodeBlendSpace1D.md), [AnimationNodeBlendSpace2D](AnimationNodeBlendSpace2D.md), [AnimationNodeStateMachine](AnimationNodeStateMachine.md).
 
 ## Description
 

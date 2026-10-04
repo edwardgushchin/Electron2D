@@ -36,9 +36,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationNodeExtension](classes/AnimationNodeExtension.md) | AnimationNode | Blocked | 3 |
 | [AnimationNodeOneShot](classes/AnimationNodeOneShot.md) | AnimationNodeSync | Implemented | 18 |
 | [AnimationNodeOutput](classes/AnimationNodeOutput.md) | AnimationNode | Implemented | 0 |
-| [AnimationNodeStateMachine](classes/AnimationNodeStateMachine.md) | AnimationRootNode | Blocked | 27 |
-| [AnimationNodeStateMachinePlayback](classes/AnimationNodeStateMachinePlayback.md) | Resource | Blocked | 17 |
-| [AnimationNodeStateMachineTransition](classes/AnimationNodeStateMachineTransition.md) | Resource | Blocked | 18 |
+| [AnimationNodeStateMachine](classes/AnimationNodeStateMachine.md) | AnimationRootNode | Implemented | 27 |
+| [AnimationNodeStateMachinePlayback](classes/AnimationNodeStateMachinePlayback.md) | Resource | Implemented | 17 |
+| [AnimationNodeStateMachineTransition](classes/AnimationNodeStateMachineTransition.md) | Resource | Implemented | 18 |
 | [AnimationNodeSub2](classes/AnimationNodeSub2.md) | AnimationNodeSync | Implemented | 0 |
 | [AnimationNodeSync](classes/AnimationNodeSync.md) | AnimationNode | Implemented | 1 |
 | [AnimationNodeTimeScale](classes/AnimationNodeTimeScale.md) | AnimationNode | Implemented | 0 |

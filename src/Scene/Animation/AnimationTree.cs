@@ -29,9 +29,14 @@ public class AnimationTree : AnimationMixer
     private readonly List<string> _trackPaths = [];
     private readonly List<AnimationMixFrame> _frames = [];
     private readonly List<double[]> _frameWeights = [];
+    private readonly HashSet<AnimationNodeStateMachinePlayback> _playbacks = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<AnimationNode> _watched = new(ReferenceEqualityComparer.Instance);
     private long _graphGeneration;
     internal long GraphGeneration => _graphGeneration;
+    internal long GraphEvaluationSerial;
+    internal void CancelGraphPass() { _graphGeneration++; InvalidateEvaluation(); }
+    private bool _graphTested, _graphEmpty;
+    internal void GraphEmptyOutput() => _graphEmpty = true;
     private SceneTree? _graphTree;
     /// <summary>Initializes deterministic mixing and ForceContinuous discrete evaluation.</summary>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
@@ -110,18 +115,34 @@ public class AnimationTree : AnimationMixer
         foreach (var (clip, state) in _clipMaps) if (!clip.IsDisposed && clip.ChangeRevision != state.Revision) { _dirty = true; break; }
         if (!_dirty) return;
         _rootInstance = null;
-        var prior = _instances.Values.ToArray(); _instances.Clear(); _clipMaps.Clear(); _trackPaths.Clear();
-        var trackMap = new Dictionary<string, int>(StringComparer.Ordinal);
-        foreach (var name in GetAnimationList())
+        var prior = _instances.Values.ToArray(); _instances.Clear();
+        try
         {
-            var clip = GetAnimation(name); if (clip.IsDisposed || _clipMaps.ContainsKey(clip)) continue;
-            var map = new int[clip.GetTrackCount()]; for (var i = 0; i < map.Length; i++) { var track = clip.Get(i); var path = track.PropertyName.Length == 0 || track.Path.Contains(':') ? track.Path : track.Path + ":" + track.PropertyName; if (!trackMap.TryGetValue(path, out var index)) { index = _trackPaths.Count; _trackPaths.Add(path); trackMap.Add(path, index); } map[i] = index; }
-            _clipMaps.Add(clip, (map, clip.ChangeRevision));
+            _clipMaps.Clear(); _trackPaths.Clear();
+            var trackMap = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var name in GetAnimationList())
+            {
+                var clip = GetAnimation(name); if (clip.IsDisposed || _clipMaps.ContainsKey(clip)) continue;
+                var map = new int[clip.GetTrackCount()]; for (var i = 0; i < map.Length; i++) { var track = clip.Get(i); var path = track.PropertyName.Length == 0 || track.Path.Contains(':') ? track.Path : track.Path + ":" + track.PropertyName; if (!trackMap.TryGetValue(path, out var index)) { index = _trackPaths.Count; _trackPaths.Add(path); trackMap.Add(path, index); } map[i] = index; }
+                _clipMaps.Add(clip, (map, clip.ChangeRevision));
+            }
+            if (_root is not null) _rootInstance = Build(_root, "", "", null, new HashSet<AnimationNode>(ReferenceEqualityComparer.Instance), prior);
+            var live = _instances.Values.Select(i => i.Definition).ToHashSet(ReferenceEqualityComparer.Instance);
+            foreach (var node in _watched.ToArray()) if (!live.Contains(node)) { node.TreeChanged -= GraphChanged; node.AnimationNodeRenamed -= GraphRenamed; node.AnimationNodeRemoved -= GraphRemoved; _watched.Remove(node); }
+            foreach (var entry in _instances.Values) if (entry.Definition is AnimationNodeStateMachine) entry.Get(AnimationNodeStateMachine.Playback).Attach(entry);
+            ReleaseUnusedPlaybacks();
+            _dirty = false;
         }
-        if (_root is not null) _rootInstance = Build(_root, "", "", null, new HashSet<AnimationNode>(ReferenceEqualityComparer.Instance), prior);
-        var live = _instances.Values.Select(i => i.Definition).ToHashSet(ReferenceEqualityComparer.Instance);
-        foreach (var node in _watched.ToArray()) if (!live.Contains(node)) { node.TreeChanged -= GraphChanged; node.AnimationNodeRenamed -= GraphRenamed; node.AnimationNodeRemoved -= GraphRemoved; _watched.Remove(node); }
-        _dirty = false;
+        catch
+        {
+            _instances.Clear(); foreach (var entry in prior) _instances.Add(entry.Path, entry); _rootInstance = prior.FirstOrDefault(entry => entry.Parent is null); ReleaseUnusedPlaybacks(); throw;
+        }
+    }
+    private void ReleaseUnusedPlaybacks()
+    {
+        var live = new HashSet<AnimationNodeStateMachinePlayback>(ReferenceEqualityComparer.Instance);
+        foreach (var entry in _instances.Values) if (entry.Definition is AnimationNodeStateMachine) live.Add(entry.Get(AnimationNodeStateMachine.Playback));
+        foreach (var playback in _playbacks.ToArray()) if (!live.Contains(playback)) { _playbacks.Remove(playback); playback.Dispose(); }
     }
     private AnimationGraphInstance Build(AnimationNode node, string path, string name, AnimationGraphInstance? parent, HashSet<AnimationNode> stack, AnimationGraphInstance[] prior)
     {
@@ -129,7 +150,7 @@ public class AnimationTree : AnimationMixer
         Watch(node); var instance = new AnimationGraphInstance(this, node, path, name, parent, _trackPaths.Count);
         var old = prior.FirstOrDefault(p => p.Path == path && ReferenceEquals(p.Definition, node));
         foreach (var parameter in node.Parameters())
-        { ArgumentNullException.ThrowIfNull(parameter); if (instance.Parameters.ContainsKey(parameter.Name)) throw new InvalidOperationException("Duplicate graph parameter name."); if (old?.Parameters.TryGetValue(parameter.Name, out var slot) == true && ReferenceEquals(slot.Parameter, parameter)) instance.Parameters.Add(parameter.Name, slot); else instance.Parameters.Add(parameter.Name, parameter.CreateSlot(node)); }
+        { ArgumentNullException.ThrowIfNull(parameter); if (instance.Parameters.ContainsKey(parameter.Name)) throw new InvalidOperationException("Duplicate graph parameter name."); if (old?.Parameters.TryGetValue(parameter.Name, out var slot) == true && ReferenceEquals(slot.Parameter, parameter)) instance.Parameters.Add(parameter.Name, slot); else { var created = parameter.CreateSlot(node); instance.Parameters.Add(parameter.Name, created); if (node is AnimationNodeStateMachine && ReferenceEquals(parameter, AnimationNodeStateMachine.Playback) && created is AnimationParameterSlot<AnimationNodeStateMachinePlayback> playback) _playbacks.Add(playback.Value); } }
         _instances.Add(path, instance);
         foreach (var child in node.Children())
         { if (child.Key.Contains('/') || !instance.Children.TryAdd(child.Key, Build(child.Value, path.Length == 0 ? child.Key : path + "/" + child.Key, child.Key, instance, stack, prior))) throw new InvalidOperationException("Invalid or duplicate child path."); }
@@ -152,6 +173,7 @@ public class AnimationTree : AnimationMixer
     }
     private AnimationGraphTime Evaluate(AnimationGraphInstance instance, double time, bool seek, bool external, bool test, double? inheritedDelta = null)
     {
+        _graphTested |= test;
         if (instance.Evaluating) throw new InvalidOperationException("Animation graph contains an input connection cycle.");
         var generation = _graphGeneration; instance.Evaluating = true; var definition = instance.Definition; var previous = definition.Context; var context = instance.Context;
         context.Time = time; context.Delta = seek && external ? instance.Get(AnimationNode.CurrentPosition) - time : inheritedDelta ?? time; context.Seek = seek; context.External = external; context.TestOnly = test; context.Result = default; context.Position = seek ? time : instance.Get(AnimationNode.CurrentPosition) + time;
@@ -192,16 +214,16 @@ public class AnimationTree : AnimationMixer
     /// <inheritdoc />
     internal override void AdvanceAnimation(double delta)
     {
-        Prepare(); if (_rootInstance is null) return; var generation = _graphGeneration; _frames.Clear(); Array.Fill(_rootInstance.Weights, 1d);
+        GraphEvaluationSerial++; _graphTested = _graphEmpty = false; Prepare(); if (_rootInstance is null) return; var generation = _graphGeneration; _frames.Clear(); Array.Fill(_rootInstance.Weights, 1d);
         Evaluate(_rootInstance, _started ? 0 : delta, _started, false, false, delta); _started = false;
-        if (!IsDisposed && generation == _graphGeneration) ApplyBlend(CollectionsMarshal.AsSpan(_frames), delta);
+        if (!IsDisposed && generation == _graphGeneration && (_frames.Count != 0 || !_graphTested || _graphEmpty)) ApplyBlend(CollectionsMarshal.AsSpan(_frames), delta);
     }
     /// <inheritdoc />
     protected override void OnNotification(int what)
     { if (what == NotificationEnterTree) { _graphTree = Tree; if (_graphTree is not null) _graphTree.TreeChanged += SceneChanged; } else if (what == NotificationExitTree) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; } if (what is NotificationEnterTree or NotificationReady) { _playerDirty = true; ReconcilePlayer(); } base.OnNotification(what); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; DetachPlayer(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); _notices.Clear(); AnimationPlayerChanged = null; } base.Dispose(disposing); }
+    { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; DetachPlayer(); foreach (var playback in _playbacks) playback.Dispose(); _playbacks.Clear(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); _notices.Clear(); AnimationPlayerChanged = null; } base.Dispose(disposing); }
 }
 internal readonly record struct AnimationGraphTime(double Length, double Position, double Delta, SpriteFrames.LoopMode Loop, bool WillEnd = false)
 { internal double Remaining => GetRemaining(false); internal double GetRemaining(bool breakLoop) => Loop != SpriteFrames.LoopMode.None && !breakLoop ? 1e20 : Loop != SpriteFrames.LoopMode.None && WillEnd ? 0 : Math.Max(0, Length - Position); }

@@ -3337,7 +3337,7 @@
       "godot": "AnimationNode::method:blend_animation(StringName:,float:,float:,bool:,bool:,float:,int:Animation.LoopedFlag)",
       "electron2d": "method:Electron2D.AnimationNode.BlendAnimation(System.String,System.Double,System.Double,System.Boolean,System.Boolean,System.Double,Electron2D.Animation.LoopedFlag)",
       "state": "Partial",
-      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate. Property clip scheduling executes. External-seek and loop-crossing flags gain event effects with the separately unimplemented method/audio/nested-animation track schedulers; they do not affect continuous property sampling."
+      "reason": "ADR 0093 typed custom clip blending executes property and all applicable event-track frames. Partial remains for explicit LoopedFlag effects supplied by a custom graph hook: forward that caller-supplied endpoint flag through the event traversal contract and verify reverse/section/seam cases. Built-in leaves compute their own movement/loop traversal; no absent method/audio/nested scheduler is claimed."
     },
     {
       "godot": "AnimationNode::method:blend_input(int:,float:,bool:,bool:,float:,int:AnimationNode.FilterAction,bool:,bool:)",
@@ -4604,6 +4604,396 @@
       "electron2d": "method:Electron2D.Animation.TrackSetKeyValue`1(System.Int32,System.Int32,TValue)",
       "state": "Implemented",
       "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
+    },
+    {
+      "godot": "class:AnimationNodeStateMachine",
+      "electron2d": "T:Electron2D.AnimationNodeStateMachine",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::enum:StateMachineType",
+      "electron2d": "T:Electron2D.AnimationStateMachineType",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::enum_value:StateMachineType.STATE_MACHINE_TYPE_GROUPED",
+      "electron2d": "enumValue:Electron2D.AnimationStateMachineType.Grouped()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::enum_value:StateMachineType.STATE_MACHINE_TYPE_NESTED",
+      "electron2d": "enumValue:Electron2D.AnimationStateMachineType.Nested()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::enum_value:StateMachineType.STATE_MACHINE_TYPE_ROOT",
+      "electron2d": "enumValue:Electron2D.AnimationStateMachineType.Root()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:add_node(StringName:,AnimationNode:,Vector2:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.AddNode(System.String,Electron2D.AnimationNode,Electron2D.Vector2)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:add_transition(StringName:,StringName:,AnimationNodeStateMachineTransition:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.AddTransition(System.String,System.String,Electron2D.AnimationNodeStateMachineTransition)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_graph_offset()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetGraphOffset()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_node(StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetNode(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_node_list()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetNodeList()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_node_name(AnimationNode:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetNodeName(Electron2D.AnimationNode)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_node_position(StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetNodePosition(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_transition(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetTransition(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_transition_count()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetTransitionCount()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_transition_from(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetTransitionFrom(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:get_transition_to(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetTransitionTo(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:has_node(StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.HasNode(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:has_transition(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.HasTransition(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:remove_node(StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.RemoveNode(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:remove_transition(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.RemoveTransition(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:remove_transition_by_index(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.RemoveTransitionByIndex(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:rename_node(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.RenameNode(System.String,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:replace_node(StringName:,AnimationNode:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.ReplaceNode(System.String,Electron2D.AnimationNode)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:set_graph_offset(Vector2:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.SetGraphOffset(Electron2D.Vector2)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::method:set_node_position(StringName:,Vector2:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.SetNodePosition(System.String,Electron2D.Vector2)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::property:allow_transition_to_self",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachine.AllowTransitionToSelf()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::property:reset_ends",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachine.ResetEnds()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachine::property:state_machine_type",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachine.StateMachineType()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "class:AnimationNodeStateMachinePlayback",
+      "electron2d": "T:Electron2D.AnimationNodeStateMachinePlayback",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_current_length()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetCurrentLength()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_current_node()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetCurrentNode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_current_play_position()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetCurrentPlayPosition()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_fading_from_length()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingFromLength()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_fading_from_node()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingFromNode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_fading_from_play_position()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingFromPlayPosition()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_fading_length()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingLength()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_fading_position()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingPosition()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:get_travel_path()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.GetTravelPath()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:is_playing()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.IsPlaying()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:next()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.Next()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:start(StringName:,bool:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.Start(System.String,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:stop()",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.Stop()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::method:travel(StringName:,bool:)",
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.Travel(System.String,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::signal:state_finished(StringName:)",
+      "electron2d": "event:Electron2D.AnimationNodeStateMachinePlayback.StateFinished()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachinePlayback::signal:state_started(StringName:)",
+      "electron2d": "event:Electron2D.AnimationNodeStateMachinePlayback.StateStarted()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "class:AnimationNodeStateMachineTransition",
+      "electron2d": "T:Electron2D.AnimationNodeStateMachineTransition",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::enum:AdvanceMode",
+      "electron2d": "T:Electron2D.AnimationAdvanceMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::enum:SwitchMode",
+      "electron2d": "T:Electron2D.AnimationSwitchMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::enum_value:AdvanceMode.ADVANCE_MODE_AUTO",
+      "electron2d": "enumValue:Electron2D.AnimationAdvanceMode.Auto()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::enum_value:AdvanceMode.ADVANCE_MODE_DISABLED",
+      "electron2d": "enumValue:Electron2D.AnimationAdvanceMode.Disabled()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::enum_value:AdvanceMode.ADVANCE_MODE_ENABLED",
+      "electron2d": "enumValue:Electron2D.AnimationAdvanceMode.Enabled()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::enum_value:SwitchMode.SWITCH_MODE_AT_END",
+      "electron2d": "enumValue:Electron2D.AnimationSwitchMode.AtEnd()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::enum_value:SwitchMode.SWITCH_MODE_IMMEDIATE",
+      "electron2d": "enumValue:Electron2D.AnimationSwitchMode.Immediate()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::enum_value:SwitchMode.SWITCH_MODE_SYNC",
+      "electron2d": "enumValue:Electron2D.AnimationSwitchMode.Sync()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:advance_condition",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.AdvanceCondition()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:advance_expression",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.AdvanceExpression()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:advance_mode",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.AdvanceMode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:break_loop_at_end",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.BreakLoopAtEnd()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:priority",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.Priority()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:reset",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.Reset()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:switch_mode",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.SwitchMode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:xfade_curve",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.XFadeCurve()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::property:xfade_time",
+      "electron2d": "property:Electron2D.AnimationNodeStateMachineTransition.XFadeTime()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationNodeStateMachineTransition::signal:advance_condition_changed()",
+      "electron2d": "event:Electron2D.AnimationNodeStateMachineTransition.AdvanceConditionChanged()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
     }
   ],
   "extras": [
@@ -6716,6 +7106,111 @@
       "electron2d": "property:Electron2D.AnimationAudioKey.Stream()",
       "state": "Implemented",
       "reason": "ADR 0093 typed audio key value/borrowed resource/trim container or exact add_track(TYPE_AUDIO) node-role factory projection. ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeStateMachine..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeStateMachinePlayback..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeStateMachineTransition..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeStateMachine.Playback()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.OnGetCaption()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.OnGetChildByName(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.OnGetChildNodes()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.OnGetParameterDefaultValue`1(AnimationParameter<TValue>)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.OnGetParameterList()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachine.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachinePlayback.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachineTransition.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachineTransition.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachineTransition.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeStateMachineTransition.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact typed playback parameter, C# resource constructor/lifecycle or immutable schema hook projection. ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -9535,16 +10030,9 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate. Property clip scheduling executes. External-seek and loop-crossing flags gain event effects with the separately unimplemented method/audio/nested-animation track schedulers; they do not affect continuous property sampling.",
+      "reason": "ADR 0093 typed custom clip blending executes property and all applicable event-track frames. Partial remains for explicit LoopedFlag effects supplied by a custom graph hook: forward that caller-supplied endpoint flag through the event traversal contract and verify reverse/section/seam cases. Built-in leaves compute their own movement/loop traversal; no absent method/audio/nested scheduler is claimed.",
       "godot": [
         "AnimationNode::method:blend_animation(StringName:,float:,float:,bool:,bool:,float:,int:Animation.LoopedFlag)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Expression evaluation domain and typed transition-expression execution are absent; enters the first expression-backed transition slice (ADR 0093).",
-      "godot": [
-        "AnimationTree::property:advance_expression_base_node"
       ]
     },
     {
@@ -9721,6 +10209,84 @@
         "Animation::method:track_get_type(int:)",
         "Animation::method:track_insert_key(int:,float:,Variant:,float:)",
         "Animation::method:track_set_key_value(int:,int:,Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed state machines. AnimationStateMachineTests checks authoring/defaults/guards/aliases, geometric priority routes and teleport/group-exit fallback, immediate/sync/end/loop/curve/boundary fades, typed flags/predicates, automatic cycles/priorities, multiple groups/events, independent shared trees, rename/removal, preparation/observer failure, reentry/test-only and method/nested effects. Warm 64 command/route cycles, 64 cached grouped starts and 64 idle frames allocate zero owner managed bytes. Native SDL-dummy FAudio PCM checks cue start/restart/stop and departed nonblended output; two GPU and two compatibility Wayland hosts verify six actual pixel poses and borrowed-resource cleanup. Native allocator internals, physical listening, other platforms, disk/editor and human acceptance remain unverified.",
+      "godot": [
+        "class:AnimationNodeStateMachine",
+        "AnimationNodeStateMachine::enum:StateMachineType",
+        "AnimationNodeStateMachine::enum_value:StateMachineType.STATE_MACHINE_TYPE_GROUPED",
+        "AnimationNodeStateMachine::enum_value:StateMachineType.STATE_MACHINE_TYPE_NESTED",
+        "AnimationNodeStateMachine::enum_value:StateMachineType.STATE_MACHINE_TYPE_ROOT",
+        "AnimationNodeStateMachine::method:add_node(StringName:,AnimationNode:,Vector2:)",
+        "AnimationNodeStateMachine::method:add_transition(StringName:,StringName:,AnimationNodeStateMachineTransition:)",
+        "AnimationNodeStateMachine::method:get_graph_offset()",
+        "AnimationNodeStateMachine::method:get_node(StringName:)",
+        "AnimationNodeStateMachine::method:get_node_list()",
+        "AnimationNodeStateMachine::method:get_node_name(AnimationNode:)",
+        "AnimationNodeStateMachine::method:get_node_position(StringName:)",
+        "AnimationNodeStateMachine::method:get_transition(int:)",
+        "AnimationNodeStateMachine::method:get_transition_count()",
+        "AnimationNodeStateMachine::method:get_transition_from(int:)",
+        "AnimationNodeStateMachine::method:get_transition_to(int:)",
+        "AnimationNodeStateMachine::method:has_node(StringName:)",
+        "AnimationNodeStateMachine::method:has_transition(StringName:,StringName:)",
+        "AnimationNodeStateMachine::method:remove_node(StringName:)",
+        "AnimationNodeStateMachine::method:remove_transition(StringName:,StringName:)",
+        "AnimationNodeStateMachine::method:remove_transition_by_index(int:)",
+        "AnimationNodeStateMachine::method:rename_node(StringName:,StringName:)",
+        "AnimationNodeStateMachine::method:replace_node(StringName:,AnimationNode:)",
+        "AnimationNodeStateMachine::method:set_graph_offset(Vector2:)",
+        "AnimationNodeStateMachine::method:set_node_position(StringName:,Vector2:)",
+        "AnimationNodeStateMachine::property:allow_transition_to_self",
+        "AnimationNodeStateMachine::property:reset_ends",
+        "AnimationNodeStateMachine::property:state_machine_type",
+        "class:AnimationNodeStateMachinePlayback",
+        "AnimationNodeStateMachinePlayback::method:get_current_length()",
+        "AnimationNodeStateMachinePlayback::method:get_current_node()",
+        "AnimationNodeStateMachinePlayback::method:get_current_play_position()",
+        "AnimationNodeStateMachinePlayback::method:get_fading_from_length()",
+        "AnimationNodeStateMachinePlayback::method:get_fading_from_node()",
+        "AnimationNodeStateMachinePlayback::method:get_fading_from_play_position()",
+        "AnimationNodeStateMachinePlayback::method:get_fading_length()",
+        "AnimationNodeStateMachinePlayback::method:get_fading_position()",
+        "AnimationNodeStateMachinePlayback::method:get_travel_path()",
+        "AnimationNodeStateMachinePlayback::method:is_playing()",
+        "AnimationNodeStateMachinePlayback::method:next()",
+        "AnimationNodeStateMachinePlayback::method:start(StringName:,bool:)",
+        "AnimationNodeStateMachinePlayback::method:stop()",
+        "AnimationNodeStateMachinePlayback::method:travel(StringName:,bool:)",
+        "AnimationNodeStateMachinePlayback::property:resource_local_to_scene",
+        "AnimationNodeStateMachinePlayback::signal:state_finished(StringName:)",
+        "AnimationNodeStateMachinePlayback::signal:state_started(StringName:)",
+        "class:AnimationNodeStateMachineTransition",
+        "AnimationNodeStateMachineTransition::enum:AdvanceMode",
+        "AnimationNodeStateMachineTransition::enum:SwitchMode",
+        "AnimationNodeStateMachineTransition::enum_value:AdvanceMode.ADVANCE_MODE_AUTO",
+        "AnimationNodeStateMachineTransition::enum_value:AdvanceMode.ADVANCE_MODE_DISABLED",
+        "AnimationNodeStateMachineTransition::enum_value:AdvanceMode.ADVANCE_MODE_ENABLED",
+        "AnimationNodeStateMachineTransition::enum_value:SwitchMode.SWITCH_MODE_AT_END",
+        "AnimationNodeStateMachineTransition::enum_value:SwitchMode.SWITCH_MODE_IMMEDIATE",
+        "AnimationNodeStateMachineTransition::enum_value:SwitchMode.SWITCH_MODE_SYNC",
+        "AnimationNodeStateMachineTransition::property:advance_condition",
+        "AnimationNodeStateMachineTransition::property:advance_expression",
+        "AnimationNodeStateMachineTransition::property:advance_mode",
+        "AnimationNodeStateMachineTransition::property:break_loop_at_end",
+        "AnimationNodeStateMachineTransition::property:priority",
+        "AnimationNodeStateMachineTransition::property:reset",
+        "AnimationNodeStateMachineTransition::property:switch_mode",
+        "AnimationNodeStateMachineTransition::property:xfade_curve",
+        "AnimationNodeStateMachineTransition::property:xfade_time",
+        "AnimationNodeStateMachineTransition::signal:advance_condition_changed()"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0001/0005/0093 replace dynamic member-addressed expressions with Func<AnimationTree,bool> typed predicates. Exact typed receivers may be captured directly; a string-resolved expression base Node path has no role in this accepted typed contract. AdvanceExpression itself executes and is mapped separately.",
+      "godot": [
+        "AnimationTree::property:advance_expression_base_node"
       ]
     }
   ]

@@ -270,6 +270,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimationAdvanceMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationAdvanceMode",
+    "name": "AnimationAdvanceMode",
+    "signature": "public enum Electron2D.AnimationAdvanceMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnimationAudioKey",
     "kind": "type",
     "declaringType": "Electron2D.AnimationAudioKey",
@@ -625,6 +643,51 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimationNodeStateMachine",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "AnimationNodeStateMachine",
+    "signature": "public sealed class Electron2D.AnimationNodeStateMachine",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationRootNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeStateMachinePlayback",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "AnimationNodeStateMachinePlayback",
+    "signature": "public sealed class Electron2D.AnimationNodeStateMachinePlayback",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeStateMachineTransition",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "AnimationNodeStateMachineTransition",
+    "signature": "public sealed class Electron2D.AnimationNodeStateMachineTransition",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnimationNodeSub2",
     "kind": "type",
     "declaringType": "Electron2D.AnimationNodeSub2",
@@ -786,6 +849,42 @@
     "baseType": "Electron2D.AnimationNode",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationStateMachineType",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationStateMachineType",
+    "name": "AnimationStateMachineType",
+    "signature": "public enum Electron2D.AnimationStateMachineType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationSwitchMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationSwitchMode",
+    "name": "AnimationSwitchMode",
+    "signature": "public enum Electron2D.AnimationSwitchMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -8988,6 +9087,45 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AnimationNodeStateMachine..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": ".ctor",
+    "signature": "public AnimationNodeStateMachine()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeStateMachinePlayback..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": ".ctor",
+    "signature": "public AnimationNodeStateMachinePlayback()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeStateMachineTransition..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": ".ctor",
+    "signature": "public AnimationNodeStateMachineTransition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AnimationNodeSub2..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AnimationNodeSub2",
@@ -13563,6 +13701,45 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.AnimationAdvanceMode.Auto()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationAdvanceMode",
+    "name": "Auto",
+    "signature": "public const Electron2D.AnimationAdvanceMode Auto = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationAdvanceMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationAdvanceMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationAdvanceMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.AnimationAdvanceMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationAdvanceMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationAdvanceMode.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationAdvanceMode",
+    "name": "Enabled",
+    "signature": "public const Electron2D.AnimationAdvanceMode Enabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationAdvanceMode",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.AnimationBlendMode.Discrete()",
     "kind": "enumValue",
     "declaringType": "Electron2D.AnimationBlendMode",
@@ -13860,6 +14037,84 @@
     "parameters": [],
     "returnType": "Electron2D.AnimationPlayMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationStateMachineType.Grouped()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationStateMachineType",
+    "name": "Grouped",
+    "signature": "public const Electron2D.AnimationStateMachineType Grouped = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationStateMachineType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationStateMachineType.Nested()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationStateMachineType",
+    "name": "Nested",
+    "signature": "public const Electron2D.AnimationStateMachineType Nested = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationStateMachineType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationStateMachineType.Root()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationStateMachineType",
+    "name": "Root",
+    "signature": "public const Electron2D.AnimationStateMachineType Root = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationStateMachineType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationSwitchMode.AtEnd()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationSwitchMode",
+    "name": "AtEnd",
+    "signature": "public const Electron2D.AnimationSwitchMode AtEnd = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSwitchMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationSwitchMode.Immediate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationSwitchMode",
+    "name": "Immediate",
+    "signature": "public const Electron2D.AnimationSwitchMode Immediate = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSwitchMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationSwitchMode.Sync()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationSwitchMode",
+    "name": "Sync",
+    "signature": "public const Electron2D.AnimationSwitchMode Sync = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSwitchMode",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.AnimationSyncMode.CyclicConstant()",
@@ -26329,6 +26584,45 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.AnimationNodeStateMachinePlayback.StateFinished()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "StateFinished",
+    "signature": "public event System.Action\u003CSystem.String\u003E StateFinished",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimationNodeStateMachinePlayback.StateStarted()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "StateStarted",
+    "signature": "public event System.Action\u003CSystem.String\u003E StateStarted",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimationNodeStateMachineTransition.AdvanceConditionChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "AdvanceConditionChanged",
+    "signature": "public event System.Action AdvanceConditionChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.AnimationPlayer.AnimationChanged()",
     "kind": "event",
     "declaringType": "Electron2D.AnimationPlayer",
@@ -28224,6 +28518,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeStateMachine.Playback()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "Playback",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CElectron2D.AnimationNodeStateMachinePlayback\u003E Playback",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CElectron2D.AnimationNodeStateMachinePlayback\u003E",
     "value": null
   },
   {
@@ -35403,6 +35710,967 @@
       }
     ],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.AddNode(System.String,Electron2D.AnimationNode,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "AddNode",
+    "signature": "public System.Void AddNode(System.String name, Electron2D.AnimationNode node, Electron2D.Vector2 position = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationNode",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.AddTransition(System.String,System.String,Electron2D.AnimationNodeStateMachineTransition)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "AddTransition",
+    "signature": "public System.Void AddTransition(System.String from, System.String to, Electron2D.AnimationNodeStateMachineTransition transition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "transition",
+        "type": "Electron2D.AnimationNodeStateMachineTransition",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetGraphOffset()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetGraphOffset",
+    "signature": "public Electron2D.Vector2 GetGraphOffset()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetNode",
+    "signature": "public Electron2D.AnimationNode GetNode(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetNodeList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetNodeList",
+    "signature": "public System.String[] GetNodeList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetNodeName(Electron2D.AnimationNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetNodeName",
+    "signature": "public System.String GetNodeName(Electron2D.AnimationNode node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetNodePosition(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetNodePosition",
+    "signature": "public Electron2D.Vector2 GetNodePosition(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetTransition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetTransition",
+    "signature": "public Electron2D.AnimationNodeStateMachineTransition GetTransition(System.Int32 idx)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "idx",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationNodeStateMachineTransition",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetTransitionCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetTransitionCount",
+    "signature": "public System.Int32 GetTransitionCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetTransitionFrom(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetTransitionFrom",
+    "signature": "public System.String GetTransitionFrom(System.Int32 idx)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "idx",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.GetTransitionTo(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "GetTransitionTo",
+    "signature": "public System.String GetTransitionTo(System.Int32 idx)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "idx",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.HasNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "HasNode",
+    "signature": "public System.Boolean HasNode(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.HasTransition(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "HasTransition",
+    "signature": "public System.Boolean HasTransition(System.String from, System.String to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.OnGetChildByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "OnGetChildByName",
+    "signature": "protected override Electron2D.AnimationNode OnGetChildByName(System.String name)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.OnGetChildNodes()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "OnGetChildNodes",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E OnGetChildNodes()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.OnGetParameterDefaultValue\u00601(AnimationParameter\u003CTValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "OnGetParameterDefaultValue",
+    "signature": "protected override TValue OnGetParameterDefaultValue\u003CTValue\u003E(AnimationParameter\u003CTValue\u003E parameter)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "AnimationParameter\u003CTValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.RemoveNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "RemoveNode",
+    "signature": "public System.Void RemoveNode(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.RemoveTransition(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "RemoveTransition",
+    "signature": "public System.Void RemoveTransition(System.String from, System.String to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.RemoveTransitionByIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "RemoveTransitionByIndex",
+    "signature": "public System.Void RemoveTransitionByIndex(System.Int32 idx)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "idx",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.RenameNode(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "RenameNode",
+    "signature": "public System.Void RenameNode(System.String name, System.String newName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "newName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.ReplaceNode(System.String,Electron2D.AnimationNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "ReplaceNode",
+    "signature": "public System.Void ReplaceNode(System.String name, Electron2D.AnimationNode node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.SetGraphOffset(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "SetGraphOffset",
+    "signature": "public System.Void SetGraphOffset(Electron2D.Vector2 offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachine.SetNodePosition(System.String,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "SetNodePosition",
+    "signature": "public System.Void SetNodePosition(System.String name, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetCurrentLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetCurrentLength",
+    "signature": "public System.Double GetCurrentLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetCurrentNode()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetCurrentNode",
+    "signature": "public System.String GetCurrentNode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetCurrentPlayPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetCurrentPlayPosition",
+    "signature": "public System.Double GetCurrentPlayPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingFromLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetFadingFromLength",
+    "signature": "public System.Double GetFadingFromLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingFromNode()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetFadingFromNode",
+    "signature": "public System.String GetFadingFromNode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingFromPlayPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetFadingFromPlayPosition",
+    "signature": "public System.Double GetFadingFromPlayPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetFadingLength",
+    "signature": "public System.Double GetFadingLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetFadingPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetFadingPosition",
+    "signature": "public System.Double GetFadingPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.GetTravelPath()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "GetTravelPath",
+    "signature": "public System.String[] GetTravelPath()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.IsPlaying()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "IsPlaying",
+    "signature": "public System.Boolean IsPlaying()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.Next()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "Next",
+    "signature": "public System.Void Next()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.Start(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "Start",
+    "signature": "public System.Void Start(System.String node, System.Boolean reset = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "reset",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.Stop()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "Stop",
+    "signature": "public System.Void Stop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachinePlayback.Travel(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachinePlayback",
+    "name": "Travel",
+    "signature": "public System.Void Travel(System.String toNode, System.Boolean resetOnTeleport = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "resetOnTeleport",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachineTransition.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachineTransition.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachineTransition.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeStateMachineTransition.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -103439,6 +104707,162 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AnimationMixMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachine.AllowTransitionToSelf()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "AllowTransitionToSelf",
+    "signature": "public System.Boolean AllowTransitionToSelf { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachine.ResetEnds()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "ResetEnds",
+    "signature": "public System.Boolean ResetEnds { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachine.StateMachineType()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachine",
+    "name": "StateMachineType",
+    "signature": "public Electron2D.AnimationStateMachineType StateMachineType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationStateMachineType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.AdvanceCondition()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "AdvanceCondition",
+    "signature": "public Electron2D.AnimationParameter\u003CSystem.Boolean\u003E AdvanceCondition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.AdvanceExpression()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "AdvanceExpression",
+    "signature": "public System.Func\u003CElectron2D.AnimationTree, System.Boolean\u003E AdvanceExpression { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.AnimationTree, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.AdvanceMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "AdvanceMode",
+    "signature": "public Electron2D.AnimationAdvanceMode AdvanceMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationAdvanceMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.BreakLoopAtEnd()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "BreakLoopAtEnd",
+    "signature": "public System.Boolean BreakLoopAtEnd { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.Priority()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "Priority",
+    "signature": "public System.Int32 Priority { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.Reset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "Reset",
+    "signature": "public System.Boolean Reset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.SwitchMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "SwitchMode",
+    "signature": "public Electron2D.AnimationSwitchMode SwitchMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSwitchMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.XFadeCurve()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "XFadeCurve",
+    "signature": "public Electron2D.Curve XFadeCurve { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeStateMachineTransition.XFadeTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeStateMachineTransition",
+    "name": "XFadeTime",
+    "signature": "public System.Double XFadeTime { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
     "value": null
   },
   {

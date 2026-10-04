@@ -16,6 +16,7 @@ public partial class AnimationMixer
     private readonly Dictionary<(ulong Owner, string Property), AnimationBlendProperty> _blendProperties = [];
     private readonly List<AnimationBlendProperty> _blendOrder = [];
     private AnimationBlendProperty[] _blendPropertySnapshot = [];
+    private AnimationBinding[] _nestedBindingSnapshot = [];
     private Animation? _captureAnimation;
     private AnimationCaptureValue[] _captureValues = [];
     private double _captureRemaining, _captureDuration;
@@ -89,7 +90,7 @@ public partial class AnimationMixer
             var reset = GetAnimation("RESET"); if (!reset.IsDisposed && _blendCaches.TryGetValue(reset, out var cache))
                 for (var i = 0; i < cache.Bindings.Length; i++) if (reset.Get(i).Enabled && reset.Get(i).Times.Count != 0) cache.Bindings[i]?.SetRest();
         }
-        _blendPropertySnapshot = _blendOrder.ToArray();
+        _blendPropertySnapshot = _blendOrder.ToArray(); _nestedBindingSnapshot = _nestedBindings.ToArray();
         _blendDirty = false;
     }
     internal bool NeedsBlending => _captureValues.Length != 0 || Deterministic || CallbackModeDiscrete == AnimationCallbackModeDiscrete.ForceContinuous;
@@ -102,7 +103,7 @@ public partial class AnimationMixer
         if (_captureRemaining <= 1e-5) ClearCapture();
         var captureWeight = _captureValues.Length == 0 ? 0 : TweenMath.Ease(_captureRemaining, _captureTransition, _captureEase);
         Animation.Finite(captureWeight); var frameWeight = 1 - captureWeight;
-        BeginAudioFrame();
+        BeginAudioFrame(); var nestedBindings = _nestedBindingSnapshot; foreach (var binding in nestedBindings) binding.BeginFrame();
         var properties = _blendPropertySnapshot;
         foreach (var property in properties) property.Begin();
         for (var index = 0; index < frames.Length; index++)
@@ -119,7 +120,7 @@ public partial class AnimationMixer
                 cache.Bindings[i]?.Mix(frame, i, weight * (frame.TrackWeights is null ? 1 : frame.TrackWeights[i]), this, generation);
             if (frame.Animation.IsDisposed || revision != frame.Animation.ChangeRevision) return;
         }
-        FinishAudioFrame();
+        FinishAudioFrame(); foreach (var binding in nestedBindings) { if (!EvaluationCurrent(generation)) return; binding.FinishFrame(this); }
         var captures = _captureValues; var snapshot = _captureAnimation; var captureRevision = snapshot?.ChangeRevision;
         foreach (var capture in captures)
         {

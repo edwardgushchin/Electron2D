@@ -165,7 +165,7 @@ public partial class AnimationMixer : Node
             try { StopNestedPlayback(); } catch (Exception error) { CollectException(ref errors, error); }
             try { ClearAudioBindings(); } catch (Exception error) { CollectException(ref errors, error); }
             _nestedBindings.Clear(); _legacyCaches.Clear();
-            _libraries.Clear(); _animationIndex.Clear(); _blendCaches.Clear(); _blendProperties.Clear(); _blendOrder.Clear(); _blendPropertySnapshot = [];
+            _libraries.Clear(); _animationIndex.Clear(); _blendCaches.Clear(); _blendProperties.Clear(); _blendOrder.Clear(); _blendPropertySnapshot = []; _nestedBindingSnapshot = [];
             try { InvalidateBindings(); } catch (Exception error) { CollectException(ref errors, error); }
             AnimationLibrariesUpdated = null; AnimationListChanged = null; AnimationStarted = null; AnimationFinished = null; CachesCleared = null;
         }

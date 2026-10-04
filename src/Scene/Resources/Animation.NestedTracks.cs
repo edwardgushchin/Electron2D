@@ -42,7 +42,9 @@ internal sealed class AnimationNestedTrack : AnimationTypedTrack<string>
     internal override AnimationBinding? Bind(Node root) => (NodePath.Length == 0 ? root : root.GetNodeOrNull(NodePath)) is AnimationPlayer player ? new Binding(this, player) : null;
     private sealed class Binding(AnimationNestedTrack track, AnimationPlayer player) : AnimationBinding
     {
-        private bool _playing;
+        private bool _playing, _seen;
+        internal override void BeginFrame() => _seen = false;
+        internal override void FinishFrame(AnimationMixer mixer) { if (!_seen) StopPlayback(); }
         private long _controlRevision;
         private readonly SceneTree? _tree = player.Tree;
         internal override void AttachBlend(AnimationMixer mixer) => mixer.RegisterNested(this);
@@ -80,6 +82,7 @@ internal sealed class AnimationNestedTrack : AnimationTypedTrack<string>
         internal override void Mix(AnimationMixFrame frame, int index, double weight, AnimationMixer mixer, long generation)
         {
             if (!track.Enabled || track.Times.Count == 0 || Math.Abs(weight) < 1e-5 || player.IsDisposed || player.IsQueuedForDeletion || !ReferenceEquals(player.Tree, mixer.Tree)) return;
+            _seen = true;
             var seek = !frame.Previous.HasValue || frame.IncludeStart;
             var key = seek ? frame.Animation.TrackFindKey(index, frame.Time, Animation.FindMode.Nearest, true) : LastCrossed(frame, index);
             if (key < 0) return;

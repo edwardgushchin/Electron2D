@@ -123,7 +123,7 @@ internal sealed class AnimationAudioTrack : AnimationTypedTrack<AnimationAudioKe
             var db = (float)Mathf.LinearToDB(weight);
             foreach (ref var cue in _cues.AsSpan()) if (cue.Active)
                 {
-                    if (!_transport.Playing(cue.ID) || cue.Duration <= 0 || cue.Elapsed > cue.Duration || _seen && _frame.Animation.LoopMode == SpriteFrames.LoopMode.None && (_frame.Backward ? _frame.Time > cue.Start : _frame.Time < cue.Start) || !_seen && !track.Enabled) { _transport.Stop(cue.ID); cue.Active = false; }
+                    if (!_transport.Playing(cue.ID) || cue.Duration <= 0 || cue.Elapsed > cue.Duration || _seen && _frame.Animation.LoopMode == SpriteFrames.LoopMode.None && (_frame.Backward ? _frame.Time > cue.Start : _frame.Time < cue.Start) || !_seen) { _transport.Stop(cue.ID); cue.Active = false; }
                     else _transport.SetGain(cue.ID, db);
                 }
         }

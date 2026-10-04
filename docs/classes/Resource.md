@@ -1,10 +1,10 @@
 # Resource
 
-Last updated: 2026-10-01
+Last updated: 2026-10-04
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [Theme](Theme.md), [StyleBox](StyleBox.md), [Gradient](Gradient.md), [Curve](Curve.md), [Curve2D](Curve2D.md), [Image](Image.md), [InputEvent](InputEvent.md), [PackedScene](PackedScene.md), [SpriteFrames](SpriteFrames.md)
+**Inherited By:** [Theme](Theme.md), [StyleBox](StyleBox.md), [Gradient](Gradient.md), [Curve](Curve.md), [Curve2D](Curve2D.md), [Image](Image.md), [InputEvent](InputEvent.md), [PackedScene](PackedScene.md), [SpriteFrames](SpriteFrames.md), [AnimationNodeStateMachinePlayback](AnimationNodeStateMachinePlayback.md), [AnimationNodeStateMachineTransition](AnimationNodeStateMachineTransition.md)
 
 - **Source:** [`src/Core/IO/Resource.cs`](../../src/Core/IO/Resource.cs)
 - **Namespace:** `Electron2D`
