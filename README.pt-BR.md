@@ -34,7 +34,7 @@
 
 <a id="about"></a>
 
-## Sobre o projeto
+## 🧭 Sobre o projeto
 
 Electron2D é um **motor 2D livre e multiplataforma em C# para desenvolver jogos em colaboração com agentes de IA**.
 
@@ -42,7 +42,7 @@ Crie mundos e mecânicas de jogo com as ferramentas habituais do .NET e assisten
 
 <a id="features"></a>
 
-## Recursos
+## ✨ Recursos
 
 - [Gráficos](docs/domains/rendering.md). Sprites e atlas, câmeras, paralaxe, desenho de formas e texto. Importação de shaders HLSL e GLSL para materiais.
 - [Cenas e animação](docs/domains/scene.md). Objetos e fases reutilizáveis, animação por quadros, animação de propriedades e temporizadores.
@@ -59,7 +59,7 @@ Materiais com shaders exigem o renderizador GPU. O renderizador de compatibilida
 
 <a id="quick-start"></a>
 
-## Primeiros passos
+## 🚀 Primeiros passos
 
 Comece pelo exemplo «Janela e entrada». Estes comandos são para Linux x64 com Wayland.
 
@@ -129,7 +129,7 @@ A compilação do motor gera `Electron2D.dll`. A publicação do jogo inclui a b
 
 <a id="platforms"></a>
 
-## Plataformas
+## 🖥️ Plataformas
 
 As plataformas de destino do jogo e as verificações realizadas são apresentadas separadamente. O editor visual é destinado a Windows, Linux e macOS.
 
@@ -149,7 +149,7 @@ Consulte os modelos dos dispositivos, os comandos e os limites das verificaçõe
 
 <a id="development"></a>
 
-## Desenvolvimento do motor
+## 🔧 Desenvolvimento do motor
 
 Atualmente, você pode usar o Electron2D por meio de C# e .NET. Os modelos `PackedScene` oferecem [arquivos tipados de recursos e cenas](docs/components/resource-files.md), incluindo carregamento em um novo processo. O editor visual e os comandos para gerenciar projetos de jogo continuam planejados.
 
@@ -159,7 +159,7 @@ As próximas tarefas e o estado dos métodos estão no [plano de desenvolvimento
 
 <a id="documentation"></a>
 
-## Documentação
+## 📚 Documentação
 
 | Você quer | Onde consultar |
 | --- | --- |
@@ -175,7 +175,7 @@ Há instruções separadas para reproduzir as verificações de [Android](tests/
 
 <a id="feedback-and-contributing"></a>
 
-## Contribua com o projeto
+## 💬 Contribua com o projeto
 
 Relate erros e sugira recursos no [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). Ao relatar um erro, informe a versão ou o commit do motor, o sistema operacional e o renderizador. Anexe um exemplo mínimo e a saída do erro.
 
@@ -194,7 +194,7 @@ O projeto é mantido por [Eduard Gushchin](https://github.com/edwardgushchin). T
 
 <a id="license"></a>
 
-## Licença
+## 📄 Licença
 
 O Electron2D é distribuído sob a [licença MIT](licence/Electron2D-LICENSE.txt). Você pode usar o motor em jogos comerciais; preserve o aviso de direitos autorais e o texto da licença.
 

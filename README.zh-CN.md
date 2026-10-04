@@ -34,7 +34,7 @@
 
 <a id="about"></a>
 
-## 关于项目
+## 🧭 关于项目
 
 Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与 AI 智能体共同开发游戏**。
 
@@ -42,7 +42,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 <a id="features"></a>
 
-## 功能
+## ✨ 功能
 
 - [图形](docs/domains/rendering.md)。精灵、纹理图集、摄像机、视差，以及图形和文字绘制。支持为材质导入 HLSL 和 GLSL 着色器。
 - [场景与动画](docs/domains/scene.md)。可复用的对象和关卡、逐帧动画、属性动画和计时器。
@@ -59,7 +59,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 <a id="quick-start"></a>
 
-## 快速开始
+## 🚀 快速开始
 
 先运行“窗口与输入”示例。以下命令适用于使用 Wayland 的 Linux x64 环境。
 
@@ -129,7 +129,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="platforms"></a>
 
-## 平台
+## 🖥️ 平台
 
 游戏的目标平台和已完成的验证分列如下。可视化编辑器面向 Windows、Linux 和 macOS。
 
@@ -149,7 +149,7 @@ Linux x64 的完整原生文本和音频库已构建。其他平台的构建与�
 
 <a id="development"></a>
 
-## 引擎开发
+## 🔧 引擎开发
 
 目前可通过 C# 和 .NET 使用 Electron2D。`PackedScene` 模板支持[类型化资源和场景文件](docs/components/resource-files.md)，并可在新进程中加载。可视化编辑器和游戏项目管理命令仍在计划中。
 
@@ -159,7 +159,7 @@ Linux x64 的完整原生文本和音频库已构建。其他平台的构建与�
 
 <a id="documentation"></a>
 
-## 文档
+## 📚 文档
 
 | 需求 | 文档 |
 | --- | --- |
@@ -175,7 +175,7 @@ Linux x64 的完整原生文本和音频库已构建。其他平台的构建与�
 
 <a id="feedback-and-contributing"></a>
 
-## 参与项目
+## 💬 参与项目
 
 通过 [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) 报告错误或提出功能建议。报告错误时，请注明引擎版本或提交、操作系统和渲染器，并附上最小复现示例及错误输出。
 
@@ -194,7 +194,7 @@ tools/coverage/check.sh
 
 <a id="license"></a>
 
-## 许可证
+## 📄 许可证
 
 Electron2D 采用 [MIT 许可证](licence/Electron2D-LICENSE.txt)。可用于商业游戏，但须保留版权声明和许可证文本。
 
