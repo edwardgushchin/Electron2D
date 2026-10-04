@@ -617,7 +617,7 @@ def render():
             updated = "2026-10-03"
         if name in {"Animation", "AnimationLibrary", "AnimationMixer", "AnimationPlayer"}:
             updated = "2026-10-04"
-        if name in {"HTTPClient", "HTTPRequest", "StreamPeerGZIP", "StreamPeerTCP"}:
+        if name in {"HTTPClient", "HTTPRequest", "StreamPeerGZIP", "StreamPeerTCP", "WebSocketPeer", "WebSocketMultiplayerPeer"}:
             updated = "2026-10-04"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

@@ -1049,7 +1049,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [WebRTCPeerConnection](classes/WebRTCPeerConnection.md) | RefCounted | Blocked | 33 |
 | [WebRTCPeerConnectionExtension](classes/WebRTCPeerConnectionExtension.md) | WebRTCPeerConnection | Blocked | 11 |
 | [WebSocketMultiplayerPeer](classes/WebSocketMultiplayerPeer.md) | MultiplayerPeer | Blocked | 11 |
-| [WebSocketPeer](classes/WebSocketPeer.md) | PacketPeer | Unimplemented | 30 |
+| [WebSocketPeer](classes/WebSocketPeer.md) | PacketPeer | Implemented | 30 |
 | [WebXRInterface](classes/WebXRInterface.md) | XRInterface | Excluded | 32 |
 | [Window](classes/Window.md) | Viewport | Partial | 199 |
 | [WorkerThreadPool](classes/WorkerThreadPool.md) | Object | Blocked | 9 |

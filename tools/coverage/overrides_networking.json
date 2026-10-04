@@ -1469,6 +1469,161 @@
       "godot": "StreamPeerGZIP::method:start_decompression(bool:,int:)",
       "electron2d": "method:Electron2D.StreamPeerGZIP.StartDecompression(System.Boolean,System.Int32)",
       "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:WebSocketPeer",
+      "electron2d": "T:Electron2D.WebSocketPeer",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::enum:State",
+      "electron2d": "T:Electron2D.WebSocketState",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::enum:WriteMode",
+      "electron2d": "T:Electron2D.WebSocketWriteMode",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::enum_value:State.STATE_CLOSED",
+      "electron2d": "enumValue:Electron2D.WebSocketState.Closed()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::enum_value:State.STATE_CLOSING",
+      "electron2d": "enumValue:Electron2D.WebSocketState.Closing()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::enum_value:State.STATE_CONNECTING",
+      "electron2d": "enumValue:Electron2D.WebSocketState.Connecting()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::enum_value:State.STATE_OPEN",
+      "electron2d": "enumValue:Electron2D.WebSocketState.Open()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::enum_value:WriteMode.WRITE_MODE_BINARY",
+      "electron2d": "enumValue:Electron2D.WebSocketWriteMode.Binary()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::enum_value:WriteMode.WRITE_MODE_TEXT",
+      "electron2d": "enumValue:Electron2D.WebSocketWriteMode.Text()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:accept_stream(StreamPeer:)",
+      "electron2d": "method:Electron2D.WebSocketPeer.AcceptStream(Electron2D.StreamPeer)",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:close(int:,String:)",
+      "electron2d": "method:Electron2D.WebSocketPeer.Close(System.Int32,System.String)",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:connect_to_url(String:,TLSOptions:)",
+      "electron2d": "method:Electron2D.WebSocketPeer.ConnectToURL(System.String,Electron2D.TLSOptions)",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:get_close_code()",
+      "electron2d": "method:Electron2D.WebSocketPeer.GetCloseCode()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:get_close_reason()",
+      "electron2d": "method:Electron2D.WebSocketPeer.GetCloseReason()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:get_connected_host()",
+      "electron2d": "method:Electron2D.WebSocketPeer.GetConnectedHost()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:get_connected_port()",
+      "electron2d": "method:Electron2D.WebSocketPeer.GetConnectedPort()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:get_current_outbound_buffered_amount()",
+      "electron2d": "method:Electron2D.WebSocketPeer.GetCurrentOutboundBufferedAmount()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:get_ready_state()",
+      "electron2d": "method:Electron2D.WebSocketPeer.GetReadyState()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:get_requested_url()",
+      "electron2d": "method:Electron2D.WebSocketPeer.GetRequestedURL()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:get_selected_protocol()",
+      "electron2d": "method:Electron2D.WebSocketPeer.GetSelectedProtocol()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:poll()",
+      "electron2d": "method:Electron2D.WebSocketPeer.Poll()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:send(PackedByteArray:,int:WebSocketPeer.WriteMode)",
+      "electron2d": "method:Electron2D.WebSocketPeer.Send(System.ReadOnlySpan<System.Byte>,Electron2D.WebSocketWriteMode)",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:send_text(String:)",
+      "electron2d": "method:Electron2D.WebSocketPeer.SendText(System.String)",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:set_no_delay(bool:)",
+      "electron2d": "method:Electron2D.WebSocketPeer.SetNoDelay(System.Boolean)",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::method:was_string_packet()",
+      "electron2d": "method:Electron2D.WebSocketPeer.WasStringPacket()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::property:handshake_headers",
+      "electron2d": "property:Electron2D.WebSocketPeer.HandshakeHeaders()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::property:heartbeat_interval",
+      "electron2d": "property:Electron2D.WebSocketPeer.HeartbeatInterval()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::property:inbound_buffer_size",
+      "electron2d": "property:Electron2D.WebSocketPeer.InboundBufferSize()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::property:max_queued_packets",
+      "electron2d": "property:Electron2D.WebSocketPeer.MaxQueuedPackets()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::property:outbound_buffer_size",
+      "electron2d": "property:Electron2D.WebSocketPeer.OutboundBufferSize()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketPeer::property:supported_protocols",
+      "electron2d": "property:Electron2D.WebSocketPeer.SupportedProtocols()",
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
     }
   ],
   "extras": [
@@ -1931,6 +2086,46 @@
       "electron2d": "property:Electron2D.HTTPClient.MaxResponseHeaderBytes()",
       "state": "Implemented",
       "reason": "Typed caller-span overload, construction/owner/disposal/metadata/scene factory hook, prepared response-header budget or codec completion boundary for HTTP/stream compression. ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebSocketPeer..ctor()",
+      "state": "Implemented",
+      "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketPeer.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketPeer.GetAvailablePacketCount()",
+      "state": "Implemented",
+      "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketPeer.GetMaxPacketSize()",
+      "state": "Implemented",
+      "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketPeer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketPeer.NextPacketSize()",
+      "state": "Implemented",
+      "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketPeer.PutPacket(System.ReadOnlySpan<System.Byte>)",
+      "state": "Implemented",
+      "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketPeer.ReadPacketCore(System.Span<System.Byte>)",
+      "state": "Implemented",
+      "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -2613,44 +2808,7 @@
         "WebSocketMultiplayerPeer::property:outbound_buffer_size",
         "WebSocketMultiplayerPeer::property:supported_protocols"
       ],
-      "reason": "ADR 0094: Requires executable WebSocketPeer framing and typed MultiplayerPeer identity/channel/lifecycle contract."
-    },
-    {
-      "state": "Unimplemented",
-      "godot": [
-        "class:WebSocketPeer",
-        "WebSocketPeer::enum:State",
-        "WebSocketPeer::enum:WriteMode",
-        "WebSocketPeer::enum_value:State.STATE_CLOSED",
-        "WebSocketPeer::enum_value:State.STATE_CLOSING",
-        "WebSocketPeer::enum_value:State.STATE_CONNECTING",
-        "WebSocketPeer::enum_value:State.STATE_OPEN",
-        "WebSocketPeer::enum_value:WriteMode.WRITE_MODE_BINARY",
-        "WebSocketPeer::enum_value:WriteMode.WRITE_MODE_TEXT",
-        "WebSocketPeer::method:accept_stream(StreamPeer:)",
-        "WebSocketPeer::method:close(int:,String:)",
-        "WebSocketPeer::method:connect_to_url(String:,TLSOptions:)",
-        "WebSocketPeer::method:get_close_code()",
-        "WebSocketPeer::method:get_close_reason()",
-        "WebSocketPeer::method:get_connected_host()",
-        "WebSocketPeer::method:get_connected_port()",
-        "WebSocketPeer::method:get_current_outbound_buffered_amount()",
-        "WebSocketPeer::method:get_ready_state()",
-        "WebSocketPeer::method:get_requested_url()",
-        "WebSocketPeer::method:get_selected_protocol()",
-        "WebSocketPeer::method:poll()",
-        "WebSocketPeer::method:send(PackedByteArray:,int:WebSocketPeer.WriteMode)",
-        "WebSocketPeer::method:send_text(String:)",
-        "WebSocketPeer::method:set_no_delay(bool:)",
-        "WebSocketPeer::method:was_string_packet()",
-        "WebSocketPeer::property:handshake_headers",
-        "WebSocketPeer::property:heartbeat_interval",
-        "WebSocketPeer::property:inbound_buffer_size",
-        "WebSocketPeer::property:max_queued_packets",
-        "WebSocketPeer::property:outbound_buffer_size",
-        "WebSocketPeer::property:supported_protocols"
-      ],
-      "reason": "ADR 0094: Native TCP/TLS, HTTP upgrade preservation and packet hooks execute; next complete slice is WebSocket handshake validation, framing/masking, control/close handshake and bounded queues for WS/WSS."
+      "reason": "ADR 0094: WebSocketPeer WS/WSS transport executes. WebSocketMultiplayerPeer requires the concrete typed MultiplayerPeer identity/channel/transfer/lifecycle contract before its inherited and protocol-specific behavior can execute."
     },
     {
       "state": "Implemented",
@@ -2855,6 +3013,43 @@
         "StreamPeerGZIP::method:start_decompression(bool:,int:)"
       ],
       "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:WebSocketPeer",
+        "WebSocketPeer::enum:State",
+        "WebSocketPeer::enum:WriteMode",
+        "WebSocketPeer::enum_value:State.STATE_CLOSED",
+        "WebSocketPeer::enum_value:State.STATE_CLOSING",
+        "WebSocketPeer::enum_value:State.STATE_CONNECTING",
+        "WebSocketPeer::enum_value:State.STATE_OPEN",
+        "WebSocketPeer::enum_value:WriteMode.WRITE_MODE_BINARY",
+        "WebSocketPeer::enum_value:WriteMode.WRITE_MODE_TEXT",
+        "WebSocketPeer::method:accept_stream(StreamPeer:)",
+        "WebSocketPeer::method:close(int:,String:)",
+        "WebSocketPeer::method:connect_to_url(String:,TLSOptions:)",
+        "WebSocketPeer::method:get_close_code()",
+        "WebSocketPeer::method:get_close_reason()",
+        "WebSocketPeer::method:get_connected_host()",
+        "WebSocketPeer::method:get_connected_port()",
+        "WebSocketPeer::method:get_current_outbound_buffered_amount()",
+        "WebSocketPeer::method:get_ready_state()",
+        "WebSocketPeer::method:get_requested_url()",
+        "WebSocketPeer::method:get_selected_protocol()",
+        "WebSocketPeer::method:poll()",
+        "WebSocketPeer::method:send(PackedByteArray:,int:WebSocketPeer.WriteMode)",
+        "WebSocketPeer::method:send_text(String:)",
+        "WebSocketPeer::method:set_no_delay(bool:)",
+        "WebSocketPeer::method:was_string_packet()",
+        "WebSocketPeer::property:handshake_headers",
+        "WebSocketPeer::property:heartbeat_interval",
+        "WebSocketPeer::property:inbound_buffer_size",
+        "WebSocketPeer::property:max_queued_packets",
+        "WebSocketPeer::property:outbound_buffer_size",
+        "WebSocketPeer::property:supported_protocols"
+      ],
+      "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
     }
   ]
 }

@@ -56,6 +56,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Component: [Native streams and packets](components/networking.md)
 - Component: [TLS and security resources](components/tls.md)
 - Component: [HTTP transfers and stream compression](components/http.md)
+- Component: [WebSocket messages](components/websocket.md)
 - Component: [Object lifecycle](components/object-lifecycle.md)
 - Component: [Typed event connections](components/event-connections.md)
 - Component: [Typed editor properties](components/editor-properties.md)

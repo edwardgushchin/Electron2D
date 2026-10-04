@@ -32,6 +32,7 @@ public class HTTPClient : ElectronObject
     private bool _trailers;
     private long _length = -1, _remaining, _chunkRemaining;
     private HTTPResponseCode _code;
+    internal bool ResponseUsesHTTP11 { get; private set; }
     private string[] _headers = [];
     private bool _blocking;
     private static readonly string[] MethodNames = ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS", "TRACE", "CONNECT", "PATCH"];
@@ -203,7 +204,7 @@ public class HTTPClient : ElectronObject
         if (chunked && length >= 0) throw new InvalidDataException("Ambiguous transfer framing.");
         _headerCount = 0; if (code is >= 100 and < 200 && code != 101) return;
         if (_proxyResponse) { if (code is < 200 or >= 300) { Fail(HTTPStatus.CantConnect); throw new IOException("HTTPS proxy refused CONNECT."); } _proxyResponse = _proxyTunnel = false; StartTLSOrConnected(); return; }
-        _code = (HTTPResponseCode)code; _headers = headers.ToArray(); _hasResponse = true; _closeAfterBody = close;
+        ResponseUsesHTTP11 = status[0] == "HTTP/1.1"; _code = (HTTPResponseCode)code; _headers = headers.ToArray(); _hasResponse = true; _closeAfterBody = close;
         var bodyless = _headRequest || _connectRequest && code is >= 200 and < 300 || code is 101 or 204 or 205 or 304; _chunked = !bodyless && chunked; _length = bodyless ? 0 : chunked ? -1 : length; _remaining = _length; _untilEOF = !bodyless && !chunked && length < 0;
         _status = _length == 0 ? HTTPStatus.Connected : HTTPStatus.Body;
     }

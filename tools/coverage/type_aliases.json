@@ -150,6 +150,8 @@
     "HTTPClient.Method": "HTTPMethod",
     "HTTPClient.Status": "HTTPStatus",
     "HTTPClient.ResponseCode": "HTTPResponseCode",
-    "HTTPRequest.Result": "HTTPRequestResult"
+    "HTTPRequest.Result": "HTTPRequestResult",
+    "WebSocketPeer.State": "WebSocketState",
+    "WebSocketPeer.WriteMode": "WebSocketWriteMode"
   }
 }

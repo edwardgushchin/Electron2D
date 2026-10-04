@@ -338,3 +338,5 @@ Remarks: This method can run concurrently in multiple callers and can race with 
 ## Verification and limits
 
 [HTTPTests](../../tests/Electron2D.Tests/HTTPTests.cs) verifies the exercised native Linux IPv4/DNS/TLS/proxy and public scene/worker paths, fragmented binary/framing/codec/security edges and prepared managed-allocation intervals. Native codec internals, real routed throughput, other-platform/browser delivery and owner acceptance remain separate gates. See [coverage](../coverage/classes/HTTPClient.md).
+
+The WebSocket client consumer reuses this HTTP upgrade path and checks the parsed protocol version through an internal property; the public HTTP status/header/body contract stays as above. See [WebSocket](../components/websocket.md).
