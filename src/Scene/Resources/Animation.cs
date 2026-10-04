@@ -16,6 +16,16 @@ public sealed class Animation : Resource
         new PropertyDescriptor<Animation, double>(nameof(Step), n => n.Step, (n, v) => n.Step = v, _ => .033333335),
         new PropertyDescriptor<Animation, SpriteFrames.LoopMode>(nameof(LoopMode), n => n.LoopMode, (n, v) => n.LoopMode = v, _ => SpriteFrames.LoopMode.None),
     ];
+    /// <summary>Identifies an endpoint crossed by clip playback.</summary>
+    public enum LoopedFlag
+    {
+        /// <summary>No endpoint was crossed.</summary>
+        None = 0,
+        /// <summary>The end endpoint was crossed.</summary>
+        End = 1,
+        /// <summary>The start endpoint was crossed.</summary>
+        Start = 2,
+    }
     /// <summary>Identifies executable timeline track kinds.</summary>
     public enum TrackType
     {

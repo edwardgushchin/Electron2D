@@ -56,3 +56,5 @@ The source XML describes every own declaration. Public/protected declaration acc
 [SceneAnimationTests](../../tests/Electron2D.Tests/SceneAnimationTests.cs) exercises the complete current property-track playback profile and Linux Wayland GPU/compatibility readback hosts. Other track kinds, packed/disk persistence and other-platform acceptance remain unimplemented; the type's existence does not close those family rows.
 
 Typed weighted transitions, capture, RESET and postprocess behavior are detailed in [the component](../components/scene-animation.md#weighted-transitions-and-capture) and tested by [SceneAnimationBlendTests](../../tests/Electron2D.Tests/SceneAnimationBlendTests.cs).
+
+[Animation graph execution](../components/scene-animation.md#animation-graphs) supplies per-track weights through AnimationTree. The public Animation.LoopedFlag domain is consumed by BlendAnimation; event effects remain tied to unfinished non-property schedulers.

@@ -216,6 +216,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Animation.LoopedFlag",
+    "kind": "type",
+    "declaringType": "Electron2D.Animation.LoopedFlag",
+    "name": "LoopedFlag",
+    "signature": "public enum Electron2D.Animation.LoopedFlag",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Animation.TrackType",
     "kind": "type",
     "declaringType": "Electron2D.Animation.TrackType",
@@ -318,11 +336,283 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimationNode",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "AnimationNode",
+    "signature": "public class Electron2D.AnimationNode",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNode.FilterAction",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNode.FilterAction",
+    "name": "FilterAction",
+    "signature": "public enum Electron2D.AnimationNode.FilterAction",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeAdd2",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeAdd2",
+    "name": "AnimationNodeAdd2",
+    "signature": "public sealed class Electron2D.AnimationNodeAdd2",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNodeSync",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeAdd3",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeAdd3",
+    "name": "AnimationNodeAdd3",
+    "signature": "public sealed class Electron2D.AnimationNodeAdd3",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNodeSync",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeAnimation",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "AnimationNodeAnimation",
+    "signature": "public sealed class Electron2D.AnimationNodeAnimation",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationRootNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeBlend2",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeBlend2",
+    "name": "AnimationNodeBlend2",
+    "signature": "public sealed class Electron2D.AnimationNodeBlend2",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNodeSync",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeBlend3",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeBlend3",
+    "name": "AnimationNodeBlend3",
+    "signature": "public sealed class Electron2D.AnimationNodeBlend3",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNodeSync",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeBlendTree",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "AnimationNodeBlendTree",
+    "signature": "public sealed class Electron2D.AnimationNodeBlendTree",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationRootNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeOutput",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeOutput",
+    "name": "AnimationNodeOutput",
+    "signature": "public sealed class Electron2D.AnimationNodeOutput",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeSub2",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeSub2",
+    "name": "AnimationNodeSub2",
+    "signature": "public sealed class Electron2D.AnimationNodeSub2",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNodeSync",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeSync",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeSync",
+    "name": "AnimationNodeSync",
+    "signature": "public class Electron2D.AnimationNodeSync",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeTimeScale",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeTimeScale",
+    "name": "AnimationNodeTimeScale",
+    "signature": "public sealed class Electron2D.AnimationNodeTimeScale",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeTimeSeek",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "AnimationNodeTimeSeek",
+    "signature": "public sealed class Electron2D.AnimationNodeTimeSeek",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationParameter",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationParameter",
+    "name": "AnimationParameter",
+    "signature": "public abstract class Electron2D.AnimationParameter",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationParameter\u003CTValue\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationParameter\u003CTValue\u003E",
+    "name": "AnimationParameter\u00601",
+    "signature": "public sealed class Electron2D.AnimationParameter\u003CTValue\u003E",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationParameter",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationPlayMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationPlayMode",
+    "name": "AnimationPlayMode",
+    "signature": "public enum Electron2D.AnimationPlayMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnimationPlayer",
     "kind": "type",
     "declaringType": "Electron2D.AnimationPlayer",
     "name": "AnimationPlayer",
     "signature": "public class Electron2D.AnimationPlayer",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationMixer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationRootNode",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationRootNode",
+    "name": "AnimationRootNode",
+    "signature": "public class Electron2D.AnimationRootNode",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationTree",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "AnimationTree",
+    "signature": "public class Electron2D.AnimationTree",
     "visibility": "public",
     "baseType": "Electron2D.AnimationMixer",
     "interfaces": [
@@ -6817,6 +7107,84 @@
     "value": "256"
   },
   {
+    "id": "constant:Electron2D.AnimationNodeBlendTree.ConnectionErrorConnectionExists()",
+    "kind": "constant",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "ConnectionErrorConnectionExists",
+    "signature": "public const System.Int32 ConnectionErrorConnectionExists = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "5"
+  },
+  {
+    "id": "constant:Electron2D.AnimationNodeBlendTree.ConnectionErrorNoInput()",
+    "kind": "constant",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "ConnectionErrorNoInput",
+    "signature": "public const System.Int32 ConnectionErrorNoInput = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "1"
+  },
+  {
+    "id": "constant:Electron2D.AnimationNodeBlendTree.ConnectionErrorNoInputIndex()",
+    "kind": "constant",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "ConnectionErrorNoInputIndex",
+    "signature": "public const System.Int32 ConnectionErrorNoInputIndex = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2"
+  },
+  {
+    "id": "constant:Electron2D.AnimationNodeBlendTree.ConnectionErrorNoOutput()",
+    "kind": "constant",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "ConnectionErrorNoOutput",
+    "signature": "public const System.Int32 ConnectionErrorNoOutput = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "3"
+  },
+  {
+    "id": "constant:Electron2D.AnimationNodeBlendTree.ConnectionErrorSameNode()",
+    "kind": "constant",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "ConnectionErrorSameNode",
+    "signature": "public const System.Int32 ConnectionErrorSameNode = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "4"
+  },
+  {
+    "id": "constant:Electron2D.AnimationNodeBlendTree.ConnectionOK()",
+    "kind": "constant",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "ConnectionOK",
+    "signature": "public const System.Int32 ConnectionOK = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "0"
+  },
+  {
     "id": "constant:Electron2D.AudioStreamInteractive.ClipAny()",
     "kind": "constant",
     "declaringType": "Electron2D.AudioStreamInteractive",
@@ -8169,11 +8537,251 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AnimationNode..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": ".ctor",
+    "signature": "public AnimationNode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeAdd2..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeAdd2",
+    "name": ".ctor",
+    "signature": "public AnimationNodeAdd2()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeAdd3..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeAdd3",
+    "name": ".ctor",
+    "signature": "public AnimationNodeAdd3()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeAnimation..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": ".ctor",
+    "signature": "public AnimationNodeAnimation()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeBlend2..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeBlend2",
+    "name": ".ctor",
+    "signature": "public AnimationNodeBlend2()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeBlend3..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeBlend3",
+    "name": ".ctor",
+    "signature": "public AnimationNodeBlend3()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeBlendTree..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": ".ctor",
+    "signature": "public AnimationNodeBlendTree()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeOutput..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeOutput",
+    "name": ".ctor",
+    "signature": "public AnimationNodeOutput()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeSub2..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeSub2",
+    "name": ".ctor",
+    "signature": "public AnimationNodeSub2()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeSync..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeSync",
+    "name": ".ctor",
+    "signature": "public AnimationNodeSync()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeTimeScale..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeTimeScale",
+    "name": ".ctor",
+    "signature": "public AnimationNodeTimeScale()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeTimeSeek..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": ".ctor",
+    "signature": "public AnimationNodeTimeSeek()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationParameter..ctor(System.String,System.Type,System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationParameter",
+    "name": ".ctor",
+    "signature": "protected AnimationParameter(System.String name, System.Type valueType, System.Boolean readOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "valueType",
+        "type": "System.Type",
+        "default": null
+      },
+      {
+        "name": "readOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationParameter\u003CTValue\u003E..ctor(System.String,TValue,System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationParameter\u003CTValue\u003E",
+    "name": ".ctor",
+    "signature": "public AnimationParameter\u00601(System.String name, TValue defaultValue, System.Boolean readOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "defaultValue",
+        "type": "TValue",
+        "default": null
+      },
+      {
+        "name": "readOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AnimationPlayer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AnimationPlayer",
     "name": ".ctor",
     "signature": "public AnimationPlayer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationRootNode..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationRootNode",
+    "name": ".ctor",
+    "signature": "public AnimationRootNode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationTree..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": ".ctor",
+    "signature": "public AnimationTree()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12452,6 +13060,45 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.Animation.LoopedFlag.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Animation.LoopedFlag",
+    "name": "End",
+    "signature": "public const Electron2D.Animation.LoopedFlag End = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Animation.LoopedFlag",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Animation.LoopedFlag.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Animation.LoopedFlag",
+    "name": "None",
+    "signature": "public const Electron2D.Animation.LoopedFlag None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Animation.LoopedFlag",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Animation.LoopedFlag.Start()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Animation.LoopedFlag",
+    "name": "Start",
+    "signature": "public const Electron2D.Animation.LoopedFlag Start = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Animation.LoopedFlag",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.Animation.TrackType.Value()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Animation.TrackType",
@@ -12579,6 +13226,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationNode.FilterAction.Blend()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationNode.FilterAction",
+    "name": "Blend",
+    "signature": "public const Electron2D.AnimationNode.FilterAction Blend = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationNode.FilterAction",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationNode.FilterAction.Ignore()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationNode.FilterAction",
+    "name": "Ignore",
+    "signature": "public const Electron2D.AnimationNode.FilterAction Ignore = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationNode.FilterAction",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationNode.FilterAction.Pass()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationNode.FilterAction",
+    "name": "Pass",
+    "signature": "public const Electron2D.AnimationNode.FilterAction Pass = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationNode.FilterAction",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationNode.FilterAction.Stop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationNode.FilterAction",
+    "name": "Stop",
+    "signature": "public const Electron2D.AnimationNode.FilterAction Stop = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationNode.FilterAction",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationPlayMode.Backward()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationPlayMode",
+    "name": "Backward",
+    "signature": "public const Electron2D.AnimationPlayMode Backward = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationPlayMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationPlayMode.Forward()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationPlayMode",
+    "name": "Forward",
+    "signature": "public const Electron2D.AnimationPlayMode Forward = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationPlayMode",
     "value": "0"
   },
   {
@@ -24919,6 +25644,71 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.AnimationNode.AnimationNodeRemoved()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "AnimationNodeRemoved",
+    "signature": "public event System.Action\u003CSystem.UInt64, System.String\u003E AnimationNodeRemoved",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.UInt64, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimationNode.AnimationNodeRenamed()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "AnimationNodeRenamed",
+    "signature": "public event System.Action\u003CSystem.UInt64, System.String, System.String\u003E AnimationNodeRenamed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.UInt64, System.String, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimationNode.NodeUpdated()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "NodeUpdated",
+    "signature": "public event System.Action\u003CSystem.UInt64\u003E NodeUpdated",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.UInt64\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimationNode.TreeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "TreeChanged",
+    "signature": "public event System.Action TreeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimationNodeBlendTree.NodeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "NodeChanged",
+    "signature": "public event System.Action\u003CSystem.String\u003E NodeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.AnimationPlayer.AnimationChanged()",
     "kind": "event",
     "declaringType": "Electron2D.AnimationPlayer",
@@ -24942,6 +25732,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimationTree.AnimationPlayerChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "AnimationPlayerChanged",
+    "signature": "public event System.Action AnimationPlayerChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -26606,6 +27409,136 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNode.CurrentDelta()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "CurrentDelta",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E CurrentDelta",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNode.CurrentLength()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "CurrentLength",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E CurrentLength",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNode.CurrentPosition()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "CurrentPosition",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E CurrentPosition",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeAdd2.AddAmount()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeAdd2",
+    "name": "AddAmount",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E AddAmount",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeAdd3.AddAmount()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeAdd3",
+    "name": "AddAmount",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E AddAmount",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeBlend2.BlendAmount()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeBlend2",
+    "name": "BlendAmount",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E BlendAmount",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeBlend3.BlendAmount()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeBlend3",
+    "name": "BlendAmount",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E BlendAmount",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeSub2.SubAmount()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeSub2",
+    "name": "SubAmount",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E SubAmount",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeTimeScale.Scale()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeTimeScale",
+    "name": "Scale",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E Scale",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeTimeSeek.SeekRequest()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "SeekRequest",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Double\u003E SeekRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
     "value": null
   },
   {
@@ -30305,6 +31238,1906 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AnimationNode.AddInput(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "AddInput",
+    "signature": "public System.Boolean AddInput(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.BlendAnimation(System.String,System.Double,System.Double,System.Boolean,System.Boolean,System.Double,Electron2D.Animation.LoopedFlag)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "BlendAnimation",
+    "signature": "public System.Void BlendAnimation(System.String animation, System.Double time, System.Double delta, System.Boolean seeked, System.Boolean isExternalSeeking, System.Double blend, Electron2D.Animation.LoopedFlag loopedFlag = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seeked",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "blend",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "loopedFlag",
+        "type": "Electron2D.Animation.LoopedFlag",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.BlendInput(System.Int32,System.Double,System.Boolean,System.Boolean,System.Double,Electron2D.AnimationNode.FilterAction,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "BlendInput",
+    "signature": "public System.Double BlendInput(System.Int32 inputIndex, System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Double blend, Electron2D.AnimationNode.FilterAction filter = Ignore, System.Boolean sync = true, System.Boolean testOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "blend",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "filter",
+        "type": "Electron2D.AnimationNode.FilterAction",
+        "default": "Ignore"
+      },
+      {
+        "name": "sync",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.BlendNode(System.String,Electron2D.AnimationNode,System.Double,System.Boolean,System.Boolean,System.Double,Electron2D.AnimationNode.FilterAction,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "BlendNode",
+    "signature": "public System.Double BlendNode(System.String name, Electron2D.AnimationNode node, System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Double blend, Electron2D.AnimationNode.FilterAction filter = Ignore, System.Boolean sync = true, System.Boolean testOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationNode",
+        "default": null
+      },
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "blend",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "filter",
+        "type": "Electron2D.AnimationNode.FilterAction",
+        "default": "Ignore"
+      },
+      {
+        "name": "sync",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.FindInput(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "FindInput",
+    "signature": "public System.Int32 FindInput(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.GetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "GetCaption",
+    "signature": "public System.String GetCaption()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.GetInputCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "GetInputCount",
+    "signature": "public System.Int32 GetInputCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.GetInputName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "GetInputName",
+    "signature": "public System.String GetInputName(System.Int32 input)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.GetParameter\u00601(AnimationParameter\u003CTValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "GetParameter",
+    "signature": "public TValue GetParameter\u003CTValue\u003E(AnimationParameter\u003CTValue\u003E parameter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "AnimationParameter\u003CTValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.GetProcessingAnimationTreeInstanceID()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "GetProcessingAnimationTreeInstanceID",
+    "signature": "public System.UInt64 GetProcessingAnimationTreeInstanceID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.IsPathFiltered(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "IsPathFiltered",
+    "signature": "public System.Boolean IsPathFiltered(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.IsProcessTesting()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "IsProcessTesting",
+    "signature": "public System.Boolean IsProcessTesting()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "OnGetCaption",
+    "signature": "protected virtual System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.OnGetChildByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "OnGetChildByName",
+    "signature": "protected virtual Electron2D.AnimationNode OnGetChildByName(System.String name)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.OnGetChildNodes()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "OnGetChildNodes",
+    "signature": "protected virtual System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E OnGetChildNodes()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.OnGetParameterDefaultValue\u00601(AnimationParameter\u003CTValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "OnGetParameterDefaultValue",
+    "signature": "protected virtual TValue OnGetParameterDefaultValue\u003CTValue\u003E(AnimationParameter\u003CTValue\u003E parameter)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "AnimationParameter\u003CTValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "OnGetParameterList",
+    "signature": "protected virtual System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.OnHasFilter()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "OnHasFilter",
+    "signature": "protected virtual System.Boolean OnHasFilter()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.OnIsParameterReadOnly(Electron2D.AnimationParameter)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "OnIsParameterReadOnly",
+    "signature": "protected virtual System.Boolean OnIsParameterReadOnly(Electron2D.AnimationParameter parameter)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "Electron2D.AnimationParameter",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "OnProcess",
+    "signature": "protected virtual System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.RemoveInput(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "RemoveInput",
+    "signature": "public System.Void RemoveInput(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.SetFilterPath(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "SetFilterPath",
+    "signature": "public System.Void SetFilterPath(System.String path, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.SetInputName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "SetInputName",
+    "signature": "public System.Boolean SetInputName(System.Int32 input, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNode.SetParameter\u00601(AnimationParameter\u003CTValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "SetParameter",
+    "signature": "public System.Void SetParameter\u003CTValue\u003E(AnimationParameter\u003CTValue\u003E parameter, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "AnimationParameter\u003CTValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd2.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd2",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd2.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd2",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd2.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd2",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd2.OnHasFilter()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd2",
+    "name": "OnHasFilter",
+    "signature": "protected override System.Boolean OnHasFilter()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd2.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd2",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd3.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd3",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd3.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd3",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd3.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd3",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd3.OnHasFilter()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd3",
+    "name": "OnHasFilter",
+    "signature": "protected override System.Boolean OnHasFilter()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAdd3.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAdd3",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAnimation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAnimation.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAnimation.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAnimation.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAnimation.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeAnimation.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend2.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend2",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend2.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend2",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend2.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend2",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend2.OnHasFilter()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend2",
+    "name": "OnHasFilter",
+    "signature": "protected override System.Boolean OnHasFilter()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend2.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend2",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend3.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend3",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend3.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend3",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend3.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend3",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend3.OnHasFilter()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend3",
+    "name": "OnHasFilter",
+    "signature": "protected override System.Boolean OnHasFilter()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlend3.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlend3",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.AddNode(System.String,Electron2D.AnimationNode,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "AddNode",
+    "signature": "public System.Void AddNode(System.String name, Electron2D.AnimationNode node, Electron2D.Vector2 position = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationNode",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.ConnectNode(System.String,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "ConnectNode",
+    "signature": "public System.Void ConnectNode(System.String inputNode, System.Int32 inputIndex, System.String outputNode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "inputIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "outputNode",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.DisconnectNode(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "DisconnectNode",
+    "signature": "public System.Void DisconnectNode(System.String inputNode, System.Int32 inputIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "inputIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.GetNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "GetNode",
+    "signature": "public Electron2D.AnimationNode GetNode(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.GetNodeList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "GetNodeList",
+    "signature": "public System.String[] GetNodeList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.GetNodePosition(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "GetNodePosition",
+    "signature": "public Electron2D.Vector2 GetNodePosition(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.HasNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "HasNode",
+    "signature": "public System.Boolean HasNode(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.OnGetChildByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "OnGetChildByName",
+    "signature": "protected override Electron2D.AnimationNode OnGetChildByName(System.String name)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.OnGetChildNodes()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "OnGetChildNodes",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E OnGetChildNodes()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.RemoveNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "RemoveNode",
+    "signature": "public System.Void RemoveNode(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.RenameNode(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "RenameNode",
+    "signature": "public System.Void RenameNode(System.String name, System.String newName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "newName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendTree.SetNodePosition(System.String,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "SetNodePosition",
+    "signature": "public System.Void SetNodePosition(System.String name, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeOutput.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeOutput",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeOutput.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeOutput",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeOutput.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeOutput",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeSub2.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeSub2",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeSub2.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeSub2",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeSub2.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeSub2",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeSub2.OnHasFilter()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeSub2",
+    "name": "OnHasFilter",
+    "signature": "protected override System.Boolean OnHasFilter()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeSub2.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeSub2",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeSync.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeSync",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeSync.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeSync",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeSync.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeSync",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeScale.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeScale",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeScale.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeScale",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeScale.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeScale",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeScale.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeScale",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeSeek.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeSeek.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeSeek.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeSeek.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeSeek.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeTimeSeek.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationParameter\u003CTValue\u003E.GetDefaultValue()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationParameter\u003CTValue\u003E",
+    "name": "GetDefaultValue",
+    "signature": "public TValue GetDefaultValue()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AnimationPlayer.AnimationGetNext(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.AnimationPlayer",
@@ -31018,6 +33851,155 @@
         "name": "keepState",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationRootNode.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationRootNode",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationTree.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationTree.GetParameter\u00601(System.String,AnimationParameter\u003CTValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "GetParameter",
+    "signature": "public TValue GetParameter\u003CTValue\u003E(System.String nodePath, AnimationParameter\u003CTValue\u003E parameter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "nodePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "parameter",
+        "type": "AnimationParameter\u003CTValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationTree.GetProcessCallback()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "GetProcessCallback",
+    "signature": "public Electron2D.AnimationMixer.AnimationCallbackModeProcess GetProcessCallback()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationTree.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationTree.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationTree.SetParameter\u00601(System.String,AnimationParameter\u003CTValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "SetParameter",
+    "signature": "public System.Void SetParameter\u003CTValue\u003E(System.String nodePath, AnimationParameter\u003CTValue\u003E parameter, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "nodePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "parameter",
+        "type": "AnimationParameter\u003CTValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationTree.SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "SetProcessCallback",
+    "signature": "public System.Void SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -96858,6 +99840,201 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AnimationNode.FilterEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNode",
+    "name": "FilterEnabled",
+    "signature": "public System.Boolean FilterEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeAnimation.AdvanceOnStart()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "AdvanceOnStart",
+    "signature": "public System.Boolean AdvanceOnStart { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeAnimation.Animation()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "Animation",
+    "signature": "public System.String Animation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeAnimation.LoopMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "LoopMode",
+    "signature": "public Electron2D.SpriteFrames.LoopMode LoopMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SpriteFrames.LoopMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeAnimation.PlayMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "PlayMode",
+    "signature": "public Electron2D.AnimationPlayMode PlayMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationPlayMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeAnimation.StartOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "StartOffset",
+    "signature": "public System.Double StartOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeAnimation.StretchTimeScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "StretchTimeScale",
+    "signature": "public System.Boolean StretchTimeScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeAnimation.TimelineLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "TimelineLength",
+    "signature": "public System.Double TimelineLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeAnimation.UseCustomTimeline()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeAnimation",
+    "name": "UseCustomTimeline",
+    "signature": "public System.Boolean UseCustomTimeline { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendTree.GraphOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendTree",
+    "name": "GraphOffset",
+    "signature": "public Electron2D.Vector2 GraphOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeSync.Sync()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeSync",
+    "name": "Sync",
+    "signature": "public System.Boolean Sync { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeTimeSeek.ExplicitElapse()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeTimeSeek",
+    "name": "ExplicitElapse",
+    "signature": "public System.Boolean ExplicitElapse { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationParameter.IsReadOnly()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationParameter",
+    "name": "IsReadOnly",
+    "signature": "public System.Boolean IsReadOnly { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationParameter.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationParameter",
+    "name": "Name",
+    "signature": "public System.String Name { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationParameter.ValueType()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationParameter",
+    "name": "ValueType",
+    "signature": "public System.Type ValueType { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Type",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AnimationPlayer.AssignedAnimation()",
     "kind": "property",
     "declaringType": "Electron2D.AnimationPlayer",
@@ -96998,6 +100175,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationTree.AnimPlayer()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "AnimPlayer",
+    "signature": "public System.String AnimPlayer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationTree.TreeRoot()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationTree",
+    "name": "TreeRoot",
+    "signature": "public Electron2D.AnimationRootNode TreeRoot { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationRootNode",
     "value": null
   },
   {

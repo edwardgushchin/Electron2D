@@ -136,6 +136,8 @@
     "Vector4i.Axis": "Vector4Axis",
     "AudioStreamWAV.LoopMode": "AudioLoopMode",
     "Animation.LoopMode": "SpriteFrames.LoopMode",
-    "AnimationPlayer.AnimationProcessCallback": "AnimationMixer.AnimationCallbackModeProcess"
+    "AnimationPlayer.AnimationProcessCallback": "AnimationMixer.AnimationCallbackModeProcess",
+    "AnimationNodeAnimation.PlayMode": "AnimationPlayMode",
+    "AnimationTree.AnimationProcessCallback": "AnimationMixer.AnimationCallbackModeProcess"
   }
 }

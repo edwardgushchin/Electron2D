@@ -4,7 +4,7 @@ Last updated: 2026-10-03
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1339 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1342 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 933 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -71,6 +71,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [KinematicCollision2D](classes/KinematicCollision2D.md) | 0 | 2 |
 | [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | 0 | 2 |
 | [ThemeDB](classes/ThemeDB.md) | 0 | 2 |
+| [AnimationNode](classes/AnimationNode.md) | 0 | 1 |
 | [ArrayMesh](classes/ArrayMesh.md) | 0 | 1 |
 | [AudioStream](classes/AudioStream.md) | 0 | 1 |
 | [AudioStreamPlayer](classes/AudioStreamPlayer.md) | 0 | 1 |
@@ -91,10 +92,10 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 43 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
-| Animation: trigger is the typed AnimationTree graph/controller, parameter schema and AnimationNode resource evaluation on the implemented weighted mixer/capture. | 22 |
 | Navigation2D: trigger is the first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052). | 10 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 10 |
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
+| Animation: trigger is the executable typed state-machine/transition, OneShot and 1D/2D BlendSpace resources on the implemented AnimationTree graph and property mixer; track event schedulers and persistence remain separate. | 8 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 8 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 8 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 8 |

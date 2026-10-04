@@ -103,7 +103,7 @@ public partial class AnimationMixer
         for (var index = 0; index < frames.Length; index++)
         {
             var frame = frames[index]; if (frame.Animation.IsDisposed || !_blendCaches.TryGetValue(frame.Animation, out var cache)) continue;
-            foreach (var binding in cache.Bindings) binding?.AddWeight(frame.Weight * frameWeight, index);
+            for (var i = 0; i < cache.Bindings.Length; i++) cache.Bindings[i]?.AddWeight(frame.Weight * frameWeight * (frame.TrackWeights is null ? 1 : frame.TrackWeights[i]), index);
         }
         foreach (var capture in _captureValues) capture.AddWeight(captureWeight, frames.Length);
         for (var index = 0; index < frames.Length && EvaluationCurrent(generation); index++)
@@ -111,7 +111,7 @@ public partial class AnimationMixer
             var frame = frames[index]; if (frame.Animation.IsDisposed || !_blendCaches.TryGetValue(frame.Animation, out var cache)) continue;
             var revision = frame.Animation.ChangeRevision; var weight = frame.Weight * frameWeight;
             for (var i = 0; i < cache.Bindings.Length && EvaluationCurrent(generation) && !frame.Animation.IsDisposed && revision == frame.Animation.ChangeRevision; i++)
-                cache.Bindings[i]?.Mix(frame, i, weight, this, generation);
+                cache.Bindings[i]?.Mix(frame, i, weight * (frame.TrackWeights is null ? 1 : frame.TrackWeights[i]), this, generation);
             if (frame.Animation.IsDisposed || revision != frame.Animation.ChangeRevision) return;
         }
         var captures = _captureValues; var snapshot = _captureAnimation; var captureRevision = snapshot?.ChangeRevision;
@@ -126,7 +126,7 @@ public partial class AnimationMixer
     internal void DiscreteWritten(ulong owner, string property) { if (_blendProperties.TryGetValue((owner, property), out var state)) state.DiscreteWritten = true; }
     private sealed record AnimationBlendCache(long Revision, AnimationBinding?[] Bindings);
 }
-internal readonly record struct AnimationMixFrame(Animation Animation, double Time, bool Backward, double? Previous, double Weight, double Start = 0, double End = -1, double Movement = 0);
+internal readonly record struct AnimationMixFrame(Animation Animation, double Time, bool Backward, double? Previous, double Weight, double Start = 0, double End = -1, double Movement = 0, double[]? TrackWeights = null);
 internal abstract class AnimationBlendProperty(Node owner)
 {
     internal readonly Node Owner = owner;
