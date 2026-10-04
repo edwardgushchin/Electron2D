@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="152" height="28" viewBox="0 0 152 28" role="img" aria-labelledby="title">
+  <title id="title">Релиз: опубликованных выпусков пока нет</title>
+  <clipPath id="round"><rect width="152" height="28" rx="4"/></clipPath>
+  <g clip-path="url(#round)">
+    <rect width="70" height="28" fill="#3D2749"/>
+    <rect x="70" width="82" height="28" fill="#7C667A"/>
+  </g>
+  <g fill="#FFFFFF" font-family="Verdana,DejaVu Sans,sans-serif" font-size="12" text-anchor="middle">
+    <text x="35" y="18.5">Релиз</text>
+    <text x="111" y="18.5">ещё нет</text>
+  </g>
+</svg>

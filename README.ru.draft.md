@@ -13,6 +13,13 @@
 <p align="center">
   <a href="#installation"><img alt="Для сборки нужен .NET 10 SDK" src="docs/design/assets/sprite/badge-dotnet10.svg" width="140" height="28"></a>
   <a href="#license"><img alt="Код движка распространяется по лицензии MIT" src="docs/design/assets/sprite/badge-mit.svg" width="140" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="Релиз: опубликованных выпусков пока нет" src="docs/design/assets/sprite/badge-no-release.svg" width="152" height="28"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Последний коммит в main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?label=%D0%9F%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BD%D0%B8%D0%B9%20%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82&amp;display_timestamp=committer&amp;style=flat&amp;labelColor=3D2749&amp;color=A63B75" width="221" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/apple-library.yml"><img alt="Статус сборки библиотек iOS и tvOS" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/apple-library.yml?branch=main&amp;label=%D0%A1%D0%B1%D0%BE%D1%80%D0%BA%D0%B0%20iOS%2FtvOS&amp;style=flat&amp;labelColor=3D2749" width="210" height="28"></a>
+  <a href="tests/Electron2D.Tests/Program.cs"><img alt="Тесты: автоматический запуск в GitHub Actions пока не настроен" src="docs/design/assets/sprite/badge-tests-ci.svg" width="192" height="28"></a>
 </p>
 
 <p align="center">
@@ -22,6 +29,8 @@
   <a href="#documentation">Документация</a> ·
   <a href="#feedback-and-contributing">Участие</a>
 </p>
+
+<p align="center">⭐ <a href="https://github.com/edwardgushchin/Electron2D">Поставьте нам звезду на GitHub</a> - это очень мотивирует!</p>
 
 <a id="about"></a>
 

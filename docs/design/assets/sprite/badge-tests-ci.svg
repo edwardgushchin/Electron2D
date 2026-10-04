@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="28" viewBox="0 0 192 28" role="img" aria-labelledby="title">
+  <title id="title">Тесты: автоматический запуск в GitHub Actions пока не настроен</title>
+  <clipPath id="round"><rect width="192" height="28" rx="4"/></clipPath>
+  <g clip-path="url(#round)">
+    <rect width="64" height="28" fill="#3D2749"/>
+    <rect x="64" width="128" height="28" fill="#7C667A"/>
+  </g>
+  <g fill="#FFFFFF" font-family="Verdana,DejaVu Sans,sans-serif" font-size="12" text-anchor="middle">
+    <text x="32" y="18.5">Тесты</text>
+    <text x="128" y="18.5">CI не настроен</text>
+  </g>
+</svg>
