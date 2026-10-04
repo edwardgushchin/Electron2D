@@ -50,6 +50,7 @@ public class WebSocketPeer : PacketPeer
     private int _handshakeCount, _responseOffset, _frameCount, _frameNeeded = 2, _payloadSize, _payloadRead, _messageSize, _messageOpcode, _opcode;
     private bool _final, _masked, _frameReady, _messageReady;
     private readonly WebSocketPacketQueue _input = new(), _output = new();
+    internal int NextMessageSize { get { CheckPacketPeer(); return NextPacketSize(); } }
     /// <summary>Creates a closed WebSocket peer with default configuration.</summary>
     public WebSocketPeer() { }
     private void Idle() { CheckPacketPeer(); if (_state != WebSocketState.Closed) throw new InvalidOperationException("Buffer configuration requires a closed WebSocket."); }
@@ -356,20 +357,21 @@ public class WebSocketPeer : PacketPeer
 internal sealed class WebSocketPacketQueue
 {
     private byte[] _bytes = [];
-    private (int Size, int Payload, bool Text, bool Application)[] _records = [];
+    private (int Size, int Payload, bool Text, bool Application, int Source)[] _records = [];
     private int _read, _write, _used, _first, _next, _remaining;
     internal int Count { get; private set; }
     internal int PayloadBytes { get; private set; }
     internal int ApplicationCount { get; private set; }
     internal int NextSize => Count == 0 ? -1 : _records[_first].Size;
+    internal int NextSource => Count == 0 ? 0 : _records[_first].Source;
     internal bool NextText => _records[_first].Text;
-    internal void Prepare(int bytes, int records) { _bytes = new byte[Math.Max(1, bytes)]; _records = new (int, int, bool, bool)[Math.Max(1, records)]; Clear(); }
+    internal void Prepare(int bytes, int records) { _bytes = new byte[Math.Max(1, bytes)]; _records = new (int, int, bool, bool, int)[Math.Max(1, records)]; Clear(); }
     internal void Clear() { _read = _write = _used = _first = _next = _remaining = Count = PayloadBytes = ApplicationCount = 0; }
     internal bool CanStore(int bytes) => bytes <= _bytes.Length - _used && Count < _records.Length;
-    internal void Store(ReadOnlySpan<byte> bytes, int payload, bool text, bool application)
+    internal void Store(ReadOnlySpan<byte> bytes, int payload, bool text, bool application, int source = 0)
     {
         var first = Math.Min(bytes.Length, _bytes.Length - _write); bytes[..first].CopyTo(_bytes.AsSpan(_write)); bytes[first..].CopyTo(_bytes); _write = (_write + bytes.Length) % _bytes.Length; _used += bytes.Length;
-        _records[_next] = (bytes.Length, payload, text, application); _next = (_next + 1) % _records.Length; if (Count++ == 0) _remaining = bytes.Length; PayloadBytes += payload; if (application) ApplicationCount++;
+        _records[_next] = (bytes.Length, payload, text, application, source); _next = (_next + 1) % _records.Length; if (Count++ == 0) _remaining = bytes.Length; PayloadBytes += payload; if (application) ApplicationCount++;
     }
     internal ReadOnlySpan<byte> Peek() => _bytes.AsSpan(_read, Math.Min(_remaining, _bytes.Length - _read));
     internal void Consume(int bytes)

@@ -4,7 +4,7 @@ Last updated: 2026-10-04
 
 **Namespace:** `Electron2D`. **Declaration:** `public abstract class Electron2D.PacketPeer`.
 
-**Inherits:** [ElectronObject](ElectronObject.md). **Inherited by:** [PacketPeerStream](PacketPeerStream.md), [PacketPeerUDP](PacketPeerUDP.md), [WebSocketPeer](WebSocketPeer.md). **Source:** [PacketPeer.cs](../../src/Core/Networking/PacketPeer.cs).
+**Inherits:** [ElectronObject](ElectronObject.md). **Inherited by:** [PacketPeerStream](PacketPeerStream.md), [PacketPeerUDP](PacketPeerUDP.md), [WebSocketPeer](WebSocketPeer.md), [MultiplayerPeer](MultiplayerPeer.md). **Source:** [PacketPeer.cs](../../src/Core/Networking/PacketPeer.cs).
 
 ## Description
 

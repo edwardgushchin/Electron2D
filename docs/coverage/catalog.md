@@ -462,8 +462,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MultiMeshInstance3D](classes/MultiMeshInstance3D.md) | GeometryInstance3D | Excluded | 1 |
 | [MultiplayerAPI](classes/MultiplayerAPI.md) | RefCounted | Blocked | 22 |
 | [MultiplayerAPIExtension](classes/MultiplayerAPIExtension.md) | MultiplayerAPI | Blocked | 9 |
-| [MultiplayerPeer](classes/MultiplayerPeer.md) | PacketPeer | Unimplemented | 26 |
-| [MultiplayerPeerExtension](classes/MultiplayerPeerExtension.md) | MultiplayerPeer | Blocked | 23 |
+| [MultiplayerPeer](classes/MultiplayerPeer.md) | PacketPeer | Implemented | 26 |
+| [MultiplayerPeerExtension](classes/MultiplayerPeerExtension.md) | MultiplayerPeer | Implemented | 23 |
 | [MultiplayerSpawner](classes/MultiplayerSpawner.md) | Node | Blocked | 10 |
 | [MultiplayerSynchronizer](classes/MultiplayerSynchronizer.md) | Node | Blocked | 18 |
 | [Mutex](classes/Mutex.md) | RefCounted | Blocked | 3 |
@@ -504,7 +504,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Occluder3D](classes/Occluder3D.md) | Resource | Excluded | 2 |
 | [OccluderInstance3D](classes/OccluderInstance3D.md) | VisualInstance3D | Excluded | 5 |
 | [OccluderPolygon2D](classes/OccluderPolygon2D.md) | Resource | Blocked | 7 |
-| [OfflineMultiplayerPeer](classes/OfflineMultiplayerPeer.md) | MultiplayerPeer | Blocked | 0 |
+| [OfflineMultiplayerPeer](classes/OfflineMultiplayerPeer.md) | MultiplayerPeer | Implemented | 0 |
 | [OggPacketSequence](classes/OggPacketSequence.md) | Resource | Implemented | 4 |
 | [OggPacketSequencePlayback](classes/OggPacketSequencePlayback.md) | RefCounted | Implemented | 0 |
 | [OmniLight3D](classes/OmniLight3D.md) | Light3D | Excluded | 8 |
@@ -1048,7 +1048,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [WebRTCMultiplayerPeer](classes/WebRTCMultiplayerPeer.md) | MultiplayerPeer | Blocked | 8 |
 | [WebRTCPeerConnection](classes/WebRTCPeerConnection.md) | RefCounted | Blocked | 33 |
 | [WebRTCPeerConnectionExtension](classes/WebRTCPeerConnectionExtension.md) | WebRTCPeerConnection | Blocked | 11 |
-| [WebSocketMultiplayerPeer](classes/WebSocketMultiplayerPeer.md) | MultiplayerPeer | Blocked | 11 |
+| [WebSocketMultiplayerPeer](classes/WebSocketMultiplayerPeer.md) | MultiplayerPeer | Implemented | 11 |
 | [WebSocketPeer](classes/WebSocketPeer.md) | PacketPeer | Implemented | 30 |
 | [WebXRInterface](classes/WebXRInterface.md) | XRInterface | Excluded | 32 |
 | [Window](classes/Window.md) | Viewport | Partial | 199 |

@@ -58,7 +58,8 @@
     "AudioStreamPlayer2D": "AudioStreamEmitter",
     "MultiMeshInstance2D": "MultiMeshInstance",
     "StreamPeerExtension": "StreamPeer",
-    "PacketPeerExtension": "PacketPeer"
+    "PacketPeerExtension": "PacketPeer",
+    "MultiplayerPeerExtension": "MultiplayerPeer"
   },
   "enums": {
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",
@@ -152,6 +153,8 @@
     "HTTPClient.ResponseCode": "HTTPResponseCode",
     "HTTPRequest.Result": "HTTPRequestResult",
     "WebSocketPeer.State": "WebSocketState",
-    "WebSocketPeer.WriteMode": "WebSocketWriteMode"
+    "WebSocketPeer.WriteMode": "WebSocketWriteMode",
+    "MultiplayerPeer.ConnectionStatus": "MultiplayerConnectionStatus",
+    "MultiplayerPeer.TransferMode": "TransferMode"
   }
 }

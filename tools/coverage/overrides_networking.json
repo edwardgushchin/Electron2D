@@ -1624,6 +1624,326 @@
       "godot": "WebSocketPeer::property:supported_protocols",
       "electron2d": "property:Electron2D.WebSocketPeer.SupportedProtocols()",
       "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:MultiplayerPeer",
+      "electron2d": "T:Electron2D.MultiplayerPeer",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::constant:TARGET_PEER_BROADCAST",
+      "electron2d": "constant:Electron2D.MultiplayerPeer.TargetPeerBroadcast()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::constant:TARGET_PEER_SERVER",
+      "electron2d": "constant:Electron2D.MultiplayerPeer.TargetPeerServer()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::enum:ConnectionStatus",
+      "electron2d": "T:Electron2D.MultiplayerConnectionStatus",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::enum:TransferMode",
+      "electron2d": "T:Electron2D.TransferMode",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_CONNECTED",
+      "electron2d": "enumValue:Electron2D.MultiplayerConnectionStatus.Connected()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_CONNECTING",
+      "electron2d": "enumValue:Electron2D.MultiplayerConnectionStatus.Connecting()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_DISCONNECTED",
+      "electron2d": "enumValue:Electron2D.MultiplayerConnectionStatus.Disconnected()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_RELIABLE",
+      "electron2d": "enumValue:Electron2D.TransferMode.Reliable()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_UNRELIABLE",
+      "electron2d": "enumValue:Electron2D.TransferMode.Unreliable()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_UNRELIABLE_ORDERED",
+      "electron2d": "enumValue:Electron2D.TransferMode.UnreliableOrdered()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:close()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.Close()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:disconnect_peer(int:,bool:)",
+      "electron2d": "method:Electron2D.MultiplayerPeer.DisconnectPeer(System.Int32,System.Boolean)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:generate_unique_id()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GenerateUniqueID()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:get_connection_status()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetConnectionStatus()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:get_packet_channel()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetPacketChannel()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:get_packet_mode()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetPacketMode()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:get_packet_peer()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetPacketPeer()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:get_unique_id()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetUniqueID()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:is_server_relay_supported()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.IsServerRelaySupported()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:poll()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.Poll()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::method:set_target_peer(int:)",
+      "electron2d": "method:Electron2D.MultiplayerPeer.SetTargetPeer(System.Int32)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::property:refuse_new_connections",
+      "electron2d": "property:Electron2D.MultiplayerPeer.RefuseNewConnections()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::property:transfer_channel",
+      "electron2d": "property:Electron2D.MultiplayerPeer.TransferChannel()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::property:transfer_mode",
+      "electron2d": "property:Electron2D.MultiplayerPeer.TransferMode()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::signal:peer_connected(int:)",
+      "electron2d": "event:Electron2D.MultiplayerPeer.PeerConnected()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeer::signal:peer_disconnected(int:)",
+      "electron2d": "event:Electron2D.MultiplayerPeer.PeerDisconnected()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "class:MultiplayerPeerExtension",
+      "electron2d": "T:Electron2D.MultiplayerPeer",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_close()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.Close()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_disconnect_peer(int:,bool:)",
+      "electron2d": "method:Electron2D.MultiplayerPeer.DisconnectPeer(System.Int32,System.Boolean)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_available_packet_count()",
+      "electron2d": "method:Electron2D.PacketPeer.GetAvailablePacketCount()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_connection_status()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetConnectionStatus()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_max_packet_size()",
+      "electron2d": "method:Electron2D.PacketPeer.GetMaxPacketSize()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_packet(const uint8_t **:,int32_t*:)",
+      "electron2d": "method:Electron2D.PacketPeer.ReadPacketCore(System.Span<System.Byte>)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_packet_channel()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetPacketChannel()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_packet_mode()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetPacketMode()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_packet_peer()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetPacketPeer()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_packet_script()",
+      "electron2d": "method:Electron2D.PacketPeer.ReadPacketCore(System.Span<System.Byte>)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_transfer_channel()",
+      "electron2d": "property:Electron2D.MultiplayerPeer.TransferChannel()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_transfer_mode()",
+      "electron2d": "property:Electron2D.MultiplayerPeer.TransferMode()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_get_unique_id()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetUniqueID()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_is_refusing_new_connections()",
+      "electron2d": "property:Electron2D.MultiplayerPeer.RefuseNewConnections()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_is_server()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.IsServer()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_is_server_relay_supported()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.IsServerRelaySupported()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_poll()",
+      "electron2d": "method:Electron2D.MultiplayerPeer.Poll()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_put_packet(const uint8_t*:,int:)",
+      "electron2d": "method:Electron2D.PacketPeer.PutPacket(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_put_packet_script(PackedByteArray:)",
+      "electron2d": "method:Electron2D.PacketPeer.PutPacket(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_set_refuse_new_connections(bool:)",
+      "electron2d": "property:Electron2D.MultiplayerPeer.RefuseNewConnections()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_set_target_peer(int:)",
+      "electron2d": "method:Electron2D.MultiplayerPeer.SetTargetPeer(System.Int32)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_set_transfer_channel(int:)",
+      "electron2d": "property:Electron2D.MultiplayerPeer.TransferChannel()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "MultiplayerPeerExtension::method:_set_transfer_mode(int:MultiplayerPeer.TransferMode)",
+      "electron2d": "property:Electron2D.MultiplayerPeer.TransferMode()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "class:OfflineMultiplayerPeer",
+      "electron2d": "T:Electron2D.OfflineMultiplayerPeer",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "class:WebSocketMultiplayerPeer",
+      "electron2d": "T:Electron2D.WebSocketMultiplayerPeer",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::method:create_client(String:,TLSOptions:)",
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.CreateClient(System.String,Electron2D.TLSOptions)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::method:create_server(int:,String:,TLSOptions:)",
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.CreateServer(System.Int32,System.String,Electron2D.TLSOptions)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::method:get_peer(int:)",
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetPeer(System.Int32)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::method:get_peer_address(int:)",
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetPeerAddress(System.Int32)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::method:get_peer_port(int:)",
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetPeerPort(System.Int32)",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::property:handshake_headers",
+      "electron2d": "property:Electron2D.WebSocketMultiplayerPeer.HandshakeHeaders()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::property:handshake_timeout",
+      "electron2d": "property:Electron2D.WebSocketMultiplayerPeer.HandshakeTimeout()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::property:inbound_buffer_size",
+      "electron2d": "property:Electron2D.WebSocketMultiplayerPeer.InboundBufferSize()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::property:max_queued_packets",
+      "electron2d": "property:Electron2D.WebSocketMultiplayerPeer.MaxQueuedPackets()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::property:outbound_buffer_size",
+      "electron2d": "property:Electron2D.WebSocketMultiplayerPeer.OutboundBufferSize()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "godot": "WebSocketMultiplayerPeer::property:supported_protocols",
+      "electron2d": "property:Electron2D.WebSocketMultiplayerPeer.SupportedProtocols()",
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
     }
   ],
   "extras": [
@@ -2126,6 +2446,206 @@
       "electron2d": "method:Electron2D.WebSocketPeer.ReadPacketCore(System.Span<System.Byte>)",
       "state": "Implemented",
       "reason": "Typed construction, inherited packet override or metadata/disposal hook for WebSocket messages. ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MultiplayerPeer..ctor()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "constructor:Electron2D.OfflineMultiplayerPeer..ctor()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WebSocketMultiplayerPeer..ctor()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiplayerPeer.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiplayerPeer.EmitPeerConnected(System.Int32)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiplayerPeer.EmitPeerDisconnected(System.Int32)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiplayerPeer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.Close()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.DisconnectPeer(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.GetAvailablePacketCount()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.GetConnectionStatus()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.GetMaxPacketSize()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.GetPacketChannel()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.GetPacketMode()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.GetPacketPeer()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.GetUniqueID()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.IsServer()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.NextPacketSize()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.Poll()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.PutPacket(System.ReadOnlySpan<System.Byte>)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.ReadPacketCore(System.Span<System.Byte>)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.OfflineMultiplayerPeer.SetTargetPeer(System.Int32)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.Close()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.DisconnectPeer(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetAvailablePacketCount()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetConnectionStatus()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetMaxPacketSize()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetPacketChannel()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetPacketMode()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetPacketPeer()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.GetUniqueID()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.IsServer()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.IsServerRelaySupported()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.NextPacketSize()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.Poll()",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.PutPacket(System.ReadOnlySpan<System.Byte>)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.ReadPacketCore(System.Span<System.Byte>)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.WebSocketMultiplayerPeer.SetTargetPeer(System.Int32)",
+      "state": "Implemented",
+      "reason": "Typed constructor, inherited span/lifecycle override, signal dispatch or metadata hook for multiplayer transports. ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -2319,7 +2839,7 @@
         "ENetConnection::method:service(int:)",
         "ENetConnection::method:socket_send(String:,int:,PackedByteArray:)"
       ],
-      "reason": "ADR 0094: Requires an ENet-capable native backend/packaging and typed host/peer/reliability ownership; ENetMultiplayerPeer additionally depends on MultiplayerPeer. Plain UDP does not provide ENet reliability/protocol."
+      "reason": "ADR 0094: The typed MultiplayerPeer contract now executes. Requires an ENet-capable native backend/packaging and typed ENet host/packet-peer/reliability ownership; plain UDP and WS do not supply ENet protocol."
     },
     {
       "state": "Blocked",
@@ -2333,7 +2853,7 @@
         "ENetMultiplayerPeer::method:set_bind_ip(String:)",
         "ENetMultiplayerPeer::property:host"
       ],
-      "reason": "ADR 0094: Requires an ENet-capable native backend/packaging and typed host/peer/reliability ownership; ENetMultiplayerPeer additionally depends on MultiplayerPeer. Plain UDP does not provide ENet reliability/protocol."
+      "reason": "ADR 0094: The typed MultiplayerPeer contract now executes. Requires an ENet-capable native backend/packaging and typed ENet host/packet-peer/reliability ownership; plain UDP and WS do not supply ENet protocol."
     },
     {
       "state": "Blocked",
@@ -2387,7 +2907,7 @@
         "ENetPacketPeer::method:set_timeout(int:,int:,int:)",
         "ENetPacketPeer::method:throttle_configure(int:,int:,int:)"
       ],
-      "reason": "ADR 0094: Requires an ENet-capable native backend/packaging and typed host/peer/reliability ownership; ENetMultiplayerPeer additionally depends on MultiplayerPeer. Plain UDP does not provide ENet reliability/protocol."
+      "reason": "ADR 0094: The typed MultiplayerPeer contract now executes. Requires an ENet-capable native backend/packaging and typed ENet host/packet-peer/reliability ownership; plain UDP and WS do not supply ENet protocol."
     },
     {
       "state": "Blocked",
@@ -2416,7 +2936,7 @@
         "MultiplayerAPI::signal:peer_disconnected(int:)",
         "MultiplayerAPI::signal:server_disconnected()"
       ],
-      "reason": "ADR 0094: Requires typed MultiplayerPeer plus SceneMultiplayer RPC/path/authority dispatch contract and Node integration."
+      "reason": "ADR 0094: MultiplayerPeer, offline authority and WS/WSS cohorts execute. Requires typed MultiplayerAPI/SceneMultiplayer RPC/path/authority dispatch and Node/SceneTree consumer integration; transport identity alone does not provide scene dispatch."
     },
     {
       "state": "Blocked",
@@ -2433,69 +2953,6 @@
         "MultiplayerAPIExtension::method:_set_multiplayer_peer(MultiplayerPeer:)"
       ],
       "reason": "ADR 0094: Requires executable MultiplayerAPI typed dispatch/authority contract before managed extension hooks."
-    },
-    {
-      "state": "Unimplemented",
-      "godot": [
-        "class:MultiplayerPeer",
-        "MultiplayerPeer::constant:TARGET_PEER_BROADCAST",
-        "MultiplayerPeer::constant:TARGET_PEER_SERVER",
-        "MultiplayerPeer::enum:ConnectionStatus",
-        "MultiplayerPeer::enum:TransferMode",
-        "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_CONNECTED",
-        "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_CONNECTING",
-        "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_DISCONNECTED",
-        "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_RELIABLE",
-        "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_UNRELIABLE",
-        "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_UNRELIABLE_ORDERED",
-        "MultiplayerPeer::method:close()",
-        "MultiplayerPeer::method:disconnect_peer(int:,bool:)",
-        "MultiplayerPeer::method:generate_unique_id()",
-        "MultiplayerPeer::method:get_connection_status()",
-        "MultiplayerPeer::method:get_packet_channel()",
-        "MultiplayerPeer::method:get_packet_mode()",
-        "MultiplayerPeer::method:get_packet_peer()",
-        "MultiplayerPeer::method:get_unique_id()",
-        "MultiplayerPeer::method:is_server_relay_supported()",
-        "MultiplayerPeer::method:poll()",
-        "MultiplayerPeer::method:set_target_peer(int:)",
-        "MultiplayerPeer::property:refuse_new_connections",
-        "MultiplayerPeer::property:transfer_channel",
-        "MultiplayerPeer::property:transfer_mode",
-        "MultiplayerPeer::signal:peer_connected(int:)",
-        "MultiplayerPeer::signal:peer_disconnected(int:)"
-      ],
-      "reason": "ADR 0094: PacketPeer now executes; next slice is typed peer identity, connection lifecycle, channel/reliability contract and polling/events before concrete multiplayer transports."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:MultiplayerPeerExtension",
-        "MultiplayerPeerExtension::method:_close()",
-        "MultiplayerPeerExtension::method:_disconnect_peer(int:,bool:)",
-        "MultiplayerPeerExtension::method:_get_available_packet_count()",
-        "MultiplayerPeerExtension::method:_get_connection_status()",
-        "MultiplayerPeerExtension::method:_get_max_packet_size()",
-        "MultiplayerPeerExtension::method:_get_packet(const uint8_t **:,int32_t*:)",
-        "MultiplayerPeerExtension::method:_get_packet_channel()",
-        "MultiplayerPeerExtension::method:_get_packet_mode()",
-        "MultiplayerPeerExtension::method:_get_packet_peer()",
-        "MultiplayerPeerExtension::method:_get_packet_script()",
-        "MultiplayerPeerExtension::method:_get_transfer_channel()",
-        "MultiplayerPeerExtension::method:_get_transfer_mode()",
-        "MultiplayerPeerExtension::method:_get_unique_id()",
-        "MultiplayerPeerExtension::method:_is_refusing_new_connections()",
-        "MultiplayerPeerExtension::method:_is_server()",
-        "MultiplayerPeerExtension::method:_is_server_relay_supported()",
-        "MultiplayerPeerExtension::method:_poll()",
-        "MultiplayerPeerExtension::method:_put_packet(const uint8_t*:,int:)",
-        "MultiplayerPeerExtension::method:_put_packet_script(PackedByteArray:)",
-        "MultiplayerPeerExtension::method:_set_refuse_new_connections(bool:)",
-        "MultiplayerPeerExtension::method:_set_target_peer(int:)",
-        "MultiplayerPeerExtension::method:_set_transfer_channel(int:)",
-        "MultiplayerPeerExtension::method:_set_transfer_mode(int:MultiplayerPeer.TransferMode)"
-      ],
-      "reason": "ADR 0094: Requires the typed MultiplayerPeer contract and managed override hooks; native extension ABI adapts to the managed owner."
     },
     {
       "state": "Blocked",
@@ -2540,13 +2997,6 @@
       "reason": "ADR 0094: Requires SceneMultiplayer replication schema plus typed property replication/interpolation and visibility ownership."
     },
     {
-      "state": "Blocked",
-      "godot": [
-        "class:OfflineMultiplayerPeer"
-      ],
-      "reason": "ADR 0094: Requires typed MultiplayerPeer identity, connection status and channel/transfer contract; no network backend is needed."
-    },
-    {
       "state": "Unimplemented",
       "godot": [
         "class:PacketPeerDTLS",
@@ -2585,7 +3035,7 @@
         "SceneMultiplayer::signal:peer_authentication_failed(int:)",
         "SceneMultiplayer::signal:peer_packet(int:,PackedByteArray:)"
       ],
-      "reason": "ADR 0094: Requires MultiplayerPeer, MultiplayerAPI and typed stable RPC/authority/path packet schema; raw transports alone do not implement scene replication."
+      "reason": "ADR 0094: MultiplayerPeer transport identity/routing/events now execute. Requires MultiplayerAPI and a typed stable RPC/authority/path packet schema plus scene synchronization/replication integration."
     },
     {
       "state": "Unimplemented",
@@ -2732,7 +3182,7 @@
         "WebRTCMultiplayerPeer::method:has_peer(int:)",
         "WebRTCMultiplayerPeer::method:remove_peer(int:)"
       ],
-      "reason": "ADR 0094: Requires executable WebRTCPeerConnection/DataChannel and typed MultiplayerPeer contract."
+      "reason": "ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort."
     },
     {
       "state": "Blocked",
@@ -2791,24 +3241,6 @@
         "WebRTCPeerConnectionExtension::method:_set_remote_description(String:,String:)"
       ],
       "reason": "ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:WebSocketMultiplayerPeer",
-        "WebSocketMultiplayerPeer::method:create_client(String:,TLSOptions:)",
-        "WebSocketMultiplayerPeer::method:create_server(int:,String:,TLSOptions:)",
-        "WebSocketMultiplayerPeer::method:get_peer(int:)",
-        "WebSocketMultiplayerPeer::method:get_peer_address(int:)",
-        "WebSocketMultiplayerPeer::method:get_peer_port(int:)",
-        "WebSocketMultiplayerPeer::property:handshake_headers",
-        "WebSocketMultiplayerPeer::property:handshake_timeout",
-        "WebSocketMultiplayerPeer::property:inbound_buffer_size",
-        "WebSocketMultiplayerPeer::property:max_queued_packets",
-        "WebSocketMultiplayerPeer::property:outbound_buffer_size",
-        "WebSocketMultiplayerPeer::property:supported_protocols"
-      ],
-      "reason": "ADR 0094: WebSocketPeer WS/WSS transport executes. WebSocketMultiplayerPeer requires the concrete typed MultiplayerPeer identity/channel/transfer/lifecycle contract before its inherited and protocol-specific behavior can execute."
     },
     {
       "state": "Implemented",
@@ -3050,6 +3482,76 @@
         "WebSocketPeer::property:supported_protocols"
       ],
       "reason": "ADR 0094 WebSocket delivery: executable owner-thread WS/WSS client/server upgrade, complete binary/text messages, native endpoints/options, copied configuration, strict framing/masks/UTF-8, fragmentation/control/close/heartbeat and prepared bounded/backpressured queues. HTTP/TLS integrate without worker access to caller streams; clients own transports, accepted/custom streams remain borrowed. Buffer changes require Closed; zero output selects a 64 MiB prepared ceiling under ADR 0014. WebSocketTests verifies native Linux both roles against independent .NET peers plus scene polling, malformed wire/upgrade/queue/lifetime edges and 64 warmed server active/idle and WS/WSS client mask/text/poll/span zero-managed-allocation cycles. Browser/foreign hosts, routed throughput, external native allocation and owner acceptance remain separate."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:MultiplayerPeer",
+        "MultiplayerPeer::constant:TARGET_PEER_BROADCAST",
+        "MultiplayerPeer::constant:TARGET_PEER_SERVER",
+        "MultiplayerPeer::enum:ConnectionStatus",
+        "MultiplayerPeer::enum:TransferMode",
+        "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_CONNECTED",
+        "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_CONNECTING",
+        "MultiplayerPeer::enum_value:ConnectionStatus.CONNECTION_DISCONNECTED",
+        "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_RELIABLE",
+        "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_UNRELIABLE",
+        "MultiplayerPeer::enum_value:TransferMode.TRANSFER_MODE_UNRELIABLE_ORDERED",
+        "MultiplayerPeer::method:close()",
+        "MultiplayerPeer::method:disconnect_peer(int:,bool:)",
+        "MultiplayerPeer::method:generate_unique_id()",
+        "MultiplayerPeer::method:get_connection_status()",
+        "MultiplayerPeer::method:get_packet_channel()",
+        "MultiplayerPeer::method:get_packet_mode()",
+        "MultiplayerPeer::method:get_packet_peer()",
+        "MultiplayerPeer::method:get_unique_id()",
+        "MultiplayerPeer::method:is_server_relay_supported()",
+        "MultiplayerPeer::method:poll()",
+        "MultiplayerPeer::method:set_target_peer(int:)",
+        "MultiplayerPeer::property:refuse_new_connections",
+        "MultiplayerPeer::property:transfer_channel",
+        "MultiplayerPeer::property:transfer_mode",
+        "MultiplayerPeer::signal:peer_connected(int:)",
+        "MultiplayerPeer::signal:peer_disconnected(int:)",
+        "class:MultiplayerPeerExtension",
+        "MultiplayerPeerExtension::method:_close()",
+        "MultiplayerPeerExtension::method:_disconnect_peer(int:,bool:)",
+        "MultiplayerPeerExtension::method:_get_available_packet_count()",
+        "MultiplayerPeerExtension::method:_get_connection_status()",
+        "MultiplayerPeerExtension::method:_get_max_packet_size()",
+        "MultiplayerPeerExtension::method:_get_packet(const uint8_t **:,int32_t*:)",
+        "MultiplayerPeerExtension::method:_get_packet_channel()",
+        "MultiplayerPeerExtension::method:_get_packet_mode()",
+        "MultiplayerPeerExtension::method:_get_packet_peer()",
+        "MultiplayerPeerExtension::method:_get_packet_script()",
+        "MultiplayerPeerExtension::method:_get_transfer_channel()",
+        "MultiplayerPeerExtension::method:_get_transfer_mode()",
+        "MultiplayerPeerExtension::method:_get_unique_id()",
+        "MultiplayerPeerExtension::method:_is_refusing_new_connections()",
+        "MultiplayerPeerExtension::method:_is_server()",
+        "MultiplayerPeerExtension::method:_is_server_relay_supported()",
+        "MultiplayerPeerExtension::method:_poll()",
+        "MultiplayerPeerExtension::method:_put_packet(const uint8_t*:,int:)",
+        "MultiplayerPeerExtension::method:_put_packet_script(PackedByteArray:)",
+        "MultiplayerPeerExtension::method:_set_refuse_new_connections(bool:)",
+        "MultiplayerPeerExtension::method:_set_target_peer(int:)",
+        "MultiplayerPeerExtension::method:_set_transfer_channel(int:)",
+        "MultiplayerPeerExtension::method:_set_transfer_mode(int:MultiplayerPeer.TransferMode)",
+        "class:OfflineMultiplayerPeer",
+        "class:WebSocketMultiplayerPeer",
+        "WebSocketMultiplayerPeer::method:create_client(String:,TLSOptions:)",
+        "WebSocketMultiplayerPeer::method:create_server(int:,String:,TLSOptions:)",
+        "WebSocketMultiplayerPeer::method:get_peer(int:)",
+        "WebSocketMultiplayerPeer::method:get_peer_address(int:)",
+        "WebSocketMultiplayerPeer::method:get_peer_port(int:)",
+        "WebSocketMultiplayerPeer::property:handshake_headers",
+        "WebSocketMultiplayerPeer::property:handshake_timeout",
+        "WebSocketMultiplayerPeer::property:inbound_buffer_size",
+        "WebSocketMultiplayerPeer::property:max_queued_packets",
+        "WebSocketMultiplayerPeer::property:outbound_buffer_size",
+        "WebSocketMultiplayerPeer::property:supported_protocols"
+      ],
+      "reason": "ADR 0094 multiplayer transport delivery: typed owner-thread peer identity/lifecycle/routing/next-packet metadata and all managed extension hooks, Offline local authority and executable owned WS/WSS server/client cohorts. Four-byte little-endian binary identity precedes connection events; broadcast/positive/exclusion targeting, Reliable/channel zero actual metadata, admission/deadlines, bounded aggregate inbox/backpressure and deterministic cleanup execute. Callback fanout/errors/reentry are defined. MultiplayerTests verifies native Linux two-client public scene flows, independent ID/raw-message wire, managed overrides/offline behavior, routing/pressure/refusal/invalid IDs/timeouts/cleanup and 64 warmed custom event/packet plus WS/WSS active/idle zero-managed-allocation cycles. Typed exceptions/spans replace Error/native/script-array ABI. Scene RPC/replication, ENet/WebRTC/browser/foreign/routed/external-native/owner acceptance remain separate."
     }
   ]
 }
