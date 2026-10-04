@@ -123,6 +123,7 @@ public partial class Node
                 else if (IsAncestorOf(descendant) && previousOwner.IsAncestorOf(descendant))
                     descendant.Owner = previousOwner;
             node._sceneFilePath = _sceneFilePath;
+            if (_sceneFileLeases is { } leases) { (node._sceneFileLeases ??= []).AddRange(leases); _sceneFileLeases = null; }
             if (_ownedSceneResources is { Count: > 0 } resources)
             {
                 foreach (var resource in resources) resource.ReassignLocalScene(this, node);

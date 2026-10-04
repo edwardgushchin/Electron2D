@@ -1,6 +1,6 @@
 # ProjectSettingsRegistry
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -857,3 +857,7 @@ Constructors register the same built-in definitions and defaults as the permanen
 Program.cs verifies typed registration, defaults, metadata, feature overrides, paths, persistence, callbacks, failure rollback, concurrency, disposal and descriptors. StaticServiceTests additionally checks independence of two explicit registries from the runtime and event sender identity. Filesystem crash behavior, resource packs, editor integration and other platforms retain their existing gates.
 
 See [project-settings component](../components/project-settings.md), [ADR 0019](../decisions/core-data-io.md#adr-0019) and [ADR 0095](../decisions/singleton-services.md#adr-0095).
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

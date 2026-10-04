@@ -1,6 +1,6 @@
 # DirAccess
 
-Last updated: 2026-09-22
+Last updated: 2026-10-05
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -882,3 +882,7 @@ The executable evidence is Linux-only. Windows/macOS link, file-identity, drive,
 - [0020: Typed file access and transformed-file containers](../decisions/core-data-io.md#adr-0020)
 - [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
 - [0022: Typed directory access](../decisions/core-data-io.md#adr-0022)
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

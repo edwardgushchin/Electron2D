@@ -121,6 +121,13 @@ public sealed class CircleShape : Shape
     }
 
     /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<CircleShape, float>(nameof(Radius), s => s.Radius, (s, v) => s.Radius = v, _ => 10f, stored: true);
+    }
+
+    /// <inheritdoc />
     public override Rect2 GetRect() { ThrowIfDisposed(); return new(-_radius, -_radius, 2 * _radius, 2 * _radius); }
 
     internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
@@ -209,6 +216,14 @@ public sealed class CapsuleShape : Shape
             _height = height;
             EmitGeometryChanged();
         }
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<CapsuleShape, float>(nameof(Radius), s => s.Radius, (s, v) => s.Radius = v, _ => 10f, stored: true);
+        yield return new PropertyDescriptor<CapsuleShape, float>(nameof(Height), s => s.Height, (s, v) => s.Height = v, _ => 20f, stored: true);
     }
 
     /// <inheritdoc />
@@ -302,6 +317,14 @@ public sealed class SegmentShape : Shape
     }
 
     /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<SegmentShape, Vector2>(nameof(A), s => s.A, (s, v) => s.A = v, _ => new(0, -10), stored: true);
+        yield return new PropertyDescriptor<SegmentShape, Vector2>(nameof(B), s => s.B, (s, v) => s.B = v, _ => new(0, 10), stored: true);
+    }
+
+    /// <inheritdoc />
     public override Rect2 GetRect()
     {
         ThrowIfDisposed();
@@ -368,6 +391,13 @@ public sealed class RectangleShape : Shape
             _size = value;
             EmitGeometryChanged();
         }
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<RectangleShape, Vector2>(nameof(Size), s => s.Size, (s, v) => s.Size = v, _ => new(20, 20), stored: true);
     }
 
     /// <inheritdoc />

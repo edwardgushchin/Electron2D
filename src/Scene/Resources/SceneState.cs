@@ -6,12 +6,14 @@ namespace Electron2D;
 /// <remarks>
 /// Instances are created by <see cref="PackedScene.GetState"/>. A live state object tracks every content and path
 /// transition of its source resource, while retaining its final snapshot if that resource is later disposed.
+/// A returned file-backed view retains its resource graph and must be disposed when finished.
 /// </remarks>
 public sealed class SceneState : ElectronObject
 {
     private readonly object _gate = new();
     private PackedSceneData _data;
     private string _path;
+    private IDisposable? _fileLease;
 
     internal SceneState(PackedSceneData data, string path)
     {
@@ -19,6 +21,18 @@ public sealed class SceneState : ElectronObject
         _path = path;
     }
 
+    internal void UpdateFileLease(IDisposable? lease)
+    {
+        IDisposable? old;
+        lock (_gate) { if (IsDisposed) { old = lease; } else { old = _fileLease; _fileLease = lease; } }
+        old?.Dispose();
+    }
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        try { if (disposing) { IDisposable? lease; lock (_gate) { lease = _fileLease; _fileLease = null; } lease?.Dispose(); } }
+        finally { base.Dispose(disposing); }
+    }
     /// <summary>Gets the inherited base scene state.</summary>
     /// <returns>Always <see langword="null"/> until scene inheritance is available.</returns>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>

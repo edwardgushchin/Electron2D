@@ -1,10 +1,10 @@
 # Packed scenes component
 
-Last updated: 2026-10-02
+Last updated: 2026-10-05
 
 ## Scope
 
-This Scene component provides the common reuse boundary for Electron2D's Node-based game objects. It performs typed, runtime-only, in-memory capture and reconstruction of detached 2D Node hierarchies; the same representation covers a reusable object or subsystem and a complete level. It connects the [Scene hierarchy](scene-hierarchy.md), [Typed editor properties](editor-properties.md), and [Resource base](resources.md) components without adding a dynamic value system, reflection-driven invocation, filesystem scene format, editor runtime, or second assembly.
+This Scene component provides the common reuse boundary for Electron2D's Node-based game objects. It performs typed runtime capture, archive persistence and reconstruction of detached 2D Node hierarchies; the same representation covers a reusable object or subsystem and a complete level. It connects the [Scene hierarchy](scene-hierarchy.md), [Typed editor properties](editor-properties.md), and [Resource base](resources.md) components without adding a dynamic value system, reflection-driven invocation, editor runtime, or second assembly.
 
 ## Owned types
 
@@ -33,7 +33,7 @@ All three types ship in `Electron2D.dll`. Production sources live in `src/Scene/
 - Normal instantiation creates no [`SceneTree`](../classes/SceneTree.md). `SceneTree` construction and existing-tree entry consult the Node factory/instantiation barriers so callbacks cannot start lifecycle before the detached result is complete.
 - Core typed events remain ordinary C# events. [`EventConnection`](../classes/EventConnection.md) subscribers are not discoverable or serialized.
 
-The component has no SDL3-CS, renderer, input, audio, physics, native handle, loader/saver, import, scripting, networking, or editor dependency.
+The stored model uses the Core typed resource-file producer for persistence. Capture and instantiation do not open native sessions or activate an editor.
 
 ## Invariants and error behavior
 
@@ -64,10 +64,10 @@ The implemented runtime treats any valid owned hierarchy uniformly: callers can 
 
 ## Exclusions
 
-- No text/binary scene loader or saver, exported-pack integration, UID/import remapping, dependency scanning, or missing-resource recovery.
+- The first binary typed archive loader/saver and UID/dependency path layer execute. Exported-pack mounts, import remapping and tolerant missing-resource recovery remain absent.
 - No inherited/nested scene authoring, editable-instance metadata, placeholders, pinned properties, script preservation, or implemented editor edit state.
 - No persistent typed event endpoint schema. Runtime C# event subscriptions and `EventConnection` tokens are intentionally not copied.
-- Typed node references use the implemented relative-path profile; no arbitrary reference-shaped stored property values are accepted. `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, and `int[][]` contours are explicit copied value-array exceptions.
+- Typed node references use the implemented relative-path profile; no arbitrary reference-shaped stored property values are accepted. `byte[]`, `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, `int[][]`, typed resource arrays and string/int dictionaries are explicit snapshot profiles; application codecs must be registered explicitly.
 - No hidden scene activation: `Instantiate()` returns detached; `SceneTree` lifecycle remains explicit.
 
 ## Verification
@@ -90,3 +90,13 @@ During reconstruction, each captured property must match a writable stored descr
 Theme/variation and actual override entries are captured independently of computed Box/Grid separation aliases. This preserves inherited values after instantiation instead of freezing a resolved gap as a new local override. Existing hierarchy/resource rollback, exact factory identity and scene-local graph policy remain unchanged. [ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified.
 
 SplitContainer offsets extend the explicit scalar-array profiles with `int[]`. Snapshots/restoration clone these arrays and revert compares elements. The exact SplitContainer/HSplitContainer/VSplitContainer factories reconstruct internal drag controls while ordinary Node.Owner selection and internal-child omission stay unchanged; runtime custom controls added below drag areas are not captured through those omitted internal branches. SplitContainerTests verifies configuration packing and source-snapshot independence.
+
+## Typed archive files
+
+ResourceSaver, ResourceUID, ResourceFormatSaver, ResourceFormatLoader and ResourceFileTypes implement the [typed resource-file component](resource-files.md). `.e2dres` and `.e2dscene` preserve registered compiled types, stored typed properties, graph aliases/cycles, scene hierarchy/owners/groups, relative node references and UID/external dependency identity. Image/texture pixel snapshots, font data/features/fallback arrays, style boxes, PhysicsMaterial and the four scalar shapes have built-in resource schemas. Other concrete resource types need their own stored schema and factory integration; no unknown state is silently encoded by assembly reflection.
+
+Ordinary Ignore/Replace reuses external dependencies; IgnoreDeep/ReplaceDeep propagates the policy. Newly decoded internal and deep-ignore resources belong to the file root. An instantiated scene retains its file graph until its root is disposed; Replace retires the old graph without invalidating old instances. Decode failure attempts all owned cleanup before publishing cache identity. Root refresh uses the existing CopyFromResource contract: custom copy/setter or Changed failure can occur after mutation and is not a transaction for arbitrary application state.
+
+Ordered borrowed format extensions support front priority, deduplication, metadata, UID/dependencies, exact type discovery and dependency rewrite. File operations allocate and execute synchronously on the initiating thread. The weak cache still owns no resource. ResourceArchiveTests exercises public save/load, fresh-process scene lifecycle, deep ownership, font/theme/pixels/geometry, custom formats, replacement and malformed boundaries. Rendered batches, editor UI, project CLI, all-platform validation, arbitrary import formats and human acceptance remain separate gates.
+
+Exported SceneState views also retain their file-backed graph snapshot through a private lease, including after template disposal. Dispose such a view when finished. Internal unexported views retain no extra ownership; later state/content transitions update exported-view retention. ResourceArchiveTests verifies the final resource snapshot and deterministic release.

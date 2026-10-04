@@ -6,6 +6,8 @@ namespace Electron2D;
 public class MultiplayerSpawner : Node
 {
     private readonly List<PackedScene> _scenes = [];
+    private readonly List<PackedScene> _fileScenes = [];
+    private readonly List<string> _scenePaths = [];
     private string _spawnPath = "";
     private uint _limit;
     private SpawnFactory? _factory;
@@ -28,10 +30,21 @@ public class MultiplayerSpawner : Node
     public event Action<Node>? Spawned;
     /// <summary>Occurs when a remote instance is removed by its authority.</summary>
     public event Action<Node>? Despawned;
+    /// <summary>Loads and registers a file-backed typed PackedScene for automatic replication.</summary><param name="path">Resource scene path or UID.</param><remarks>Cached templates remain borrowed. This spawner owns newly loaded templates until clear/disposal; live instances retain their file graph leases.</remarks>
+    public void AddSpawnableScene(string path)
+    {
+        Mutate(); if (_scenes.Count >= 255) throw new InvalidOperationException("At most 255 ordered spawnable scenes are supported.");
+        var cached = ResourceLoader.GetCachedRef<PackedScene>(path); var scene = ResourceLoader.Load<PackedScene>(path);
+        try { AddSpawnableScene(scene); _scenePaths[^1] = path; if (!ReferenceEquals(cached, scene)) _fileScenes.Add(scene); }
+        catch { if (!ReferenceEquals(cached, scene)) scene.Dispose(); throw; }
+    }
+    /// <summary>Returns the portable source path of an authored scene.</summary><param name="index">Ordered scene index.</param><returns>Original registration path or UID; ResourcePath for an in-memory template.</returns>
+    public string GetSpawnableScenePath(int index) { _ = GetSpawnableScene(index); return _scenePaths[index]; }
     /// <summary>Registers a borrowed in-memory PackedScene template for automatic direct-child replication.</summary><param name="scene">Template; ordered indices must match across peers.</param><remarks>Instantiate this same template and add its root beneath SpawnPath for automatic local spawning. File scene loading remains the resource loader's separate contract.</remarks>
-    public void AddSpawnableScene(PackedScene scene) { Mutate(); ArgumentNullException.ThrowIfNull(scene); ObjectDisposedException.ThrowIf(scene.IsDisposed, scene); if (_scenes.Count >= 255) throw new InvalidOperationException("At most 255 ordered spawnable scenes are supported."); _scenes.Add(scene); }
+    public void AddSpawnableScene(PackedScene scene) { Mutate(); ArgumentNullException.ThrowIfNull(scene); ObjectDisposedException.ThrowIf(scene.IsDisposed, scene); if (_scenes.Count >= 255) throw new InvalidOperationException("At most 255 ordered spawnable scenes are supported."); _scenes.Add(scene); _scenePaths.Add(scene.ResourcePath); }
     /// <summary>Clears template registration without despawning existing nodes.</summary>
-    public void ClearSpawnableScenes() { Mutate(); _scenes.Clear(); }
+    public void ClearSpawnableScenes() { Mutate(); _scenes.Clear(); _scenePaths.Clear(); ReleaseFileScenes(); }
+    private void ReleaseFileScenes() { var owned = _fileScenes.ToArray(); _fileScenes.Clear(); List<Exception>? errors = null; foreach (var scene in owned) try { scene.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); } if (errors is not null) throw new AggregateException(errors); }
     /// <summary>Gets an ordered borrowed scene template.</summary><param name="index">Registered position.</param><returns>The original resource.</returns>
     public PackedScene GetSpawnableScene(int index) { Check(); if ((uint)index >= (uint)_scenes.Count) throw new ArgumentOutOfRangeException(nameof(index)); return _scenes[index]; }
     /// <summary>Gets the registered template count.</summary><returns>Zero through 255.</returns>
@@ -92,7 +105,7 @@ public class MultiplayerSpawner : Node
         yield return new PropertyDescriptor<MultiplayerSpawner, SpawnFactory?>(nameof(SpawnFunction), n => n.SpawnFunction, (n, v) => n.SpawnFunction = v, _ => null);
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _scenes.Clear(); Spawned = null; Despawned = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _scenes.Clear(); _scenePaths.Clear(); ReleaseFileScenes(); Spawned = null; Despawned = null; } base.Dispose(disposing); }
 }
 internal sealed class SpawnedNodeRecord(MultiplayerSpawner spawner, Node node, int scene, uint factory, byte[] arguments)
 {

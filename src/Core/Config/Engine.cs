@@ -88,6 +88,12 @@ public sealed partial class Engine : ElectronObject
         _singletonNames.Add(nameof(Input));
         _singletons.Add(nameof(InputMap), InputMap.Service);
         _singletonNames.Add(nameof(InputMap));
+        _singletons.Add(nameof(ResourceLoader), ResourceLoader.Runtime);
+        _singletonNames.Add(nameof(ResourceLoader));
+        _singletons.Add(nameof(ResourceSaver), ResourceSaver.Runtime);
+        _singletonNames.Add(nameof(ResourceSaver));
+        _singletons.Add(nameof(ResourceUID), ResourceUID.Runtime);
+        _singletonNames.Add(nameof(ResourceUID));
         _singletons.Add(nameof(AudioServer), AudioServer.Service);
         _singletonNames.Add(nameof(AudioServer));
     }
@@ -309,6 +315,9 @@ public sealed partial class Engine : ElectronObject
             string.Equals(name, nameof(ProjectSettings), StringComparison.Ordinal) ||
             string.Equals(name, nameof(Input), StringComparison.Ordinal) ||
             string.Equals(name, nameof(InputMap), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(ResourceLoader), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(ResourceSaver), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(ResourceUID), StringComparison.Ordinal) ||
             string.Equals(name, nameof(AudioServer), StringComparison.Ordinal))
         {
             throw new InvalidOperationException($"The built-in {name} singleton cannot be unregistered.");

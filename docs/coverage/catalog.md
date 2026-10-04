@@ -464,7 +464,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MultiplayerAPIExtension](classes/MultiplayerAPIExtension.md) | MultiplayerAPI | Implemented | 9 |
 | [MultiplayerPeer](classes/MultiplayerPeer.md) | PacketPeer | Implemented | 26 |
 | [MultiplayerPeerExtension](classes/MultiplayerPeerExtension.md) | MultiplayerPeer | Implemented | 23 |
-| [MultiplayerSpawner](classes/MultiplayerSpawner.md) | Node | Partial | 10 |
+| [MultiplayerSpawner](classes/MultiplayerSpawner.md) | Node | Implemented | 10 |
 | [MultiplayerSynchronizer](classes/MultiplayerSynchronizer.md) | Node | Implemented | 18 |
 | [Mutex](classes/Mutex.md) | RefCounted | Blocked | 3 |
 | [NativeMenu](classes/NativeMenu.md) | Object | Blocked | 82 |
@@ -715,8 +715,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RenderingDevice](classes/RenderingDevice.md) | Object | Excluded | 748 |
 | [RenderingServer](classes/RenderingServer.md) | Object | Partial | 1137 |
 | [Resource](classes/Resource.md) | RefCounted | Partial | 28 |
-| [ResourceFormatLoader](classes/ResourceFormatLoader.md) | RefCounted | Blocked | 17 |
-| [ResourceFormatSaver](classes/ResourceFormatSaver.md) | RefCounted | Blocked | 5 |
+| [ResourceFormatLoader](classes/ResourceFormatLoader.md) | RefCounted | Implemented | 17 |
+| [ResourceFormatSaver](classes/ResourceFormatSaver.md) | RefCounted | Implemented | 5 |
 | [ResourceImporter](classes/ResourceImporter.md) | RefCounted | Blocked | 4 |
 | [ResourceImporterBMFont](classes/ResourceImporterBMFont.md) | ResourceImporter | Blocked | 3 |
 | [ResourceImporterBitMap](classes/ResourceImporterBitMap.md) | ResourceImporter | Blocked | 2 |
@@ -736,8 +736,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ResourceImporterWAV](classes/ResourceImporterWAV.md) | ResourceImporter | Blocked | 10 |
 | [ResourceLoader](classes/ResourceLoader.md) | Object | Partial | 25 |
 | [ResourcePreloader](classes/ResourcePreloader.md) | Node | Blocked | 6 |
-| [ResourceSaver](classes/ResourceSaver.md) | Object | Blocked | 15 |
-| [ResourceUID](classes/ResourceUID.md) | Object | Blocked | 13 |
+| [ResourceSaver](classes/ResourceSaver.md) | Object | Implemented | 15 |
+| [ResourceUID](classes/ResourceUID.md) | Object | Implemented | 13 |
 | [RetargetModifier3D](classes/RetargetModifier3D.md) | SkeletonModifier3D | Excluded | 14 |
 | [RibbonTrailMesh](classes/RibbonTrailMesh.md) | PrimitiveMesh | Excluded | 9 |
 | [RichTextEffect](classes/RichTextEffect.md) | Resource | Blocked | 1 |

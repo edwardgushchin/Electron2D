@@ -1,80 +1,203 @@
 # ResourceLoader
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
-**Inherits:** None; static C# service
+**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.ResourceLoader`. **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs).
 
-- **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs)
-- **Namespace:** `Electron2D`
-- **Declaration:** `public static class ResourceLoader`
-- **Component:** [Resource loading](../components/resource-loading.md)
+**Inherits:** [ElectronObject](ElectronObject.md).
 
 ## Description
 
-The first synchronous loader profile turns a PNG, JPEG, WebP, BMP, TGA or SVG file into a caller-owned `ImageTexture`. Decoding uses `Image.LoadFromFile`; the texture owns a copied pixel snapshot and uploads GPU data when drawn. `Load<TResource>` accepts `ImageTexture` or an assignable base such as `Texture` or `Resource`. Dynamic [FontFile](FontFile.md) loading also executes for SFNT font files through [Font](Font.md) or Resource base views. WAV/MP3/Ogg audio, X509Certificate `.crt` and CryptoKey `.key` files also execute through their typed decoders. Further concrete resource formats remain separate integrations and fail explicitly.
+Loads supported resource files through the engine's typed resource path cache.
 
-The exact path string is the ordinal, case-sensitive cache key. The process-wide `Resource.ResourcePath` cache holds only weak references; it never owns or keeps a resource alive. Loads serialize cache decisions, but callers own returned resources and may dispose them. `GetCachedRef<TResource>` returns a borrowed reference and has no separate retention protocol. `res://`, `user://` and operating-system file paths follow `FileAccess` resolution.
+Supported resources include registered typed archives/format extensions, image textures, dynamic fonts, WAV/MP3/Ogg audio and certificate/private-key files. Static operations use a permanent retained service. The returned resource belongs to the caller and is cached weakly while it remains live. Synchronous load operations serialize cache decisions. File roots own newly decoded dependency graphs; the weak cache owns no resources.
+
+See [typed resource files](../components/resource-files.md) for the complete storage, type/factory, graph, UID, cache, failure, ownership and thread contract.
 
 ## Example
 
+This public excerpt requires its existing file/directory or the named application extension types; ResourceArchiveTests supplies executable complete producers and consumers.
+
 ```csharp
-using var texture = ResourceLoader.Load<ImageTexture>("res://art/player.png");
-var sprite = new Sprite { Texture = texture };
-// Add sprite to a scene; retain texture while the sprite borrows it.
+using var scene = ResourceLoader.Load<PackedScene>("user://level.e2dscene");
+using var root = scene.Instantiate();
+using var tree = new SceneTree(root);
+tree.ProcessFrame(0);
 ```
 
-## Nested enum
+## Method summary
 
-| Type | Role |
+| Complete C# signature | Contract |
 | --- | --- |
-| [`CacheMode`](ResourceLoader.CacheMode.md) | Ignore, reuse or refresh a cached resource; deep modes equal ordinary modes for leaf images and dynamic font files. |
+| `public static System.Void AddResourceFormatLoader(Electron2D.ResourceFormatLoader formatLoader, System.Boolean atFront = false)` | Registers a borrowed typed file loader without duplicating identity. |
+| `public static System.Boolean Exists<TResource>(System.String path)` | Reports whether a supported resource file exists or is already cached. |
+| `public static TResource GetCachedRef<TResource>(System.String path)` | Gets a live cached resource of the requested type, or null when absent. |
+| `public static System.Type[] GetClassesUsed(System.String path)` | Returns compiled types used by a recognized resource file. |
+| `public static System.String[] GetDependencies(System.String path, System.Boolean addTypes = false)` | Returns external dependency tokens from a recognized format. |
+| `public static System.String[] GetRecognizedExtensionsForType<TResource>()` | Gets caller-owned lowercase filename extensions supported for a resource type. |
+| `public static System.Int64 GetResourceUID(System.String path)` | Reports the UID stored by a recognized file format. |
+| `public static System.Boolean HasCached(System.String path)` | Reports whether any live registered resource occupies an exact cache path. |
+| `public static TResource Load<TResource>(System.String path, Electron2D.ResourceLoader.CacheMode cacheMode = Reuse)` | Loads a supported typed resource from an operating-system, res:// or user:// path. |
+| `public static System.Void RemoveResourceFormatLoader(Electron2D.ResourceFormatLoader formatLoader)` | Removes loader registration without disposing its object. |
+| `public static System.Void RenameDependencies(System.String path, System.Collections.Generic.IReadOnlyDictionary<System.String, System.String> renames)` | Rewrites recognized external dependency paths without instantiating resource objects. |
+| `protected override System.Void ValidateDisposal()` | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 
-## Methods
+## Method Descriptions
 
-| Member | Contract |
-| --- | --- |
-| `public static TResource Load<TResource>(string path, CacheMode cacheMode = CacheMode.Reuse) where TResource : Resource` | Synchronously load or reuse an image texture or dynamic font file. |
-| `public static bool Exists<TResource>(string path) where TResource : Resource` | Test a live cached instance or a recognized file for the requested type. |
-| `public static bool HasCached(string path)` | Test whether any live resource owns the exact registered path. |
-| `public static TResource? GetCachedRef<TResource>(string path) where TResource : Resource` | Borrow a live cached resource of the requested type. |
-| `public static string[] GetRecognizedExtensionsForType<TResource>() where TResource : Resource` | Return independent lowercase extensions without dots for the supported type. |
+<a id="member-cc670a01db39"></a>
+### AddResourceFormatLoader
 
-## Method descriptions
+`public static System.Void AddResourceFormatLoader(Electron2D.ResourceFormatLoader formatLoader, System.Boolean atFront = false)`
 
-### `Load<TResource>`
+Registers a borrowed typed file loader without duplicating identity.
 
-The default `Reuse` returns a cached live `ImageTexture` or `FontFile` without reading disk. A cache entry holding a different resource type throws `InvalidOperationException`. If no compatible entry exists, the loader decodes the file, copies its pixels into a texture, and registers the exact path. `Ignore` decodes independently and records a visible but unregistered path with `SetPathCache`. `Replace` decodes before mutation, then calls `SetImage` on an existing texture so sprites and materials keep their borrowed identity. If the path belongs to a different resource type, it constructs a new texture before taking over the path. Deep modes behave identically to their ordinary modes for the currently integrated leaf image/font file formats. Font replacement calls LoadDynamicFont atomically on an existing FontFile and retains its borrowed fallback configuration; it does not recursively load a fallback file graph.
+- `formatLoader`: Live format extension.
+- `atFront`: Whether it precedes existing extensions.
 
-The caller owns the result and must dispose it when finished. `Replace` resets a previous logical size override to the decoded image dimensions, publishes `Changed` after updating pixels, and causes the renderer to upload the replacement before its next draw. A decode or validation failure leaves cached data intact. A user `Changed` handler can throw after the replacement has committed. Unsupported type/extension, malformed input, missing file, invalid cache mode and path-policy failures propagate as typed exceptions. File reads obey the existing 64 MiB codec limit.
+<a id="member-2250e1b0dad0"></a>
+### Exists
 
-### `Exists<TResource>`
+`public static System.Boolean Exists<TResource>(System.String path)`
 
-Returns true for a live cached instance of `TResource` even if the source file has since been removed. Otherwise it checks whether the type can represent the current image or font format, whether the extension is recognized, and whether `FileAccess.FileExists` finds the path. It checks file existence, not whether decoding would succeed. An unsupported concrete type with no matching cache entry returns false.
+Reports whether a supported resource file exists or is already cached.
 
-### `HasCached` and `GetCachedRef<TResource>`
+The cache is checked first, so a cached resource may outlive removal of its source file.
 
-Both read the existing `ResourcePath` registry. Manual path registration by another `Resource` is visible. Dead or disposed entries are removed during lookup. `HasCached` reports any live type; `GetCachedRef<TResource>` returns null for a missing or differently typed entry. The borrowed result can be disposed by its owner after retrieval, so callers must coordinate concurrent lifetime use.
+Returns: True when a live cached instance has this type, or a recognized resource file exists for it.
 
-### `GetRecognizedExtensionsForType<TResource>`
+- `path`: Exact cache path or file path.
 
-Returns `png`, `jpg`, `jpeg`, `webp`, `bmp`, `tga`, `svg` for `ImageTexture` and assignable base types. FontFile and Font base views return `ttf`, `otf`, `woff`, `woff2`, `ttc`, `otc`; Resource combines both families. Unsupported concrete types return an empty array. Each call returns a caller-owned array.
+- `TResource`: Requested resource type or compatible base type.
 
-## State, failures and scope
+- `System.ArgumentException`: The path is null or empty.
 
-There is no loader-owned strong cache, manager-owned native payload or extra lease protocol. `ImageTexture` owns CPU pixels, and the existing renderer manages GPU upload and release. Loading and replacing may allocate; they are explicit asset operations outside the zero-allocation frame path. Registry and load decisions are synchronized, while returned resource state and callback use follow their own documented thread rules.
+<a id="member-884bec15ba40"></a>
+### GetCachedRef
 
-The coverage page keeps the general `ResourceLoader` type and its load/exists/extension methods Partial because only the synchronous image-texture format exists. Threaded request/status APIs, format-loader registration, UID and dependency catalogs and missing-resource policy have specific backend or file-format triggers. Resource-aware directory listing remains Unimplemented. See [ResourceLoader coverage](../coverage/classes/ResourceLoader.md) for every pinned declaration.
+`public static TResource GetCachedRef<TResource>(System.String path)`
 
-[ResourceLoaderTests](../../tests/Electron2D.Tests/ResourceLoaderTests.cs) verifies file decode, cache modes, same-instance replacement, type takeover, concurrent reuse, malformed rollback, path removal and disposal. Focused [Sprite pixel checks](../../tests/Electron2D.Tests/SpriteRenderingTests.cs) verify initial file loading and live Replace on Linux Wayland compatibility/GPU and dummy compatibility. Other platforms, AOT, future formats and owner asset-pipeline acceptance remain unverified.
+Gets a live cached resource of the requested type, or null when absent.
 
-## Font file integration
+Retrieval does not extend ownership; the resource's owner controls disposal.
 
-A font owns its validated encoded bytes and native glyph data. Ignore returns a distinct independent FontFile without replacing a cached identity. Reuse does not reread a live cached font; Replace and ReplaceDeep validate the new file before committing to the same font. Malformed input preserves the old character map, metrics and layout. Disposing the font removes its weak path entry and retires its owned glyph state. Extension discovery describes the supported SFNT containers; it does not promise system-font search or bitmap-font import. [FontResourceLoaderTests](../../tests/Electron2D.Tests/FontResourceLoaderTests.cs) verifies actual WOFF2 loading, base views, concurrent reuse, replacement, rollback and weak-cache lifetime.
+Returns: A borrowed live instance, or null when the path is absent or holds another type.
 
-## Audio files
+- `path`: Ordinal, case-sensitive cache path.
 
-WAV, MP3 and Ogg Vorbis participate through exact concrete types and compatible AudioStream/Resource base views. Discovery reports wav/mp3/ogg. Uncached existence requires a compatible extension; format mismatch rejects explicit audio loads. Reuse borrows the live cached identity; Ignore and IgnoreDeep preserve that identity while returning independent owned resources. Replace/ReplaceDeep validate before publishing into the same concrete audio wrapper and issue Changed afterward. A malformed file preserves old state; a throwing Changed callback follows committed replacement. Ogg reload owns an independent imported packet copy and retains retired imports for old playback captures. There is no external dependency graph in these file formats, so their deep cache modes equal ordinary modes. AudioCompressedTests checks identity, independent ignores, retained playback after reload, malformed rollback and typed discovery. General scene-file serialization and public format registration remain their own coverage dependencies.
+- `TResource`: Resource or one of its concrete derived types.
 
-## Certificate and private-key files
+- `System.ArgumentException`: The path is null or empty.
 
-TLS integration adds X509Certificate `.crt` and CryptoKey `.key` files, including PEM chains and DER file input. GetRecognizedExtensionsForType and Exists include these actual families. Reuse preserves a live matching resource; Ignore creates an independent copy; Replace decodes fully before payload-only reload, preserving key/certificate payload on malformed input. Active TLS resource use rejects replacement. [TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) checks discovery, cache identities and replacement/failure behavior. General ResourceSaver remains absent.
+<a id="member-b317089970c5"></a>
+### GetClassesUsed
+
+`public static System.Type[] GetClassesUsed(System.String path)`
+
+Returns compiled types used by a recognized resource file.
+
+Returns: Copied type census; empty when unrecognized.
+
+- `path`: Source file.
+
+<a id="member-a75cda62f9d1"></a>
+### GetDependencies
+
+`public static System.String[] GetDependencies(System.String path, System.Boolean addTypes = false)`
+
+Returns external dependency tokens from a recognized format.
+
+Returns: Copied ordered dependencies.
+
+- `path`: Source file.
+- `addTypes`: Whether to append stable type IDs.
+
+<a id="member-bb8993f82127"></a>
+### GetRecognizedExtensionsForType
+
+`public static System.String[] GetRecognizedExtensionsForType<TResource>()`
+
+Gets caller-owned lowercase filename extensions supported for a resource type.
+
+Returns: The supported extensions without dots, or an empty array for unsupported types.
+
+- `TResource`: Requested resource type or compatible base type.
+
+<a id="member-5bb87d60e949"></a>
+### GetResourceUID
+
+`public static System.Int64 GetResourceUID(System.String path)`
+
+Reports the UID stored by a recognized file format.
+
+Returns: UID or InvalidID.
+
+- `path`: Source file.
+
+<a id="member-cbe43c14b72e"></a>
+### HasCached
+
+`public static System.Boolean HasCached(System.String path)`
+
+Reports whether any live registered resource occupies an exact cache path.
+
+Returns: True for a live registered resource, including a resource registered outside this loader.
+
+- `path`: Ordinal, case-sensitive cache path.
+
+- `System.ArgumentException`: The path is null or empty.
+
+<a id="member-b8dbcdb9271d"></a>
+### Load
+
+`public static TResource Load<TResource>(System.String path, Electron2D.ResourceLoader.CacheMode cacheMode = Reuse)`
+
+Loads a supported typed resource from an operating-system, res:// or user:// path.
+
+Returns: A caller-owned live resource. Reuse and Replace can return the same cached instance.
+
+- `path`: File path; the exact path string is the cache key.
+- `cacheMode`: Whether to reuse, ignore or refresh an existing live instance.
+
+- `TResource`: Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, X509Certificate, CryptoKey, or an assignable resource base type.
+
+- `System.ArgumentException`: The path or cache mode is invalid.
+- `System.NotSupportedException`: The resource type or file extension is unsupported.
+- `System.InvalidOperationException`: Reuse finds a different resource type at the path.
+- `System.IO.IOException`: The file cannot be read.
+- `System.FormatException`: Encoded audio is malformed or outside its verified channel profile.
+- `System.IO.InvalidDataException`: The encoded resource is malformed or exceeds supported limits.
+- `System.Security.Cryptography.CryptographicException`: Certificate/key input is malformed or does not match the requested key role.
+
+<a id="member-bfd4bf710af5"></a>
+### RemoveResourceFormatLoader
+
+`public static System.Void RemoveResourceFormatLoader(Electron2D.ResourceFormatLoader formatLoader)`
+
+Removes loader registration without disposing its object.
+
+- `formatLoader`: Extension identity.
+
+<a id="member-6531d0f124e7"></a>
+### RenameDependencies
+
+`public static System.Void RenameDependencies(System.String path, System.Collections.Generic.IReadOnlyDictionary<System.String, System.String> renames)`
+
+Rewrites recognized external dependency paths without instantiating resource objects.
+
+- `path`: Source archive or plugin file.
+- `renames`: Old-to-new path map.
+
+<a id="member-119f8d90a0d8"></a>
+### ValidateDisposal
+
+`protected override System.Void ValidateDisposal()`
+
+Validates caller-specific disposal preconditions before this caller attempts the disposal transition.
+
+This method can run concurrently in multiple callers and can race with another caller starting disposal. Overrides must therefore be side-effect-free and tolerate repeated execution.
+
+## Lifecycle, failures and verification
+
+Permanent service objects cannot be disposed or unregistered; format extensions are caller-owned and borrowed only while registered. Factories must return fresh exact live identities; node factories are detached, without caller-owned tree membership. Unknown schemas, incompatible property/resource types, invalid flags/UIDs, missing files and corrupt payloads reject explicitly. Metadata, registration, snapshots, save/load and scene instantiation allocate outside the frame interval. File cache publication follows complete decoding; arbitrary custom copy or observer failure follows Resource commitment rules. Read the component for concrete bounds and remaining payload integrations.
+
+ResourceArchiveTests exercises registered public formats, graph/scene persistence, separate-process lifecycle, UID/dependency rewrite, cache replacement, font/theme/pixel/geometry consumers and rollback/lifetime edges on Linux x64. It does not establish editor, rendered archive scenes, foreign-host/AOT, all-resource payloads, unmeasured native allocations or human acceptance.

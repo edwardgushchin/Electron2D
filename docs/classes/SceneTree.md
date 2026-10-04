@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -798,7 +798,7 @@ The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.
 
 [PhysicsInterpolationTests](../../tests/Electron2D.Tests/PhysicsInterpolationTests.cs) checks project-setting initialization, runtime toggles, eligible snapshots, first/repeated ticks, reset/pause, camera/Control policy, callback failure, and 128 warmed active ticks with zero managed allocation. [Native pixel checks](../../tests/Electron2D.Tests/PhysicsInterpolationNativeTests.cs) pass on dummy compatibility and Linux Wayland compatibility/GPU for moving items and camera scroll. Other platforms and visual owner acceptance remain unverified.
 
-`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and the fraction consumed by 2D presentation, and Engine.Run supplies the window clock/pump and frame wait. [SceneChangeTests](../../tests/Electron2D.Tests/SceneChangeTests.cs) cover in-memory scene replacement, ownership, deferred entry, callback failures and cleanup. Scene file loading/reloading, multithreaded renderer synchronization, complete GUI input routing, wider physics server/area/joint APIs, loaded-scene performance benchmark, and exception logging remain absent. Root viewport GUI dispatch and hover are covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs); clipping, stationary-pointer geometry changes, keyboard navigation, exact renderer order and nested viewports remain. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
+`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and the fraction consumed by 2D presentation, and Engine.Run supplies the window clock/pump and frame wait. [SceneChangeTests](../../tests/Electron2D.Tests/SceneChangeTests.cs) cover in-memory scene replacement, ownership, deferred entry, callback failures and cleanup. Further import/remapping rules, multithreaded renderer synchronization, complete GUI input routing, wider physics server/area/joint APIs, loaded-scene performance benchmark, and exception logging remain absent. Root viewport GUI dispatch and hover are covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs); clipping, stationary-pointer geometry changes, keyboard navigation, exact renderer order and nested viewports remain. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
 
 ## Related decision
 
@@ -903,3 +903,38 @@ rootPath: Empty selects default; an absolute existing node path selects a branch
 Remarks: One interface can belong to only one tree/branch. Replacement detaches the old interface; only tree-created defaults are disposed by the tree.
 
 Branch replacement now rebinds existing spawner/synchronizer configurations after committing the new interface, and continues all rebind/cleanup stages after observer failure. Removing an existing custom mapping remains possible after its branch node has left the scene. Native replication tests exercise real idle-frame spawn/state/visibility flow; no rendered/editor acceptance is inferred.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+## File integration API additions
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public System.Void ChangeSceneToFile(System.String path)` | Loads a typed file scene and replaces the current scene at its ordinary deferred safe point. |
+| `public System.Void ReloadCurrentScene()` | Reloads the selected scene from its source file without reusing old file content. |
+
+## Method Descriptions
+
+<a id="member-b73111695a75"></a>
+### ChangeSceneToFile
+
+`public System.Void ChangeSceneToFile(System.String path)`
+
+Loads a typed file scene and replaces the current scene at its ordinary deferred safe point.
+
+Existing cached templates remain borrowed. A newly loaded temporary template releases its graph owner after the new scene acquires its lease.
+
+- `path`: Scene path or UID.
+
+<a id="member-eba9d9f5c7b1"></a>
+### ReloadCurrentScene
+
+`public System.Void ReloadCurrentScene()`
+
+Reloads the selected scene from its source file without reusing old file content.
+
+Requires a current scene with a file path. Decode failure preserves the current scene.

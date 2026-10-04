@@ -83,6 +83,9 @@ public abstract class PropertyDescriptor
         Func<Resource, Resource> resolveResource) =>
         throw new NotSupportedException($"Property descriptor '{Name}' does not support scene storage.");
 
+    internal virtual void WriteFileValue(ElectronObject owner, StoredPropertyValue value, ResourceArchiveWrite context, StreamPeerBuffer stream) => throw new NotSupportedException("Descriptor has no file schema.");
+    internal virtual StoredPropertyValue ReadFileValue(ResourceArchiveRead context, StreamPeerBuffer stream) => throw new NotSupportedException("Descriptor has no file schema.");
+
     internal void EnsureCompatible(ElectronObject owner)
     {
         ArgumentNullException.ThrowIfNull(owner);
@@ -231,12 +234,16 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         if (RuntimeHelpers.IsReferenceOrContainsReferences<TValue>() &&
             typeof(TValue) != typeof(string) &&
             typeof(TValue) != typeof(string[]) &&
+            typeof(TValue) != typeof(byte[]) &&
+            typeof(TValue) != typeof(Dictionary<string, int>) &&
+            !typeof(Resource[]).IsAssignableFrom(typeof(TValue)) &&
             typeof(TValue) != typeof(float[]) &&
             typeof(TValue) != typeof(int[]) &&
             typeof(TValue) != typeof(Vector2[]) &&
             typeof(TValue) != typeof(Color[]) &&
             typeof(TValue) != typeof(int[][]) &&
-            !typeof(Resource).IsAssignableFrom(typeof(TValue)))
+            !typeof(Resource).IsAssignableFrom(typeof(TValue)) &&
+            !ResourceFileTypes.HasCodec(typeof(TValue)))
         {
             throw new NotSupportedException(
                 $"Stored property '{Name}' uses unsupported reference-shaped type {typeof(TValue).FullName}.");
@@ -275,6 +282,22 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         ObjectDisposedException.ThrowIf(owner.IsDisposed, owner);
     }
 
+    internal override void WriteFileValue(ElectronObject owner, StoredPropertyValue value, ResourceArchiveWrite context, StreamPeerBuffer stream)
+    {
+        if (value is StoredNodeReferenceValue reference && reference.ValueType == typeof(TValue)) { ResourceFileTypes.Codec<string>().Write(stream, reference.Path!); return; }
+        if (!value.TryGetValue<TValue>(out var typed)) throw new InvalidOperationException("File property value does not match its declared schema.");
+        if (typeof(Resource).IsAssignableFrom(typeof(TValue))) stream.Put32(context.Reference(typed as Resource));
+        else if (typeof(Resource[]).IsAssignableFrom(typeof(TValue))) { var resources = typed as Resource[]; stream.Put32(resources is null ? -1 : resources.Length); if (resources is not null) foreach (var resource in resources) stream.Put32(context.Reference(resource)); }
+        else ResourceFileTypes.Codec<TValue>().Write(stream, typed);
+    }
+    internal override StoredPropertyValue ReadFileValue(ResourceArchiveRead context, StreamPeerBuffer stream)
+    {
+        if (typeof(Node).IsAssignableFrom(typeof(TValue))) return new StoredNodeReferenceValue(typeof(TValue), ResourceFileTypes.Codec<string>().Read(stream));
+        if (typeof(Resource).IsAssignableFrom(typeof(TValue))) { var resource = context.Reference(stream.Get32()); if (resource is not null && resource is not TValue) throw new InvalidDataException("Resource reference does not match property type."); return new StoredPropertyValue<TValue>(resource is null ? default! : (TValue)(object)resource); }
+        if (typeof(Resource[]).IsAssignableFrom(typeof(TValue))) return new StoredPropertyValue<TValue>((TValue)(object)ResourceFileTypes.ResourceArray(typeof(TValue)).Read(stream, context));
+        return new StoredPropertyValue<TValue>(ResourceFileTypes.Codec<TValue>().Read(stream));
+    }
+
     private TOwner GetOwner(ElectronObject owner)
     {
         EnsureCompatible(owner);
@@ -285,6 +308,8 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     private static bool ValuesEqual(TValue left, TValue right)
     {
         if (left is Resource?[] resources && right is Resource?[] otherResources) return resources.AsSpan().SequenceEqual(otherResources);
+        if (left is byte[] bytes && right is byte[] otherBytes) return bytes.AsSpan().SequenceEqual(otherBytes);
+        if (left is Dictionary<string, int> map && right is Dictionary<string, int> otherMap) return map.Count == otherMap.Count && map.All(p => otherMap.TryGetValue(p.Key, out var v) && v == p.Value);
         if (left is string[] strings && right is string[] otherStrings) return strings.AsSpan().SequenceEqual(otherStrings);
         if (left is int[] integers && right is int[] otherIntegers) return integers.AsSpan().SequenceEqual(otherIntegers);
         if (left is float[] numbers && right is float[] otherNumbers) return numbers.AsSpan().SequenceEqual(otherNumbers);
@@ -325,7 +350,7 @@ internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredProperty
     internal TValue Value { get; } = value;
 
     internal TValue Resolve(Func<Resource, Resource> resolveResource) =>
-        Value is Resource resource ? (TValue)(object)resolveResource(resource) : Snapshot(Value);
+        Transform(Value, resolveResource);
 
     internal override bool TryGetValue<TRequested>(out TRequested value)
     {
@@ -346,18 +371,30 @@ internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredProperty
     }
 
     internal override StoredPropertyValue TransformResources(Func<Resource, Resource> transform) =>
-        Value is Resource resource
-            ? new StoredPropertyValue<TValue>((TValue)(object)transform(resource))
-            : this;
+        new StoredPropertyValue<TValue>(Transform(Value, transform));
 
+    private static TValue Transform(TValue value, Func<Resource, Resource> transform)
+    {
+        if (value is Resource resource) return (TValue)(object)transform(resource);
+        if (value is Resource?[] resources) { var copy = (Resource?[])resources.Clone(); for (var i = 0; i < copy.Length; i++) if (copy[i] is { } item) copy[i] = transform(item); return (TValue)(object)copy; }
+        return Snapshot(value);
+    }
     internal static TValue Snapshot(TValue value) => value switch
     {
+        Resource[] resources => (TValue)(object)resources.Clone(),
+        byte[] bytes => (TValue)(object)bytes.Clone(),
+        Dictionary<string, int> dictionary => (TValue)(object)new Dictionary<string, int>(dictionary, dictionary.Comparer),
         string[] strings => (TValue)(object)strings.Clone(),
         float[] numbers => (TValue)(object)numbers.Clone(),
         int[] integers => (TValue)(object)integers.Clone(),
         Vector2[] points => (TValue)(object)points.Clone(),
         Color[] colors => (TValue)(object)colors.Clone(),
         int[][] contours => (TValue)(object)contours.Select(indices => (int[])indices.Clone()).ToArray(),
-        _ => value,
+        _ => SnapshotCustom(value),
     };
+    private static TValue SnapshotCustom(TValue value)
+    {
+        if (!RuntimeHelpers.IsReferenceOrContainsReferences<TValue>() || value is null or string or Resource) return value;
+        var codec = ResourceFileTypes.Codec<TValue>(); using var stream = new StreamPeerBuffer(); codec.Write(stream, value); stream.Seek(0); var copy = codec.Read(stream); if (stream.GetAvailableBytes() != 0) throw new InvalidDataException("Custom snapshot codec left trailing bytes."); return copy;
+    }
 }

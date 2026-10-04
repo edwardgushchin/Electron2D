@@ -1,6 +1,6 @@
 # PropertyDescriptor
 
-Last updated: 2026-09-23
+Last updated: 2026-10-05
 
 **Inherits:** —
 
@@ -175,3 +175,7 @@ The descriptor's metadata is immutable and safe to read concurrently. Operations
 [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) verifies compatible discovery, duplicate-name rejection, storage metadata, typed access through the generic subtype, revert dispatch through `ElectronObject`, packed capture/restore, and rejection of unsupported stored values.
 
 There are no categories, ranges, hints, file-format flags, reflection-based access, arbitrary object storage, node-reference remapping, or editor widgets.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

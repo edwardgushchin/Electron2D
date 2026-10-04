@@ -1,6 +1,6 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-10-02
+Last updated: 2026-10-05
 
 **Inherits:** [PropertyDescriptor](PropertyDescriptor.md)
 
@@ -196,3 +196,7 @@ Stored typed Node references on node owners use [StoredNodeReferenceValue](Store
 ## Integer array storage
 
 SplitContainer.SplitOffsets adds the exact `int[]` packed profile under ADR 0023. Capture, state reads and restoration clone the array; element equality drives revert instead of array reference equality. SplitContainerTests verifies captured-source changes and independently mutable public snapshots. Other array/reference graphs remain rejected.
+
+## Typed archive storage
+
+File values use the exact TValue schema with registered codecs, graph-aware resource/array references and relative node paths. Capture snapshots explicit value arrays/dictionaries; registered reference-shaped custom values snapshot through their codec. ResourceArchiveTests exercises endian/file reconstruction and typed resource ownership; see [resource files](../components/resource-files.md) for bounds and failures.

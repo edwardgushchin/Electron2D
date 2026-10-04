@@ -44,6 +44,331 @@
       "godot": "Resource::method:get_rid()",
       "electron2d": "method:Electron2D.AtlasTexture.GetRID()",
       "reason": "AtlasTexture forwards the current underlying source RID, including nested views; empty atlas returns empty. Disposing the view does not release the borrowed source identity; source replacement changes the forwarded RID. Pinned atlas_texture.cpp and RenderingTextureRIDTests verify this sibling contract."
+    },
+    {
+      "godot": "class:ResourceFormatLoader",
+      "electron2d": "T:Electron2D.ResourceFormatLoader",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::enum:CacheMode",
+      "electron2d": "T:Electron2D.ResourceLoader.CacheMode",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_IGNORE",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.CacheMode.Ignore()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_IGNORE_DEEP",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.CacheMode.IgnoreDeep()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_REPLACE",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.CacheMode.Replace()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_REPLACE_DEEP",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.CacheMode.ReplaceDeep()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_REUSE",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.CacheMode.Reuse()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_exists(String:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.Exists(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_get_classes_used(String:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.GetClassesUsed(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_get_dependencies(String:,bool:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.GetDependencies(System.String,System.Boolean)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_get_recognized_extensions()",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.GetRecognizedExtensions()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_get_resource_script_class(String:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.GetResourceScriptClass(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_get_resource_type(String:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.GetResourceType(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_get_resource_uid(String:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.GetResourceUID(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_handles_type(StringName:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.HandlesType(System.Type)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_load(String:,String:,bool:,int:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.Load(System.String,System.String,System.Boolean,Electron2D.ResourceLoader.CacheMode)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_recognize_path(String:,StringName:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.RecognizePath(System.String,System.Type)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatLoader::method:_rename_dependencies(String:,Dictionary:)",
+      "electron2d": "method:Electron2D.ResourceFormatLoader.RenameDependencies(System.String,System.Collections.Generic.IReadOnlyDictionary<System.String, System.String>)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "class:ResourceFormatSaver",
+      "electron2d": "T:Electron2D.ResourceFormatSaver",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatSaver::method:_get_recognized_extensions(Resource:)",
+      "electron2d": "method:Electron2D.ResourceFormatSaver.GetRecognizedExtensions(Electron2D.Resource)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatSaver::method:_recognize(Resource:)",
+      "electron2d": "method:Electron2D.ResourceFormatSaver.Recognize(Electron2D.Resource)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatSaver::method:_recognize_path(Resource:,String:)",
+      "electron2d": "method:Electron2D.ResourceFormatSaver.RecognizePath(Electron2D.Resource,System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatSaver::method:_save(Resource:,String:,int:)",
+      "electron2d": "method:Electron2D.ResourceFormatSaver.Save(Electron2D.Resource,System.String,Electron2D.SaverFlags)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceFormatSaver::method:_set_uid(String:,int:)",
+      "electron2d": "method:Electron2D.ResourceFormatSaver.SetUID(System.String,System.Int64)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "class:ResourceSaver",
+      "electron2d": "T:Electron2D.ResourceSaver",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum:SaverFlags",
+      "electron2d": "T:Electron2D.SaverFlags",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum_value:SaverFlags.FLAG_BUNDLE_RESOURCES",
+      "electron2d": "enumValue:Electron2D.SaverFlags.BundleResources()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum_value:SaverFlags.FLAG_CHANGE_PATH",
+      "electron2d": "enumValue:Electron2D.SaverFlags.ChangePath()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum_value:SaverFlags.FLAG_COMPRESS",
+      "electron2d": "enumValue:Electron2D.SaverFlags.Compress()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum_value:SaverFlags.FLAG_NONE",
+      "electron2d": "enumValue:Electron2D.SaverFlags.None()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum_value:SaverFlags.FLAG_OMIT_EDITOR_PROPERTIES",
+      "electron2d": "enumValue:Electron2D.SaverFlags.OmitEditorProperties()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum_value:SaverFlags.FLAG_RELATIVE_PATHS",
+      "electron2d": "enumValue:Electron2D.SaverFlags.RelativePaths()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum_value:SaverFlags.FLAG_REPLACE_SUBRESOURCE_PATHS",
+      "electron2d": "enumValue:Electron2D.SaverFlags.ReplaceSubresourcePaths()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::enum_value:SaverFlags.FLAG_SAVE_BIG_ENDIAN",
+      "electron2d": "enumValue:Electron2D.SaverFlags.SaveBigEndian()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::method:add_resource_format_saver(ResourceFormatSaver:,bool:)",
+      "electron2d": "method:Electron2D.ResourceSaver.AddResourceFormatSaver(Electron2D.ResourceFormatSaver,System.Boolean)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::method:get_recognized_extensions(Resource:)",
+      "electron2d": "method:Electron2D.ResourceSaver.GetRecognizedExtensions(Electron2D.Resource)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::method:get_resource_id_for_path(String:,bool:)",
+      "electron2d": "method:Electron2D.ResourceSaver.GetResourceIDForPath(System.String,System.Boolean)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::method:remove_resource_format_saver(ResourceFormatSaver:)",
+      "electron2d": "method:Electron2D.ResourceSaver.RemoveResourceFormatSaver(Electron2D.ResourceFormatSaver)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::method:save(Resource:,String:,int:ResourceSaver.SaverFlags)",
+      "electron2d": "method:Electron2D.ResourceSaver.Save(Electron2D.Resource,System.String,Electron2D.SaverFlags)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceSaver::method:set_uid(String:,int:)",
+      "electron2d": "method:Electron2D.ResourceSaver.SetUID(System.String,System.Int64)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "class:ResourceUID",
+      "electron2d": "T:Electron2D.ResourceUID",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::constant:INVALID_ID",
+      "electron2d": "constant:Electron2D.ResourceUID.InvalidID()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:add_id(int:,String:)",
+      "electron2d": "method:Electron2D.ResourceUID.AddID(System.Int64,System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:create_id()",
+      "electron2d": "method:Electron2D.ResourceUID.CreateID()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:create_id_for_path(String:)",
+      "electron2d": "method:Electron2D.ResourceUID.CreateIDForPath(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:ensure_path(String:)",
+      "electron2d": "method:Electron2D.ResourceUID.EnsurePath(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:get_id_path(int:)",
+      "electron2d": "method:Electron2D.ResourceUID.GetIDPath(System.Int64)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:has_id(int:)",
+      "electron2d": "method:Electron2D.ResourceUID.HasID(System.Int64)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:id_to_text(int:)",
+      "electron2d": "method:Electron2D.ResourceUID.IDToText(System.Int64)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:path_to_uid(String:)",
+      "electron2d": "method:Electron2D.ResourceUID.PathToUID(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:remove_id(int:)",
+      "electron2d": "method:Electron2D.ResourceUID.RemoveID(System.Int64)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:set_id(int:,String:)",
+      "electron2d": "method:Electron2D.ResourceUID.SetID(System.Int64,System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:text_to_id(String:)",
+      "electron2d": "method:Electron2D.ResourceUID.TextToID(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceUID::method:uid_to_path(String:)",
+      "electron2d": "method:Electron2D.ResourceUID.UIDToPath(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "@GlobalScope::property:ResourceLoader",
+      "electron2d": "T:Electron2D.ResourceLoader",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "@GlobalScope::property:ResourceSaver",
+      "electron2d": "T:Electron2D.ResourceSaver",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "@GlobalScope::property:ResourceUID",
+      "electron2d": "T:Electron2D.ResourceUID",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "MultiplayerSpawner::method:add_spawnable_scene(String:)",
+      "electron2d": "method:Electron2D.MultiplayerSpawner.AddSpawnableScene(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "MultiplayerSpawner::method:get_spawnable_scene(int:)",
+      "electron2d": "method:Electron2D.MultiplayerSpawner.GetSpawnableScenePath(System.Int32)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceLoader::method:add_resource_format_loader(ResourceFormatLoader:,bool:)",
+      "electron2d": "method:Electron2D.ResourceLoader.AddResourceFormatLoader(Electron2D.ResourceFormatLoader,System.Boolean)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceLoader::method:get_dependencies(String:)",
+      "electron2d": "method:Electron2D.ResourceLoader.GetDependencies(System.String,System.Boolean)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceLoader::method:get_resource_uid(String:)",
+      "electron2d": "method:Electron2D.ResourceLoader.GetResourceUID(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "ResourceLoader::method:remove_resource_format_loader(ResourceFormatLoader:)",
+      "electron2d": "method:Electron2D.ResourceLoader.RemoveResourceFormatLoader(Electron2D.ResourceFormatLoader)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "SceneTree::method:change_scene_to_file(String:)",
+      "electron2d": "method:Electron2D.SceneTree.ChangeSceneToFile(System.String)",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "SceneTree::method:reload_current_scene()",
+      "electron2d": "method:Electron2D.SceneTree.ReloadCurrentScene()",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
     }
   ],
   "statusGroups": [
@@ -52,7 +377,7 @@
         "class:ResourceLoader"
       ],
       "state": "Partial",
-      "reason": "Synchronous image, font, WAV/MP3/Ogg and certificate/private-key loading, weak cache modes and typed discovery execute; further resource formats, public format-loader plugins, UID/dependency catalogs and threaded loading remain separate."
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate. Remaining load/exists/discovery scope: concrete archive schemas for audio/curves/materials/mesh/animation/Theme, worker job tokens, tolerant missing resources, import remapping and resource-directory listing; formats and UID/dependencies themselves execute. Direct file::subresource reload additionally requires identity-table lookup and ownership rebasing; internal paths are currently visible metadata and stored-reference identities."
     },
     {
       "godot": [
@@ -81,7 +406,7 @@
         "ResourceLoader::method:get_recognized_extensions_for_type(String:)"
       ],
       "state": "Partial",
-      "reason": "Typed synchronous image, SFNT font, WAV/MP3/Ogg audio and X509Certificate .crt/CryptoKey .key paths, extension lookup and cache modes execute, including decode-before-replace failure preservation. Remaining applicable resource formats, type hints and extensible format loaders are absent; TLS resource use prevents payload replacement under ADR 0094."
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate. Remaining load/exists/discovery scope: concrete archive schemas for audio/curves/materials/mesh/animation/Theme, worker job tokens, tolerant missing resources, import remapping and resource-directory listing; formats and UID/dependencies themselves execute. Direct file::subresource reload additionally requires identity-table lookup and ownership rebasing; internal paths are currently visible metadata and stored-reference identities."
     },
     {
       "godot": [
@@ -99,26 +424,10 @@
     },
     {
       "godot": [
-        "ResourceLoader::method:add_resource_format_loader(ResourceFormatLoader:,bool:)",
-        "ResourceLoader::method:remove_resource_format_loader(ResourceFormatLoader:)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: public typed ResourceFormatLoader contract, registration ownership and callback lifetime beyond the internal image-texture format."
-    },
-    {
-      "godot": [
-        "ResourceLoader::method:get_dependencies(String:)",
         "ResourceLoader::method:set_abort_on_missing_resources(bool:)"
       ],
       "state": "Blocked",
-      "reason": "Trigger: resource-file dependency graph with typed external-resource references and missing-resource policy."
-    },
-    {
-      "godot": [
-        "ResourceLoader::method:get_resource_uid(String:)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: first resource UID registry and imported-file path mapping."
+      "reason": "Trigger: typed tolerant missing-resource placeholders and replacement schema; current archive dependency failures reject/cleanup explicitly. UID/dependency catalogs now execute under ADR 0013."
     },
     {
       "godot": [
@@ -140,6 +449,174 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0088: typed C# virtual GetRID replaces dispatcher/hook indirection; base empty return, custom override dispatch and Shape specialization execute."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate.",
+      "godot": [
+        "@GlobalScope::property:ResourceLoader",
+        "@GlobalScope::property:ResourceSaver",
+        "@GlobalScope::property:ResourceUID",
+        "MultiplayerSpawner::method:add_spawnable_scene(String:)",
+        "MultiplayerSpawner::method:get_spawnable_scene(int:)",
+        "ResourceFormatLoader::enum:CacheMode",
+        "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_IGNORE",
+        "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_IGNORE_DEEP",
+        "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_REPLACE",
+        "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_REPLACE_DEEP",
+        "ResourceFormatLoader::enum_value:CacheMode.CACHE_MODE_REUSE",
+        "ResourceFormatLoader::method:_exists(String:)",
+        "ResourceFormatLoader::method:_get_classes_used(String:)",
+        "ResourceFormatLoader::method:_get_dependencies(String:,bool:)",
+        "ResourceFormatLoader::method:_get_recognized_extensions()",
+        "ResourceFormatLoader::method:_get_resource_script_class(String:)",
+        "ResourceFormatLoader::method:_get_resource_type(String:)",
+        "ResourceFormatLoader::method:_get_resource_uid(String:)",
+        "ResourceFormatLoader::method:_handles_type(StringName:)",
+        "ResourceFormatLoader::method:_load(String:,String:,bool:,int:)",
+        "ResourceFormatLoader::method:_recognize_path(String:,StringName:)",
+        "ResourceFormatLoader::method:_rename_dependencies(String:,Dictionary:)",
+        "ResourceFormatSaver::method:_get_recognized_extensions(Resource:)",
+        "ResourceFormatSaver::method:_recognize(Resource:)",
+        "ResourceFormatSaver::method:_recognize_path(Resource:,String:)",
+        "ResourceFormatSaver::method:_save(Resource:,String:,int:)",
+        "ResourceFormatSaver::method:_set_uid(String:,int:)",
+        "ResourceLoader::method:add_resource_format_loader(ResourceFormatLoader:,bool:)",
+        "ResourceLoader::method:get_dependencies(String:)",
+        "ResourceLoader::method:get_resource_uid(String:)",
+        "ResourceLoader::method:remove_resource_format_loader(ResourceFormatLoader:)",
+        "ResourceSaver::enum:SaverFlags",
+        "ResourceSaver::enum_value:SaverFlags.FLAG_BUNDLE_RESOURCES",
+        "ResourceSaver::enum_value:SaverFlags.FLAG_CHANGE_PATH",
+        "ResourceSaver::enum_value:SaverFlags.FLAG_COMPRESS",
+        "ResourceSaver::enum_value:SaverFlags.FLAG_NONE",
+        "ResourceSaver::enum_value:SaverFlags.FLAG_OMIT_EDITOR_PROPERTIES",
+        "ResourceSaver::enum_value:SaverFlags.FLAG_RELATIVE_PATHS",
+        "ResourceSaver::enum_value:SaverFlags.FLAG_REPLACE_SUBRESOURCE_PATHS",
+        "ResourceSaver::enum_value:SaverFlags.FLAG_SAVE_BIG_ENDIAN",
+        "ResourceSaver::method:add_resource_format_saver(ResourceFormatSaver:,bool:)",
+        "ResourceSaver::method:get_recognized_extensions(Resource:)",
+        "ResourceSaver::method:get_resource_id_for_path(String:,bool:)",
+        "ResourceSaver::method:remove_resource_format_saver(ResourceFormatSaver:)",
+        "ResourceSaver::method:save(Resource:,String:,int:ResourceSaver.SaverFlags)",
+        "ResourceSaver::method:set_uid(String:,int:)",
+        "ResourceUID::constant:INVALID_ID",
+        "ResourceUID::method:add_id(int:,String:)",
+        "ResourceUID::method:create_id()",
+        "ResourceUID::method:create_id_for_path(String:)",
+        "ResourceUID::method:ensure_path(String:)",
+        "ResourceUID::method:get_id_path(int:)",
+        "ResourceUID::method:has_id(int:)",
+        "ResourceUID::method:id_to_text(int:)",
+        "ResourceUID::method:path_to_uid(String:)",
+        "ResourceUID::method:remove_id(int:)",
+        "ResourceUID::method:set_id(int:,String:)",
+        "ResourceUID::method:text_to_id(String:)",
+        "ResourceUID::method:uid_to_path(String:)",
+        "SceneTree::method:change_scene_to_file(String:)",
+        "SceneTree::method:reload_current_scene()",
+        "class:ResourceFormatLoader",
+        "class:ResourceFormatSaver",
+        "class:ResourceSaver",
+        "class:ResourceUID"
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.ResourceFileTypes",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ResourceFormatLoader..ctor()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ResourceFormatSaver..ctor()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.CapsuleShape.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.CircleShape.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsMaterial.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.RectangleShape.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceFileTypes.RegisterNode`1(System.String,Func<TNode>)",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceFileTypes.RegisterResource`1(System.String,Func<TResource>)",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceFileTypes.RegisterValueCodec`1(Action<Electron2D.StreamPeerBuffer, TValue>,Func<Electron2D.StreamPeerBuffer, TValue>)",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceLoader.GetClassesUsed(System.String)",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceLoader.RenameDependencies(System.String,System.Collections.Generic.IReadOnlyDictionary<System.String, System.String>)",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceLoader.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceSaver.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceUID.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.SegmentShape.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiplayerSpawner.AddSpawnableScene(Electron2D.PackedScene)",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiplayerSpawner.GetSpawnableScene(System.Int32)",
+      "state": "Implemented",
+      "reason": "Typed projection of file factories/value schemas, format metadata, stored resource descriptors, retained-service lifetime or in-memory PackedScene registration. ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "electron2d": "method:Electron2D.SceneState.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Protected SceneState deterministic cleanup for its exported file-graph snapshot lease under ADRs 0013/0014/0023. ResourceArchiveTests verifies final resource snapshot survival and release after template disposal; internal unexported state adds no extra owner."
     }
   ]
 }

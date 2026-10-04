@@ -1,6 +1,6 @@
 # Agent-native development decisions
 
-Last updated: 2026-10-01
+Last updated: 2026-10-05
 
 This bounded document owns the product's agent-native development contract. Use [the decision index](index.md) for other architectural domains; implemented behavior remains documented in class, component and domain pages.
 
@@ -56,7 +56,7 @@ Headless simulation must not claim visual verification or return a fake successf
 #### Typed files, diagnostics and discoverability
 
 - Agent-native design preserves the full applicable API, strictly 2D scope, one-runtime-assembly boundary and typed C# adaptations. It does not authorize narrowing the contract, inert aliases, `Variant`, general `object`/`dynamic` payloads or string-based runtime `Get/Set/Call`.
-- Project/scene/resource files must be inspectable and versioned, produce stable focused diffs, and preserve type identity, hierarchy, ownership, typed stored properties, node/resource references and shared resource identity. The concrete format, codecs, type/factory registration and migration rules are specified in the first serializer slice under ADR 0023. No extension or JSON scene schema is selected here.
+- Project/scene/resource files must be inspectable and versioned, produce stable focused diffs, and preserve type identity, hierarchy, ownership, typed stored properties, node/resource references and shared resource identity. The concrete format, codecs, type/factory registration and migration rules are specified in the first serializer slice under ADR 0023. ADR 0013 now selects the first binary typed archive version; its public typed metadata/state inspection and explicit schema document are available. Textual authoring/diff export remains a separate tooling capability.
 - CLI and UI use the same serializer/loader. File writes must avoid losing the previous saved data on failure; recovery and validation boundaries are tested. This does not change the existing clear-on-attempt `PackedScene.Pack` contract. A saved result must load correctly in a fresh process rather than relying on in-memory factories or caches.
 - Structured transport/file values map to operation-specific typed models and approved property codecs. Their serialized field names do not create an untyped runtime value or arbitrary member invocation boundary.
 - API discovery and documentation must provide compact, version-matched access to signatures, defaults, units, coordinate spaces, lifecycle/ownership, ordering, errors, executable examples and backend limits. Generated declarations and coverage states remain distinct from semantic verification; unknown/unverified behavior must not appear as supported.
@@ -77,7 +77,7 @@ Measure verified task success, repair iterations, elapsed time, required context
 
 ### Current implementation and verification boundary
 
-This change records architecture only; it adds no CLI command, editor executable, serializer, capture API or runtime behavior. Existing MainLoop/Engine manual scheduling, typed Input delivery and in-memory PackedScene are foundations. Engine.Run(Window) still owns a native window and real-time clock. ResourceLoader supports image textures and font files; scene-file loading/saving is absent. Renderer readback is internal to tests, while public Viewport.GetTexture/ViewportTexture and independent offscreen output remain missing. Existing domain-specific development tools do not constitute the unified project workflow.
+This decision adds no CLI command, editor executable or capture API. The typed archive slice now supplies runtime programmatic save/load and fresh-process reconstruction. Existing MainLoop/Engine manual scheduling, typed Input delivery and in-memory PackedScene are foundations. Engine.Run(Window) still owns a native window and real-time clock. ResourceLoader supports leaf codecs, ordered typed format extensions and archive resource/scene graphs. ResourceArchiveTests proves programmatic save, fresh-process load and headless lifecycle; rendered capture and unified project tooling remain absent. Renderer readback is internal to tests, while public Viewport.GetTexture/ViewportTexture and independent offscreen output remain missing. Existing domain-specific development tools do not constitute the unified project workflow.
 
 Missing capabilities remain gaps with exact triggers in [coverage](../coverage/index.md). Platform claims follow ADR 0021; zero-allocation claims follow ADR 0014. Documentation/link/decision checks verify this record only, not an implemented agent workflow or improved agent performance.
 

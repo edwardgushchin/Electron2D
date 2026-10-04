@@ -34,6 +34,17 @@ public sealed partial class SceneTree
     /// <remarks>The argument is this tree. The selected scene is available through <see cref="CurrentScene"/>.</remarks>
     public event Action<SceneTree>? SceneChanged;
 
+    /// <summary>Loads a typed file scene and replaces the current scene at its ordinary deferred safe point.</summary><param name="path">Scene path or UID.</param><remarks>Existing cached templates remain borrowed. A newly loaded temporary template releases its graph owner after the new scene acquires its lease.</remarks>
+    public void ChangeSceneToFile(string path)
+    {
+        EnsureOwnerThread(); EnsureAcceptingWork(); var resolved = ResourceUID.EnsurePath(path); var cached = ResourceLoader.GetCachedRef<PackedScene>(resolved); var packed = ResourceLoader.Load<PackedScene>(resolved); try { ChangeSceneToPacked(packed); } finally { if (!ReferenceEquals(cached, packed)) packed.Dispose(); }
+    }
+    /// <summary>Reloads the selected scene from its source file without reusing old file content.</summary><remarks>Requires a current scene with a file path. Decode failure preserves the current scene.</remarks>
+    public void ReloadCurrentScene()
+    {
+        EnsureOwnerThread(); EnsureAcceptingWork(); var path = _currentScene?.SceneFilePath; if (string.IsNullOrEmpty(path)) throw new InvalidOperationException("A file-backed current scene is required."); using var packed = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); ChangeSceneToPacked(packed);
+    }
+
     /// <summary>Replaces the current scene with a detached node at the next deferred safe point.</summary>
     /// <param name="node">The live, parentless scene root. The tree takes ownership after acceptance.</param>
     /// <remarks>The old scene exits immediately and is disposed before the new scene enters. A later request before the

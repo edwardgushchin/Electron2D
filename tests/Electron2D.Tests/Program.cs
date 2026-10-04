@@ -10,6 +10,8 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_ARCHIVE_CHILD") is { } archivePath) { ResourceArchiveTests.RunChild(archivePath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_ARCHIVE") == "1") { ResourceArchiveTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENET") == "1") { ENetTests.Run(); return; }
 
@@ -548,6 +550,7 @@ FontLifetimeTests.Run(FontTestFixtures.OpenSans);
 FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 LabelTests.Run(FontTestFixtures.OpenSans);
 FontResourceLoaderTests.Run();
+ResourceArchiveTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();
@@ -4551,8 +4554,8 @@ static void VerifyFileAccess()
         "File access must reject empty paths.");
     Expect<ArgumentOutOfRangeException>(() => EngineFileAccess.Open("unused", (FileAccessModeFlags)5),
         "File access must reject unknown mode combinations.");
-    Expect<NotSupportedException>(() => EngineFileAccess.FileExists("uid://123"),
-        "Resource-identity paths must remain explicit until their resolver exists.");
+    Expect<KeyNotFoundException>(() => EngineFileAccess.FileExists("uid://123"),
+        "Unknown resource identities fail explicitly.");
     Expect<NotSupportedException>(() => EngineFileAccess.FileExists("pipe://channel"),
         "Pipe paths must remain explicit until their platform backend exists.");
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(prefix: "bad/name"),
@@ -4911,7 +4914,7 @@ static void VerifyDirAccess()
         "Directory opening must reject empty paths.");
     Expect<DirectoryNotFoundException>(() => DirAccess.Open(IOPath.Combine(IOPath.GetTempPath(), Guid.NewGuid().ToString("N"))),
         "Directory opening must reject missing directories.");
-    Expect<NotSupportedException>(() => DirAccess.Open("uid://missing"),
+    Expect<KeyNotFoundException>(() => DirAccess.Open("uid://missing"),
         "Directory opening must reject unknown virtual schemes.");
     Expect<ArgumentException>(() => DirAccess.GetFilesAt("relative"),
         "Static directory operations must reject relative paths.");
@@ -7661,7 +7664,7 @@ static void VerifyEngine()
             ReferenceEquals(Engine.GetSingleton<Input>(nameof(Input)), Input.Service) &&
             ReferenceEquals(Engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Service) &&
             ReferenceEquals(Engine.GetSingleton<AudioServer>(nameof(AudioServer)), AudioServer.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(AudioServer)]),
         "All built-in process services must be present in the global singleton registry.");
     Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(Engine)),
         "The built-in Engine registry entry must not be removable.");
@@ -7713,7 +7716,7 @@ static void VerifyEngine()
         Require(Engine.HasSingleton("tests.primary") &&
                 ReferenceEquals(Engine.GetSingleton("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<TestObject>("tests.primary"), registered) &&
-                Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer), "tests.primary"]),
+                Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(AudioServer), "tests.primary"]),
             "Engine singleton lookup must preserve identity, type, and registration order.");
         Expect<InvalidOperationException>(() => Engine.RegisterSingleton("tests.primary", registered),
             "Engine singleton names must be unique.");
@@ -7736,7 +7739,7 @@ static void VerifyEngine()
         "Engine singleton registration must reject disposed objects.");
 
     Parallel.For(0, 32, index => Engine.RegisterSingleton($"tests.concurrent.{index}", new TestObject()));
-    Require(Engine.GetSingletonList().Count == 37, "Concurrent singleton registration must not lose entries.");
+    Require(Engine.GetSingletonList().Count == 40, "Concurrent singleton registration must not lose entries.");
     Parallel.For(0, 32, index =>
     {
         var name = $"tests.concurrent.{index}";
@@ -7744,7 +7747,7 @@ static void VerifyEngine()
         Engine.UnregisterSingleton(name);
         instance.Dispose();
     });
-    Require(Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer)]),
+    Require(Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(AudioServer)]),
         "Concurrent singleton removal must preserve only the built-in registry entries.");
 
     Engine.PhysicsTicksPerSecond = 10;

@@ -1,10 +1,11 @@
 namespace Electron2D;
 
 /// <summary>Loads supported resource files through the engine's typed resource path cache.</summary>
-/// <remarks>Supported resources are image textures, dynamic font files, WAV/MP3/Ogg audio and certificate/private-key files.
+/// <remarks>Supported resources include registered typed archives/format extensions, image textures, dynamic fonts,
+/// WAV/MP3/Ogg audio and certificate/private-key files. Static operations use a permanent retained service.
 /// The returned resource belongs to the caller and is cached weakly while it remains live. Synchronous load
-/// operations serialize cache decisions; this service does not own caller resources or their renderer payloads.</remarks>
-public static class ResourceLoader
+/// operations serialize cache decisions. File roots own newly decoded dependency graphs; the weak cache owns no resources.</remarks>
+public sealed class ResourceLoader : ElectronObject
 {
     /// <summary>Controls how a load uses or refreshes the path cache.</summary>
     /// <remarks>Deep modes equal their ordinary counterparts for dependency-free image and font files.</remarks>
@@ -18,16 +19,38 @@ public static class ResourceLoader
         Replace,
         /// <summary>Ignore recursively; equivalent to Ignore for dependency-free images and fonts.</summary>
         IgnoreDeep,
-        /// <summary>Replace recursively; equivalent to Replace for dependency-free images and fonts.</summary>
+        /// <summary>Refreshes root and external dependencies recursively, preserving compatible cached identities.</summary>
         ReplaceDeep
     }
 
-    private static readonly object LoadGate = new();
+    internal static readonly ResourceLoader Runtime = new();
+    internal readonly ResourceFileRegistry FileTypes = new();
+    private readonly object _loadGate = new();
+    private readonly List<ResourceFormatLoader> _fileLoaders = [new ResourceArchiveLoader()];
+    private ResourceLoader() { }
+    private static object LoadGate => Runtime._loadGate;
+    private static List<ResourceFormatLoader> FileLoaders => Runtime._fileLoaders;
+    /// <inheritdoc />
+    protected override void ValidateDisposal() => throw new InvalidOperationException("The resource-loading service is permanent.");
     private static readonly string[] FontExtensions = ["ttf", "otf", "woff", "woff2", "ttc", "otc"];
     private static readonly string[] ImageExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg"];
 
+    /// <summary>Registers a borrowed typed file loader without duplicating identity.</summary><param name="formatLoader">Live format extension.</param><param name="atFront">Whether it precedes existing extensions.</param>
+    public static void AddResourceFormatLoader(ResourceFormatLoader formatLoader, bool atFront = false) { ArgumentNullException.ThrowIfNull(formatLoader); ObjectDisposedException.ThrowIf(formatLoader.IsDisposed, formatLoader); lock (LoadGate) { if (FileLoaders.Any(item => ReferenceEquals(item, formatLoader))) return; if (FileLoaders.Count >= 64) throw new InvalidOperationException("At most 64 format loaders can be registered."); if (atFront) FileLoaders.Insert(0, formatLoader); else FileLoaders.Add(formatLoader); } }
+    /// <summary>Removes loader registration without disposing its object.</summary><param name="formatLoader">Extension identity.</param>
+    public static void RemoveResourceFormatLoader(ResourceFormatLoader formatLoader) { ArgumentNullException.ThrowIfNull(formatLoader); lock (LoadGate) FileLoaders.RemoveAll(item => ReferenceEquals(item, formatLoader)); }
+    private static ResourceFormatLoader[] LoaderSnapshot() { lock (LoadGate) return FileLoaders.Where(l => !l.IsDisposed).ToArray(); }
+    /// <summary>Returns external dependency tokens from a recognized format.</summary><param name="path">Source file.</param><param name="addTypes">Whether to append stable type IDs.</param><returns>Copied ordered dependencies.</returns>
+    public static string[] GetDependencies(string path, bool addTypes = false) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetDependencies(path, addTypes); return []; }
+    /// <summary>Reports the UID stored by a recognized file format.</summary><param name="path">Source file.</param><returns>UID or InvalidID.</returns>
+    public static long GetResourceUID(string path) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetResourceUID(path); return ResourceUID.InvalidID; }
+
+    /// <summary>Rewrites recognized external dependency paths without instantiating resource objects.</summary><param name="path">Source archive or plugin file.</param><param name="renames">Old-to-new path map.</param>
+    public static void RenameDependencies(string path, IReadOnlyDictionary<string, string> renames) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) { loader.RenameDependencies(path, renames); return; } throw new NotSupportedException("No loader recognizes dependency rewrite."); }
+    /// <summary>Returns compiled types used by a recognized resource file.</summary><param name="path">Source file.</param><returns>Copied type census; empty when unrecognized.</returns>
+    public static Type[] GetClassesUsed(string path) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetClassesUsed(path); return []; }
     /// <summary>Loads a supported typed resource from an operating-system, res:// or user:// path.</summary>
-    /// <typeparam name="TResource"><see cref="ImageTexture"/>, <see cref="FontFile"/>, an implemented AudioStream type, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
+    /// <typeparam name="TResource">Registered archive/plugin resource, ImageTexture, FontFile, implemented AudioStream, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
     /// <param name="path">File path; the exact path string is the cache key.</param>
     /// <param name="cacheMode">Whether to reuse, ignore or refresh an existing live instance.</param>
     /// <returns>A caller-owned live resource. Reuse and Replace can return the same cached instance.</returns>
@@ -41,6 +64,34 @@ public static class ResourceLoader
     public static TResource Load<TResource>(string path, CacheMode cacheMode = CacheMode.Reuse)
         where TResource : Resource
     {
+        CheckFilePath(path);
+        if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode));
+        path = ResourceUID.EnsurePath(path);
+        foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, typeof(TResource)))
+            {
+                if (loader is ResourceArchiveLoader) return (TResource)LoadFileResource(path, cacheMode, typeof(TResource));
+                lock (LoadGate)
+                {
+                    var cached = Resource.GetRegisteredPath(path);
+                    if (cacheMode == CacheMode.Reuse && cached is not null) return cached is TResource reused ? reused : throw new InvalidOperationException("Cached resource does not match requested type.");
+                    _fileLoads ??= new(StringComparer.Ordinal);
+                    var fileKey = ResourceArchive.Absolute(path);
+                    if (_fileLoads.Count >= 64 || !_fileLoads.Add(fileKey)) throw new InvalidDataException("File format dependency cycle or depth budget exceeded.");
+                    try
+                    {
+                        var loaded = loader.Load(path, path, false, cacheMode) ?? throw new InvalidDataException("Format loader returned null.");
+                        if (ReferenceEquals(loaded, cached)) { if (loaded is TResource existing && !loaded.IsDisposed) return existing; throw new InvalidDataException("Format loader returned an invalid cached resource."); }
+                        try
+                        {
+                            if (loaded is not TResource result || loaded.IsDisposed) throw new InvalidDataException("Format loader returned an incompatible resource.");
+                            if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == loaded.GetType()) { cached.CopyFromResource(loaded); loaded.Dispose(); return (TResource)cached; }
+                            if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else loaded.TakeOverPath(path); return result;
+                        }
+                        catch { loaded.Dispose(); throw; }
+                    }
+                    finally { _fileLoads.Remove(fileKey); }
+                }
+            }
         CheckType<TResource>();
         CheckFilePath(path);
         if (cacheMode is < CacheMode.Ignore or > CacheMode.ReplaceDeep)
@@ -111,6 +162,29 @@ public static class ResourceLoader
         }
     }
 
+    [ThreadStatic] private static HashSet<string>? _fileLoads;
+    internal static Resource LoadFileResource(string path, CacheMode cacheMode, Type? expectedType = null)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); path = ResourceUID.EnsurePath(path);
+        if (!ResourceArchive.IsPath(path)) return Load<Resource>(path, cacheMode);
+        lock (LoadGate)
+        {
+            var cached = Resource.GetRegisteredPath(path); if (cacheMode == CacheMode.Reuse && cached is not null) { if (expectedType is not null && !expectedType.IsInstanceOfType(cached)) throw new InvalidOperationException("Cached resource does not match requested type."); return cached; }
+            _fileLoads ??= new(StringComparer.Ordinal); var fileKey = ResourceArchive.Absolute(path); if (_fileLoads.Count >= 64 || !_fileLoads.Add(fileKey)) throw new InvalidDataException("External file dependency cycle requires bundled resources.");
+            try
+            {
+                using var context = ResourceArchive.Decode(path, cacheMode); var parsed = context.Root; if (expectedType is not null && !expectedType.IsInstanceOfType(parsed)) throw new InvalidDataException("File resource does not match requested type.");
+                if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == parsed.GetType())
+                {
+                    context.RedirectRoot(cached); using var source = context.ReleaseRoot(); cached.CopyFromResource(source);
+                    ResourceUID.SetID(ResourceArchive.ReadUID(path), path); return cached;
+                }
+                var loaded = context.ReleaseRoot(); try { if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else if (cached is not null) loaded.TakeOverPath(path); else loaded.ResourcePath = path; ResourceUID.SetID(ResourceArchive.ReadUID(path), path); return loaded; } catch { loaded.Dispose(); throw; }
+            }
+            finally { _fileLoads.Remove(fileKey); }
+        }
+    }
+
     /// <summary>Reports whether a supported resource file exists or is already cached.</summary>
     /// <typeparam name="TResource">Requested resource type or compatible base type.</typeparam>
     /// <param name="path">Exact cache path or file path.</param>
@@ -120,7 +194,11 @@ public static class ResourceLoader
     public static bool Exists<TResource>(string path) where TResource : Resource
     {
         CheckFilePath(path);
+        path = ResourceUID.EnsurePath(path);
+        if (Resource.GetRegisteredPath(path) is TResource) return true;
+        foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, typeof(TResource)) && loader.Exists(path)) { var type = loader.GetResourceType(path); return type is not null && typeof(TResource).IsAssignableFrom(type); }
         return Resource.GetRegisteredPath(path) is TResource ||
+
             (typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && IsExtension(path, ImageExtensions) ||
              typeof(TResource).IsAssignableFrom(typeof(FontFile)) && IsExtension(path, FontExtensions) || AudioType<TResource>(path) is not null || CryptoType<TResource>(path) is not null) && FileAccess.FileExists(path);
     }
@@ -132,7 +210,7 @@ public static class ResourceLoader
     public static bool HasCached(string path)
     {
         CheckPath(path);
-        return Resource.GetRegisteredPath(path) is not null;
+        return Resource.GetRegisteredPath(ResourceUID.EnsurePath(path)) is not null;
     }
 
     /// <summary>Gets a live cached resource of the requested type, or null when absent.</summary>
@@ -144,7 +222,7 @@ public static class ResourceLoader
     public static TResource? GetCachedRef<TResource>(string path) where TResource : Resource
     {
         CheckPath(path);
-        return Resource.GetRegisteredPath(path) as TResource;
+        return Resource.GetRegisteredPath(ResourceUID.EnsurePath(path)) as TResource;
     }
 
     /// <summary>Gets caller-owned lowercase filename extensions supported for a resource type.</summary>
@@ -152,6 +230,8 @@ public static class ResourceLoader
     /// <returns>The supported extensions without dots, or an empty array for unsupported types.</returns>
     public static string[] GetRecognizedExtensionsForType<TResource>() where TResource : Resource
     {
+        var archive = new List<string>(ResourceFileTypes.Extensions(typeof(TResource)));
+        foreach (var loader in LoaderSnapshot()) if (loader is not ResourceArchiveLoader && loader.HandlesType(typeof(TResource))) archive.AddRange(loader.GetRecognizedExtensions());
         var images = typeof(TResource).IsAssignableFrom(typeof(ImageTexture));
         var fonts = typeof(TResource).IsAssignableFrom(typeof(FontFile));
         var audio = new List<string>();
@@ -160,8 +240,8 @@ public static class ResourceLoader
         if (typeof(TResource).IsAssignableFrom(typeof(AudioStreamOggVorbis))) audio.Add("ogg");
         if (typeof(TResource).IsAssignableFrom(typeof(CryptoKey))) audio.Add("key");
         if (typeof(TResource).IsAssignableFrom(typeof(X509Certificate))) audio.Add("crt");
-        if (images || fonts) return [.. images ? ImageExtensions : [], .. fonts ? FontExtensions : [], .. audio];
-        return audio.ToArray();
+        if (images || fonts) return [.. images ? ImageExtensions : [], .. fonts ? FontExtensions : [], .. audio, .. archive];
+        return audio.Concat(archive).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
 
     }
 

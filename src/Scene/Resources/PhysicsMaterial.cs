@@ -52,6 +52,16 @@ public sealed class PhysicsMaterial : Resource
     internal ulong Revision => _revision;
 
     /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<PhysicsMaterial, float>(nameof(Friction), p => p.Friction, (p, v) => p.Friction = v, _ => 1f, stored: true);
+        yield return new PropertyDescriptor<PhysicsMaterial, float>(nameof(Bounce), p => p.Bounce, (p, v) => p.Bounce = v, _ => 0f, stored: true);
+        yield return new PropertyDescriptor<PhysicsMaterial, bool>(nameof(Rough), p => p.Rough, (p, v) => p.Rough = v, _ => false, stored: true);
+        yield return new PropertyDescriptor<PhysicsMaterial, bool>(nameof(Absorbent), p => p.Absorbent, (p, v) => p.Absorbent = v, _ => false, stored: true);
+    }
+
+    /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new PhysicsMaterial();
 
     /// <inheritdoc />

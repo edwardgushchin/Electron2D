@@ -6689,14 +6689,59 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ResourceFileTypes",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceFileTypes",
+    "name": "ResourceFileTypes",
+    "signature": "public static class Electron2D.ResourceFileTypes",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ResourceFormatLoader",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "ResourceFormatLoader",
+    "signature": "public abstract class Electron2D.ResourceFormatLoader",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ResourceFormatSaver",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceFormatSaver",
+    "name": "ResourceFormatSaver",
+    "signature": "public abstract class Electron2D.ResourceFormatSaver",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ResourceLoader",
     "kind": "type",
     "declaringType": "Electron2D.ResourceLoader",
     "name": "ResourceLoader",
-    "signature": "public static class Electron2D.ResourceLoader",
+    "signature": "public sealed class Electron2D.ResourceLoader",
     "visibility": "public",
-    "baseType": "System.Object",
-    "interfaces": [],
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -6714,6 +6759,36 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ResourceSaver",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "ResourceSaver",
+    "signature": "public sealed class Electron2D.ResourceSaver",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ResourceUID",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "ResourceUID",
+    "signature": "public sealed class Electron2D.ResourceUID",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -6776,6 +6851,24 @@
     "declaringType": "Electron2D.RigidFreezeMode",
     "name": "RigidFreezeMode",
     "signature": "public enum Electron2D.RigidFreezeMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SaverFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "SaverFlags",
+    "signature": "public enum Electron2D.SaverFlags",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -10198,6 +10291,19 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "-2147483648"
+  },
+  {
+    "id": "constant:Electron2D.ResourceUID.InvalidID()",
+    "kind": "constant",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "InvalidID",
+    "signature": "public const System.Int64 InvalidID = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": "-1"
   },
   {
     "id": "constant:Electron2D.Window.NotificationThemeChanged()",
@@ -14237,6 +14343,32 @@
     "name": ".ctor",
     "signature": "public Resource()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ResourceFormatLoader..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": ".ctor",
+    "signature": "protected ResourceFormatLoader()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ResourceFormatSaver..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ResourceFormatSaver",
+    "name": ".ctor",
+    "signature": "protected ResourceFormatSaver()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -28654,6 +28786,110 @@
     "parameters": [],
     "returnType": "Electron2D.RigidFreezeMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.SaverFlags.BundleResources()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "BundleResources",
+    "signature": "public const Electron2D.SaverFlags BundleResources = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SaverFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.SaverFlags.ChangePath()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "ChangePath",
+    "signature": "public const Electron2D.SaverFlags ChangePath = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SaverFlags",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.SaverFlags.Compress()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "Compress",
+    "signature": "public const Electron2D.SaverFlags Compress = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SaverFlags",
+    "value": "32"
+  },
+  {
+    "id": "enumValue:Electron2D.SaverFlags.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "None",
+    "signature": "public const Electron2D.SaverFlags None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SaverFlags",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.SaverFlags.OmitEditorProperties()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "OmitEditorProperties",
+    "signature": "public const Electron2D.SaverFlags OmitEditorProperties = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SaverFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.SaverFlags.RelativePaths()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "RelativePaths",
+    "signature": "public const Electron2D.SaverFlags RelativePaths = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SaverFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.SaverFlags.ReplaceSubresourcePaths()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "ReplaceSubresourcePaths",
+    "signature": "public const Electron2D.SaverFlags ReplaceSubresourcePaths = 64",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SaverFlags",
+    "value": "64"
+  },
+  {
+    "id": "enumValue:Electron2D.SaverFlags.SaveBigEndian()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SaverFlags",
+    "name": "SaveBigEndian",
+    "signature": "public const Electron2D.SaverFlags SaveBigEndian = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SaverFlags",
+    "value": "16"
   },
   {
     "id": "enumValue:Electron2D.ScreenEnableMode.Always()",
@@ -56335,6 +56571,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CapsuleShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CapsuleShape.GetRect()",
     "kind": "method",
     "declaringType": "Electron2D.CapsuleShape",
@@ -56882,6 +57131,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CircleShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CircleShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -84323,6 +84585,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.MultiplayerSpawner.AddSpawnableScene(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "AddSpawnableScene",
+    "signature": "public System.Void AddSpawnableScene(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.MultiplayerSpawner.ClearSpawnableScenes()",
     "kind": "method",
     "declaringType": "Electron2D.MultiplayerSpawner",
@@ -84423,6 +84704,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerSpawner.GetSpawnableScenePath(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerSpawner",
+    "name": "GetSpawnableScenePath",
+    "signature": "public System.String GetSpawnableScenePath(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -89038,6 +89338,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsMaterial.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsMaterial",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -96122,6 +96435,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RectangleShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RectangleShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RectangleShape.GetRect()",
     "kind": "method",
     "declaringType": "Electron2D.RectangleShape",
@@ -98120,6 +98446,450 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ResourceFileTypes.RegisterNode\u00601(System.String,Func\u003CTNode\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFileTypes",
+    "name": "RegisterNode",
+    "signature": "public static System.Void RegisterNode\u003CTNode\u003E(System.String id, Func\u003CTNode\u003E factory)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CTNode\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFileTypes.RegisterResource\u00601(System.String,Func\u003CTResource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFileTypes",
+    "name": "RegisterResource",
+    "signature": "public static System.Void RegisterResource\u003CTResource\u003E(System.String id, Func\u003CTResource\u003E factory)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CTResource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFileTypes.RegisterValueCodec\u00601(Action\u003CElectron2D.StreamPeerBuffer, TValue\u003E,Func\u003CElectron2D.StreamPeerBuffer, TValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFileTypes",
+    "name": "RegisterValueCodec",
+    "signature": "public static System.Void RegisterValueCodec\u003CTValue\u003E(Action\u003CElectron2D.StreamPeerBuffer, TValue\u003E write, Func\u003CElectron2D.StreamPeerBuffer, TValue\u003E read)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "write",
+        "type": "Action\u003CElectron2D.StreamPeerBuffer, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "read",
+        "type": "Func\u003CElectron2D.StreamPeerBuffer, TValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.Exists(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "Exists",
+    "signature": "public virtual System.Boolean Exists(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.GetClassesUsed(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "GetClassesUsed",
+    "signature": "public virtual System.Type[] GetClassesUsed(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Type[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.GetDependencies(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "GetDependencies",
+    "signature": "public virtual System.String[] GetDependencies(System.String path, System.Boolean addTypes = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "addTypes",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.GetRecognizedExtensions()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "GetRecognizedExtensions",
+    "signature": "public abstract System.String[] GetRecognizedExtensions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.GetResourceScriptClass(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "GetResourceScriptClass",
+    "signature": "public virtual System.String GetResourceScriptClass(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.GetResourceType(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "GetResourceType",
+    "signature": "public abstract System.Type GetResourceType(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Type",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.GetResourceUID(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "GetResourceUID",
+    "signature": "public virtual System.Int64 GetResourceUID(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.HandlesType(System.Type)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "HandlesType",
+    "signature": "public abstract System.Boolean HandlesType(System.Type type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.Type",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.Load(System.String,System.String,System.Boolean,Electron2D.ResourceLoader.CacheMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "Load",
+    "signature": "public abstract Electron2D.Resource Load(System.String path, System.String originalPath, System.Boolean useSubThreads, Electron2D.ResourceLoader.CacheMode cacheMode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "originalPath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "useSubThreads",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "cacheMode",
+        "type": "Electron2D.ResourceLoader.CacheMode",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.RecognizePath(System.String,System.Type)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "RecognizePath",
+    "signature": "public virtual System.Boolean RecognizePath(System.String path, System.Type type = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "System.Type",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatLoader.RenameDependencies(System.String,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatLoader",
+    "name": "RenameDependencies",
+    "signature": "public virtual System.Void RenameDependencies(System.String path, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E renames)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "renames",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatSaver.GetRecognizedExtensions(Electron2D.Resource)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatSaver",
+    "name": "GetRecognizedExtensions",
+    "signature": "public abstract System.String[] GetRecognizedExtensions(Electron2D.Resource resource)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "resource",
+        "type": "Electron2D.Resource",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatSaver.Recognize(Electron2D.Resource)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatSaver",
+    "name": "Recognize",
+    "signature": "public abstract System.Boolean Recognize(Electron2D.Resource resource)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "resource",
+        "type": "Electron2D.Resource",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatSaver.RecognizePath(Electron2D.Resource,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatSaver",
+    "name": "RecognizePath",
+    "signature": "public virtual System.Boolean RecognizePath(Electron2D.Resource resource, System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "resource",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatSaver.Save(Electron2D.Resource,System.String,Electron2D.SaverFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatSaver",
+    "name": "Save",
+    "signature": "public abstract System.Void Save(Electron2D.Resource resource, System.String path, Electron2D.SaverFlags flags)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "resource",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.SaverFlags",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFormatSaver.SetUID(System.String,System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFormatSaver",
+    "name": "SetUID",
+    "signature": "public virtual System.Void SetUID(System.String path, System.Int64 uid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "uid",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.AddResourceFormatLoader(Electron2D.ResourceFormatLoader,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "AddResourceFormatLoader",
+    "signature": "public static System.Void AddResourceFormatLoader(Electron2D.ResourceFormatLoader formatLoader, System.Boolean atFront = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "formatLoader",
+        "type": "Electron2D.ResourceFormatLoader",
+        "default": null
+      },
+      {
+        "name": "atFront",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ResourceLoader.Exists\u00601(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.ResourceLoader",
@@ -98158,6 +98928,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ResourceLoader.GetClassesUsed(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "GetClassesUsed",
+    "signature": "public static System.Type[] GetClassesUsed(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Type[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.GetDependencies(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "GetDependencies",
+    "signature": "public static System.String[] GetDependencies(System.String path, System.Boolean addTypes = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "addTypes",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ResourceLoader.GetRecognizedExtensionsForType\u00601()",
     "kind": "method",
     "declaringType": "Electron2D.ResourceLoader",
@@ -98168,6 +98981,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.GetResourceUID(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "GetResourceUID",
+    "signature": "public static System.Int64 GetResourceUID(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64",
     "value": null
   },
   {
@@ -98211,6 +99043,459 @@
       }
     ],
     "returnType": "TResource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.RemoveResourceFormatLoader(Electron2D.ResourceFormatLoader)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "RemoveResourceFormatLoader",
+    "signature": "public static System.Void RemoveResourceFormatLoader(Electron2D.ResourceFormatLoader formatLoader)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "formatLoader",
+        "type": "Electron2D.ResourceFormatLoader",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.RenameDependencies(System.String,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "RenameDependencies",
+    "signature": "public static System.Void RenameDependencies(System.String path, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E renames)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "renames",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceSaver.AddResourceFormatSaver(Electron2D.ResourceFormatSaver,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "AddResourceFormatSaver",
+    "signature": "public static System.Void AddResourceFormatSaver(Electron2D.ResourceFormatSaver formatSaver, System.Boolean atFront = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "formatSaver",
+        "type": "Electron2D.ResourceFormatSaver",
+        "default": null
+      },
+      {
+        "name": "atFront",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceSaver.GetRecognizedExtensions(Electron2D.Resource)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "GetRecognizedExtensions",
+    "signature": "public static System.String[] GetRecognizedExtensions(Electron2D.Resource resource)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "resource",
+        "type": "Electron2D.Resource",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceSaver.GetResourceIDForPath(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "GetResourceIDForPath",
+    "signature": "public static System.Int64 GetResourceIDForPath(System.String path, System.Boolean generate = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "generate",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceSaver.RemoveResourceFormatSaver(Electron2D.ResourceFormatSaver)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "RemoveResourceFormatSaver",
+    "signature": "public static System.Void RemoveResourceFormatSaver(Electron2D.ResourceFormatSaver formatSaver)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "formatSaver",
+        "type": "Electron2D.ResourceFormatSaver",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceSaver.Save(Electron2D.Resource,System.String,Electron2D.SaverFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "Save",
+    "signature": "public static System.Void Save(Electron2D.Resource resource, System.String path = \u0022\u0022, Electron2D.SaverFlags flags = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "resource",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.SaverFlags",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceSaver.SetUID(System.String,System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "SetUID",
+    "signature": "public static System.Void SetUID(System.String resource, System.Int64 uid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "resource",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "uid",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceSaver.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceSaver",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.AddID(System.Int64,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "AddID",
+    "signature": "public static System.Void AddID(System.Int64 id, System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.CreateID()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "CreateID",
+    "signature": "public static System.Int64 CreateID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.CreateIDForPath(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "CreateIDForPath",
+    "signature": "public static System.Int64 CreateIDForPath(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.EnsurePath(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "EnsurePath",
+    "signature": "public static System.String EnsurePath(System.String pathOrUID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pathOrUID",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.GetIDPath(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "GetIDPath",
+    "signature": "public static System.String GetIDPath(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.HasID(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "HasID",
+    "signature": "public static System.Boolean HasID(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.IDToText(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "IDToText",
+    "signature": "public static System.String IDToText(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.PathToUID(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "PathToUID",
+    "signature": "public static System.String PathToUID(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.RemoveID(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "RemoveID",
+    "signature": "public static System.Void RemoveID(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.SetID(System.Int64,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "SetID",
+    "signature": "public static System.Void SetID(System.Int64 id, System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.TextToID(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "TextToID",
+    "signature": "public static System.Int64 TextToID(System.String textID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "textID",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.UIDToPath(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "UIDToPath",
+    "signature": "public static System.String UIDToPath(System.String uid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "uid",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceUID.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceUID",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -99227,6 +100512,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneState.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneState",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneState.GetBaseSceneState()",
     "kind": "method",
     "declaringType": "Electron2D.SceneState",
@@ -99545,6 +100849,25 @@
         "name": "flags",
         "type": "Electron2D.GroupCallFlags",
         "default": "Default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneTree.ChangeSceneToFile(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "ChangeSceneToFile",
+    "signature": "public System.Void ChangeSceneToFile(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -99973,6 +101296,19 @@
         "default": "0"
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneTree.ReloadCurrentScene()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "ReloadCurrentScene",
+    "signature": "public System.Void ReloadCurrentScene()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -100442,6 +101778,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SegmentShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {

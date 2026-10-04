@@ -169,6 +169,8 @@
     "ENetConnection.EventType": "ENetEventType",
     "ENetConnection.HostStatistic": "ENetHostStatistic",
     "ENetPacketPeer.PeerState": "ENetPeerState",
-    "ENetPacketPeer.PeerStatistic": "ENetPeerStatistic"
+    "ENetPacketPeer.PeerStatistic": "ENetPeerStatistic",
+    "ResourceSaver.SaverFlags": "SaverFlags",
+    "ResourceFormatLoader.CacheMode": "ResourceLoader.CacheMode"
   }
 }

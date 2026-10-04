@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 ## Responsibility
 
@@ -135,3 +135,7 @@ AudioStreamSynchronized stores only active-prefix child/volume configuration in 
 ## TLS resources
 
 [Certificate and key resources](../components/tls.md) provide ordered chains, RSA/EC public/private material, PEM/DER files and typed weak ResourceLoader cache modes. They use ordinary Resource duplication/lifetime; active TLS use retains payload state until disconnect. General saver/serialization/editor workflows remain separate.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

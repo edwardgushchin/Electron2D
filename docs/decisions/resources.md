@@ -1,6 +1,6 @@
 # Electron2D resources decisions
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 This bounded log owns the complete architectural records for resources. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0013](#adr-0013), [0014](#adr-0014), [0039](#adr-0039).
 <a id="adr-0013"></a>
 ## ADR 0013: Managed typed Resource contract
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 ### Status
 
@@ -35,7 +35,7 @@ Duplication is opt-in for every derived type through two protected hooks: constr
 
 Invalid scene IDs throw without mutation. Automatic replacement by a random ID is rejected because silently discarding caller input is unsuitable for the typed C# boundary; `GenerateSceneUniqueID` remains explicit.
 
-Renderer RID, general loader/saver formats, threaded loading, editor path-ID mapping, and automatic file-serialization discovery remain deferred to their missing domains. The first synchronous image-texture loader and its cache modes follow the profile below. Packed-scene local duplication, root ownership, association and setup automation are implemented under ADR 0023.
+Renderer RID, further concrete file schemas, threaded loading, editor path-ID mapping and automatic reflection-based discovery remain deferred to their missing domains. The first synchronous image-texture loader and its cache modes follow the profile below. Packed-scene local duplication, root ownership, association and setup automation are implemented under ADR 0023.
 
 ### First synchronous resource-loader profile
 
@@ -43,7 +43,19 @@ Renderer RID, general loader/saver formats, threaded loading, editor path-ID map
 
 The existing weak path cache does not own returned resources. `Reuse` returns a live registered texture without reading the file. `Ignore` decodes a new caller-owned texture and records an unregistered visible path. `Replace` decodes before mutating and refreshes a same-type cached `ImageTexture` in place through `SetImage`, preserving references held by sprites and materials; a different cached resource type is displaced only after a new texture is ready. Deep cache modes coincide with their ordinary modes because this image format has no resource dependencies. `SetImage` resets a prior logical size override and publishes Changed after state commitment. A decoding failure preserves the existing instance and pixels; a Changed callback failure may propagate after a successful replacement, following the Resource event contract. Loader cache decisions serialize across callers, while resources remain caller-owned and may be disposed independently.
 
-This profile does not introduce a manager-owned shared native payload. An `ImageTexture` owns copied CPU pixels and the existing rendering backend owns GPU uploads and their release. ADR 0014's optional internal leases await a concrete shared-payload ownership transition; adding one here would duplicate the current weak-cache and renderer lifetime rules. Public format-loader registration, other resource formats, file dependencies/UIDs and threaded requests remain separate triggers in coverage.
+This profile does not introduce a manager-owned shared native payload. An `ImageTexture` owns copied CPU pixels and the existing rendering backend owns GPU uploads and their release. The archive profile below establishes the concrete graph lifetime transition for internal leases. Threaded requests and further concrete schemas remain separate triggers.
+
+### Typed resource archives and format extensions
+
+ResourceSaver and ResourceUID expose static public operations through permanent retained internal objects under ADR 0095. ResourceFormatSaver/ResourceFormatLoader are ordinary caller-owned managed extension objects; ordered registration borrows them, deduplicates identity, supports front priority and uses invocation snapshots so callbacks cannot corrupt iteration. Typed exceptions replace heterogeneous Error values. Save uses the explicit path or current ResourcePath, validates flags, and restores a temporary ChangePath even on failure. File replacement commits complete encoded data atomically; no failed encode truncates an existing file.
+
+The runtime archive producer uses a versioned bounded binary format for `.e2dres` resources and `.e2dscene` PackedScene graphs. A fixed header retains UID and endian/compression identity; numeric payloads use explicit selected byte order. Compression is bounded Deflate. RelativePaths and BundleResources affect external dependencies; ReplaceSubresourcePaths assigns stable built-in paths after successful persistence. OmitEditorProperties excludes the reserved editor metadata family. No editor process is required for runtime UID persistence.
+
+Constructors and property codecs are explicitly typed. ResourceFileTypes registers immutable stable IDs and direct factories for compiled Node/Resource types; registration never loads an assembly from file data, invokes reflected members or serializes delegates. Built-in types have explicit compiled registrations. Resource stored descriptors opt in through IsStored; name/local-scene/scene-ID metadata has dedicated fields. A typed value-codec registry supplies portable scalar/math/array values and explicit application codecs. Unknown type IDs, absent codecs, mismatched declared property schemas and transient/native identities reject before publishing resources or cache entries.
+
+An archive contains a resource identity table and scene node tables. Allocate every internal resource identity before applying references to preserve aliases and cycles. External references retain UID, typed class and fallback path; Ordinary Ignore/Replace applies only to the root while dependency cache decisions reuse, and Deep modes propagate. Decode/preparation validates bounds and schema before cache publication; failure attempts every owned resource cleanup without disposing borrowed external resources. PackedScene consumes its existing typed stored model, replacing captured factory delegates with registered stable IDs in files and rebuilding direct factories on load. File-backed instantiation preserves ordinary detached construction and rollback under ADR 0023.
+
+This decision defines the first persistent producer and extensions; current executable behavior and verification are documented with the implementation. File authoring requires save plus fresh-process load/run under ADR 0090. Native rendering, editor controls, inheritance authoring, persistent delegate endpoints and general dynamic values retain their separate dependencies/exclusions.
 
 ### Concrete curve resources
 
@@ -106,7 +118,7 @@ Executable checks cover path ownership and races, event timing and failures, all
 <a id="adr-0014"></a>
 ## ADR 0014: Managed Resource lifetime and realtime allocation
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 ### Status
 
@@ -130,7 +142,7 @@ Copying the reference engine's public `RefCounted` API would not remove Electron
 
 When the first concrete loader and native-backed asset establish real shared-ownership transitions, the Resources domain may add a resource manager with internal disposable leases. Acquiring a lease retains the manager-owned asset payload; disposing a lease releases that retention. Reaching zero leases makes the native payload eligible for deterministic release under the manager's cache policy. It does not force collection of the managed `Resource` wrapper and is not exposed as `Ref()`, `Unref()`, or a public counter on `Resource`.
 
-The first synchronous image-texture loader reuses the weak `ResourcePath` cache and existing renderer-owned GPU upload lifecycle; it does not create a manager-owned shared native payload or add a lease type. A future shared-payload resource manager must specify cache eviction, thread affinity, reload behavior and failure semantics from its concrete ownership transition rather than speculative scaffolding.
+The first synchronous image-texture loader reuses the weak `ResourcePath` cache and existing renderer-owned GPU upload lifecycle; it does not create a manager-owned shared native payload or add a lease type. Loaded archive roots now own their newly decoded graph through an internal disposable owner/instance lease. Scene instances retain that graph independently of template disposal or replacement; node replacement transfers the lease and final root disposal attempts all resource cleanup. File-root copies retain shared graph ownership; failed arbitrary copying keeps old/new graphs for partially committed state, and instantiation acquires retention before invoking factories. Reused external resources remain borrowed. The weak path cache remains non-owning. A future shared-payload resource manager must specify cache eviction, thread affinity, reload behavior and failure semantics from its concrete ownership transition rather than speculative scaffolding.
 
 Engine-owned hot paths have a zero-allocation budget: a repeated successful frame, fixed physics step, input dispatch, render submission, audio mix, or equivalent per-item operation must make no managed-heap or engine-owned native-heap allocation after explicit preparation. This includes allocations hidden in boxing, closures, iterators, formatting, collection growth, lazy cache creation, and native buffer creation. The same rule applies to later runtime domains when they add repeated work.
 
@@ -220,7 +232,7 @@ Electron2D owns `Color`, `Vector2i`, `Rect2i`, `Resource`, typed duplication, bl
 | `compress` and `compress_from_channels` | The editor executable plus the primary SDL3 GPU renderer must expose a concrete offline texture-compression toolchain and selected BC/ETC/BPTC/ASTC encoders. | The first approved texture-compression/import slice; not the initial renderer draw slice unless that slice explicitly includes authoring/import compression. |
 | `decompress` for BC/ETC/BPTC/ASTC | A selected, portable CPU decompressor or renderer readback/conversion backend must exist with format-capability reporting. | The first vertical slice that consumes compressed image pixels on CPU. Raw upload-only texture work does not trigger CPU decompression. |
 | `ImageTexture` conversion and renderer upload | The texture API and first SDL3 GPU/compatibility renderer slices execute with copied Image pixels and documented format limits. | Remaining compressed/integer sampling, device-loss and target-platform verification stay on their specific renderer rows. |
-| Resource loading/import metadata, cache leases, and scene-file image persistence | The first typed synchronous ImageTexture file loader and weak path cache execute. General loader/saver formats, import metadata and disk scene format remain absent; this profile has no manager-owned shared native payload. | Add a format or scene-file producer with dependency/UID integration; add internal leases only when a concrete shared-payload ownership transition requires them under ADR 0014. |
+| Resource loading/import metadata, cache leases, and scene-file image persistence | The first typed synchronous ImageTexture file loader and weak path cache execute. Typed archives now persist image/resource/scene graphs with UID/dependencies and deterministic file-root/scene-instance ownership. Import metadata and further concrete file schemas remain separate. | Further schemas must add typed stored state, native payload handling where required, and executable file consumers; export/remap/editor integration remains a distinct trigger. |
 
 ### Consequences
 
@@ -253,3 +265,5 @@ The managed image checks are Linux/.NET 8 only and do not establish native codec
 - [0021: Runtime and editor target platforms](product.md#adr-0021)
 - [0024: Typed color values and portable quantization](core-math.md#adr-0024)
 - [0035: Foreseeable public type-family completeness](core-math.md#adr-0035)
+
+Exported SceneState views also retain their file-backed graph snapshot through a private lease, including after template disposal. Dispose such a view when finished. Internal unexported views retain no extra ownership; later state/content transitions update exported-view retention. ResourceArchiveTests verifies the final resource snapshot and deterministic release.

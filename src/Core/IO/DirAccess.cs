@@ -9,7 +9,8 @@ namespace Electron2D;
 /// <remarks>
 /// Instances retain one current directory and one access scope. Relative paths resolve from that directory;
 /// <c>res://</c> and <c>user://</c> instances cannot leave their configured root or switch scopes. Operations are
-/// serialized per instance, may block, and are unsuitable for real-time callbacks.
+/// Registered UID notation resolves through ResourceUID before applying these scope rules; unknown UIDs fail.
+/// Operations are serialized per instance, may block, and are unsuitable for real-time callbacks.
 /// </remarks>
 public sealed class DirAccess : ElectronObject
 {
@@ -826,7 +827,7 @@ public sealed class DirAccess : ElectronObject
 
     private string ResolveLocked(string path)
     {
-        ValidatePath(path);
+        ValidatePath(path); path = ResourceUID.EnsurePath(path);
         if (path.StartsWith("res://", StringComparison.Ordinal))
         {
             EnsureScope(AccessScope.Resources);
@@ -856,7 +857,7 @@ public sealed class DirAccess : ElectronObject
         string path,
         (string ProjectRoot, string UserDataRoot) roots)
     {
-        ValidatePath(path);
+        ValidatePath(path); path = ResourceUID.EnsurePath(path);
         if (path.StartsWith("res://", StringComparison.Ordinal))
         {
             var root = roots.ProjectRoot;
@@ -891,6 +892,7 @@ public sealed class DirAccess : ElectronObject
         string path,
         (string ProjectRoot, string UserDataRoot) roots)
     {
+        path = ResourceUID.EnsurePath(path);
         if (path.StartsWith("res://", StringComparison.Ordinal))
             return ResolveWithinRoot(roots.ProjectRoot, path[6..]);
         if (path.StartsWith("user://", StringComparison.Ordinal))

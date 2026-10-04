@@ -1,6 +1,6 @@
 # PhysicsMaterial
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
 **Inherits:** [Resource](Resource.md), ElectronObject
 
@@ -55,3 +55,28 @@ The caller retains and disposes the resource. Bodies unsubscribe when replaced, 
 ## Body-local server coefficients
 
 PhysicsServer signed friction/bounce setters can override one body's fixtures without mutating this borrowed resource or other borrowers. Assignment, revision or disposal reloads both body coefficients; polling at body preparation recovers a change whose earlier subscriber threw before the body handler. [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) verifies isolation, signed contact behavior and reload under [ADR 0076](../decisions/physics-mass.md#adr-0076).
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+## File integration API additions
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Returns the typed properties exposed to tooling before validation. |
+
+## Method Descriptions
+
+<a id="member-3987c8c97192"></a>
+### GetPropertyDescriptors
+
+`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
+
+Returns the typed properties exposed to tooling before validation.
+
+Overrides append or replace descriptors; they must not yield null entries.
+
+Returns: The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.

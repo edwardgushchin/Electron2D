@@ -1,6 +1,6 @@
 # CapsuleShape
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -66,3 +66,28 @@ The concrete Resource copy hooks preserve Radius and Height independently of the
 Direct [shape queries](PhysicsDirectSpaceState.md) use the current capsule, including the sub-slop circle substitution; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) verifies its overlap and contact families.
 
 Inherited [Shape collision methods](Shape.md#collide) now test posed resources and independently swept regions without a SceneTree. ShapeCollisionTests verifies this family under [ADR 0069](../decisions/physics.md#adr-0069), including caller/other boundary-point ordering, lifetime and the sixteen-pair cap.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+## File integration API additions
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Returns the typed properties exposed to tooling before validation. |
+
+## Method Descriptions
+
+<a id="member-9ee74dceed70"></a>
+### GetPropertyDescriptors
+
+`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
+
+Returns the typed properties exposed to tooling before validation.
+
+Overrides append or replace descriptors; they must not yield null entries.
+
+Returns: The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.

@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** [Resource](Resource.md)
 
@@ -16,9 +16,9 @@ Last updated: 2026-10-04
 
 Stores a reusable in-memory node hierarchy and creates independent runtime instances from it.
 
-`PackedScene` is the reuse boundary for Electron2D's Node-based game objects. It stores an in-memory, typed snapshot of one Node hierarchy and constructs independent detached runtime instances from it. The hierarchy may represent one composed game object, a reusable subsystem, or a complete level; these cases use the same capture and instantiation contract. It is a managed [`Resource`](Resource.md) in `Electron2D.dll`; it is not a text/binary scene file, loader, saver, import artifact, or editor document.
+`PackedScene` is the reuse boundary for Electron2D's Node-based game objects. It stores an in-memory, typed snapshot of one Node hierarchy and constructs independent detached runtime instances from it. The hierarchy may represent one composed game object, a reusable subsystem, or a complete level; these cases use the same capture and instantiation contract. It is a managed [`Resource`](Resource.md) in `Electron2D.dll`; ResourceSaver/ResourceLoader persist this model as typed archive scene files; import/editor artifacts and their authoring semantics remain separate.
 
-The snapshot owns no source [`Node`](Node.md). It retains source-independent static node factories, immutable node metadata, typed stored-property values, and references to resources used by those values. Shared source resources remain caller-owned. During instantiation, the returned root owns all created child nodes and every duplicated scene resource; disposing that root disposes the complete hierarchy and those duplicates.
+The snapshot owns no source [`Node`](Node.md). It retains source-independent static node factories, immutable node metadata, typed stored-property values, and references to resources used by those values. Shared resources in an in-memory capture remain caller-owned. A loaded file root owns its newly decoded graph; copies and instances retain it through private ownership leases. During instantiation, the returned root owns all created child nodes and every duplicated scene resource; disposing that root disposes the complete hierarchy and those duplicates.
 
 Runtime packing is typed and uses storage-enabled [`PropertyDescriptor`](PropertyDescriptor.md) instances. Text and binary scene
 files, editor metadata, inheritance authoring, placeholders, and persistent event endpoints belong to later domains.
@@ -275,3 +275,7 @@ Stored Node properties such as Control.ShortcutContext are captured as relative 
 ## Replication provenance
 
 Successful instances carry an internal reference to their source template, enabling automatic direct-child recognition by [MultiplayerSpawner](MultiplayerSpawner.md) even with an empty ResourcePath. The template remains borrowed immutable authoring data; this does not add disk serialization. Factories still return default detached nodes without precreated children. SceneReplicationTests executes automatic template spawning and pre-Ready initial state through native WS/WSS.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

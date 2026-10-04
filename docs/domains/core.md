@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 ## Responsibility
 
@@ -126,7 +126,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
 - Engine.Run now owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. Root-window canvas rendering runs after scene processing. Permission requests and remaining mobile/browser integrations are absent.
 - No complete target build/package/test matrix, Android host/package, iOS host/bundle, Web browser host/build/storage integration, signing pipeline, or complete native/browser verification exists yet. Current native verification is Linux-only: the root host and canvas have Wayland checks, with narrower XWayland display/context probes. This does not establish complete X11 or other-target acceptance.
-- No resource-pack mount, exported/archive-backed virtual filesystem, resource-UID resolver, or platform-pipe backend exists. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` and `pipe://` fail explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard are not implemented. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
+- No resource-pack mount, exported/archive-backed virtual filesystem, platform-pipe backend exists. ResourceUID supplies registered identity resolution. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` resolves registered file identities and unknown identities fail; `pipe://` still fails explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard are not implemented. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
 - No renderer draw count, logging-output controls, generated author/license manifest, script backtrace/language registry, movie writer, or editor hints; the Engine coverage inventory records each dependency boundary.
 
 ## Verification
@@ -186,3 +186,7 @@ The typed ProjectSettings.DebugPathsColor definition supplies the construction-t
 ## Native networking foundation
 
 [Networking](networking.md) owns StreamPeer/PacketPeer codecs and native TCP/UDP/UDS listener/peer behavior under [ADR 0094](../decisions/networking.md#adr-0094). The core object identity/disposal and typed project settings remain shared infrastructure; transport handles stay private. This is the first executable network layer, with protocol-specific and other-platform gates recorded separately.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

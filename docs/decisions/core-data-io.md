@@ -1,6 +1,6 @@
 # Electron2D core configuration, data, and i/o decisions
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 This bounded log owns the complete architectural records for core configuration, data, and i/o. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -153,7 +153,7 @@ Executable tests cover the typed registry, exact identity, mutable snapshots, va
 <a id="adr-0020"></a>
 ## ADR 0020: Typed file access and transformed-file containers
 
-Last updated: 2026-09-21
+Last updated: 2026-10-05
 
 ### Status
 
@@ -186,7 +186,7 @@ Filesystem attributes are exposed through native BCL behavior where the referenc
 - Authentication prevents wrong credentials or modified ciphertext from exposing plaintext.
 - The transformed envelope is versioned and private to Electron2D; external/reference binary compatibility is not promised.
 - FastLZ/Zstandard remain visible, explicit capability gaps without inert stubs; macOS/Windows attribute backends still require native-host testing.
-- Packed `res://`, `uid://`, and `pipe://` need future pack, resource-UID, and platform-pipe backends; no current API claims that directory resolution can read them.
+- Packed res:// mounts and pipe:// require pack/platform-pipe backends. Registered uid:// identities now resolve through ResourceUID under ADR 0013 before applying the existing directory-backed scope; unknown identities fail explicitly.
 
 ### Reference coverage classification
 
@@ -194,7 +194,7 @@ Implemented: raw open modes, temporary files, close/flush/seek/resize, position/
 
 Adapted: reference counting to managed memory and `IDisposable`; numeric error returns and static open error to exceptions; encryption to authenticated private containers; snake_case to typed PascalCase.
 
-Dependency-blocked: FastLZ, Zstandard, packed/exported archive paths, `uid://` resource identities, and `pipe://` streams.
+Dependency-blocked: FastLZ, Zstandard, packed/exported virtual filesystem paths and pipe:// streams. Registered UID resolution now executes under ADR 0013; this does not mount resource packs.
 
 Permanently excluded: `Variant` read/write and a shared mutable numeric error slot.
 

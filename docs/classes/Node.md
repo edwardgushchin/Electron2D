@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1545,3 +1545,7 @@ recursive: True applies to current descendants; later children retain their own 
 Remarks: This local configuration does not replicate itself; participants must agree separately.
 
 SetMultiplayerAuthority is now virtual so MultiplayerSynchronizer stops/rebinds its concrete configuration around authority changes. Spawner/synchronizer lifecycle and [typed replication](../components/scene-replication.md) reuse the existing attached owner/capture guards; authority does not automatically replicate. In-memory source provenance stays internal.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

@@ -5996,8 +5996,6 @@
       "reason": "Managed logical disposal and guarded cleanup replace Object.free lifetime.",
       "adr": "docs/decisions/core-object-runtime.md#adr-0003"
     },
-
-
     {
       "electron2d": "property:Electron2D.InputEvent.CanceledState()",
       "reason": "Protected typed backing state for is_canceled().",
@@ -6008,7 +6006,6 @@
       "reason": "Protected typed backing state for is_pressed().",
       "adr": "docs/decisions/input.md#adr-0038"
     },
-
     {
       "electron2d": "constructor:Electron2D.Window..ctor()",
       "state": "Implemented",
@@ -8910,14 +8907,6 @@
         "SceneTree::method:unload_current_scene()",
         "SceneTree::property:current_scene",
         "SceneTree::signal:scene_changed()"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: implement the typed scene-file loader and path/UID import integration under ADR 0023, then load a PackedScene by path and implement file-based change or reload with the same deferred lifecycle. No file loader exists yet.",
-      "godot": [
-        "SceneTree::method:change_scene_to_file(String:)",
-        "SceneTree::method:reload_current_scene()"
       ]
     },
     {

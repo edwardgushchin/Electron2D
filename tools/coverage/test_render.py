@@ -352,7 +352,7 @@ def main():
     assert len(loader_rows) == 26
     assert {state: sum(f" | {state} | " in row for row in loader_rows)
             for state in ("Implemented", "Partial", "Blocked", "Unimplemented")} == {
-                "Implemented": 8, "Partial": 4, "Blocked": 13, "Unimplemented": 1}
+                "Implemented": 12, "Partial": 4, "Blocked": 9, "Unimplemented": 1}
     for name, target in (("Shape2D", "Shape"), ("CircleShape2D", "CircleShape"),
                          ("CapsuleShape2D", "CapsuleShape"),
                          ("SegmentShape2D", "SegmentShape"),
@@ -395,13 +395,17 @@ def main():
         assert len(rows) == sum(expected.values()), name
         assert {state: sum(f" | {state} | " in row for row in rows)
                 for state in expected} == expected, name
-    for name, expected in (("MultiplayerSpawner", {"Implemented": 8, "Partial": 3}),
+    for name, expected in (("MultiplayerSpawner", {"Implemented": 11}),
                            ("MultiplayerSynchronizer", {"Implemented": 19}),
                            ("SceneReplicationConfig", {"Implemented": 18})):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == sum(expected.values()), name
         assert {state: sum(f" | {state} | " in row for row in rows) for state in expected} == expected, name
-    assert "typed PackedScene disk format" in pages[CLASS_PAGES / "MultiplayerSpawner.md"]
+    assert "ResourceArchiveTests" in pages[CLASS_PAGES / "MultiplayerSpawner.md"]
+    for name, count in (("ResourceSaver", 16), ("ResourceFormatSaver", 6), ("ResourceFormatLoader", 18), ("ResourceUID", 14)):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows), name
+        assert "ResourceArchiveTests" in rows[0] and "typed archive" in rows[0], name
     assert "Electron2D.RPCMode" in pages[CLASS_PAGES / "MultiplayerAPI.md"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     button_rows = 0

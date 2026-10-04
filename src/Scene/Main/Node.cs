@@ -1759,6 +1759,8 @@ public partial class Node : ElectronObject
 
                 _ownedSceneResources = null;
             }
+            try { AdoptSceneFileLease(null); } catch (Exception error) { CollectException(ref errors, error); }
+
             ChildAdded = null;
             ChildRemoved = null;
             ChildEnteredTree = null;
@@ -1832,6 +1834,14 @@ public partial class Node : ElectronObject
     internal IReadOnlyList<string> GetPersistentGroups() => Array.AsReadOnly(
         _groups.Where(pair => pair.Value).Select(pair => pair.Key).Order(StringComparer.Ordinal).ToArray());
 
+    private List<IDisposable>? _sceneFileLeases;
+    internal void AdoptSceneFileLease(IDisposable? lease)
+    {
+        if (lease is not null) { (_sceneFileLeases ??= []).Add(lease); return; }
+        var old = _sceneFileLeases; _sceneFileLeases = null; if (old is null) return;
+        List<Exception>? errors = null; foreach (var item in old) try { item.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("File resource graph cleanup failed.", errors);
+    }
     internal void AdoptSceneResources(IReadOnlyList<Resource> resources)
     {
         EnsureMutable();
@@ -2275,7 +2285,7 @@ public partial class Node : ElectronObject
 
     internal void DispatchUnhandledInput(InputEvent @event) => OnUnhandledInput(@event);
 
-    private static bool IsValidNodeName(string? value) =>
+    internal static bool IsValidNodeName(string? value) =>
         !string.IsNullOrWhiteSpace(value) && value is not "." and not ".." && !value.Contains('/');
 
     private static Node CreateDefaultSceneNode() => new();

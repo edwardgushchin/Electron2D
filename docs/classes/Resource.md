@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -499,7 +499,7 @@ Pure managed `Resource` instances are reclaimed by the runtime. `Dispose` perfor
 
 `tests/Electron2D.Tests/Program.cs` verifies defaults, property descriptors, event rules, validation, concurrent ID generation, path conflict/transfer/raw-cache/disposal behavior, concurrent path claims, built-in classification, setup ordering and failure aggregation, every duplication mode, forced and forbidden nested duplication, shallow and typed-container semantics, aliases, cycles, external resources, serialized concurrent copy/reset/coalescing behavior, unsupported and invalid factories, partial-graph rollback, packed-scene local duplication/aliasing/root association/setup/ownership, and access after disposal.
 
-The first synchronous image-texture file loader uses the existing weak path cache; it does not own loaded resources or introduce native-payload leases. There is no general asset loader/saver, import pipeline, scene/resource file format, general renderer material/shader RID ownership, editor path-ID table, or automatic reflection-based discovery. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.
+The first synchronous image-texture file loader uses the existing weak path cache; it does not own loaded resources or introduce native-payload leases. The typed archive loader/saver persists registered stored schemas and scene graphs. General import pipeline, further resource payload schemas, renderer material/shader RID ownership, editor path-ID tables and automatic reflection-based discovery remain absent. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.
 
 Engine consumers can detect content changes through an internal monotonic revision advanced by EmitChanged before public observers, including inside notification-coalescing batches. This preserves Changed ordering and permits retained controls to recover when an earlier observer throws. It is not a public version or serialization identity. Custom resource authors still report meaningful mutations through EmitChanged.
 
@@ -511,3 +511,7 @@ Engine consumers can detect content changes through an internal monotonic revisi
 
 <a id="getrid"></a>
 **GetRID:** The base resource has no backend identity and returns empty after its disposal guard. C# overrides replace the source dispatcher/hook pair. [Shape.GetRID](Shape.md#getrid) supplies stable physics shape identity; [Texture.GetRID](Texture.md#getrid) supplies stable borrowed rendering identity. Material/shader registration remains incomplete. This is a Partial family-wide projection, with an executable base/physics/texture contract under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) checks empty base dispatch and concrete shape identity.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

@@ -336,3 +336,9 @@ The type intentionally omits connection-detail accessors, editable-instance meta
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
 
 For a stored typed Node reference, `GetNodePropertyValue<string>` returns its captured relative path, or an empty string for null. Querying it as a Node is rejected: metadata never retains the original scene or exposes an unfinished instance. The declared property type is still used to validate restoration after hierarchy construction.
+
+Exported SceneState views also retain their file-backed graph snapshot through a private lease, including after template disposal. Dispose such a view when finished. Internal unexported views retain no extra ownership; later state/content transitions update exported-view retention. ResourceArchiveTests verifies the final resource snapshot and deterministic release.
+
+### File snapshot disposal
+
+`protected override void Dispose(bool disposing)` releases an exported file snapshot lease, attempts owned graph cleanup and always invokes the ordinary EObject cleanup. Public Dispose is inherited. Dispose file-backed state views when finished; their resources can otherwise outlive the template. The in-memory borrowed-resource contract stays explicit.

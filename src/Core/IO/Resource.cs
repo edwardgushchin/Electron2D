@@ -61,6 +61,13 @@ public class Resource : ElectronObject
             (_, value) => IsValidSceneUniqueID(value))
     ]);
 
+    private ResourceFileOwnership? _fileOwnership;
+    internal void AdoptFileResources(Resource[] resources) { var old = _fileOwnership; _fileOwnership = resources.Length == 0 ? null : new ResourceFileOwnership(resources); old?.ReleaseOwner(); OnFileOwnershipChanged(); }
+    internal bool FilePathRegistered { get { lock (PathCacheGate) return _pathIsRegistered; } }
+    internal void AdoptFileOwnership(ResourceFileOwnership? ownership) { var old = _fileOwnership; _fileOwnership = ownership; old?.ReleaseOwner(); OnFileOwnershipChanged(); }
+    internal virtual void OnFileOwnershipChanged() { }
+    internal IDisposable? RetainFileResources() => _fileOwnership?.Retain();
+
     private readonly object _changeBatchGate = new();
     private readonly object _stateGate = new();
     private string _resourceName = string.Empty;
@@ -259,23 +266,29 @@ public class Resource : ElectronObject
         if (GetType() != source.GetType())
             throw new ArgumentException("Resources must have the same runtime type.", nameof(source));
 
-        ExecuteChangeBatch(
-            () =>
-            {
-                source.ThrowIfDisposed();
-                var (name, localToScene) = source.GetCopyableBaseState();
-                EmitChanged();
-                ResetState();
-                ResourceName = name;
-                ResourceLocalToScene = localToScene;
-                source.CopyCustomStateTo(
-                    this,
-                    deep: false,
-                    DeepDuplicateMode.None,
-                    static resource => resource,
-                    static resource => resource);
-            },
-            emitAtEnd: true);
+        var retention = source._fileOwnership is { } owner && !owner.Contains(this) ? owner.RetainOwner() : null;
+        try
+        {
+            ExecuteChangeBatch(
+                () =>
+                {
+                    var copied = false;
+                    try
+                    {
+                        source.ThrowIfDisposed();
+                        var (name, localToScene) = source.GetCopyableBaseState();
+                        EmitChanged(); ResetState(); ResourceName = name; ResourceLocalToScene = localToScene;
+                        source.CopyCustomStateTo(this, deep: false, DeepDuplicateMode.None, static resource => resource, static resource => resource);
+                        copied = true;
+                    }
+                    finally
+                    {
+                        if (copied) { var transfer = retention; retention = null; AdoptFileOwnership(transfer); }
+                        else if (retention is not null) { var previous = _fileOwnership; _fileOwnership = previous is null ? retention : new ResourceFileOwnership([], [previous, retention]); retention = null; OnFileOwnershipChanged(); }
+                    }
+                }, emitAtEnd: true);
+        }
+        finally { retention?.ReleaseOwner(); }
     }
 
     /// <summary>Creates a shallow or internally deep duplicate of this resource.</summary>
@@ -502,27 +515,23 @@ public class Resource : ElectronObject
 
     /// <summary>Clears non-stored state when <see cref="ResetState"/> or <see cref="CopyFromResource"/> requests it.</summary>
     protected virtual void OnResetState()
-    {
-    }
+    { }
 
     /// <summary>Handles a raw path-cache assignment after the new path has been committed.</summary>
     /// <param name="path">The newly committed path.</param>
     protected virtual void OnPathCacheSet(string path)
-    {
-    }
+    { }
 
     /// <summary>Handles any committed change to this resource's visible path.</summary>
     /// <param name="path">The newly committed path, or an empty string after displacement.</param>
     /// <remarks>The path has already changed when this callback runs.</remarks>
     protected virtual void OnResourcePathChanged(string path)
-    {
-    }
+    { }
 
     /// <summary>Customizes a newly duplicated scene-local resource.</summary>
     /// <remarks>The owning scene is available through <see cref="GetLocalScene"/> while this callback runs.</remarks>
     protected virtual void OnSetupLocalToScene()
-    {
-    }
+    { }
 
     /// <inheritdoc />
     /// <remarks>Appends resource identity and scene-instancing configuration descriptors.</remarks>
@@ -533,6 +542,7 @@ public class Resource : ElectronObject
     /// <remarks>Unregisters the cache path and clears resource event subscribers before base cleanup.</remarks>
     protected override void Dispose(bool disposing)
     {
+        Exception? fileError = null; if (disposing) try { var ownership = _fileOwnership; _fileOwnership = null; ownership?.ReleaseOwner(); } catch (Exception error) { fileError = error; }
         if (disposing)
         {
             lock (_changeBatchGate)
@@ -559,6 +569,7 @@ public class Resource : ElectronObject
         }
 
         base.Dispose(disposing);
+        if (fileError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(fileError).Throw();
     }
 
     /// <summary>Returns a diagnostic string containing the optional resource name, path, runtime class, and instance identifier.</summary>
@@ -950,6 +961,7 @@ public class Resource : ElectronObject
                 emitAtEnd: false);
 
             ValidateTarget(source, target);
+            target.AdoptFileOwnership(source._fileOwnership?.RetainOwner());
 
             return target;
         }

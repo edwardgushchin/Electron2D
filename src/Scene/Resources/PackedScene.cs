@@ -4,8 +4,10 @@ namespace Electron2D;
 
 /// <summary>Stores a reusable in-memory node hierarchy and creates independent runtime instances from it.</summary>
 /// <remarks>
-/// Runtime packing is typed and uses storage-enabled <see cref="PropertyDescriptor"/> instances. Text and binary scene
-/// files, editor metadata, inheritance authoring, placeholders, and persistent event endpoints belong to later domains.
+/// Runtime packing is typed and uses storage-enabled <see cref="PropertyDescriptor"/> instances.
+/// <see cref="ResourceSaver"/> persists registered factories/properties as typed scene archives;
+/// loaded instances retain their owned file graphs. Editor metadata, inheritance authoring, placeholders
+/// and persistent event endpoints belong to later domains.
 /// An inherited node translation domain is omitted from storage so it continues to track its parent after instantiation.
 /// </remarks>
 public sealed class PackedScene : Resource
@@ -13,6 +15,7 @@ public sealed class PackedScene : Resource
     private readonly object _gate = new();
     private PackedSceneData _data = PackedSceneData.Empty;
     private SceneState _state;
+    private bool _stateExported;
     private bool _packing;
 
     /// <summary>Initializes an empty packed scene.</summary>
@@ -36,7 +39,8 @@ public sealed class PackedScene : Resource
 
     /// <summary>Gets the live read-only metadata object for this resource.</summary>
     /// <returns>A state object that observes later content and path transitions until either object is disposed.</returns>
-    /// <remarks>If a caller disposes a previously returned state, the next call creates a replacement.</remarks>
+    /// <remarks>If a caller disposes a previously returned state, the next call creates a replacement.
+    /// A returned file-backed view retains its graph after template disposal; dispose that view when finished.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
     public SceneState GetState()
     {
@@ -44,7 +48,9 @@ public sealed class PackedScene : Resource
         lock (_gate)
         {
             ThrowIfDisposed();
-            return EnsureStateUnderLock();
+            var state = EnsureStateUnderLock();
+            if (!_stateExported) { state.UpdateFileLease(RetainFileResources()); _stateExported = true; }
+            return state;
         }
     }
 
@@ -83,6 +89,7 @@ public sealed class PackedScene : Resource
             resourcePath = ResourcePath;
         }
 
+        IDisposable? fileLease = RetainFileResources();
         var nodes = new Node[data.Nodes.Length];
         var createdCount = 0;
         var resources = CreateSceneDuplicationScope();
@@ -125,6 +132,7 @@ public sealed class PackedScene : Resource
             resources.AssignLocalScene(root);
             resources.SetupLocalResources();
             root.AdoptSceneResources(resources.ReleaseCreated());
+            root.AdoptSceneFileLease(fileLease); fileLease = null;
             ValidateInstantiatedHierarchy(data, nodes);
             root.Notify(Node.NotificationSceneInstantiated);
             ValidateInstantiatedHierarchy(data, nodes);
@@ -136,6 +144,7 @@ public sealed class PackedScene : Resource
         {
             EndSceneInstantiation(nodes, createdCount);
             var cleanupErrors = CleanupFailedInstance(nodes, createdCount, resources);
+            try { fileLease?.Dispose(); } catch (Exception cleanup) { cleanupErrors.Add(cleanup); }
             if (cleanupErrors.Count == 0)
                 ExceptionDispatchInfo.Capture(instantiationError).Throw();
 
@@ -210,6 +219,13 @@ public sealed class PackedScene : Resource
             ExceptionDispatchInfo.Capture(changedError).Throw();
     }
 
+    internal override void OnFileOwnershipChanged()
+    {
+        lock (_gate) if (_stateExported && !_state.IsDisposed) _state.UpdateFileLease(RetainFileResources());
+    }
+    internal PackedSceneData FileData { get { ThrowIfDisposed(); lock (_gate) return _data; } }
+    internal void LoadFileData(PackedSceneData data) { ThrowIfDisposed(); lock (_gate) ReplaceDataUnderLock(data); }
+
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new PackedScene();
 
@@ -260,7 +276,7 @@ public sealed class PackedScene : Resource
             var state = _state;
             if (state.IsDisposed)
             {
-                _state = new SceneState(_data, path);
+                _state = new SceneState(_data, path); _stateExported = false;
                 return;
             }
 
@@ -270,7 +286,7 @@ public sealed class PackedScene : Resource
             }
             catch (ObjectDisposedException) when (state.IsDisposed && ReferenceEquals(_state, state))
             {
-                _state = new SceneState(_data, path);
+                _state = new SceneState(_data, path); _stateExported = false;
             }
         }
     }
@@ -473,8 +489,7 @@ public sealed class PackedScene : Resource
 
     private SceneState EnsureStateUnderLock()
     {
-        if (_state.IsDisposed)
-            _state = new SceneState(_data, ResourcePath);
+        if (_state.IsDisposed) { _state = new SceneState(_data, ResourcePath); _stateExported = false; }
         return _state;
     }
 
@@ -486,7 +501,7 @@ public sealed class PackedScene : Resource
         var state = _state;
         if (state.IsDisposed)
         {
-            _state = new SceneState(data, path);
+            _state = new SceneState(data, path); _stateExported = false;
             return;
         }
 
@@ -496,7 +511,7 @@ public sealed class PackedScene : Resource
         }
         catch (ObjectDisposedException) when (state.IsDisposed && ReferenceEquals(_state, state))
         {
-            _state = new SceneState(data, path);
+            _state = new SceneState(data, path); _stateExported = false;
         }
     }
 }

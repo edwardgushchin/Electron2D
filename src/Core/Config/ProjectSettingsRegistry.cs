@@ -625,6 +625,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             userDataRoot = _userDataRoot;
         }
 
+        if (path.StartsWith("uid://", StringComparison.Ordinal)) return GlobalizePathCore(ResourceUID.EnsurePath(path));
         if (path.StartsWith("res://", StringComparison.Ordinal))
             return ResolveWithinRoot(projectRoot, path[6..]);
         if (path.StartsWith("user://", StringComparison.Ordinal))

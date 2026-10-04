@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -446,3 +446,7 @@ The original scheduling checks use deterministic supplied deltas. WindowRuntimeT
 ## Canvas render time
 
 Engine.Run captures the scheduled scaled process delta before callbacks and passes it to the renderer after a successful scene frame. Mid-frame TimeScale changes take effect on the next frame. Manual AdvanceFrame does not submit canvas frames. See [render-clock ordering and checks](../components/canvas-rendering.md#animation-intervals-and-rectangles).
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.

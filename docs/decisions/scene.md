@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-03
+Last updated: 2026-10-05
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -181,7 +181,7 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 - Cross-thread scheduling has a precise linearization point at the queue lock. The lock is intentionally small and never held while user code runs.
 - Typed group operations require explicit delegates and therefore remain compile-time checked.
 - Timers use delivered frame delta. ADR 0016 later added Engine time scaling, and ADR 0036 added reusable Node timers with original-delta time-scale bypass; lightweight `SceneTreeTimer` still has no independent bypass.
-- Historical implementation note: scene switching, application quit, tweening, multiplayer, accessibility, editor signals, and platform notifications were absent when this ADR was adopted. ADR 0006 now provides in-memory scene switching; ADR 0037 added typed tweening; the application quit lifecycle is implemented by `SceneTree.Quit`, `AutoAcceptQuit`, and `Engine.Run`. File-based scene loading and the other listed domains remain absent.
+- Historical implementation note: scene switching, application quit, tweening, multiplayer, accessibility, editor signals, and platform notifications were absent when this ADR was adopted. ADR 0006 now provides in-memory scene switching; ADR 0037 added typed tweening; the application quit lifecycle is implemented by `SceneTree.Quit`, `AutoAcceptQuit`, and `Engine.Run`. File-based scene loading now executes through the typed archive producer under ADR 0013; other listed gaps retain their coverage triggers.
 - Historical implementation note: ADR 0037 extended activation rollback and finalization to invalidate SceneTree-owned tweens while retaining this ADR's failure-continuing cleanup rule.
 
 ### Rejected alternatives
@@ -251,7 +251,7 @@ The dependency is restricted to local-scene association and is cleared on resour
 
 Ordinary C# event subscribers and `EventConnection` tokens are runtime objects, not stored scene data. Persistent event connections remain deferred under ADR 0010 until a typed stable endpoint identity and handler-binding schema exists. No delegate inspection or reflection fallback is introduced.
 
-There is no scene file loader/saver, import/UID remapping, editor, inheritance authoring, placeholders, editable instances, missing-resource recovery, or script serialization. The unsupported `PackedSceneEditState` values fail explicitly.
+ResourceSaver/ResourceLoader now persist the typed PackedScene model as version-1 archives under ADR 0013. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, editor/inheritance authoring, placeholders, editable instances and tolerant missing-resource recovery remain absent. The unsupported `PackedSceneEditState` values fail explicitly.
 
 ### Consequences
 
@@ -309,7 +309,7 @@ The intended model follows the proven Node-based, scene-oriented structure famil
 
 ### Current implementation boundary
 
-The implemented `PackedScene` contract is typed, runtime-only, and in-memory. It can capture one owned Node hierarchy and construct independent detached instances now. Scene files, loaders/savers, editor authoring, nested scene-instance metadata, inherited scenes, editable overrides, scripting, and persistent typed event endpoints remain absent. Composition is currently performed by ordinary Node parenting and packing; this decision does not claim those future authoring workflows are implemented.
+The implemented `PackedScene` contract is typed, runtime-only, and in-memory. It can capture one owned Node hierarchy and construct independent detached instances now. Typed scene-file persistence and file-based change/reload now execute under ADR 0013. Editor authoring, nested scene-instance metadata, inherited scenes, editable overrides, scripting and persistent typed event endpoints remain absent. Composition is currently performed by ordinary Node parenting and packing; this decision does not claim those future authoring workflows are implemented.
 
 ### Consequences
 

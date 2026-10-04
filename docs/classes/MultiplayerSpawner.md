@@ -1,6 +1,6 @@
 # MultiplayerSpawner
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.MultiplayerSpawner`. **Source:** [MultiplayerSpawner.cs](../../src/Scene/Multiplayer/MultiplayerSpawner.cs).
 
@@ -258,3 +258,40 @@ Occurs after a remote node has entered and readied.
 ## Verification and limits
 
 [SceneReplicationTests](../../tests/Electron2D.Tests/SceneReplicationTests.cs) verifies native WS/WSS custom/automatic/late/visibility spawning and state, copied config, independent malformed/old/wrong-authority schema bytes, actual batching/modes and 64 warmed active/idle zero-managed-allocation intervals. Setup/templates/snapshots/error/caller-codec/native costs remain separate. File-based scene formats/load/save and editor authoring, foreign/routed traffic and human/rendered acceptance require their own gates.
+
+## Typed file integration
+
+See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+## File integration API additions
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public System.Void AddSpawnableScene(System.String path)` | Loads and registers a file-backed typed PackedScene for automatic replication. |
+| `public System.String GetSpawnableScenePath(System.Int32 index)` | Returns the portable source path of an authored scene. |
+
+## Method Descriptions
+
+<a id="member-b724821cb71a"></a>
+### AddSpawnableScene
+
+`public System.Void AddSpawnableScene(System.String path)`
+
+Loads and registers a file-backed typed PackedScene for automatic replication.
+
+Cached templates remain borrowed. This spawner owns newly loaded templates until clear/disposal; live instances retain their file graph leases.
+
+- `path`: Resource scene path or UID.
+
+<a id="member-e3aa8bd01660"></a>
+### GetSpawnableScenePath
+
+`public System.String GetSpawnableScenePath(System.Int32 index)`
+
+Returns the portable source path of an authored scene.
+
+Returns: Original registration path or UID; ResourcePath for an in-memory template.
+
+- `index`: Ordered scene index.
