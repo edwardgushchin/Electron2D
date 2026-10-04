@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-01
+Last updated: 2026-10-04
 
 ## Responsibility
 
@@ -180,3 +180,7 @@ Engine.Run(Window) is the ordinary application entry point, with MaxFPS, monoton
 Pixel-snapping integration is described by [the canvas component](../components/canvas-rendering.md#pixel-snapping). Viewport owns independent transform/vertex policies; rendering preserves logical node transforms, while Sprite local queries honor attached transform snapping. Project defaults initialize the explicit root Window at construction.
 
 The typed ProjectSettings.DebugPathsColor definition supplies the construction-time color for optional SceneTree path diagnostics; the runtime consumer is documented in [Scene paths](../components/scene-paths.md).
+
+## Native networking foundation
+
+[Networking](networking.md) owns StreamPeer/PacketPeer codecs and native TCP/UDP/UDS listener/peer behavior under [ADR 0094](../decisions/networking.md#adr-0094). The core object identity/disposal and typed project settings remain shared infrastructure; transport handles stay private. This is the first executable network layer, with protocol-specific and other-platform gates recorded separately.

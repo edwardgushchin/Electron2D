@@ -28,6 +28,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Body parameters | [physics-mass.md](physics-mass.md) | 0073, 0076 |
 | Physics monitoring | [physics-monitoring.md](physics-monitoring.md) | 0055, 0058, 0077 |
 | Audio | [audio.md](audio.md) | 0047 |
+| Networking | [networking.md](networking.md) | 0094 |
 | Input | [input.md](input.md) | 0038 |
 | Display | [display.md](display.md) | 0040, 0041, 0042, 0043, 0044 |
 

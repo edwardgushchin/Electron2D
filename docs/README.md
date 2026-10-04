@@ -1,6 +1,6 @@
 # Electron2D documentation
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 This directory describes the engine as it exists now. Planned features are listed only as explicit limitations or next boundaries; they are never presented as implemented.
 
@@ -14,7 +14,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Production source root: `src/`, organized by engine module while retaining the flat public `Electron2D` namespace.
 - Architecture context: `decisions/index.md` routes to bounded domain decision documents; read only the affected documents and explicit cross-domain dependencies. No decision document may exceed 500 lines.
 - Target framework: .NET 10 (`net10.0`), with target-specific Android, iOS and tvOS frameworks selected by runtime identifier.
-- Implemented domains: Core, Input, Scene, Localization, Resources, Display, Rendering, Navigation, Physics and Audio. Each domain page records its exact capabilities and remaining gaps.
+- Implemented domains: Core, Input, Scene, Localization, Resources, Display, Rendering, Navigation, Physics, Audio and Networking. Each domain page records its exact capabilities and remaining gaps.
 - Implemented components include object/resource lifetime, math, configuration and I/O, input, scene scheduling, window lifecycle, translation, CPU images and codecs, canvas drawing, typed shader materials, GUI/text, navigation, physics and audio playback/recording. The [inventory](inventory.md) links implemented production types to their source and reference pages.
 - SDL3-CS managed bindings: complete core, Image and ShaderCross modules from pinned release `v3.4.16.1`, internal to the engine assembly and refreshed by the release import script.
 - Native SDL packaging: Linux x64 consumers receive SDL 3.4.16, SDL_image 3.4.6 and SDL_shadercross 3.0.0 from the runtime project’s pinned native packages. Published self-contained host/rendering/codec checks run without a development library path; native libraries remain separate files.
@@ -31,6 +31,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Process-wide typed project settings, feature overrides, directory-backed `res://`/`user://`, blocking typed file access with metadata/hashes/temporary files/cross-platform extended attributes/compression/authenticated encryption, scoped directory navigation/listing/mutations/links/temporary ownership/filesystem identity, host-driven bounded fixed-step scheduling, scaled/original frame deltas, time scaling, frame metrics, named engine singletons, typed keyboard/mouse/touch/gesture/controller events, action mapping and frame-latched state, deterministic Node input propagation, typed sectioned configuration files with atomic persistence and authenticated encryption, separate Node, CanvasItem and spatial Entity layers, local/global transforms, hierarchy paths and groups, visibility and Z state, pause-aware public/internal process lanes, reusable Timer scene nodes, lightweight one-shot frame timers, typed Tween sequences and interpolation, exception-safe scene-tree lifecycle, typed group operations, queued deletion, typed deferred work and event connections, in-memory typed packed scenes with per-instance local resources, translations, notifications including the future-facing `ScriptChanged` hook, typed editor-property descriptors, and the typed resource base with graph duplication: implemented.
 - Managed CPU images implement raw pixel layouts, copied-buffer ownership, mip chains, format conversion, transforms, filters, compositing, channel/alpha inspection, normal-map helpers and metrics. PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG encoding execute through the native image integration. Further codecs and block compression/decompression remain incomplete under ADR 0039.
 - Rendering has Linux Wayland native pixel checks for canvas geometry, shader parameters, textures, text and resource cleanup; broader rendering and shader features remain partial in coverage. Physics and non-spatial audio playback/recording are implemented within their documented profiles. Scene file serialization and an editor application remain absent. Native input pumping exists in DisplayServer; remaining hardware gaps have explicit triggers in ADR 0038.
+- Native TCP/UDP/Unix-domain listeners and peers, endian-aware stream codecs, caller-span packets, framed streams and extensible typed transport hooks are implemented. Linux x64 IPv4/IPv6 loopback, local IPC, scene-owned exchange and warmed managed allocation checks pass; protocol layers, routed traffic and other platforms retain separate gates in the [networking domain](domains/networking.md).
 - The editor source root is reserved in this repository, but no editor project or source exists yet. Its future assembly is a consumer of `Electron2D.dll` and is not part of the one-runtime-DLL boundary.
 - Persistent event connections: deferred until a typed stable endpoint schema exists.
 - Packed/exported resource filesystems, import remapping, `uid://`, and `pipe://` are not implemented; current `res://`/`user://` resolution is directory-backed and lexically confined. FastLZ and Zstandard are explicit file-access gaps. Extended attributes and directory links are implemented for Linux, macOS, and Windows, with native-host verification currently limited to Linux. Android/iOS link and drive-enumeration integration is explicitly absent.
@@ -51,6 +52,8 @@ This directory describes the engine as it exists now. Planned features are liste
 - Domain: [Navigation](domains/navigation.md)
 - Domain: [Physics](domains/physics.md)
 - Domain: [Audio](domains/audio.md)
+- Domain: [Networking](domains/networking.md)
+- Component: [Native streams and packets](components/networking.md)
 - Component: [Object lifecycle](components/object-lifecycle.md)
 - Component: [Typed event connections](components/event-connections.md)
 - Component: [Typed editor properties](components/editor-properties.md)

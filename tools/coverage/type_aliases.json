@@ -56,7 +56,9 @@
     "MeshInstance2D": "MeshInstance",
     "AudioListener2D": "AudioListener",
     "AudioStreamPlayer2D": "AudioStreamEmitter",
-    "MultiMeshInstance2D": "MultiMeshInstance"
+    "MultiMeshInstance2D": "MultiMeshInstance",
+    "StreamPeerExtension": "StreamPeer",
+    "PacketPeerExtension": "PacketPeer"
   },
   "enums": {
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",

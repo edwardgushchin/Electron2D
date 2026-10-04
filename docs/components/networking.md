@@ -1,0 +1,37 @@
+# Native streams and packets
+
+Last updated: 2026-10-04
+
+## Scope and owned types
+
+[StreamPeer](../classes/StreamPeer.md) provides exact-width numbers and framed text, [StreamPeerBuffer](../classes/StreamPeerBuffer.md) provides seekable bytes, and [StreamPeerSocket](../classes/StreamPeerSocket.md) owns the shared TCP/UDS connection phases. [StreamPeerTCP](../classes/StreamPeerTCP.md), [StreamPeerUDS](../classes/StreamPeerUDS.md), [SocketServer](../classes/SocketServer.md), [TCPServer](../classes/TCPServer.md) and [UDSServer](../classes/UDSServer.md) execute native ordered transport. [PacketPeer](../classes/PacketPeer.md) provides whole-packet and caller-span reads, [PacketPeerUDP](../classes/PacketPeerUDP.md) uses bounded datagram queues, [UDPServer](../classes/UDPServer.md) routes endpoint peers, and [PacketPeerStream](../classes/PacketPeerStream.md) frames packets over a borrowed stream. [StreamSocketStatus](../classes/StreamSocketStatus.md) and [PacketReadStatus](../classes/PacketReadStatus.md) retain domain-specific phases/outcomes. [NetworkSockets](../classes/NetworkSockets.md), [DatagramAddress](../classes/DatagramAddress.md) and [DatagramQueue](../classes/DatagramQueue.md) stay internal.
+
+## Runtime flow
+
+A stream listener owns its listening socket until Stop/Dispose. Each accepted connection owns a separate socket and remains valid after listener Stop. A TCP/UDS client starts a nonblocking connect; Poll advances completion, captures errors and detects drained FIN. Full byte operations can block for requested progress, while partial operations report bytes available for immediate transfer. Host resolution is synchronous cold work. The two typed 30-second project timeout settings are sampled at connect; timeout applies to connect polling rather than subsequent full I/O.
+
+UDP destination assignment resolves and stores an address without opening a socket. Binding or connecting opens native state; first send implicitly opens/binds when necessary. A native-connected UDP socket filters to one sender. Standalone count/read methods poll datagrams into FIFO storage. Queue budgets round to a power of two, charge packet length plus 24 metadata bytes and retain IPv6 scope; overflow drops a whole packet. Sender text is formatted lazily. Empty UDP packets are real packets. Multicast membership accepts a native interface name/id; shared server peers cannot alter listener options.
+
+UDPServer.Poll creates a pending peer on the first packet from a new endpoint. Pending peers are strongly server-owned; TakeConnection transfers logical ownership and keeps a weak endpoint route. Each accepted peer borrows the same native socket and has a separate receive queue. Closing a peer removes its route without closing the listener. Stopping the server disposes pending peers and detaches accepted peers. A zero pending limit rejects new senders while existing accepted peers work; lowering trims newest pending peers.
+
+PacketPeerStream borrows its stream. It buffers partial headers/bodies, counts complete frames and consumes one frame at a time. Four-byte lengths are always little endian. Payload limits round to the next power-of-two allocation less four. Zero outgoing payload is ignored; incoming zero length is valid. Changing stream identity discards queued bytes. Input resize rejects queued data. Oversized headers fail before the full buffer can stall permanently; callers choose how to close/rebind a malformed borrowed stream.
+
+## Ownership, errors and invariants
+
+All transport calls and disposal require the constructing thread. Validation rejects foreign disposal before the object changes state. Peer objects inherit ElectronObject, not Resource; no native handles enter consumer API. Disposal closes owned sockets and preserves borrowed stream ownership. Snapshot arrays are copies; span operations borrow buffers only during the call. TCP/UDS full I/O may block, so a real-time consumer uses availability/partial methods or owns a separate constructing thread.
+
+BigEndian affects primitive numbers and text prefixes. Signed/unsigned widths use C# numeric types; IEEE half is projected as float with half precision on the wire. ASCII output replaces non-ASCII scalars with spaces. GetString decodes Latin-1 until NUL; UTF-8 skips a leading BOM, stops at NUL and replaces malformed bytes individually. MaxStringBytes is an explicit 16 MiB default receive-allocation budget. Queue/frame configuration caps native-layer prepared allocation at 64 MiB. Errors propagate as typed validation/stream/socket exceptions. PacketReadStatus and LastReadException report the latest attempted read; insufficient destination storage leaves the packet queued.
+
+Linux listener setup applies only SO_REUSEADDR through a private SafeHandle-pinned call, avoiding .NET's SO_REUSEPORT sharing behavior. Native restart and exclusive simultaneous listeners are tested. Non-Linux native setup currently uses explicit exclusive binding and requires its own executable fidelity gate. Browser raw sockets are unavailable; in-memory buffer behavior remains independent of sockets. Source buffer shrink/negative readable-count and UDP reversed-limit-trimming defects are corrected with explicit documented behavior.
+
+## Exclusions and remaining integrations
+
+Dynamic value wire serialization and its encode-buffer-size property are excluded under ADR 0001; raw typed bytes and framing are implemented. TLS/DTLS/certificate/trust owners, HTTP/WebSocket protocols, resolver/interface services, ENet/WebRTC, multiplayer scene replication and router discovery remain separate complete slices. This layer does not establish networking permissions, routed delivery, protocol security or unified project/editor tooling. [ADR 0094](../decisions/networking.md#adr-0094) owns these boundaries.
+
+## Verification boundaries
+
+[NetworkingTests](../../tests/Electron2D.Tests/NetworkingTests.cs) verifies native Linux x64 IPv4/IPv6 TCP/UDP and UDS, namespace cleanup and preservation, exact byte fixtures, ASCII/UTF-8 framing edges, partial one-megabyte transfer, FIN with queued bytes, listener conflict/restart, zero/max-size datagrams, connected filtering, receive budgets, UDP first-packet/reply/reaccept/stop/limit behavior, multicast join/leave on loopback, ownership rejection and public Node/SceneTree request/reply. The scene workflow is headless scheduling over actual local sockets, not rendered or editor acceptance.
+
+After preparation, 64 buffer number cycles, 64 TCP number/read/write/poll cycles and 64 UDP caller-span queue/metadata cycles each measure zero managed allocation on the owner thread. Constructors, DNS/connect/endpoints, string/array snapshots and errors are outside that scope. Native allocator totals, other platforms, routed multicast/broadcast/network conditions, throughput and owner acceptance remain unverified.
+
+Consumer-defined transports inherit StreamPeer or PacketPeer and override typed span, progress, availability and raw payload capacity hooks. NetworkingTests integrates a one-byte-at-a-time consumer stream with primitive reads/writes and PacketPeerStream, and verifies custom packet bounds without consuming undersized reads. GetMaxPacketSize reports 65507 bytes conservatively for UDP and the configured outgoing payload limit for framed streams.

@@ -5174,6 +5174,69 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PacketPeer",
+    "kind": "type",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "PacketPeer",
+    "signature": "public abstract class Electron2D.PacketPeer",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PacketPeerStream",
+    "kind": "type",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "PacketPeerStream",
+    "signature": "public class Electron2D.PacketPeerStream",
+    "visibility": "public",
+    "baseType": "Electron2D.PacketPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PacketPeerUDP",
+    "kind": "type",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "PacketPeerUDP",
+    "signature": "public class Electron2D.PacketPeerUDP",
+    "visibility": "public",
+    "baseType": "Electron2D.PacketPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PacketReadStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.PacketReadStatus",
+    "name": "PacketReadStatus",
+    "signature": "public enum Electron2D.PacketReadStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Panel",
     "kind": "type",
     "declaringType": "Electron2D.Panel",
@@ -6326,6 +6389,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SocketServer",
+    "kind": "type",
+    "declaringType": "Electron2D.SocketServer",
+    "name": "SocketServer",
+    "signature": "public abstract class Electron2D.SocketServer",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SplitContainer",
     "kind": "type",
     "declaringType": "Electron2D.SplitContainer",
@@ -6416,6 +6494,99 @@
     "baseType": "Electron2D.PhysicsBody",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StreamPeer",
+    "kind": "type",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "StreamPeer",
+    "signature": "public abstract class Electron2D.StreamPeer",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StreamPeerBuffer",
+    "kind": "type",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "StreamPeerBuffer",
+    "signature": "public class Electron2D.StreamPeerBuffer",
+    "visibility": "public",
+    "baseType": "Electron2D.StreamPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StreamPeerSocket",
+    "kind": "type",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": "StreamPeerSocket",
+    "signature": "public abstract class Electron2D.StreamPeerSocket",
+    "visibility": "public",
+    "baseType": "Electron2D.StreamPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StreamPeerTCP",
+    "kind": "type",
+    "declaringType": "Electron2D.StreamPeerTCP",
+    "name": "StreamPeerTCP",
+    "signature": "public class Electron2D.StreamPeerTCP",
+    "visibility": "public",
+    "baseType": "Electron2D.StreamPeerSocket",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StreamPeerUDS",
+    "kind": "type",
+    "declaringType": "Electron2D.StreamPeerUDS",
+    "name": "StreamPeerUDS",
+    "signature": "public class Electron2D.StreamPeerUDS",
+    "visibility": "public",
+    "baseType": "Electron2D.StreamPeerSocket",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StreamSocketStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.StreamSocketStatus",
+    "name": "StreamSocketStatus",
+    "signature": "public enum Electron2D.StreamSocketStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -6552,6 +6723,21 @@
     "signature": "public sealed class Electron2D.SubtweenTweener",
     "visibility": "public",
     "baseType": "Electron2D.Tweener",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TCPServer",
+    "kind": "type",
+    "declaringType": "Electron2D.TCPServer",
+    "name": "TCPServer",
+    "signature": "public class Electron2D.TCPServer",
+    "visibility": "public",
+    "baseType": "Electron2D.SocketServer",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -7066,6 +7252,36 @@
     "signature": "public abstract class Electron2D.Tweener",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.UDPServer",
+    "kind": "type",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "UDPServer",
+    "signature": "public class Electron2D.UDPServer",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.UDSServer",
+    "kind": "type",
+    "declaringType": "Electron2D.UDSServer",
+    "name": "UDSServer",
+    "signature": "public class Electron2D.UDSServer",
+    "visibility": "public",
+    "baseType": "Electron2D.SocketServer",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -11722,6 +11938,45 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.PacketPeer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": ".ctor",
+    "signature": "protected PacketPeer()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PacketPeerStream..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": ".ctor",
+    "signature": "public PacketPeerStream()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PacketPeerUDP..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": ".ctor",
+    "signature": "public PacketPeerUDP()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Panel..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Panel",
@@ -12646,6 +12901,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.SocketServer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SocketServer",
+    "name": ".ctor",
+    "signature": "protected SocketServer()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.SplitContainer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.SplitContainer",
@@ -12709,6 +12977,71 @@
     "declaringType": "Electron2D.StaticBody",
     "name": ".ctor",
     "signature": "public StaticBody()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StreamPeer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": ".ctor",
+    "signature": "protected StreamPeer()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StreamPeerBuffer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": ".ctor",
+    "signature": "public StreamPeerBuffer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StreamPeerSocket..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": ".ctor",
+    "signature": "protected StreamPeerSocket()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StreamPeerTCP..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StreamPeerTCP",
+    "name": ".ctor",
+    "signature": "public StreamPeerTCP()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StreamPeerUDS..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StreamPeerUDS",
+    "name": ".ctor",
+    "signature": "public StreamPeerUDS()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12800,6 +13133,19 @@
     "declaringType": "Electron2D.SubViewportContainer",
     "name": ".ctor",
     "signature": "public SubViewportContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TCPServer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TCPServer",
+    "name": ".ctor",
+    "signature": "public TCPServer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13064,6 +13410,32 @@
     "declaringType": "Electron2D.TranslationDomain",
     "name": ".ctor",
     "signature": "public TranslationDomain()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.UDPServer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.UDPServer",
+    "name": ".ctor",
+    "signature": "public UDPServer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.UDSServer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.UDSServer",
+    "name": ".ctor",
+    "signature": "public UDSServer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23909,6 +24281,45 @@
     "value": "3"
   },
   {
+    "id": "enumValue:Electron2D.PacketReadStatus.Error()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PacketReadStatus",
+    "name": "Error",
+    "signature": "public const Electron2D.PacketReadStatus Error = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketReadStatus",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.PacketReadStatus.OK()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PacketReadStatus",
+    "name": "OK",
+    "signature": "public const Electron2D.PacketReadStatus OK = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketReadStatus",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PacketReadStatus.Unavailable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PacketReadStatus",
+    "name": "Unavailable",
+    "signature": "public const Electron2D.PacketReadStatus Unavailable = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketReadStatus",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.PhysicsInterpolationMode.Inherit()",
     "kind": "enumValue",
     "declaringType": "Electron2D.PhysicsInterpolationMode",
@@ -24778,6 +25189,58 @@
     "parameters": [],
     "returnType": "Electron2D.SpriteFrames.LoopMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.StreamSocketStatus.Connected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.StreamSocketStatus",
+    "name": "Connected",
+    "signature": "public const Electron2D.StreamSocketStatus Connected = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamSocketStatus",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.StreamSocketStatus.Connecting()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.StreamSocketStatus",
+    "name": "Connecting",
+    "signature": "public const Electron2D.StreamSocketStatus Connecting = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamSocketStatus",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.StreamSocketStatus.Error()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.StreamSocketStatus",
+    "name": "Error",
+    "signature": "public const Electron2D.StreamSocketStatus Error = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamSocketStatus",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.StreamSocketStatus.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.StreamSocketStatus",
+    "name": "None",
+    "signature": "public const Electron2D.StreamSocketStatus None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamSocketStatus",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.StructuredTextParser.Custom()",
@@ -77487,6 +77950,594 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PacketPeer.CheckPacketPeer()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "CheckPacketPeer",
+    "signature": "protected System.Void CheckPacketPeer()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.GetAvailablePacketCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "GetAvailablePacketCount",
+    "signature": "public abstract System.Int32 GetAvailablePacketCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.GetMaxPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "GetMaxPacketSize",
+    "signature": "public abstract System.Int32 GetMaxPacketSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.GetPacket()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "GetPacket",
+    "signature": "public System.Byte[] GetPacket()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.GetPacket(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "GetPacket",
+    "signature": "public System.Int32 GetPacket(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.GetPacketError()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "GetPacketError",
+    "signature": "public Electron2D.PacketReadStatus GetPacketError()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketReadStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.NextPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "NextPacketSize",
+    "signature": "protected abstract System.Int32 NextPacketSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "PutPacket",
+    "signature": "public abstract System.Void PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.ReadPacketCore(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "ReadPacketCore",
+    "signature": "protected abstract System.Void ReadPacketCore(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerStream.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerStream.GetAvailablePacketCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "GetAvailablePacketCount",
+    "signature": "public override System.Int32 GetAvailablePacketCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerStream.GetMaxPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "GetMaxPacketSize",
+    "signature": "public override System.Int32 GetMaxPacketSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerStream.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerStream.NextPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "NextPacketSize",
+    "signature": "protected override System.Int32 NextPacketSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerStream.PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "PutPacket",
+    "signature": "public override System.Void PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerStream.ReadPacketCore(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "ReadPacketCore",
+    "signature": "protected override System.Void ReadPacketCore(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.Bind(System.Int32,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "Bind",
+    "signature": "public System.Void Bind(System.Int32 port, System.String bindAddress = \u0022*\u0022, System.Int32 receiveBufferSize = 65536)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "bindAddress",
+        "type": "System.String",
+        "default": "\u0022*\u0022"
+      },
+      {
+        "name": "receiveBufferSize",
+        "type": "System.Int32",
+        "default": "65536"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "Close",
+    "signature": "public System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.ConnectToHost(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "ConnectToHost",
+    "signature": "public System.Void ConnectToHost(System.String host, System.Int32 port)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.GetAvailablePacketCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "GetAvailablePacketCount",
+    "signature": "public override System.Int32 GetAvailablePacketCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.GetLocalPort()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "GetLocalPort",
+    "signature": "public System.Int32 GetLocalPort()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.GetMaxPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "GetMaxPacketSize",
+    "signature": "public override System.Int32 GetMaxPacketSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.GetPacketIP()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "GetPacketIP",
+    "signature": "public System.String GetPacketIP()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.GetPacketPort()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "GetPacketPort",
+    "signature": "public System.Int32 GetPacketPort()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.IsBound()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "IsBound",
+    "signature": "public System.Boolean IsBound()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.IsSocketConnected()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "IsSocketConnected",
+    "signature": "public System.Boolean IsSocketConnected()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.JoinMulticastGroup(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "JoinMulticastGroup",
+    "signature": "public System.Void JoinMulticastGroup(System.String multicastAddress, System.String interfaceName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multicastAddress",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "interfaceName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.LeaveMulticastGroup(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "LeaveMulticastGroup",
+    "signature": "public System.Void LeaveMulticastGroup(System.String multicastAddress, System.String interfaceName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multicastAddress",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "interfaceName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.NextPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "NextPacketSize",
+    "signature": "protected override System.Int32 NextPacketSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "PutPacket",
+    "signature": "public override System.Void PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.ReadPacketCore(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "ReadPacketCore",
+    "signature": "protected override System.Void ReadPacketCore(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.SetBroadcastEnabled(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "SetBroadcastEnabled",
+    "signature": "public System.Void SetBroadcastEnabled(System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.SetDestAddress(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "SetDestAddress",
+    "signature": "public System.Void SetDestAddress(System.String host, System.Int32 port)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerUDP.Wait()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerUDP",
+    "name": "Wait",
+    "signature": "public System.Void Wait()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Panel.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Panel",
@@ -89548,6 +90599,103 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SocketServer.CheckServer()",
+    "kind": "method",
+    "declaringType": "Electron2D.SocketServer",
+    "name": "CheckServer",
+    "signature": "protected System.Void CheckServer()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SocketServer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SocketServer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SocketServer.IsConnectionAvailable()",
+    "kind": "method",
+    "declaringType": "Electron2D.SocketServer",
+    "name": "IsConnectionAvailable",
+    "signature": "public System.Boolean IsConnectionAvailable()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SocketServer.IsListening()",
+    "kind": "method",
+    "declaringType": "Electron2D.SocketServer",
+    "name": "IsListening",
+    "signature": "public System.Boolean IsListening()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SocketServer.Stop()",
+    "kind": "method",
+    "declaringType": "Electron2D.SocketServer",
+    "name": "Stop",
+    "signature": "public System.Void Stop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SocketServer.TakeSocketConnection()",
+    "kind": "method",
+    "declaringType": "Electron2D.SocketServer",
+    "name": "TakeSocketConnection",
+    "signature": "public Electron2D.StreamPeerSocket TakeSocketConnection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamPeerSocket",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SocketServer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.SocketServer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SplitContainer.ClampSplitOffset(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.SplitContainer",
@@ -90318,6 +91466,1107 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.CheckStream()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "CheckStream",
+    "signature": "protected System.Void CheckStream()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.Get16()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "Get16",
+    "signature": "public System.Int16 Get16()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int16",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.Get32()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "Get32",
+    "signature": "public System.Int32 Get32()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.Get64()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "Get64",
+    "signature": "public System.Int64 Get64()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.Get8()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "Get8",
+    "signature": "public System.SByte Get8()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.SByte",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetAvailableBytes()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetAvailableBytes",
+    "signature": "public abstract System.Int32 GetAvailableBytes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetData(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetData",
+    "signature": "public System.Byte[] GetData(System.Int32 bytes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bytes",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetData(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetData",
+    "signature": "public System.Void GetData(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetDouble()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetDouble",
+    "signature": "public System.Double GetDouble()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetFloat()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetFloat",
+    "signature": "public System.Single GetFloat()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetHalf()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetHalf",
+    "signature": "public System.Single GetHalf()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetPartialData(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetPartialData",
+    "signature": "public System.Byte[] GetPartialData(System.Int32 bytes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bytes",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetPartialData(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetPartialData",
+    "signature": "public System.Int32 GetPartialData(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetString(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetString",
+    "signature": "public System.String GetString(System.Int32 bytes = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bytes",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetU16()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetU16",
+    "signature": "public System.UInt16 GetU16()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt16",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetU32()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetU32",
+    "signature": "public System.UInt32 GetU32()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetU64()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetU64",
+    "signature": "public System.UInt64 GetU64()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetU8()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetU8",
+    "signature": "public System.Byte GetU8()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.GetUTF8String(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "GetUTF8String",
+    "signature": "public System.String GetUTF8String(System.Int32 bytes = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bytes",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.Put16(System.Int16)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "Put16",
+    "signature": "public System.Void Put16(System.Int16 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Int16",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.Put32(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "Put32",
+    "signature": "public System.Void Put32(System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.Put64(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "Put64",
+    "signature": "public System.Void Put64(System.Int64 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.Put8(System.SByte)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "Put8",
+    "signature": "public System.Void Put8(System.SByte value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.SByte",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutData(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutData",
+    "signature": "public System.Void PutData(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutDouble(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutDouble",
+    "signature": "public System.Void PutDouble(System.Double value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutFloat(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutFloat",
+    "signature": "public System.Void PutFloat(System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutHalf(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutHalf",
+    "signature": "public System.Void PutHalf(System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutPartialData(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutPartialData",
+    "signature": "public System.Int32 PutPartialData(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutString(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutString",
+    "signature": "public System.Void PutString(System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutU16(System.UInt16)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutU16",
+    "signature": "public System.Void PutU16(System.UInt16 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.UInt16",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutU32(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutU32",
+    "signature": "public System.Void PutU32(System.UInt32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutU64(System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutU64",
+    "signature": "public System.Void PutU64(System.UInt64 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.UInt64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutU8(System.Byte)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutU8",
+    "signature": "public System.Void PutU8(System.Byte value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Byte",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.PutUTF8String(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "PutUTF8String",
+    "signature": "public System.Void PutUTF8String(System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.ReadCore(System.Span\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "ReadCore",
+    "signature": "protected abstract System.Int32 ReadCore(System.Span\u003CSystem.Byte\u003E destination, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeer.WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "WriteCore",
+    "signature": "protected abstract System.Int32 WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.Duplicate()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "Duplicate",
+    "signature": "public Electron2D.StreamPeerBuffer Duplicate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamPeerBuffer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.GetAvailableBytes()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "GetAvailableBytes",
+    "signature": "public override System.Int32 GetAvailableBytes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.GetPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "GetPosition",
+    "signature": "public System.Int32 GetPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "GetSize",
+    "signature": "public System.Int32 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.ReadCore(System.Span\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "ReadCore",
+    "signature": "protected override System.Int32 ReadCore(System.Span\u003CSystem.Byte\u003E destination, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.Resize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "Resize",
+    "signature": "public System.Void Resize(System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.Seek(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "Seek",
+    "signature": "public System.Void Seek(System.Int32 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerBuffer.WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "WriteCore",
+    "signature": "protected override System.Int32 WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerSocket.DisconnectFromHost()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": "DisconnectFromHost",
+    "signature": "public System.Void DisconnectFromHost()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerSocket.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerSocket.GetAvailableBytes()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": "GetAvailableBytes",
+    "signature": "public override System.Int32 GetAvailableBytes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerSocket.GetStatus()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": "GetStatus",
+    "signature": "public Electron2D.StreamSocketStatus GetStatus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamSocketStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerSocket.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": "Poll",
+    "signature": "public System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerSocket.ReadCore(System.Span\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": "ReadCore",
+    "signature": "protected override System.Int32 ReadCore(System.Span\u003CSystem.Byte\u003E destination, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerSocket.WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerSocket",
+    "name": "WriteCore",
+    "signature": "protected override System.Int32 WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTCP.Bind(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTCP",
+    "name": "Bind",
+    "signature": "public System.Void Bind(System.Int32 port, System.String host = \u0022*\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": "\u0022*\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTCP.ConnectToHost(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTCP",
+    "name": "ConnectToHost",
+    "signature": "public System.Void ConnectToHost(System.String host, System.Int32 port)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "host",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTCP.GetConnectedHost()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTCP",
+    "name": "GetConnectedHost",
+    "signature": "public System.String GetConnectedHost()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTCP.GetConnectedPort()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTCP",
+    "name": "GetConnectedPort",
+    "signature": "public System.Int32 GetConnectedPort()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTCP.GetLocalPort()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTCP",
+    "name": "GetLocalPort",
+    "signature": "public System.Int32 GetLocalPort()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTCP.SetNoDelay(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTCP",
+    "name": "SetNoDelay",
+    "signature": "public System.Void SetNoDelay(System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerUDS.Bind(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerUDS",
+    "name": "Bind",
+    "signature": "public System.Void Bind(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerUDS.ConnectToHost(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerUDS",
+    "name": "ConnectToHost",
+    "signature": "public System.Void ConnectToHost(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerUDS.GetConnectedPath()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerUDS",
+    "name": "GetConnectedPath",
+    "signature": "public System.String GetConnectedPath()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -91584,6 +93833,56 @@
       }
     ],
     "returnType": "Electron2D.SubtweenTweener",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TCPServer.GetLocalPort()",
+    "kind": "method",
+    "declaringType": "Electron2D.TCPServer",
+    "name": "GetLocalPort",
+    "signature": "public System.Int32 GetLocalPort()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TCPServer.Listen(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TCPServer",
+    "name": "Listen",
+    "signature": "public System.Void Listen(System.Int32 port, System.String bindAddress = \u0022*\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "bindAddress",
+        "type": "System.String",
+        "default": "\u0022*\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TCPServer.TakeConnection()",
+    "kind": "method",
+    "declaringType": "Electron2D.TCPServer",
+    "name": "TakeConnection",
+    "signature": "public Electron2D.StreamPeerTCP TakeConnection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamPeerTCP",
     "value": null
   },
   {
@@ -95897,6 +98196,185 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.GetLocalPort()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "GetLocalPort",
+    "signature": "public System.Int32 GetLocalPort()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.IsConnectionAvailable()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "IsConnectionAvailable",
+    "signature": "public System.Boolean IsConnectionAvailable()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.IsListening()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "IsListening",
+    "signature": "public System.Boolean IsListening()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.Listen(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "Listen",
+    "signature": "public System.Void Listen(System.Int32 port, System.String bindAddress = \u0022*\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "bindAddress",
+        "type": "System.String",
+        "default": "\u0022*\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "Poll",
+    "signature": "public System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.Stop()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "Stop",
+    "signature": "public System.Void Stop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.TakeConnection()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "TakeConnection",
+    "signature": "public Electron2D.PacketPeerUDP TakeConnection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PacketPeerUDP",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDPServer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDSServer.Listen(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.UDSServer",
+    "name": "Listen",
+    "signature": "public System.Void Listen(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UDSServer.TakeConnection()",
+    "kind": "method",
+    "declaringType": "Electron2D.UDSServer",
+    "name": "TakeConnection",
+    "signature": "public Electron2D.StreamPeerUDS TakeConnection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamPeerUDS",
     "value": null
   },
   {
@@ -119124,6 +121602,58 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.PacketPeer.LastReadException()",
+    "kind": "property",
+    "declaringType": "Electron2D.PacketPeer",
+    "name": "LastReadException",
+    "signature": "public System.Exception LastReadException { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Exception",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PacketPeerStream.InputBufferMaxSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "InputBufferMaxSize",
+    "signature": "public System.Int32 InputBufferMaxSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PacketPeerStream.OutputBufferMaxSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "OutputBufferMaxSize",
+    "signature": "public System.Int32 OutputBufferMaxSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PacketPeerStream.StreamPeer()",
+    "kind": "property",
+    "declaringType": "Electron2D.PacketPeerStream",
+    "name": "StreamPeer",
+    "signature": "public Electron2D.StreamPeer StreamPeer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamPeer",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Parallax.Autoscroll()",
     "kind": "property",
     "declaringType": "Electron2D.Parallax",
@@ -121724,6 +124254,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.TCPConnectTimeoutSeconds()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "TCPConnectTimeoutSeconds",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E TCPConnectTimeoutSeconds { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.TooltipDelaySeconds()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -121747,6 +124290,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.UDSConnectTimeoutSeconds()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "UDSConnectTimeoutSeconds",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E UDSConnectTimeoutSeconds { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {
@@ -123622,6 +126178,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.StreamPeer.BigEndian()",
+    "kind": "property",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "BigEndian",
+    "signature": "public System.Boolean BigEndian { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StreamPeer.MaxStringBytes()",
+    "kind": "property",
+    "declaringType": "Electron2D.StreamPeer",
+    "name": "MaxStringBytes",
+    "signature": "public System.Int32 MaxStringBytes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StreamPeerBuffer.DataArray()",
+    "kind": "property",
+    "declaringType": "Electron2D.StreamPeerBuffer",
+    "name": "DataArray",
+    "signature": "public System.Byte[] DataArray { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.StyleBox.ContentMarginBottom()",
     "kind": "property",
     "declaringType": "Electron2D.StyleBox",
@@ -125296,6 +127891,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UDPServer.MaxPendingConnections()",
+    "kind": "property",
+    "declaringType": "Electron2D.UDPServer",
+    "name": "MaxPendingConnections",
+    "signature": "public System.Int32 MaxPendingConnections { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

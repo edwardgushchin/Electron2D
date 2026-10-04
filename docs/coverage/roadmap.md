@@ -5,7 +5,7 @@ Last updated: 2026-10-03
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Close 1338 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 884 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
+2. Complete 1096 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [HTTPClient](classes/HTTPClient.md), [MultiplayerPeer](classes/MultiplayerPeer.md), [StreamPeerGZIP](classes/StreamPeerGZIP.md), [UPNP](classes/UPNP.md), [WebSocketPeer](classes/WebSocketPeer.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -91,7 +91,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 41 |
-| Networking: trigger is the first networking and multiplayer slice. | 41 |
 | Navigation2D: trigger is the first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052). | 10 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 10 |
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
@@ -102,7 +101,9 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
+| ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
+| ADR 0094: Requires an ENet-capable native backend/packaging and typed host/peer/reliability ownership; ENetMultiplayerPeer additionally depends on MultiplayerPeer. Plain UDP does not provide ENet reliability/protocol. | 3 |
 | Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
@@ -122,6 +123,21 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092). | 2 |
 | Trigger: typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice. | 2 |
+| ADR 0094: Requires HTTPClient protocol state/body decoding plus Node cancellation/completion integration; raw TCP is now available. | 1 |
+| ADR 0094: Requires MultiplayerPeer, MultiplayerAPI and typed stable RPC/authority/path packet schema; raw transports alone do not implement scene replication. | 1 |
+| ADR 0094: Requires SceneMultiplayer replication schema and typed PackedScene spawn/authority/despawn integration. | 1 |
+| ADR 0094: Requires SceneMultiplayer replication schema plus typed property replication/interpolation and visibility ownership. | 1 |
+| ADR 0094: Requires TLSOptions certificate/key/trust resources and a DTLS-capable backend with datagram handshake/retransmission; BCL SslStream alone does not supply DTLS. | 1 |
+| ADR 0094: Requires TLSOptions plus certificate/key/trust resources, native/BCL TLS handshake and encrypted stream polling/ownership adaptation over existing StreamPeerTCP. | 1 |
+| ADR 0094: Requires UPNP SSDP/device-description/SOAP protocol and a typed discovered-device owner. | 1 |
+| ADR 0094: Requires executable MultiplayerAPI typed dispatch/authority contract before managed extension hooks. | 1 |
+| ADR 0094: Requires executable PacketPeerDTLS and DTLS server-cookie/handshake ownership over existing UDP transports. | 1 |
+| ADR 0094: Requires executable WebRTCPeerConnection/DataChannel and typed MultiplayerPeer contract. | 1 |
+| ADR 0094: Requires executable WebSocketPeer framing and typed MultiplayerPeer identity/channel/lifecycle contract. | 1 |
+| ADR 0094: Requires the typed MultiplayerPeer contract and managed override hooks; native extension ABI adapts to the managed owner. | 1 |
+| ADR 0094: Requires typed MultiplayerPeer identity, connection status and channel/transfer contract; no network backend is needed. | 1 |
+| ADR 0094: Requires typed MultiplayerPeer plus SceneMultiplayer RPC/path/authority dispatch contract and Node integration. | 1 |
+| ADR 0094: Requires typed certificate/key/trust resources and a shared TLS configuration contract consumed by StreamPeerTLS and DTLS. | 1 |
 | Animation: trigger is the first missing type-specific animation resource utility or persistence slice on the executable graph/state-machine/BlendSpace/action foundation (ADR 0093); applicable event tracks already execute. | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |

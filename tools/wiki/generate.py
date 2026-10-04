@@ -20,6 +20,7 @@ KINDS = {
 DOMAIN_NAMES = {
     "core": "Core", "input": "Input", "scene": "Scene", "localization": "Localization",
     "resources": "Resources", "display": "Display", "rendering": "Rendering",
+    "networking": "Networking",
     "navigation": "Navigation", "physics": "Physics", "audio": "Audio",
 }
 

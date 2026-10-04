@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class OfflineMultiplayerPeer`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/multiplayer/doc_classes/OfflineMultiplayerPeer.xml) | — | Blocked | Networking: trigger is the first networking and multiplayer slice. |
+| [`class OfflineMultiplayerPeer`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/multiplayer/doc_classes/OfflineMultiplayerPeer.xml) | — | Blocked | ADR 0094: Requires typed MultiplayerPeer identity, connection status and channel/transfer contract; no network backend is needed. |

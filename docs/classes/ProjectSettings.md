@@ -1324,3 +1324,7 @@ Typed built-in nonnegative finite timeout in seconds, read during output prepara
 ## Text editing actions
 
 The `InputUIText*`, `InputUICopy`, `InputUICut`, `InputUIPaste`, `InputUIUndo`, `InputUIRedo` and `InputUISwapInputDirection` permanent typed InputActionSettings entries provide the default [LineEdit](LineEdit.md) keyboard actions. Their stored definitions participate in the existing InputMap transaction and can be remapped by a project. Shift extends caret movement after matching without Shift. LineEditTests exercises submission, movement, deletion and history on the prepared scene GUI path.
+
+## Native stream connection timeouts
+
+`public static ProjectSetting<int> TCPConnectTimeoutSeconds { get; }` maps `network/limits/tcp/connect_timeout_seconds`; `public static ProjectSetting<int> UDSConnectTimeoutSeconds { get; }` maps `network/limits/unix/connect_timeout_seconds`. Both start at 30 seconds, reject negative values and are permanent typed settings sampled on a new ConnectToHost attempt. StreamPeerSocket.Poll enforces the captured deadline; later registry changes do not retime an active attempt. NetworkingTests verifies actual connection/poll behavior. Full I/O blocking is separate from this connection deadline.

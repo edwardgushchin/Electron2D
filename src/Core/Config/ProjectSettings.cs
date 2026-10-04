@@ -519,6 +519,14 @@ public sealed class ProjectSettings : ElectronObject
     /// <value>The permanent typed input/ui_swap_input_direction setting; projects may override its bindings.</value>
     public static ProjectSetting<InputActionSettings> InputUISwapInputDirection { get; } = CreateDefaultKeyAction("ui_swap_input_direction", Key.QuoteLeft, KeyModifierMask.CommandOrControl);
 
+    /// <summary>Defines the connection timeout for new TCP stream attempts.</summary>
+    /// <value>Thirty nonnegative seconds initially; sampled on ConnectToHost.</value>
+    public static ProjectSetting<int> TCPConnectTimeoutSeconds { get; } = new("network/limits/tcp/connect_timeout_seconds", 30, value => value >= 0);
+
+    /// <summary>Defines the connection timeout for new UDS stream attempts.</summary>
+    /// <value>Thirty nonnegative seconds initially; sampled on ConnectToHost.</value>
+    public static ProjectSetting<int> UDSConnectTimeoutSeconds { get; } = new("network/limits/unix/connect_timeout_seconds", 30, value => value >= 0);
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -615,6 +623,8 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(InputUIMenu, isBasic: false);
         RegisterInternal(InputUIAccept, isBasic: false);
         RegisterInternal(InputUICancel, isBasic: false);
+        RegisterInternal(TCPConnectTimeoutSeconds, isBasic: false);
+        RegisterInternal(UDSConnectTimeoutSeconds, isBasic: false);
         RegisterInternal(InputUITextSubmit, isBasic: false);
         RegisterInternal(InputUITextSelectAll, isBasic: false);
         RegisterInternal(InputUICopy, isBasic: false);
@@ -2026,6 +2036,8 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, InputUIMenu) ||
         ReferenceEquals(setting, InputUIAccept) ||
         ReferenceEquals(setting, InputUICancel) ||
+        ReferenceEquals(setting, TCPConnectTimeoutSeconds) ||
+        ReferenceEquals(setting, UDSConnectTimeoutSeconds) ||
         ReferenceEquals(setting, InputUITextSubmit) ||
         ReferenceEquals(setting, InputUITextSelectAll) ||
         ReferenceEquals(setting, InputUICopy) ||
