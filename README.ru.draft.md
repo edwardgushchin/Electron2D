@@ -105,7 +105,7 @@ var window = new Window
     Size = new Vector2i(960, 540)
 };
 
-return Engine.Instance.Run(window);
+return Engine.Run(window);
 ```
 
 Запустите приложение:

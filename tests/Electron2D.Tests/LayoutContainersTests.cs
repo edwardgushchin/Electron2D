@@ -15,7 +15,7 @@ internal static class LayoutContainersTests
 
     private static void VerifyMargins()
     {
-        var theme = ThemeDB.Instance.GetDefaultTheme();
+        var theme = ThemeDB.GetDefaultTheme();
         foreach (var side in new[] { "left", "top", "right", "bottom" })
             Check(theme.HasConstant("margin_" + side, "MarginContainer") && theme.GetConstant("margin_" + side, "MarginContainer") == 0,
                 "All four default margin constants exist with zero values.");

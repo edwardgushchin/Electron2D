@@ -50,7 +50,7 @@ internal static class AudioPhaserTests
     private sealed record OracleCase(int Rate, int Profile, float[] Input, float[] PCM);
     private static void ReferencePCM()
     {
-        var rate = (int)AudioServer.Instance.GetMixRate();
+        var rate = (int)AudioServer.GetMixRate();
         using var stream = typeof(AudioPhaserTests).Assembly.GetManifestResourceStream("TestAudio.PhaserReference.json")!;
         var cases = JsonSerializer.Deserialize<OracleCase[]>(stream)!.Where(item => item.Rate == rate).ToArray();
         Check(cases.Length == 2, "Two pinned C++ phaser profiles at the output rate.");
@@ -83,7 +83,7 @@ internal static class AudioPhaserTests
         using var effect = new AudioEffectPhaser { RangeMinHZ = 1000, RangeMaxHZ = 1000, RateHZ = .01f, Feedback = .1f };
         using var processor = effect.Instantiate(); var output = new Vector2[1];
         processor.Process([new(1, 0)], output);
-        var d = 1000f / (AudioServer.Instance.GetMixRate() * .5f);
+        var d = 1000f / (AudioServer.GetMixRate() * .5f);
         var a = (1 - d) / (1 + d);
         Check(Math.Abs(output[0].X - (1 + MathF.Pow(a, 6))) < .0001f && Math.Abs(output[0].Y) < .00001f,
             "Six cascaded all-pass stages have the expected first impulse gain without cross-channel leakage.");
@@ -111,12 +111,12 @@ internal static class AudioPhaserTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectPhaser { RateHZ = 20, Feedback = .9f, Depth = 4 };
         using var stream = AudioEffectTests.Constant(); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); var borrowed = server.GetBusEffectInstance(0, 0); player.Play(); var native = server.Native;
+            AudioServer.AddBusEffect(0, effect); var borrowed = AudioServer.GetBusEffectInstance(0, 0); player.Play(); var native = server.Native;
             AudioEffectTests.Wait(native, 20); native.PrepareCapture(native.QuantumFrames * native.Channels * 8); AudioEffectTests.Wait(native, 10);
             var pcm = native.CapturedPCM(); var changed = false;
             for (var frame = 0; frame < pcm.Length; frame += native.Channels)
@@ -126,34 +126,34 @@ internal static class AudioPhaserTests
                     Check(Math.Abs(pcm[frame + channel]) < .0001f, "Phaser does not leak into unrelated output pairs.");
             }
             Check(changed, "Native FAudio output contains a distinct stereo phaser signal.");
-            server.SetBusEffectEnabled(0, 0, false); AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
-            server.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
+            AudioServer.SetBusEffectEnabled(0, 0, false); AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
+            AudioServer.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
             var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native active passes allocate no measured bytes/calls.");
             player.StreamPaused = true; AudioEffectTests.Wait(native, 20); bytes = native.MixManagedBytes; calls = FAudioContext.AllocationCalls;
             AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native paused passes allocate no measured bytes/calls.");
-            server.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !effect.IsDisposed, "Removal releases only the borrowed instance.");
+            AudioServer.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !effect.IsDisposed, "Removal releases only the borrowed instance.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     private static void NativeTail()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectPhaser { RangeMinHZ = 10, RangeMaxHZ = 10, RateHZ = .01f, Feedback = .9f, Depth = 4 };
         var samples = new short[512]; samples[0] = 16384; samples[1] = -16384;
         using var stream = new AudioStreamWAV
         {
             SampleFormat = AudioStreamWAV.Format.PCM16,
             Stereo = true,
-            MixRate = (int)server.GetMixRate(),
+            MixRate = (int)AudioServer.GetMixRate(),
             Data = MemoryMarshal.AsBytes(samples.AsSpan()).ToArray()
         };
         var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); var native = server.Native;
+            AudioServer.AddBusEffect(0, effect); var native = server.Native;
             native.PrepareCapture(native.QuantumFrames * native.Channels * 70); player.Play(); AudioEffectTests.Wait(native, 70);
             var pcm = native.CapturedPCM(); var found = false;
             for (var frame = 512; frame < pcm.Length / native.Channels; frame++)
@@ -161,24 +161,24 @@ internal static class AudioPhaserTests
             Check(found, "Finite source leaves a native phaser feedback tail after voice completion.");
             tree.ProcessFrame(.01); Check(!player.IsPlaying(), "Finite voice ends before the phaser tail.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod);
-        settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
         try
         {
             using var effect = new AudioEffectPhaser { RateHZ = 20, Feedback = .9f, Depth = 4 };
             using var stream = AudioEffectTests.Constant(); using var capture = new AudioEffectCapture { BufferLength = .1f };
             var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Stream = stream, Autoplay = true });
             var scenario = new HostScenario(capture); window.AddChild(scenario);
-            var server = AudioServer.Instance; server.AddBusEffect(0, effect); server.AddBusEffect(0, capture);
-            try { Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public phaser host processed and cleaned up."); }
-            finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+            var server = AudioServer.Service; AudioServer.AddBusEffect(0, effect); AudioServer.AddBusEffect(0, capture);
+            try { Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public phaser host processed and cleaned up."); }
+            finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class HostScenario(AudioEffectCapture capture) : Node
     {

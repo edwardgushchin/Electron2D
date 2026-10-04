@@ -85,7 +85,7 @@ internal static class SliderTests
 
     private static void VerifyKeyboardWheelAndJoypad()
     {
-        InputMap.Instance.LoadFromProjectSettings(); Input.Instance.BeginFrame(false);
+        InputMap.LoadFromProjectSettings(); Input.Service.BeginFrame(false);
         using var skin = new Skin(); var viewport = new TestViewport();
         var h = new HSlider { Theme = skin.Theme, Position = new(10, 10), Size = new(100, 20), Value = 50, Step = 2 };
         var v = new VSlider { Theme = skin.Theme, Position = new(150, 10), Size = new(20, 100), Value = 50, Step = 2 };
@@ -105,15 +105,15 @@ internal static class SliderTests
         using var joyRelease = new InputEventJoypadButton { Device = 73, ButtonIndex = JoyButton.DpadRight, Pressed = false };
         try
         {
-            Input.Instance.CompleteFrame(false);
-            Input.Instance.ParseInputEvent(joy); viewport.PushInput(joy, true); Check(h.Value == 52, "The exact joypad transition applies its immediate step."); Input.Instance.CompleteFrame(false);
-            tree.ProcessFrame(.49); Check(h.Value == 52, "Joypad repeat waits for the initial half-second delay."); Input.Instance.CompleteFrame(false);
-            tree.ProcessFrame(.02); Check(h.Value == 54, "Joypad repeat starts after the delay."); Input.Instance.CompleteFrame(false);
-            tree.ProcessFrame(.05); Check(h.Value == 56, "Joypad repeat preserves its twenty-per-second interval."); Input.Instance.CompleteFrame(false);
-            tree.ProcessFrame(.3); Check(h.Value == 58, "A large process delta performs at most one repeat per frame."); Input.Instance.CompleteFrame(false);
-            Input.Instance.ParseInputEvent(joyRelease); viewport.PushInput(joyRelease, true); tree.ProcessFrame(.5); Check(h.Value == 58, "A directional release stops repeating before the next increment.");
+            Input.Service.CompleteFrame(false);
+            Input.ParseInputEvent(joy); viewport.PushInput(joy, true); Check(h.Value == 52, "The exact joypad transition applies its immediate step."); Input.Service.CompleteFrame(false);
+            tree.ProcessFrame(.49); Check(h.Value == 52, "Joypad repeat waits for the initial half-second delay."); Input.Service.CompleteFrame(false);
+            tree.ProcessFrame(.02); Check(h.Value == 54, "Joypad repeat starts after the delay."); Input.Service.CompleteFrame(false);
+            tree.ProcessFrame(.05); Check(h.Value == 56, "Joypad repeat preserves its twenty-per-second interval."); Input.Service.CompleteFrame(false);
+            tree.ProcessFrame(.3); Check(h.Value == 58, "A large process delta performs at most one repeat per frame."); Input.Service.CompleteFrame(false);
+            Input.ParseInputEvent(joyRelease); viewport.PushInput(joyRelease, true); tree.ProcessFrame(.5); Check(h.Value == 58, "A directional release stops repeating before the next increment.");
         }
-        finally { Input.Instance.ParseInputEvent(joyRelease); Input.Instance.CompleteFrame(false); Input.Instance.CompleteFrame(true); }
+        finally { Input.ParseInputEvent(joyRelease); Input.Service.CompleteFrame(false); Input.Service.CompleteFrame(true); }
         using var axis = new InputEventJoypadMotion { Device = 74, Axis = JoyAxis.LeftX, AxisValue = 1 };
         using var heldAxis = new InputEventJoypadMotion { Device = 74, Axis = JoyAxis.LeftX, AxisValue = 1 };
         using var neutralAxis = new InputEventJoypadMotion { Device = 74, Axis = JoyAxis.LeftX, AxisValue = 0 };
@@ -121,16 +121,16 @@ internal static class SliderTests
         using var otherRelease = new InputEventJoypadButton { Device = 75, ButtonIndex = JoyButton.DpadUp, Pressed = false };
         try
         {
-            Input.Instance.ParseInputEvent(axis); viewport.PushInput(axis, true); Check(h.Value == 60, "A fresh analog directional transition also applies the immediate step.");
-            Input.Instance.ParseInputEvent(heldAxis); viewport.PushInput(heldAxis, true); Check(h.Value == 60, "Another held-axis event does not impersonate the event that created just-pressed state."); Input.Instance.CompleteFrame(false);
-            Input.Instance.ParseInputEvent(otherPress); Input.Instance.ParseInputEvent(otherRelease); tree.ProcessFrame(.6);
-            Check(h.Value == 60 && Input.Instance.IsActionPressed("ui_right"), "Releasing any directional action stops the repeat even while another direction remains held.");
+            Input.ParseInputEvent(axis); viewport.PushInput(axis, true); Check(h.Value == 60, "A fresh analog directional transition also applies the immediate step.");
+            Input.ParseInputEvent(heldAxis); viewport.PushInput(heldAxis, true); Check(h.Value == 60, "Another held-axis event does not impersonate the event that created just-pressed state."); Input.Service.CompleteFrame(false);
+            Input.ParseInputEvent(otherPress); Input.ParseInputEvent(otherRelease); tree.ProcessFrame(.6);
+            Check(h.Value == 60 && Input.IsActionPressed("ui_right"), "Releasing any directional action stops the repeat even while another direction remains held.");
         }
-        finally { Input.Instance.ParseInputEvent(neutralAxis); Input.Instance.ParseInputEvent(otherRelease); Input.Instance.CompleteFrame(false); Input.Instance.CompleteFrame(true); }
+        finally { Input.ParseInputEvent(neutralAxis); Input.ParseInputEvent(otherRelease); Input.Service.CompleteFrame(false); Input.Service.CompleteFrame(true); }
         var dragEnds = 0; h.DragEnded += _ => dragEnds++;
         for (var reason = 0; reason < 4; reason++)
         {
-            h.Value = 10; h.GrabFocus(); Input.Instance.ParseInputEvent(joy); viewport.PushInput(joy, true); Check(h.Value == 12, "Lifecycle repeat regression starts with an active controller gesture."); Input.Instance.CompleteFrame(false);
+            h.Value = 10; h.GrabFocus(); Input.ParseInputEvent(joy); viewport.PushInput(joy, true); Check(h.Value == 12, "Lifecycle repeat regression starts with an active controller gesture."); Input.Service.CompleteFrame(false);
             try
             {
                 switch (reason)
@@ -142,15 +142,15 @@ internal static class SliderTests
                 }
                 tree.ProcessFrame(.6); Check(h.Value == 12 && dragEnds == 0, "Visibility, editability, focus and tree transitions cancel controller repeat without manufacturing DragEnded.");
             }
-            finally { Input.Instance.ParseInputEvent(joyRelease); Input.Instance.CompleteFrame(false); Input.Instance.CompleteFrame(true); }
+            finally { Input.ParseInputEvent(joyRelease); Input.Service.CompleteFrame(false); Input.Service.CompleteFrame(true); }
         }
-        h.Value = 10; h.GrabFocus(); Input.Instance.ParseInputEvent(joy); viewport.PushInput(joy, true);
-        Input.Instance.ParseInputEvent(joyRelease); Input.Instance.CompleteFrame(false); tree.ProcessFrame(.1);
-        try { Input.Instance.ActionPress("ui_right"); tree.ProcessFrame(.6); Check(h.Value == 12, "A missed release edge still disables idle repeat while no orientation action is held."); }
-        finally { Input.Instance.ActionRelease("ui_right"); Input.Instance.CompleteFrame(false); Input.Instance.CompleteFrame(true); }
-        h.Value = 10; Input.Instance.ParseInputEvent(joy); viewport.PushInput(joy, true);
-        try { InputMap.Instance.EraseAction("ui_right"); tree.ProcessFrame(.6); Check(h.Value == 12, "Removing the held action mapping safely cancels its repeat loop."); }
-        finally { Input.Instance.ParseInputEvent(joyRelease); InputMap.Instance.LoadFromProjectSettings(); Input.Instance.CompleteFrame(false); Input.Instance.CompleteFrame(true); }
+        h.Value = 10; h.GrabFocus(); Input.ParseInputEvent(joy); viewport.PushInput(joy, true);
+        Input.ParseInputEvent(joyRelease); Input.Service.CompleteFrame(false); tree.ProcessFrame(.1);
+        try { Input.ActionPress("ui_right"); tree.ProcessFrame(.6); Check(h.Value == 12, "A missed release edge still disables idle repeat while no orientation action is held."); }
+        finally { Input.ActionRelease("ui_right"); Input.Service.CompleteFrame(false); Input.Service.CompleteFrame(true); }
+        h.Value = 10; Input.ParseInputEvent(joy); viewport.PushInput(joy, true);
+        try { InputMap.EraseAction("ui_right"); tree.ProcessFrame(.6); Check(h.Value == 12, "Removing the held action mapping safely cancels its repeat loop."); }
+        finally { Input.ParseInputEvent(joyRelease); InputMap.LoadFromProjectSettings(); Input.Service.CompleteFrame(false); Input.Service.CompleteFrame(true); }
     }
 
     private static void VerifyFailuresLifetimeAndPacking()

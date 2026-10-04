@@ -12,8 +12,8 @@ internal static partial class RenderingRuntimeTests
         box.AddChild(a); box.AddChild(b); var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 if (frames == 1)
@@ -38,7 +38,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         VerifyBoxWarm(backend, texture);
         Console.WriteLine($"Box layout native weighted sizing, RTL, visibility, shrink and allocations passed: {backend}.");
     }
@@ -50,14 +50,14 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; long before = 0, allocated = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); box.Size = frames % 2 == 0 ? new(40, 30) : new(42, 32); box.Alignment = frames % 2 == 0 ? AlignmentMode.Begin : AlignmentMode.Center; };
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); box.Size = frames % 2 == 0 ? new(40, 30) : new(42, 32); box.Alignment = frames % 2 == 0 ? AlignmentMode.Begin : AlignmentMode.Center; };
+            RenderingServer.FramePostDraw += () =>
             {
                 if (++frames > 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (frames == 128) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(allocated == 0, $"Warmed {backend} box resize/layout/render allocated {allocated} bytes.");
+        Engine.Run(window); Released(window); Check(allocated == 0, $"Warmed {backend} box resize/layout/render allocated {allocated} bytes.");
     }
 }

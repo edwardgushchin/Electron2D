@@ -15,7 +15,7 @@ internal static class ThemeResourceTests
 
     private static void VerifyBuiltInSliderSkins()
     {
-        var theme = ThemeDB.Instance.GetDefaultTheme();
+        var theme = ThemeDB.GetDefaultTheme();
         foreach (var (key, color) in new[] { ("slider", new Color(.1f, .1f, .1f, .6f)), ("grabber_area", new Color(1, 1, 1, .4f)), ("grabber_area_highlight", new Color(1, 1, 1, .75f)) })
         {
             var style = (StyleBoxFlat)theme.GetStyleBox(key, "HSlider")!;
@@ -47,13 +47,13 @@ internal static class ThemeResourceTests
         Check(theme.DefaultBaseScale == 0 && theme.DefaultFontSize == -1 && !theme.HasDefaultBaseScale() && !theme.HasDefaultFontSize() && theme.GetTypeList().Length == 0,
             "Empty theme defaults do not supply scale or font size overrides.");
         Check(theme.GetColor("missing", "Type") == Colors.Black && theme.GetConstant("missing", "Type") == 0 && !theme.HasColor("missing", "Type") && !theme.HasFontSize("missing", "Type"), "Missing values and presence checks follow category defaults.");
-        Check(ReferenceEquals(theme.GetIcon("missing", "Type"), ThemeDB.Instance.FallbackIcon) && ReferenceEquals(theme.GetStyleBox("missing", "Type"), ThemeDB.Instance.FallbackStyleBox) &&
-            theme.GetFontSize("missing", "Type") == ThemeDB.Instance.FallbackFontSize, "Missing resources and sizes use live theme-database fallbacks.");
+        Check(ReferenceEquals(theme.GetIcon("missing", "Type"), ThemeDB.FallbackIcon) && ReferenceEquals(theme.GetStyleBox("missing", "Type"), ThemeDB.FallbackStyleBox) &&
+            theme.GetFontSize("missing", "Type") == ThemeDB.FallbackFontSize, "Missing resources and sizes use live theme-database fallbacks.");
         theme.DefaultBaseScale = 0; theme.DefaultFontSize = -1; Check(order.Count == 0, "Equal default assignments are silent.");
         theme.DefaultBaseScale = -2; theme.DefaultFontSize = 18;
         Check(theme.DefaultBaseScale == -2 && !theme.HasDefaultBaseScale() && theme.HasDefaultFontSize() && theme.HasFontSize("missing", "Type") && theme.GetFontSize("missing", "Type") == 18, "Signed defaults are retained and only positive values participate in fallback.");
         theme.SetFontSize("size", "Type", 0); Check(theme.GetFontSize("size", "Type") == 18 && theme.GetFontSizeList("Type").SequenceEqual(new[] { "size" }), "Nonpositive font-size slots remain listed and resolve through local defaults.");
-        theme.DefaultFontSize = -1; Check(!theme.HasFontSize("size", "Type") && theme.GetFontSize("size", "Type") == ThemeDB.Instance.FallbackFontSize, "Nonpositive size placeholders do not count as present without a local default.");
+        theme.DefaultFontSize = -1; Check(!theme.HasFontSize("size", "Type") && theme.GetFontSize("size", "Type") == ThemeDB.FallbackFontSize, "Nonpositive size placeholders do not count as present without a local default.");
         theme.SetFontSize("size", "Type", 22); Check(theme.GetFontSize("size", "Type") == 22 && theme.HasFontSize("size", "Type"), "Positive item size overrides all fallbacks.");
         order.Clear(); theme.SetColor("9_item", "", Colors.Red); Check(order.SequenceEqual(new[] { "list", "changed" }), "A new scalar item publishes property-list changes before Changed.");
         order.Clear(); theme.SetColor("9_item", "", Colors.Red); Check(order.SequenceEqual(new[] { "changed" }), "Equal existing scalar writes still emit Changed without list changes.");

@@ -5,10 +5,10 @@ internal static class DisplayServerPointerPixelNativeTests
 {
     public static void Run(DisplayServer display)
     {
-        if (display.GetName() != "Wayland")
+        if (DisplayServer.GetName() != "Wayland")
             return;
 
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The pointer pixel test needs one native window.");
         var window = windows![0];
@@ -17,15 +17,15 @@ internal static class DisplayServerPointerPixelNativeTests
         var id = SDL.GetWindowID(window);
         var probe = new PointerProbe();
         using var tree = new SceneTree(probe);
-        var previousAccumulation = Input.Instance.UseAccumulatedInput;
-        var previousMouseEmulation = Input.Instance.EmulateMouseFromTouch;
-        var previousTouchEmulation = Input.Instance.EmulateTouchFromMouse;
-        Engine.Instance.Start(tree);
+        var previousAccumulation = Input.UseAccumulatedInput;
+        var previousMouseEmulation = Input.EmulateMouseFromTouch;
+        var previousTouchEmulation = Input.EmulateTouchFromMouse;
+        Engine.Start(tree);
         try
         {
-            Input.Instance.UseAccumulatedInput = false;
-            Input.Instance.EmulateMouseFromTouch = false;
-            Input.Instance.EmulateTouchFromMouse = false;
+            Input.UseAccumulatedInput = false;
+            Input.EmulateMouseFromTouch = false;
+            Input.EmulateTouchFromMouse = false;
 
             var motion = new SDL.Event
             {
@@ -68,7 +68,7 @@ internal static class DisplayServerPointerPixelNativeTests
             Check(SDL.PushEvent(ref motion) && SDL.PushEvent(ref press) &&
                   SDL.PushEvent(ref release) && SDL.PushEvent(ref wheel),
                 "SDL accepts the pointer pixel-space probes.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
 
             var expectedPosition = new Vector2(80f * density, 60f * density);
             var expectedRelative = new Vector2(4f * density, 8f * density);
@@ -100,7 +100,7 @@ internal static class DisplayServerPointerPixelNativeTests
                 "SDL accepts malformed and valid pointer events in one queue.");
             try
             {
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 throw new InvalidOperationException("Malformed native pointer values must fail.");
             }
             catch (AggregateException errors)
@@ -119,7 +119,7 @@ internal static class DisplayServerPointerPixelNativeTests
             var preciseWheel = wheel;
             preciseWheel.Wheel.Y = 1.25f;
             Check(SDL.PushEvent(ref preciseWheel), "SDL accepts a fractional wheel amount.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Check(probe.Events.Count == 2 &&
                   probe.Events[0] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: true, Factor: 1.25f } &&
                   probe.Events[1] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: false, Factor: 1.25f },
@@ -132,7 +132,7 @@ internal static class DisplayServerPointerPixelNativeTests
             doubleRelease.Button.Clicks = 2;
             Check(SDL.PushEvent(ref doublePress) && SDL.PushEvent(ref doubleRelease),
                 "SDL accepts a double-click press and release.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Check(probe.Events.Count == 2 &&
                   probe.Events[0] is InputEventMouseButton { DoubleClick: true, Pressed: true, ButtonMask: MouseButtonMask.Left } &&
                   probe.Events[1] is InputEventMouseButton { DoubleClick: true, Pressed: false, ButtonMask: MouseButtonMask.None },
@@ -147,25 +147,25 @@ internal static class DisplayServerPointerPixelNativeTests
             timedMotion.Motion.Timestamp = timestampAnchor.Motion.Timestamp + 1_000_000_000UL;
             Check(SDL.PushEvent(ref timestampAnchor) && SDL.PushEvent(ref timedMotion),
                 "SDL accepts consecutive pointer motions with explicit timestamps.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Check(probe.Events.Count == 2 && probe.Events[1] is InputEventMouseMotion timed &&
                   timed.Velocity == new Vector2(4f * density, 8f * density) &&
                   timed.ScreenVelocity == timed.Velocity,
                 "Native motion velocity uses the original timestamp interval and client pixel density.");
 
             probe.Clear();
-            var previousMode = display.MouseGetMode();
+            var previousMode = DisplayServer.MouseGetMode();
             try
             {
-                display.MouseSetMode(MouseMode.Captured);
-                display.ProcessEvents();
+                DisplayServer.MouseSetMode(MouseMode.Captured);
+                DisplayServer.ProcessEvents();
                 probe.Clear();
                 var capturedMotion = motion;
                 capturedMotion.Motion.Timestamp = timedMotion.Motion.Timestamp + 1_000_000_000UL;
                 capturedMotion.Motion.XRel = 5f;
                 capturedMotion.Motion.YRel = 3f;
                 Check(SDL.PushEvent(ref capturedMotion), "SDL accepts a captured pointer motion.");
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Check(probe.Events.Any(inputEvent => inputEvent is InputEventMouseMotion moved &&
                     moved.ScreenRelative == new Vector2(5f * density, 3f * density) &&
                     moved.Velocity == Vector2.Zero && moved.ScreenVelocity == Vector2.Zero),
@@ -173,17 +173,17 @@ internal static class DisplayServerPointerPixelNativeTests
             }
             finally
             {
-                display.MouseSetMode(previousMode);
+                DisplayServer.MouseSetMode(previousMode);
             }
             Console.WriteLine($"Wayland pointer pixel probe: density {density}; fractional path {(density % 1f == 0f ? "not exercised" : "exercised")}.");
         }
         finally
         {
-            Input.Instance.ReleasePressedEvents();
-            Input.Instance.UseAccumulatedInput = previousAccumulation;
-            Input.Instance.EmulateMouseFromTouch = previousMouseEmulation;
-            Input.Instance.EmulateTouchFromMouse = previousTouchEmulation;
-            Engine.Instance.Stop();
+            Input.ReleasePressedEvents();
+            Input.UseAccumulatedInput = previousAccumulation;
+            Input.EmulateMouseFromTouch = previousMouseEmulation;
+            Input.EmulateTouchFromMouse = previousTouchEmulation;
+            Engine.Stop();
             probe.Clear();
         }
     }

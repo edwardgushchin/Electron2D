@@ -110,7 +110,7 @@ dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 -
 
 按住方向键可移动场景节点；按 Escape 或关闭窗口可退出。此示例会在终端报告移动情况，但不会绘制场景。
 
-其[入口代码](examples/HostExample/Program.cs)配置 `Window`、添加场景并调用 `Engine.Instance.Run`。事件循环、帧计时和关闭流程由引擎负责。完整流程请参阅[示例指南](examples/HostExample/README.md)。
+其[入口代码](examples/HostExample/Program.cs)配置 `Window`、添加场景并调用 `Engine.Run`。事件循环、帧计时和关闭流程由引擎负责。完整流程请参阅[示例指南](examples/HostExample/README.md)。
 
 <a id="documentation"></a>
 

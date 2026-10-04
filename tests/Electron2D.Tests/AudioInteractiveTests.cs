@@ -12,7 +12,7 @@ internal static class AudioInteractiveTests
         if (native) Native();
         Console.WriteLine("Interactive clip rules, timing/fades/filler/hold, lifetime/copies/parameters and warmed CPU" + (native ? "/native/input" : "") + " checks passed.");
     }
-    private static double Rate => AudioServer.Instance.GetMixRate();
+    private static double Rate => AudioServer.GetMixRate();
     private static void Resources()
     {
         using var s = new AudioStreamInteractive();
@@ -160,7 +160,7 @@ internal static class AudioInteractiveTests
     private static void Native()
     {
         using var a = new Probe(new(.2f, .2f)) { Wave = true }; using var b = new Probe(new(-.2f, -.2f)) { Wave = true }; using var s = Pair(a, b); s.AddTransition(-1, -1, From.Immediate, To.Start, Fade.Out, 0);
-        var root = new Node(); var player = new AudioStreamPlayer { Stream = s }; root.AddChild(player); using var tree = new SceneTree(root); player.Play(); var native = AudioServer.Instance.Native;
+        var root = new Node(); var player = new AudioStreamPlayer { Stream = s }; root.AddChild(player); using var tree = new SceneTree(root); player.Play(); var native = AudioServer.Service.Native;
         Wait(native, 20); native.PrepareCapture(native.QuantumFrames * native.Channels * 8); Wait(native, 10); Check(native.CapturedPCM().Any(v => Math.Abs(v) > .1f), "Interactive clip reaches actual FAudio PCM.");
         var handle = (AudioStreamPlaybackInteractive)player.GetStreamPlayback(); player.SetParameter(AudioStreamPlaybackInteractive.SwitchToClipParameter, "B"); Wait(native, 5); Check(handle.GetCurrentClipIndex() == 1 && player.GetParameter(AudioStreamPlaybackInteractive.SwitchToClipParameter) == "B", "Live typed player parameter reaches the native scheduler.");
         player.StreamPaused = true; var cursor = b.Last!.Position; Wait(native, 5); Check(b.Last.Position == cursor, "Paused child cursor remains fixed."); player.StreamPaused = false;
@@ -169,42 +169,42 @@ internal static class AudioInteractiveTests
         Check(native.MixManagedBytes == before && FAudioContext.AllocationCalls == calls, "64 warmed native scheduled switches allocate zero measured bytes/calls.");
         player.StreamPaused = true; Wait(native, 20); before = native.MixManagedBytes; calls = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == before && FAudioContext.AllocationCalls == calls, "64 warmed paused native passes allocate zero measured bytes/calls."); player.StreamPaused = false;
         s.SetClipStream(0, a); Wait(native, 5); tree.ProcessFrame(.01); Check(!player.IsPlaying(), "Structural version edit stops the attached native voice.");
-        var settings = ProjectSettings.Instance; var enabled = settings.Get(ProjectSettings.AudioDriverEnableInput);
+        var settings = ProjectSettings.Service; var enabled = ProjectSettings.Get(ProjectSettings.AudioDriverEnableInput);
         try
         {
-            settings.Set(ProjectSettings.AudioDriverEnableInput, true);
+            ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, true);
             using var microphone = new AudioStreamMicrophone(); using var random = new AudioStreamRandomizer(); random.AddStream(-1, microphone);
             using var sync = new AudioStreamSynchronized { StreamCount = 1 }; sync.SetSyncStream(0, random);
             using var nested = Pair(sync, a); using var monitored = Pair(a, nested); monitored.AddTransition(-1, -1, From.Immediate, To.Start, Fade.Out, 0);
-            player.Stream = monitored; player.Play(); handle = (AudioStreamPlaybackInteractive)player.GetStreamPlayback(); Check(AudioServer.Instance.CurrentInput?.Active != true, "Preparing a nested microphone clip opens paused input without recording.");
+            player.Stream = monitored; player.Play(); handle = (AudioStreamPlaybackInteractive)player.GetStreamPlayback(); Check(AudioServer.Service.CurrentInput?.Active != true, "Preparing a nested microphone clip opens paused input without recording.");
             Task.Run(() => { Reject<InvalidOperationException>(() => handle.Start()); Reject<InvalidOperationException>(() => handle.Dispose()); }).GetAwaiter().GetResult(); Check(!handle.IsDisposed && handle.IsPlaying(), "Prepared nested microphone controls retain public owner checks.");
-            handle.SwitchToClip(1); Wait(native, 8); tree.ProcessFrame(.01); Check(handle.GetCurrentClipIndex() == 1 && AudioServer.Instance.CurrentInput?.Active == true, "Native scheduler starts nested interactive/synchronized/randomized microphone recording safely.");
-            handle.SwitchToClip(0); Wait(native, 8); tree.ProcessFrame(.01); Check(AudioServer.Instance.CurrentInput?.Active != true, "Outgoing scheduled stop releases the final nested microphone capture request.");
+            handle.SwitchToClip(1); Wait(native, 8); tree.ProcessFrame(.01); Check(handle.GetCurrentClipIndex() == 1 && AudioServer.Service.CurrentInput?.Active == true, "Native scheduler starts nested interactive/synchronized/randomized microphone recording safely.");
+            handle.SwitchToClip(0); Wait(native, 8); tree.ProcessFrame(.01); Check(AudioServer.Service.CurrentInput?.Active != true, "Outgoing scheduled stop releases the final nested microphone capture request.");
             for (var i = 0; i < 20; i++) { handle.SwitchToClip(i % 2); Wait(native, 2); }
             before = native.MixManagedBytes; calls = FAudioContext.AllocationCalls;
             for (var i = 0; i < 64; i++) { handle.SwitchToClip(i % 2); Wait(native, 2); }
             Check(native.MixManagedBytes == before && FAudioContext.AllocationCalls == calls, "64 warmed nested scheduled recording switches allocate zero measured bytes/calls.");
-            handle.SwitchToClip(1); Wait(native, 5); monitored.SetClipStream(1, nested); Wait(native, 5); tree.ProcessFrame(.01); Check(!player.IsPlaying() && AudioServer.Instance.CurrentInput?.Active != true, "Version invalidation releases nested recording on the native thread.");
-            settings.Set(ProjectSettings.AudioDriverEnableInput, false); player.Play(); handle = (AudioStreamPlaybackInteractive)player.GetStreamPlayback(); handle.SwitchToClip(1); Wait(native, 5); Reject<Exception>(() => tree.ProcessFrame(.01)); Check(!player.IsPlaying() && AudioServer.Instance.CurrentInput?.Active != true, "Disabled scheduled input fails through native containment without a retained request.");
+            handle.SwitchToClip(1); Wait(native, 5); monitored.SetClipStream(1, nested); Wait(native, 5); tree.ProcessFrame(.01); Check(!player.IsPlaying() && AudioServer.Service.CurrentInput?.Active != true, "Version invalidation releases nested recording on the native thread.");
+            ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, false); player.Play(); handle = (AudioStreamPlaybackInteractive)player.GetStreamPlayback(); handle.SwitchToClip(1); Wait(native, 5); Reject<Exception>(() => tree.ProcessFrame(.01)); Check(!player.IsPlaying() && AudioServer.Service.CurrentInput?.Active != true, "Disabled scheduled input fails through native containment without a retained request.");
         }
-        finally { player.Stop(); settings.Set(ProjectSettings.AudioDriverEnableInput, enabled); }
+        finally { player.Stop(); ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, enabled); }
     }
     private static void Wait(FAudioContext context, long count) { var end = context.MixPasses + count; var watch = System.Diagnostics.Stopwatch.StartNew(); while (context.MixPasses < end) { if (watch.Elapsed > TimeSpan.FromSeconds(5)) throw new InvalidOperationException("Native audio did not advance."); Thread.Sleep(1); } }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; var settings = ProjectSettings.Instance; var old = settings.Get(ProjectSettings.RenderingMethod); var fps = Engine.Instance.MaxFPS;
-        settings.Set(ProjectSettings.RenderingMethod, backend); Engine.Instance.MaxFPS = 60;
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; var settings = ProjectSettings.Service; var old = ProjectSettings.Get(ProjectSettings.RenderingMethod); var fps = Engine.MaxFPS;
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); Engine.MaxFPS = 60;
         try
         {
             for (var run = 0; run < 2; run++)
             {
                 using var a = HostTone(440); using var b = HostTone(660); using var s = Pair(a, b); s.AddTransition(-1, -1, From.Immediate, To.Start, Fade.Cross, .05f);
                 var window = new Window { Title = "Electron2D interactive audio", Size = new(240, 120) }; var player = new AudioStreamPlayer { Stream = s, Autoplay = true, VolumeDB = -24 }; player.SetParameter(AudioStreamPlaybackInteractive.SwitchToClipParameter, "B"); var scenario = new HostScenario(player); window.AddChild(player); window.AddChild(scenario);
-                if (Engine.Instance.Run(window) != 0 || !scenario.Completed || !window.IsDisposed || s.IsDisposed || a.IsDisposed || b.IsDisposed) throw new InvalidOperationException("Interactive public host lifecycle failed.");
+                if (Engine.Run(window) != 0 || !scenario.Completed || !window.IsDisposed || s.IsDisposed || a.IsDisposed || b.IsDisposed) throw new InvalidOperationException("Interactive public host lifecycle failed.");
                 Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "audio-interactive-host", backend, run, scenario.Selected, scenario.Paused, scenario.Restarted, cleaned = window.IsDisposed }));
             }
         }
-        finally { Engine.Instance.MaxFPS = fps; settings.Set(ProjectSettings.RenderingMethod, old); }
+        finally { Engine.MaxFPS = fps; ProjectSettings.Set(ProjectSettings.RenderingMethod, old); }
     }
     private static AudioStreamWAV HostTone(double hz)
     {

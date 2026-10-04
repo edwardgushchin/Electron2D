@@ -20,7 +20,7 @@ Plays borrowed [AudioStream](AudioStream.md) resources through the existing FAud
 using var stream = AudioStreamWAV.LoadFromFile("res://audio/step.wav");
 var player = new AudioStreamEmitter { Stream = stream, Position = new Vector2(100, 50), Autoplay = true };
 window.AddChild(player);
-Engine.Instance.Run(window);
+Engine.Run(window);
 ```
 
 The window owns the node; dispose the borrowed stream after the scene finishes.

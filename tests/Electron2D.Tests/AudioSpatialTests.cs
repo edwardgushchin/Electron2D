@@ -16,7 +16,7 @@ internal static class AudioSpatialTests
         listener.MakeCurrent(); Check(listener.Current, "Detached listener request."); listener.ClearCurrent(); Check(!listener.Current, "Detached clear.");
         using var area = new Area(); Check(!area.AudioBusOverride && area.AudioBusName == "Master", "Area bus defaults.");
         Reject<ArgumentNullException>(() => area.AudioBusName = null!); area.AudioBusName = "Effects"; area.AudioBusOverride = true;
-        using var settings = new ProjectSettings(Directory.GetCurrentDirectory(), System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-spatial-settings"));
+        using var settings = new ProjectSettingsRegistry(Directory.GetCurrentDirectory(), System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-spatial-settings"));
         Check(settings.Get(ProjectSettings.AudioGeneral2DPanningStrength) == .5f, "Spatial project setting default.");
         Reject<ArgumentException>(() => settings.Set(ProjectSettings.AudioGeneral2DPanningStrength, float.NaN));
         Reject<ArgumentOutOfRangeException>(() => settings.Set(ProjectSettings.AudioGeneral2DPanningStrength, -1));
@@ -38,9 +38,9 @@ internal static class AudioSpatialTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod); var fps = Engine.Instance.MaxFPS;
-        settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"); Engine.Instance.MaxFPS = 60;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); var fps = Engine.MaxFPS;
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"); Engine.MaxFPS = 60;
         using var stream = AudioEffectTests.Constant(); using var shape = new RectangleShape { Size = new(40, 40) }; using var capture = new AudioEffectCapture { BufferLength = .2f };
         var window = new Window { Size = new(160, 96) }; var player = new AudioStreamEmitter { Stream = stream, Position = new(80, 48) }; window.AddChild(player);
         var listener = new AudioListener { Position = new(160, 48) }; window.AddChild(listener);
@@ -48,10 +48,10 @@ internal static class AudioSpatialTests
         var scenario = new HostScenario(window, player, listener, area, capture); window.AddChild(scenario);
         try
         {
-            server.AddBus(); server.SetBusName(1, "Effects"); server.AddBusEffect(1, capture);
-            Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Spatial native host completed and released its scene.");
+            AudioServer.AddBus(); AudioServer.SetBusName(1, "Effects"); AudioServer.AddBusEffect(1, capture);
+            Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Spatial native host completed and released its scene.");
         }
-        finally { if (!window.IsDisposed) window.Dispose(); server.CloseNative(); server.BusCount = 1; Engine.Instance.MaxFPS = fps; settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { if (!window.IsDisposed) window.Dispose(); server.CloseNative(); AudioServer.BusCount = 1; Engine.MaxFPS = fps; ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
 
     private sealed class HostScenario(Window window, AudioStreamEmitter player, AudioListener listener, Area area, AudioEffectCapture capture) : Node
@@ -68,7 +68,7 @@ internal static class AudioSpatialTests
         {
             if (++_frames < 3) return;
             _frames = 0;
-            var native = AudioServer.Instance.Native;
+            var native = AudioServer.Service.Native;
             switch (_phase++)
             {
                 case 0:

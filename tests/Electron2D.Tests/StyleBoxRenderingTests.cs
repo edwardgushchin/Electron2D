@@ -33,8 +33,8 @@ internal static partial class RenderingRuntimeTests
         }; window.AddChild(node);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 if (frames == 1) File.WriteAllBytes($"/tmp/electron2d-style-box-{backend}.png", pixels.SavePNGToBuffer());
@@ -80,7 +80,7 @@ internal static partial class RenderingRuntimeTests
                 else window.Tree!.Quit();
             };
         };
-        try { Engine.Instance.Run(window); Released(window); }
+        try { Engine.Run(window); Released(window); }
         finally { foreach (var style in styles) style.Dispose(); }
         Check(!texture.IsDisposed && !atlas.IsDisposed, "Style drawing and disposal preserve borrowed textures.");
         VerifyStyleBoxWarm(backend, texture);
@@ -110,13 +110,13 @@ internal static partial class RenderingRuntimeTests
                 style.SetExpandMarginAll(frames % 2 == 0 ? 1.25f : 2.25f);
                 line.Thickness = frames % 2 == 0 ? 2 : 3; node.QueueRedraw();
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && node.Draws == 128 && allocated == 0, $"Warmed {backend} style mutation/recording/render allocated {allocated} bytes over 64 ProcessFrameStarted-to-FramePostDraw frames; recordings={node.Draws}.");
     }
 }

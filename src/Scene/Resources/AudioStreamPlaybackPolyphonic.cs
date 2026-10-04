@@ -30,7 +30,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     internal override bool RequiresAudioOwner { get { if (base.RequiresAudioOwner) return true; foreach (var voice in _voices) if (voice.Playback?.RequiresAudioOwner == true) return true; return false; } }
     private void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(_source.IsDisposed, _source); }
     private void Idle() { ThrowIfDisposed(); if (_busy) throw new InvalidOperationException("Polyphonic child callbacks cannot reenter control, mixing or disposal."); }
-    private void Owner() { if (RequiresAudioOwner) AudioServer.Instance.Check(); }
+    private void Owner() { if (RequiresAudioOwner) AudioServer.Service.Check(); }
     private Voice? Find(long id)
     {
         var index = (ulong)id >> 32; if (index >= (uint)_voices.Length) return null;
@@ -62,7 +62,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     /// <exception cref="ObjectDisposedException">The parent/resource or requested stream is disposed.</exception>
     public long PlayStream(AudioStream? stream, double fromOffset = 0, float volumeDB = 0, float pitchScale = 1, AudioServer.PlaybackType playbackType = AudioServer.PlaybackType.Default, string bus = "Master")
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try
         {
             Check(); Idle(); Owner(); if (stream is null) return InvalidID;
@@ -77,7 +77,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
             }
             if (index < 0) return InvalidID;
             lock (AudioStream.GraphGate) _source.ValidateChild(stream); stream.EnsurePlaybackOwner();
-            var type = playbackType == AudioServer.PlaybackType.Default ? (ProjectSettings.Instance.GetWithOverride(ProjectSettings.AudioGeneralDefaultPlaybackType) == AudioDefaultPlaybackType.Sample ? AudioServer.PlaybackType.Sample : AudioServer.PlaybackType.Stream) : playbackType;
+            var type = playbackType == AudioServer.PlaybackType.Default ? (ProjectSettings.GetWithOverride(ProjectSettings.AudioGeneralDefaultPlaybackType) == AudioDefaultPlaybackType.Sample ? AudioServer.PlaybackType.Sample : AudioServer.PlaybackType.Stream) : playbackType;
             AudioStreamPlayback? child = null; var owned = false; _source.EnterCall(0); _busy = true;
             try
             {
@@ -102,14 +102,14 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
             }
             finally { AudioStream.ExitCall(); _busy = false; }
         }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     /// <summary>Gets whether an ID still refers to an unfinished child.</summary>
     /// <param name="stream">Parent-local ID returned by PlayStream.</param>
     /// <returns>False for invalid/stopped/stale IDs, including naturally completed native samples.</returns>
     /// <exception cref="InvalidOperationException">A native query reports a contained playback failure.</exception>
     /// <exception cref="ObjectDisposedException">The parent or source is disposed.</exception>
-    public bool IsStreamPlaying(long stream) { lock (AudioServer.Instance.StreamGate) { Check(); var voice = Find(stream); return voice is not null && (voice.Playback!.GetSamplePlayback() is null || voice.Playback.IsPlaying()); } }
+    public bool IsStreamPlaying(long stream) { lock (AudioServer.Service.StreamGate) { Check(); var voice = Find(stream); return voice is not null && (voice.Playback!.GetSamplePlayback() is null || voice.Playback.IsPlaying()); } }
     /// <summary>Updates a live child's scalar volume without restarting it.</summary>
     /// <param name="stream">Parent-local ID; invalid IDs do nothing.</param>
     /// <param name="volumeDB">Representable dB gain; negative infinity mutes.</param>
@@ -120,7 +120,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     /// <exception cref="ArithmeticException">Native gain coefficients overflow; prior configuration is preserved.</exception>
     public void SetStreamVolume(long stream, float volumeDB)
     {
-        var server = AudioServer.Instance; server.Lock(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); var gain = Gain(volumeDB); gain *= voice.VariationGain; voice.Playback!.GetSamplePlayback()?.SetVoiceGain(gain); voice.Gain = gain; } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); var gain = Gain(volumeDB); gain *= voice.VariationGain; voice.Playback!.GetSamplePlayback()?.SetVoiceGain(gain); voice.Gain = gain; } finally { server.UnlockCore(); }
     }
     /// <summary>Updates a live child's pitch without resetting its cursor.</summary>
     /// <param name="stream">Parent-local ID; invalid IDs do nothing.</param>
@@ -131,7 +131,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     /// <exception cref="NotSupportedException">The effective native ratio is unsupported; prior configuration is preserved.</exception>
     public void SetStreamPitchScale(long stream, float pitchScale)
     {
-        var server = AudioServer.Instance; server.Lock(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); Pitch(pitchScale); pitchScale *= voice.VariationPitch; Pitch(pitchScale); if (voice.Playback!.GetSamplePlayback() is { } sample) { if (pitchScale == 0) throw new NotSupportedException("Native sample pitch must be positive."); sample.PitchScale = pitchScale; } voice.Pitch = pitchScale; } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); Pitch(pitchScale); pitchScale *= voice.VariationPitch; Pitch(pitchScale); if (voice.Playback!.GetSamplePlayback() is { } sample) { if (pitchScale == 0) throw new NotSupportedException("Native sample pitch must be positive."); sample.PitchScale = pitchScale; } voice.Pitch = pitchScale; } finally { server.UnlockCore(); }
     }
     /// <summary>Invalidates one ID and requests its final streamed fade or immediate native stop.</summary>
     /// <param name="stream">Parent-local ID; invalid IDs do nothing.</param>
@@ -139,7 +139,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     /// <exception cref="ObjectDisposedException">The parent or source is disposed.</exception>
     public void StopStream(long stream)
     {
-        var server = AudioServer.Instance; server.Lock(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); if (voice.Playback!.GetSamplePlayback() is not null) { voice.Playback.Stop(); voice.Active = false; } else voice.Finishing = true; } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); if (voice.Playback!.GetSamplePlayback() is not null) { voice.Playback.Stop(); voice.Active = false; } else voice.Finishing = true; } finally { server.UnlockCore(); }
     }
     internal override void UpdateNativeOwner(FAudioStreamVoice? owner, bool enabled = true)
     {
@@ -160,14 +160,14 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     {
         Check(); Idle(); if (!queued) Owner(); _busy = true; try { if (_active) { var error = StopCore(queued); if (error is not null) throw error; } _active = true; foreach (var voice in _voices) if (voice.Active) voice.Playback?.GetSamplePlayback()?.Native?.PauseQueued(_nativeOwner?.SamplingPaused == true); } finally { _busy = false; }
     }
-    internal override void StartQueued(double time) { lock (AudioServer.Instance.StreamGate) StartCore(true); }
-    internal override void StopQueued() { lock (AudioServer.Instance.StreamGate) { Idle(); _busy = true; try { var error = StopCore(true); if (error is not null) throw error; } finally { _busy = false; } } }
+    internal override void StartQueued(double time) { lock (AudioServer.Service.StreamGate) StartCore(true); }
+    internal override void StopQueued() { lock (AudioServer.Service.StreamGate) { Idle(); _busy = true; try { var error = StopCore(true); if (error is not null) throw error; } finally { _busy = false; } } }
     /// <inheritdoc />
-    protected override void OnStart(double fromPosition) { var server = AudioServer.Instance; server.Lock(); try { StartCore(false); } finally { server.Unlock(); } }
+    protected override void OnStart(double fromPosition) { var server = AudioServer.Service; server.LockCore(); try { StartCore(false); } finally { server.UnlockCore(); } }
     /// <inheritdoc />
-    protected override void OnStop() { var server = AudioServer.Instance; server.Lock(); try { Idle(); Owner(); _busy = true; try { var error = StopCore(false); if (error is not null) throw error; } finally { _busy = false; } } finally { server.Unlock(); } }
+    protected override void OnStop() { var server = AudioServer.Service; server.LockCore(); try { Idle(); Owner(); _busy = true; try { var error = StopCore(false); if (error is not null) throw error; } finally { _busy = false; } } finally { server.UnlockCore(); } }
     /// <inheritdoc />
-    protected override bool OnIsPlaying() { lock (AudioServer.Instance.StreamGate) { Check(); return _active; } }
+    protected override bool OnIsPlaying() { lock (AudioServer.Service.StreamGate) { Check(); return _active; } }
     /// <inheritdoc />
     protected override double OnGetPlaybackPosition() { Check(); return 0; }
     /// <inheritdoc />
@@ -175,7 +175,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     /// <inheritdoc />
     protected override int OnMix(Span<Vector2> buffer, float rateScale)
     {
-        lock (AudioServer.Instance.StreamGate)
+        lock (AudioServer.Service.StreamGate)
         {
             Check(); Idle(); buffer.Clear(); if (!_active || buffer.IsEmpty) return 0; _source.EnterCall(4); _busy = true;
             try
@@ -203,7 +203,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
         }
     }
     /// <inheritdoc />
-    protected override void ValidateDisposal() { var server = AudioServer.Instance; server.Lock(); try { Idle(); Owner(); } finally { server.Unlock(); } base.ValidateDisposal(); }
+    protected override void ValidateDisposal() { var server = AudioServer.Service; server.LockCore(); try { Idle(); Owner(); } finally { server.UnlockCore(); } base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { lock (AudioServer.Instance.StreamGate) { _busy = true; try { var error = StopCore(false); error = AudioStreamSynchronized.Combine(error, DisposePrepared()); if (error is not null) throw error; } finally { _nativeOwner = null; _busy = false; base.Dispose(disposing); } } } else base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { lock (AudioServer.Service.StreamGate) { _busy = true; try { var error = StopCore(false); error = AudioStreamSynchronized.Combine(error, DisposePrepared()); if (error is not null) throw error; } finally { _nativeOwner = null; _busy = false; base.Dispose(disposing); } } } else base.Dispose(disposing); }
 }

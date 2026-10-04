@@ -4,13 +4,8 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    /// <summary>Tests a live body's shapes through their owning space without moving that body.</summary>
-    /// <param name="body">A scene or server-created body RID.</param>
-    /// <param name="parameters">Global starting pose, motion, margin and exclusions.</param>
-    /// <param name="result">Optional caller-owned result updated after a successful test.</param>
-    /// <returns>Whether motion or requested recovery reached a body contact.</returns>
-    public bool BodyTestMotion(RID body, PhysicsTestMotionParameters2D parameters,
-        PhysicsTestMotionResult2D? result = null)
+    internal bool BodyTestMotionCore(RID body, PhysicsTestMotionParameters2D parameters,
+    PhysicsTestMotionResult2D? result = null)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);

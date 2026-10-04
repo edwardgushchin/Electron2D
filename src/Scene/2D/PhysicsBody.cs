@@ -44,7 +44,7 @@ public abstract class PhysicsBody : CollisionObject
             old.Disposed -= OnMaterialDisposed;
         }
         _materialOverride = material;
-        PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
+        PhysicsServer.Service.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
         if (material is not null)
         {
             material.Changed += OnMaterialChanged;
@@ -77,7 +77,7 @@ public abstract class PhysicsBody : CollisionObject
 
     internal void DetachBackend()
     {
-        PhysicsServer.Instance.InvalidateBodyView(PhysicsRID);
+        PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
         if (_space is null) return;
         if (this is RigidBody rigid && b2Body_GetType(_bodyID) == B2BodyType.b2_dynamicBody) rigid.OnBackendAdvanced();
         b2DestroyBody(_bodyID);
@@ -94,12 +94,12 @@ public abstract class PhysicsBody : CollisionObject
         if (_materialOverride is { IsDisposed: true })
         {
             _materialOverride = null;
-            PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
+            PhysicsServer.Service.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
             MarkShapesDirty();
         }
         if ((_materialOverride?.Revision ?? 0) != _appliedMaterialRevision)
         {
-            PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
+            PhysicsServer.Service.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
             MarkShapesDirty();
         }
         if (!_shapesDirty)
@@ -157,7 +157,7 @@ public abstract class PhysicsBody : CollisionObject
     internal abstract B2BodyDef CreateBodyDefinition();
     internal abstract bool MovesWithSimulation { get; }
     internal virtual void OnBackendAdvanced() { }
-    internal virtual void OnShapesRebuilt() => PhysicsServer.Instance.BodyRuntime(PhysicsRID).ApplyMassProfile();
+    internal virtual void OnShapesRebuilt() => PhysicsServer.Service.BodyRuntime(PhysicsRID).ApplyMassProfile();
     internal virtual Vector2 EffectiveGravity => Vector2.Zero;
 
     /// <summary>Gets the gravity applied by the last fixed physics step in scene units per second squared.</summary>
@@ -178,7 +178,7 @@ public abstract class PhysicsBody : CollisionObject
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(body);
-        PhysicsServer.Instance.BodyAddCollisionException(GetRID(), body.GetRID());
+        PhysicsServer.BodyAddCollisionException(GetRID(), body.GetRID());
     }
 
     /// <summary>Removes another body from this body's collision-exception list.</summary>
@@ -188,7 +188,7 @@ public abstract class PhysicsBody : CollisionObject
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(body);
-        PhysicsServer.Instance.BodyRemoveCollisionException(GetRID(), body.GetRID());
+        PhysicsServer.BodyRemoveCollisionException(GetRID(), body.GetRID());
     }
 
     /// <summary>Returns deduplicated explicit and active-joint body exceptions.</summary>
@@ -198,10 +198,10 @@ public abstract class PhysicsBody : CollisionObject
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        var entries = PhysicsServer.Instance.GetBodyCollisionExceptions(GetRID());
+        var entries = PhysicsServer.Service.GetBodyCollisionExceptions(GetRID());
         var result = new PhysicsBody?[entries.Length];
         for (var index = 0; index < entries.Length; index++)
-            result[index] = PhysicsServer.Instance.ResolveSceneObject(entries[index]) as PhysicsBody;
+            result[index] = PhysicsServer.Service.ResolveSceneObject(entries[index]) as PhysicsBody;
         return result;
     }
 
@@ -218,7 +218,7 @@ public abstract class PhysicsBody : CollisionObject
         ValidateMotion(motion, safeMargin);
         if (!HasBackend) throw new InvalidOperationException("A body must be attached before moving through physics.");
         var from = GlobalTransform;
-        var data = PhysicsServer.Instance.TestMotionData(GetRID(), from, motion, safeMargin,
+        var data = PhysicsServer.Service.TestMotionData(GetRID(), from, motion, safeMargin,
             recoveryAsCollision, [], []);
         if (!testOnly && data.Travel != Vector2.Zero)
             GlobalTransform = new Transform(from.Rotation, Vector2.One, 0, from.Origin + data.Travel);
@@ -241,7 +241,7 @@ public abstract class PhysicsBody : CollisionObject
         if (!from.IsFinite() || !from.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(from.Skew))
             throw new ArgumentException("Body motion requires finite translation, unit scale and zero skew.", nameof(from));
         if (collision?.IsDisposed == true) throw new ObjectDisposedException(nameof(collision));
-        var data = PhysicsServer.Instance.TestMotionData(GetRID(), from, motion, safeMargin,
+        var data = PhysicsServer.Service.TestMotionData(GetRID(), from, motion, safeMargin,
             recoveryAsCollision, [], []);
         collision?.Set(data);
         return data.Collided;
@@ -275,7 +275,7 @@ public abstract class PhysicsBody : CollisionObject
     protected override void ValidateDisposal()
     {
         Tree?.EnsurePhysicsParticipationChange();
-        PhysicsServer.Instance.EnsureJointBodyMembershipChange(PhysicsRID);
+        PhysicsServer.Service.EnsureJointBodyMembershipChange(PhysicsRID);
         base.ValidateDisposal();
     }
 
@@ -312,7 +312,7 @@ public abstract class PhysicsBody : CollisionObject
         definition.filter.categoryBits = CollisionLayer;
         definition.filter.maskBits = CollisionMask;
         definition.density = MovesWithSimulation ? 1f : 0f;
-        var runtime = PhysicsServer.Instance.BodyRuntime(PhysicsRID);
+        var runtime = PhysicsServer.Service.BodyRuntime(PhysicsRID);
         PhysicsSpace.SetMaterial(ref definition, runtime.GetFriction(), runtime.GetBounce());
         for (var index = 0; index < ShapeSlots.Count; index++)
         {
@@ -321,7 +321,7 @@ public abstract class PhysicsBody : CollisionObject
             var contact = node.OneWay;
             definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact));
             definition.enablePreSolveEvents = contact is not null ||
-                PhysicsServer.Instance.HasBodyCollisionExceptions(GetRID());
+                PhysicsServer.Service.HasBodyCollisionExceptions(GetRID());
             node.Shape.AppendToBody(_bodyID, node.Transform.Origin, node.Transform.Rotation, definition, _backendShapes);
         }
 
@@ -339,13 +339,13 @@ public abstract class PhysicsBody : CollisionObject
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
     }
 
-    private void OnMaterialChanged(Resource _) { if (IsDisposed) return; PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides(); MarkShapesDirty(); }
+    private void OnMaterialChanged(Resource _) { if (IsDisposed) return; PhysicsServer.Service.BodyRuntime(PhysicsRID).ResetMaterialOverrides(); MarkShapesDirty(); }
 
     private void OnMaterialDisposed(ElectronObject _)
     {
         if (IsDisposed) return;
         _materialOverride = null;
-        PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
+        PhysicsServer.Service.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
         MarkShapesDirty();
     }
 }

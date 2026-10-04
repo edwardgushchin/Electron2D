@@ -1,6 +1,6 @@
 # AudioEffectCompressor
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectCompressor` · **Source:** [AudioEffectCompressor.cs](../../src/Scene/Resources/AudioEffectCompressor.cs) · **Component:** [Audio playback](../components/audio-playback.md#linked-compression-and-sidechain).
 
@@ -19,20 +19,19 @@ Scalar access is serialized. Sidechain edits additionally serialize with the nat
 ## Example
 
 ```csharp
-AudioServer server = AudioServer.Instance;
-server.BusCount = 3;
-server.SetBusName(1, "Music");
-server.SetBusName(2, "Voice");
+AudioServer.BusCount = 3;
+AudioServer.SetBusName(1, "Music");
+AudioServer.SetBusName(2, "Voice");
 using var compressor = new AudioEffectCompressor
 {
     Threshold = -18,
     Ratio = 4,
     Sidechain = "Voice"
 };
-server.AddBusEffect(1, compressor);
+AudioServer.AddBusEffect(1, compressor);
 // Route players to Music and Voice, then remove the borrowed effect before disposal.
-server.RemoveBusEffect(1, 0);
-server.BusCount = 1;
+AudioServer.RemoveBusEffect(1, 0);
+AudioServer.BusCount = 1;
 ```
 
 This partial owner-thread host snippet requires two players and real native mixing. `AudioCompressorTests.RunHost` executes its public Window counterpart.

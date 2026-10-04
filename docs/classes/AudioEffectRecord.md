@@ -1,6 +1,6 @@
 # AudioEffectRecord
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectRecord` · **Source:** [AudioEffectRecord.cs](../../src/Scene/Resources/AudioEffectRecord.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,12 +16,12 @@ A prepared 1.5-second capture ring separates the callback from a worker that acc
 
 ```csharp
 using var record = new AudioEffectRecord { Format = AudioStreamWAV.Format.PCM16 };
-AudioServer.Instance.AddBusEffect(0, record);
+AudioServer.AddBusEffect(0, record);
 record.SetRecordingActive(true);
 // Run the scene with a player routed to bus zero.
 record.SetRecordingActive(false);
 using AudioStreamWAV? sample = record.GetRecording();
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 This is a partial owner-thread host snippet; a player and real native mixing are required for nonempty data. `GetRecording()` returns an audio resource, not a file on disk.

@@ -1,8 +1,10 @@
 # Project settings component
 
-Last updated: 2026-09-30
+Last updated: 2026-10-04
 
 ## Scope
+
+Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 This Core component provides the process-wide typed settings registry, isolated registries, defaults/validation/revert metadata, feature overrides, unsaved/change-notification tracking, project persistence, project discovery, and directory-backed `res://`/`user://` resolution.
 
@@ -12,6 +14,7 @@ This Core component provides the process-wide typed settings registry, isolated 
 | --- | --- |
 | [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md) | Immutable typed name/default/validator identity |
 | [`ProjectSettings`](../classes/ProjectSettings.md) | Registry, metadata, override, persistence, event, and virtual-path owner |
+| [`ProjectSettingsRegistry`](../classes/ProjectSettingsRegistry.md) | Independent disposable registry and shared state implementation |
 
 The input action records are defined by the [Input runtime](input-runtime.md); this component registers six typed defaults and provides the internal typed group snapshot used by explicit `InputMap` reload. Two locale and nine pseudolocalization settings have executable consumers in [Localization](localization.md). Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs).
 

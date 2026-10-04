@@ -310,7 +310,7 @@ public abstract class BaseButton : Control
             QueueRedraw();
             if (_shortcutFeedback && IsInsideTree)
             {
-                if (_feedbackDuration < 0) _feedbackDuration = ProjectSettings.Instance.GetWithOverride(ProjectSettings.ButtonShortcutFeedbackHighlightTime);
+                if (_feedbackDuration < 0) _feedbackDuration = ProjectSettings.GetWithOverride(ProjectSettings.ButtonShortcutFeedbackHighlightTime);
                 _feedback = true; _feedbackLeft = _feedbackDuration; UpdateInternalProcessing();
             }
         }

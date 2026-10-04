@@ -33,8 +33,8 @@ internal static partial class RenderingRuntimeTests
             var density = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland" ? SDL.GetWindowPixelDensity(native![0]) : 1;
             var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(native![0]), Which = 987, X = 3 / density, Y = 75 / density } };
             Check(SDL.PushEvent(ref motion), "Inject input for a culled node.");
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 try
@@ -73,7 +73,7 @@ internal static partial class RenderingRuntimeTests
                 catch (Exception error) { throw new InvalidOperationException($"Canvas masks {backend}/{fixture}, frame {frames}.", error); }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 11, "Eleven mask and retained submission stages.");
+        Engine.Run(window); Released(window); Check(frames == 11, "Eleven mask and retained submission stages.");
         Console.WriteLine($"Canvas masks native pixels, input and retention passed: {backend}/{fixture ?? "default"}.");
     }
 
@@ -83,11 +83,11 @@ internal static partial class RenderingRuntimeTests
         var window = new Window { Size = new(96, 80), CanvasCullMask = 0 };
         var item = LayerBox("Shader", Vector2.Zero, Colors.Red, material); window.AddChild(item);
         var frames = 0;
-        window.Ready += _ => RenderingServer.Instance!.FramePostDraw += () =>
+        window.Ready += _ => RenderingServer.FramePostDraw += () =>
         {
             Check(item.Draws == 1, "Culled shader commands are recorded."); frames++; window.CanvasCullMask = uint.MaxValue;
         };
-        Reject<NotSupportedException>(() => Engine.Instance.Run(window)); Released(window);
+        Reject<NotSupportedException>(() => Engine.Run(window)); Released(window);
         Check(frames == 1, "Compatibility accepts a culled shader and rejects it only once submitted.");
     }
 

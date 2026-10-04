@@ -30,7 +30,7 @@ public sealed partial class SceneTree
     {
         if (input is InputEventMouseButton { Pressed: true } or InputEventGesture)
         { CancelTooltip(); return; }
-        if (input is not InputEventMouse && input.IsActionType() && InputMap.Instance.HasAction("ui_cancel") && input.IsActionPressed("ui_cancel"))
+        if (input is not InputEventMouse && input.IsActionType() && InputMap.HasAction("ui_cancel") && input.IsActionPressed("ui_cancel"))
         {
             var shown = _gui.TooltipPanel is not null; CancelTooltip();
             if (shown) SetInputAsHandled();
@@ -50,7 +50,7 @@ public sealed partial class SceneTree
         if (!ReferenceEquals(target, _gui.TooltipControl) || _gui.TooltipPosition.DistanceSquaredTo(motion.Position) > 25)
         {
             _gui.TooltipControl = target; _gui.TooltipPosition = motion.Position;
-            _gui.TooltipRemaining = ProjectSettings.Instance.GetWithOverride(ProjectSettings.TooltipDelaySeconds);
+            _gui.TooltipRemaining = ProjectSettings.GetWithOverride(ProjectSettings.TooltipDelaySeconds);
             _gui.TooltipScheduled = true; _gui.TooltipGeneration++;
         }
     }
@@ -133,7 +133,7 @@ public sealed partial class SceneTree
             panel.Size = size;
             if (generation != _gui.TooltipGeneration || layer.IsDisposed || !IsLiveTooltipTarget(target)) return;
             var bounds = viewport.GetVisibleRect();
-            var offset = ProjectSettings.Instance.GetWithOverride(ProjectSettings.TooltipPositionOffset);
+            var offset = ProjectSettings.GetWithOverride(ProjectSettings.TooltipPositionOffset);
             var position = _gui.TooltipPosition + offset;
             for (var axis = 0; axis < 2; axis++)
             {

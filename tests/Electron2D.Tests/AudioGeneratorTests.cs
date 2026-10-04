@@ -94,7 +94,7 @@ internal static class AudioGeneratorTests
     private static void VerifyNative()
     {
         using var stream = new AudioStreamGenerator { MixRateMode = RateMode.Output, BufferLength = .1f }; var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
-        player.Play(); var p = (AudioStreamGeneratorPlayback)player.GetStreamPlayback(); var native = AudioServer.Instance.Native;
+        player.Play(); var p = (AudioStreamGeneratorPlayback)player.GetStreamPlayback(); var native = AudioServer.Service.Native;
         var feed = new Vector2[512]; feed.AsSpan().Fill(new(.2f, -.15f));
         void Refill() { while (p.CanPushBuffer(feed.Length)) p.PushBuffer(feed); }
         Refill(); Wait(native, 20, Refill); native.PrepareCapture(16000); Wait(native, 20, Refill);
@@ -114,19 +114,19 @@ internal static class AudioGeneratorTests
     internal static void RunHost()
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu";
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
-        var fps = Engine.Instance.MaxFPS; Engine.Instance.MaxFPS = 60;
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        var fps = Engine.MaxFPS; Engine.MaxFPS = 60;
         try
         {
             for (var run = 0; run < 2; run++)
             {
                 using var stream = new AudioStreamGenerator { MixRate = 22050, BufferLength = .1f }; var window = new Window { Size = new(160, 96), Title = "Electron2D generated audio" };
                 var player = new AudioStreamPlayer { Stream = stream, Autoplay = true, VolumeDB = -24 }; var scenario = new Scenario(player); window.AddChild(player); window.AddChild(scenario);
-                Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed && !stream.IsDisposed, "Public generator host lifecycle.");
+                Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed && !stream.IsDisposed, "Public generator host lifecycle.");
                 Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "audio-generator-host", backend, run, scenario.Position, cleaned = window.IsDisposed }));
             }
         }
-        finally { Engine.Instance.MaxFPS = fps; settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { Engine.MaxFPS = fps; ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class Scenario(AudioStreamPlayer player) : Node
     {

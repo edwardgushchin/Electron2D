@@ -1,6 +1,6 @@
 # AudioEffectPhaser
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectPhaser` · **Source:** [AudioEffectPhaser.cs](../../src/Scene/Resources/AudioEffectPhaser.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,9 +16,9 @@ Each bus owns an independent [instance](AudioEffectPhaserInstance.md) per output
 
 ```csharp
 using var phaser = new AudioEffectPhaser { RateHZ = 1.2f, Depth = 1.5f };
-AudioServer.Instance.AddBusEffect(0, phaser);
+AudioServer.AddBusEffect(0, phaser);
 // Play sources on bus zero, then remove the borrowed effect.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 This owner-thread snippet needs native mixing. `AudioPhaserTests.RunHost` exercises a complete public Window/player/effect/capture path.

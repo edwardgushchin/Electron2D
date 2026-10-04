@@ -154,7 +154,7 @@ public abstract class Slider : Range
         {
             if (inputEvent is InputEventJoypadMotion or InputEventJoypadButton)
             {
-                if (!Input.Instance.IsActionJustPressedByEvent(action, inputEvent, exactMatch: true)) return;
+                if (!Input.IsActionJustPressedByEvent(action, inputEvent, exactMatch: true)) return;
                 _repeatEnabled = true; SetInternalProcessing(true, false);
             }
             SetValueAndAccept(Value + direction * Step);
@@ -162,10 +162,10 @@ public abstract class Slider : Range
         else if (ExactPressed(inputEvent, "ui_home")) SetValueAndAccept(MinValue);
         else if (ExactPressed(inputEvent, "ui_end")) SetValueAndAccept(MaxValue);
     }
-    private static bool ActionPressed(InputEvent inputEvent, string action) => InputMap.Instance.HasAction(action) && inputEvent.IsActionPressed(action, allowEcho: true);
-    private static bool ExactPressed(InputEvent inputEvent, string action) => InputMap.Instance.HasAction(action) && inputEvent.IsAction(action, exactMatch: true) && inputEvent.IsPressed();
-    private static bool Held(string action) => InputMap.Instance.HasAction(action) && Input.Instance.IsActionPressed(action);
-    private static bool Released(string action) => InputMap.Instance.HasAction(action) && Input.Instance.IsActionJustReleased(action);
+    private static bool ActionPressed(InputEvent inputEvent, string action) => InputMap.HasAction(action) && inputEvent.IsActionPressed(action, allowEcho: true);
+    private static bool ExactPressed(InputEvent inputEvent, string action) => InputMap.HasAction(action) && inputEvent.IsAction(action, exactMatch: true) && inputEvent.IsPressed();
+    private static bool Held(string action) => InputMap.HasAction(action) && Input.IsActionPressed(action);
+    private static bool Released(string action) => InputMap.HasAction(action) && Input.IsActionJustReleased(action);
     private void SetValueAndAccept(double value)
     {
         var tree = Tree; List<Exception>? errors = null;

@@ -59,7 +59,7 @@ public sealed class AudioStreamGenerator : AudioStream
             {
                 ThrowIfDisposed();
                 if (value is < AudioStreamGeneratorMixRate.Output or >= AudioStreamGeneratorMixRate.Max) throw new ArgumentOutOfRangeException(nameof(value));
-                if (value == AudioStreamGeneratorMixRate.Input) _ = AudioServer.Instance.GetInputMixRate();
+                if (value == AudioStreamGeneratorMixRate.Input) _ = AudioServer.GetInputMixRate();
                 _mode = value;
             }
             EmitChanged();
@@ -68,15 +68,15 @@ public sealed class AudioStreamGenerator : AudioStream
     private static void Positive(float value) { if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); }
     internal float TargetRate
     {
-        get { lock (_gate) { ThrowIfDisposed(); return _mode switch { AudioStreamGeneratorMixRate.Output => AudioServer.Instance.GetMixRate(), AudioStreamGeneratorMixRate.Input => AudioServer.Instance.PreparedInputMixRate, _ => _mixRate }; } }
+        get { lock (_gate) { ThrowIfDisposed(); return _mode switch { AudioStreamGeneratorMixRate.Output => AudioServer.GetMixRate(), AudioStreamGeneratorMixRate.Input => AudioServer.Service.PreparedInputMixRate, _ => _mixRate }; } }
     }
-    internal float PrepareRate() { lock (_gate) { ThrowIfDisposed(); if (_mode == AudioStreamGeneratorMixRate.Input) _ = AudioServer.Instance.GetInputMixRate(); return TargetRate; } }
+    internal float PrepareRate() { lock (_gate) { ThrowIfDisposed(); if (_mode == AudioStreamGeneratorMixRate.Input) _ = AudioServer.GetInputMixRate(); return TargetRate; } }
     /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback()
     {
         lock (_gate)
         {
-            ThrowIfDisposed(); if (_mode == AudioStreamGeneratorMixRate.Input) _ = AudioServer.Instance.GetInputMixRate(); var requested = TargetRate * _bufferLength;
+            ThrowIfDisposed(); if (_mode == AudioStreamGeneratorMixRate.Input) _ = AudioServer.GetInputMixRate(); var requested = TargetRate * _bufferLength;
             if (!float.IsFinite(requested) || requested >= 1 << 24) throw new ArgumentOutOfRangeException(nameof(BufferLength), "The requested generator queue exceeds 2^24 storage frames.");
             var count = (uint)requested;
             return new AudioStreamGeneratorPlayback(this, count == 0 ? 1 : 1 << (BitOperations.Log2(count) + 1));

@@ -165,11 +165,11 @@ internal static class GUIDragTests
 
     private static void VerifyThresholdAndValidation()
     {
-        var settings = ProjectSettings.Instance;
-        var previous = settings.Get(ProjectSettings.DefaultGUIDragThreshold);
+        var settings = ProjectSettings.Service;
+        var previous = ProjectSettings.Get(ProjectSettings.DefaultGUIDragThreshold);
         try
         {
-            settings.Set(ProjectSettings.DefaultGUIDragThreshold, -1);
+            ProjectSettings.Set(ProjectSettings.DefaultGUIDragThreshold, -1);
             var viewport = new TestViewport();
             var source = new DragSource { Name = "Source", Size = new(40, 40) };
             viewport.AddChild(source);
@@ -181,7 +181,7 @@ internal static class GUIDragTests
                 viewport.PushInput(motion, inLocalCoordinates: true);
             Check(viewport.IsGUIDragging() && source.Requests == 1,
                 "A negative threshold attempts automatic drag on the first left-held motion.");
-            InputMap.Instance.LoadFromProjectSettings();
+            InputMap.LoadFromProjectSettings();
             using (var cancel = new InputEventKey { Keycode = Key.Escape, Pressed = true })
                 viewport.PushInput(cancel, inLocalCoordinates: true);
             Check(!viewport.IsGUIDragging() && !viewport.IsGUIDragSuccessful() && source.Preview.IsDisposed,
@@ -203,7 +203,7 @@ internal static class GUIDragTests
             Reject<ArgumentException>(() => source.ForceDrag(new DragPayload<int>(1), parented));
             Check(!viewport.IsGUIDragging(), "A rejected parented preview leaves no half-started drag.");
         }
-        finally { settings.Set(ProjectSettings.DefaultGUIDragThreshold, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.DefaultGUIDragThreshold, previous); }
 
         using var packed = new PackedScene();
         using var window = new Window { GUIDragThreshold = 23 };

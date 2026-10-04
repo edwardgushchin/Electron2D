@@ -88,18 +88,18 @@ internal static class SceneAnimationTests
     { var a = new Animation(); var t = a.AddTrack(descriptor); a.TrackSetPath(t, path); a.TrackInsertKey(t, start, (start == 0 ? 0d : start)); a.TrackInsertKey(t, end, (end == 1 ? 10d : end)); return a; }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         try
         {
             for (var run = 0; run < 2; run++)
             {
                 using var animation = new Animation(); var track = animation.AddTrack(Position); animation.TrackSetPath(track, "box:Position"); animation.TrackInsertKey(track, 0, new Vector2(16, 16)); animation.TrackInsertKey(track, 1, new Vector2(48, 16)); using var library = new AnimationLibrary(); library.AddAnimation("move", animation);
                 var window = new Window { Size = new(80, 64), Title = "Electron2D scene animation" }; var box = new Box { Name = "box" }; var player = new AnimationPlayer { CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Manual }; player.AddAnimationLibrary("", library); window.AddChild(box); window.AddChild(player); var stage = 0;
-                box.Start = () => { var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); player.Play("move"); player.Advance(0); renderer.FramePostDraw += () => { using var image = renderer.Readback(); var x = stage == 0 ? 16 : stage == 1 ? 32 : 48; Check(image.GetPixel(x, 16).R > .9f && image.GetPixel(x, 16).G < .1f, "Animated position reaches rendered pixels."); if (stage > 0) Check(image.GetPixel(16, 16).R < .1f, "Previous position cleared."); stage++; if (stage == 3) window.Tree!.Quit(); else player.Advance(.5); }; };
-                Check(Engine.Instance.Run(window) == 0 && stage == 3 && window.IsDisposed && !animation.IsDisposed && !library.IsDisposed, "Rendered host and borrowed resources cleaned up."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "scene-animation-host", backend, run, stages = stage, cleaned = window.IsDisposed }));
+                box.Start = () => { var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); player.Play("move"); player.Advance(0); RenderingServer.FramePostDraw += () => { using var image = renderer.Readback(); var x = stage == 0 ? 16 : stage == 1 ? 32 : 48; Check(image.GetPixel(x, 16).R > .9f && image.GetPixel(x, 16).G < .1f, "Animated position reaches rendered pixels."); if (stage > 0) Check(image.GetPixel(16, 16).R < .1f, "Previous position cleared."); stage++; if (stage == 3) window.Tree!.Quit(); else player.Advance(.5); }; };
+                Check(Engine.Run(window) == 0 && stage == 3 && window.IsDisposed && !animation.IsDisposed && !library.IsDisposed, "Rendered host and borrowed resources cleaned up."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "scene-animation-host", backend, run, stages = stage, cleaned = window.IsDisposed }));
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class Box : Entity { internal Action? Start; protected override void OnReady() => Start?.Invoke(); protected override void OnDraw() => DrawRect(new(-3, -3, 6, 6), Colors.Red); }
     private sealed class Probe : Node { internal double Value; internal string Text = ""; internal int Writes; internal Action? Hook; }

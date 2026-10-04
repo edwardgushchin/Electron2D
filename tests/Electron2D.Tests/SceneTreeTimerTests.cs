@@ -4,8 +4,8 @@ internal static class SceneTreeTimerTests
 {
     public static void Run()
     {
-        var engine = Engine.Instance;
-        var previousScale = engine.TimeScale;
+        var engine = Engine.Service;
+        var previousScale = Engine.TimeScale;
         using var tree = new SceneTree(new Entity());
         var scaledProcess = tree.CreateTimer(0.02d);
         var originalProcess = tree.CreateTimer(0.02d, ignoreTimeScale: true);
@@ -21,9 +21,9 @@ internal static class SceneTreeTimerTests
 
         try
         {
-            engine.TimeScale = 0d;
-            engine.Start(tree);
-            engine.AdvanceFrame(1d);
+            Engine.TimeScale = 0d;
+            Engine.Start(tree);
+            Engine.AdvanceFrame(1d);
             Check(order.SequenceEqual(["physics", "process"]), "Original frame deltas expire both lanes before deferred work.");
             Check(originalProcess.IsDisposed && originalPhysics.IsDisposed, "Expired timers are disposed after timeout.");
             Check(scaledProcess.TimeLeft == 0.02d && scaledPhysics.TimeLeft == 0.02d,
@@ -31,9 +31,9 @@ internal static class SceneTreeTimerTests
         }
         finally
         {
-            if (ReferenceEquals(engine.MainLoop, tree))
-                engine.Stop();
-            engine.TimeScale = previousScale;
+            if (ReferenceEquals(Engine.MainLoop, tree))
+                Engine.Stop();
+            Engine.TimeScale = previousScale;
         }
 
         using var directTree = new SceneTree(new Entity());

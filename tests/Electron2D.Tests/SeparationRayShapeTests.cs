@@ -49,19 +49,19 @@ internal static class SeparationRayShapeTests
 
     private static void VerifyQueries()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var floor = server.BodyCreate();
-        var floorRID = server.RectangleShapeCreate();
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var floor = PhysicsServer.BodyCreate();
+        var floorRID = PhysicsServer.RectangleShapeCreate();
         using var rectangle = new RectangleShape { Size = new(200, 10) };
-        server.ShapeSetData(floorRID, rectangle);
-        server.BodySetMode(floor, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(floor, floorRID);
-        server.BodySetTransform(floor, new(0, Vector2.One, 0, new(0, 25)));
-        server.BodySetSpace(floor, space);
+        PhysicsServer.ShapeSetData(floorRID, rectangle);
+        PhysicsServer.BodySetMode(floor, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(floor, floorRID);
+        PhysicsServer.BodySetTransform(floor, new(0, Vector2.One, 0, new(0, 25)));
+        PhysicsServer.BodySetSpace(floor, space);
         using var ray = new SeparationRayShape { Length = 30 };
         using var query = new PhysicsShapeQueryParameters2D { Shape = ray };
-        var direct = server.SpaceGetDirectState(space);
+        var direct = PhysicsServer.SpaceGetDirectState(space);
         var rest = direct.GetRestInfo(query);
         var points = direct.CollideShape(query);
         Check(direct.IntersectShape(query) is [var hit] && hit.ColliderRID == floor &&
@@ -86,21 +86,21 @@ internal static class SeparationRayShapeTests
         Check(direct.GetRestInfo(query) is { Normal.Y: < -0.99f }, "Margin extends the ray endpoint.");
         query.Margin = 0;
         ray.Length = 30;
-        server.BodySetTransform(floor, new(0.3f, Vector2.One, 0, new(0, 25)));
+        PhysicsServer.BodySetTransform(floor, new(0.3f, Vector2.One, 0, new(0, 25)));
         Check(direct.GetRestInfo(query) is { Normal.X: > -0.01f and < 0.01f, Normal.Y: < -0.99f },
             "Without slide, slope separation remains opposite the ray axis.");
         ray.SlideOnSlope = true;
         Check(direct.GetRestInfo(query) is { Normal.X: > 0.2f, Normal.Y: < -0.9f },
             "Slide mode uses the rotated surface normal.");
 
-        var rayRID = server.SeparationRayShapeCreate();
-        using var defaultData = server.ShapeGetData(rayRID);
+        var rayRID = PhysicsServer.SeparationRayShapeCreate();
+        using var defaultData = PhysicsServer.ShapeGetData(rayRID);
         Check(defaultData is SeparationRayShape { Length: 20, SlideOnSlope: false }, "Server creation defaults.");
-        server.ShapeSetData(rayRID, ray);
-        var holder = server.BodyCreate();
-        server.BodySetMode(holder, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(holder, rayRID);
-        server.BodySetSpace(holder, space);
+        PhysicsServer.ShapeSetData(rayRID, ray);
+        var holder = PhysicsServer.BodyCreate();
+        PhysicsServer.BodySetMode(holder, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(holder, rayRID);
+        PhysicsServer.BodySetSpace(holder, space);
         using var cast = PhysicsRayQueryParameters2D.Create(new(-5, 10), new(5, 10));
         using var point = new PhysicsPointQueryParameters2D { Position = new(0, 10) };
         Check(direct.IntersectRay(cast) is null && direct.IntersectPoint(point).Length == 0,
@@ -127,8 +127,8 @@ internal static class SeparationRayShapeTests
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var index = 0; index < 64; index++) { direct.CastMotion(solidQuery); direct.GetRestInfo(solidQuery); }
         Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed reverse ray casts/rest queries allocate no managed bytes.");
-        server.FreeRID(holder); server.FreeRID(rayRID); server.FreeRID(floor);
-        server.FreeRID(floorRID); server.FreeRID(space);
+        PhysicsServer.FreeRID(holder); PhysicsServer.FreeRID(rayRID); PhysicsServer.FreeRID(floor);
+        PhysicsServer.FreeRID(floorRID); PhysicsServer.FreeRID(space);
     }
 
     private static void VerifyMotionAndSnap()
@@ -144,22 +144,22 @@ internal static class SeparationRayShapeTests
         using var tree = new SceneTree(root);
         using var parameters = new PhysicsTestMotionParameters2D { Motion = new(0, 10), Margin = 0 };
         using var result = new PhysicsTestMotionResult2D();
-        var server = PhysicsServer.Instance;
-        Check(!parameters.CollideSeparationRay && !server.BodyTestMotion(mover.GetRID(), parameters, result),
+        var server = PhysicsServer.Service;
+        Check(!parameters.CollideSeparationRay && !PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result),
             "Non-sliding rays are ignored by default during the sweep.");
         parameters.CollideSeparationRay = true;
-        Check(server.BodyTestMotion(mover.GetRID(), parameters, result) &&
+        Check(PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result) &&
             result.GetTravel().Y is > 4.9f and < 5.1f && result.GetCollisionPoint().Y is > 24.9f and < 25.1f,
             "Explicit ray participation brackets floor impact and reports surface point.");
         parameters.From = new(0, Vector2.One, 0, new(0, 5));
         parameters.Motion = new(0, -10);
-        Check(!server.BodyTestMotion(mover.GetRID(), parameters, result) && result.GetTravel().Y < -9.9f,
+        Check(!PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result) && result.GetTravel().Y < -9.9f,
             "A touching ray can move away from its floor.");
         parameters.From = Transform.Identity;
         parameters.Motion = new(0, 10);
         parameters.CollideSeparationRay = false;
         ray.SlideOnSlope = true;
-        Check(server.BodyTestMotion(mover.GetRID(), parameters, result), "Sliding rays participate without the flag.");
+        Check(PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result), "Sliding rays participate without the flag.");
         mover.PhysicsProcessEnabled = true;
         tree.PhysicsFrame(1d / 60);
         mover.Velocity = new(0, 600);
@@ -175,7 +175,7 @@ internal static class SeparationRayShapeTests
         parameters.From = new(0, Vector2.One, 0, new(0, 10));
         parameters.Motion = Vector2.Zero;
         parameters.RecoveryAsCollision = true;
-        Check(server.BodyTestMotion(mover.GetRID(), parameters, result) && result.GetTravel().Y < -4 &&
+        Check(PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result) && result.GetTravel().Y < -4 &&
             result.GetCollisionNormal().Y < -0.99f, "Recovery always separates an overlapping ray.");
         mover.ApplyFloorSnap();
         Check(mover.IsOnFloor() && mover.GlobalPosition.Y is > 4.8f and < 5.1f,
@@ -183,11 +183,11 @@ internal static class SeparationRayShapeTests
         ray.Changed += _ => throw new InvalidOperationException("User subscriber failed.");
         Reject<InvalidOperationException>(() => ray.Length = 30);
         parameters.From = Transform.Identity;
-        Check(server.BodyTestMotion(mover.GetRID(), parameters, result) && result.GetTravel().Y < -4,
+        Check(PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result) && result.GetTravel().Y < -4,
             "Committed ray edit reaches motion fixtures despite a failed Changed subscriber.");
-        for (var index = 0; index < 64; index++) server.BodyTestMotion(mover.GetRID(), parameters, result);
+        for (var index = 0; index < 64; index++) PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result);
         var before = GC.GetAllocatedBytesForCurrentThread();
-        for (var index = 0; index < 64; index++) server.BodyTestMotion(mover.GetRID(), parameters, result);
+        for (var index = 0; index < 64; index++) PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result);
         Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed ray recovery queries allocate no managed bytes.");
     }
 

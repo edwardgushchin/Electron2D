@@ -2,9 +2,7 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    /// <summary>Creates an inactive physics space independent of any scene tree.</summary>
-    /// <returns>A caller-owned space RID; activate it with SpaceSetActive before advancing simulation.</returns>
-    public RID SpaceCreate()
+    internal RID SpaceCreateCore()
     {
         ThrowIfDisposed();
         var space = new PhysicsSpace();
@@ -18,12 +16,7 @@ public sealed partial class PhysicsServer
         return rid;
     }
 
-    /// <summary>Advances one explicitly created space by a finite nonnegative fixed delta.</summary>
-    /// <param name="space">A caller-owned space RID.</param>
-    /// <param name="delta">Elapsed seconds; zero or an inactive space/server leaves solver state unchanged.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Delta is negative or nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">The caller is off the space owner thread or the world is stepping.</exception>
-    public void SpaceStep(RID space, double delta)
+    internal void SpaceStepCore(RID space, double delta)
     {
         ThrowIfDisposed();
         if (!double.IsFinite(delta) || delta < 0 || delta > float.MaxValue)
@@ -35,42 +28,19 @@ public sealed partial class PhysicsServer
         world.Step(delta);
     }
 
-    /// <summary>Creates a detached rigid body with layer and mask one.</summary>
-    /// <returns>A caller-owned body RID.</returns>
-    public RID BodyCreate() => CreateCollider(isArea: false);
+    internal RID BodyCreateCore() => CreateCollider(isArea: false);
 
-    /// <summary>Creates a detached sensor Area with layer and mask one.</summary>
-    /// <returns>A caller-owned Area RID.</returns>
-    public RID AreaCreate() => CreateCollider(isArea: true);
+    internal RID AreaCreateCore() => CreateCollider(isArea: true);
 
-    /// <summary>Creates a caller-owned circle shape with its default geometry.</summary>
-    /// <returns>A live circle-shape RID.</returns>
-    public RID CircleShapeCreate() => CreateShape(new CircleShape());
-    /// <summary>Creates a caller-owned rectangle shape with its default geometry.</summary>
-    /// <returns>A live rectangle-shape RID.</returns>
-    public RID RectangleShapeCreate() => CreateShape(new RectangleShape());
-    /// <summary>Creates a caller-owned capsule shape with its default geometry.</summary>
-    /// <returns>A live capsule-shape RID.</returns>
-    public RID CapsuleShapeCreate() => CreateShape(new CapsuleShape());
-    /// <summary>Creates a caller-owned segment shape with its default geometry.</summary>
-    /// <returns>A live segment-shape RID.</returns>
-    public RID SegmentShapeCreate() => CreateShape(new SegmentShape());
-    /// <summary>Creates a caller-owned twenty-unit directed separation ray.</summary>
-    /// <returns>A live separation-ray shape RID.</returns>
-    public RID SeparationRayShapeCreate() => CreateShape(new SeparationRayShape());
-    /// <summary>Creates a caller-owned empty convex polygon shape.</summary>
-    /// <returns>A live convex-polygon-shape RID.</returns>
-    public RID ConvexPolygonShapeCreate() => CreateShape(new ConvexPolygonShape());
-    /// <summary>Creates a caller-owned empty paired-segment shape.</summary>
-    /// <returns>A live concave-polygon-shape RID.</returns>
-    public RID ConcavePolygonShapeCreate() => CreateShape(new ConcavePolygonShape());
+    internal RID CircleShapeCreateCore() => CreateShape(new CircleShape());
+    internal RID RectangleShapeCreateCore() => CreateShape(new RectangleShape());
+    internal RID CapsuleShapeCreateCore() => CreateShape(new CapsuleShape());
+    internal RID SegmentShapeCreateCore() => CreateShape(new SegmentShape());
+    internal RID SeparationRayShapeCreateCore() => CreateShape(new SeparationRayShape());
+    internal RID ConvexPolygonShapeCreateCore() => CreateShape(new ConvexPolygonShape());
+    internal RID ConcavePolygonShapeCreateCore() => CreateShape(new ConcavePolygonShape());
 
-    /// <summary>Copies typed geometry into a server-owned shape RID.</summary>
-    /// <param name="shape">A live server shape of the same concrete type as the supplied resource.</param>
-    /// <param name="data">Caller-owned source geometry; later edits do not affect the server copy.</param>
-    /// <exception cref="ArgumentException">The RID is not a live shape or the resource has another concrete type.</exception>
-    /// <exception cref="ObjectDisposedException">The supplied resource is disposed.</exception>
-    public void ShapeSetData(RID shape, Shape data)
+    internal void ShapeSetDataCore(RID shape, Shape data)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(data);
@@ -108,10 +78,7 @@ public sealed partial class PhysicsServer
         previous.ReleaseServerGeometry();
     }
 
-    /// <summary>Returns a caller-owned duplicate of server shape geometry.</summary>
-    /// <param name="shape">A live server shape RID.</param>
-    /// <returns>An independent caller-owned Shape resource.</returns>
-    public Shape ShapeGetData(RID shape)
+    internal Shape ShapeGetDataCore(RID shape)
     {
         ThrowIfDisposed();
         var entry = GetShape(shape);
@@ -121,45 +88,25 @@ public sealed partial class PhysicsServer
         return (Shape)entry.Geometry.Duplicate();
     }
 
-    /// <summary>Adds a typed server shape to a body as one indexed owner slot.</summary>
-    /// <param name="body">A live scene or server body RID.</param>
-    /// <param name="shape">A live server shape RID.</param>
-    /// <param name="transform">Finite local pose, or null for identity.</param>
-    /// <param name="disabled">Whether this slot initially contributes no fixtures.</param>
-    public void BodyAddShape(RID body, RID shape, Transform? transform = null, bool disabled = false) =>
-        AddShape(body, shape, transform ?? Transform.Identity, disabled, isArea: false);
+    internal void BodyAddShapeCore(RID body, RID shape, Transform? transform = null, bool disabled = false) =>
+    AddShape(body, shape, transform ?? Transform.Identity, disabled, isArea: false);
 
-    /// <summary>Adds a typed server shape to an Area sensor as one indexed owner slot.</summary>
-    /// <param name="area">A live scene or server Area RID.</param>
-    /// <param name="shape">A live server shape RID.</param>
-    /// <param name="transform">Finite local pose, or null for identity.</param>
-    /// <param name="disabled">Whether this slot initially contributes no fixtures.</param>
-    public void AreaAddShape(RID area, RID shape, Transform? transform = null, bool disabled = false) =>
-        AddShape(area, shape, transform ?? Transform.Identity, disabled, isArea: true);
+    internal void AreaAddShapeCore(RID area, RID shape, Transform? transform = null, bool disabled = false) =>
+    AddShape(area, shape, transform ?? Transform.Identity, disabled, isArea: true);
 
-    /// <summary>Gets the number of indexed shape slots on a body, including disabled slots.</summary>
-    /// <param name="body">A live scene or server body RID.</param>
-    /// <returns>The current slot count.</returns>
-    public int BodyGetShapeCount(RID body)
+    internal int BodyGetShapeCountCore(RID body)
     {
         var owners = ShapeOwners(body, isArea: false);
         return owners.Scene?.ShapeSlots.Count ?? owners.Server!.ShapeCount;
     }
 
-    /// <summary>Gets the number of indexed shape slots on an Area, including disabled slots.</summary>
-    /// <param name="area">A live scene or server Area RID.</param>
-    /// <returns>The current slot count.</returns>
-    public int AreaGetShapeCount(RID area)
+    internal int AreaGetShapeCountCore(RID area)
     {
         var owners = ShapeOwners(area, isArea: true);
         return owners.Scene?.ShapeSlots.Count ?? owners.Server!.ShapeCount;
     }
 
-    /// <summary>Enables or disables one indexed body shape slot.</summary>
-    /// <param name="body">A live scene or server body RID.</param>
-    /// <param name="index">Zero-based shape-owner slot index.</param>
-    /// <param name="disabled">Whether the slot contributes no fixtures.</param>
-    public void BodySetShapeDisabled(RID body, int index, bool disabled)
+    internal void BodySetShapeDisabledCore(RID body, int index, bool disabled)
     {
         var owners = ShapeOwners(body, isArea: false, writing: true);
         if (owners.Scene is { } scene)
@@ -171,11 +118,7 @@ public sealed partial class PhysicsServer
         else owners.Server!.SetShapeDisabled(index, disabled);
     }
 
-    /// <summary>Enables or disables one indexed Area shape slot.</summary>
-    /// <param name="area">A live scene or server Area RID.</param>
-    /// <param name="index">Zero-based shape-owner slot index.</param>
-    /// <param name="disabled">Whether the slot contributes no sensor fixtures.</param>
-    public void AreaSetShapeDisabled(RID area, int index, bool disabled)
+    internal void AreaSetShapeDisabledCore(RID area, int index, bool disabled)
     {
         var owners = ShapeOwners(area, isArea: true, writing: true);
         if (owners.Scene is { } scene)
@@ -187,97 +130,63 @@ public sealed partial class PhysicsServer
         else owners.Server!.SetShapeDisabled(index, disabled);
     }
 
-    /// <summary>Removes one indexed body shape slot and its fixtures.</summary>
-    /// <param name="body">A live scene or server body RID.</param>
-    /// <param name="index">Zero-based shape-owner slot index.</param>
-    public void BodyRemoveShape(RID body, int index)
+    internal void BodyRemoveShapeCore(RID body, int index)
     {
         var owners = ShapeOwners(body, isArea: false, writing: true);
         if (owners.Scene is { } scene) scene.RemoveGlobalShape(index); else owners.Server!.RemoveShapeAt(index);
     }
 
-    /// <summary>Removes one indexed Area shape slot and its fixtures.</summary>
-    /// <param name="area">A live scene or server Area RID.</param>
-    /// <param name="index">Zero-based shape-owner slot index.</param>
-    public void AreaRemoveShape(RID area, int index)
+    internal void AreaRemoveShapeCore(RID area, int index)
     {
         var owners = ShapeOwners(area, isArea: true, writing: true);
         if (owners.Scene is { } scene) scene.RemoveGlobalShape(index); else owners.Server!.RemoveShapeAt(index);
     }
 
-    /// <summary>Moves a body into a live space, or detaches it with an empty RID.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <param name="space">A live space RID, or default to detach.</param>
-    public void BodySetSpace(RID body, RID space) => SetSpace(body, space, isArea: false);
-    /// <summary>Moves an Area into a live space, or detaches it with an empty RID.</summary>
-    /// <param name="area">A live server Area RID.</param>
-    /// <param name="space">A live space RID, or default to detach.</param>
-    public void AreaSetSpace(RID area, RID space) => SetSpace(area, space, isArea: true);
+    internal void BodySetSpaceCore(RID body, RID space) => SetSpace(body, space, isArea: false);
+    internal void AreaSetSpaceCore(RID area, RID space) => SetSpace(area, space, isArea: true);
 
-    /// <summary>Gets the current body space, or an empty RID while detached.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <returns>The current space identity or default.</returns>
-    public RID BodyGetSpace(RID body)
+    internal RID BodyGetSpaceCore(RID body)
     {
         var collider = GetCollider(body, isArea: false);
         EnsureColliderSpaceAccessible(collider);
         return collider.SpaceRID;
     }
-    /// <summary>Gets the current Area space, or an empty RID while detached.</summary>
-    /// <param name="area">A live server Area RID.</param>
-    /// <returns>The current space identity or default.</returns>
-    public RID AreaGetSpace(RID area)
+    internal RID AreaGetSpaceCore(RID area)
     {
         var collider = GetCollider(area, isArea: true);
         EnsureColliderSpaceAccessible(collider);
         return collider.SpaceRID;
     }
 
-    /// <summary>Changes a body's translation and rotation in scene units.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <param name="transform">Finite global pose with unit scale and zero skew.</param>
-    public void BodySetTransform(RID body, Transform transform)
+    internal void BodySetTransformCore(RID body, Transform transform)
     {
         var collider = GetCollider(body, isArea: false);
         EnsureColliderSpaceAccessible(collider);
         collider.SetTransform(transform);
     }
 
-    /// <summary>Changes an Area's translation and rotation in scene units.</summary>
-    /// <param name="area">A live scene or server Area RID.</param>
-    /// <param name="transform">Finite global pose with unit scale and zero skew.</param>
-    public void AreaSetTransform(RID area, Transform transform)
+    internal void AreaSetTransformCore(RID area, Transform transform)
     {
         ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(true); var owners = runtime.Owners;
         PhysicsServerCollider.ValidateTransform(transform);
         if (owners.Scene is { } scene) scene.GlobalTransform = transform; else owners.Server!.SetTransform(transform);
     }
 
-    /// <summary>Returns the body's current solver transform.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <returns>The current scene-unit pose, including solved dynamic movement.</returns>
-    public Transform BodyGetTransform(RID body)
+    internal Transform BodyGetTransformCore(RID body)
     {
         var collider = GetCollider(body, isArea: false);
         EnsureColliderSpaceAccessible(collider);
         return collider.GetTransform();
     }
 
-    /// <summary>Sets the body's finite linear velocity in scene units per second.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <param name="velocity">Finite global scene units per second.</param>
-    public void BodySetLinearVelocity(RID body, Vector2 velocity)
+    internal void BodySetLinearVelocityCore(RID body, Vector2 velocity)
     {
         var collider = GetCollider(body, isArea: false);
         EnsureColliderSpaceAccessible(collider);
         collider.SetLinearVelocity(velocity);
     }
 
-    /// <summary>Changes a body among static, kinematic and dynamic modes.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <param name="mode">One of the four declared body modes.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
-    public void BodySetMode(RID body, BodyMode mode)
+    internal void BodySetModeCore(RID body, BodyMode mode)
     {
         if (mode is not (BodyMode.Static or BodyMode.Kinematic or BodyMode.Rigid or BodyMode.RigidLinear))
             throw new ArgumentOutOfRangeException(nameof(mode));
@@ -286,62 +195,40 @@ public sealed partial class PhysicsServer
         collider.SetMode(mode);
     }
 
-    /// <summary>Gets the body's current motion mode.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <returns>The current mode.</returns>
-    public BodyMode BodyGetMode(RID body)
+    internal BodyMode BodyGetModeCore(RID body)
     {
         var collider = GetCollider(body, isArea: false);
         EnsureColliderSpaceAccessible(collider);
         return collider.Mode;
     }
 
-    /// <summary>Sets a body's 32 collision-layer bits.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <param name="layer">All accepted layer bits, including zero and bit 32.</param>
-    public void BodySetCollisionLayer(RID body, uint layer)
+    internal void BodySetCollisionLayerCore(RID body, uint layer)
     {
         var collider = GetCollider(body, isArea: false);
         EnsureColliderSpaceAccessible(collider);
         collider.SetFilter(layer, collider.CollisionMask);
     }
 
-    /// <summary>Sets a body's 32 collision-mask bits.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <param name="mask">All accepted mask bits, including zero and bit 32.</param>
-    public void BodySetCollisionMask(RID body, uint mask)
+    internal void BodySetCollisionMaskCore(RID body, uint mask)
     {
         var collider = GetCollider(body, isArea: false);
         EnsureColliderSpaceAccessible(collider);
         collider.SetFilter(collider.CollisionLayer, mask);
     }
 
-    /// <summary>Sets an Area's 32 collision-layer bits.</summary>
-    /// <param name="area">A live scene or server Area RID.</param>
-    /// <param name="layer">All accepted layer bits, including zero and bit 32.</param>
-    public void AreaSetCollisionLayer(RID area, uint layer)
+    internal void AreaSetCollisionLayerCore(RID area, uint layer)
     {
         ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(true); var owners = runtime.Owners;
         if (owners.Scene is { } scene) scene.CollisionLayer = layer; else owners.Server!.SetFilter(layer, owners.Server.CollisionMask);
     }
 
-    /// <summary>Sets whether scene monitoring Areas may detect a server-created Area.</summary>
-    /// <param name="area">A live scene or server Area RID.</param>
-    /// <param name="monitorable">The sensing policy; server Areas default false.</param>
-    /// <remarks>The next nonzero overlap scan adopts the policy. Attached changes require the space owner thread.</remarks>
-    public void AreaSetMonitorable(RID area, bool monitorable)
+    internal void AreaSetMonitorableCore(RID area, bool monitorable)
     {
         ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(true); var owners = runtime.Owners;
         if (owners.Scene is { } scene) scene.Monitorable = monitorable; else owners.Server!.Monitorable = monitorable;
     }
 
-    /// <summary>Frees a server-owned space, collider, shape or joint RID.</summary>
-    /// <param name="rid">A live caller-owned server resource identity.</param>
-    /// <remarks>Scene-owned spaces, collision objects and joints are released by their scene owners.
-    /// Freeing a body clears dependent joint connections before removing its identity.</remarks>
-    /// <exception cref="ArgumentException">The RID is stale or has no server-owned resource.</exception>
-    /// <exception cref="InvalidOperationException">The RID belongs to a scene owner or the space is being stepped.</exception>
-    public void FreeRID(RID rid)
+    internal void FreeRIDCore(RID rid)
     {
         ThrowIfDisposed();
         PhysicsSpace? space = null;

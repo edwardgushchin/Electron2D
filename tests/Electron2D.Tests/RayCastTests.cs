@@ -222,19 +222,19 @@ internal static class RayCastTests
         var ray = new RayCast { TargetPosition = new(0, 100) };
         root.AddChild(ray);
         using var tree = new SceneTree(root);
-        var server = PhysicsServer.Instance;
-        var body = server.BodyCreate();
-        var shape = server.CircleShapeCreate();
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(body, shape);
-        server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 30)));
-        server.BodySetSpace(body, ray.GetWorld2D()!.Space);
+        var server = PhysicsServer.Service;
+        var body = PhysicsServer.BodyCreate();
+        var shape = PhysicsServer.CircleShapeCreate();
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(body, shape);
+        PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 30)));
+        PhysicsServer.BodySetSpace(body, ray.GetWorld2D()!.Space);
         tree.PhysicsFrame(1d / 60);
         Check(ray.IsColliding() && ray.GetCollider() is null && ray.GetColliderRID() == body,
             "A server-only hit retains its RID even without a scene collider object.");
         var point = ray.GetCollisionPoint();
-        server.FreeRID(body);
-        server.FreeRID(shape);
+        PhysicsServer.FreeRID(body);
+        PhysicsServer.FreeRID(shape);
         tree.PhysicsFrame(1d / 60);
         Check(!ray.IsColliding() && !ray.GetColliderRID().IsValid() && ray.GetCollisionPoint() == point,
             "A freed server collider disappears on the next sample without losing prior point data.");

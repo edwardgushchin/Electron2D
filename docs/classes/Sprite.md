@@ -1,6 +1,6 @@
 # Sprite
 
-Last updated: 2026-09-23
+Last updated: 2026-10-04
 
 - Declaration: `public class Sprite : Entity`
 - Source: [Sprite.cs](../../src/Scene/2D/Sprite.cs)
@@ -31,7 +31,7 @@ var sprite = new Sprite
 window.AddChild(sprite);
 ```
 
-The texture must outlive its use by the scene. `Engine.Instance.Run(window)` owns the supplied window hierarchy; it does not own this ordinary borrowed texture.
+The texture must outlive its use by the scene. `Engine.Run(window)` owns the supplied window hierarchy; it does not own this ordinary borrowed texture.
 
 ## Constructor
 

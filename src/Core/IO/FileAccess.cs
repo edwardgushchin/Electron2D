@@ -1738,7 +1738,7 @@ public sealed class FileAccess : ElectronObject
         ArgumentNullException.ThrowIfNull(path);
         if (path.Length == 0)
             throw new ArgumentException("A file path cannot be empty.", nameof(path));
-        return ProjectSettings.Instance.GlobalizePath(path);
+        return ProjectSettings.GlobalizePath(path);
     }
 
     private static void ValidateCompressionMode(FileCompressionMode mode)

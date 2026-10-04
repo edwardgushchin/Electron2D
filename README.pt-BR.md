@@ -110,7 +110,7 @@ dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 -
 
 Mantenha as teclas de direção pressionadas para mover o nó da cena; pressione Escape ou feche a janela para sair. O exemplo informa o movimento no terminal e não desenha a cena.
 
-Seu [ponto de entrada](examples/HostExample/Program.cs) configura `Window`, adiciona a cena e chama `Engine.Instance.Run`. O motor cuida dos eventos, do tempo dos quadros e do encerramento. Consulte o [guia do exemplo](examples/HostExample/README.md) para ver o fluxo completo.
+Seu [ponto de entrada](examples/HostExample/Program.cs) configura `Window`, adiciona a cena e chama `Engine.Run`. O motor cuida dos eventos, do tempo dos quadros e do encerramento. Consulte o [guia do exemplo](examples/HostExample/README.md) para ver o fluxo completo.
 
 <a id="documentation"></a>
 

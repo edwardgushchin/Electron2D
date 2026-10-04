@@ -161,11 +161,11 @@ internal sealed class AudioEffectFilterInstance : AudioEffectInstance
     private float _rate;
     internal AudioEffectFilterInstance(AudioEffectFilter source)
     {
-        _source = source; _settings = source.Snapshot(); _rate = AudioServer.Instance.GetMixRate(); _coefficients = AudioFilterKernel.Prepare(_settings, _rate);
+        _source = source; _settings = source.Snapshot(); _rate = AudioServer.GetMixRate(); _coefficients = AudioFilterKernel.Prepare(_settings, _rate);
     }
     protected override void OnProcess(ReadOnlySpan<Vector2> input, Span<Vector2> output)
     {
-        var settings = _source.Snapshot(); var rate = AudioServer.Instance.GetMixRate();
+        var settings = _source.Snapshot(); var rate = AudioServer.GetMixRate();
         if (settings.Cutoff != _settings.Cutoff || settings.Resonance != _settings.Resonance || settings.Gain != _settings.Gain || settings.Stages != _settings.Stages || rate != _rate) { var coefficients = AudioFilterKernel.Prepare(settings, rate); _coefficients = coefficients; _settings = settings; _rate = rate; }
         for (var i = 0; i < input.Length; i++)
         {

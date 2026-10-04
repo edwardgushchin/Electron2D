@@ -55,7 +55,7 @@ public partial class RigidBody
     public void AddConstantCentralForce(Vector2 force)
     {
         EnsureMutable();
-        PhysicsServer.Instance.BodyAddConstantCentralForce(GetRID(), force);
+        PhysicsServer.BodyAddConstantCentralForce(GetRID(), force);
     }
 
     /// <summary>Adds a persistent force at a world-axis offset from the body origin.</summary>
@@ -66,7 +66,7 @@ public partial class RigidBody
     public void AddConstantForce(Vector2 force, Vector2 position = default)
     {
         EnsureMutable();
-        PhysicsServer.Instance.BodyAddConstantForce(GetRID(), force, position);
+        PhysicsServer.BodyAddConstantForce(GetRID(), force, position);
     }
 
     /// <summary>Adds a persistent finite torque without changing constant force.</summary>
@@ -75,7 +75,7 @@ public partial class RigidBody
     public void AddConstantTorque(float torque)
     {
         EnsureMutable();
-        PhysicsServer.Instance.BodyAddConstantTorque(GetRID(), torque);
+        PhysicsServer.BodyAddConstantTorque(GetRID(), torque);
     }
 
     /// <summary>Applies a force for the current physics step at a world-axis offset from the body origin.</summary>
@@ -88,7 +88,7 @@ public partial class RigidBody
         EnsureMutable();
         ValidateForceAndPosition(force, position);
         if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
-        PhysicsServer.Instance.BodyApplyForce(GetRID(), force, position);
+        PhysicsServer.BodyApplyForce(GetRID(), force, position);
     }
 
     /// <summary>Applies a one-time impulse at a world-axis offset from the body origin.</summary>
@@ -101,7 +101,7 @@ public partial class RigidBody
         EnsureMutable();
         ValidateForceAndPosition(impulse, position);
         if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
-        PhysicsServer.Instance.BodyApplyImpulse(GetRID(), impulse, position);
+        PhysicsServer.BodyApplyImpulse(GetRID(), impulse, position);
     }
 
     /// <summary>Applies a finite torque for the current physics step.</summary>
@@ -113,7 +113,7 @@ public partial class RigidBody
         EnsureMutable();
         Finite(torque);
         if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
-        PhysicsServer.Instance.BodyApplyTorque(GetRID(), torque);
+        PhysicsServer.BodyApplyTorque(GetRID(), torque);
     }
 
     /// <summary>Applies a finite one-time angular impulse.</summary>
@@ -125,7 +125,7 @@ public partial class RigidBody
         EnsureMutable();
         Finite(torque);
         if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
-        PhysicsServer.Instance.BodyApplyTorqueImpulse(GetRID(), torque);
+        PhysicsServer.BodyApplyTorqueImpulse(GetRID(), torque);
     }
 
     /// <summary>Replaces the velocity component along the supplied axis, retaining perpendicular velocity.</summary>

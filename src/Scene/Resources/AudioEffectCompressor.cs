@@ -64,9 +64,9 @@ public sealed class AudioEffectCompressor : AudioEffect
         get { lock (_gate) { ThrowIfDisposed(); return _sidechain; } }
         set
         {
-            ArgumentNullException.ThrowIfNull(value); var server = AudioServer.Instance; var changed = false; server.Lock();
+            ArgumentNullException.ThrowIfNull(value); var server = AudioServer.Service; var changed = false; server.LockCore();
             try { lock (_gate) { ThrowIfDisposed(); if (_sidechain != value) { _sidechain = value; changed = true; } } }
-            finally { server.Unlock(); }
+            finally { server.UnlockCore(); }
             if (changed) EmitChanged();
         }
     }
@@ -109,13 +109,13 @@ internal sealed class AudioEffectCompressorInstance : AudioEffectInstance
     private readonly float _rate;
     private float _runDB;
     private int _pair = -1;
-    internal AudioEffectCompressorInstance(AudioEffectCompressor source) { _source = source; _rate = AudioServer.Instance.GetMixRate(); }
+    internal AudioEffectCompressorInstance(AudioEffectCompressor source) { _source = source; _rate = AudioServer.GetMixRate(); }
     internal override void OnAttached(int pair) => _pair = pair;
     /// <inheritdoc />
     protected override void OnProcess(ReadOnlySpan<Vector2> input, Span<Vector2> destination)
     {
         var settings = _source.Snapshot();
-        var detector = _pair >= 0 && settings.Sidechain.Length != 0 ? AudioServer.Instance.ReadSidechain(settings.Sidechain, _pair, input.Length) : input;
+        var detector = _pair >= 0 && settings.Sidechain.Length != 0 ? AudioServer.Service.ReadSidechain(settings.Sidechain, _pair, input.Length) : input;
         ProcessBlock(input, destination, detector, settings);
     }
     internal void ProcessBlock(ReadOnlySpan<Vector2> input, Span<Vector2> destination, ReadOnlySpan<Vector2> detector, AudioEffectCompressor.Settings settings)

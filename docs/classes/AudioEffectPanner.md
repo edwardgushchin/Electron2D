@@ -1,6 +1,6 @@
 # AudioEffectPanner
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectPanner` · **Source:** [AudioEffectLevel.cs](../../src/Scene/Resources/AudioEffectLevel.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,9 +16,9 @@ Partial snippet in an audio-owner host:
 
 ```csharp
 using var pan = new AudioEffectPanner { Pan = -.5f };
-AudioServer.Instance.AddBusEffect(0, pan);
+AudioServer.AddBusEffect(0, pan);
 pan.Pan = 1;
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 ## API summary

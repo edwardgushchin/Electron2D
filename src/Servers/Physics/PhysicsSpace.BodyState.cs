@@ -17,7 +17,7 @@ internal sealed partial class PhysicsSpace
         _callbackBodies.Clear();
         foreach (var body in _bodies)
         {
-            var runtime = PhysicsServer.Instance.BodyRuntime(body.GetRID());
+            var runtime = PhysicsServer.Service.BodyRuntime(body.GetRID());
             runtime.ApplyBeforeStep();
             runtime.GetView(this, body.BackendID);
             _callbackBodies.Add(new(runtime, body.BackendID));
@@ -25,7 +25,7 @@ internal sealed partial class PhysicsSpace
         foreach (var body in _serverColliders)
         {
             if (body.IsArea) continue;
-            var runtime = PhysicsServer.Instance.BodyRuntime(body.RID);
+            var runtime = PhysicsServer.Service.BodyRuntime(body.RID);
             runtime.ApplyBeforeStep();
             runtime.GetView(this, body.BackendID);
             _callbackBodies.Add(new(runtime, body.BackendID));

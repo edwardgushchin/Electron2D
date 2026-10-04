@@ -41,8 +41,8 @@ internal static partial class RenderingRuntimeTests
         var frame = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 frame++; using var pixels = server.Readback();
                 for (var mode = 0; mode < buttons.Length; mode++)
@@ -67,7 +67,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window); atlas.Changed -= early;
+        Engine.Run(window); Released(window); atlas.Changed -= early;
         VerifyTextureButtonWarm(backend, texture);
         Console.WriteLine($"Texture-button seven stretch modes, both flips, normal/pressed/hover/disabled/focus overlays, atlas callback recovery and warm frames passed: {backend}.");
     }
@@ -106,15 +106,15 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(button); var frames = 0; long before = 0, allocated = 0;
         window.Ready += _ =>
         {
-            var tree = window.Tree!; var server = RenderingServer.Instance!;
+            var tree = window.Tree!; var server = RenderingServer.Service!;
             tree.ProcessFrameStarted += _ => { before = GC.GetAllocatedBytesForCurrentThread(); button.FlipH = (frames & 1) == 0; button.ButtonPressed = (frames & 1) != 0; };
-            server.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(allocated == 0, $"Texture-button {backend} 64 warmed active frames alternating distinct state textures allocate {allocated} managed bytes from ProcessFrameStarted through FramePostDraw.");
     }
     private sealed class NativeTextureButtonProbe : TextureButton

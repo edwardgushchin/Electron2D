@@ -1,6 +1,6 @@
 # AudioEffectDelay
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectDelay` · **Source:** [AudioEffectDelay.cs](../../src/Scene/Resources/AudioEffectDelay.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,9 +16,9 @@ Partial snippet in an audio-owner host; remove the bus effect before disposing t
 
 ```csharp
 using var delay = new AudioEffectDelay { Dry = 0.5f, Tap1DelayMS = 180, Tap2Active = false };
-AudioServer.Instance.AddBusEffect(0, delay);
+AudioServer.AddBusEffect(0, delay);
 // A source routed to Master now has a delayed tap.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 ## API summary

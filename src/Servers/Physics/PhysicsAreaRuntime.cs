@@ -10,7 +10,7 @@ internal sealed class PhysicsAreaRuntime(RID rid)
     internal ulong Generation;
     private bool _dispatching;
 
-    internal (Area? Scene, PhysicsServerCollider? Server) Owners => PhysicsServer.Instance.ResolveAreaOwners(RID);
+    internal (Area? Scene, PhysicsServerCollider? Server) Owners => PhysicsServer.Service.ResolveAreaOwners(RID);
     internal PhysicsSpace? Space { get { var owners = Owners; return owners.Scene?.Space ?? owners.Server?.Space; } }
     internal uint Layer { get { var owners = Owners; return owners.Scene?.CollisionLayer ?? owners.Server!.CollisionLayer; } }
     internal uint Mask { get { var owners = Owners; return owners.Scene?.CollisionMask ?? owners.Server!.CollisionMask; } }

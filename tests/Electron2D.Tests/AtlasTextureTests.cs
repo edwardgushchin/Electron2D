@@ -182,8 +182,8 @@ internal static partial class RenderingRuntimeTests
             },
             ReadyAction = n =>
             {
-                var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-                server.FramePostDraw += () =>
+                var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+                RenderingServer.FramePostDraw += () =>
                 {
                     frames++;
                     using var frame = server.Readback();
@@ -196,7 +196,7 @@ internal static partial class RenderingRuntimeTests
                             Pixel(frame, 58, 26, Colors.Blue); Pixel(frame, 70, 26, Colors.Green); Pixel(frame, 90, 20, Colors.Green);
                             Pixel(frame, 13, 70, frames == 1 ? Colors.Green : Colors.Red);
                             // Software input truncates half-texel UVs before interpolation; hardware retains their fractions.
-                            var software = server.GetCurrentRenderingDriverName() == "software";
+                            var software = RenderingServer.GetCurrentRenderingDriverName() == "software";
                             Pixel(frame, 17, 70, software ? (frames == 1 ? Colors.Green : Colors.Red) : (frames == 1 ? Colors.Blue : Colors.Green));
                             Pixel(frame, 19, 70, frames == 1 ? Colors.Blue : Colors.Green);
                             Pixel(frame, 42, 70, frames == 1 ? Colors.Blue : Colors.Green);
@@ -214,7 +214,7 @@ internal static partial class RenderingRuntimeTests
                 };
             }
         };
-        window.AddChild(node); Engine.Instance.Run(window); Released(window);
+        window.AddChild(node); Engine.Run(window); Released(window);
         Check(frames == 3 && !atlas.IsDisposed && !texture.IsDisposed, "Renderer shutdown retains borrowed atlas resources.");
         Console.WriteLine($"Atlas pixel checks passed: {backend}/{fixture ?? "default"}.");
     }
@@ -236,15 +236,15 @@ internal static partial class RenderingRuntimeTests
         {
             Material = material,
             DrawAction = n => n.DrawRect(new Rect2(0, 0, 16, 16), Colors.White),
-            ReadyAction = _ => RenderingServer.Instance!.FramePostDraw += () =>
+            ReadyAction = _ => RenderingServer.FramePostDraw += () =>
             {
-                using var frame = RenderingServer.Instance.Readback();
+                using var frame = RenderingServer.Service!.Readback();
                 Pixel(frame, 8, 8, frames == 0 ? Colors.Red : Colors.Cyan);
                 if (++frames == 1) { image.Fill(Colors.Cyan); texture.Update(image); }
                 else atlas.Atlas = null;
             }
         });
-        try { Engine.Instance.Run(window); throw new Exception("An empty material atlas must fail."); }
+        try { Engine.Run(window); throw new Exception("An empty material atlas must fail."); }
         catch (InvalidOperationException error) when (error.Message.Contains("sampled atlas has no source")) { }
         Released(window);
         Check(frames == 2 && !atlas.IsDisposed && !texture.IsDisposed, "Material atlases sample full live storage and reject an empty source on the following frame.");

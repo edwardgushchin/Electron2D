@@ -62,7 +62,7 @@ internal static class AudioStereoEnhanceTests
 
     private static void DelayAndEdges()
     {
-        var rate = AudioServer.Instance.GetMixRate();
+        var rate = AudioServer.GetMixRate();
         var delay = (int)(50 / 1000.0 * rate);
         using var effect = new AudioEffectStereoEnhance { TimePulloutMS = 50 };
         using var split = effect.Instantiate(); using var alias = effect.Instantiate();
@@ -121,12 +121,12 @@ internal static class AudioStereoEnhanceTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectStereoEnhance { PanPullout = 0 };
         using var stream = AudioEffectTests.Constant(); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); var borrowed = server.GetBusEffectInstance(0, 0); player.Play(); var native = server.Native;
+            AudioServer.AddBusEffect(0, effect); var borrowed = AudioServer.GetBusEffectInstance(0, 0); player.Play(); var native = server.Native;
             AudioEffectTests.CheckOutput(native, new(-.05f, -.05f));
             effect.PanPullout = 1; effect.Surround = 1; AudioEffectTests.CheckOutput(native, new(.15f, -.25f));
             if (native.Channels > 2)
@@ -136,34 +136,34 @@ internal static class AudioStereoEnhanceTests
                     for (var channel = 2; channel < native.Channels; channel++)
                         Check(Math.Abs(pcm[frame + channel]) < .0001f, "Unrelated output pairs remain silent.");
             }
-            server.SetBusEffectEnabled(0, 0, false); AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
-            server.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
+            AudioServer.SetBusEffectEnabled(0, 0, false); AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
+            AudioServer.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
             var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native active passes allocate no measured bytes or calls.");
             player.StreamPaused = true; AudioEffectTests.Wait(native, 20); bytes = native.MixManagedBytes; calls = FAudioContext.AllocationCalls;
             AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native paused passes allocate no measured bytes or calls.");
-            server.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !effect.IsDisposed, "Removal releases the borrowed instance only.");
+            AudioServer.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !effect.IsDisposed, "Removal releases the borrowed instance only.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     private static void NativeTail()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectStereoEnhance { TimePulloutMS = 20 };
         var samples = new short[512]; samples[0] = 16384; samples[1] = 8192;
         using var stream = new AudioStreamWAV
         {
             SampleFormat = AudioStreamWAV.Format.PCM16,
             Stereo = true,
-            MixRate = (int)server.GetMixRate(),
+            MixRate = (int)AudioServer.GetMixRate(),
             Data = MemoryMarshal.AsBytes(samples.AsSpan()).ToArray()
         };
         var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); var native = server.Native;
+            AudioServer.AddBusEffect(0, effect); var native = server.Native;
             native.PrepareCapture(native.QuantumFrames * native.Channels * 70); player.Play(); AudioEffectTests.Wait(native, 70);
             var pcm = native.CapturedPCM(); var found = false;
             for (var frame = 400; frame < pcm.Length / native.Channels; frame++)
@@ -171,24 +171,24 @@ internal static class AudioStereoEnhanceTests
             Check(found, "Finite source produces a delayed right-channel tail on the native bus.");
             tree.ProcessFrame(.01); Check(!player.IsPlaying(), "Finite source stops before its effect tail.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod);
-        settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
         try
         {
             using var effect = new AudioEffectStereoEnhance { PanPullout = 0 };
             using var stream = AudioEffectTests.Constant(); using var capture = new AudioEffectCapture { BufferLength = .1f };
             var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Stream = stream, Autoplay = true });
             var scenario = new HostScenario(capture); window.AddChild(scenario);
-            var server = AudioServer.Instance; server.AddBusEffect(0, effect); server.AddBusEffect(0, capture);
-            try { Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public stereo host processed and cleaned up."); }
-            finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+            var server = AudioServer.Service; AudioServer.AddBusEffect(0, effect); AudioServer.AddBusEffect(0, capture);
+            try { Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public stereo host processed and cleaned up."); }
+            finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class HostScenario(AudioEffectCapture capture) : Node
     {

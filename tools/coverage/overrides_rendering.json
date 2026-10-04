@@ -4847,11 +4847,7 @@
       "reason": "Protected implementation of the existing typed property-list contract for texture metadata or shader/material parameters; replaces dictionary-shaped property metadata and exposes no dynamic invocation.",
       "adr": "ADR 0005"
     },
-    {
-      "electron2d": "property:Electron2D.RenderingServer.Instance()",
-      "reason": "Typed access to the existing rendering singleton, scoped to Engine.Run. Null outside the owned startup/frame/shutdown lifetime; does not provide an independent renderer constructor.",
-      "adr": "ADRs 0015/0016/0028"
-    },
+
     {
       "electron2d": "method:Electron2D.RenderingServer.ValidateDisposal()",
       "reason": "Protected implementation of owner-thread/lifetime validation for the Engine.Run-owned rendering service. Public disposal cannot interrupt an active host or render frame.",
@@ -5329,11 +5325,7 @@
       "state": "Implemented",
       "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
     },
-    {
-      "electron2d": "property:Electron2D.ThemeDB.Instance()",
-      "state": "Implemented",
-      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
-    },
+
     {
       "electron2d": "method:Electron2D.ThemeDB.Dispose(System.Boolean)",
       "state": "Implemented",
@@ -5618,6 +5610,7 @@
       "electron2d": "method:Electron2D.CanvasGroup.GetPropertyDescriptors()",
       "state": "Implemented",
       "reason": "Typed constructor/scene factory, stored descriptor or configuration-warning override for native canvas composition. ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes now execute through CanvasItem.ClipChildren; nested mask/group ranges explicitly reject. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
-    }
+    },
+    {"electron2d": "property:Electron2D.RenderingServer.IsAvailable()", "reason": "Observable availability gate for the session-scoped static service API; does not reserve its lifetime.", "adr": "ADR 0095"}
   ]
 }

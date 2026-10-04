@@ -90,7 +90,7 @@ public sealed class AudioEffectSpectrumAnalyzerInstance : AudioEffectInstance
         var settings = source.Snapshot();
         _size = 256 << (int)settings.Size;
         _windowFrames = _size * 2;
-        _rate = AudioServer.Instance.GetMixRate();
+        _rate = AudioServer.GetMixRate();
         if (!float.IsFinite(_rate) || _rate <= 0 || _rate > 1_000_000) throw new ArgumentOutOfRangeException(nameof(source), "Output rate exceeds prepared spectrum storage.");
         _historyCount = (int)(settings.Length / (_size / _rate)) + 1;
         _history = new Vector2[checked(_historyCount * _size)];

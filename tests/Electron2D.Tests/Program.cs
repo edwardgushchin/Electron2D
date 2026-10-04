@@ -407,9 +407,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPRITE") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
 {
     WindowRuntimeTests.Run();
+    StaticServiceTests.RunNative();
     return;
 }
 
+StaticServiceTests.Run();
 SceneDiagnosticsTests.Run();
 GeometryTests.Run();
 PathTests.Run();
@@ -645,13 +647,13 @@ Console.WriteLine("Electron2D checks passed.");
 
 static void VerifyDisplayServer()
 {
-    Require(DisplayServer.Instance is null, "No display server is open before initialization.");
+    Require(DisplayServer.Service is null, "No display server is open before initialization.");
     Expect<ArgumentOutOfRangeException>(() => DisplayServer.Open("invalid", new Vector2i(0, 40)),
         "A native window requires positive dimensions.");
 
     using (var display = DisplayServer.Open("Initial", new Vector2i(320, 240), hidden: true))
     {
-        Require(ReferenceEquals(DisplayServer.Instance, display), "Opening registers the process display server.");
+        Require(ReferenceEquals(DisplayServer.Service, display), "Opening registers the process display server.");
         var expectedBackendName = SDL3.SDL.GetCurrentVideoDriver() switch
         {
             "dummy" => "headless",
@@ -659,143 +661,143 @@ static void VerifyDisplayServer()
             "x11" => "X11",
             var driver => driver,
         };
-        Require(display.GetName() == expectedBackendName && display.GetScreenCount() > 0,
+        Require(DisplayServer.GetName() == expectedBackendName && DisplayServer.GetScreenCount() > 0,
             "The backend reports its public name and an active display.");
         DisplayServerKeyboardNativeTests.Run(display);
         var systemTheme = SDL3.SDL.GetSystemTheme();
-        Require(display.IsDarkMode() == (systemTheme == SDL3.SDL.SystemTheme.Dark) &&
-                display.IsDarkModeSupported() == (systemTheme != SDL3.SDL.SystemTheme.Unknown),
+        Require(DisplayServer.IsDarkMode() == (systemTheme == SDL3.SDL.SystemTheme.Dark) &&
+                DisplayServer.IsDarkModeSupported() == (systemTheme != SDL3.SDL.SystemTheme.Unknown),
             "Theme queries reflect the native light, dark, or unknown state.");
-        Expect<InvalidOperationException>(() => Task.Run(display.IsDarkMode).GetAwaiter().GetResult(),
+        Expect<InvalidOperationException>(() => Task.Run(DisplayServer.IsDarkMode).GetAwaiter().GetResult(),
             "Theme queries remain on the opening thread.");
-        Expect<InvalidOperationException>(() => Task.Run(display.IsDarkModeSupported).GetAwaiter().GetResult(),
+        Expect<InvalidOperationException>(() => Task.Run(DisplayServer.IsDarkModeSupported).GetAwaiter().GetResult(),
             "Theme support queries remain on the opening thread.");
-        Require(display.HasHardwareKeyboard(),
+        Require(DisplayServer.HasHardwareKeyboard(),
             "Desktop hosts report hardware keyboard support independent of attached devices.");
-        var priorTouchEmulation = Input.Instance.EmulateTouchFromMouse;
+        var priorTouchEmulation = Input.EmulateTouchFromMouse;
         try
         {
-            Input.Instance.EmulateTouchFromMouse = false;
-            var nativeTouchAvailable = display.IsTouchscreenAvailable();
-            Input.Instance.EmulateTouchFromMouse = true;
-            Require(display.IsTouchscreenAvailable(),
+            Input.EmulateTouchFromMouse = false;
+            var nativeTouchAvailable = DisplayServer.IsTouchscreenAvailable();
+            Input.EmulateTouchFromMouse = true;
+            Require(DisplayServer.IsTouchscreenAvailable(),
                 "Mouse-to-touch emulation makes touchscreen input available without native touch hardware.");
-            Input.Instance.EmulateTouchFromMouse = false;
-            Require(display.IsTouchscreenAvailable() == nativeTouchAvailable,
+            Input.EmulateTouchFromMouse = false;
+            Require(DisplayServer.IsTouchscreenAvailable() == nativeTouchAvailable,
                 "Disabling emulation restores the native touch-device result.");
         }
         finally
         {
-            Input.Instance.EmulateTouchFromMouse = priorTouchEmulation;
+            Input.EmulateTouchFromMouse = priorTouchEmulation;
         }
-        var wasKeptOn = display.ScreenIsKeptOn();
+        var wasKeptOn = DisplayServer.ScreenIsKeptOn();
         try
         {
-            display.ScreenSetKeepOn(!wasKeptOn);
-            Require(display.ScreenIsKeptOn() != wasKeptOn,
+            DisplayServer.ScreenSetKeepOn(!wasKeptOn);
+            Require(DisplayServer.ScreenIsKeptOn() != wasKeptOn,
                 "Accepted screen blanking requests are observable through the public API.");
-            display.ScreenSetKeepOn(wasKeptOn);
+            DisplayServer.ScreenSetKeepOn(wasKeptOn);
         }
         catch (InvalidOperationException)
         {
-            Require(display.ScreenIsKeptOn() == wasKeptOn,
+            Require(DisplayServer.ScreenIsKeptOn() == wasKeptOn,
                 "A rejected screen blanking request does not pretend to change native state.");
         }
         Require((int)DisplayServer.Feature.Mouse == 3 &&
                 (int)DisplayServer.Feature.ClipboardPrimary == 18 &&
                 (int)DisplayServer.Feature.PipMode == 36 &&
-                display.HasFeature(DisplayServer.Feature.Clipboard) &&
-                !display.HasFeature(DisplayServer.Feature.NativeDialog) &&
-                !display.HasFeature((DisplayServer.Feature)999),
+                DisplayServer.HasFeature(DisplayServer.Feature.Clipboard) &&
+                !DisplayServer.HasFeature(DisplayServer.Feature.NativeDialog) &&
+                !DisplayServer.HasFeature((DisplayServer.Feature)999),
             "Feature IDs remain stable and capability queries do not advertise absent services.");
         Require((int)DisplayServer.HandleType.DisplayHandle == 0 &&
                 (int)DisplayServer.HandleType.WindowHandle == 1,
             "Native handle categories retain their display/window numeric identities.");
-        Expect<NotSupportedException>(() => display.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle),
+        Expect<NotSupportedException>(() => DisplayServer.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle),
             "The dummy video driver has no operating-system window handle.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowGetNativeHandle((DisplayServer.HandleType)99),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowGetNativeHandle((DisplayServer.HandleType)99),
             "Undefined native handle categories are rejected.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle, 1),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle, 1),
             "Native handles belong only to the main window.");
         Expect<InvalidOperationException>(() => Task.Run(() =>
-            display.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle)).GetAwaiter().GetResult(),
+            DisplayServer.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle)).GetAwaiter().GetResult(),
             "Native handles are queried only on the opening thread.");
-        display.ClipboardSet("DisplayServer clipboard probe");
-        Require(display.ClipboardHas() && display.ClipboardGet() == "DisplayServer clipboard probe",
+        DisplayServer.ClipboardSet("DisplayServer clipboard probe");
+        Require(DisplayServer.ClipboardHas() && DisplayServer.ClipboardGet() == "DisplayServer clipboard probe",
             "The advertised text clipboard round-trips through the dummy native driver.");
-        var mainScreen = display.WindowGetCurrentScreen();
+        var mainScreen = DisplayServer.WindowGetCurrentScreen();
         var nativeRefreshRate = SDL3.SDL.GetCurrentDisplayMode(
             SDL3.SDL.GetDisplays(out _)![mainScreen])?.RefreshRate ?? 0f;
-        Require(display.ScreenGetRefreshRate(mainScreen) ==
+        Require(DisplayServer.ScreenGetRefreshRate(mainScreen) ==
                 (float.IsFinite(nativeRefreshRate) && nativeRefreshRate > 0f ? nativeRefreshRate : -1f),
             "A missing or nonpositive native refresh rate is reported as unavailable.");
-        Require(display.WindowGetCurrentScreen(DisplayServer.InvalidWindowId) == DisplayServer.InvalidScreen,
+        Require(DisplayServer.WindowGetCurrentScreen(DisplayServer.InvalidWindowId) == DisplayServer.InvalidScreen,
             "An unknown window has no current screen.");
-        var unchangedPosition = display.WindowGetPosition();
-        var unchangedMode = display.WindowGetMode();
-        display.WindowSetCurrentScreen(mainScreen);
-        display.WindowSetCurrentScreen(DisplayServer.ScreenOfMainWindow);
-        Require(display.WindowGetPosition() == unchangedPosition && display.WindowGetMode() == unchangedMode,
+        var unchangedPosition = DisplayServer.WindowGetPosition();
+        var unchangedMode = DisplayServer.WindowGetMode();
+        DisplayServer.WindowSetCurrentScreen(mainScreen);
+        DisplayServer.WindowSetCurrentScreen(DisplayServer.ScreenOfMainWindow);
+        Require(DisplayServer.WindowGetPosition() == unchangedPosition && DisplayServer.WindowGetMode() == unchangedMode,
             "Selecting the current screen, including its selector, leaves the window unchanged.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetCurrentScreen(int.MaxValue),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetCurrentScreen(int.MaxValue),
             "An unknown target display is rejected before a move.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetCurrentScreen(mainScreen, 1),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetCurrentScreen(mainScreen, 1),
             "An unknown window ID is rejected even when the target is the current screen.");
-        Require(mainScreen >= 0 && display.ScreenGetPosition() == display.ScreenGetPosition(mainScreen) &&
-                display.ScreenGetSize() == display.ScreenGetSize(mainScreen) &&
-                display.ScreenGetScale() == display.ScreenGetScale(mainScreen) &&
-                display.ScreenGetRefreshRate() == display.ScreenGetRefreshRate(mainScreen),
+        Require(mainScreen >= 0 && DisplayServer.ScreenGetPosition() == DisplayServer.ScreenGetPosition(mainScreen) &&
+                DisplayServer.ScreenGetSize() == DisplayServer.ScreenGetSize(mainScreen) &&
+                DisplayServer.ScreenGetScale() == DisplayServer.ScreenGetScale(mainScreen) &&
+                DisplayServer.ScreenGetRefreshRate() == DisplayServer.ScreenGetRefreshRate(mainScreen),
             "Default screen queries select the display containing the main window.");
-        Require(display.ScreenGetSize(DisplayServer.ScreenPrimary) ==
-                display.ScreenGetSize(display.GetPrimaryScreen()) &&
-                display.ScreenGetSize(DisplayServer.ScreenWithKeyboardFocus).X > 0 &&
-                display.ScreenGetSize(DisplayServer.ScreenWithMouseFocus).X > 0,
+        Require(DisplayServer.ScreenGetSize(DisplayServer.ScreenPrimary) ==
+                DisplayServer.ScreenGetSize(DisplayServer.GetPrimaryScreen()) &&
+                DisplayServer.ScreenGetSize(DisplayServer.ScreenWithKeyboardFocus).X > 0 &&
+                DisplayServer.ScreenGetSize(DisplayServer.ScreenWithMouseFocus).X > 0,
             "Negative screen selectors resolve to connected displays.");
-        Require(display.ScreenGetPosition(int.MaxValue) == Vector2i.Zero &&
-                display.ScreenGetSize(int.MaxValue) == Vector2i.Zero &&
-                display.ScreenGetScale(int.MaxValue) == 1f &&
-                display.ScreenGetRefreshRate(int.MaxValue) == -1f,
+        Require(DisplayServer.ScreenGetPosition(int.MaxValue) == Vector2i.Zero &&
+                DisplayServer.ScreenGetSize(int.MaxValue) == Vector2i.Zero &&
+                DisplayServer.ScreenGetScale(int.MaxValue) == 1f &&
+                DisplayServer.ScreenGetRefreshRate(int.MaxValue) == -1f,
             "Invalid screen queries return their documented fallbacks.");
-        var screenPosition = display.ScreenGetPosition();
-        Require(display.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 1, 1)) == mainScreen &&
-                display.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 0.5f, 0.5f)) ==
+        var screenPosition = DisplayServer.ScreenGetPosition();
+        Require(DisplayServer.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 1, 1)) == mainScreen &&
+                DisplayServer.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 0.5f, 0.5f)) ==
                 DisplayServer.InvalidScreen &&
-                display.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 0, 1)) ==
+                DisplayServer.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 0, 1)) ==
                 DisplayServer.InvalidScreen &&
-                display.GetScreenFromRect(new Rect2(float.NaN, 0, 1, 1)) == DisplayServer.InvalidScreen,
+                DisplayServer.GetScreenFromRect(new Rect2(float.NaN, 0, 1, 1)) == DisplayServer.InvalidScreen,
             "Screen overlap requires at least one whole pixel of finite intersection.");
-        Require(display.WindowGetTitle() == "Initial" && display.WindowGetSize() == new Vector2i(320, 240),
+        Require(display.WindowGetTitle() == "Initial" && DisplayServer.WindowGetSize() == new Vector2i(320, 240),
             "The native window exposes its initial title and logical size.");
-        Require(display.WindowGetMinSize() == new Vector2i(64, 64),
+        Require(DisplayServer.WindowGetMinSize() == new Vector2i(64, 64),
             "The main window starts with its documented minimum size.");
-        display.WindowSetTitle("Updated");
-        Expect<ArgumentNullException>(() => display.WindowSetTitle(null!),
+        DisplayServer.WindowSetTitle("Updated");
+        Expect<ArgumentNullException>(() => DisplayServer.WindowSetTitle(null!),
             "A null title is rejected without changing the native title.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetTitle("Wrong window", 1),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetTitle("Wrong window", 1),
             "A title request for an unknown window is rejected.");
-        display.WindowSetSize(new Vector2i(400, 300));
-        Require(display.WindowGetTitle() == "Updated" && display.WindowGetSize() == new Vector2i(400, 300),
+        DisplayServer.WindowSetSize(new Vector2i(400, 300));
+        Require(display.WindowGetTitle() == "Updated" && DisplayServer.WindowGetSize() == new Vector2i(400, 300),
             "Native title and size mutations are observable.");
         Expect<InvalidOperationException>(() => DisplayServer.Open("duplicate", new Vector2i(100, 100)),
             "Only one native display server can own the process window.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowGetSize(1),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowGetSize(1),
             "Unknown window identifiers fail explicitly.");
-        Expect<InvalidOperationException>(() => Task.Run(display.GetScreenCount).GetAwaiter().GetResult(),
+        Expect<InvalidOperationException>(() => Task.Run(DisplayServer.GetScreenCount).GetAwaiter().GetResult(),
             "Native display calls remain on the opening thread.");
 
         var quitCount = 0;
-        display.QuitRequested += () => quitCount++;
+        DisplayServer.QuitRequested += () => quitCount++;
         var quit = new SDL3.SDL.Event { Type = (uint)SDL3.SDL.EventType.Quit };
         Require(SDL3.SDL.PushEvent(ref quit), "The native queue accepts a quit request.");
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         Require(quitCount == 1, "The display event pump delivers quit requests synchronously.");
         Action failingQuit = () => throw new InvalidOperationException("injected display callback failure");
-        display.QuitRequested += failingQuit;
+        DisplayServer.QuitRequested += failingQuit;
         Require(SDL3.SDL.PushEvent(ref quit) && SDL3.SDL.PushEvent(ref quit),
             "The native queue accepts multiple quit requests.");
         try
         {
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             throw new Exception("The display pump must aggregate callback failures.");
         }
         catch (AggregateException errors)
@@ -803,38 +805,38 @@ static void VerifyDisplayServer()
             Require(errors.InnerExceptions.Count == 2 && quitCount == 3,
                 "Callback failure does not prevent later native events from being delivered.");
         }
-        display.QuitRequested -= failingQuit;
-        Action reenter = () => Expect<InvalidOperationException>(display.ProcessEvents,
+        DisplayServer.QuitRequested -= failingQuit;
+        Action reenter = () => Expect<InvalidOperationException>(DisplayServer.ProcessEvents,
             "The display event pump rejects callback re-entry.");
-        display.QuitRequested += reenter;
+        DisplayServer.QuitRequested += reenter;
         Require(SDL3.SDL.PushEvent(ref quit), "The native queue accepts a re-entry probe.");
-        display.ProcessEvents();
-        display.QuitRequested -= reenter;
+        DisplayServer.ProcessEvents();
+        DisplayServer.QuitRequested -= reenter;
 
         var themeDelivery = new List<string>();
         Action themeChanged = () => themeDelivery.Add("theme");
         Action themeOrderedQuit = () => themeDelivery.Add("quit");
-        display.SystemThemeChanged += themeChanged;
-        display.QuitRequested += themeOrderedQuit;
+        DisplayServer.SystemThemeChanged += themeChanged;
+        DisplayServer.QuitRequested += themeOrderedQuit;
         var nativeThemeChanged = new SDL3.SDL.Event { Type = (uint)SDL3.SDL.EventType.SystemThemeChanged };
         try
         {
             Require(SDL3.SDL.PushEvent(ref nativeThemeChanged) && SDL3.SDL.PushEvent(ref quit) &&
                     SDL3.SDL.PushEvent(ref nativeThemeChanged),
                 "The native queue accepts system theme changes between quit requests.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Require(themeDelivery.SequenceEqual(["theme", "quit", "theme"]),
                 "Global theme events retain queue order among other global events.");
 
             Action failingTheme = () => throw new InvalidOperationException("injected theme callback failure");
-            display.SystemThemeChanged += failingTheme;
+            DisplayServer.SystemThemeChanged += failingTheme;
             try
             {
                 Require(SDL3.SDL.PushEvent(ref nativeThemeChanged) && SDL3.SDL.PushEvent(ref quit),
                     "The native queue accepts a failing theme callback followed by quit.");
                 try
                 {
-                    display.ProcessEvents();
+                    DisplayServer.ProcessEvents();
                     throw new Exception("A failing theme callback must be reported after the queue drains.");
                 }
                 catch (AggregateException errors)
@@ -846,16 +848,16 @@ static void VerifyDisplayServer()
             }
             finally
             {
-                display.SystemThemeChanged -= failingTheme;
+                DisplayServer.SystemThemeChanged -= failingTheme;
             }
         }
         finally
         {
-            display.SystemThemeChanged -= themeChanged;
-            display.QuitRequested -= themeOrderedQuit;
+            DisplayServer.SystemThemeChanged -= themeChanged;
+            DisplayServer.QuitRequested -= themeOrderedQuit;
         }
 
-        Require(!display.WindowGetFlag(WindowFlag.ResizeDisabled) &&
+        Require(!DisplayServer.WindowGetFlag(WindowFlag.ResizeDisabled) &&
                 (int)WindowFlag.ResizeDisabled == 0 &&
                 (int)WindowFlag.Borderless == 1 &&
                 (int)WindowFlag.Transparent == 3 &&
@@ -863,22 +865,22 @@ static void VerifyDisplayServer()
                 (int)WindowFlag.Max == 13 &&
                 (int)WindowMode.ExclusiveFullscreen == 4,
             "The native main window starts resizable and flag IDs match the public contract.");
-        display.WindowSetFlag(WindowFlag.ResizeDisabled, true);
-        display.ProcessEvents();
+        DisplayServer.WindowSetFlag(WindowFlag.ResizeDisabled, true);
+        DisplayServer.ProcessEvents();
         var observedResizable = (SDL3.SDL.GetWindowFlags(SDL3.SDL.GetWindows(out _)![0]) &
             SDL3.SDL.WindowFlags.Resizable) != 0;
-        Require(display.WindowGetFlag(WindowFlag.ResizeDisabled) == !observedResizable,
+        Require(DisplayServer.WindowGetFlag(WindowFlag.ResizeDisabled) == !observedResizable,
             "The resize-disabled flag is the inverse of the observed native resizable flag.");
-        display.WindowSetFlag(WindowFlag.ResizeDisabled, false);
-        Expect<NotSupportedException>(() => display.WindowSetFlag(WindowFlag.Transparent, true),
+        DisplayServer.WindowSetFlag(WindowFlag.ResizeDisabled, false);
+        Expect<NotSupportedException>(() => DisplayServer.WindowSetFlag(WindowFlag.Transparent, true),
             "A defined flag requiring the absent renderer rejects mutation explicitly.");
-        Expect<NotSupportedException>(() => display.WindowGetFlag(WindowFlag.Transparent),
+        Expect<NotSupportedException>(() => DisplayServer.WindowGetFlag(WindowFlag.Transparent),
             "A defined but unavailable flag is not reported as native state.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetMode((WindowMode)99),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetMode((WindowMode)99),
             "Unknown window modes are rejected before native mutation.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetFlag(WindowFlag.Max, true),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetFlag(WindowFlag.Max, true),
             "The terminal enum marker is not a policy.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetFlag((WindowFlag)100, true),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetFlag((WindowFlag)100, true),
             "An unknown window flag is rejected before native mutation.");
         Require((int)CursorShape.Drag == 6 &&
                 (int)CursorShape.CanDrop == 7 &&
@@ -892,23 +894,23 @@ static void VerifyDisplayServer()
                 (int)CursorShape.Max == 17 &&
                 (int)MouseMode.Max == 5,
             "Pointer enum values retain their complete public identities.");
-        Expect<ArgumentOutOfRangeException>(() => display.CursorSetShape(CursorShape.Max),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.CursorSetShape(CursorShape.Max),
             "The cursor shape terminal marker cannot be selected.");
-        Expect<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(null, CursorShape.Max),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.CursorSetCustomImage(null, CursorShape.Max),
             "The cursor shape terminal marker is not a custom slot.");
-        Expect<ArgumentOutOfRangeException>(() => display.MouseSetMode(MouseMode.Max),
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.MouseSetMode(MouseMode.Max),
             "The mouse-mode terminal marker cannot be applied.");
-        Require(!display.HasFeature(DisplayServer.Feature.MouseWarp),
+        Require(!DisplayServer.HasFeature(DisplayServer.Feature.MouseWarp),
             "The dummy backend does not advertise pointer warping.");
-        Expect<NotSupportedException>(() => display.WarpMouse(new Vector2i(20, 20)),
+        Expect<NotSupportedException>(() => DisplayServer.WarpMouse(new Vector2i(20, 20)),
             "An unavailable pointer warp rejects use before native mutation.");
 
         using (var icon = Image.CreateFromData(2, 2, false, Image.Format.Rgba8,
             [255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 255]))
         {
-            Expect<InvalidOperationException>(() => display.WindowSetIcon(icon),
+            Expect<InvalidOperationException>(() => DisplayServer.WindowSetIcon(icon),
                 "The dummy video backend reports unsupported icon installation explicitly.");
-            Expect<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(icon,
+            Expect<ArgumentOutOfRangeException>(() => DisplayServer.CursorSetCustomImage(icon,
                 hotspot: new Vector2i(2, 0)), "A cursor hotspot must remain inside its image.");
         }
 
@@ -919,9 +921,9 @@ static void VerifyDisplayServer()
         Action entered = () => pointerDelivery.Add("enter");
         Action exited = () => pointerDelivery.Add("exit");
         Action orderedQuit = () => pointerDelivery.Add("quit");
-        display.WindowMouseEntered += entered;
-        display.WindowMouseExited += exited;
-        display.QuitRequested += orderedQuit;
+        DisplayServer.WindowMouseEntered += entered;
+        DisplayServer.WindowMouseExited += exited;
+        DisplayServer.QuitRequested += orderedQuit;
         try
         {
             var pointerWindowEvent = new SDL3.SDL.Event
@@ -937,10 +939,10 @@ static void VerifyDisplayServer()
             pointerWindowEvent.Window.Type = SDL3.SDL.EventType.WindowMouseLeave;
             Require(SDL3.SDL.PushEvent(ref pointerWindowEvent),
                 "The native queue accepts pointer-leave events.");
-            Expect<InvalidOperationException>(() => Task.Run(display.ProcessEvents).GetAwaiter().GetResult(),
+            Expect<InvalidOperationException>(() => Task.Run(DisplayServer.ProcessEvents).GetAwaiter().GetResult(),
                 "Window callbacks may be pumped only on the opening thread.");
             Require(pointerDelivery.Count == 0, "An off-thread pump leaves queued window events untouched.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Require(pointerDelivery.SequenceEqual(["enter", "quit", "exit"]),
                 "Pointer focus callbacks follow native event order among other window events.");
 
@@ -948,12 +950,12 @@ static void VerifyDisplayServer()
             pointerWindowEvent.Window.WindowID = nativeWindowId + 1;
             Require(SDL3.SDL.PushEvent(ref pointerWindowEvent),
                 "The native queue accepts a foreign-window pointer event.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Require(pointerDelivery.Count == 3, "Foreign-window pointer events are ignored.");
 
             pointerWindowEvent.Window.WindowID = nativeWindowId;
             Action failingEnter = () => throw new InvalidOperationException("injected pointer-enter failure");
-            display.WindowMouseEntered += failingEnter;
+            DisplayServer.WindowMouseEntered += failingEnter;
             try
             {
                 Require(SDL3.SDL.PushEvent(ref pointerWindowEvent),
@@ -963,7 +965,7 @@ static void VerifyDisplayServer()
                     "The native queue accepts a following pointer-leave event.");
                 try
                 {
-                    display.ProcessEvents();
+                    DisplayServer.ProcessEvents();
                     throw new Exception("A failing pointer callback must be reported after draining the queue.");
                 }
                 catch (AggregateException errors)
@@ -975,21 +977,21 @@ static void VerifyDisplayServer()
             }
             finally
             {
-                display.WindowMouseEntered -= failingEnter;
+                DisplayServer.WindowMouseEntered -= failingEnter;
             }
         }
         finally
         {
-            display.WindowMouseEntered -= entered;
-            display.WindowMouseExited -= exited;
-            display.QuitRequested -= orderedQuit;
+            DisplayServer.WindowMouseEntered -= entered;
+            DisplayServer.WindowMouseExited -= exited;
+            DisplayServer.QuitRequested -= orderedQuit;
         }
 
         var dpiDelivery = new List<string>();
         Action dpiChanged = () => dpiDelivery.Add("dpi");
         Action dpiOrderedQuit = () => dpiDelivery.Add("quit");
-        display.WindowDpiChanged += dpiChanged;
-        display.QuitRequested += dpiOrderedQuit;
+        DisplayServer.WindowDpiChanged += dpiChanged;
+        DisplayServer.QuitRequested += dpiOrderedQuit;
         var scaleChanged = new SDL3.SDL.Event
         {
             Window = new SDL3.SDL.WindowEvent
@@ -1003,26 +1005,26 @@ static void VerifyDisplayServer()
             Require(SDL3.SDL.PushEvent(ref scaleChanged) && SDL3.SDL.PushEvent(ref quit) &&
                     SDL3.SDL.PushEvent(ref scaleChanged),
                 "The native queue accepts content-scale changes around a quit request.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Require(dpiDelivery.SequenceEqual(["dpi", "quit", "dpi"]),
                 "Content-scale callbacks retain native event order.");
 
             scaleChanged.Window.WindowID = nativeWindowId + 1;
             Require(SDL3.SDL.PushEvent(ref scaleChanged),
                 "The native queue accepts a foreign-window content-scale event.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Require(dpiDelivery.Count == 3, "Foreign-window content-scale changes are ignored.");
 
             scaleChanged.Window.WindowID = nativeWindowId;
             Action failingDpi = () => throw new InvalidOperationException("injected content-scale callback failure");
-            display.WindowDpiChanged += failingDpi;
+            DisplayServer.WindowDpiChanged += failingDpi;
             try
             {
                 Require(SDL3.SDL.PushEvent(ref scaleChanged) && SDL3.SDL.PushEvent(ref quit),
                     "The native queue accepts a failing content-scale callback followed by quit.");
                 try
                 {
-                    display.ProcessEvents();
+                    DisplayServer.ProcessEvents();
                     throw new Exception("A failing content-scale callback must be reported after the queue drains.");
                 }
                 catch (AggregateException errors)
@@ -1034,17 +1036,17 @@ static void VerifyDisplayServer()
             }
             finally
             {
-                display.WindowDpiChanged -= failingDpi;
+                DisplayServer.WindowDpiChanged -= failingDpi;
             }
         }
         finally
         {
-            display.WindowDpiChanged -= dpiChanged;
-            display.QuitRequested -= dpiOrderedQuit;
+            DisplayServer.WindowDpiChanged -= dpiChanged;
+            DisplayServer.QuitRequested -= dpiOrderedQuit;
         }
 
-        display.ProcessEvents();
-        var initialRect = new Rect2i(display.WindowGetPosition(), display.WindowGetSize());
+        DisplayServer.ProcessEvents();
+        var initialRect = new Rect2i(DisplayServer.WindowGetPosition(), DisplayServer.WindowGetSize());
         var movedPosition = initialRect.Position + new Vector2i(17, 19);
         var resizedSize = initialRect.Size + new Vector2i(23, 29);
         var rectDelivery = new List<Rect2i>();
@@ -1055,8 +1057,8 @@ static void VerifyDisplayServer()
             rectOrder.Add("rect");
         };
         Action rectOrderedQuit = () => rectOrder.Add("quit");
-        display.WindowRectChanged += rectChanged;
-        display.QuitRequested += rectOrderedQuit;
+        DisplayServer.WindowRectChanged += rectChanged;
+        DisplayServer.QuitRequested += rectOrderedQuit;
         var rectEvent = new SDL3.SDL.Event
         {
             Window = new SDL3.SDL.WindowEvent
@@ -1079,10 +1081,10 @@ static void VerifyDisplayServer()
             rectEvent.Window.WindowID = nativeWindowId + 1;
             rectEvent.Window.Data1++;
             Require(SDL3.SDL.PushEvent(ref rectEvent), "The native queue accepts a foreign-window resize.");
-            Expect<InvalidOperationException>(() => Task.Run(display.ProcessEvents).GetAwaiter().GetResult(),
+            Expect<InvalidOperationException>(() => Task.Run(DisplayServer.ProcessEvents).GetAwaiter().GetResult(),
                 "Rectangle callbacks may be pumped only on the opening thread.");
             Require(rectDelivery.Count == 0, "An off-thread pump leaves rectangle events queued.");
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Require(rectDelivery.SequenceEqual([
                     new Rect2i(movedPosition, initialRect.Size),
                     new Rect2i(movedPosition, resizedSize),
@@ -1102,7 +1104,7 @@ static void VerifyDisplayServer()
                     throw new InvalidOperationException("injected rectangle callback failure");
                 }
             };
-            display.WindowRectChanged += failingRect;
+            DisplayServer.WindowRectChanged += failingRect;
             try
             {
                 Require(SDL3.SDL.PushEvent(ref rectEvent), "The native queue accepts a failing rectangle callback.");
@@ -1113,7 +1115,7 @@ static void VerifyDisplayServer()
                     "The native queue accepts resize and quit after a failing rectangle callback.");
                 try
                 {
-                    display.ProcessEvents();
+                    DisplayServer.ProcessEvents();
                     throw new Exception("A failing rectangle callback must be reported after the queue drains.");
                 }
                 catch (AggregateException errors)
@@ -1129,16 +1131,16 @@ static void VerifyDisplayServer()
             }
             finally
             {
-                display.WindowRectChanged -= failingRect;
+                DisplayServer.WindowRectChanged -= failingRect;
             }
         }
         finally
         {
-            display.WindowRectChanged -= rectChanged;
-            display.QuitRequested -= rectOrderedQuit;
+            DisplayServer.WindowRectChanged -= rectChanged;
+            DisplayServer.QuitRequested -= rectOrderedQuit;
         }
 
-        Input.Instance.ReleasePressedEvents();
+        Input.ReleasePressedEvents();
         var keyDown = new SDL3.SDL.Event
         {
             Key = new SDL3.SDL.KeyboardEvent
@@ -1151,27 +1153,27 @@ static void VerifyDisplayServer()
             },
         };
         Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts a keyboard press.");
-        display.ProcessEvents();
-        Require(Input.Instance.IsKeyPressed(Key.A) && Input.Instance.IsPhysicalKeyPressed(Key.A),
+        DisplayServer.ProcessEvents();
+        Require(Input.IsKeyPressed(Key.A) && Input.IsPhysicalKeyPressed(Key.A),
             "The event pump commits logical and physical key state.");
         keyDown.Key.Type = SDL3.SDL.EventType.KeyUp;
         keyDown.Key.Down = false;
         Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts a keyboard release.");
-        display.ProcessEvents();
-        Require(!Input.Instance.IsKeyPressed(Key.A) && !Input.Instance.IsPhysicalKeyPressed(Key.A),
+        DisplayServer.ProcessEvents();
+        Require(!Input.IsKeyPressed(Key.A) && !Input.IsPhysicalKeyPressed(Key.A),
             "The event pump releases logical and physical key state.");
         keyDown.Key.Key = SDL3.SDL.Keycode.Escape;
         keyDown.Key.Scancode = SDL3.SDL.Scancode.Escape;
         keyDown.Key.Type = SDL3.SDL.EventType.KeyDown;
         keyDown.Key.Down = true;
         Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts Escape.");
-        display.ProcessEvents();
-        Require(Input.Instance.IsKeyPressed(Key.Escape), "Escape maps to the special key identity.");
+        DisplayServer.ProcessEvents();
+        Require(Input.IsKeyPressed(Key.Escape), "Escape maps to the special key identity.");
         keyDown.Key.Type = SDL3.SDL.EventType.KeyUp;
         keyDown.Key.Down = false;
         Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts Escape release.");
-        display.ProcessEvents();
-        Require(!Input.Instance.IsKeyPressed(Key.Escape), "Escape releases its special key identity.");
+        DisplayServer.ProcessEvents();
+        Require(!Input.IsKeyPressed(Key.Escape), "Escape releases its special key identity.");
         keyDown.Key.Key = SDL3.SDL.Keycode.A;
         var unicodeKeyMapper = typeof(DisplayServer).GetMethod("MapKeycode",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
@@ -1182,26 +1184,26 @@ static void VerifyDisplayServer()
         keyDown.Key.Type = SDL3.SDL.EventType.KeyDown;
         keyDown.Key.Down = true;
         Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts a layout-label probe.");
-        display.ProcessEvents();
-        Require(Input.Instance.IsKeyPressed(Key.A) && Input.Instance.IsKeyLabelPressed(Key.B) &&
-                !Input.Instance.IsKeyLabelPressed(Key.A),
+        DisplayServer.ProcessEvents();
+        Require(Input.IsKeyPressed(Key.A) && Input.IsKeyLabelPressed(Key.B) &&
+                !Input.IsKeyLabelPressed(Key.A),
             "A key event records its localized label independently of its logical keycode.");
         keyDown.Key.Type = SDL3.SDL.EventType.KeyUp;
         keyDown.Key.Down = false;
         Require(SDL3.SDL.PushEvent(ref keyDown), "The native queue accepts the label-probe release.");
-        display.ProcessEvents();
-        Require(!Input.Instance.IsKeyLabelPressed(Key.B), "The localized key label is released.");
+        DisplayServer.ProcessEvents();
+        Require(!Input.IsKeyLabelPressed(Key.B), "The localized key label is released.");
         keyDown.Key.Scancode = SDL3.SDL.Scancode.A;
         keyDown.Key.Type = SDL3.SDL.EventType.KeyDown;
         keyDown.Key.Down = true;
         Require(SDL3.SDL.PushEvent(ref keyDown) && SDL3.SDL.PushEvent(ref quit),
             "The native queue accepts an input-discard probe.");
         var quitsBeforeDiscard = quitCount;
-        display.ForceProcessAndDropEvents();
-        Require(!Input.Instance.IsKeyPressed(Key.A) && quitCount == quitsBeforeDiscard + 1,
+        DisplayServer.ForceProcessAndDropEvents();
+        Require(!Input.IsKeyPressed(Key.A) && quitCount == quitsBeforeDiscard + 1,
             "Forced window processing discards input while preserving quit delivery.");
 
-        Input.Instance.UseAccumulatedInput = true;
+        Input.UseAccumulatedInput = true;
         var motion = new SDL3.SDL.Event
         {
             Motion = new SDL3.SDL.MouseMotionEvent
@@ -1218,37 +1220,37 @@ static void VerifyDisplayServer()
         motion.Motion.X = 13;
         motion.Motion.XRel = 3;
         Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts consecutive pointer motion.");
-        display.ProcessEvents();
-        Require(NearlyEqual(Input.Instance.LastMouseVelocity.X, 2.5f),
+        DisplayServer.ProcessEvents();
+        Require(NearlyEqual(Input.LastMouseVelocity.X, 2.5f),
             "Accumulated pointer motion combines relative travel across the batch.");
-        Input.Instance.UseAccumulatedInput = false;
+        Input.UseAccumulatedInput = false;
         motion.Motion.Timestamp = 3_000_000_000;
         motion.Motion.XRel = 4;
         Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts direct pointer motion.");
-        display.ProcessEvents();
-        Require(NearlyEqual(Input.Instance.LastMouseVelocity.X, 4f),
+        DisplayServer.ProcessEvents();
+        Require(NearlyEqual(Input.LastMouseVelocity.X, 4f),
             "Disabling accumulation dispatches each pointer motion separately.");
-        Input.Instance.UseAccumulatedInput = true;
+        Input.UseAccumulatedInput = true;
         motion.Motion.WindowID = nativeWindowId + 1;
         motion.Motion.XRel = 100;
         Require(SDL3.SDL.PushEvent(ref motion), "The native queue accepts foreign-window pointer motion.");
-        display.ProcessEvents();
-        Require(NearlyEqual(Input.Instance.LastMouseVelocity.X, 4f),
+        DisplayServer.ProcessEvents();
+        Require(NearlyEqual(Input.LastMouseVelocity.X, 4f),
             "Pointer motion from an unowned window cannot enter the accumulated input stream.");
-        Input.Instance.FlushBufferedEvents();
+        Input.FlushBufferedEvents();
         VerifyDisplayServerDropBatches(display);
         DisplayServerFocusEventsTests.Run(display);
         DisplayServerCloseEventsTests.Run(display);
     }
 
-    Require(DisplayServer.Instance is null, "Disposal unregisters the native display server.");
+    Require(DisplayServer.Service is null, "Disposal unregisters the native display server.");
     using var reopened = DisplayServer.Open("Reopened", new Vector2i(120, 80), hidden: true);
-    Require(reopened.WindowGetSize() == new Vector2i(120, 80),
+    Require(DisplayServer.WindowGetSize() == new Vector2i(120, 80),
         "The native video subsystem can reopen after deterministic disposal.");
     reopened.Dispose();
-    Expect<ObjectDisposedException>(() => reopened.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle),
+    Expect<InvalidOperationException>(() => DisplayServer.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle),
         "Disposed display servers cannot expose native handles.");
-    Expect<ObjectDisposedException>(() => reopened.IsDarkMode(),
+    Expect<InvalidOperationException>(() => DisplayServer.IsDarkMode(),
         "Disposed display servers cannot query the system theme.");
 }
 
@@ -1262,7 +1264,7 @@ static void VerifyDisplayServerDropBatches(DisplayServer display)
 
     var deliveries = new List<string[]>();
     void Capture(IReadOnlyList<string> files) => deliveries.Add(files.ToArray());
-    display.FilesDropped += Capture;
+    DisplayServer.FilesDropped += Capture;
     try
     {
         Drop(SDL3.SDL.EventType.DropBegin);
@@ -1280,12 +1282,12 @@ static void VerifyDisplayServerDropBatches(DisplayServer display)
             "A standalone file emits one path and an empty batch emits nothing.");
 
         Action<IReadOnlyList<string>> fail = _ => throw new InvalidOperationException("injected drop failure");
-        display.FilesDropped += fail;
+        DisplayServer.FilesDropped += fail;
         Drop(SDL3.SDL.EventType.DropBegin);
         Drop(SDL3.SDL.EventType.DropFile, "failed.txt");
         Expect<System.Reflection.TargetInvocationException>(() => Drop(SDL3.SDL.EventType.DropComplete),
             "A failing callback propagates after its batch state is cleared.");
-        display.FilesDropped -= fail;
+        DisplayServer.FilesDropped -= fail;
         Drop(SDL3.SDL.EventType.DropBegin);
         Drop(SDL3.SDL.EventType.DropFile, "next.txt");
         Drop(SDL3.SDL.EventType.DropComplete);
@@ -1312,13 +1314,13 @@ static void VerifyDisplayServerDropBatches(DisplayServer display)
             },
         };
         Require(SDL3.SDL.PushEvent(ref close), "The native queue accepts a window-close request.");
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         Drop(SDL3.SDL.EventType.DropComplete);
         Require(deliveries.Count == 5, "Closing the window discards its unfinished file drop.");
     }
     finally
     {
-        display.FilesDropped -= Capture;
+        DisplayServer.FilesDropped -= Capture;
     }
 }
 
@@ -4833,7 +4835,7 @@ static void VerifyFileAccess()
 
         var virtualName = $"electron2d-file-access-{Guid.NewGuid():N}.tmp";
         var virtualPath = $"res://{virtualName}";
-        var physicalVirtualPath = IOPath.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
+        var physicalVirtualPath = IOPath.Combine(ProjectSettings.ProjectRoot, virtualName);
         try
         {
             using (var virtualFile = EngineFileAccess.Open(virtualPath, FileAccessModeFlags.Write))
@@ -5121,7 +5123,7 @@ static void VerifyDirAccess()
         }
 
         var virtualName = $"electron2d-dir-access-{Guid.NewGuid():N}";
-        var virtualRoot = IOPath.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
+        var virtualRoot = IOPath.Combine(ProjectSettings.ProjectRoot, virtualName);
         Directory.CreateDirectory(virtualRoot);
         try
         {
@@ -5199,12 +5201,12 @@ static void VerifyProjectSettings()
 
     try
     {
-        Expect<DirectoryNotFoundException>(() => new ProjectSettings(IOPath.Combine(root, "missing"), user),
+        Expect<DirectoryNotFoundException>(() => new ProjectSettingsRegistry(IOPath.Combine(root, "missing"), user),
             "ProjectSettings must reject an absent project root.");
-        Expect<ArgumentException>(() => new ProjectSettings(root, root),
+        Expect<ArgumentException>(() => new ProjectSettingsRegistry(root, root),
             "ProjectSettings must reject identical resource and user roots.");
 
-        using var settings = new ProjectSettings(root, user);
+        using var settings = new ProjectSettingsRegistry(root, user);
         Require(settings.ProjectRoot == IOPath.GetFullPath(root) && settings.UserDataRoot == IOPath.GetFullPath(user) &&
                 settings.ProjectFilePath == IOPath.Combine(root, ProjectSettings.ProjectFileName) &&
                 settings.OverrideFilePath == IOPath.Combine(root, ProjectSettings.OverrideFileName) &&
@@ -5271,7 +5273,7 @@ static void VerifyProjectSettings()
         Require(settings.Get(score) == 20,
             "Changing a revert value must not change the current setting.");
         var scoreProperty = settings.GetPropertyList()
-            .OfType<PropertyDescriptor<ProjectSettings, int>>()
+            .OfType<PropertyDescriptor<ProjectSettingsRegistry, int>>()
             .Single(property => property.Name == score.Name);
         Require(scoreProperty.TryGetRevertValue(settings, out var initialScore) && initialScore == 7 &&
                 settings.PropertyCanRevert(scoreProperty),
@@ -5333,7 +5335,7 @@ static void VerifyProjectSettings()
 
         var settingsEvents = 0;
         var reenterEvent = true;
-        void OnSettingsChanged(ProjectSettings sender)
+        void OnSettingsChanged(ProjectSettingsRegistry sender)
         {
             settingsEvents++;
             Require(sender.GetChangedSettings().Count > 0,
@@ -5355,7 +5357,7 @@ static void VerifyProjectSettings()
         settings.SettingsChanged -= OnSettingsChanged;
 
         settings.Set(title, "Before failing handler");
-        void ThrowingSettingsHandler(ProjectSettings _) => throw new InvalidOperationException("expected settings event failure");
+        void ThrowingSettingsHandler(ProjectSettingsRegistry _) => throw new InvalidOperationException("expected settings event failure");
         settings.SettingsChanged += ThrowingSettingsHandler;
         Require(Capture(() => settings.FlushChanges()) is InvalidOperationException && !settings.FlushChanges(),
             "A SettingsChanged handler failure must propagate after consuming that pending invocation.");
@@ -5385,7 +5387,7 @@ static void VerifyProjectSettings()
                         projectText.IndexOf("[application]", StringComparison.Ordinal),
                 "A successful save must omit the initial value, retain overrides, apply setting order, and clear unsaved tracking.");
         }
-        using (var initialReload = new ProjectSettings(root, user))
+        using (var initialReload = new ProjectSettingsRegistry(root, user))
         {
             initialReload.Register(score);
             initialReload.SetInitialValue(score, 7);
@@ -5427,7 +5429,7 @@ static void VerifyProjectSettings()
             overrideDocument.Save(settings.OverrideFilePath);
         }
 
-        using (var loaded = new ProjectSettings(root, user))
+        using (var loaded = new ProjectSettingsRegistry(root, user))
         {
             loaded.Register(score);
             loaded.Load();
@@ -5489,11 +5491,11 @@ static void VerifyProjectSettings()
         Require(!settings.HasSetting(checkpoints) && propertyListChanges >= 8,
             "Custom setting removal must update registration and tooling discovery.");
 
-        var disposable = new ProjectSettings(root, user);
+        var disposable = new ProjectSettingsRegistry(root, user);
         disposable.Dispose();
         Expect<ObjectDisposedException>(() => disposable.Get(ProjectSettings.ApplicationName),
             "Disposed isolated registries must reject reads.");
-        Expect<InvalidOperationException>(ProjectSettings.Instance.Dispose,
+        Expect<InvalidOperationException>(ProjectSettings.Service.Dispose,
             "The process-wide ProjectSettings registry must reject disposal.");
     }
     finally
@@ -5508,82 +5510,82 @@ static void VerifyProjectSettings()
 static void VerifyInputMapConfiguration()
 {
     const string action = "tests.input.map.configuration";
-    var map = InputMap.Instance;
-    var input = Input.Instance;
-    input.ReleasePressedEvents();
-    if (map.HasAction(action))
-        map.EraseAction(action);
+    var map = InputMap.Service;
+    var input = Input.Service;
+    Input.ReleasePressedEvents();
+    if (InputMap.HasAction(action))
+        InputMap.EraseAction(action);
 
-    var before = map.GetActions();
+    var before = InputMap.GetActions();
     using var binding = new InputEventKey { Keycode = Key.F1 };
     using var duplicate = new InputEventKey { Keycode = Key.F1 };
     using var absent = new InputEventKey { Keycode = Key.F2 };
     using var incompatible = new InputEventMouseMotion();
     try
     {
-        map.AddAction(action);
-        Require(map.HasAction(action) && !map.HasAction(action.ToUpperInvariant()) &&
-                map.ActionGetDeadzone(action) == 0.2f &&
-                !before.Contains(action) && map.GetActions().Last() == action,
+        InputMap.AddAction(action);
+        Require(InputMap.HasAction(action) && !InputMap.HasAction(action.ToUpperInvariant()) &&
+                InputMap.ActionGetDeadzone(action) == 0.2f &&
+                !before.Contains(action) && InputMap.GetActions().Last() == action,
             "Action registration must preserve case, default deadzone and snapshot order.");
-        Expect<NotSupportedException>(() => ((IList<string>)map.GetActions()).Add("invalid"),
+        Expect<NotSupportedException>(() => ((IList<string>)InputMap.GetActions()).Add("invalid"),
             "The action-name snapshot must be immutable.");
-        Expect<InvalidOperationException>(() => map.AddAction(action),
+        Expect<InvalidOperationException>(() => InputMap.AddAction(action),
             "Duplicate action registration must fail without changing the existing action.");
-        Expect<ArgumentOutOfRangeException>(() => map.ActionSetDeadzone(action, -0.01f),
+        Expect<ArgumentOutOfRangeException>(() => InputMap.ActionSetDeadzone(action, -0.01f),
             "Negative deadzones must be rejected before mutation.");
-        Expect<ArgumentOutOfRangeException>(() => map.ActionSetDeadzone(action, float.PositiveInfinity),
+        Expect<ArgumentOutOfRangeException>(() => InputMap.ActionSetDeadzone(action, float.PositiveInfinity),
             "Infinite deadzones must be rejected before mutation.");
-        Require(map.ActionGetDeadzone(action) == 0.2f,
+        Require(InputMap.ActionGetDeadzone(action) == 0.2f,
             "Failed deadzone changes must leave the action intact.");
-        map.ActionSetDeadzone(action, 0f);
-        Require(map.ActionGetDeadzone(action) == 0f, "Zero is a valid action deadzone.");
-        input.ActionPress(action);
-        map.ActionSetDeadzone(action, 1f);
-        Require(map.ActionGetDeadzone(action) == 1f && !input.IsActionPressed(action),
+        InputMap.ActionSetDeadzone(action, 0f);
+        Require(InputMap.ActionGetDeadzone(action) == 0f, "Zero is a valid action deadzone.");
+        Input.ActionPress(action);
+        InputMap.ActionSetDeadzone(action, 1f);
+        Require(InputMap.ActionGetDeadzone(action) == 1f && !Input.IsActionPressed(action),
             "One is a valid deadzone and changing it invalidates prior action state.");
 
-        Expect<ArgumentException>(() => map.ActionAddEvent(action, incompatible),
+        Expect<ArgumentException>(() => InputMap.ActionAddEvent(action, incompatible),
             "Only action-compatible events may be registered.");
-        map.ActionAddEvent(action, binding);
-        var snapshot = map.ActionGetEvents(action);
-        map.ActionAddEvent(action, duplicate);
-        Require(map.ActionHasEvent(action, duplicate) && map.ActionGetEvents(action).Count == 1 &&
+        InputMap.ActionAddEvent(action, binding);
+        var snapshot = InputMap.ActionGetEvents(action);
+        InputMap.ActionAddEvent(action, duplicate);
+        Require(InputMap.ActionHasEvent(action, duplicate) && InputMap.ActionGetEvents(action).Count == 1 &&
                 snapshot.Count == 1 && ReferenceEquals(snapshot[0], binding),
             "Exact duplicate bindings must collapse while snapshots retain live references.");
         Expect<NotSupportedException>(() => ((IList<InputEvent>)snapshot).Clear(),
             "The binding snapshot must be immutable.");
-        input.ActionPress(action);
-        map.ActionEraseEvent(action, absent);
-        Require(input.IsActionPressed(action) && map.ActionGetEvents(action).Count == 1,
+        Input.ActionPress(action);
+        InputMap.ActionEraseEvent(action, absent);
+        Require(Input.IsActionPressed(action) && InputMap.ActionGetEvents(action).Count == 1,
             "Erasing an absent binding must not change the map or pressed state.");
-        map.ActionEraseEvent(action, duplicate);
-        Require(!input.IsActionPressed(action) && map.ActionGetEvents(action).Count == 0 &&
+        InputMap.ActionEraseEvent(action, duplicate);
+        Require(!Input.IsActionPressed(action) && InputMap.ActionGetEvents(action).Count == 0 &&
                 snapshot.Count == 1 && ReferenceEquals(snapshot[0], binding),
             "Erasing an exact binding must invalidate action state and preserve old snapshots.");
-        map.ActionAddEvent(action, binding);
-        input.ActionPress(action);
-        map.ActionEraseEvents(action);
-        Require(!input.IsActionPressed(action) && map.ActionGetEvents(action).Count == 0,
+        InputMap.ActionAddEvent(action, binding);
+        Input.ActionPress(action);
+        InputMap.ActionEraseEvents(action);
+        Require(!Input.IsActionPressed(action) && InputMap.ActionGetEvents(action).Count == 0,
             "Erasing every binding must invalidate action state.");
-        input.ActionPress(action);
-        map.EraseAction(action);
-        Require(!map.HasAction(action) && !map.GetActions().Contains(action) && !input.IsAnythingPressed(),
+        Input.ActionPress(action);
+        InputMap.EraseAction(action);
+        Require(!InputMap.HasAction(action) && !InputMap.GetActions().Contains(action) && !Input.IsAnythingPressed(),
             "Erasing an action must remove its registration and pressed contribution.");
-        Expect<KeyNotFoundException>(() => map.EraseAction(action),
+        Expect<KeyNotFoundException>(() => InputMap.EraseAction(action),
             "Erasing an unknown action must report the missing registration.");
-        Expect<KeyNotFoundException>(() => map.ActionGetDeadzone(action),
+        Expect<KeyNotFoundException>(() => InputMap.ActionGetDeadzone(action),
             "Deadzone lookup must report a missing action.");
-        Expect<KeyNotFoundException>(() => map.ActionGetEvents(action),
+        Expect<KeyNotFoundException>(() => InputMap.ActionGetEvents(action),
             "Binding lookup must report a missing action.");
-        Expect<KeyNotFoundException>(() => map.ActionEraseEvents(action),
+        Expect<KeyNotFoundException>(() => InputMap.ActionEraseEvents(action),
             "Binding removal must report a missing action.");
     }
     finally
     {
-        if (map.HasAction(action))
-            map.EraseAction(action);
-        input.ReleasePressedEvents();
+        if (InputMap.HasAction(action))
+            InputMap.EraseAction(action);
+        Input.ReleasePressedEvents();
     }
 }
 
@@ -5591,28 +5593,28 @@ static void VerifyInputMapMatching()
 {
     const string inner = "tests.input.map.match.inner";
     const string outer = "tests.input.map.match.outer";
-    var map = InputMap.Instance;
+    var map = InputMap.Service;
     foreach (var action in new[] { inner, outer })
-        if (map.HasAction(action))
-            map.EraseAction(action);
+        if (InputMap.HasAction(action))
+            InputMap.EraseAction(action);
 
     using var key = new InputEventKey { Keycode = Key.F3 };
     using var synthetic = new InputEventAction { Action = inner, Device = InputMap.AllDevices };
     try
     {
-        map.AddAction(inner);
-        map.ActionAddEvent(inner, key);
-        map.AddAction(outer);
-        map.ActionAddEvent(outer, synthetic);
-        Require(synthetic.IsMatch(key) && !map.ActionHasEvent(outer, key),
+        InputMap.AddAction(inner);
+        InputMap.ActionAddEvent(inner, key);
+        InputMap.AddAction(outer);
+        InputMap.ActionAddEvent(outer, synthetic);
+        Require(synthetic.IsMatch(key) && !InputMap.ActionHasEvent(outer, key),
             "A synthetic event may publicly match an action source without making that source an exact binding.");
-        map.ActionAddEvent(outer, key);
-        Require(map.ActionGetEvents(outer).Count == 2 && map.ActionHasEvent(outer, key),
+        InputMap.ActionAddEvent(outer, key);
+        Require(InputMap.ActionGetEvents(outer).Count == 2 && InputMap.ActionHasEvent(outer, key),
             "Exact binding lookup must keep physical and synthetic event families distinct.");
-        map.ActionEraseEvent(outer, key);
-        Require(map.ActionGetEvents(outer).Count == 1 && ReferenceEquals(map.ActionGetEvents(outer)[0], synthetic),
+        InputMap.ActionEraseEvent(outer, key);
+        Require(InputMap.ActionGetEvents(outer).Count == 1 && ReferenceEquals(InputMap.ActionGetEvents(outer)[0], synthetic),
             "Exact binding removal must retain the synthetic event when given a physical source.");
-        map.ActionEraseEvents(outer);
+        InputMap.ActionEraseEvents(outer);
 
         var cases = new (InputEvent Binding, InputEvent Same, InputEvent Different)[]
         {
@@ -5628,14 +5630,14 @@ static void VerifyInputMapMatching()
             {
                 Require(binding.IsMatch(same) && !binding.IsMatch(different),
                     "Each bindable event family must distinguish exact identities and axis directions.");
-                map.ActionAddEvent(outer, binding);
-                Require(map.ActionHasEvent(outer, same) && !map.ActionHasEvent(outer, different),
+                InputMap.ActionAddEvent(outer, binding);
+                Require(InputMap.ActionHasEvent(outer, same) && !InputMap.ActionHasEvent(outer, different),
                     "Exact binding lookup must use each event family's action-match identity.");
-                map.ActionEraseEvent(outer, different);
-                Require(map.ActionGetEvents(outer).Count == 1,
+                InputMap.ActionEraseEvent(outer, different);
+                Require(InputMap.ActionGetEvents(outer).Count == 1,
                     "An unrelated event must not remove an existing binding.");
-                map.ActionEraseEvent(outer, same);
-                Require(map.ActionGetEvents(outer).Count == 0,
+                InputMap.ActionEraseEvent(outer, same);
+                Require(InputMap.ActionGetEvents(outer).Count == 0,
                     "An equivalent event must remove its exact binding.");
             }
             Require(cases[3].Binding.IsMatch(cases[3].Different, exactMatch: false),
@@ -5647,7 +5649,7 @@ static void VerifyInputMapMatching()
         }
         finally
         {
-            map.ActionEraseEvents(outer);
+            InputMap.ActionEraseEvents(outer);
             foreach (var (binding, same, different) in cases)
             {
                 binding.Dispose();
@@ -5661,79 +5663,79 @@ static void VerifyInputMapMatching()
         using var keyMissing = new InputEventKey { Keycode = Key.F6, Pressed = true };
         using var keyRelease = new InputEventKey { Keycode = Key.F6 };
         using var keyEcho = new InputEventKey { Keycode = Key.F6, ControlPressed = true, Pressed = true, Echo = true };
-        map.ActionAddEvent(outer, requiredKey);
+        InputMap.ActionAddEvent(outer, requiredKey);
         Require(keyExtra.IsActionPressed(outer) && !keyExtra.IsActionPressed(outer, exactMatch: true) &&
                 !keyMissing.IsAction(outer) && keyRelease.IsActionReleased(outer) &&
                 !keyRelease.IsActionReleased(outer, exactMatch: true) &&
                 !keyEcho.IsActionPressed(outer) && keyEcho.IsActionPressed(outer, allowEcho: true),
             "Key actions must handle extra, missing and released modifiers plus repeated presses.");
-        map.ActionEraseEvents(outer);
+        InputMap.ActionEraseEvents(outer);
 
         using var physical = new InputEventKey { PhysicalKeycode = Key.F7, Location = KeyLocation.Left };
         using var physicalLeft = new InputEventKey { PhysicalKeycode = Key.F7, Location = KeyLocation.Left, Pressed = true };
         using var physicalRight = new InputEventKey { PhysicalKeycode = Key.F7, Location = KeyLocation.Right, Pressed = true };
-        map.ActionAddEvent(outer, physical);
+        InputMap.ActionAddEvent(outer, physical);
         Require(physical.IsMatch(physicalLeft) && !physical.IsMatch(physicalRight) &&
-                map.EventIsAction(physicalLeft, outer) && !map.EventIsAction(physicalRight, outer),
+                InputMap.EventIsAction(physicalLeft, outer) && !InputMap.EventIsAction(physicalRight, outer),
             "Physical-key actions must preserve left/right location identity.");
-        map.ActionEraseEvents(outer);
+        InputMap.ActionEraseEvents(outer);
 
         using var label = new InputEventKey { KeyLabel = Key.F8 };
         using var labeledSource = new InputEventKey { Keycode = Key.F9, KeyLabel = Key.F8, Pressed = true };
-        map.ActionAddEvent(outer, label);
-        Require(map.EventIsAction(labeledSource, outer) && label.IsMatch(labeledSource),
+        InputMap.ActionAddEvent(outer, label);
+        Require(InputMap.EventIsAction(labeledSource, outer) && label.IsMatch(labeledSource),
             "Label-only bindings must use the key label even when the logical code differs.");
-        map.ActionEraseEvents(outer);
+        InputMap.ActionEraseEvents(outer);
 
         using var mouse = new InputEventMouseButton { ButtonIndex = MouseButton.Left, ControlPressed = true };
         using var mouseExtra = new InputEventMouseButton { ButtonIndex = MouseButton.Left, ControlPressed = true, ShiftPressed = true, Pressed = true };
         using var mouseCanceled = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Canceled = true };
-        map.ActionAddEvent(outer, mouse);
+        InputMap.ActionAddEvent(outer, mouse);
         Require(mouseExtra.IsActionPressed(outer) && !mouseExtra.IsActionPressed(outer, exactMatch: true) &&
                 mouseCanceled.IsActionReleased(outer) && !mouseCanceled.IsActionReleased(outer, exactMatch: true),
             "Mouse-button actions must handle modifiers and canceled releases.");
-        map.ActionEraseEvents(outer);
+        InputMap.ActionEraseEvents(outer);
 
         using var button = new InputEventJoypadButton { Device = InputMap.AllDevices, ButtonIndex = JoyButton.B };
         using var buttonSource = new InputEventJoypadButton { Device = 7, ButtonIndex = JoyButton.B, Pressed = true };
-        map.ActionAddEvent(outer, button);
+        InputMap.ActionAddEvent(outer, button);
         Require(buttonSource.IsActionPressed(outer, exactMatch: true) &&
                 buttonSource.GetActionStrength(outer) == 1f,
             "An all-device controller button must match a concrete device at full strength.");
         button.Device = 3;
-        Require(!map.EventIsAction(buttonSource, outer),
+        Require(!InputMap.EventIsAction(buttonSource, outer),
             "A concrete controller binding must reject events from another device.");
-        map.ActionEraseEvents(outer);
+        InputMap.ActionEraseEvents(outer);
 
         using var axis = new InputEventJoypadMotion { Device = InputMap.AllDevices, Axis = JoyAxis.LeftX, AxisValue = -1f };
         using var axisSource = new InputEventJoypadMotion { Device = 7, Axis = JoyAxis.LeftX, AxisValue = -0.6f };
         using var axisOpposite = new InputEventJoypadMotion { Device = 7, Axis = JoyAxis.LeftX, AxisValue = 0.6f };
         using var axisBelowDeadzone = new InputEventJoypadMotion { Device = 7, Axis = JoyAxis.LeftX, AxisValue = -0.1f };
-        map.ActionAddEvent(outer, axis);
+        InputMap.ActionAddEvent(outer, axis);
         Require(axisSource.IsActionPressed(outer, exactMatch: true) &&
                 NearlyEqual(axisSource.GetActionStrength(outer), 0.5f) &&
-                map.EventIsAction(axisOpposite, outer) && axisOpposite.IsActionReleased(outer) &&
+                InputMap.EventIsAction(axisOpposite, outer) && axisOpposite.IsActionReleased(outer) &&
                 !axisOpposite.IsAction(outer, exactMatch: true) &&
                 axisOpposite.GetActionStrength(outer) == 0f &&
                 axisBelowDeadzone.IsActionReleased(outer),
             "Controller-axis actions must apply direction and deadzone to effective press and strength.");
-        map.ActionAddEvent(outer, axisOpposite);
+        InputMap.ActionAddEvent(outer, axisOpposite);
         Require(axisOpposite.IsActionReleased(outer) && axisOpposite.GetActionStrength(outer) == 0f,
             "Non-exact action queries must use the first matching axis binding in registration order.");
-        map.ActionEraseEvent(outer, axis);
+        InputMap.ActionEraseEvent(outer, axis);
         Require(axisOpposite.IsActionPressed(outer) && NearlyEqual(axisOpposite.GetActionStrength(outer), 0.5f),
             "Removing the earlier opposite-axis binding must expose the later matching direction.");
-        map.ActionEraseEvents(outer);
+        InputMap.ActionEraseEvents(outer);
 
         using var direct = new InputEventAction { Action = outer, Pressed = true, Strength = 0.3f };
-        Require(map.EventIsAction(direct, outer, exactMatch: true) &&
+        Require(InputMap.EventIsAction(direct, outer, exactMatch: true) &&
                 direct.IsActionPressed(outer) && NearlyEqual(direct.GetActionStrength(outer), 0.3f) &&
                 !direct.IsAction(inner) && !direct.IsAction(outer + ".missing"),
             "A direct action event must match its registered name and preserve its configured strength.");
         direct.Pressed = false;
         Require(direct.IsActionReleased(outer) && direct.GetActionStrength(outer) == 0f,
             "A direct action release must contribute zero strength.");
-        Expect<KeyNotFoundException>(() => map.EventIsAction(direct, outer + ".missing"),
+        Expect<KeyNotFoundException>(() => InputMap.EventIsAction(direct, outer + ".missing"),
             "Action-map queries must validate registration even for direct events.");
         using var motion = new InputEventMouseMotion();
         Require(!motion.IsMatch(key), "Non-bindable events must retain the base non-match behavior.");
@@ -5748,19 +5750,19 @@ static void VerifyInputMapMatching()
     }
     finally
     {
-        if (map.HasAction(outer))
-            map.EraseAction(outer);
-        if (map.HasAction(inner))
-            map.EraseAction(inner);
+        if (InputMap.HasAction(outer))
+            InputMap.EraseAction(outer);
+        if (InputMap.HasAction(inner))
+            InputMap.EraseAction(inner);
     }
 }
 
 static void VerifyInputEventActionValues()
 {
     const string name = "tests.input.action.values";
-    var map = InputMap.Instance;
-    if (map.HasAction(name))
-        map.EraseAction(name);
+    var map = InputMap.Service;
+    if (InputMap.HasAction(name))
+        InputMap.EraseAction(name);
 
     using var action = new InputEventAction();
     using var selfBinding = new InputEventAction { Action = name };
@@ -5816,28 +5818,28 @@ static void VerifyInputEventActionValues()
     try
     {
         Require(action.AsText() == name, "An unregistered action description falls back to its name.");
-        map.AddAction(name);
-        map.ActionAddEvent(name, selfBinding);
+        InputMap.AddAction(name);
+        InputMap.ActionAddEvent(name, selfBinding);
         Require(action.AsText() == name, "A synthetic self-binding must not recurse into its description.");
-        Input.Instance.ActionPress(name);
+        Input.ActionPress(name);
         selfBinding.Action = name + ".other";
-        Require(!Input.Instance.IsActionPressed(name),
+        Require(!Input.IsActionPressed(name),
             "Editing a registered direct-action binding must invalidate its cached action state.");
         selfBinding.Action = name;
-        map.ActionAddEvent(name, firstKey);
-        map.ActionAddEvent(name, secondKey);
+        InputMap.ActionAddEvent(name, firstKey);
+        InputMap.ActionAddEvent(name, secondKey);
         Require(action.AsText() == firstKey.AsText(),
             "A direct action description uses its first concrete binding.");
-        map.ActionEraseEvent(name, firstKey);
+        InputMap.ActionEraseEvent(name, firstKey);
         Require(action.AsText() == secondKey.AsText(),
             "Removing the first concrete binding exposes the next description.");
-        map.ActionEraseEvents(name);
+        InputMap.ActionEraseEvents(name);
         Require(action.AsText() == name, "Removing all bindings restores the action-name fallback.");
     }
     finally
     {
-        if (map.HasAction(name))
-            map.EraseAction(name);
+        if (InputMap.HasAction(name))
+            InputMap.EraseAction(name);
     }
 
     action.RevertProperty(actionProperty);
@@ -5856,10 +5858,10 @@ static void VerifyInputText()
 {
     const string empty = "tests.input.text.empty";
     const string keys = "tests.input.text.keys";
-    var map = InputMap.Instance;
+    var map = InputMap.Service;
     foreach (var action in new[] { empty, keys })
-        if (map.HasAction(action))
-            map.EraseAction(action);
+        if (InputMap.HasAction(action))
+            InputMap.EraseAction(action);
 
     using var unset = new InputEventKey();
     using var space = new InputEventKey { Keycode = Key.Space };
@@ -5968,18 +5970,18 @@ static void VerifyInputText()
         map.CanTranslateMessages = true;
         map.TranslationDomain = string.Empty;
         unset.CanTranslateMessages = true;
-        map.AddAction(empty);
-        map.AddAction(keys);
-        Expect<KeyNotFoundException>(() => map.GetActionDescription(empty + ".missing"),
+        InputMap.AddAction(empty);
+        InputMap.AddAction(keys);
+        Expect<KeyNotFoundException>(() => InputMap.GetActionDescription(empty + ".missing"),
             "Action descriptions must reject an unregistered name.");
-        map.ActionAddEvent(keys, synthetic);
-        Require(map.GetActionDescription(keys) == "Action has no bound inputs",
+        InputMap.ActionAddEvent(keys, synthetic);
+        Require(InputMap.GetActionDescription(keys) == "Action has no bound inputs",
             "A synthetic-only action has no concrete binding description.");
-        map.ActionAddEvent(keys, space);
-        map.ActionAddEvent(keys, function);
-        map.ActionAddEvent(keys, mouseBinding);
-        Require(map.GetActionDescription(empty) == "Action has no bound inputs" &&
-                map.GetActionDescription(keys) == $"Space or F1 or {mouseBinding.AsText()}" &&
+        InputMap.ActionAddEvent(keys, space);
+        InputMap.ActionAddEvent(keys, function);
+        InputMap.ActionAddEvent(keys, mouseBinding);
+        Require(InputMap.GetActionDescription(empty) == "Action has no bound inputs" &&
+                InputMap.GetActionDescription(keys) == $"Space or F1 or {mouseBinding.AsText()}" &&
                 synthetic.AsText() == "Space",
             "Action descriptions must skip synthetic bindings and list concrete names in order.");
 
@@ -5996,8 +5998,8 @@ static void VerifyInputText()
         TranslationServer.AddTranslation(french, "", "Button", "Bouton");
         TranslationServer.AddTranslation(french, "", "Mouse motion at position (%s) with velocity (%s)",
             "Mouvement à (%s), vitesse (%s)");
-        Require(map.GetActionDescription(empty) == "Action sans touche" &&
-                map.GetActionDescription(keys) == $"Space ou F1 ou {mouseBinding.AsText()}" &&
+        Require(InputMap.GetActionDescription(empty) == "Action sans touche" &&
+                InputMap.GetActionDescription(keys) == $"Space ou F1 ou {mouseBinding.AsText()}" &&
                 unset.AsText() == "(non défini)" && physical.AsText() == "A - Physique" &&
                 mouseBinding.AsText() == "Bouton gauche" &&
                 mouseDouble.AsText() == "Ctrl+Bouton gauche (Double clic)" &&
@@ -6015,8 +6017,8 @@ static void VerifyInputText()
             "Disabling translation on mouse events must restore source descriptions.");
         map.CanTranslateMessages = false;
         unset.CanTranslateMessages = false;
-        Require(map.GetActionDescription(empty) == "Action has no bound inputs" &&
-                map.GetActionDescription(keys) == $"Space or F1 or {mouseBinding.AsText()}" &&
+        Require(InputMap.GetActionDescription(empty) == "Action has no bound inputs" &&
+                InputMap.GetActionDescription(keys) == $"Space or F1 or {mouseBinding.AsText()}" &&
                 unset.AsText() == "(unset)",
             "Disabling translation on a description owner must return its source wording.");
     }
@@ -6028,10 +6030,10 @@ static void VerifyInputText()
         TranslationServer.Clear();
         TranslationServer.Culture = previousCulture;
         TranslationServer.Enabled = previousEnabled;
-        if (map.HasAction(keys))
-            map.EraseAction(keys);
-        if (map.HasAction(empty))
-            map.EraseAction(empty);
+        if (InputMap.HasAction(keys))
+            InputMap.EraseAction(keys);
+        if (InputMap.HasAction(empty))
+            InputMap.EraseAction(empty);
     }
 }
 
@@ -6283,38 +6285,38 @@ static void VerifyInput()
     const string up = "tests.input.up";
     const string down = "tests.input.down";
     const string full = "tests.input.full";
-    var map = InputMap.Instance;
-    var input = Input.Instance;
+    var map = InputMap.Service;
+    var input = Input.Service;
     var actionNames = new[] { jump, left, right, up, down, full };
     var bindings = new List<InputEvent>();
 
-    input.ReleasePressedEvents();
+    Input.ReleasePressedEvents();
     foreach (var action in actionNames)
     {
-        if (map.HasAction(action))
-            map.EraseAction(action);
+        if (InputMap.HasAction(action))
+            InputMap.EraseAction(action);
     }
 
     try
     {
-        Require(ReferenceEquals(input, Input.Instance) && ReferenceEquals(map, InputMap.Instance),
+        Require(ReferenceEquals(input, Input.Service) && ReferenceEquals(map, InputMap.Service),
             "Input and InputMap must be process-wide singletons.");
         Require((int)MouseMode.ConfinedHidden == 4 && (int)CursorShape.Help == 16,
             "Input pointer enums retain the reference numeric identities.");
-        Expect<InvalidOperationException>(() => _ = input.MouseMode,
+        Expect<InvalidOperationException>(() => _ = Input.MouseMode,
             "Native pointer mode cannot be queried without a display.");
-        Expect<InvalidOperationException>(() => input.SetDefaultCursorShape(),
+        Expect<InvalidOperationException>(() => Input.SetDefaultCursorShape(),
             "Cursor requests cannot silently succeed without a display.");
-        Expect<ArgumentException>(() => input.WarpMouse(new Vector2(float.NaN, 0)),
+        Expect<ArgumentException>(() => Input.WarpMouse(new Vector2(float.NaN, 0)),
             "Pointer warping rejects nonfinite coordinates before requesting a display.");
         Expect<InvalidOperationException>(input.Dispose, "The process-wide Input service must reject disposal.");
         Expect<InvalidOperationException>(map.Dispose, "The process-wide InputMap service must reject disposal.");
-        Expect<ArgumentException>(() => map.AddAction(" "), "Input action names must reject whitespace.");
-        Expect<ArgumentOutOfRangeException>(() => map.AddAction("tests.invalid", float.NaN),
+        Expect<ArgumentException>(() => InputMap.AddAction(" "), "Input action names must reject whitespace.");
+        Expect<ArgumentOutOfRangeException>(() => InputMap.AddAction("tests.invalid", float.NaN),
             "Action deadzones must reject NaN.");
         var disposedEvent = new InputEventKey();
         disposedEvent.Dispose();
-        Expect<ObjectDisposedException>(() => input.ParseInputEvent(disposedEvent),
+        Expect<ObjectDisposedException>(() => Input.ParseInputEvent(disposedEvent),
             "Input parsing must reject a disposed event before changing state.");
         Expect<ObjectDisposedException>(() => _ = disposedEvent.Keycode,
             "Concrete input-event properties must reject access after disposal.");
@@ -6650,29 +6652,29 @@ static void VerifyInput()
                 "Pan delta is stored and duplicated without normalization.");
         }
 
-        map.AddAction(jump, 0.25f);
-        map.AddAction(left);
-        map.AddAction(right);
-        map.AddAction(up);
-        map.AddAction(down);
-        map.AddAction(full);
+        InputMap.AddAction(jump, 0.25f);
+        InputMap.AddAction(left);
+        InputMap.AddAction(right);
+        InputMap.AddAction(up);
+        InputMap.AddAction(down);
+        InputMap.AddAction(full);
 
         for (var index = 0; index < Input.MaxEventsPerAction; index++)
         {
             var binding = new InputEventKey { Keycode = (Key)('A' + index) };
             bindings.Add(binding);
-            map.ActionAddEvent(full, binding);
+            InputMap.ActionAddEvent(full, binding);
         }
         using (var overflowBinding = new InputEventKey { Keycode = Key.F12 })
-            Expect<InvalidOperationException>(() => map.ActionAddEvent(full, overflowBinding),
+            Expect<InvalidOperationException>(() => InputMap.ActionAddEvent(full, overflowBinding),
                 "A 33rd distinct binding must fail without changing the action.");
-        Require(map.ActionGetEvents(full).Count == Input.MaxEventsPerAction,
+        Require(InputMap.ActionGetEvents(full).Count == Input.MaxEventsPerAction,
             "Rejected binding overflow must preserve the existing 32 bindings.");
         using (var overflowAction = new InputEventAction { Action = full, Pressed = true })
         {
-            Expect<InvalidOperationException>(() => input.ParseInputEvent(overflowAction),
+            Expect<InvalidOperationException>(() => Input.ParseInputEvent(overflowAction),
                 "An unindexed direct action event must not exceed the 32-source action limit.");
-            Require(!input.IsActionPressed(full),
+            Require(!Input.IsActionPressed(full),
                 "A rejected direct action event must not mutate action state.");
         }
         using (var explicitOverflow = new InputEventAction
@@ -6682,24 +6684,24 @@ static void VerifyInput()
             Pressed = true,
         })
         {
-            Expect<InvalidOperationException>(() => input.ParseInputEvent(explicitOverflow),
+            Expect<InvalidOperationException>(() => Input.ParseInputEvent(explicitOverflow),
                 "Parsing an explicit index outside the 32-source range must fail before state mutation.");
-            Require(!input.IsActionPressed(jump),
+            Require(!Input.IsActionPressed(jump),
                 "A rejected indexed direct event must leave its action released.");
         }
 
         var syntheticBinding = new InputEventAction { Action = up };
         bindings.Add(syntheticBinding);
-        map.ActionAddEvent(up, syntheticBinding);
-        Require(map.GetActionDescription(up) == "Action has no bound inputs" && syntheticBinding.AsText() == up,
+        InputMap.ActionAddEvent(up, syntheticBinding);
+        Require(InputMap.GetActionDescription(up) == "Action has no bound inputs" && syntheticBinding.AsText() == up,
             "Action descriptions must omit synthetic indirection while a synthetic event falls back to its name.");
 
         var jumpBinding = new InputEventKey { Keycode = Key.Space };
         bindings.Add(jumpBinding);
-        map.ActionAddEvent(jump, jumpBinding);
-        map.ActionAddEvent(jump, jumpBinding);
-        Require(map.ActionGetEvents(jump).Count == 1 && map.ActionHasEvent(jump, jumpBinding) &&
-                map.EventIsAction(new InputEventKey { Keycode = Key.Space, Pressed = true }, jump),
+        InputMap.ActionAddEvent(jump, jumpBinding);
+        InputMap.ActionAddEvent(jump, jumpBinding);
+        Require(InputMap.ActionGetEvents(jump).Count == 1 && InputMap.ActionHasEvent(jump, jumpBinding) &&
+                InputMap.EventIsAction(new InputEventKey { Keycode = Key.Space, Pressed = true }, jump),
             "InputMap must ignore duplicate bindings and match a configured key.");
 
         var allDeviceBinding = new InputEventJoypadButton
@@ -6708,47 +6710,47 @@ static void VerifyInput()
             ButtonIndex = JoyButton.B,
         };
         bindings.Add(allDeviceBinding);
-        map.ActionAddEvent(up, allDeviceBinding);
+        InputMap.ActionAddEvent(up, allDeviceBinding);
         using (var deviceBinding = new InputEventJoypadButton { Device = 7, ButtonIndex = JoyButton.B })
         {
-            Require(map.ActionHasEvent(up, deviceBinding),
+            Require(InputMap.ActionHasEvent(up, deviceBinding),
                 "An all-device binding must match exact binding queries from a concrete controller.");
-            map.ActionAddEvent(up, deviceBinding);
-            Require(map.ActionGetEvents(up).Count == 2,
+            InputMap.ActionAddEvent(up, deviceBinding);
+            Require(InputMap.ActionGetEvents(up).Count == 2,
                 "A concrete-device binding already covered by an earlier all-device binding must be deduplicated.");
-            Require(map.GetActionDescription(up) == allDeviceBinding.AsText(),
+            Require(InputMap.GetActionDescription(up) == allDeviceBinding.AsText(),
                 "An action description must list each concrete binding once and omit synthetic indirection.");
         }
 
         var throwingBinding = new InputEventKey { Keycode = Key.L };
         throwingBinding.Changed += _ => throw new InvalidOperationException("expected binding observer failure");
         bindings.Add(throwingBinding);
-        map.ActionAddEvent(left, throwingBinding);
+        InputMap.ActionAddEvent(left, throwingBinding);
         using (var throwingBindingPress = new InputEventKey { Keycode = Key.L, Pressed = true })
         {
-            input.ParseInputEvent(throwingBindingPress);
-            Require(input.IsActionPressed(left), "The failure-injection binding must first contribute to its action.");
+            Input.ParseInputEvent(throwingBindingPress);
+            Require(Input.IsActionPressed(left), "The failure-injection binding must first contribute to its action.");
             Expect<InvalidOperationException>(() => throwingBinding.Keycode = Key.M,
                 "A throwing public binding observer must propagate after the binding changes.");
-            Require(!input.IsActionPressed(left) && throwingBinding.Keycode == Key.M,
+            Require(!Input.IsActionPressed(left) && throwingBinding.Keycode == Key.M,
                 "Internal action invalidation must precede fallible public binding observers.");
         }
 
         var disposableBinding = new InputEventKey { Keycode = Key.D };
         bindings.Add(disposableBinding);
-        map.ActionAddEvent(down, disposableBinding);
+        InputMap.ActionAddEvent(down, disposableBinding);
         using (var disposableBindingPress = new InputEventKey { Keycode = Key.D, Pressed = true })
         {
-            input.ParseInputEvent(disposableBindingPress);
-            Require(input.IsActionPressed(down), "The disposable binding must first contribute to its action.");
+            Input.ParseInputEvent(disposableBindingPress);
+            Require(Input.IsActionPressed(down), "The disposable binding must first contribute to its action.");
             disposableBinding.Dispose();
-            Require(!input.IsActionPressed(down) && map.ActionGetEvents(down).Count == 0,
+            Require(!Input.IsActionPressed(down) && InputMap.ActionGetEvents(down).Count == 0,
                 "Disposing a registered binding must remove it and clear its cached contribution.");
         }
 
         var modifiedBinding = new InputEventKey { Keycode = Key.J, ControlPressed = true };
         bindings.Add(modifiedBinding);
-        map.ActionAddEvent(jump, modifiedBinding);
+        InputMap.ActionAddEvent(jump, modifiedBinding);
         using (var extraModifier = new InputEventKey
         {
             Keycode = Key.J,
@@ -6783,25 +6785,25 @@ static void VerifyInput()
         using (var tree = new SceneTree(root))
         using (var press = new InputEventKey { Keycode = Key.Space, Pressed = true })
         {
-            Engine.Instance.Start(tree);
-            var wrongThreadError = Task.Run(() => Capture(() => input.ParseInputEvent(press))).Result;
-            Require(wrongThreadError is InvalidOperationException && !input.IsKeyPressed(Key.Space) &&
-                    !input.IsActionPressed(jump),
+            Engine.Start(tree);
+            var wrongThreadError = Task.Run(() => Capture(() => Input.ParseInputEvent(press))).Result;
+            Require(wrongThreadError is InvalidOperationException && !Input.IsKeyPressed(Key.Space) &&
+                    !Input.IsActionPressed(jump),
                 "Off-owner input delivery must fail before raw or mapped state changes.");
-            input.ParseInputEvent(press);
+            Input.ParseInputEvent(press);
             Require(log.SequenceEqual([
                     "child:input", "root:input",
                     "child:key", "root:key",
                     "child:unhandled", "root:unhandled",
                 ]) && child.SawPressedState && root.SawPressedState,
                 "Scene input must run child-first by stage after committing state.");
-            Require(input.IsKeyPressed(Key.Space) && input.IsActionPressed(jump) &&
-                    input.IsActionJustPressed(jump) && input.IsActionJustPressedByEvent(jump, press) &&
-                    input.GetActionStrength(jump) == 1f && input.GetActionRawStrength(jump) == 1f,
+            Require(Input.IsKeyPressed(Key.Space) && Input.IsActionPressed(jump) &&
+                    Input.IsActionJustPressed(jump) && Input.IsActionJustPressedByEvent(jump, press) &&
+                    Input.GetActionStrength(jump) == 1f && Input.GetActionRawStrength(jump) == 1f,
                 "A key press must update raw, mapped, transition, and strength state.");
 
             tree.ProcessFrame(0d);
-            Require(!input.IsActionJustPressed(jump),
+            Require(!Input.IsActionJustPressed(jump),
                 "The process transition must clear after the first process frame.");
             using (var frameRelease = new InputEventKey { Keycode = Key.Space, Pressed = false })
             {
@@ -6809,18 +6811,18 @@ static void VerifyInput()
                 tree.PhysicsFrame(0d);
                 root.PhysicsInputAttempt = null;
                 Require(root.PhysicsSawJustPressed && child.PhysicsSawJustPressed &&
-                        root.FrameInputError is InvalidOperationException && input.IsActionPressed(jump) &&
-                        !input.IsActionJustPressed(jump),
+                        root.FrameInputError is InvalidOperationException && Input.IsActionPressed(jump) &&
+                        !Input.IsActionJustPressed(jump),
                     "The physics lane must observe its transition while nested input fails before changing state.");
             }
 
             log.Clear();
             child.HandleInput = true;
             using var release = new InputEventKey { Keycode = Key.Space, Pressed = false };
-            input.ParseInputEvent(release);
-            Require(log.SequenceEqual(["child:input"]) && !input.IsKeyPressed(Key.Space) &&
-                    !input.IsActionPressed(jump) && input.IsActionJustReleased(jump) &&
-                    input.IsActionJustReleasedByEvent(jump, release),
+            Input.ParseInputEvent(release);
+            Require(log.SequenceEqual(["child:input"]) && !Input.IsKeyPressed(Key.Space) &&
+                    !Input.IsActionPressed(jump) && Input.IsActionJustReleased(jump) &&
+                    Input.IsActionJustReleasedByEvent(jump, release),
                 "Handled input must stop the current and later stages while preserving the committed release.");
             Expect<InvalidOperationException>(tree.SetInputAsHandled,
                 "Input handled state must not escape synchronous dispatch.");
@@ -6828,24 +6830,24 @@ static void VerifyInput()
             child.HandleInput = false;
             child.ReenterInput = true;
             log.Clear();
-            input.ParseInputEvent(press);
+            Input.ParseInputEvent(press);
             Require(child.ReentryError is InvalidOperationException,
                 "Input parsing must reject callback re-entry without corrupting outer delivery.");
 
             child.ReenterInput = false;
             child.ThrowOnInput = true;
             log.Clear();
-            Expect<AggregateException>(() => input.ParseInputEvent(release),
+            Expect<AggregateException>(() => Input.ParseInputEvent(release),
                 "A throwing node input callback must be reported after the remaining eligible nodes run.");
-            Require(log.Contains("root:input") && !input.IsActionPressed(jump),
+            Require(log.Contains("root:input") && !Input.IsActionPressed(jump),
                 "Input callback failures must not roll back state or skip unrelated nodes.");
             child.ThrowOnInput = false;
 
             tree.Paused = true;
             log.Clear();
             press.Pressed = true;
-            input.ParseInputEvent(press);
-            Require(log.Count == 0 && input.IsActionPressed(jump),
+            Input.ParseInputEvent(press);
+            Require(log.Count == 0 && Input.IsActionPressed(jump),
                 "Paused-ineligible nodes must skip input callbacks after state is committed.");
             tree.Paused = false;
 
@@ -6858,9 +6860,9 @@ static void VerifyInput()
             for (var index = 0; index < 16; index++)
             {
                 press.Pressed = true;
-                input.ParseInputEvent(press);
+                Input.ParseInputEvent(press);
                 press.Pressed = false;
-                input.ParseInputEvent(press);
+                Input.ParseInputEvent(press);
             }
 
             GC.Collect();
@@ -6870,72 +6872,72 @@ static void VerifyInput()
             for (var index = 0; index < 256; index++)
             {
                 press.Pressed = true;
-                input.ParseInputEvent(press);
+                Input.ParseInputEvent(press);
                 press.Pressed = false;
-                input.ParseInputEvent(press);
+                Input.ParseInputEvent(press);
             }
             Require(GC.GetAllocatedBytesForCurrentThread() == allocatedBefore,
                 "Warmed mapped input parsing and scene traversal must not allocate managed memory.");
 
-            Engine.Instance.Stop();
+            Engine.Stop();
         }
 
         using (var remapPress = new InputEventKey { Keycode = Key.Space, Pressed = true })
         {
-            input.ParseInputEvent(remapPress);
-            Require(input.IsActionPressed(jump), "A mapped source must be active before a live binding edit.");
+            Input.ParseInputEvent(remapPress);
+            Require(Input.IsActionPressed(jump), "A mapped source must be active before a live binding edit.");
             jumpBinding.Keycode = Key.Enter;
-            Require(!input.IsActionPressed(jump),
+            Require(!Input.IsActionPressed(jump),
                 "Mutating a registered live binding must invalidate cached contributions for that action.");
             jumpBinding.Keycode = Key.Space;
         }
 
-        input.ActionPress(right, 0.75f);
-        input.ActionPress(down, 1f);
-        Require(input.IsActionPressed(right) && input.GetActionStrength(right) == 0.75f &&
-                VectorNearlyEqual(input.GetVector(left, right, up, down, 0f), new Vector2(0.6f, 0.8f)),
+        Input.ActionPress(right, 0.75f);
+        Input.ActionPress(down, 1f);
+        Require(Input.IsActionPressed(right) && Input.GetActionStrength(right) == 0.75f &&
+                VectorNearlyEqual(Input.GetVector(left, right, up, down, 0f), new Vector2(0.6f, 0.8f)),
             "Synthetic action state and vector composition must preserve analog magnitude and clamp diagonals.");
-        input.ActionRelease(right);
-        input.ActionRelease(down);
-        Expect<ArgumentOutOfRangeException>(() => input.GetVector(left, right, up, down, float.NaN),
+        Input.ActionRelease(right);
+        Input.ActionRelease(down);
+        Expect<ArgumentOutOfRangeException>(() => Input.GetVector(left, right, up, down, float.NaN),
             "Vector deadzones must reject NaN.");
-        Expect<KeyNotFoundException>(() => input.ActionPress("tests.input.missing"),
+        Expect<KeyNotFoundException>(() => Input.ActionPress("tests.input.missing"),
             "Synthetic action changes must reject unregistered names.");
 
         using (var direct = new InputEventAction { Action = jump, Pressed = true, Strength = 0.4f })
         {
-            input.ParseInputEvent(direct);
-            Require(input.IsActionPressed(jump) && input.GetActionStrength(jump) == 0.4f,
+            Input.ParseInputEvent(direct);
+            Require(Input.IsActionPressed(jump) && Input.GetActionStrength(jump) == 0.4f,
                 "A direct action event must update its registered action without a hardware binding.");
             direct.Pressed = false;
-            input.ParseInputEvent(direct);
-            Require(!input.IsActionPressed(jump), "A direct action release must remove its synthetic event source.");
+            Input.ParseInputEvent(direct);
+            Require(!Input.IsActionPressed(jump), "A direct action release must remove its synthetic event source.");
         }
         using (var negative = new InputEventAction { Action = jump, Device = 4, EventIndex = int.MinValue, Pressed = true })
         using (var release = new InputEventAction { Action = jump, Device = 4, EventIndex = -1 })
         {
-            input.ParseInputEvent(negative);
-            Require(input.IsActionPressed(jump), "A negative index selects the action's post-binding source slot.");
-            input.ParseInputEvent(release);
-            Require(!input.IsActionPressed(jump),
+            Input.ParseInputEvent(negative);
+            Require(Input.IsActionPressed(jump), "A negative index selects the action's post-binding source slot.");
+            Input.ParseInputEvent(release);
+            Require(!Input.IsActionPressed(jump),
                 "Another negative index on the same device must release that source slot.");
         }
         using (var weak = new InputEventAction { Action = jump, Device = 10, EventIndex = 0, Pressed = true, Strength = 0f })
         using (var strong = new InputEventAction { Action = jump, Device = 10, EventIndex = 1, Pressed = true, Strength = 0.6f })
         {
-            input.ParseInputEvent(weak);
-            Require(input.IsActionPressed(jump) && input.GetActionStrength(jump) == 0f,
+            Input.ParseInputEvent(weak);
+            Require(Input.IsActionPressed(jump) && Input.GetActionStrength(jump) == 0f,
                 "A zero-strength indexed action source remains logically pressed.");
-            input.ParseInputEvent(strong);
-            Require(input.IsActionPressed(jump) && input.GetActionStrength(jump) == 0.6f,
+            Input.ParseInputEvent(strong);
+            Require(Input.IsActionPressed(jump) && Input.GetActionStrength(jump) == 0.6f,
                 "Independent direct action indexes combine their maximum strength.");
             weak.Pressed = false;
-            input.ParseInputEvent(weak);
-            Require(input.IsActionPressed(jump) && input.GetActionStrength(jump) == 0.6f,
+            Input.ParseInputEvent(weak);
+            Require(Input.IsActionPressed(jump) && Input.GetActionStrength(jump) == 0.6f,
                 "Releasing one direct action index must preserve another pressed source.");
             strong.Pressed = false;
-            input.ParseInputEvent(strong);
-            Require(!input.IsActionPressed(jump),
+            Input.ParseInputEvent(strong);
+            Require(!Input.IsActionPressed(jump),
                 "Releasing the final indexed source must clear the action press.");
         }
 
@@ -6947,14 +6949,14 @@ static void VerifyInput()
             ScreenVelocity = new Vector2(40f, 50f),
         })
         {
-            input.ParseInputEvent(motion);
-            Require(input.MouseButtonMask == MouseButtonMask.Left &&
-                    input.IsMouseButtonPressed(MouseButton.Left) &&
-                    !input.IsMouseButtonPressed(MouseButton.WheelUp) &&
-                    input.LastMouseVelocity == new Vector2(20f, 30f) &&
-                    input.LastMouseScreenVelocity == new Vector2(40f, 50f),
+            Input.ParseInputEvent(motion);
+            Require(Input.MouseButtonMask == MouseButtonMask.Left &&
+                    Input.IsMouseButtonPressed(MouseButton.Left) &&
+                    !Input.IsMouseButtonPressed(MouseButton.WheelUp) &&
+                    Input.LastMouseVelocity == new Vector2(20f, 30f) &&
+                    Input.LastMouseScreenVelocity == new Vector2(40f, 50f),
                 "Mouse motion must publish held buttons and both velocity coordinate spaces.");
-            Expect<ArgumentOutOfRangeException>(() => input.IsMouseButtonPressed((MouseButton)99),
+            Expect<ArgumentOutOfRangeException>(() => Input.IsMouseButtonPressed((MouseButton)99),
                 "Mouse-button queries must reject unknown identifiers.");
         }
 
@@ -6963,47 +6965,47 @@ static void VerifyInput()
         using (var rawButton = new InputEventJoypadButton { Device = 2, ButtonIndex = (JoyButton)int.MinValue, Pressed = true })
         using (var rawAxis = new InputEventJoypadMotion { Device = 2, Axis = JoyAxis.Max, AxisValue = 1.5f })
         {
-            input.ParseInputEvent(button);
-            input.ParseInputEvent(axis);
-            input.ParseInputEvent(rawButton);
-            input.ParseInputEvent(rawAxis);
-            Require(input.IsJoyButtonPressed(JoyButton.A, 2) && NearlyEqual(input.GetJoyAxis(JoyAxis.LeftX, 2), -0.7f),
+            Input.ParseInputEvent(button);
+            Input.ParseInputEvent(axis);
+            Input.ParseInputEvent(rawButton);
+            Input.ParseInputEvent(rawAxis);
+            Require(Input.IsJoyButtonPressed(JoyButton.A, 2) && NearlyEqual(Input.GetJoyAxis(JoyAxis.LeftX, 2), -0.7f),
                 "Controller events must retain per-device button and axis state.");
-            Require(input.IsJoyButtonPressed((JoyButton)int.MinValue, 2) &&
-                    input.GetJoyAxis(JoyAxis.Max, 2) == 1.5f &&
-                    !input.IsJoyButtonPressed(JoyButton.Invalid, 2) &&
-                    input.GetJoyAxis(JoyAxis.Invalid, 2) == 0f &&
-                    !input.IsJoyButtonPressed((JoyButton)int.MinValue, 3) &&
-                    input.GetJoyAxis(JoyAxis.Max, 3) == 0f,
+            Require(Input.IsJoyButtonPressed((JoyButton)int.MinValue, 2) &&
+                    Input.GetJoyAxis(JoyAxis.Max, 2) == 1.5f &&
+                    !Input.IsJoyButtonPressed(JoyButton.Invalid, 2) &&
+                    Input.GetJoyAxis(JoyAxis.Invalid, 2) == 0f &&
+                    !Input.IsJoyButtonPressed((JoyButton)int.MinValue, 3) &&
+                    Input.GetJoyAxis(JoyAxis.Max, 3) == 0f,
                 "Controller queries retain arbitrary signed raw identities and source values.");
-            Expect<ArgumentOutOfRangeException>(() => input.IsJoyButtonPressed(JoyButton.A, -1),
+            Expect<ArgumentOutOfRangeException>(() => Input.IsJoyButtonPressed(JoyButton.A, -1),
                 "Controller button queries reject negative physical device IDs.");
-            Expect<ArgumentOutOfRangeException>(() => input.GetJoyAxis(JoyAxis.LeftX, -1),
+            Expect<ArgumentOutOfRangeException>(() => Input.GetJoyAxis(JoyAxis.LeftX, -1),
                 "Controller axis queries reject negative physical device IDs.");
             rawButton.Pressed = false;
             rawAxis.AxisValue = float.PositiveInfinity;
-            input.ParseInputEvent(rawButton);
-            input.ParseInputEvent(rawAxis);
-            Require(!input.IsJoyButtonPressed((JoyButton)int.MinValue, 2) &&
-                    float.IsPositiveInfinity(input.GetJoyAxis(JoyAxis.Max, 2)),
+            Input.ParseInputEvent(rawButton);
+            Input.ParseInputEvent(rawAxis);
+            Require(!Input.IsJoyButtonPressed((JoyButton)int.MinValue, 2) &&
+                    float.IsPositiveInfinity(Input.GetJoyAxis(JoyAxis.Max, 2)),
                 "Raw controller queries reflect button release and non-finite axis updates.");
             rawAxis.AxisValue = 0f;
-            input.ParseInputEvent(rawAxis);
-            Require(input.GetJoyAxis(JoyAxis.Max, 2) == 0f,
+            Input.ParseInputEvent(rawAxis);
+            Require(Input.GetJoyAxis(JoyAxis.Max, 2) == 0f,
                 "A later resting axis event replaces the prior raw value.");
         }
 
         var vectorBinding = new InputEventJoypadMotion { Axis = JoyAxis.RightX, AxisValue = 1f };
         bindings.Add(vectorBinding);
-        map.ActionSetDeadzone(right, 0.5f);
-        map.ActionAddEvent(right, vectorBinding);
+        InputMap.ActionSetDeadzone(right, 0.5f);
+        InputMap.ActionAddEvent(right, vectorBinding);
         using (var vectorAxis = new InputEventJoypadMotion { Axis = JoyAxis.RightX, AxisValue = 0.75f })
         {
-            input.ParseInputEvent(vectorAxis);
+            Input.ParseInputEvent(vectorAxis);
             Require(vectorAxis.IsPressed() &&
-                    NearlyEqual(input.GetActionStrength(right), 0.5f) &&
-                    NearlyEqual(input.GetActionRawStrength(right), 0.75f) &&
-                    VectorNearlyEqual(input.GetVector(left, right, up, down, 0f), new Vector2(0.75f, 0f)),
+                    NearlyEqual(Input.GetActionStrength(right), 0.5f) &&
+                    NearlyEqual(Input.GetActionRawStrength(right), 0.75f) &&
+                    VectorNearlyEqual(Input.GetVector(left, right, up, down, 0f), new Vector2(0.75f, 0f)),
                 "Axis raw presses use the fixed toggle threshold while actions use their own deadzone and vectors use raw strengths.");
         }
 
@@ -7136,19 +7138,19 @@ static void VerifyInput()
                 "Pan transforms must move the gesture position without rescaling its platform-reported delta.");
         }
 
-        input.ReleasePressedEvents();
-        Require(!input.IsAnythingPressed() && input.MouseButtonMask == MouseButtonMask.None,
+        Input.ReleasePressedEvents();
+        Require(!Input.IsAnythingPressed() && Input.MouseButtonMask == MouseButtonMask.None,
             "ReleasePressedEvents must clear all raw input families and action sources.");
     }
     finally
     {
-        if (Engine.Instance.MainLoop is not null)
-            Engine.Instance.Stop();
-        input.ReleasePressedEvents();
+        if (Engine.MainLoop is not null)
+            Engine.Stop();
+        Input.ReleasePressedEvents();
         foreach (var action in actionNames)
         {
-            if (map.HasAction(action))
-                map.EraseAction(action);
+            if (InputMap.HasAction(action))
+                InputMap.EraseAction(action);
         }
         foreach (var binding in bindings)
             binding.Dispose();
@@ -7158,20 +7160,20 @@ static void VerifyInput()
 static void VerifyInputEmulation()
 {
     const string click = "tests.input.emulation.click";
-    var input = Input.Instance;
-    var map = InputMap.Instance;
-    input.ReleasePressedEvents();
-    input.EmulateMouseFromTouch = true;
-    input.EmulateTouchFromMouse = false;
-    if (map.HasAction(click))
-        map.EraseAction(click);
-    map.AddAction(click);
+    var input = Input.Service;
+    var map = InputMap.Service;
+    Input.ReleasePressedEvents();
+    Input.EmulateMouseFromTouch = true;
+    Input.EmulateTouchFromMouse = false;
+    if (InputMap.HasAction(click))
+        InputMap.EraseAction(click);
+    InputMap.AddAction(click);
     using var binding = new InputEventMouseButton
     {
         Device = InputMap.AllDevices,
         ButtonIndex = MouseButton.Left,
     };
-    map.ActionAddEvent(click, binding);
+    InputMap.ActionAddEvent(click, binding);
     using (var canceledButton = new InputEventMouseButton
     {
         ButtonIndex = MouseButton.Left,
@@ -7187,7 +7189,7 @@ static void VerifyInputEmulation()
     }
     var probe = new InputEmulationProbeNode { InputEnabled = true };
     using var tree = new SceneTree(probe);
-    Engine.Instance.Start(tree);
+    Engine.Start(tree);
     try
     {
         using var first = new InputEventScreenTouch
@@ -7198,14 +7200,14 @@ static void VerifyInputEmulation()
             Position = new Vector2(20f, 30f),
             Pressed = true,
         };
-        input.ParseInputEvent(first);
+        Input.ParseInputEvent(first);
         Require(probe.Events.Count == 2 &&
                 probe.Events[0] is InputEventMouseButton
                 {
                     Device: InputEvent.DeviceIdEmulation, ButtonIndex: MouseButton.Left,
                     ButtonMask: MouseButtonMask.Left, Position: { X: 20f, Y: 30f }, Pressed: true,
                 } && probe.Events[1] is InputEventScreenTouch { Device: 2, Index: 7 } &&
-                input.IsMouseButtonPressed(MouseButton.Left) && input.IsActionPressed(click),
+                Input.IsMouseButtonPressed(MouseButton.Left) && Input.IsActionPressed(click),
             "The first touch must commit and deliver an emulated left click before the source touch.");
         probe.Clear();
 
@@ -7217,7 +7219,7 @@ static void VerifyInputEmulation()
             Position = new Vector2(50f, 60f),
             Pressed = true,
         };
-        input.ParseInputEvent(second);
+        Input.ParseInputEvent(second);
         Require(probe.Events.Count == 1 && probe.Events[0] is InputEventScreenTouch { Device: 3 },
             "A second physical contact with the same index on another device stays touch-only.");
         probe.Clear();
@@ -7234,31 +7236,31 @@ static void VerifyInputEmulation()
             ScreenVelocity = new Vector2(50f, 40f),
             Pressure = 0.5f,
         };
-        input.ParseInputEvent(drag);
+        Input.ParseInputEvent(drag);
         Require(probe.Events.Count == 2 && probe.Events[0] is InputEventMouseMotion
         {
             Device: InputEvent.DeviceIdEmulation, ButtonMask: MouseButtonMask.Left,
             Relative: { X: 5f, Y: 4f }, Pressure: 0.5f,
         } && probe.Events[1] is InputEventScreenDrag { Device: 2, Index: 7 } &&
-                input.LastMouseVelocity == new Vector2(50f, 40f),
+                Input.LastMouseVelocity == new Vector2(50f, 40f),
             "The tracked contact's drag must become emulated mouse motion with velocity and pressure.");
         probe.Clear();
 
         first.Pressed = false;
-        input.EmulateMouseFromTouch = false;
-        input.ParseInputEvent(first);
+        Input.EmulateMouseFromTouch = false;
+        Input.ParseInputEvent(first);
         Require(probe.Events.Count == 2 && probe.Events[0] is InputEventMouseButton
         { Device: InputEvent.DeviceIdEmulation, Pressed: false } &&
-                !input.IsMouseButtonPressed(MouseButton.Left) && !input.IsActionPressed(click),
+                !Input.IsMouseButtonPressed(MouseButton.Left) && !Input.IsActionPressed(click),
             "Turning emulation off during a contact must still release its synthetic button.");
         probe.Clear();
         second.Pressed = false;
-        input.ParseInputEvent(second);
+        Input.ParseInputEvent(second);
         Require(probe.Events.Count == 1 && probe.Events[0] is InputEventScreenTouch,
             "The other contact must not inherit mouse ownership after the first releases.");
         probe.Clear();
 
-        input.EmulateTouchFromMouse = true;
+        Input.EmulateTouchFromMouse = true;
         using var mousePress = new InputEventMouseButton
         {
             ButtonIndex = MouseButton.Left,
@@ -7267,7 +7269,7 @@ static void VerifyInputEmulation()
             GlobalPosition = new Vector2(112f, 114f),
             Pressed = true,
         };
-        input.ParseInputEvent(mousePress);
+        Input.ParseInputEvent(mousePress);
         Require(probe.Events.Count == 2 && probe.Events[0] is InputEventScreenTouch
         {
             Device: InputEvent.DeviceIdEmulation, Index: 0, Pressed: true,
@@ -7285,12 +7287,12 @@ static void VerifyInputEmulation()
             Position = new Vector2(70f, 80f),
             Pressed = true,
         };
-        input.ParseInputEvent(otherMousePress);
+        Input.ParseInputEvent(otherMousePress);
         Require(probe.Events.Count == 1 && probe.Events[0] is InputEventMouseButton { Device: 4 },
             "Another mouse device cannot take over an active emulated touch contact.");
         probe.Clear();
         otherMousePress.Pressed = false;
-        input.ParseInputEvent(otherMousePress);
+        Input.ParseInputEvent(otherMousePress);
         Require(probe.Events.Count == 1 && probe.Events[0] is InputEventMouseButton { Device: 4 },
             "Another mouse device cannot end the active emulated touch contact.");
         probe.Clear();
@@ -7305,7 +7307,7 @@ static void VerifyInputEmulation()
             Velocity = new Vector2(50f, 20f),
             ScreenVelocity = new Vector2(50f, 20f),
         };
-        input.ParseInputEvent(mouseDrag);
+        Input.ParseInputEvent(mouseDrag);
         Require(probe.Events.Count == 2 && probe.Events[0] is InputEventScreenDrag
         {
             Device: InputEvent.DeviceIdEmulation, Index: 0,
@@ -7315,27 +7317,27 @@ static void VerifyInputEmulation()
             "A held left-button mouse motion must deliver an emulated touch drag.");
         probe.Clear();
 
-        input.EmulateTouchFromMouse = false;
+        Input.EmulateTouchFromMouse = false;
         mousePress.Pressed = false;
-        input.ParseInputEvent(mousePress);
+        Input.ParseInputEvent(mousePress);
         Require(probe.Events.Count == 2 && probe.Events[0] is InputEventScreenTouch
         { Device: InputEvent.DeviceIdEmulation, Pressed: false } &&
-                !input.IsMouseButtonPressed(MouseButton.Left),
+                !Input.IsMouseButtonPressed(MouseButton.Left),
             "Disabling touch emulation during a press must still end the contact on release.");
         probe.Clear();
 
-        input.EmulateMouseFromTouch = true;
+        Input.EmulateMouseFromTouch = true;
         first.Pressed = true;
         probe.ThrowOnEmulated = true;
-        Expect<AggregateException>(() => input.ParseInputEvent(first),
+        Expect<AggregateException>(() => Input.ParseInputEvent(first),
             "A failing synthetic callback must be reported after source delivery.");
-        Require(probe.Events.Count == 2 && input.IsMouseButtonPressed(MouseButton.Left) &&
-                input.IsActionPressed(click),
+        Require(probe.Events.Count == 2 && Input.IsMouseButtonPressed(MouseButton.Left) &&
+                Input.IsActionPressed(click),
             "A synthetic callback failure must not undo state or skip the physical touch callback.");
         probe.ThrowOnEmulated = false;
         probe.Clear();
         first.Pressed = false;
-        input.ParseInputEvent(first);
+        Input.ParseInputEvent(first);
         probe.Clear();
 
         using var emulatedTouch = new InputEventScreenTouch
@@ -7344,18 +7346,18 @@ static void VerifyInputEmulation()
             Index = 0,
             Pressed = true,
         };
-        input.ParseInputEvent(emulatedTouch);
-        Require(probe.Events.Count == 1 && !input.IsMouseButtonPressed(MouseButton.Left),
+        Input.ParseInputEvent(emulatedTouch);
+        Require(probe.Events.Count == 1 && !Input.IsMouseButtonPressed(MouseButton.Left),
             "An emulated event must never recursively generate the opposite pointer family.");
     }
     finally
     {
-        Engine.Instance.Stop();
+        Engine.Stop();
         probe.Clear();
-        input.ReleasePressedEvents();
-        input.EmulateMouseFromTouch = true;
-        input.EmulateTouchFromMouse = false;
-        map.EraseAction(click);
+        Input.ReleasePressedEvents();
+        Input.EmulateMouseFromTouch = true;
+        Input.EmulateTouchFromMouse = false;
+        InputMap.EraseAction(click);
     }
 }
 
@@ -7365,11 +7367,11 @@ static void VerifyDisplayServerPointerModifiers()
     var probe = new InputEmulationProbeNode { InputEnabled = true, PhysicsProcessEnabled = true };
     using var tree = new SceneTree(probe);
     var previousModifiers = SDL3.SDL.GetModState();
-    var previousAccumulation = Input.Instance.UseAccumulatedInput;
-    Engine.Instance.Start(tree);
+    var previousAccumulation = Input.UseAccumulatedInput;
+    Engine.Start(tree);
     try
     {
-        Input.Instance.UseAccumulatedInput = false;
+        Input.UseAccumulatedInput = false;
         SDL3.SDL.SetModState(SDL3.SDL.Keymod.Shift | SDL3.SDL.Keymod.Ctrl);
         var windows = SDL3.SDL.GetWindows(out var count);
         Require(windows is { Length: 1 } && count == 1,
@@ -7401,7 +7403,7 @@ static void VerifyDisplayServerPointerModifiers()
         };
         Require(SDL3.SDL.PushEvent(ref motion) && SDL3.SDL.PushEvent(ref button),
             "The native queue accepts pointer modifier probes.");
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         Require(probe.Events.Count == 2 &&
                 probe.Events[0] is InputEventMouseMotion first &&
                 first.ShiftPressed && first.ControlPressed &&
@@ -7432,7 +7434,7 @@ static void VerifyDisplayServerPointerModifiers()
         Require(SDL3.SDL.PushEvent(ref modifiedKey) && SDL3.SDL.PushEvent(ref motion) &&
                 SDL3.SDL.PushEvent(ref unmodifiedKey),
             "The native queue accepts a mixed keyboard and pointer sequence.");
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         Require(probe.Events.Count == 3 &&
                 probe.Events[1] is InputEventMouseMotion { ShiftPressed: true, ControlPressed: false },
             "Queued pointer modifiers follow the preceding keyboard snapshot, not the final global state.");
@@ -7467,7 +7469,7 @@ static void VerifyDisplayServerPointerModifiers()
             locationKey.Key.Down = false;
             Require(SDL3.SDL.PushEvent(ref locationKey), "The native queue accepts a side-specific key release.");
         }
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         Require(probe.Events.Count == keyLocations.Length * 2,
             "Every queued side-specific key press and release reaches input callbacks.");
         for (var i = 0; i < keyLocations.Length; i++)
@@ -7522,7 +7524,7 @@ static void VerifyDisplayServerPointerModifiers()
             modifierKey.Key.Down = false;
             Require(SDL3.SDL.PushEvent(ref modifierKey), "The native queue accepts a self-modifier release.");
         }
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         Require(probe.Events.Count == selfModifiers.Length * 2,
             "Every self-modifier probe reaches both key callback phases.");
         for (var i = 0; i < selfModifiers.Length * 2; i++)
@@ -7553,7 +7555,7 @@ static void VerifyDisplayServerPointerModifiers()
             modifierKey.Key.Down = false;
             Require(SDL3.SDL.PushEvent(ref modifierKey), "The native queue accepts an opposite-side modifier release.");
         }
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         Require(probe.Events.Count == selfModifiers.Length * 2,
             "Every opposite-side modifier probe reaches both key callback phases.");
         for (var i = 0; i < selfModifiers.Length * 2; i++)
@@ -7582,7 +7584,7 @@ static void VerifyDisplayServerPointerModifiers()
         Require(SDL3.SDL.PushEvent(ref wheel), "The native queue accepts a wheel failure probe.");
         try
         {
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             throw new Exception("Both wheel callback failures must be reported.");
         }
         catch (AggregateException errors)
@@ -7611,224 +7613,224 @@ static void VerifyDisplayServerPointerModifiers()
         };
         Require(SDL3.SDL.PushEvent(ref key), "The native queue accepts an input preflight probe.");
         probe.DisplayPumpAttempt = display;
-        Engine.Instance.AdvanceFrame(0.1d);
+        Engine.AdvanceFrame(0.1d);
         Require(probe.DisplayPumpError is InvalidOperationException &&
-                !Input.Instance.IsKeyPressed(Key.A) && probe.Events.Count == 0,
+                !Input.IsKeyPressed(Key.A) && probe.Events.Count == 0,
             "Pumping inside a frame callback rejects before consuming queued native input.");
-        display.ProcessEvents();
-        Require(Input.Instance.IsKeyPressed(Key.A) && probe.Events.Count == 1,
+        DisplayServer.ProcessEvents();
+        Require(Input.IsKeyPressed(Key.A) && probe.Events.Count == 1,
             "The retained native input is delivered when pumping becomes valid.");
         key.Key.Type = SDL3.SDL.EventType.KeyUp;
         key.Key.Down = false;
         Require(SDL3.SDL.PushEvent(ref key), "The native queue accepts the preflight key release.");
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
     }
     finally
     {
         SDL3.SDL.SetModState(previousModifiers);
-        Input.Instance.UseAccumulatedInput = previousAccumulation;
-        Input.Instance.ReleasePressedEvents();
-        Engine.Instance.Stop();
+        Input.UseAccumulatedInput = previousAccumulation;
+        Input.ReleasePressedEvents();
+        Engine.Stop();
         probe.Clear();
     }
 }
 
 static void VerifyEngine()
 {
-    var engine = Engine.Instance;
-    Require(ReferenceEquals(engine, Engine.Instance), "Engine must be a process-wide singleton.");
+    var engine = Engine.Service;
+    Require(ReferenceEquals(engine, Engine.Service), "Engine must be a process-wide singleton.");
     Require(!engine.IsDisposed, "The process-wide Engine must remain live.");
-    Require(engine.HasSingleton(nameof(Engine)) && ReferenceEquals(engine.GetSingleton<Engine>(nameof(Engine)), engine) &&
-            engine.HasSingleton(nameof(ProjectSettings)) &&
-            ReferenceEquals(engine.GetSingleton<ProjectSettings>(nameof(ProjectSettings)), ProjectSettings.Instance) &&
-            ReferenceEquals(engine.GetSingleton<Input>(nameof(Input)), Input.Instance) &&
-            ReferenceEquals(engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Instance) &&
-            ReferenceEquals(engine.GetSingleton<AudioServer>(nameof(AudioServer)), AudioServer.Instance) &&
-            engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer)]),
+    Require(Engine.HasSingleton(nameof(Engine)) && ReferenceEquals(Engine.GetSingleton<Engine>(nameof(Engine)), engine) &&
+            Engine.HasSingleton(nameof(ProjectSettings)) &&
+            ReferenceEquals(Engine.GetSingleton<ProjectSettings>(nameof(ProjectSettings)), ProjectSettings.Service) &&
+            ReferenceEquals(Engine.GetSingleton<Input>(nameof(Input)), Input.Service) &&
+            ReferenceEquals(Engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Service) &&
+            ReferenceEquals(Engine.GetSingleton<AudioServer>(nameof(AudioServer)), AudioServer.Service) &&
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer)]),
         "All built-in process services must be present in the global singleton registry.");
-    Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(Engine)),
+    Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(Engine)),
         "The built-in Engine registry entry must not be removable.");
-    Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(ProjectSettings)),
+    Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(ProjectSettings)),
         "The built-in ProjectSettings registry entry must not be removable.");
-    Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(Input)),
+    Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(Input)),
         "The built-in Input registry entry must not be removable.");
-    Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(InputMap)),
+    Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(InputMap)),
         "The built-in InputMap registry entry must not be removable.");
     Expect<InvalidOperationException>(engine.Dispose, "The process-wide Engine must reject disposal.");
-    Require(engine.PhysicsTicksPerSecond == 60 && engine.MaxPhysicsStepsPerFrame == 8 &&
-            DoubleNearlyEqual(engine.PhysicsJitterFix, 0.5d) && DoubleNearlyEqual(engine.TimeScale, 1d),
+    Require(Engine.PhysicsTicksPerSecond == 60 && Engine.MaxPhysicsStepsPerFrame == 8 &&
+            DoubleNearlyEqual(Engine.PhysicsJitterFix, 0.5d) && DoubleNearlyEqual(Engine.TimeScale, 1d),
         "Engine timing settings must expose their documented defaults.");
-    var processSettings = ProjectSettings.Instance;
-    processSettings.SetFeatureOverride(ProjectSettings.PhysicsTicksPerSecond, "tests", 30);
-    processSettings.AddCustomFeature("tests");
-    Require(engine.PhysicsTicksPerSecond == 30,
+    var processSettings = ProjectSettings.Service;
+    ProjectSettings.SetFeatureOverride(ProjectSettings.PhysicsTicksPerSecond, "tests", 30);
+    ProjectSettings.AddCustomFeature("tests");
+    Require(Engine.PhysicsTicksPerSecond == 30,
         "Engine timing must read active feature overrides from process-wide project settings.");
-    processSettings.RemoveCustomFeature("tests");
-    processSettings.ClearFeatureOverride(ProjectSettings.PhysicsTicksPerSecond, "tests");
-    processSettings.FlushChanges();
-    Expect<ArgumentOutOfRangeException>(() => engine.PhysicsTicksPerSecond = 0,
+    ProjectSettings.RemoveCustomFeature("tests");
+    ProjectSettings.ClearFeatureOverride(ProjectSettings.PhysicsTicksPerSecond, "tests");
+    ProjectSettings.FlushChanges();
+    Expect<ArgumentOutOfRangeException>(() => Engine.PhysicsTicksPerSecond = 0,
         "Physics tick frequency must reject zero.");
-    Expect<ArgumentOutOfRangeException>(() => engine.MaxPhysicsStepsPerFrame = -1,
+    Expect<ArgumentOutOfRangeException>(() => Engine.MaxPhysicsStepsPerFrame = -1,
         "Maximum physics steps must reject negative values.");
-    Expect<ArgumentOutOfRangeException>(() => engine.PhysicsJitterFix = double.NaN,
+    Expect<ArgumentOutOfRangeException>(() => Engine.PhysicsJitterFix = double.NaN,
         "Physics jitter fix must reject NaN.");
-    Expect<ArgumentOutOfRangeException>(() => engine.TimeScale = double.PositiveInfinity,
+    Expect<ArgumentOutOfRangeException>(() => Engine.TimeScale = double.PositiveInfinity,
         "Time scale must reject infinity.");
-    Expect<ArgumentOutOfRangeException>(() => engine.TimeScale = -double.Epsilon,
+    Expect<ArgumentOutOfRangeException>(() => Engine.TimeScale = -double.Epsilon,
         "Time scale must reject negative values.");
-    engine.PhysicsJitterFix = -1d;
-    Require(engine.PhysicsJitterFix == 0d, "A negative physics jitter fix must clamp to zero.");
+    Engine.PhysicsJitterFix = -1d;
+    Require(Engine.PhysicsJitterFix == 0d, "A negative physics jitter fix must clamp to zero.");
 
     var engineProperties = engine.GetPropertyList();
     Require(engineProperties.Any(property => property.Name == nameof(Engine.PhysicsTicksPerSecond)) &&
             engineProperties.Any(property => property.Name == nameof(Engine.TimeScale)) &&
             engineProperties.Any(property => property.Name == nameof(Engine.ProcessFrames)),
         "Engine timing settings and metrics must participate in typed property discovery.");
-    Require(!string.IsNullOrWhiteSpace(engine.ArchitectureName) &&
-            engine.VersionInfo.AssemblyVersion == typeof(Engine).Assembly.GetName().Version &&
-            !string.IsNullOrWhiteSpace(engine.VersionInfo.InformationalVersion) &&
-            engine.VersionInfo.ToString() == engine.VersionInfo.InformationalVersion,
+    Require(!string.IsNullOrWhiteSpace(Engine.ArchitectureName) &&
+            Engine.VersionInfo.AssemblyVersion == typeof(Engine).Assembly.GetName().Version &&
+            !string.IsNullOrWhiteSpace(Engine.VersionInfo.InformationalVersion) &&
+            Engine.VersionInfo.ToString() == Engine.VersionInfo.InformationalVersion,
         "Engine build information must describe the loaded assembly and process architecture.");
 
     using (var registered = new TestObject())
     {
-        engine.RegisterSingleton("tests.primary", registered);
-        Require(engine.HasSingleton("tests.primary") &&
-                ReferenceEquals(engine.GetSingleton("tests.primary"), registered) &&
-                ReferenceEquals(engine.GetSingleton<TestObject>("tests.primary"), registered) &&
-                engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer), "tests.primary"]),
+        Engine.RegisterSingleton("tests.primary", registered);
+        Require(Engine.HasSingleton("tests.primary") &&
+                ReferenceEquals(Engine.GetSingleton("tests.primary"), registered) &&
+                ReferenceEquals(Engine.GetSingleton<TestObject>("tests.primary"), registered) &&
+                Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer), "tests.primary"]),
             "Engine singleton lookup must preserve identity, type, and registration order.");
-        Expect<InvalidOperationException>(() => engine.RegisterSingleton("tests.primary", registered),
+        Expect<InvalidOperationException>(() => Engine.RegisterSingleton("tests.primary", registered),
             "Engine singleton names must be unique.");
-        Expect<InvalidCastException>(() => engine.GetSingleton<Resource>("tests.primary"),
+        Expect<InvalidCastException>(() => Engine.GetSingleton<Resource>("tests.primary"),
             "Typed engine singleton lookup must reject an incompatible type.");
-        engine.UnregisterSingleton("tests.primary");
-        Require(!engine.HasSingleton("tests.primary") && !registered.IsDisposed,
+        Engine.UnregisterSingleton("tests.primary");
+        Require(!Engine.HasSingleton("tests.primary") && !registered.IsDisposed,
             "Unregistering an engine singleton must not dispose the registered object.");
     }
 
-    Expect<ArgumentNullException>(() => engine.HasSingleton(null!), "Engine singleton names must reject null.");
-    Expect<ArgumentException>(() => engine.HasSingleton("  "), "Engine singleton names must reject whitespace.");
-    Expect<KeyNotFoundException>(() => engine.GetSingleton("tests.missing"),
+    Expect<ArgumentNullException>(() => Engine.HasSingleton(null!), "Engine singleton names must reject null.");
+    Expect<ArgumentException>(() => Engine.HasSingleton("  "), "Engine singleton names must reject whitespace.");
+    Expect<KeyNotFoundException>(() => Engine.GetSingleton("tests.missing"),
         "Engine singleton lookup must report an absent name.");
-    Expect<KeyNotFoundException>(() => engine.UnregisterSingleton("tests.missing"),
+    Expect<KeyNotFoundException>(() => Engine.UnregisterSingleton("tests.missing"),
         "Engine singleton removal must report an absent name.");
     var disposedSingleton = new TestObject();
     disposedSingleton.Dispose();
-    Expect<ObjectDisposedException>(() => engine.RegisterSingleton("tests.disposed", disposedSingleton),
+    Expect<ObjectDisposedException>(() => Engine.RegisterSingleton("tests.disposed", disposedSingleton),
         "Engine singleton registration must reject disposed objects.");
 
-    Parallel.For(0, 32, index => engine.RegisterSingleton($"tests.concurrent.{index}", new TestObject()));
-    Require(engine.GetSingletonList().Count == 37, "Concurrent singleton registration must not lose entries.");
+    Parallel.For(0, 32, index => Engine.RegisterSingleton($"tests.concurrent.{index}", new TestObject()));
+    Require(Engine.GetSingletonList().Count == 37, "Concurrent singleton registration must not lose entries.");
     Parallel.For(0, 32, index =>
     {
         var name = $"tests.concurrent.{index}";
-        var instance = engine.GetSingleton(name);
-        engine.UnregisterSingleton(name);
+        var instance = Engine.GetSingleton(name);
+        Engine.UnregisterSingleton(name);
         instance.Dispose();
     });
-    Require(engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer)]),
+    Require(Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer)]),
         "Concurrent singleton removal must preserve only the built-in registry entries.");
 
-    engine.PhysicsTicksPerSecond = 10;
-    engine.MaxPhysicsStepsPerFrame = 3;
-    engine.PhysicsJitterFix = 0d;
-    engine.TimeScale = 2d;
+    Engine.PhysicsTicksPerSecond = 10;
+    Engine.MaxPhysicsStepsPerFrame = 3;
+    Engine.PhysicsJitterFix = 0d;
+    Engine.TimeScale = 2d;
 
     using (var loop = new EngineProbeMainLoop())
     {
         var projectSettingsEvents = 0;
-        void OnProjectSettingsChanged(ProjectSettings _) => projectSettingsEvents++;
-        processSettings.SettingsChanged += OnProjectSettingsChanged;
-        processSettings.Set(ProjectSettings.ApplicationVersion, "frame-test");
-        engine.Start(loop);
+        void OnProjectSettingsChanged(ProjectSettingsRegistry _) => projectSettingsEvents++;
+        ProjectSettings.SettingsChanged += OnProjectSettingsChanged;
+        ProjectSettings.Set(ProjectSettings.ApplicationVersion, "frame-test");
+        Engine.Start(loop);
         Require(loop.InitializeCount == 1 && ReferenceEquals(loop.MainLoopDuringInitialize, loop) &&
-                ReferenceEquals(engine.MainLoop, loop),
+                ReferenceEquals(Engine.MainLoop, loop),
             "Engine.Start must publish and initialize an uninitialized MainLoop exactly once.");
-        Expect<InvalidOperationException>(() => engine.Start(loop), "Engine must reject a second active MainLoop.");
-        Expect<ArgumentOutOfRangeException>(() => engine.AdvanceFrame(double.NaN),
+        Expect<InvalidOperationException>(() => Engine.Start(loop), "Engine must reject a second active MainLoop.");
+        Expect<ArgumentOutOfRangeException>(() => Engine.AdvanceFrame(double.NaN),
             "Engine frame scheduling must reject NaN.");
-        Expect<ArgumentOutOfRangeException>(() => engine.AdvanceFrame(-double.Epsilon),
+        Expect<ArgumentOutOfRangeException>(() => Engine.AdvanceFrame(-double.Epsilon),
             "Engine frame scheduling must reject negative elapsed time.");
 
-        Require(!engine.AdvanceFrame(0.05d) && loop.PhysicsDeltas.Count == 0 &&
+        Require(!Engine.AdvanceFrame(0.05d) && loop.PhysicsDeltas.Count == 0 &&
                 loop.ProcessDeltas.Count == 1 && DoubleNearlyEqual(loop.ProcessDeltas[0], 0.1d) &&
-                DoubleNearlyEqual(engine.PhysicsInterpolationFraction, 0.5d) && projectSettingsEvents == 1,
+                DoubleNearlyEqual(Engine.PhysicsInterpolationFraction, 0.5d) && projectSettingsEvents == 1,
             "A half fixed interval must run one scaled process callback, expose interpolation, and flush project settings once.");
-        processSettings.SettingsChanged -= OnProjectSettingsChanged;
-        processSettings.Set(ProjectSettings.ApplicationVersion, string.Empty);
-        processSettings.FlushChanges();
-        Require(!engine.AdvanceFrame(0.05d) && loop.PhysicsDeltas.Count == 1 &&
-                DoubleNearlyEqual(loop.PhysicsDeltas[0], 0.2d) && !engine.IsInPhysicsFrame &&
+        ProjectSettings.SettingsChanged -= OnProjectSettingsChanged;
+        ProjectSettings.Set(ProjectSettings.ApplicationVersion, string.Empty);
+        ProjectSettings.FlushChanges();
+        Require(!Engine.AdvanceFrame(0.05d) && loop.PhysicsDeltas.Count == 1 &&
+                DoubleNearlyEqual(loop.PhysicsDeltas[0], 0.2d) && !Engine.IsInPhysicsFrame &&
                 loop.ObservedPhysicsFrameState && !loop.ObservedProcessFrameState &&
                 loop.Order.TakeLast(2).SequenceEqual(["physics", "process"]),
             "A complete fixed interval must run a scaled fixed callback before process and restore physics state.");
-        Require(engine.ProcessFrames == 2 && engine.PhysicsFrames == 1,
+        Require(Engine.ProcessFrames == 2 && Engine.PhysicsFrames == 1,
             "Engine frame counters must reflect completed process and started fixed callbacks.");
 
         loop.ReenterEngine = true;
-        engine.AdvanceFrame(0.1d);
+        Engine.AdvanceFrame(0.1d);
         Require(loop.AdvanceReentryError is InvalidOperationException && loop.StopReentryError is InvalidOperationException,
             "Engine callbacks must reject frame and stop re-entry without poisoning the runtime.");
         loop.ReenterEngine = false;
 
-        var physicsBeforeCap = engine.PhysicsFrames;
-        engine.AdvanceFrame(1000.05d);
-        Require(engine.PhysicsFrames - physicsBeforeCap <= 3 && engine.PhysicsInterpolationFraction is >= 0d and <= 1d,
+        var physicsBeforeCap = Engine.PhysicsFrames;
+        Engine.AdvanceFrame(1000.05d);
+        Require(Engine.PhysicsFrames - physicsBeforeCap <= 3 && Engine.PhysicsInterpolationFraction is >= 0d and <= 1d,
             "A long host stall must obey the fixed-step catch-up cap and preserve a bounded interpolation fraction.");
 
         loop.PhysicsResult = true;
         loop.ProcessResult = true;
         var physicsBeforeStopRequest = loop.PhysicsDeltas.Count;
-        Require(engine.AdvanceFrame(0.3d) && loop.ProcessDeltas.Count >= 4 &&
+        Require(Engine.AdvanceFrame(0.3d) && loop.ProcessDeltas.Count >= 4 &&
                 loop.PhysicsDeltas.Count == physicsBeforeStopRequest + 1,
             "A fixed-step stop request must skip remaining fixed work but still run process and combine stop requests.");
         loop.PhysicsResult = false;
         loop.ProcessResult = false;
 
-        var processFramesBeforeFailure = engine.ProcessFrames;
+        var processFramesBeforeFailure = Engine.ProcessFrames;
         loop.ThrowOnProcess = true;
-        Require(Capture(() => engine.AdvanceFrame(0d)) is InvalidOperationException &&
-                engine.ProcessFrames == processFramesBeforeFailure && ReferenceEquals(engine.MainLoop, loop),
+        Require(Capture(() => Engine.AdvanceFrame(0d)) is InvalidOperationException &&
+                Engine.ProcessFrames == processFramesBeforeFailure && ReferenceEquals(Engine.MainLoop, loop),
             "A process callback failure must not count completion or detach the running loop.");
         loop.ThrowOnProcess = false;
-        engine.AdvanceFrame(0d);
+        Engine.AdvanceFrame(0d);
 
-        Require(Task.Run(() => Capture(() => engine.AdvanceFrame(0d))).GetAwaiter().GetResult() is InvalidOperationException &&
-                Task.Run(() => Capture(engine.Stop)).GetAwaiter().GetResult() is InvalidOperationException,
+        Require(Task.Run(() => Capture(() => Engine.AdvanceFrame(0d))).GetAwaiter().GetResult() is InvalidOperationException &&
+                Task.Run(() => Capture(Engine.Stop)).GetAwaiter().GetResult() is InvalidOperationException,
             "Engine frame execution and stop must reject a non-owner thread.");
 
-        engine.Stop();
+        Engine.Stop();
         Require(loop.FinalizeCount == 1 && ReferenceEquals(loop.MainLoopDuringFinalize, loop) &&
-                engine.MainLoop is null && !loop.IsDisposed,
+                Engine.MainLoop is null && !loop.IsDisposed,
             "Engine.Stop must finalize and detach, but not dispose, the MainLoop.");
-        Expect<InvalidOperationException>(() => engine.Start(loop),
+        Expect<InvalidOperationException>(() => Engine.Start(loop),
             "Engine must reject reattaching a finalized MainLoop and return to idle.");
-        Expect<InvalidOperationException>(() => engine.AdvanceFrame(0d),
+        Expect<InvalidOperationException>(() => Engine.AdvanceFrame(0d),
             "Engine must reject frames after stop.");
-        Expect<InvalidOperationException>(engine.Stop, "Engine must reject stop while idle.");
+        Expect<InvalidOperationException>(Engine.Stop, "Engine must reject stop while idle.");
     }
 
-    engine.TimeScale = 1d;
-    engine.PhysicsTicksPerSecond = 60;
-    engine.MaxPhysicsStepsPerFrame = 8;
-    engine.PhysicsJitterFix = 0.5d;
+    Engine.TimeScale = 1d;
+    Engine.PhysicsTicksPerSecond = 60;
+    Engine.MaxPhysicsStepsPerFrame = 8;
+    Engine.PhysicsJitterFix = 0.5d;
 
     using (var failedInitialize = new EngineProbeMainLoop { ThrowOnInitialize = true })
     {
-        Require(Capture(() => engine.Start(failedInitialize)) is InvalidOperationException && engine.MainLoop is null,
+        Require(Capture(() => Engine.Start(failedInitialize)) is InvalidOperationException && Engine.MainLoop is null,
             "Failed loop initialization must return Engine to idle and clear its MainLoop.");
     }
 
     var disposedLoop = new EngineProbeMainLoop();
     disposedLoop.Dispose();
-    Expect<ObjectDisposedException>(() => engine.Start(disposedLoop),
+    Expect<ObjectDisposedException>(() => Engine.Start(disposedLoop),
         "Engine must reject a disposed MainLoop and return to idle.");
 
     using (var wrongThreadLoop = new EngineProbeMainLoop())
     {
-        Require(Task.Run(() => Capture(() => engine.Start(wrongThreadLoop))).GetAwaiter().GetResult() is InvalidOperationException &&
-                engine.MainLoop is null,
+        Require(Task.Run(() => Capture(() => Engine.Start(wrongThreadLoop))).GetAwaiter().GetResult() is InvalidOperationException &&
+                Engine.MainLoop is null,
             "Engine.Start must preserve MainLoop owner-thread affinity and roll back a failed attachment.");
     }
 
@@ -7838,89 +7840,89 @@ static void VerifyEngine()
         ReenterDuringFinalize = true
     })
     {
-        engine.Start(lifecycleReentry);
+        Engine.Start(lifecycleReentry);
         Require(lifecycleReentry.StartDuringInitializeError is InvalidOperationException,
             "Engine startup must reject lifecycle re-entry.");
-        engine.Stop();
+        Engine.Stop();
         Require(lifecycleReentry.StartDuringFinalizeError is InvalidOperationException &&
                 lifecycleReentry.StopDuringFinalizeError is InvalidOperationException,
             "Engine shutdown must reject lifecycle re-entry.");
     }
 
     var failedFinalize = new EngineProbeMainLoop { ThrowOnFinalize = true };
-    engine.Start(failedFinalize);
-    Require(Capture(engine.Stop) is InvalidOperationException && engine.MainLoop is null,
+    Engine.Start(failedFinalize);
+    Require(Capture(Engine.Stop) is InvalidOperationException && Engine.MainLoop is null,
         "Failed loop finalization must still detach the terminal MainLoop.");
     failedFinalize.Dispose();
 
     using (var physicsFailure = new EngineProbeMainLoop { ThrowOnPhysics = true })
     {
-        var physicsFramesBeforeFailure = engine.PhysicsFrames;
-        engine.Start(physicsFailure);
-        Require(Capture(() => engine.AdvanceFrame(1d / 60d)) is InvalidOperationException &&
-                engine.PhysicsFrames == physicsFramesBeforeFailure + 1 && !engine.IsInPhysicsFrame &&
-                ReferenceEquals(engine.MainLoop, physicsFailure),
+        var physicsFramesBeforeFailure = Engine.PhysicsFrames;
+        Engine.Start(physicsFailure);
+        Require(Capture(() => Engine.AdvanceFrame(1d / 60d)) is InvalidOperationException &&
+                Engine.PhysicsFrames == physicsFramesBeforeFailure + 1 && !Engine.IsInPhysicsFrame &&
+                ReferenceEquals(Engine.MainLoop, physicsFailure),
             "A fixed callback failure must count its start, clear physics state, and leave Engine running.");
         physicsFailure.ThrowOnPhysics = false;
-        engine.AdvanceFrame(0d);
-        engine.Stop();
+        Engine.AdvanceFrame(0d);
+        Engine.Stop();
     }
 
     using (var fpsLoop = new EmptyMainLoop())
     {
-        engine.Start(fpsLoop);
+        Engine.Start(fpsLoop);
         for (var index = 0; index < 10; index++)
-            engine.AdvanceFrame(0.1d);
-        Require(DoubleNearlyEqual(engine.FramesPerSecond, 10d),
+            Engine.AdvanceFrame(0.1d);
+        Require(DoubleNearlyEqual(Engine.FramesPerSecond, 10d),
             "Engine must publish completed process frames per unscaled host second.");
 
         for (var index = 0; index < 16; index++)
-            engine.AdvanceFrame(0d);
+            Engine.AdvanceFrame(0d);
         var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
         for (var index = 0; index < 128; index++)
-            engine.AdvanceFrame(0d);
+            Engine.AdvanceFrame(0d);
         var allocatedBytes = GC.GetAllocatedBytesForCurrentThread() - allocatedBefore;
         Require(allocatedBytes == 0,
             $"A warmed idle Engine frame must not allocate; observed {allocatedBytes} bytes.");
-        engine.Stop();
+        Engine.Stop();
     }
 
     using (var frequencyChange = new EngineProbeMainLoop())
     {
-        engine.PhysicsTicksPerSecond = 10;
-        engine.PhysicsJitterFix = 0d;
-        engine.TimeScale = 0d;
-        engine.Start(frequencyChange);
-        engine.AdvanceFrame(0.05d);
-        engine.PhysicsTicksPerSecond = 20;
-        engine.AdvanceFrame(0.025d);
+        Engine.PhysicsTicksPerSecond = 10;
+        Engine.PhysicsJitterFix = 0d;
+        Engine.TimeScale = 0d;
+        Engine.Start(frequencyChange);
+        Engine.AdvanceFrame(0.05d);
+        Engine.PhysicsTicksPerSecond = 20;
+        Engine.AdvanceFrame(0.025d);
         Require(frequencyChange.PhysicsDeltas.Count == 0 && frequencyChange.ProcessDeltas.All(delta => delta == 0d) &&
-                DoubleNearlyEqual(engine.PhysicsInterpolationFraction, 0.5d),
-            $"A tick-frequency change must re-baseline old fractional time, while zero time scale freezes delivered deltas. Physics={frequencyChange.PhysicsDeltas.Count}, process=[{string.Join(',', frequencyChange.ProcessDeltas)}], interpolation={engine.PhysicsInterpolationFraction}.");
-        engine.Stop();
+                DoubleNearlyEqual(Engine.PhysicsInterpolationFraction, 0.5d),
+            $"A tick-frequency change must re-baseline old fractional time, while zero time scale freezes delivered deltas. Physics={frequencyChange.PhysicsDeltas.Count}, process=[{string.Join(',', frequencyChange.ProcessDeltas)}], interpolation={Engine.PhysicsInterpolationFraction}.");
+        Engine.Stop();
     }
 
     using (var jitterTolerance = new EngineProbeMainLoop())
     {
-        engine.PhysicsTicksPerSecond = 10;
-        engine.PhysicsJitterFix = 0.5d;
-        engine.TimeScale = 1d;
-        engine.Start(jitterTolerance);
-        engine.AdvanceFrame(0.05d);
-        Require(jitterTolerance.PhysicsDeltas.Count == 1 && engine.PhysicsInterpolationFraction == 0d,
+        Engine.PhysicsTicksPerSecond = 10;
+        Engine.PhysicsJitterFix = 0.5d;
+        Engine.TimeScale = 1d;
+        Engine.Start(jitterTolerance);
+        Engine.AdvanceFrame(0.05d);
+        Require(jitterTolerance.PhysicsDeltas.Count == 1 && Engine.PhysicsInterpolationFraction == 0d,
             "The default jitter tolerance must permit a stable fixed callback at a half-step boundary.");
-        engine.Stop();
+        Engine.Stop();
     }
 
-    engine.PhysicsTicksPerSecond = 60;
-    engine.PhysicsJitterFix = 0.5d;
-    engine.TimeScale = 1d;
+    Engine.PhysicsTicksPerSecond = 60;
+    Engine.PhysicsJitterFix = 0.5d;
+    Engine.TimeScale = 1d;
 
     var root = new Entity();
     var tree = new SceneTree(root);
-    engine.Start(tree);
-    engine.AdvanceFrame(0d);
-    engine.Stop();
+    Engine.Start(tree);
+    Engine.AdvanceFrame(0d);
+    Engine.Stop();
     Require(root.IsDisposed && !tree.IsDisposed,
         "Engine must attach an already initialized SceneTree and finalize its owned hierarchy exactly once.");
     tree.Dispose();
@@ -9609,8 +9611,8 @@ static void VerifyTimers()
             "PackedScene must preserve Timer configuration without persisting runtime pause or countdown state.");
     }
 
-    var engine = Engine.Instance;
-    var previousTimeScale = engine.TimeScale;
+    var engine = Engine.Service;
+    var previousTimeScale = Engine.TimeScale;
     var scaledRoot = new Entity { Name = "scaled-timer-root" };
     var scaledTimer = new EngineTimer { Name = "scaled", Autostart = true, OneShot = true, WaitTime = 0.1d };
     var unscaledTimer = new EngineTimer
@@ -9647,20 +9649,20 @@ static void VerifyTimers()
         unscaledPhysicsTimer.Timeout += _ => unscaledTimeouts++;
         try
         {
-            engine.TimeScale = 0d;
-            engine.Start(scaledTree);
-            _ = engine.AdvanceFrame(1d);
+            Engine.TimeScale = 0d;
+            Engine.Start(scaledTree);
+            _ = Engine.AdvanceFrame(1d);
             Require(!scaledTimer.IsStopped() && DoubleNearlyEqual(scaledTimer.TimeLeft, 0.1d) &&
                     unscaledTimer.IsStopped() && unscaledPhysicsTimer.IsStopped() && unscaledTimeouts == 2 &&
                     physicsFrames > 1 && physicsProcessStep > 0.05d && physicsFrames / 60d < 0.5d,
                 "IgnoreTimeScale must subtract Engine's process step in both lanes, even when scaled time is frozen.");
-            engine.Stop();
+            Engine.Stop();
         }
         finally
         {
-            if (ReferenceEquals(engine.MainLoop, scaledTree))
-                engine.Stop();
-            engine.TimeScale = previousTimeScale;
+            if (ReferenceEquals(Engine.MainLoop, scaledTree))
+                Engine.Stop();
+            Engine.TimeScale = previousTimeScale;
         }
     }
 
@@ -10333,8 +10335,8 @@ static void VerifyTweens()
     Require(Capture(() => tree.ProcessFrame(0d)) is AggregateException && !empty.IsValid(),
         "A matching zero-delta frame must reject and invalidate an empty tween.");
 
-    var engine = Engine.Instance;
-    var previousTimeScale = engine.TimeScale;
+    var engine = Engine.Service;
+    var previousTimeScale = Engine.TimeScale;
     using (var scaleTree = new SceneTree(new Entity()))
     {
         var scaledValue = 0d;
@@ -10344,19 +10346,19 @@ static void VerifyTweens()
         var restoredScaleValue = 0d;
         scaleTree.CreateTween().SetIgnoreTimeScale().SetIgnoreTimeScale(false)
             .TweenMethod(value => restoredScaleValue = value, 0d, 1d, 0.1d);
-        engine.Start(scaleTree);
+        Engine.Start(scaleTree);
         try
         {
-            engine.TimeScale = 0d;
-            engine.AdvanceFrame(1d);
+            Engine.TimeScale = 0d;
+            Engine.AdvanceFrame(1d);
             Require(scaledValue == 0d && DoubleNearlyEqual(originalValue, 1d) && restoredScaleValue == 0d,
                 "Time-scale bypass must use the original delta and its false setting must restore scaled time.");
         }
         finally
         {
-            engine.TimeScale = previousTimeScale;
-            if (ReferenceEquals(engine.MainLoop, scaleTree))
-                engine.Stop();
+            Engine.TimeScale = previousTimeScale;
+            if (ReferenceEquals(Engine.MainLoop, scaleTree))
+                Engine.Stop();
         }
     }
 
@@ -13457,10 +13459,10 @@ sealed class EngineProbeMainLoop : MainLoop
     protected override void OnInitialize()
     {
         InitializeCount++;
-        MainLoopDuringInitialize = Engine.Instance.MainLoop;
+        MainLoopDuringInitialize = Engine.MainLoop;
 
         if (ReenterDuringInitialize)
-            StartDuringInitializeError = Capture(() => Engine.Instance.Start(this));
+            StartDuringInitializeError = Capture(() => Engine.Start(this));
 
         if (ThrowOnInitialize)
             throw new InvalidOperationException("expected engine initialization failure");
@@ -13470,7 +13472,7 @@ sealed class EngineProbeMainLoop : MainLoop
     {
         PhysicsDeltas.Add(delta);
         Order.Add("physics");
-        ObservedPhysicsFrameState |= Engine.Instance.IsInPhysicsFrame;
+        ObservedPhysicsFrameState |= Engine.IsInPhysicsFrame;
 
         if (ThrowOnPhysics)
             throw new InvalidOperationException("expected engine physics failure");
@@ -13482,12 +13484,12 @@ sealed class EngineProbeMainLoop : MainLoop
     {
         ProcessDeltas.Add(delta);
         Order.Add("process");
-        ObservedProcessFrameState |= Engine.Instance.IsInPhysicsFrame;
+        ObservedProcessFrameState |= Engine.IsInPhysicsFrame;
 
         if (ReenterEngine)
         {
-            AdvanceReentryError = Capture(() => Engine.Instance.AdvanceFrame(0d));
-            StopReentryError = Capture(Engine.Instance.Stop);
+            AdvanceReentryError = Capture(() => Engine.AdvanceFrame(0d));
+            StopReentryError = Capture(Engine.Stop);
         }
 
         if (ThrowOnProcess)
@@ -13499,12 +13501,12 @@ sealed class EngineProbeMainLoop : MainLoop
     protected override void OnFinalize()
     {
         FinalizeCount++;
-        MainLoopDuringFinalize = Engine.Instance.MainLoop;
+        MainLoopDuringFinalize = Engine.MainLoop;
 
         if (ReenterDuringFinalize)
         {
-            StartDuringFinalizeError = Capture(() => Engine.Instance.Start(this));
-            StopDuringFinalizeError = Capture(Engine.Instance.Stop);
+            StartDuringFinalizeError = Capture(() => Engine.Start(this));
+            StopDuringFinalizeError = Capture(Engine.Stop);
         }
 
         if (ThrowOnFinalize)
@@ -13940,7 +13942,7 @@ sealed class InputEmulationProbeNode : Entity
         DisplayPumpAttempt = null;
         try
         {
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
         }
         catch (Exception error)
         {
@@ -13973,14 +13975,14 @@ sealed class InputProbeNode(string id, List<string> log) : Entity
     {
         log.Add($"{id}:input");
         if (ObservedAction.Length != 0)
-            SawPressedState |= Input.Instance.IsActionPressed(ObservedAction);
+            SawPressedState |= Input.IsActionPressed(ObservedAction);
 
         if (ReenterInput)
         {
             using var nested = new InputEventMouseMotion();
             try
             {
-                Input.Instance.ParseInputEvent(nested);
+                Input.ParseInputEvent(nested);
             }
             catch (Exception error)
             {
@@ -14002,13 +14004,13 @@ sealed class InputProbeNode(string id, List<string> log) : Entity
     protected override void OnPhysicsProcess(double delta)
     {
         if (ObservedAction.Length != 0)
-            PhysicsSawJustPressed |= Input.Instance.IsActionJustPressed(ObservedAction);
+            PhysicsSawJustPressed |= Input.IsActionJustPressed(ObservedAction);
 
         if (PhysicsInputAttempt is not null)
         {
             try
             {
-                Input.Instance.ParseInputEvent(PhysicsInputAttempt);
+                Input.ParseInputEvent(PhysicsInputAttempt);
             }
             catch (Exception error)
             {

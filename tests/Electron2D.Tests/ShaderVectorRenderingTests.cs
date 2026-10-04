@@ -50,16 +50,16 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(node);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback();
                 Pixel(image, 4, 4, new(.25f, .5f, .75f, 1));
                 window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Console.WriteLine("Shader float3/int3/uint3 GPU pixel and cleanup passed.");
     }
@@ -169,9 +169,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; var before = 0L; var allocated = 0L;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before; if (++frames > 20) allocated += bytes;
                 using var image = server.Readback();
@@ -183,8 +183,8 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 40) { Check(allocated == 0 && nodes.All(n => n.Draws == 1), "Live vector parameters retain geometry without warm render allocations."); window.Tree!.Quit(); }
             };
         };
-        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
-        else Engine.Instance.Run(window);
+        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));
+        else Engine.Run(window);
         Released(window);
         Console.WriteLine(backend == "compatibility" ? $"Shader vector fallback rejection and cleanup passed: {fixture}." :
             $"Shader vector pixels/reload/cleanup passed: {backend}/{fixture}; {frames} frames, {allocated} warm bytes.");

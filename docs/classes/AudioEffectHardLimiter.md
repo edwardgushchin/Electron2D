@@ -1,6 +1,6 @@
 # AudioEffectHardLimiter
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectHardLimiter` · **Source:** [AudioEffectHardLimiter.cs](../../src/Scene/Resources/AudioEffectHardLimiter.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,9 +16,9 @@ The output uses a final sample ceiling. This corrects the pinned processor's sma
 
 ```csharp
 using var limiter = new AudioEffectHardLimiter { CeilingDB = -1, PreGainDB = 3 };
-AudioServer.Instance.AddBusEffect(0, limiter);
+AudioServer.AddBusEffect(0, limiter);
 // Run players routed to bus zero, then remove the borrowed effect.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 This partial owner-thread host snippet needs a player and real native mixing. The complete public Window path is exercised by `AudioHardLimiterTests.RunHost`.

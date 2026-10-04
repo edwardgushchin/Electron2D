@@ -21,9 +21,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         observer.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 frames++;
                 using var pixels = server.Readback();
@@ -93,7 +93,7 @@ internal static partial class RenderingRuntimeTests
         };
         try
         {
-            Engine.Instance.Run(window);
+            Engine.Run(window);
             Check(frames == 12 && sprite.IsDisposed && !texture.IsDisposed && !replacement.IsDisposed, "Sprite frame progression and borrowed lifetime.");
             Released(window);
         }

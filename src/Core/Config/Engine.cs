@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <summary>Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.</summary>
 /// <remarks>
 /// <para>
-/// <see cref="Instance"/> is created once for the process and cannot be disposed. Use Run to own a windowed scene lifecycle. For embedding, a host attaches one <see cref="MainLoop"/>, supplies finite elapsed time to
+/// The retained engine object is created once for the process and cannot be disposed. Public operations are static delegates to that object. Use Run to own a windowed scene lifecycle. For embedding, a host attaches one <see cref="MainLoop"/>, supplies finite elapsed time to
 /// <see cref="AdvanceFrame"/>, and finally calls <see cref="Stop"/>.
 /// </para>
 /// <para>
@@ -30,34 +30,34 @@ public sealed partial class Engine : ElectronObject
         [
             new PropertyDescriptor<Engine, int>(
                 nameof(PhysicsTicksPerSecond),
-                engine => engine.PhysicsTicksPerSecond,
-                (engine, value) => engine.PhysicsTicksPerSecond = value,
+                engine => engine.PhysicsTicksPerSecondCore,
+                (engine, value) => engine.PhysicsTicksPerSecondCore = value,
                 _ => 60),
             new PropertyDescriptor<Engine, int>(
                 nameof(MaxPhysicsStepsPerFrame),
-                engine => engine.MaxPhysicsStepsPerFrame,
-                (engine, value) => engine.MaxPhysicsStepsPerFrame = value,
+                engine => engine.MaxPhysicsStepsPerFrameCore,
+                (engine, value) => engine.MaxPhysicsStepsPerFrameCore = value,
                 _ => 8),
             new PropertyDescriptor<Engine, double>(
                 nameof(PhysicsJitterFix),
-                engine => engine.PhysicsJitterFix,
-                (engine, value) => engine.PhysicsJitterFix = value,
+                engine => engine.PhysicsJitterFixCore,
+                (engine, value) => engine.PhysicsJitterFixCore = value,
                 _ => 0.5d),
             new PropertyDescriptor<Engine, double>(
                 nameof(TimeScale),
-                engine => engine.TimeScale,
-                (engine, value) => engine.TimeScale = value,
+                engine => engine.TimeScaleCore,
+                (engine, value) => engine.TimeScaleCore = value,
                 _ => 1d),
-            new PropertyDescriptor<Engine, int>(nameof(MaxFPS), engine => engine.MaxFPS, (engine, value) => engine.MaxFPS = value, _ => 0),
-            new PropertyDescriptor<Engine, ulong>(nameof(ProcessFrames), engine => engine.ProcessFrames),
-            new PropertyDescriptor<Engine, ulong>(nameof(PhysicsFrames), engine => engine.PhysicsFrames),
-            new PropertyDescriptor<Engine, double>(nameof(FramesPerSecond), engine => engine.FramesPerSecond),
+            new PropertyDescriptor<Engine, int>(nameof(MaxFPS), engine => engine.MaxFPSCore, (engine, value) => engine.MaxFPSCore = value, _ => 0),
+            new PropertyDescriptor<Engine, ulong>(nameof(ProcessFrames), engine => engine.ProcessFramesCore),
+            new PropertyDescriptor<Engine, ulong>(nameof(PhysicsFrames), engine => engine.PhysicsFramesCore),
+            new PropertyDescriptor<Engine, double>(nameof(FramesPerSecond), engine => engine.FramesPerSecondCore),
             new PropertyDescriptor<Engine, double>(
                 nameof(PhysicsInterpolationFraction),
-                engine => engine.PhysicsInterpolationFraction),
-            new PropertyDescriptor<Engine, bool>(nameof(IsInPhysicsFrame), engine => engine.IsInPhysicsFrame),
-            new PropertyDescriptor<Engine, string>(nameof(ArchitectureName), engine => engine.ArchitectureName),
-            new PropertyDescriptor<Engine, EngineVersionInfo>(nameof(VersionInfo), engine => engine.VersionInfo)
+                engine => engine.PhysicsInterpolationFractionCore),
+            new PropertyDescriptor<Engine, bool>(nameof(IsInPhysicsFrame), engine => engine.IsInPhysicsFrameCore),
+            new PropertyDescriptor<Engine, string>(nameof(ArchitectureName), engine => engine.ArchitectureNameCore),
+            new PropertyDescriptor<Engine, EngineVersionInfo>(nameof(VersionInfo), engine => engine.VersionInfoCore)
         ]);
 
     private readonly object _singletonsGate = new();
@@ -82,77 +82,43 @@ public sealed partial class Engine : ElectronObject
     {
         _singletons.Add(nameof(Engine), this);
         _singletonNames.Add(nameof(Engine));
-        _singletons.Add(nameof(ProjectSettings), ProjectSettings.Instance);
+        _singletons.Add(nameof(ProjectSettings), ProjectSettings.Service);
         _singletonNames.Add(nameof(ProjectSettings));
-        _singletons.Add(nameof(Input), Input.Instance);
+        _singletons.Add(nameof(Input), Input.Service);
         _singletonNames.Add(nameof(Input));
-        _singletons.Add(nameof(InputMap), InputMap.Instance);
+        _singletons.Add(nameof(InputMap), InputMap.Service);
         _singletonNames.Add(nameof(InputMap));
-        _singletons.Add(nameof(AudioServer), AudioServer.Instance);
+        _singletons.Add(nameof(AudioServer), AudioServer.Service);
         _singletonNames.Add(nameof(AudioServer));
     }
 
-    /// <summary>Gets the process-wide engine instance.</summary>
-    /// <value>The same non-disposable instance for the lifetime of the process.</value>
-    public static Engine Instance => SharedInstance;
+    internal static Engine Service => SharedInstance;
 
-    /// <summary>Gets or sets the fixed-step callback frequency.</summary>
-    /// <value>The number of physics callback opportunities per unscaled second. The default is <c>60</c>.</value>
-    /// <remarks>
-    /// Higher values improve fixed-step precision while increasing processor cost. The fixed callback delta is
-    /// <c>TimeScale / PhysicsTicksPerSecond</c>. The value is sampled once at the start of each frame. Changing it
-    /// writes <see cref="ProjectSettings.PhysicsTicksPerSecond"/>, re-baselines fixed-step history on the next frame,
-    /// and discards any fractional interval from the old frequency.
-    /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is less than or equal to zero.</exception>
-    public int PhysicsTicksPerSecond
+    internal int PhysicsTicksPerSecondCore
     {
-        get => ProjectSettings.Instance.GetWithOverride(ProjectSettings.PhysicsTicksPerSecond);
-        set => ProjectSettings.Instance.Set(ProjectSettings.PhysicsTicksPerSecond, value);
+        get => ProjectSettings.GetWithOverride(ProjectSettings.PhysicsTicksPerSecond);
+        set => ProjectSettings.Set(ProjectSettings.PhysicsTicksPerSecond, value);
     }
 
-    /// <summary>Gets or sets the maximum number of fixed-step callbacks run during one process frame.</summary>
-    /// <value>A positive callback limit. The default is <c>8</c>.</value>
-    /// <remarks>
-    /// Limiting catch-up avoids an unbounded spiral after a long host stall. Excess whole fixed steps are discarded;
-    /// the remaining fractional time is preserved for interpolation. Assignment writes
-    /// <see cref="ProjectSettings.MaxPhysicsStepsPerFrame"/>.
-    /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is less than or equal to zero.</exception>
-    public int MaxPhysicsStepsPerFrame
+    internal int MaxPhysicsStepsPerFrameCore
     {
-        get => ProjectSettings.Instance.GetWithOverride(ProjectSettings.MaxPhysicsStepsPerFrame);
-        set => ProjectSettings.Instance.Set(ProjectSettings.MaxPhysicsStepsPerFrame, value);
+        get => ProjectSettings.GetWithOverride(ProjectSettings.MaxPhysicsStepsPerFrame);
+        set => ProjectSettings.Set(ProjectSettings.MaxPhysicsStepsPerFrame, value);
     }
 
-    /// <summary>Gets or sets the tolerance used to smooth fixed-step boundaries against variable frame timing.</summary>
-    /// <value>A finite non-negative multiple of one fixed step. The default is <c>0.5</c>.</value>
-    /// <remarks>
-    /// A value of zero disables tolerance-based clock adjustment. Values above <c>2</c> are accepted but can make
-    /// timing noticeably less responsive. Custom interpolation commonly uses zero. Assignment writes
-    /// <see cref="ProjectSettings.PhysicsJitterFix"/>; negative input is clamped to zero before storage.
-    /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is NaN or infinite.</exception>
-    public double PhysicsJitterFix
+    internal double PhysicsJitterFixCore
     {
-        get => ProjectSettings.Instance.GetWithOverride(ProjectSettings.PhysicsJitterFix);
+        get => ProjectSettings.GetWithOverride(ProjectSettings.PhysicsJitterFix);
         set
         {
             if (!double.IsFinite(value))
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Physics jitter fix must be finite.");
 
-            ProjectSettings.Instance.Set(ProjectSettings.PhysicsJitterFix, Math.Max(0d, value));
+            ProjectSettings.Set(ProjectSettings.PhysicsJitterFix, Math.Max(0d, value));
         }
     }
 
-    /// <summary>Gets or sets the rate at which game time advances relative to unscaled host time.</summary>
-    /// <value>A finite non-negative multiplier. The default is <c>1</c>; zero freezes callback deltas.</value>
-    /// <remarks>
-    /// This multiplier changes the deltas supplied to process and fixed-step callbacks. It does not change how often
-    /// those callbacks are scheduled. Extremely large values reduce temporal precision and should be avoided.
-    /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is negative, NaN, or infinite.</exception>
-    public double TimeScale
+    internal double TimeScaleCore
     {
         get => Volatile.Read(ref _timeScale);
         set
@@ -164,57 +130,23 @@ public sealed partial class Engine : ElectronObject
         }
     }
 
-    /// <summary>Gets the number of process callbacks completed since the process-wide engine was created.</summary>
-    /// <value>A monotonically increasing process-lifetime count. A callback that throws is not counted.</value>
-    public ulong ProcessFrames => unchecked((ulong)Interlocked.Read(ref _processFrames));
+    internal ulong ProcessFramesCore => unchecked((ulong)Interlocked.Read(ref _processFrames));
 
-    /// <summary>Gets the number of fixed-step callbacks started since the process-wide engine was created.</summary>
-    /// <value>A monotonically increasing process-lifetime count, including a callback that throws.</value>
-    public ulong PhysicsFrames => unchecked((ulong)Interlocked.Read(ref _physicsFrames));
+    internal ulong PhysicsFramesCore => unchecked((ulong)Interlocked.Read(ref _physicsFrames));
 
-    /// <summary>Gets the most recently measured process-frame rate.</summary>
-    /// <value>
-    /// Completed process frames per unscaled host second, updated after each accumulated second. The value is zero
-    /// until the first measurement window completes and is reset by <see cref="Start"/>.
-    /// </value>
-    public double FramesPerSecond => Volatile.Read(ref _framesPerSecond);
+    internal double FramesPerSecondCore => Volatile.Read(ref _framesPerSecond);
 
-    /// <summary>Gets the fraction of the current fixed interval remaining after the latest scheduling decision.</summary>
-    /// <value>A value from <c>0</c> through <c>1</c>, where zero is exactly on a fixed-step boundary.</value>
-    /// <remarks>The active 2D renderer uses this fraction for eligible canvas and camera presentation when
-    /// <see cref="SceneTree.PhysicsInterpolation"/> is enabled; logical transforms remain current.</remarks>
-    public double PhysicsInterpolationFraction => Volatile.Read(ref _physicsInterpolationFraction);
+    internal double PhysicsInterpolationFractionCore => Volatile.Read(ref _physicsInterpolationFraction);
 
-    /// <summary>Gets whether the current thread is executing a fixed-step callback.</summary>
-    /// <value><see langword="true"/> only during a call to <see cref="MainLoop.PhysicsProcess"/>.</value>
-    public bool IsInPhysicsFrame => Volatile.Read(ref _inPhysicsFrame) != 0;
+    internal bool IsInPhysicsFrameCore => Volatile.Read(ref _inPhysicsFrame) != 0;
 
-    /// <summary>Gets the currently attached application loop.</summary>
-    /// <value>The loop visible during startup, frames, and shutdown; otherwise <see langword="null"/>.</value>
-    public MainLoop? MainLoop => Volatile.Read(ref _mainLoop);
+    internal MainLoop? MainLoopCore => Volatile.Read(ref _mainLoop);
 
-    /// <summary>Gets the architecture targeted by the current Electron2D process.</summary>
-    /// <value>A stable lowercase architecture name such as <c>x86_64</c>, <c>x86_32</c>, <c>arm64</c>, or <c>arm32</c>.</value>
-    public string ArchitectureName { get; } = GetArchitectureName();
+    internal string ArchitectureNameCore { get; } = GetArchitectureName();
 
-    /// <summary>Gets immutable version information for the loaded Electron2D assembly.</summary>
-    /// <value>The process-wide version descriptor.</value>
-    public EngineVersionInfo VersionInfo => SharedVersionInfo;
+    internal EngineVersionInfo VersionInfoCore => SharedVersionInfo;
 
-    /// <summary>Attaches and, when necessary, initializes one application loop.</summary>
-    /// <param name="mainLoop">The live loop to own until <see cref="Stop"/> completes.</param>
-    /// <remarks>
-    /// The calling thread becomes the runtime owner. An uninitialized loop is initialized; an already running loop,
-    /// including a newly constructed <see cref="SceneTree"/>, is attached without a second initialization. The loop
-    /// is not disposed by the engine. During its initialization, <see cref="MainLoop"/> already returns
-    /// <paramref name="mainLoop"/>. Active project locale and pseudolocalization settings are sampled before loop attachment;
-    /// a caller-constructed SceneTree has already completed its initial node-ready callbacks at that point.
-    /// </remarks>
-    /// <exception cref="ArgumentNullException"><paramref name="mainLoop"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">A runtime is already starting, running, iterating, or stopping; the loop is in an incompatible state; or the caller does not own the loop.</exception>
-    /// <exception cref="ObjectDisposedException">The loop is disposing or disposed.</exception>
-    /// <exception cref="Exception">Loop initialization throws. The engine returns to its idle state.</exception>
-    public void Start(MainLoop mainLoop)
+    internal void StartCore(MainLoop mainLoop)
     {
         ArgumentNullException.ThrowIfNull(mainLoop);
 
@@ -240,20 +172,7 @@ public sealed partial class Engine : ElectronObject
         }
     }
 
-    /// <summary>Advances fixed-step callbacks followed by one process callback.</summary>
-    /// <param name="elapsedSeconds">Finite non-negative unscaled host time elapsed since the previous call.</param>
-    /// <returns><see langword="true"/> if either callback lane asks the host to stop; otherwise <see langword="false"/>.</returns>
-    /// <remarks>
-    /// Fixed steps run before the process callback. If a fixed callback requests a stop, remaining fixed callbacks are
-    /// skipped but the process callback still runs. A callback exception propagates, restores the engine to its running
-    /// state, and does not implicitly finalize the loop. This method performs no waiting, rendering, input pumping,
-    /// audio work, or collision simulation. After a successful process callback and metric update, the method flushes
-    /// one pending <see cref="ProjectSettings.SettingsChanged"/> event before returning.
-    /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="elapsedSeconds"/> is negative, NaN, or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The runtime is not running, the caller is not its owner thread, frame execution is re-entered, or the current time scale would produce a non-finite callback delta.</exception>
-    /// <exception cref="Exception">A loop callback or project-settings event handler throws.</exception>
-    public bool AdvanceFrame(double elapsedSeconds)
+    internal bool AdvanceFrameCore(double elapsedSeconds)
     {
         if (Volatile.Read(ref _applicationRun) != 0)
             throw new InvalidOperationException("Engine.Run owns frame execution until it returns.");
@@ -274,10 +193,10 @@ public sealed partial class Engine : ElectronObject
         {
             var mainLoop = Volatile.Read(ref _mainLoop) ??
                 throw new InvalidOperationException("The running engine has no MainLoop.");
-            var physicsTicksPerSecond = PhysicsTicksPerSecond;
-            var maxPhysicsSteps = MaxPhysicsStepsPerFrame;
-            var jitterFix = PhysicsJitterFix;
-            var timeScale = TimeScale;
+            var physicsTicksPerSecond = PhysicsTicksPerSecondCore;
+            var maxPhysicsSteps = MaxPhysicsStepsPerFrameCore;
+            var jitterFix = PhysicsJitterFixCore;
+            var timeScale = TimeScaleCore;
             var physicsStep = 1d / physicsTicksPerSecond;
 
             if (_scheduledPhysicsTicksPerSecond != physicsTicksPerSecond)
@@ -333,7 +252,7 @@ public sealed partial class Engine : ElectronObject
 
             Interlocked.Increment(ref _processFrames);
             UpdateFramesPerSecond(elapsedSeconds);
-            ProjectSettings.Instance.FlushChanges();
+            ProjectSettings.FlushChanges();
             return stopRequested;
         }
         finally
@@ -343,16 +262,7 @@ public sealed partial class Engine : ElectronObject
         }
     }
 
-    /// <summary>Finalizes and detaches the current application loop.</summary>
-    /// <remarks>
-    /// The loop becomes unavailable through <see cref="MainLoop"/> after finalization returns or throws. The engine
-    /// returns to its idle state and may start a different loop. Native audio output and player voice slots are closed even
-    /// after finalization fails. The detached loop and borrowed streams are not disposed.
-    /// </remarks>
-    /// <exception cref="InvalidOperationException">The runtime is not running, the caller is not its owner thread, or the call occurs during a frame or lifecycle transition.</exception>
-    /// <exception cref="Exception">Loop finalization or audio cleanup throws. Detachment still completes.</exception>
-    /// <exception cref="AggregateException">Several finalization or cleanup operations fail.</exception>
-    public void Stop()
+    internal void StopCore()
     {
         if (Volatile.Read(ref _applicationRun) != 0)
             throw new InvalidOperationException("Request SceneTree.Quit to stop Engine.Run.");
@@ -376,19 +286,7 @@ public sealed partial class Engine : ElectronObject
         Node.ThrowCollected("Engine shutdown failed.", errors);
     }
 
-    /// <summary>Registers a named, non-owned engine singleton.</summary>
-    /// <param name="name">The nonblank case-sensitive name.</param>
-    /// <param name="instance">The live object to expose.</param>
-    /// <remarks>
-    /// Registration retains a managed reference but does not transfer disposal ownership. Disposing an object does not
-    /// remove its registration; the registering component must unregister it during teardown. The name <c>Engine</c>,
-    /// <c>ProjectSettings</c>, <c>Input</c>, <c>InputMap</c>, and <c>AudioServer</c> are already occupied by built-in process singletons.
-    /// </remarks>
-    /// <exception cref="ArgumentNullException"><paramref name="name"/> or <paramref name="instance"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
-    /// <exception cref="ObjectDisposedException"><paramref name="instance"/> is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The name is already registered.</exception>
-    public void RegisterSingleton(string name, ElectronObject instance)
+    internal void RegisterSingletonCore(string name, ElectronObject instance)
     {
         ValidateSingletonName(name);
         ArgumentNullException.ThrowIfNull(instance);
@@ -403,13 +301,7 @@ public sealed partial class Engine : ElectronObject
         }
     }
 
-    /// <summary>Unregisters a named engine singleton without disposing it.</summary>
-    /// <param name="name">The nonblank case-sensitive registered name.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
-    /// <exception cref="KeyNotFoundException">No singleton has the supplied name.</exception>
-    /// <exception cref="InvalidOperationException"><paramref name="name"/> identifies a built-in singleton.</exception>
-    public void UnregisterSingleton(string name)
+    internal void UnregisterSingletonCore(string name)
     {
         ValidateSingletonName(name);
 
@@ -431,13 +323,7 @@ public sealed partial class Engine : ElectronObject
         }
     }
 
-    /// <summary>Gets a named engine singleton.</summary>
-    /// <param name="name">The nonblank case-sensitive registered name.</param>
-    /// <returns>The registered object. Ownership remains with the registering component.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
-    /// <exception cref="KeyNotFoundException">No singleton has the supplied name.</exception>
-    public ElectronObject GetSingleton(string name)
+    internal ElectronObject GetSingletonCore(string name)
     {
         ValidateSingletonName(name);
 
@@ -449,28 +335,15 @@ public sealed partial class Engine : ElectronObject
         }
     }
 
-    /// <summary>Gets a named engine singleton and validates its type.</summary>
-    /// <typeparam name="T">The required <see cref="ElectronObject"/> type.</typeparam>
-    /// <param name="name">The nonblank case-sensitive registered name.</param>
-    /// <returns>The registered object cast to <typeparamref name="T"/>.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
-    /// <exception cref="KeyNotFoundException">No singleton has the supplied name.</exception>
-    /// <exception cref="InvalidCastException">The registered object is not assignable to <typeparamref name="T"/>.</exception>
-    public T GetSingleton<T>(string name)
-        where T : ElectronObject
+    internal T GetSingletonCore<T>(string name)
+    where T : ElectronObject
     {
-        var instance = GetSingleton(name);
+        var instance = GetSingletonCore(name);
         return instance as T ?? throw new InvalidCastException(
             $"Engine singleton '{name}' is a {instance.ClassName}, not a {typeof(T).Name}.");
     }
 
-    /// <summary>Reports whether a named engine singleton is registered.</summary>
-    /// <param name="name">The nonblank case-sensitive name.</param>
-    /// <returns><see langword="true"/> when the name is registered; otherwise <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
-    public bool HasSingleton(string name)
+    internal bool HasSingletonCore(string name)
     {
         ValidateSingletonName(name);
 
@@ -478,9 +351,7 @@ public sealed partial class Engine : ElectronObject
             return _singletons.ContainsKey(name);
     }
 
-    /// <summary>Gets the current engine-singleton names in registration order.</summary>
-    /// <returns>An immutable snapshot using ordinal, case-sensitive names.</returns>
-    public IReadOnlyList<string> GetSingletonList()
+    internal IReadOnlyList<string> GetSingletonListCore()
     {
         lock (_singletonsGate)
             return Array.AsReadOnly(_singletonNames.ToArray());
@@ -552,7 +423,7 @@ public sealed partial class Engine : ElectronObject
         Volatile.Write(ref _framesPerSecond, 0d);
         _fpsElapsed = 0d;
         _fpsFrames = 0;
-        _scheduledPhysicsTicksPerSecond = PhysicsTicksPerSecond;
+        _scheduledPhysicsTicksPerSecond = PhysicsTicksPerSecondCore;
     }
 
     private void UpdateFramesPerSecond(double elapsedSeconds)

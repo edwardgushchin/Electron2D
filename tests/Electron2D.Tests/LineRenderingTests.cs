@@ -40,8 +40,8 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = server.Readback(); frames++;
                 Pixel(frame, 9, 12, frames == 1 ? Colors.Red : Colors.Blue);
@@ -53,7 +53,7 @@ internal static partial class RenderingRuntimeTests
                 else window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 2, "Line drew and retained a changed color across two frames.");
         Console.WriteLine($"Line cap, joint, texture and redraw native pixels passed: {backend}/{fixture ?? "default"}.");
     }

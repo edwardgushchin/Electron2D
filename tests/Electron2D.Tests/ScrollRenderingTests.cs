@@ -17,9 +17,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback();
                 frames++;
@@ -51,7 +51,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 3, $"All three {backend} scroll and focus frames completed.");
         VerifyScrollHints(backend);
@@ -71,9 +71,9 @@ internal static partial class RenderingRuntimeTests
         var baseline = 0f;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback();
                 frames++;
@@ -100,7 +100,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 3, $"All three {backend} hint frames completed.");
     }
@@ -124,13 +124,13 @@ internal static partial class RenderingRuntimeTests
                 scroll.ScrollHorizontal = frames % 2 == 0 ? 0 : 40;
                 scroll.ScrollVertical = frames % 2 == 0 ? 40 : 0;
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 128 && allocated == 0,
             $"Warmed {backend} scroll offset, layout, recording and render allocated {allocated} managed bytes over 64 frames.");

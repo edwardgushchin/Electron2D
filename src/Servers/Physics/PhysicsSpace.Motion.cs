@@ -222,7 +222,7 @@ internal sealed partial class PhysicsSpace
                 travel, remainder, safe, unsafeFraction, false);
 
         var rid = contact.Candidate.Tag.ColliderRID;
-        var scene = PhysicsServer.Instance.ResolveSceneObject(rid);
+        var scene = PhysicsServer.Service.ResolveSceneObject(rid);
         var candidateBody = b2Shape_GetBody(contact.Candidate.ShapeID);
         var velocity = b2Body_GetWorldPointVelocity(candidateBody, contact.Point);
         return new(ownerRID, rid, scene?.InstanceID ?? 0, contact.LocalShape,
@@ -239,9 +239,9 @@ internal sealed partial class PhysicsSpace
             var shape = shapes[shapeIndex];
             var tag = b2Shape_GetUserData(shape).GetRef<PhysicsFixtureTag>();
             if (tag is null || tag.ColliderRID == ownerRID || Array.IndexOf(excludedBodies, tag.ColliderRID) >= 0 ||
-                PhysicsServer.Instance.BodiesExcepted(ownerRID, tag.ColliderRID))
+                PhysicsServer.Service.BodiesExcepted(ownerRID, tag.ColliderRID))
                 continue;
-            var scene = PhysicsServer.Instance.ResolveSceneObject(tag.ColliderRID);
+            var scene = PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID);
             if (scene is not null && Array.IndexOf(excludedObjects, scene.InstanceID) >= 0) continue;
             var filter = b2Shape_GetFilter(shape);
             var eligible = false;

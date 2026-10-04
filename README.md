@@ -110,7 +110,7 @@ dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 -
 
 Hold the arrow keys to move its scene node; press Escape or close the window to quit. This example reports movement in the terminal and does not draw the scene.
 
-Its [entry point](examples/HostExample/Program.cs) configures a `Window`, adds the scene and calls `Engine.Instance.Run`. The engine owns the event pump, frame timing and teardown. See the [example guide](examples/HostExample/README.md) for the full workflow.
+Its [entry point](examples/HostExample/Program.cs) configures a `Window`, adds the scene and calls `Engine.Run`. The engine owns the event pump, frame timing and teardown. See the [example guide](examples/HostExample/README.md) for the full workflow.
 
 <a id="documentation"></a>
 

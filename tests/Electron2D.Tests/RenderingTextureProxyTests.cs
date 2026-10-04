@@ -82,74 +82,74 @@ internal static partial class RenderingRuntimeTests
             },
             ReadyAction = n =>
             {
-                var tree = n.Tree!; var server = renderer = RenderingServer.Instance!;
-                server.SetDefaultClearColor(Colors.Black);
-                server.FramePreDraw += () =>
+                var tree = n.Tree!; var server = renderer = RenderingServer.Service!;
+                RenderingServer.SetDefaultClearColor(Colors.Black);
+                RenderingServer.FramePreDraw += () =>
                 {
                     before = GC.GetAllocatedBytesForCurrentThread();
                     if (phase >= 5)
                     {
-                        if (warm < 84) server.TextureProxyUpdate(proxy, warm % 2 == 0 ? first : second);
+                        if (warm < 84) RenderingServer.TextureProxyUpdate(proxy, warm % 2 == 0 ? first : second);
                         return;
                     }
                     if (phase == 0)
                     {
-                        first = server.Texture2DCreate(red); second = server.Texture2DCreate(blue);
-                        consumed = server.Texture2DCreate(green);
-                        proxy = server.TextureProxyCreate(first); nested = server.TextureProxyCreate(proxy);
-                        server.TextureSetSizeOverride(proxy, 7, 5);
+                        first = RenderingServer.Texture2DCreate(red); second = RenderingServer.Texture2DCreate(blue);
+                        consumed = RenderingServer.Texture2DCreate(green);
+                        proxy = RenderingServer.TextureProxyCreate(first); nested = RenderingServer.TextureProxyCreate(proxy);
+                        RenderingServer.TextureSetSizeOverride(proxy, 7, 5);
                         Check(RenderingTextureRegistry.Resolve(proxy).GetSize() == new Vector2(7, 5), "Proxy logical-size overrides execute independently of source size.");
-                        redirected = server.TextureProxyCreate(consumed);
-                        emptyProxy = server.TextureProxyCreate(empty.GetRID()); borrowedProxy = server.TextureProxyCreate(borrowed.GetRID());
+                        redirected = RenderingServer.TextureProxyCreate(consumed);
+                        emptyProxy = RenderingServer.TextureProxyCreate(empty.GetRID()); borrowedProxy = RenderingServer.TextureProxyCreate(borrowed.GetRID());
                         firstTexture = RenderingTextureRegistry.Resolve(first); secondTexture = RenderingTextureRegistry.Resolve(second);
-                        Reject<ArgumentException>(() => server.TextureProxyCreate(default));
-                        using var shape = new CircleShape(); Reject<ArgumentException>(() => server.TextureProxyCreate(shape.GetRID()));
-                        Reject<ArgumentException>(() => server.TextureProxyUpdate(proxy, default));
-                        Reject<InvalidOperationException>(() => server.TextureProxyUpdate(first, second));
-                        Reject<InvalidOperationException>(() => server.TextureProxyUpdate(borrowed.GetRID(), second));
-                        Reject<InvalidOperationException>(() => server.TextureProxyUpdate(proxy, proxy));
-                        Reject<InvalidOperationException>(() => server.TextureProxyUpdate(proxy, nested));
-                        Reject<InvalidOperationException>(() => server.TextureReplace(proxy, first));
-                        Reject<InvalidOperationException>(() => server.TextureReplace(first, proxy));
-                        Reject<InvalidOperationException>(() => server.Texture2DUpdate(proxy, blue));
-                        Reject<InvalidOperationException>(() => Task.Run(() => server.TextureProxyUpdate(proxy, second)).GetAwaiter().GetResult());
-                        using var pixels = server.Texture2DGet(proxy)!; pixels.Fill(Colors.Blue);
-                        using var unchanged = server.Texture2DGet(first)!;
+                        Reject<ArgumentException>(() => RenderingServer.TextureProxyCreate(default));
+                        using var shape = new CircleShape(); Reject<ArgumentException>(() => RenderingServer.TextureProxyCreate(shape.GetRID()));
+                        Reject<ArgumentException>(() => RenderingServer.TextureProxyUpdate(proxy, default));
+                        Reject<InvalidOperationException>(() => RenderingServer.TextureProxyUpdate(first, second));
+                        Reject<InvalidOperationException>(() => RenderingServer.TextureProxyUpdate(borrowed.GetRID(), second));
+                        Reject<InvalidOperationException>(() => RenderingServer.TextureProxyUpdate(proxy, proxy));
+                        Reject<InvalidOperationException>(() => RenderingServer.TextureProxyUpdate(proxy, nested));
+                        Reject<InvalidOperationException>(() => RenderingServer.TextureReplace(proxy, first));
+                        Reject<InvalidOperationException>(() => RenderingServer.TextureReplace(first, proxy));
+                        Reject<InvalidOperationException>(() => RenderingServer.Texture2DUpdate(proxy, blue));
+                        Reject<InvalidOperationException>(() => Task.Run(() => RenderingServer.TextureProxyUpdate(proxy, second)).GetAwaiter().GetResult());
+                        using var pixels = RenderingServer.Texture2DGet(proxy)!; pixels.Fill(Colors.Blue);
+                        using var unchanged = RenderingServer.Texture2DGet(first)!;
                         Check(unchanged.GetPixel(0, 0) == Colors.Red, "Proxy image outputs are independent source copies.");
-                        var freed = server.TextureProxyCreate(first); server.FreeRID(freed);
-                        Reject<ArgumentException>(() => server.Texture2DGet(freed));
-                        using var remaining = server.Texture2DGet(first);
+                        var freed = RenderingServer.TextureProxyCreate(first); RenderingServer.FreeRID(freed);
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DGet(freed));
+                        using var remaining = RenderingServer.Texture2DGet(first);
                         Check(remaining is not null, "Freeing an alias preserves its source.");
                     }
                     else if (phase == 1)
                     {
-                        server.TextureSetPath(second, "blue"); server.TextureSetSizeOverride(second, 8, 4);
-                        server.TextureProxyUpdate(proxy, second);
-                        Check(proxy.GetID() != second.GetID() && server.TextureGetPath(proxy) == "blue" && RenderingTextureRegistry.Resolve(proxy).GetSize() == new Vector2(8, 4), "Retarget preserves proxy identity and updates dimensions/path.");
-                        server.TextureReplace(first, consumed);
-                        Reject<ArgumentException>(() => server.Texture2DGet(consumed));
-                        Check(server.Texture2DGet(redirected) is not null, "Replacing a source redirects its aliases before consuming it.");
+                        RenderingServer.TextureSetPath(second, "blue"); RenderingServer.TextureSetSizeOverride(second, 8, 4);
+                        RenderingServer.TextureProxyUpdate(proxy, second);
+                        Check(proxy.GetID() != second.GetID() && RenderingServer.TextureGetPath(proxy) == "blue" && RenderingTextureRegistry.Resolve(proxy).GetSize() == new Vector2(8, 4), "Retarget preserves proxy identity and updates dimensions/path.");
+                        RenderingServer.TextureReplace(first, consumed);
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DGet(consumed));
+                        Check(RenderingServer.Texture2DGet(redirected) is not null, "Replacing a source redirects its aliases before consuming it.");
                     }
                     else if (phase == 2)
                     {
                         borrowed.Dispose();
-                        server.FreeRID(second);
-                        Check(server.Texture2DGet(proxy) is null && server.Texture2DGet(nested) is null && server.Texture2DGet(borrowedProxy) is null, "Freed or disposed sources leave live but empty aliases.");
+                        RenderingServer.FreeRID(second);
+                        Check(RenderingServer.Texture2DGet(proxy) is null && RenderingServer.Texture2DGet(nested) is null && RenderingServer.Texture2DGet(borrowedProxy) is null, "Freed or disposed sources leave live but empty aliases.");
                     }
                     else if (phase == 3)
                     {
-                        server.TextureProxyUpdate(proxy, first);
-                        server.FreeRID(nested);
-                        Reject<ArgumentException>(() => server.TextureProxyUpdate(nested, first));
+                        RenderingServer.TextureProxyUpdate(proxy, first);
+                        RenderingServer.FreeRID(nested);
+                        Reject<ArgumentException>(() => RenderingServer.TextureProxyUpdate(nested, first));
                     }
                     else
                     {
-                        second = server.Texture2DCreate(blue); secondTexture = RenderingTextureRegistry.Resolve(second);
+                        second = RenderingServer.Texture2DCreate(blue); secondTexture = RenderingTextureRegistry.Resolve(second);
                         n.DrawAction = item => { item.DrawTextureRect(proxy, new(4, 4, 16, 16), false); item.DrawTexture(second, new(8, 32)); };
                         n.QueueRedraw();
                     }
                 };
-                server.FramePostDraw += () =>
+                RenderingServer.FramePostDraw += () =>
                 {
                     frames++;
                     if (phase >= 5)
@@ -199,10 +199,11 @@ internal static partial class RenderingRuntimeTests
                 };
             }
         };
-        window.AddChild(node); Engine.Instance.Run(window);
+        window.AddChild(node); Engine.Run(window);
         Check(frames == 153 && allocated == 0 && idleAllocated == 0, $"Warmed active proxy retarget/replay/submission allocated {allocated} managed bytes ({backend}).");
         Reject<ArgumentException>(() => RenderingTextureRegistry.Resolve(proxy));
-        Reject<ObjectDisposedException>(() => renderer!.TextureProxyCreate(empty.GetRID()));
+        Reject<InvalidOperationException>(() => RenderingServer.TextureProxyCreate(empty.GetRID()));
+        Reject<ObjectDisposedException>(() => renderer!.TextureProxyCreateCore(empty.GetRID()));
         Check(empty.GetRID().IsValid(), "Renderer shutdown preserves borrowed empty resources.");
         Console.WriteLine($"Texture proxy create/retarget/nesting/replacement/free/shared-storage passed ({backend}); {allocated}/{idleAllocated} managed bytes over 64 active/64 retained warmed frames.");
     }

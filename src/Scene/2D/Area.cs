@@ -213,7 +213,7 @@ public sealed partial class Area : CollisionObject
 
     internal void DetachBackend()
     {
-        PhysicsServer.Instance.FindAreaRuntime(PhysicsRID)?.Reset();
+        PhysicsServer.Service.FindAreaRuntime(PhysicsRID)?.Reset();
         if (_space is null) return;
         b2DestroyBody(_bodyID);
         _backendShapes.Clear();

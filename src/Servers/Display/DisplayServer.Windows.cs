@@ -38,10 +38,7 @@ public sealed partial class DisplayServer
         Paused = 4,
     }
 
-    /// <summary>Gets the current screen index containing the main window.</summary>
-    /// <param name="windowId">The window ID; only zero identifies an owned window.</param>
-    /// <returns>The zero-based screen index or <see cref="InvalidScreen"/> when the window has no display.</returns>
-    public int WindowGetCurrentScreen(int windowId = MainWindowId)
+    internal int WindowGetCurrentScreenCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         if (windowId != MainWindowId)
@@ -50,21 +47,14 @@ public sealed partial class DisplayServer
         return Array.IndexOf(GetDisplays(), displayId);
     }
 
-    /// <summary>Gets the index of the display with keyboard focus.</summary>
-    /// <returns>The main window's screen when it has focus on a backend with global focus information; otherwise the primary screen.</returns>
-    /// <remarks>Wayland does not expose a process-wide keyboard-focus window, so its result is always the primary screen.</remarks>
-    public int GetKeyboardFocusScreen()
+    internal int GetKeyboardFocusScreenCore()
     {
         EnsureOwner();
         return SDL.GetCurrentVideoDriver() != "wayland" && SDL.GetKeyboardFocus() == _window.DangerousGetHandle()
-            ? WindowGetCurrentScreen() : GetPrimaryScreen();
+            ? WindowGetCurrentScreenCore() : GetPrimaryScreenCore();
     }
 
-    /// <summary>Gets the display containing the largest portion of a desktop rectangle.</summary>
-    /// <param name="rectangle">Desktop rectangle in platform-native coordinates.</param>
-    /// <returns>The zero-based index of the screen with the greatest whole-pixel overlap area, or <see cref="InvalidScreen"/> when no overlap reaches one pixel.</returns>
-    /// <remarks>On Wayland, SDL output origins may be in logical desktop coordinates while the public output sizes use physical pixels; cross-output selection can therefore be ambiguous at mixed scales.</remarks>
-    public int GetScreenFromRect(Rect2 rectangle)
+    internal int GetScreenFromRectCore(Rect2 rectangle)
     {
         EnsureOwner();
         if (!rectangle.IsFinite() || !rectangle.HasArea())
@@ -92,32 +82,13 @@ public sealed partial class DisplayServer
         return selected;
     }
 
-    /// <summary>Gets a snapshot of the engine-owned native window IDs.</summary>
-    /// <returns>A one-element snapshot containing <see cref="MainWindowId"/>.</returns>
-    public int[] GetWindowList()
+    internal int[] GetWindowListCore()
     {
         EnsureOwner();
         return [MainWindowId];
     }
 
-    /// <summary>Gets a borrowed operating-system or graphics-context handle for the main window.</summary>
-    /// <param name="handleType">The native handle category to query.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>A nonzero pointer or platform window ID represented as a pointer-sized integer.</returns>
-    /// <remarks>
-    /// The caller does not own the returned handle and must never destroy or release it. Query it again after native
-    /// window state changes; it is invalid after this server is disposed. Native interop with it must obey the
-    /// platform's thread rules and this server's owner-thread boundary. Display handles are available on X11 and
-    /// Wayland; window handles are available on X11, Wayland, Windows, and macOS. Graphics-context identities
-    /// are available with the Linux compatibility renderer's GL/EGL/GLX driver as applicable. They are invalid
-    /// after renderer shutdown. Querying does not change the current context. The caller must not destroy,
-    /// replace or mutate the renderer's context or graphics state. GPU and software renderers have no GL identity.
-    /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="handleType"/> or <paramref name="windowId"/> is not defined or owned.</exception>
-    /// <exception cref="NotSupportedException">The requested native handle is unavailable on the active video driver.</exception>
-    /// <exception cref="InvalidOperationException">The call is made from another thread, or SDL cannot retrieve window properties or the native handle is currently absent.</exception>
-    /// <exception cref="ObjectDisposedException">The display server has been disposed.</exception>
-    public nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)
+    internal nint WindowGetNativeHandleCore(HandleType handleType, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -148,12 +119,7 @@ public sealed partial class DisplayServer
         return handle != 0 ? handle : throw new InvalidOperationException("The native handle is currently unavailable.");
     }
 
-    /// <summary>Finds the engine-owned window at a desktop position.</summary>
-    /// <param name="position">Global desktop point in platform-native coordinates.</param>
-    /// <returns><see cref="MainWindowId"/> when the point is inside the visible main window; otherwise <see cref="InvalidWindowId"/>.</returns>
-    /// <remarks>On X11, only the client area is counted; the native border and title bar are excluded. Other desktop drivers use decorated bounds.</remarks>
-    /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
-    public int GetWindowAtScreenPosition(Vector2i position)
+    internal int GetWindowAtScreenPositionCore(Vector2i position)
     {
         EnsureOwner();
         var flags = SDL.GetWindowFlags(GetWindow(MainWindowId));
@@ -161,22 +127,14 @@ public sealed partial class DisplayServer
         if ((flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0)
             return InvalidWindowId;
         var x11 = SDL.GetCurrentVideoDriver() == "x11";
-        var origin = x11 ? WindowGetPosition() : WindowGetPositionWithDecorations();
-        var size = x11 ? WindowGetSize() : WindowGetSizeWithDecorations();
+        var origin = x11 ? WindowGetPositionCore() : WindowGetPositionWithDecorationsCore();
+        var size = x11 ? WindowGetSizeCore() : WindowGetSizeWithDecorationsCore();
         return (long)position.X >= origin.X && (long)position.X < (long)origin.X + size.X &&
                (long)position.Y >= origin.Y && (long)position.Y < (long)origin.Y + size.Y
             ? MainWindowId : InvalidWindowId;
     }
 
-    /// <summary>Requests that the main window move to another connected display.</summary>
-    /// <param name="screen">A zero-based display index or a negative display selector.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>A request for the current screen does nothing. A floating window retains its offset from the source display, clamped so part of it remains in the target work area. Fullscreen and maximized windows keep their mode. The window manager may apply or deny a move asynchronously.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="screen"/> or <paramref name="windowId"/> does not identify an available display or the main window.</exception>
-    /// <exception cref="NotSupportedException">Wayland does not allow this top-level window to choose another display.</exception>
-    /// <exception cref="InvalidOperationException">A native display query or move fails, or the window state fails to synchronize.</exception>
-    /// <exception cref="AggregateException">A transfer fails and restoring the previous window mode also fails.</exception>
-    public void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)
+    internal void WindowSetCurrentScreenCore(int screen, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -188,7 +146,7 @@ public sealed partial class DisplayServer
             return;
         EnsureGlobalWindowCoordinatesAvailable();
 
-        var mode = WindowGetMode(windowId);
+        var mode = WindowGetModeCore(windowId);
         if (mode == WindowMode.ExclusiveFullscreen)
         {
             MoveExclusiveFullscreenToDisplay(window, display);
@@ -258,10 +216,7 @@ public sealed partial class DisplayServer
             throw SDLFailure("move the exclusive fullscreen window to a display");
     }
 
-    /// <summary>Gets the current screen refresh rate.</summary>
-    /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
-    /// <returns>The current display-mode refresh rate in hertz, using the precise rational value when available, or minus one when unavailable.</returns>
-    public float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)
+    internal float ScreenGetRefreshRateCore(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
         if (!TryGetDisplayID(screen, out var displayId))
@@ -273,22 +228,17 @@ public sealed partial class DisplayServer
         return float.IsFinite(rate) && rate > 0f ? rate : -1f;
     }
 
-    /// <summary>Gets the largest reported content scale among connected displays.</summary>
-    /// <returns>The maximum positive logical-to-physical ratio, at least one even when no display is connected.</returns>
-    public float ScreenGetMaxScale()
+    internal float ScreenGetMaxScaleCore()
     {
         EnsureOwner();
-        var count = GetScreenCount();
+        var count = GetScreenCountCore();
         var maximum = 1f;
         for (var screen = 0; screen < count; screen++)
-            maximum = Math.Max(maximum, ScreenGetScale(screen));
+            maximum = Math.Max(maximum, ScreenGetScaleCore(screen));
         return maximum;
     }
 
-    /// <summary>Gets the requested minimum size of the main window.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>The requested pixel dimensions on Wayland or native window dimensions elsewhere; zero means no bound on that axis.</returns>
-    public Vector2i WindowGetMinSize(int windowId = MainWindowId)
+    internal Vector2i WindowGetMinSizeCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         if (_waylandWindowPosition)
@@ -301,17 +251,12 @@ public sealed partial class DisplayServer
         return new Vector2i(width, height);
     }
 
-    /// <summary>Requests minimum dimensions for the main window.</summary>
-    /// <param name="size">Nonnegative lower bounds in client pixels on Wayland and native window coordinates elsewhere; zero leaves that axis unbounded.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>Wayland rounds each pixel lower bound upward to native window coordinates and reapplies it when the window pixel density changes.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">A bound is negative, exceeds a nonzero maximum, or cannot coexist with it after native pixel-density conversion.</exception>
-    public void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)
+    internal void WindowSetMinSizeCore(Vector2i size, int windowId = MainWindowId)
     {
         EnsureOwner();
         if (size.X < 0 || size.Y < 0)
             throw new ArgumentOutOfRangeException(nameof(size), size, "Minimum dimensions cannot be negative.");
-        var maximum = WindowGetMaxSize(windowId);
+        var maximum = WindowGetMaxSizeCore(windowId);
         if ((maximum.X > 0 && size.X > maximum.X) || (maximum.Y > 0 && size.Y > maximum.Y))
             throw new ArgumentOutOfRangeException(nameof(size), size, "Minimum dimensions cannot exceed the maximum dimensions.");
         var window = GetWindow(windowId);
@@ -329,10 +274,7 @@ public sealed partial class DisplayServer
             _waylandMinimumSize = size;
     }
 
-    /// <summary>Gets the requested maximum size of the main window.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>The requested pixel dimensions on Wayland or native window dimensions elsewhere; zero means no bound on that axis.</returns>
-    public Vector2i WindowGetMaxSize(int windowId = MainWindowId)
+    internal Vector2i WindowGetMaxSizeCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         if (_waylandWindowPosition)
@@ -345,17 +287,12 @@ public sealed partial class DisplayServer
         return new Vector2i(width, height);
     }
 
-    /// <summary>Requests maximum dimensions for the main window.</summary>
-    /// <param name="size">Nonnegative upper bounds in client pixels on Wayland and native window coordinates elsewhere; zero leaves that axis unbounded.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>Wayland rounds each pixel upper bound downward to native window coordinates and reapplies it when the window pixel density changes.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">A bound is negative, falls below a nonzero minimum, or cannot represent a finite maximum after native pixel-density conversion.</exception>
-    public void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)
+    internal void WindowSetMaxSizeCore(Vector2i size, int windowId = MainWindowId)
     {
         EnsureOwner();
         if (size.X < 0 || size.Y < 0)
             throw new ArgumentOutOfRangeException(nameof(size), size, "Maximum dimensions cannot be negative.");
-        var minimum = WindowGetMinSize(windowId);
+        var minimum = WindowGetMinSizeCore(windowId);
         if ((size.X > 0 && size.X < minimum.X) || (size.Y > 0 && size.Y < minimum.Y))
             throw new ArgumentOutOfRangeException(nameof(size), size, "Maximum dimensions cannot be smaller than the minimum dimensions.");
         var window = GetWindow(windowId);
@@ -383,10 +320,7 @@ public sealed partial class DisplayServer
             throw SDLFailure("update window size limits for the pixel density");
     }
 
-    /// <summary>Gets the main window's current native mode.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>The state reported by SDL; an exclusive display mode is distinguished from desktop fullscreen. Wayland can retain a requested minimized state until the window regains focus.</returns>
-    public WindowMode WindowGetMode(int windowId = MainWindowId)
+    internal WindowMode WindowGetModeCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         var flags = SDL.GetWindowFlags(GetWindow(windowId));
@@ -400,14 +334,7 @@ public sealed partial class DisplayServer
         return WindowMode.Windowed;
     }
 
-    /// <summary>Requests a native main-window mode.</summary>
-    /// <param name="mode">Windowed, minimized, maximized, borderless fullscreen, or exclusive fullscreen.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>On Wayland, exclusive fullscreen uses the compositor's ordinary fullscreen request and is observed as <see cref="WindowMode.Fullscreen"/> if accepted. Wayland has no reliable programmatic restoration from a minimized state; the minimized flag can remain set until the window regains focus. Elsewhere exclusive mode chooses the closest native mode to the current logical window size. Mode transitions may complete asynchronously; call <see cref="WindowGetMode"/> for the reported state.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="mode"/> is unknown.</exception>
-    /// <exception cref="InvalidOperationException">No suitable exclusive mode exists or the native window manager rejects a transition.</exception>
-    /// <exception cref="AggregateException">A fullscreen transition and restoration of the previous mode both fail.</exception>
-    public void WindowSetMode(WindowMode mode, int windowId = MainWindowId)
+    internal void WindowSetModeCore(WindowMode mode, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -453,11 +380,7 @@ public sealed partial class DisplayServer
         throw failure;
     }
 
-    /// <summary>Gets whether the main window currently has native focus.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns><see langword="true"/> when the window is focused.</returns>
-    /// <remarks>On Wayland, focus follows SDL's mouse-focused window; tablet and touch focus are not merged into this query. Other video drivers use keyboard focus.</remarks>
-    public bool WindowIsFocused(int windowId = MainWindowId)
+    internal bool WindowIsFocusedCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -466,14 +389,7 @@ public sealed partial class DisplayServer
             : (SDL.GetWindowFlags(window) & SDL.WindowFlags.InputFocus) != 0;
     }
 
-    /// <summary>Reads a supported native window flag.</summary>
-    /// <param name="flag">Policy to inspect.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>Whether the policy is enabled in the observed native flags.</returns>
-    /// <remarks>On Wayland, <see cref="WindowFlag.AlwaysOnTop"/> and <see cref="WindowFlag.NoFocus"/> are unavailable for the main window.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="flag"/> is not a defined policy.</exception>
-    /// <exception cref="NotSupportedException">The defined policy requires a display capability that is not integrated.</exception>
-    public bool WindowGetFlag(WindowFlag flag, int windowId = MainWindowId)
+    internal bool WindowGetFlagCore(WindowFlag flag, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -491,14 +407,7 @@ public sealed partial class DisplayServer
         };
     }
 
-    /// <summary>Requests a supported native window policy.</summary>
-    /// <param name="flag">Policy to change.</param>
-    /// <param name="enabled">Whether to enable the policy.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>A platform may reject the policy or apply it asynchronously. Wayland cannot apply <see cref="WindowFlag.AlwaysOnTop"/> to an ordinary top-level window, and SDL can change its internal focusable flag before rejecting <see cref="WindowFlag.NoFocus"/> there; both requests are rejected before native mutation.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="flag"/> is not a defined policy.</exception>
-    /// <exception cref="NotSupportedException">The defined policy requires a display capability that is not integrated.</exception>
-    public void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId)
+    internal void WindowSetFlagCore(WindowFlag flag, bool enabled, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -517,24 +426,14 @@ public sealed partial class DisplayServer
             throw SDLFailure("change window flag");
     }
 
-    /// <summary>Gets whether the current SDL resize policy permits a maximize request.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns><see langword="true"/> when the window is resizable, regardless of its current mode.</returns>
-    /// <remarks>The Wayland compositor may independently disable maximization through its window-manager capabilities; SDL does not expose that native policy here. A fullscreen window can leave fullscreen before requesting maximization.</remarks>
-    public bool WindowIsMaximizeAllowed(int windowId = MainWindowId)
+    internal bool WindowIsMaximizeAllowedCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         var flags = SDL.GetWindowFlags(GetWindow(windowId));
         return (flags & SDL.WindowFlags.Resizable) != 0;
     }
 
-    /// <summary>Requests that the window manager bring the main window to the foreground.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>Wayland has no standard foreground request for an existing top-level window, so this is a no-op there. Other window managers may refuse a native raise request under their focus policy.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread or the native raise request fails.</exception>
-    /// <exception cref="ObjectDisposedException">The display server is disposing or disposed.</exception>
-    public void WindowMoveToForeground(int windowId = MainWindowId)
+    internal void WindowMoveToForegroundCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -544,24 +443,14 @@ public sealed partial class DisplayServer
             throw SDLFailure("raise the window");
     }
 
-    /// <summary>Requests user attention until the main window receives focus.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>On Wayland this submits an activation request without an input serial, allowing the compositor to mark the window urgent without switching focus. The platform chooses how, or whether, to display the request; a focused window may show no effect.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread or the native attention request fails.</exception>
-    /// <exception cref="ObjectDisposedException">The display server is disposing or disposed.</exception>
-    public void WindowRequestAttention(int windowId = MainWindowId)
+    internal void WindowRequestAttentionCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         if (!SDL.FlashWindow(GetWindow(windowId), SDL.FlashOperation.UntilFocused))
             throw SDLFailure("request window attention");
     }
 
-    /// <summary>Gets the main-window position including its left and top decorations.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>The outer upper-left position in platform-native desktop coordinates.</returns>
-    /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
-    public Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)
+    internal Vector2i WindowGetPositionWithDecorationsCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -572,32 +461,19 @@ public sealed partial class DisplayServer
         return new Vector2i(checked(x - left), checked(y - top));
     }
 
-    /// <summary>Gets the main-window size including native decorations.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>Outer window dimensions in platform-native window coordinates; on Wayland, the client size in pixels.</returns>
-    /// <remarks>Wayland does not provide a reliable server-side decoration size for a top-level window.</remarks>
-    public Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId)
+    internal Vector2i WindowGetSizeWithDecorationsCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
         if (SDL.GetCurrentVideoDriver() == "wayland")
-            return WindowGetSize(windowId);
+            return WindowGetSizeCore(windowId);
         if (!SDL.GetWindowSize(window, out var width, out var height) ||
             !SDL.GetWindowBordersSize(window, out var top, out var left, out var bottom, out var right))
             throw SDLFailure("read decorated window size");
         return new Vector2i(checked(width + left + right), checked(height + top + bottom));
     }
 
-    /// <summary>Requests a taskbar progress state for the main window where the desktop supports it.</summary>
-    /// <param name="state">The indication to show.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="state"/> is unknown.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
-    /// <exception cref="InvalidOperationException">The call is off the opening thread or a supported native backend rejects the request.</exception>
-    /// <exception cref="NotSupportedException">Taskbar progress integration is unavailable on the active Wayland backend.</exception>
-    /// <exception cref="ObjectDisposedException">The display server has been disposed.</exception>
-    /// <remarks>Wayland needs a verified desktop entry and a desktop environment that accepts progress notifications. A successful native setter alone does not establish that the indication is visible.</remarks>
-    public void WindowSetTaskbarProgressState(ProgressState state, int windowId = MainWindowId)
+    internal void WindowSetTaskbarProgressStateCore(ProgressState state, int windowId = MainWindowId)
     {
         EnsureOwner();
         var native = state switch
@@ -616,16 +492,7 @@ public sealed partial class DisplayServer
             throw SDLFailure("set taskbar progress state");
     }
 
-    /// <summary>Requests a taskbar progress fraction for the main window where the desktop supports it.</summary>
-    /// <param name="value">A finite fraction from zero through one.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is outside the supported range.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
-    /// <exception cref="InvalidOperationException">The call is off the opening thread or a supported native backend rejects the request.</exception>
-    /// <exception cref="NotSupportedException">Taskbar progress integration is unavailable on the active Wayland backend.</exception>
-    /// <exception cref="ObjectDisposedException">The display server has been disposed.</exception>
-    /// <remarks>Wayland needs a verified desktop entry and a desktop environment that accepts progress notifications. A successful native setter alone does not establish that the value is visible.</remarks>
-    public void WindowSetTaskbarProgressValue(float value, int windowId = MainWindowId)
+    internal void WindowSetTaskbarProgressValueCore(float value, int windowId = MainWindowId)
     {
         EnsureOwner();
         if (!float.IsFinite(value) || value < 0f || value > 1f)

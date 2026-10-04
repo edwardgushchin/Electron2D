@@ -300,7 +300,7 @@ public abstract class MainLoop : ElectronObject
         _state = LoopState.Processing;
         CurrentUnscaledFrameDelta = unscaledDelta;
         CurrentUnscaledProcessStep = unscaledProcessStep;
-        Input.Instance.BeginFrame(physics);
+        Input.Service.BeginFrame(physics);
 
         try
         {
@@ -308,7 +308,7 @@ public abstract class MainLoop : ElectronObject
         }
         finally
         {
-            Input.Instance.CompleteFrame(physics);
+            Input.Service.CompleteFrame(physics);
             CurrentUnscaledFrameDelta = 0d;
             CurrentUnscaledProcessStep = null;
             _state = LoopState.Running;

@@ -6,15 +6,15 @@ internal static class DisplayServerScaleMoveNativeTests
     public static void Run()
     {
         using var display = DisplayServer.Open("Electron2D scale move test", new Vector2i(320, 240));
-        if (display.GetName() != "Wayland")
+        if (DisplayServer.GetName() != "Wayland")
             throw new InvalidOperationException("The scale move test requires Wayland.");
 
         var windows = SDL.GetWindows(out var count);
         if (count != 1 || windows is not { Length: 1 })
             throw new InvalidOperationException("The scale move test needs one window.");
         var window = windows[0];
-        display.WindowSetMaxSize(new Vector2i(501, 401));
-        display.WindowSetMinSize(new Vector2i(97, 73));
+        DisplayServer.WindowSetMaxSize(new Vector2i(501, 401));
+        DisplayServer.WindowSetMinSize(new Vector2i(97, 73));
 
         var renderer = SDL.CreateRenderer(window, "software");
         if (renderer == 0)
@@ -38,7 +38,7 @@ internal static class DisplayServerScaleMoveNativeTests
         var settledAt = DateTime.UtcNow.AddSeconds(2);
         while (DateTime.UtcNow < settledAt)
         {
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             if (!SDL.RenderClear(renderer) || !SDL.RenderPresent(renderer))
                 throw new InvalidOperationException($"The scale move test cannot present its window: {SDL.GetError()}");
             Thread.Sleep(20);
@@ -48,21 +48,21 @@ internal static class DisplayServerScaleMoveNativeTests
         var previousDensity = startingDensity;
         var transitions = 0;
         var scaleEvents = 0;
-        display.WindowDpiChanged += () => scaleEvents++;
+        DisplayServer.WindowDpiChanged += () => scaleEvents++;
         Console.WriteLine($"Scale move window ready: density {startingDensity}. Drag it to a monitor with a different scale and back.");
         var deadline = DateTime.UtcNow.AddSeconds(60);
         while (DateTime.UtcNow < deadline && transitions < 2)
         {
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             if (!SDL.RenderClear(renderer) || !SDL.RenderPresent(renderer))
                 throw new InvalidOperationException($"The scale move test cannot present its window: {SDL.GetError()}");
             var density = SDL.GetWindowPixelDensity(window);
             if (density != previousDensity)
             {
                 transitions++;
-                var size = display.WindowGetSize();
-                var minimum = display.WindowGetMinSize();
-                var maximum = display.WindowGetMaxSize();
+                var size = DisplayServer.WindowGetSize();
+                var minimum = DisplayServer.WindowGetMinSize();
+                var maximum = DisplayServer.WindowGetMaxSize();
                 if (!SDL.GetWindowSizeInPixels(window, out var pixelWidth, out var pixelHeight) ||
                     !SDL.GetWindowMinimumSize(window, out var minWidth, out var minHeight) ||
                     !SDL.GetWindowMaximumSize(window, out var maxWidth, out var maxHeight) ||

@@ -29,8 +29,8 @@ internal static partial class RenderingRuntimeTests
             pointerCenter = window.GetVisibleRect().Size * 0.5f;
             var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(native![0]), Which = 987, X = pointerCenter.X / scale, Y = pointerCenter.Y / scale } };
             Check(SDL.PushEvent(ref motion), "Inject a pointer at the camera center.");
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 try
@@ -58,7 +58,7 @@ internal static partial class RenderingRuntimeTests
                 catch (Exception e) { throw new InvalidOperationException($"Camera pixels {backend}/{fixture}, frame {frames}.", e); }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 6, "All six camera stages ran.");
+        Engine.Run(window); Released(window); Check(frames == 6, "All six camera stages ran.");
         Console.WriteLine($"Camera native pixels, input and switching passed: {backend}/{fixture ?? "default"}.");
     }
 }

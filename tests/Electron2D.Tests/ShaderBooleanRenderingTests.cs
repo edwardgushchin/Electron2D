@@ -138,9 +138,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; var before = 0L; var allocated = 0L;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before; if (++frames > 20) allocated += bytes;
                 using var image = server.Readback();
@@ -159,10 +159,10 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 40) window.Tree!.Quit();
             };
         };
-        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
+        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));
         else
         {
-            Engine.Instance.Run(window);
+            Engine.Run(window);
             Check(frames == 40 && allocated == 0 && nodes.All(n => n.Draws == 1), "Boolean updates/reload reuse geometry with zero warm rendering allocation.");
         }
         Released(window);

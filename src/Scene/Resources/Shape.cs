@@ -36,7 +36,7 @@ public abstract partial class Shape : Resource
         {
             ThrowIfDisposed();
             return _queryRID.IsValid() ? _queryRID :
-                _queryRID = PhysicsServer.Instance.RegisterBorrowedShape(this);
+                _queryRID = PhysicsServer.Service.RegisterBorrowedShape(this);
         }
     }
 
@@ -66,7 +66,7 @@ public abstract partial class Shape : Resource
         _revision++;
         RID rid;
         lock (_queryRIDGate) rid = _queryRID;
-        if (rid.IsValid()) PhysicsServer.Instance.MarkBorrowedShapeDirty(rid);
+        if (rid.IsValid()) PhysicsServer.Service.MarkBorrowedShapeDirty(rid);
         EmitChanged();
     }
 
@@ -77,7 +77,7 @@ public abstract partial class Shape : Resource
         {
             RID rid;
             lock (_queryRIDGate) { rid = _queryRID; _queryRID = default; }
-            if (rid.IsValid() && !_serverOwned) PhysicsServer.Instance.UnregisterBorrowedShape(rid);
+            if (rid.IsValid() && !_serverOwned) PhysicsServer.Service.UnregisterBorrowedShape(rid);
         }
         base.Dispose(disposing);
     }

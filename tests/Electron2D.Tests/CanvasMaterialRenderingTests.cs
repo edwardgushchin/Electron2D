@@ -50,14 +50,14 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         node.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!;
-            if (server.GetCurrentRenderingDriverName() == "software")
+            var server = RenderingServer.Service!;
+            if (RenderingServer.GetCurrentRenderingDriverName() == "software")
             {
                 modes = [Blend.Mix];
                 expected = [expected[0]];
             }
-            server.SetDefaultClearColor(new Color(.2f, .4f, .6f, 1));
-            server.FramePostDraw += () =>
+            RenderingServer.SetDefaultClearColor(new Color(.2f, .4f, .6f, 1));
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = server.Readback();
                 var target = expected[frames];
@@ -74,7 +74,7 @@ internal static partial class RenderingRuntimeTests
             };
         };
         window.AddChild(node);
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == modes.Length && node.Draws == 1, "Blend modes update retained geometry without re-recording.");
         if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy")
@@ -85,7 +85,7 @@ internal static partial class RenderingRuntimeTests
             using var unsupported = new CanvasItemMaterial { BlendMode = Blend.Add };
             var rejected = new Window { Size = new(32, 32) };
             rejected.AddChild(new CanvasNode { Material = unsupported, DrawAction = n => n.DrawRect(new Rect2(0, 0, 8, 8), Colors.Red) });
-            Reject<NotSupportedException>(() => Engine.Instance.Run(rejected));
+            Reject<NotSupportedException>(() => Engine.Run(rejected));
             Released(rejected);
         }
         Console.WriteLine($"Canvas material pixels passed: {backend}.");
@@ -115,9 +115,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         child.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(new Color(.2f, .4f, .6f, 1f));
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(new Color(.2f, .4f, .6f, 1f));
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = server.Readback();
                 var actual = frame.GetPixel(12, 12);
@@ -136,7 +136,7 @@ internal static partial class RenderingRuntimeTests
                 else n.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 3, "Direct-parent, local and TopLevel material paths render with the expected live policy.");
     }
@@ -170,9 +170,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         child.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = server.Readback();
                 var expectedOwn = frames == 0 ? new Color(.5f, .375f, 1f) : new Color(.25f, .25f, .75f);
@@ -200,7 +200,7 @@ internal static partial class RenderingRuntimeTests
                 else n.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 3 && parent.Draws == 1 && separate.Draws == 1,
             "Live modulation and neutral/TopLevel boundaries retain unaffected recorded geometry.");

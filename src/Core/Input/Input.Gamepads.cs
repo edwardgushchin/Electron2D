@@ -12,96 +12,56 @@ public sealed partial class Input
     private readonly HashSet<uint> _ignoredJoypadIDs = ReadIgnoredJoypads();
     private bool _ignoreJoypadOnUnfocusedApplication;
 
-    /// <summary>Occurs after a native controller connects or disconnects and its state is committed.</summary>
-    /// <remarks>Raised synchronously on the display owner thread during event delivery.</remarks>
-    public event Action<int, bool>? JoyConnectionChanged;
+    internal event Action<int, bool>? JoyConnectionChangedCore;
 
-    /// <summary>Gets a sorted snapshot of connected native controller IDs.</summary>
-    /// <returns>Caller-owned IDs, or an empty array when no native controller is connected.</returns>
-    public int[] GetConnectedJoypads()
+    internal int[] GetConnectedJoypadsCore()
     {
         lock (_gate) return _connectedJoypads.Keys.Order().ToArray();
     }
 
-    /// <summary>Gets the mapped name of a native controller.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>The name, or an empty string for an absent device.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public string GetJoyName(int device)
+    internal string GetJoyNameCore(int device)
     {
         ValidateDevice(device);
         lock (_gate) return _connectedJoypads.GetValueOrDefault(device)?.Name ?? string.Empty;
     }
 
-    /// <summary>Gets the SDL-compatible identifier of a native controller.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>The hexadecimal GUID, or an empty string for an absent device.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public string GetJoyGUID(int device)
+    internal string GetJoyGUIDCore(int device)
     {
         ValidateDevice(device);
         lock (_gate) return _connectedJoypads.GetValueOrDefault(device)?.GUID ?? string.Empty;
     }
 
-    /// <summary>Gets extra typed native information for a connected controller.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>Information for the device, or null when absent.</returns>
-    /// <remarks>Raw name, USB IDs and optional serial are available. Platform-specific Steam Input and XInput indices are not exposed by this runtime projection.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public JoypadInfo? GetJoyInfo(int device)
+    internal JoypadInfo? GetJoyInfoCore(int device)
     {
         ValidateDevice(device);
         lock (_gate) return _connectedJoypads.TryGetValue(device, out var joypad) ? joypad.Info : null;
     }
 
-    /// <summary>Returns whether the controller has a standardized gamepad mapping.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>True for a mapped native controller.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public bool IsJoyKnown(int device)
+    internal bool IsJoyKnownCore(int device)
     {
         ValidateDevice(device);
         lock (_gate) return _connectedJoypads.GetValueOrDefault(device)?.Known ?? false;
     }
 
-    /// <summary>Returns whether the connected controller supports vibration.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>True when the native backend reports rumble support.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public bool HasJoyVibration(int device)
+    internal bool HasJoyVibrationCore(int device)
     {
         ValidateDevice(device);
         lock (_gate) return _connectedJoypads.GetValueOrDefault(device)?.Vibration ?? false;
     }
 
-    /// <summary>Returns whether the connected controller has a controllable LED.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>True when the native backend reports LED support.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public bool HasJoyLight(int device)
+    internal bool HasJoyLightCore(int device)
     {
         ValidateDevice(device);
         lock (_gate) return _connectedJoypads.GetValueOrDefault(device)?.Light ?? false;
     }
 
-    /// <summary>Reports whether an environment-configured vendor/product pair is ignored by native controller discovery.</summary>
-    /// <param name="vendorID">USB vendor identifier.</param>
-    /// <param name="productID">USB product identifier.</param>
-    /// <returns>True for a pair in SDL_GAMECONTROLLER_IGNORE_DEVICES at input initialization.</returns>
-    public bool ShouldIgnoreDevice(int vendorID, int productID)
+    internal bool ShouldIgnoreDeviceCore(int vendorID, int productID)
     {
         var fullID = unchecked((uint)(vendorID << 16) | (ushort)productID);
         return _ignoredJoypadIDs.Contains(fullID);
     }
 
-    /// <summary>Adds an SDL-style controller mapping for future connections.</summary>
-    /// <param name="mapping">A GUID, name and binding list separated by commas.</param>
-    /// <param name="updateExisting">Whether connected devices with this GUID should adopt the mapping now.</param>
-    /// <remarks>The process-wide overlay applies through the native host; a false update flag leaves current devices unchanged until reconnection. The binding grammar beyond the required GUID/name fields is validated by SDL when applied to a device.</remarks>
-    /// <exception cref="ArgumentNullException">Mapping is null.</exception>
-    /// <exception cref="ArgumentException">The GUID, name or binding section is missing.</exception>
-    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread.</exception>
-    public void AddJoyMapping(string mapping, bool updateExisting = false)
+    internal void AddJoyMappingCore(string mapping, bool updateExisting = false)
     {
         ArgumentNullException.ThrowIfNull(mapping);
         var first = mapping.IndexOf(',');
@@ -109,7 +69,7 @@ public sealed partial class Input
         if (first <= 0 || second <= first + 1)
             throw new ArgumentException("A gamepad mapping requires a GUID, name and bindings.", nameof(mapping));
         var guid = mapping[..first];
-        var display = DisplayServer.Instance;
+        var display = DisplayServer.Service;
         display?.EnsureGamepadOwner();
         lock (_gate)
         {
@@ -119,15 +79,10 @@ public sealed partial class Input
         if (updateExisting) display?.UpdateJoyMapping(guid, mapping);
     }
 
-    /// <summary>Removes a controller mapping and restores raw input for connected matching devices.</summary>
-    /// <param name="guid">The SDL-compatible GUID to remove.</param>
-    /// <remarks>Removal also suppresses the built-in mapping for this GUID in the current process; raw joystick events remain available.</remarks>
-    /// <exception cref="ArgumentException">The GUID is blank.</exception>
-    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread.</exception>
-    public void RemoveJoyMapping(string guid)
+    internal void RemoveJoyMappingCore(string guid)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(guid);
-        var display = DisplayServer.Instance;
+        var display = DisplayServer.Service;
         display?.EnsureGamepadOwner();
         lock (_gate)
         {
@@ -137,64 +92,41 @@ public sealed partial class Input
         display?.UpdateJoyMapping(guid, null);
     }
 
-    /// <summary>Starts a controller rumble effect with independent weak and strong motors.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <param name="weakMagnitude">Weak motor strength from zero through one.</param>
-    /// <param name="strongMagnitude">Strong motor strength from zero through one.</param>
-    /// <param name="duration">Duration in seconds; zero requests the native maximum of about 65 seconds.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID, motor strength or duration is invalid.</exception>
-    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread.</exception>
-    public void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration = 0)
+    internal void StartJoyVibrationCore(int device, float weakMagnitude, float strongMagnitude, float duration = 0)
     {
         ValidateDevice(device);
         ValidateStrength(weakMagnitude, nameof(weakMagnitude));
         ValidateStrength(strongMagnitude, nameof(strongMagnitude));
         if (!float.IsFinite(duration) || duration < 0) throw new ArgumentOutOfRangeException(nameof(duration));
-        var display = DisplayServer.Instance;
+        var display = DisplayServer.Service;
         display?.EnsureGamepadOwner();
         if (display?.ShouldIgnoreGamepads() == true) return;
         lock (_gate) _joyVibrations[device] = new VibrationState(new(weakMagnitude, strongMagnitude), duration, Stopwatch.GetTimestamp());
         display?.StartGamepadVibration(device, weakMagnitude, strongMagnitude, duration);
     }
 
-    /// <summary>Stops the controller's current rumble effect.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread.</exception>
-    public void StopJoyVibration(int device)
+    internal void StopJoyVibrationCore(int device)
     {
         ValidateDevice(device);
-        var display = DisplayServer.Instance;
+        var display = DisplayServer.Service;
         display?.EnsureGamepadOwner();
         lock (_gate) _joyVibrations[device] = new VibrationState(Vector2.Zero, 0, Stopwatch.GetTimestamp());
         display?.StopGamepadVibration(device);
     }
 
-    /// <summary>Gets the last requested weak and strong rumble strengths.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>The retained request, or zero when none was made.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public Vector2 GetJoyVibrationStrength(int device)
+    internal Vector2 GetJoyVibrationStrengthCore(int device)
     {
         ValidateDevice(device);
         lock (_gate) return _joyVibrations.GetValueOrDefault(device).Strength;
     }
 
-    /// <summary>Gets the last requested rumble duration in seconds.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>The retained duration, or zero when none was made.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public float GetJoyVibrationDuration(int device)
+    internal float GetJoyVibrationDurationCore(int device)
     {
         ValidateDevice(device);
         lock (_gate) return _joyVibrations.GetValueOrDefault(device).Duration;
     }
 
-    /// <summary>Estimates the remaining native rumble duration in seconds.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>Zero when the controller is absent, unsupported, stopped or expired.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public float GetJoyVibrationRemainingDuration(int device)
+    internal float GetJoyVibrationRemainingDurationCore(int device)
     {
         ValidateDevice(device);
         lock (_gate)
@@ -207,40 +139,26 @@ public sealed partial class Input
         }
     }
 
-    /// <summary>Returns whether a requested controller rumble effect still has time remaining.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <returns>True while a supported device's effect is active.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    public bool IsJoyVibrating(int device) => GetJoyVibrationRemainingDuration(device) > 0;
+    internal bool IsJoyVibratingCore(int device) => GetJoyVibrationRemainingDurationCore(device) > 0;
 
-    /// <summary>Sets a connected controller's LED when its hardware supports it.</summary>
-    /// <param name="device">Nonnegative controller ID.</param>
-    /// <param name="color">Finite color; RGB channels clamp to zero through one.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The device ID is negative.</exception>
-    /// <exception cref="ArgumentException">The color is not finite.</exception>
-    /// <exception cref="InvalidOperationException">A live display is accessed off its owner thread.</exception>
-    public void SetJoyLight(int device, Color color)
+    internal void SetJoyLightCore(int device, Color color)
     {
         ValidateDevice(device);
         if (!color.IsFinite()) throw new ArgumentException("The LED color must be finite.", nameof(color));
-        var display = DisplayServer.Instance;
+        var display = DisplayServer.Service;
         display?.EnsureGamepadOwner();
         if (display?.ShouldIgnoreGamepads() == true) return;
         display?.SetGamepadLight(device, color);
     }
 
-    /// <summary>Gets or sets whether native controller input and effects are ignored while the application lacks focus.</summary>
-    /// <value>False by default.</value>
-    /// <remarks>Engine.Run samples <see cref="ProjectSettings.IgnoreJoypadOnUnfocusedApplication"/> before opening the native host. Enabling this while unfocused releases pressed input and stops native rumble; subsequent controller input and effect requests are suppressed until focus returns.</remarks>
-    /// <exception cref="InvalidOperationException">The active display policy is changed off its owner thread.</exception>
-    public bool IgnoreJoypadOnUnfocusedApplication
+    internal bool IgnoreJoypadOnUnfocusedApplicationCore
     {
         get { lock (_gate) return _ignoreJoypadOnUnfocusedApplication; }
         set
         {
-            DisplayServer.Instance?.EnsureGamepadOwner();
+            DisplayServer.Service?.EnsureGamepadOwner();
             lock (_gate) _ignoreJoypadOnUnfocusedApplication = value;
-            if (value) DisplayServer.Instance?.ApplyGamepadFocusPolicy();
+            if (value) DisplayServer.Service?.ApplyGamepadFocusPolicy();
         }
     }
 
@@ -252,10 +170,10 @@ public sealed partial class Input
             _joyVibrations.Remove(device);
             _connectedJoypads[device] = new JoypadState(name, guid, info, known, vibration, light);
         }
-        if (notify) JoyConnectionChanged?.Invoke(device, true);
+        if (notify) JoyConnectionChangedCore?.Invoke(device, true);
     }
 
-    internal void EmitNativeJoypadConnection(int device) => JoyConnectionChanged?.Invoke(device, true);
+    internal void EmitNativeJoypadConnection(int device) => JoyConnectionChangedCore?.Invoke(device, true);
 
     internal string? GetCustomJoyMapping(string guid)
     {
@@ -288,7 +206,7 @@ public sealed partial class Input
                 { state.ExactProcessJustReleased = true; state.ExactPhysicsJustReleased = true; state.ExactLastReleasedEventId = 0; }
             }
         }
-        if (notify) JoyConnectionChanged?.Invoke(device, false);
+        if (notify) JoyConnectionChangedCore?.Invoke(device, false);
     }
 
     internal void StopNativeJoypadVibration(int device)

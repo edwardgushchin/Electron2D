@@ -68,7 +68,7 @@ internal sealed class AudioEffectHardLimiterInstance : AudioEffectInstance
     internal AudioEffectHardLimiterInstance(AudioEffectHardLimiter source)
     {
         _source = source;
-        var rate = AudioServer.Instance.GetMixRate();
+        var rate = AudioServer.GetMixRate();
         if (!float.IsFinite(rate) || rate <= 0 || rate > 1_000_000) throw new ArgumentOutOfRangeException(nameof(source), "Output mix rate exceeds prepared limiter storage.");
         _inverseRate = 1 / rate;
         _delay = new Vector2[checked((int)Math.Ceiling(rate * Attack) + 1)];

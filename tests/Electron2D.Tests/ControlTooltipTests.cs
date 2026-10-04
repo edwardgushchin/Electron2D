@@ -4,8 +4,8 @@ internal static class ControlTooltipTests
 {
     internal static void Run()
     {
-        var settings = ProjectSettings.Instance;
-        var delay = settings.Get(ProjectSettings.TooltipDelaySeconds);
+        var settings = ProjectSettings.Service;
+        var delay = ProjectSettings.Get(ProjectSettings.TooltipDelaySeconds);
         var root = new TestViewport();
         var owner = new TooltipProbe { Name = "Owner", Size = new(100, 50), TooltipText = "  Tooltip text  " };
         root.AddChild(owner);
@@ -13,7 +13,7 @@ internal static class ControlTooltipTests
         using var motion = new InputEventMouseMotion { Position = new(20, 20) };
         try
         {
-            settings.Set(ProjectSettings.TooltipDelaySeconds, .25);
+            ProjectSettings.Set(ProjectSettings.TooltipDelaySeconds, .25);
             root.PushInput(motion, true); tree.ProcessFrame(.25);
             Check(tree.TooltipPanel is null, "Tooltip waits until the unscaled delay is passed.");
             tree.ProcessFrame(.01);
@@ -48,7 +48,7 @@ internal static class ControlTooltipTests
             root.PushInput(motion, true); tree.ProcessFrame(.26);
             Check(tree.TooltipPanel?.GetChild(0) is Label { Text: "\u00a0tip\u00a0" }, "Tooltip edge stripping removes ASCII controls and spaces while preserving nonbreaking Unicode spaces.");
         }
-        finally { settings.Set(ProjectSettings.TooltipDelaySeconds, delay); }
+        finally { ProjectSettings.Set(ProjectSettings.TooltipDelaySeconds, delay); }
         TeardownAndReentry();
         Console.WriteLine("Control tooltips verify delay, content hooks, real layout, input transparency, ownership, cancellation, edge placement and warmed frames.");
     }

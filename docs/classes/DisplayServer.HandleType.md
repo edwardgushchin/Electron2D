@@ -1,6 +1,6 @@
 # DisplayServer.HandleType
 
-Last updated: 2026-09-22
+Last updated: 2026-10-04
 
 **Inherits:** `System.Enum`
 
@@ -22,7 +22,7 @@ Linux compatibility rendering also exposes its borrowed GL/EGL/GLX identities. T
 using Electron2D;
 
 using var display = DisplayServer.Open("Native integration", new Vector2i(640, 480));
-nint window = display.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle);
+nint window = DisplayServer.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle);
 // Pass window to platform code while display remains alive; never release it.
 ```
 

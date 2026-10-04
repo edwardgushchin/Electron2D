@@ -4,9 +4,9 @@ internal static class ControlFocusNavigationTests
 {
     internal static void Run()
     {
-        var map = InputMap.Instance;
-        Check(map.HasAction("ui_focus_next") && map.HasAction("ui_focus_prev") && map.HasAction("ui_right") &&
-            map.ActionGetEvents("ui_focus_next").Count != 0, "GUI navigation actions are registered by default.");
+        var map = InputMap.Service;
+        Check(InputMap.HasAction("ui_focus_next") && InputMap.HasAction("ui_focus_prev") && InputMap.HasAction("ui_right") &&
+            InputMap.ActionGetEvents("ui_focus_next").Count != 0, "GUI navigation actions are registered by default.");
 
         var root = new TestViewport();
         var first = new Control { Name = "first", Position = new(0, 0), Size = new(10, 10), FocusMode = FocusMode.All };
@@ -78,23 +78,23 @@ internal static class ControlFocusNavigationTests
         second.Visible = true;
         second.FocusNeighborRight = "../first";
         first.GrabFocus();
-        Engine.Instance.Start(tree);
+        Engine.Start(tree);
         try
         {
             using var stick = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f, Device = 9 };
-            Input.Instance.ParseInputEvent(stick);
+            Input.ParseInputEvent(stick);
             Check(second.HasFocus(), "Left-stick right moves GUI focus through the active input loop.");
             using var heldStick = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f, Device = 9 };
-            Input.Instance.ParseInputEvent(heldStick);
+            Input.ParseInputEvent(heldStick);
             Check(second.HasFocus(), "Holding the stick does not repeat a directional focus transition.");
             using var neutralStick = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, Device = 9 };
-            Input.Instance.ParseInputEvent(neutralStick);
+            Input.ParseInputEvent(neutralStick);
             using var repeatedStick = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f, Device = 9 };
-            Input.Instance.ParseInputEvent(repeatedStick);
+            Input.ParseInputEvent(repeatedStick);
             Check(first.HasFocus(), "Releasing and pressing the stick permits another focus transition.");
-            Input.Instance.ParseInputEvent(neutralStick);
+            Input.ParseInputEvent(neutralStick);
         }
-        finally { Engine.Instance.Stop(); }
+        finally { Engine.Stop(); }
         Console.WriteLine("Control focus navigation checks passed.");
     }
 

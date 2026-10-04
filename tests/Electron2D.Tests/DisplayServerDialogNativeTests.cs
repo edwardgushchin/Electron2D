@@ -6,7 +6,7 @@ internal static class DisplayServerDialogNativeTests
     public static void Run()
     {
         using var display = DisplayServer.Open("Electron2D native dialog test", new Vector2i(400, 240));
-        if (display.GetName() != "Wayland")
+        if (DisplayServer.GetName() != "Wayland")
             throw new InvalidOperationException("The native dialog test requires Wayland.");
 
         var windows = SDL.GetWindows(out var count);
@@ -24,7 +24,7 @@ internal static class DisplayServerDialogNativeTests
             var owner = Environment.CurrentManagedThreadId;
             var selected = int.MinValue;
             Console.Error.WriteLine("DIALOG_SELECT: Click Choose in the first dialog.");
-            display.DialogShow("Choose button", "Click Choose", ["Cancel", "Choose"], index =>
+            DisplayServer.DialogShow("Choose button", "Click Choose", ["Cancel", "Choose"], index =>
             {
                 if (Environment.CurrentManagedThreadId != owner)
                     throw new InvalidOperationException("The message dialog callback ran off the opening thread.");
@@ -35,7 +35,7 @@ internal static class DisplayServerDialogNativeTests
 
             selected = int.MinValue;
             Console.Error.WriteLine("DIALOG_CLOSE: Close the second dialog with its window close button.");
-            display.DialogShow("Close dialog", "Close this dialog without choosing", ["Only button"], index =>
+            DisplayServer.DialogShow("Close dialog", "Close this dialog without choosing", ["Only button"], index =>
             {
                 if (Environment.CurrentManagedThreadId != owner)
                     throw new InvalidOperationException("The message dialog callback ran off the opening thread.");

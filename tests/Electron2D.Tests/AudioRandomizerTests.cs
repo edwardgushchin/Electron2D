@@ -106,7 +106,7 @@ internal static class AudioRandomizerTests
         pool.AddStream(-1, a); pool.AddStream(-1, b); var root = new Node(); var player = new AudioStreamPlayer { Stream = pool, MaxPolyphony = 3 }; root.AddChild(player); using var tree = new SceneTree(root);
         player.Play(); Check(a.Stops == 0, "Fresh native Play does not call child Stop before its first Start."); Check(a.Instances == 1 && b.Instances == 0, "One child preparation per actual Play, independent of configured polyphony."); var first = player.GetStreamPlayback(); player.Stop();
         player.Play(); Check(a.Stops == 1 && b.Stops == 0, "Reusing a stopped native slot does not stop either child redundantly."); Check(a.Instances == 1 && b.Instances == 1 && first.IsDisposed, "Pooled native slot receives fresh playback/next selection.");
-        var native = AudioServer.Instance.Native; Wait(native, 20); native.PrepareCapture(16000); Wait(native, 20); Check(native.CapturedPCM().Any(v => v < -.1f), "Actual FAudio PCM contains the second child.");
+        var native = AudioServer.Service.Native; Wait(native, 20); native.PrepareCapture(16000); Wait(native, 20); Check(native.CapturedPCM().Any(v => v < -.1f), "Actual FAudio PCM contains the second child.");
         var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 active native passes allocate zero measured bytes/calls.");
         player.StreamPaused = true; Wait(native, 20); bytes = native.MixManagedBytes; calls = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 paused native passes allocate zero measured bytes/calls."); player.StreamPaused = false;
         player.Play(); player.Play(); Check(player.HasStreamPlayback() && a.Instances + b.Instances == 4, "Polyphony prepares one fresh independent child at a time.");
@@ -155,7 +155,7 @@ internal static class AudioRandomizerTests
             {
                 if (source.FailMix) throw new ApplicationException("Child mix failure");
                 if (!_active) { buffer.Clear(); return 0; }
-                source.LastRate = rate; buffer.Fill(new(sample, sample)); _position += buffer.Length * rate / AudioServer.Instance.GetMixRate(); return buffer.Length;
+                source.LastRate = rate; buffer.Fill(new(sample, sample)); _position += buffer.Length * rate / AudioServer.GetMixRate(); return buffer.Length;
             }
             protected override void Dispose(bool disposing) { base.Dispose(disposing); if (source.FailDispose) throw new ApplicationException("Child dispose failure"); }
         }

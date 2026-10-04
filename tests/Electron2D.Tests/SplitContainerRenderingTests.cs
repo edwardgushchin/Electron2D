@@ -18,10 +18,10 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; var starts = 0; var ends = 0; split.DragStarted += () => starts++; split.DragEnded += () => ends++;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
             var windows = SDL.GetWindows(out var count); Check(count == 1, "Split input needs one native window.");
             var native = windows![0]; var id = SDL.GetWindowID(native); var scale = SDL.GetCurrentVideoDriver() == "wayland" ? SDL.GetWindowPixelDensity(native) : 1;
-            server.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 switch (frames)
@@ -63,7 +63,7 @@ internal static partial class RenderingRuntimeTests
                 var profile = SDL.GetCurrentVideoDriver() == "dummy" ? backend + "-dummy" : backend; pixels.SavePNG($"/tmp/e2d-split-{profile}-{frames}.png");
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 15, "All split native phases completed."); VerifySplitIntersection(backend, skin, red, blue, green); VerifySplitWarm(backend, skin, red, blue);
+        Engine.Run(window); Released(window); Check(frames == 15, "All split native phases completed."); VerifySplitIntersection(backend, skin, red, blue, green); VerifySplitWarm(backend, skin, red, blue);
         Console.WriteLine($"Split native layout, drag/keyboard, RTL/touch, collapse/orientation/multi-panel and warm frame checks passed ({backend}).");
     }
     private static void VerifySplitSoftware(string backend, SplitContainerTests.Skin skin, Theme red, Theme blue)
@@ -72,8 +72,8 @@ internal static partial class RenderingRuntimeTests
         var split = new SplitContainer { Theme = skin.Theme, Position = new(10, 10), Size = new(100, 60) }; var a = SplitPanel("A", red); var b = SplitPanel("B", blue); split.AddChild(a); split.AddChild(b); host.AddChild(split); var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 switch (frames)
@@ -88,7 +88,7 @@ internal static partial class RenderingRuntimeTests
                 pixels.SavePNG($"/tmp/e2d-split-{backend}-dummy-{frames}.png");
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 6, "All software split phases completed.");
+        Engine.Run(window); Released(window); Check(frames == 6, "All software split phases completed.");
     }
     private static void VerifySplitIntersection(string backend, SplitContainerTests.Skin skin, Theme red, Theme blue, Theme green)
     {
@@ -101,8 +101,8 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; var outerEnds = 0; var innerEnds = 0; outer.DragEnded += () => outerEnds++; nested.DragEnded += () => innerEnds++;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black); var windows = SDL.GetWindows(out var nativeCount); var native = windows![0]; var id = SDL.GetWindowID(native); var scale = SDL.GetCurrentVideoDriver() == "wayland" ? SDL.GetWindowPixelDensity(native) : 1;
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); var windows = SDL.GetWindows(out var nativeCount); var native = windows![0]; var id = SDL.GetWindowID(native); var scale = SDL.GetCurrentVideoDriver() == "wayland" ? SDL.GetWindowPixelDensity(native) : 1;
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 if (frames == 2) { Pixel(pixels, 20, 20, Colors.Green); Pixel(pixels, 20, 80, Colors.Blue); SliderMotion(id, scale, new(58, 48)); SliderButton(id, scale, new(58, 48)); }
@@ -116,7 +116,7 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 4) pixels.SavePNG($"/tmp/e2d-split-intersection-{backend}.png");
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 6, "Native intersection phases completed.");
+        Engine.Run(window); Released(window); Check(frames == 6, "Native intersection phases completed.");
     }
     private static Theme SplitPanelTheme(Color color)
     {
@@ -131,13 +131,13 @@ internal static partial class RenderingRuntimeTests
         window.Ready += _ =>
         {
             window.Tree!.ProcessFrameStarted += _ => { before = GC.GetAllocatedBytesForCurrentThread(); if (frames < 84) { split.SplitOffset = frames % 2; split.Size = new(frames % 2 == 0 ? 120 : 122, 60); } };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
                 if (frames is >= 20 and < 84) active += bytes; if (frames >= 84) idle += bytes;
                 if (++frames == 148) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(active == 0 && idle == 0, $"Split warmed frame intervals allocated {active}/{idle} managed bytes ({backend}).");
+        Engine.Run(window); Released(window); Check(active == 0 && idle == 0, $"Split warmed frame intervals allocated {active}/{idle} managed bytes ({backend}).");
     }
 }

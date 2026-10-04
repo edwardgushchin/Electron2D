@@ -6,7 +6,7 @@ internal static class DisplayServerAttentionNativeTests
     public static void Run()
     {
         using var display = DisplayServer.Open("Electron2D attention protocol test", new Vector2i(200, 150));
-        if (display.GetName() != "Wayland")
+        if (DisplayServer.GetName() != "Wayland")
             throw new InvalidOperationException("The attention protocol test requires Wayland.");
 
         var windows = SDL.GetWindows(out var count);
@@ -22,19 +22,19 @@ internal static class DisplayServerAttentionNativeTests
                 !SDL.RenderClear(renderer) || !SDL.RenderPresent(renderer) || !SDL.SyncWindow(window))
                 throw new InvalidOperationException($"Cannot show the test window: {SDL.GetError()}");
 
-            ExpectInvalidWindow(() => display.WindowMoveToForeground(1));
-            ExpectInvalidWindow(() => display.WindowRequestAttention(1));
+            ExpectInvalidWindow(() => DisplayServer.WindowMoveToForeground(1));
+            ExpectInvalidWindow(() => DisplayServer.WindowRequestAttention(1));
 
             Console.Error.WriteLine("FOREGROUND_BEGIN");
-            display.WindowMoveToForeground();
-            display.ProcessEvents();
+            DisplayServer.WindowMoveToForeground();
+            DisplayServer.ProcessEvents();
             Console.Error.WriteLine("FOREGROUND_END");
 
             Console.Error.WriteLine("ATTENTION_BEGIN");
-            display.WindowRequestAttention();
+            DisplayServer.WindowRequestAttention();
             for (var i = 0; i < 20; i++)
             {
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Thread.Sleep(50);
             }
             Console.Error.WriteLine("ATTENTION_END");

@@ -58,7 +58,7 @@ internal static class AudioTransitionTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var stream = new ProbeStream(); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player);
         using var tree = new SceneTree(root); player.Play(); var native = server.Native;
         try
@@ -83,8 +83,8 @@ internal static class AudioTransitionTests
             {
                 player.StreamPaused = false; stream.MixHook = () => player.Stream = null;
                 Reject<Exception>(() => player.StreamPaused = true); Check(ReferenceEquals(player.Stream, stream), "Owner final-block callbacks cannot reenter player mutation."); stream.MixHook = null;
-                player.StreamPaused = false; stream.MixHook = () => server.BusCount = 2;
-                Reject<Exception>(() => player.StreamPaused = true); Check(server.BusCount == 1, "Owner final-block callbacks cannot rebuild the native graph."); stream.MixHook = null;
+                player.StreamPaused = false; stream.MixHook = () => AudioServer.BusCount = 2;
+                Reject<Exception>(() => player.StreamPaused = true); Check(AudioServer.BusCount == 1, "Owner final-block callbacks cannot rebuild the native graph."); stream.MixHook = null;
             }
             player.Stop(); player.MaxPolyphony = 2; player.Play(); var oldest = stream.Last!; player.Play(); oldest.FailDispose = true; player.MaxPolyphony = 1;
             Reject<AggregateException>(() => player.Play()); Check(oldest.IsDisposed && player.HasStreamPlayback(), "Failed trim still removes disposed slots and retains the newest voice."); oldest.FailDispose = false; player.Play();
@@ -108,9 +108,9 @@ internal static class AudioTransitionTests
 
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var method = settings.Get(ProjectSettings.RenderingMethod);
+        var settings = ProjectSettings.Service; var method = ProjectSettings.Get(ProjectSettings.RenderingMethod);
         var renderer = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu";
-        settings.Set(ProjectSettings.RenderingMethod, renderer);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, renderer);
         try
         {
             for (var run = 0; run < 2; run++)
@@ -119,16 +119,16 @@ internal static class AudioTransitionTests
                 var window = new Window { Size = new(160, 96) };
                 var player = new AudioStreamEmitter { Stream = stream, Autoplay = true, Position = new(80, 48) };
                 var scenario = new HostScenario(player, capture); window.AddChild(player); window.AddChild(scenario);
-                var server = AudioServer.Instance; server.AddBusEffect(0, capture);
+                var server = AudioServer.Service; AudioServer.AddBusEffect(0, capture);
                 try
                 {
-                    Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed && !stream.IsDisposed, "Public spatial transition host completed and cleaned up.");
+                    Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed && !stream.IsDisposed, "Public spatial transition host completed and cleaned up.");
                     Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "audio-transitions", renderer, run, spatial = true, cleaned = window.IsDisposed }));
                 }
-                finally { if (!window.IsDisposed) window.Dispose(); server.RemoveBusEffect(0, 0); server.CloseNative(); }
+                finally { if (!window.IsDisposed) window.Dispose(); AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, method); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, method); }
     }
     private sealed class HostScenario(AudioStreamEmitter player, AudioEffectCapture capture) : Node
     {
@@ -178,7 +178,7 @@ internal static class AudioTransitionTests
         {
             Hook?.Invoke(); if (FailMix) throw new InvalidOperationException("Injected final-block mix failure.");
             var count = _active ? Math.Min(buffer.Length, Remaining) : 0;
-            buffer[..count].Fill(Sample); Remaining -= count; _position += count * (double)rateScale / AudioServer.Instance.GetMixRate(); return count;
+            buffer[..count].Fill(Sample); Remaining -= count; _position += count * (double)rateScale / AudioServer.GetMixRate(); return count;
         }
     }
     private static void Near(float actual, float expected, string message) { Check(Math.Abs(actual - expected) < 1e-6f, $"{message} {actual} vs {expected}."); }

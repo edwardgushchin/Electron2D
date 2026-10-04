@@ -4,7 +4,7 @@ Last updated: 2026-09-27
 
 **Inherits:** —
 
-**Inherited By:** [ThemeDB](ThemeDB.md), [ConfigFile](ConfigFile.md), [DirAccess](DirAccess.md), [DisplayServer](DisplayServer.md), [Engine](Engine.md), [FileAccess](FileAccess.md), [Input](Input.md), [InputMap](InputMap.md), [MainLoop](MainLoop.md), [Node](Node.md), [ProjectSettings](ProjectSettings.md), [Resource](Resource.md), [SceneState](SceneState.md), [SceneTreeTimer](SceneTreeTimer.md), [Tween](Tween.md), [Tweener](Tweener.md)
+**Inherited By:** [ThemeDB](ThemeDB.md), [ConfigFile](ConfigFile.md), [DirAccess](DirAccess.md), [DisplayServer](DisplayServer.md), [Engine](Engine.md), [FileAccess](FileAccess.md), [Input](Input.md), [InputMap](InputMap.md), [MainLoop](MainLoop.md), [Node](Node.md), [ProjectSettingsRegistry](ProjectSettingsRegistry.md), [Resource](Resource.md), [SceneState](SceneState.md), [SceneTreeTimer](SceneTreeTimer.md), [Tween](Tween.md), [Tweener](Tweener.md)
 
 - **Source:** [`src/Core/Object/ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs)
 - **Namespace:** `Electron2D`

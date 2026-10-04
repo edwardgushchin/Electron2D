@@ -43,7 +43,7 @@ internal static class AudioPitchShiftTests
     private sealed record OracleCase(int Rate, int Size, int Overlap, float Scale, float[] Input, float[] PCM);
     private static void ReferencePCM()
     {
-        var rate = (int)AudioServer.Instance.GetMixRate();
+        var rate = (int)AudioServer.GetMixRate();
         using var resource = typeof(AudioPitchShiftTests).Assembly.GetManifestResourceStream("TestAudio.PitchShiftReference.json")!;
         var cases = JsonSerializer.Deserialize<OracleCase[]>(resource)!.Where(item => item.Rate == rate).ToArray();
         Check(cases.Length == 2, "Two pinned phase-vocoder profiles at the output rate.");
@@ -77,7 +77,7 @@ internal static class AudioPitchShiftTests
 
     private static void FrequencyAndEdges()
     {
-        var rate = (int)AudioServer.Instance.GetMixRate();
+        var rate = (int)AudioServer.GetMixRate();
         var input = SineFrames(rate, 16384); var output = new Vector2[input.Length];
         using var effect = new AudioEffectPitchShift { PitchScale = 2, FFTSize = AudioFFTSize.Size512, Oversampling = 8 };
         using var instance = effect.Instantiate(); instance.Process(input, output);
@@ -138,7 +138,7 @@ internal static class AudioPitchShiftTests
     private static void Warm()
     {
         using var effect = new AudioEffectPitchShift { FFTSize = AudioFFTSize.Size256, PitchScale = 1.5f };
-        using var instance = effect.Instantiate(); var input = SineFrames((int)AudioServer.Instance.GetMixRate(), 256); var output = new Vector2[256];
+        using var instance = effect.Instantiate(); var input = SineFrames((int)AudioServer.GetMixRate(), 256); var output = new Vector2[256];
         for (var i = 0; i < 16; i++) instance.Process(input, output);
         var bytes = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 64; i++) instance.Process(input, output);
@@ -150,13 +150,13 @@ internal static class AudioPitchShiftTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectPitchShift { PitchScale = 2, FFTSize = AudioFFTSize.Size256, Oversampling = 4 };
         using var stream = SineStream(); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 30);
-            var borrowed = server.GetBusEffectInstance(0, 0);
+            AudioServer.AddBusEffect(0, effect); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 30);
+            var borrowed = AudioServer.GetBusEffectInstance(0, 0);
             native.PrepareCapture(native.QuantumFrames * native.Channels * 20); AudioEffectTests.Wait(native, 22);
             var pcm = native.CapturedPCM(); var rate = native.MixRate;
             Check(pcm.Length > 0 && Magnitude(pcm, native.Channels, 0, 880, rate) > Magnitude(pcm, native.Channels, 0, 440, rate) * 2 &&
@@ -164,37 +164,37 @@ internal static class AudioPitchShiftTests
                 "Native front stereo pair shifts distinct tones upward.");
             for (var i = 0; i < pcm.Length; i += native.Channels)
                 for (var channel = 2; channel < native.Channels; channel++) Check(MathF.Abs(pcm[i + channel]) < .0001f, "Rear speaker pairs remain silent.");
-            server.SetBusEffectEnabled(0, 0, false); AudioEffectTests.Wait(native, 10);
+            AudioServer.SetBusEffectEnabled(0, 0, false); AudioEffectTests.Wait(native, 10);
             native.PrepareCapture(native.QuantumFrames * native.Channels * 10); AudioEffectTests.Wait(native, 12);
             pcm = native.CapturedPCM();
             Check(Magnitude(pcm, native.Channels, 0, 440, rate) > Magnitude(pcm, native.Channels, 0, 880, rate) * 2,
                 "Bus effect disable restores original pitch.");
-            server.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
+            AudioServer.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
             var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native active passes allocate no measured bytes/calls.");
             player.StreamPaused = true; AudioEffectTests.Wait(native, 20); bytes = native.MixManagedBytes; calls = FAudioContext.AllocationCalls;
             AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native paused passes allocate no measured bytes/calls.");
-            server.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !effect.IsDisposed, "Removal invalidates borrowed pitch state.");
+            AudioServer.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !effect.IsDisposed, "Removal invalidates borrowed pitch state.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod);
-        settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
         try
         {
             using var effect = new AudioEffectPitchShift { PitchScale = 2, FFTSize = AudioFFTSize.Size256 };
             using var stream = SineStream(); using var capture = new AudioEffectCapture { BufferLength = .1f };
             var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Stream = stream, Autoplay = true });
             var scenario = new HostScenario(capture); window.AddChild(scenario);
-            var server = AudioServer.Instance; server.AddBusEffect(0, effect); server.AddBusEffect(0, capture);
-            try { Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public pitch host processed and cleaned up."); }
-            finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+            var server = AudioServer.Service; AudioServer.AddBusEffect(0, effect); AudioServer.AddBusEffect(0, capture);
+            try { Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public pitch host processed and cleaned up."); }
+            finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class HostScenario(AudioEffectCapture capture) : Node
     {
@@ -206,7 +206,7 @@ internal static class AudioPitchShiftTests
             if (available > 1024)
             {
                 var pcm = capture.GetBuffer(available);
-                var rate = (int)AudioServer.Instance.GetMixRate();
+                var rate = (int)AudioServer.GetMixRate();
                 Completed |= Magnitude(pcm, 0, 880, rate) > Magnitude(pcm, 0, 440, rate) * 2;
             }
             if (_elapsed < .35) return;

@@ -47,13 +47,13 @@ internal static class ResourceLoaderTests
         Check(copies.All(copy => ReferenceEquals(copy, texture)),
             "Concurrent reuse requests converge on one live cached wrapper.");
 
-        var settings = ProjectSettings.Instance;
-        var priorRoots = (settings.ProjectRoot, settings.UserDataRoot);
+        var settings = ProjectSettings.Service;
+        var priorRoots = (ProjectSettings.ProjectRoot, ProjectSettings.UserDataRoot);
         var userRoot = IOPath.Combine(root, "user");
         Directory.CreateDirectory(userRoot);
         try
         {
-            settings.ConfigurePaths(root, userRoot);
+            ProjectSettings.ConfigurePaths(root, userRoot);
             using var projectAlias = ResourceLoader.Load<ImageTexture>("res://texture.PNG", ResourceLoader.CacheMode.Ignore);
             image.SavePNG("user://texture.png");
             using var userAlias = ResourceLoader.Load<ImageTexture>("user://texture.png", ResourceLoader.CacheMode.Ignore);
@@ -61,7 +61,7 @@ internal static class ResourceLoaderTests
                   projectAlias.ResourcePath == "res://texture.PNG" && userAlias.ResourcePath == "user://texture.png",
                 "Project and user path aliases decode through FileAccess without changing their visible keys.");
         }
-        finally { settings.ConfigurePaths(priorRoots.ProjectRoot, priorRoots.UserDataRoot); }
+        finally { ProjectSettings.ConfigurePaths(priorRoots.ProjectRoot, priorRoots.UserDataRoot); }
 
         image.Fill(Colors.Green);
         image.SavePNG(path);

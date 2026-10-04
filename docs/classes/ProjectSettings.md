@@ -2,26 +2,30 @@
 
 Last updated: 2026-10-04
 
-**Inherits:** [ElectronObject](ElectronObject.md)
+**Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
 **Inherited By:** —
 
 - **Source:** [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public sealed class ProjectSettings : ElectronObject`
+- **Declaration:** `public sealed partial class ProjectSettings : ProjectSettingsRegistry`
 
 > Stores globally accessible, strongly typed project settings and resolves project virtual paths.
 
+Public static declarations are in [`ProjectSettings.API.cs`](../../src/Core/Config/ProjectSettings.API.cs).
+
 ## Description
+
+Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
 Stores globally accessible, strongly typed project settings and resolves project virtual paths.
 
-`ProjectSettings` owns a typed registry of project-wide values, metadata, feature overrides, independent unsaved/change-notification state, atomic persistence through [`ConfigFile`](ConfigFile.md), and lexical resolution of `res://` and `user://`. `Instance` is the permanent runtime registry and is registered as the built-in `ProjectSettings` entry in [`Engine`](Engine.md). Public constructors create disposable isolated registries for tools, tests, or unopened projects.
+`ProjectSettings` owns a typed registry of project-wide values, metadata, feature overrides, independent unsaved/change-notification state, atomic persistence through [`ConfigFile`](ConfigFile.md), and lexical resolution of `res://` and `user://`. Static operations address the permanent runtime registry, registered as the built-in `ProjectSettings` entry in [`Engine`](Engine.md). Construct [`ProjectSettingsRegistry`](ProjectSettingsRegistry.md) for disposable isolated registries used by tools or unopened projects.
 
-Each instance owns its in-memory `ConfigFile`. It does not own project/user directories and does not create the user directory. Unknown entry values loaded from disk are retained semantically in canonical encoding and can be claimed later by registering a compatible typed definition.
+The retained registry owns its in-memory `ConfigFile`. It does not own project/user directories and does not create the user directory. Unknown entry values loaded from disk are retained semantically in canonical encoding and can be claimed later by registering a compatible typed definition.
 
-[`ProjectSettings.Instance`](ProjectSettings.md#p-electron2d-projectsettings-instance) is the process-wide runtime registry. Additional instances may be created for isolated
-tooling, tests, or multiple unopened projects. All public operations are thread-safe; disk and serialization
+[`ProjectSettings`](ProjectSettings.md) is the process-wide runtime registry. Additional `ProjectSettingsRegistry` objects may be created for isolated
+tooling, tests, or multiple unopened projects. All public static operations are thread-safe; disk and serialization
 operations are not suitable for real-time callbacks.
 
 Settings must be registered before typed access. Unknown values loaded from disk remain preserved and become
@@ -33,19 +37,11 @@ Two built-in locale settings select an optional test locale and a fallback catal
 
 ## Examples
 
-The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+The following focused snippet uses the current public static API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-ProjectSettings settings = ProjectSettings.Instance;
-string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
+string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 ```
-
-## Constructors
-
-| Member | Description |
-| --- | --- |
-| [`public ProjectSettings(string projectRoot)`](#m-electron2d-projectsettings-ctor-system-string) | Initializes an isolated registry using a platform-appropriate user-data directory. |
-| [`public ProjectSettings(string projectRoot, string userDataRoot)`](#m-electron2d-projectsettings-ctor-system-string-system-string) | Initializes an isolated registry with explicit project and user-data directories. |
 
 ## Properties
 
@@ -91,53 +87,52 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<InputActionSettings> InputUIDown { get; }`](#inputuidown) | Defines down-arrow, D-pad down and left-stick-down focus navigation. |
 | [`public static ProjectSetting<InputActionSettings> InputUIHome { get; }`](#inputuihome) | Defines the Home endpoint action. |
 | [`public static ProjectSetting<InputActionSettings> InputUIEnd { get; }`](#inputuiend) | Defines the End endpoint action. |
-| [`public static ProjectSettings Instance { get; }`](#p-electron2d-projectsettings-instance) | Gets the process-wide project settings registry. |
-| [`public string ProjectRoot { get; }`](#p-electron2d-projectsettings-projectroot) | Gets the current absolute project resource directory. |
-| [`public string UserDataRoot { get; }`](#p-electron2d-projectsettings-userdataroot) | Gets the current absolute user-data directory. |
-| [`public string ProjectFilePath { get; }`](#p-electron2d-projectsettings-projectfilepath) | Gets the absolute path of the current project settings file. |
-| [`public string OverrideFilePath { get; }`](#p-electron2d-projectsettings-overridefilepath) | Gets the absolute path of the optional runtime override file. |
-| [`public string ProjectDataPath { get; }`](#p-electron2d-projectsettings-projectdatapath) | Gets the absolute path reserved for generated project-local engine data. |
-| [`public ulong Version { get; }`](#p-electron2d-projectsettings-version) | Gets a monotonically increasing in-process registry version. |
+| [`public static string ProjectRoot { get; }`](#p-electron2d-projectsettings-projectroot) | Gets the current absolute project resource directory. |
+| [`public static string UserDataRoot { get; }`](#p-electron2d-projectsettings-userdataroot) | Gets the current absolute user-data directory. |
+| [`public static string ProjectFilePath { get; }`](#p-electron2d-projectsettings-projectfilepath) | Gets the absolute path of the current project settings file. |
+| [`public static string OverrideFilePath { get; }`](#p-electron2d-projectsettings-overridefilepath) | Gets the absolute path of the optional runtime override file. |
+| [`public static string ProjectDataPath { get; }`](#p-electron2d-projectsettings-projectdatapath) | Gets the absolute path reserved for generated project-local engine data. |
+| [`public static ulong Version { get; }`](#p-electron2d-projectsettings-version) | Gets a monotonically increasing in-process registry version. |
 
 ## Methods
 
 | Member | Description |
 | --- | --- |
-| [`public void ConfigurePaths(string projectRoot, string userDataRoot)`](#m-electron2d-projectsettings-configurepaths-system-string-system-string) | Changes the project and user-data roots and clears all loaded or explicitly stored values. |
-| [`public void Register<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-register-1-electron2d-projectsetting-0) | Registers a setting definition for typed access and tooling discovery. |
-| [`public void Unregister<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-unregister-1-electron2d-projectsetting-0) | Unregisters a setting and removes its stored base value and feature overrides. |
-| [`public bool HasSetting<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-hassetting-1-electron2d-projectsetting-0) | Determines whether the exact setting definition is registered. |
-| [`public IReadOnlyList<string> GetSettingNames(bool includeInternal = true)`](#m-electron2d-projectsettings-getsettingnames-system-boolean) | Gets registered setting names ordered by explicit order and then by name. |
-| [`public T Get<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-get-1-electron2d-projectsetting-0) | Gets a setting value without applying feature overrides. |
-| [`public T GetWithOverride<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-getwithoverride-1-electron2d-projectsetting-0) | Gets a setting after applying the first override matching an active platform, build, or custom feature. |
-| [`public T GetWithOverride<T>(ProjectSetting<T> setting, IEnumerable<string> features)`](#m-electron2d-projectsettings-getwithoverride-1-electron2d-projectsetting-0-system-collections-generic-ienumerable-system-string) | Gets a setting after applying overrides against caller-supplied feature tags. |
-| [`public void Set<T>(ProjectSetting<T> setting, T value)`](#m-electron2d-projectsettings-set-1-electron2d-projectsetting-0-0) | Stores a base value for a registered setting. |
-| [`public void Reset<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-reset-1-electron2d-projectsetting-0) | Removes an explicit base value so the setting returns its current initial value. |
-| [`public void SetInitialValue<T>(ProjectSetting<T> setting, T value)`](#m-electron2d-projectsettings-setinitialvalue-1-electron2d-projectsetting-0-0) | Changes the value used by [`ProjectSettings.Reset``1(ProjectSetting{``0})`](ProjectSettings.md#m-electron2d-projectsettings-reset-1-electron2d-projectsetting-0) and typed property reversion. |
-| [`public void SetFeatureOverride<T>(ProjectSetting<T> setting, string feature, T value)`](#m-electron2d-projectsettings-setfeatureoverride-1-electron2d-projectsetting-0-system-string-0) | Stores a value selected when the named feature is active. |
-| [`public bool ClearFeatureOverride<T>(ProjectSetting<T> setting, string feature)`](#m-electron2d-projectsettings-clearfeatureoverride-1-electron2d-projectsetting-0-system-string) | Removes one stored feature override. |
-| [`public IReadOnlyList<string> GetFeatureOverrides<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-getfeatureoverrides-1-electron2d-projectsetting-0) | Gets the stored feature tags for one setting in override precedence order. |
-| [`public bool AddCustomFeature(string feature)`](#m-electron2d-projectsettings-addcustomfeature-system-string) | Adds a custom feature to the process feature set. |
-| [`public bool RemoveCustomFeature(string feature)`](#m-electron2d-projectsettings-removecustomfeature-system-string) | Removes a custom feature from the process feature set. |
-| [`public bool HasFeature(string feature)`](#m-electron2d-projectsettings-hasfeature-system-string) | Determines whether a platform, build, architecture, or custom feature is active. |
-| [`public IReadOnlyList<string> GetActiveFeatures()`](#m-electron2d-projectsettings-getactivefeatures) | Gets all active platform, build, architecture, and custom features. |
-| [`public int GetOrder<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-getorder-1-electron2d-projectsetting-0) | Gets the persistence order assigned to a registered setting. |
-| [`public void SetOrder<T>(ProjectSetting<T> setting, int order)`](#m-electron2d-projectsettings-setorder-1-electron2d-projectsetting-0-system-int32) | Changes the persistence and tooling order of a registered setting. |
-| [`public bool IsBasic<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-isbasic-1-electron2d-projectsetting-0) | Gets whether a setting should appear in a reduced basic-settings view. |
-| [`public void SetAsBasic<T>(ProjectSetting<T> setting, bool basic)`](#m-electron2d-projectsettings-setasbasic-1-electron2d-projectsetting-0-system-boolean) | Sets whether a setting should appear in a reduced basic-settings view. |
-| [`public bool IsInternal<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-isinternal-1-electron2d-projectsetting-0) | Gets whether a setting is hidden from ordinary tooling discovery. |
-| [`public void SetAsInternal<T>(ProjectSetting<T> setting, bool internalSetting)`](#m-electron2d-projectsettings-setasinternal-1-electron2d-projectsetting-0-system-boolean) | Sets whether a setting is hidden from ordinary tooling discovery. |
-| [`public bool IsRestartRequired<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-isrestartrequired-1-electron2d-projectsetting-0) | Gets whether changing a setting requires the host application to restart. |
-| [`public void SetRestartIfChanged<T>(ProjectSetting<T> setting, bool restart)`](#m-electron2d-projectsettings-setrestartifchanged-1-electron2d-projectsetting-0-system-boolean) | Sets whether changing a setting requires the host application to restart. |
-| [`public IReadOnlyList<string> GetChangedSettings()`](#m-electron2d-projectsettings-getchangedsettings) | Gets setting names included in the pending or currently delivered change notification. |
-| [`public bool CheckChangedSettingsInGroup(string prefix)`](#m-electron2d-projectsettings-checkchangedsettingsingroup-system-string) | Checks whether any changed setting starts with a category prefix. |
-| [`public void Load()`](#m-electron2d-projectsettings-load) | Loads the project file and then merges the conventional override file when it exists. |
-| [`public void LoadCustom(string path)`](#m-electron2d-projectsettings-loadcustom-system-string) | Merges a custom configuration file into the current settings after full validation. |
-| [`public void Save()`](#m-electron2d-projectsettings-save) | Saves the current document to [`ProjectSettings.ProjectFilePath`](ProjectSettings.md#p-electron2d-projectsettings-projectfilepath) using atomic replacement. |
-| [`public void SaveCustom(string path)`](#m-electron2d-projectsettings-savecustom-system-string) | Saves the current document to an explicit file using atomic replacement. |
-| [`public bool FlushChanges()`](#m-electron2d-projectsettings-flushchanges) | Raises one coalesced [`ProjectSettings.SettingsChanged`](ProjectSettings.md#e-electron2d-projectsettings-settingschanged) notification when changes are pending. |
-| [`public string GlobalizePath(string path)`](#m-electron2d-projectsettings-globalizepath-system-string) | Converts a virtual or ordinary path to an absolute native operating-system path. |
-| [`public string LocalizePath(string path)`](#m-electron2d-projectsettings-localizepath-system-string) | Converts an ordinary path inside a configured root to a virtual project or user path. |
+| [`public static void ConfigurePaths(string projectRoot, string userDataRoot)`](#m-electron2d-projectsettings-configurepaths-system-string-system-string) | Changes the project and user-data roots and clears all loaded or explicitly stored values. |
+| [`public static void Register<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-register-1-electron2d-projectsetting-0) | Registers a setting definition for typed access and tooling discovery. |
+| [`public static void Unregister<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-unregister-1-electron2d-projectsetting-0) | Unregisters a setting and removes its stored base value and feature overrides. |
+| [`public static bool HasSetting<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-hassetting-1-electron2d-projectsetting-0) | Determines whether the exact setting definition is registered. |
+| [`public static IReadOnlyList<string> GetSettingNames(bool includeInternal = true)`](#m-electron2d-projectsettings-getsettingnames-system-boolean) | Gets registered setting names ordered by explicit order and then by name. |
+| [`public static T Get<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-get-1-electron2d-projectsetting-0) | Gets a setting value without applying feature overrides. |
+| [`public static T GetWithOverride<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-getwithoverride-1-electron2d-projectsetting-0) | Gets a setting after applying the first override matching an active platform, build, or custom feature. |
+| [`public static T GetWithOverride<T>(ProjectSetting<T> setting, IEnumerable<string> features)`](#m-electron2d-projectsettings-getwithoverride-1-electron2d-projectsetting-0-system-collections-generic-ienumerable-system-string) | Gets a setting after applying overrides against caller-supplied feature tags. |
+| [`public static void Set<T>(ProjectSetting<T> setting, T value)`](#m-electron2d-projectsettings-set-1-electron2d-projectsetting-0-0) | Stores a base value for a registered setting. |
+| [`public static void Reset<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-reset-1-electron2d-projectsetting-0) | Removes an explicit base value so the setting returns its current initial value. |
+| [`public static void SetInitialValue<T>(ProjectSetting<T> setting, T value)`](#m-electron2d-projectsettings-setinitialvalue-1-electron2d-projectsetting-0-0) | Changes the value used by [`ProjectSettings.Reset``1(ProjectSetting{``0})`](ProjectSettings.md#m-electron2d-projectsettings-reset-1-electron2d-projectsetting-0) and typed property reversion. |
+| [`public static void SetFeatureOverride<T>(ProjectSetting<T> setting, string feature, T value)`](#m-electron2d-projectsettings-setfeatureoverride-1-electron2d-projectsetting-0-system-string-0) | Stores a value selected when the named feature is active. |
+| [`public static bool ClearFeatureOverride<T>(ProjectSetting<T> setting, string feature)`](#m-electron2d-projectsettings-clearfeatureoverride-1-electron2d-projectsetting-0-system-string) | Removes one stored feature override. |
+| [`public static IReadOnlyList<string> GetFeatureOverrides<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-getfeatureoverrides-1-electron2d-projectsetting-0) | Gets the stored feature tags for one setting in override precedence order. |
+| [`public static bool AddCustomFeature(string feature)`](#m-electron2d-projectsettings-addcustomfeature-system-string) | Adds a custom feature to the process feature set. |
+| [`public static bool RemoveCustomFeature(string feature)`](#m-electron2d-projectsettings-removecustomfeature-system-string) | Removes a custom feature from the process feature set. |
+| [`public static bool HasFeature(string feature)`](#m-electron2d-projectsettings-hasfeature-system-string) | Determines whether a platform, build, architecture, or custom feature is active. |
+| [`public static IReadOnlyList<string> GetActiveFeatures()`](#m-electron2d-projectsettings-getactivefeatures) | Gets all active platform, build, architecture, and custom features. |
+| [`public static int GetOrder<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-getorder-1-electron2d-projectsetting-0) | Gets the persistence order assigned to a registered setting. |
+| [`public static void SetOrder<T>(ProjectSetting<T> setting, int order)`](#m-electron2d-projectsettings-setorder-1-electron2d-projectsetting-0-system-int32) | Changes the persistence and tooling order of a registered setting. |
+| [`public static bool IsBasic<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-isbasic-1-electron2d-projectsetting-0) | Gets whether a setting should appear in a reduced basic-settings view. |
+| [`public static void SetAsBasic<T>(ProjectSetting<T> setting, bool basic)`](#m-electron2d-projectsettings-setasbasic-1-electron2d-projectsetting-0-system-boolean) | Sets whether a setting should appear in a reduced basic-settings view. |
+| [`public static bool IsInternal<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-isinternal-1-electron2d-projectsetting-0) | Gets whether a setting is hidden from ordinary tooling discovery. |
+| [`public static void SetAsInternal<T>(ProjectSetting<T> setting, bool internalSetting)`](#m-electron2d-projectsettings-setasinternal-1-electron2d-projectsetting-0-system-boolean) | Sets whether a setting is hidden from ordinary tooling discovery. |
+| [`public static bool IsRestartRequired<T>(ProjectSetting<T> setting)`](#m-electron2d-projectsettings-isrestartrequired-1-electron2d-projectsetting-0) | Gets whether changing a setting requires the host application to restart. |
+| [`public static void SetRestartIfChanged<T>(ProjectSetting<T> setting, bool restart)`](#m-electron2d-projectsettings-setrestartifchanged-1-electron2d-projectsetting-0-system-boolean) | Sets whether changing a setting requires the host application to restart. |
+| [`public static IReadOnlyList<string> GetChangedSettings()`](#m-electron2d-projectsettings-getchangedsettings) | Gets setting names included in the pending or currently delivered change notification. |
+| [`public static bool CheckChangedSettingsInGroup(string prefix)`](#m-electron2d-projectsettings-checkchangedsettingsingroup-system-string) | Checks whether any changed setting starts with a category prefix. |
+| [`public static void Load()`](#m-electron2d-projectsettings-load) | Loads the project file and then merges the conventional override file when it exists. |
+| [`public static void LoadCustom(string path)`](#m-electron2d-projectsettings-loadcustom-system-string) | Merges a custom configuration file into the current settings after full validation. |
+| [`public static void Save()`](#m-electron2d-projectsettings-save) | Saves the current document to [`ProjectSettings.ProjectFilePath`](ProjectSettings.md#p-electron2d-projectsettings-projectfilepath) using atomic replacement. |
+| [`public static void SaveCustom(string path)`](#m-electron2d-projectsettings-savecustom-system-string) | Saves the current document to an explicit file using atomic replacement. |
+| [`public static bool FlushChanges()`](#m-electron2d-projectsettings-flushchanges) | Raises one coalesced [`ProjectSettings.SettingsChanged`](ProjectSettings.md#e-electron2d-projectsettings-settingschanged) notification when changes are pending. |
+| [`public static string GlobalizePath(string path)`](#m-electron2d-projectsettings-globalizepath-system-string) | Converts a virtual or ordinary path to an absolute native operating-system path. |
+| [`public static string LocalizePath(string path)`](#m-electron2d-projectsettings-localizepath-system-string) | Converts an ordinary path inside a configured root to a virtual project or user path. |
 | [`public static string FindProjectRoot(string startPath)`](#m-electron2d-projectsettings-findprojectroot-system-string) | Searches an existing directory and its parents for [`ProjectSettings.ProjectFileName`](ProjectSettings.md#f-electron2d-projectsettings-projectfilename). |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-projectsettings-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-projectsettings-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
@@ -147,7 +142,7 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 
 | Member | Description |
 | --- | --- |
-| [`public event Action<ProjectSettings> SettingsChanged`](#e-electron2d-projectsettings-settingschanged) | Occurs after one or more settings change and [`ProjectSettings.FlushChanges`](ProjectSettings.md#m-electron2d-projectsettings-flushchanges) is called. |
+| [`public static event Action<ProjectSettingsRegistry> SettingsChanged`](#e-electron2d-projectsettings-settingschanged) | Occurs after one or more settings change and [`ProjectSettings.FlushChanges`](ProjectSettings.md#m-electron2d-projectsettings-flushchanges) is called. |
 
 ## Constants
 
@@ -158,37 +153,6 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public const string ProjectDataDirectoryName = ".electron2d"`](#f-electron2d-projectsettings-projectdatadirectoryname) | Gets the project-local directory name reserved for generated engine data. |
 
 ## Constructor Descriptions
-
-<a id="m-electron2d-projectsettings-ctor-system-string"></a>
-### `public ProjectSettings(string projectRoot)`
-
-Initializes an isolated registry using a platform-appropriate user-data directory.
-
-**Parameters**
-
-- `projectRoot`: An existing project directory.
-
-**Exceptions**
-
-- `ArgumentNullException`: `projectRoot` is `null`.
-- `ArgumentException`: `projectRoot` is empty or invalid.
-- `IO.DirectoryNotFoundException`: `projectRoot` does not exist.
-
-<a id="m-electron2d-projectsettings-ctor-system-string-system-string"></a>
-### `public ProjectSettings(string projectRoot, string userDataRoot)`
-
-Initializes an isolated registry with explicit project and user-data directories.
-
-**Parameters**
-
-- `projectRoot`: An existing project directory.
-- `userDataRoot`: The user-writable data directory; it is not created automatically.
-
-**Exceptions**
-
-- `ArgumentNullException`: `projectRoot` or `userDataRoot` is `null`.
-- `ArgumentException`: A path is empty or invalid, or both paths resolve to the same directory.
-- `IO.DirectoryNotFoundException`: `projectRoot` does not exist.
 
 ## Audio settings
 
@@ -205,7 +169,7 @@ Initializes an isolated registry with explicit project and user-data directories
 <a id="audiodriverenableinput"></a>
 ### AudioDriverEnableInput
 
-Allows AudioServer or AudioStreamMicrophone to activate the recording device. Set it in ProjectSettings.Instance before Start/Play/manual activation; feature overrides resolve through GetWithOverride. False rejects a new request before activation, while existing capture continues until explicit stop, last automatic release or engine closure. Merely querying/preparing input frequency or selecting generator Input mode opens a paused device and does not record. OS permission/device failure is separate from this typed setting. Isolated registries register independent values and built-in metadata; normal persistence/default suppression applies. Native recording acceptance is documented in the [audio component](../components/audio-playback.md#recording-input).
+Allows AudioServer or AudioStreamMicrophone to activate the recording device. Set it in ProjectSettings before Start/Play/manual activation; feature overrides resolve through GetWithOverride. False rejects a new request before activation, while existing capture continues until explicit stop, last automatic release or engine closure. Merely querying/preparing input frequency or selecting generator Input mode opens a paused device and does not record. OS permission/device failure is separate from this typed setting. Isolated registries register independent values and built-in metadata; normal persistence/default suppression applies. Native recording acceptance is documented in the [audio component](../components/audio-playback.md#recording-input).
 
 ## Property Descriptions
 
@@ -402,50 +366,43 @@ Defines `input/ui_right`, default right arrow, D-pad right and left-stick X posi
 
 Defines `input/ui_down`, default down arrow, D-pad down and left-stick Y positive. Each directional definition has three ordered bindings; the controller bindings match all devices. These definitions are registered in every registry; an active feature override participates in the next explicit map load. Their `InputActionSettings` values are snapshotted through project-setting serialization.
 
-<a id="p-electron2d-projectsettings-instance"></a>
-### `public static ProjectSettings Instance { get; }`
-
-Gets the process-wide project settings registry.
-
-**Value:** The same non-disposable instance for the lifetime of the process.
-
 <a id="p-electron2d-projectsettings-projectroot"></a>
-### `public string ProjectRoot { get; }`
+### `public static string ProjectRoot { get; }`
 
 Gets the current absolute project resource directory.
 
 **Value:** The directory to which `res://` resolves.
 
 <a id="p-electron2d-projectsettings-userdataroot"></a>
-### `public string UserDataRoot { get; }`
+### `public static string UserDataRoot { get; }`
 
 Gets the current absolute user-data directory.
 
 **Value:** The directory to which `user://` resolves. The directory may not exist yet.
 
 <a id="p-electron2d-projectsettings-projectfilepath"></a>
-### `public string ProjectFilePath { get; }`
+### `public static string ProjectFilePath { get; }`
 
 Gets the absolute path of the current project settings file.
 
 **Value:** [`ProjectSettings.ProjectFileName`](ProjectSettings.md#f-electron2d-projectsettings-projectfilename) inside [`ProjectSettings.ProjectRoot`](ProjectSettings.md#p-electron2d-projectsettings-projectroot).
 
 <a id="p-electron2d-projectsettings-overridefilepath"></a>
-### `public string OverrideFilePath { get; }`
+### `public static string OverrideFilePath { get; }`
 
 Gets the absolute path of the optional runtime override file.
 
 **Value:** [`ProjectSettings.OverrideFileName`](ProjectSettings.md#f-electron2d-projectsettings-overridefilename) inside [`ProjectSettings.ProjectRoot`](ProjectSettings.md#p-electron2d-projectsettings-projectroot).
 
 <a id="p-electron2d-projectsettings-projectdatapath"></a>
-### `public string ProjectDataPath { get; }`
+### `public static string ProjectDataPath { get; }`
 
 Gets the absolute path reserved for generated project-local engine data.
 
 **Value:** [`ProjectSettings.ProjectDataDirectoryName`](ProjectSettings.md#f-electron2d-projectsettings-projectdatadirectoryname) inside [`ProjectSettings.ProjectRoot`](ProjectSettings.md#p-electron2d-projectsettings-projectroot).
 
 <a id="p-electron2d-projectsettings-version"></a>
-### `public ulong Version { get; }`
+### `public static ulong Version { get; }`
 
 Gets a monotonically increasing in-process registry version.
 
@@ -463,7 +420,7 @@ This setting drives [canvas animation intervals](CanvasItem.md#drawanimationslic
 ## Method Descriptions
 
 <a id="m-electron2d-projectsettings-configurepaths-system-string-system-string"></a>
-### `public void ConfigurePaths(string projectRoot, string userDataRoot)`
+### `public static void ConfigurePaths(string projectRoot, string userDataRoot)`
 
 Changes the project and user-data roots and clears all loaded or explicitly stored values.
 
@@ -483,7 +440,7 @@ Changes the project and user-data roots and clears all loaded or explicitly stor
 **Remarks:** Registered setting definitions and metadata are retained. Call this during host setup before runtime use.
 
 <a id="m-electron2d-projectsettings-register-1-electron2d-projectsetting-0"></a>
-### `public void Register<T>(ProjectSetting<T> setting)`
+### `public static void Register<T>(ProjectSetting<T> setting)`
 
 Registers a setting definition for typed access and tooling discovery.
 
@@ -508,7 +465,7 @@ Registers a setting definition for typed access and tooling discovery.
 the registry changes. Registration does not mark the setting as modified.
 
 <a id="m-electron2d-projectsettings-unregister-1-electron2d-projectsetting-0"></a>
-### `public void Unregister<T>(ProjectSetting<T> setting)`
+### `public static void Unregister<T>(ProjectSetting<T> setting)`
 
 Unregisters a setting and removes its stored base value and feature overrides.
 
@@ -531,7 +488,7 @@ Unregisters a setting and removes its stored base value and feature overrides.
 **Remarks:** Built-in settings cannot be unregistered. The removal is tracked as an unsaved change.
 
 <a id="m-electron2d-projectsettings-hassetting-1-electron2d-projectsetting-0"></a>
-### `public bool HasSetting<T>(ProjectSetting<T> setting)`
+### `public static bool HasSetting<T>(ProjectSetting<T> setting)`
 
 Determines whether the exact setting definition is registered.
 
@@ -551,7 +508,7 @@ Determines whether the exact setting definition is registered.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-getsettingnames-system-boolean"></a>
-### `public IReadOnlyList<string> GetSettingNames(bool includeInternal = true)`
+### `public static IReadOnlyList<string> GetSettingNames(bool includeInternal = true)`
 
 Gets registered setting names ordered by explicit order and then by name.
 
@@ -566,7 +523,7 @@ Gets registered setting names ordered by explicit order and then by name.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-get-1-electron2d-projectsetting-0"></a>
-### `public T Get<T>(ProjectSetting<T> setting)`
+### `public static T Get<T>(ProjectSetting<T> setting)`
 
 Gets a setting value without applying feature overrides.
 
@@ -588,7 +545,7 @@ Gets a setting value without applying feature overrides.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-getwithoverride-1-electron2d-projectsetting-0"></a>
-### `public T GetWithOverride<T>(ProjectSetting<T> setting)`
+### `public static T GetWithOverride<T>(ProjectSetting<T> setting)`
 
 Gets a setting after applying the first override matching an active platform, build, or custom feature.
 
@@ -612,7 +569,7 @@ Gets a setting after applying the first override matching an active platform, bu
 **Remarks:** Override precedence follows the insertion order of override entries in the loaded or modified document.
 
 <a id="m-electron2d-projectsettings-getwithoverride-1-electron2d-projectsetting-0-system-collections-generic-ienumerable-system-string"></a>
-### `public T GetWithOverride<T>(ProjectSetting<T> setting, IEnumerable<string> features)`
+### `public static T GetWithOverride<T>(ProjectSetting<T> setting, IEnumerable<string> features)`
 
 Gets a setting after applying overrides against caller-supplied feature tags.
 
@@ -638,7 +595,7 @@ Gets a setting after applying overrides against caller-supplied feature tags.
 **Remarks:** Tags are normalized to lowercase. Override precedence follows stored override insertion order.
 
 <a id="m-electron2d-projectsettings-set-1-electron2d-projectsetting-0-0"></a>
-### `public void Set<T>(ProjectSetting<T> setting, T value)`
+### `public static void Set<T>(ProjectSetting<T> setting, T value)`
 
 Stores a base value for a registered setting.
 
@@ -663,7 +620,7 @@ Stores a base value for a registered setting.
 **Remarks:** An equal serialized value is a no-op and does not update change tracking or [`ProjectSettings.Version`](ProjectSettings.md#p-electron2d-projectsettings-version).
 
 <a id="m-electron2d-projectsettings-reset-1-electron2d-projectsetting-0"></a>
-### `public void Reset<T>(ProjectSetting<T> setting)`
+### `public static void Reset<T>(ProjectSetting<T> setting)`
 
 Removes an explicit base value so the setting returns its current initial value.
 
@@ -685,7 +642,7 @@ Removes an explicit base value so the setting returns its current initial value.
 **Remarks:** Feature overrides are retained. The initial value becomes implicit and is not persisted.
 
 <a id="m-electron2d-projectsettings-setinitialvalue-1-electron2d-projectsetting-0-0"></a>
-### `public void SetInitialValue<T>(ProjectSetting<T> setting, T value)`
+### `public static void SetInitialValue<T>(ProjectSetting<T> setting, T value)`
 
 Changes the value used by [`ProjectSettings.Reset``1(ProjectSetting{``0})`](ProjectSettings.md#m-electron2d-projectsettings-reset-1-electron2d-projectsetting-0) and typed property reversion.
 
@@ -710,7 +667,7 @@ Changes the value used by [`ProjectSettings.Reset``1(ProjectSetting{``0})`](Proj
 changing the implicit value cannot change what callers observe.
 
 <a id="m-electron2d-projectsettings-setfeatureoverride-1-electron2d-projectsetting-0-system-string-0"></a>
-### `public void SetFeatureOverride<T>(ProjectSetting<T> setting, string feature, T value)`
+### `public static void SetFeatureOverride<T>(ProjectSetting<T> setting, string feature, T value)`
 
 Stores a value selected when the named feature is active.
 
@@ -736,7 +693,7 @@ Stores a value selected when the named feature is active.
 **Remarks:** New overrides have lower priority than existing overrides for the same setting.
 
 <a id="m-electron2d-projectsettings-clearfeatureoverride-1-electron2d-projectsetting-0-system-string"></a>
-### `public bool ClearFeatureOverride<T>(ProjectSetting<T> setting, string feature)`
+### `public static bool ClearFeatureOverride<T>(ProjectSetting<T> setting, string feature)`
 
 Removes one stored feature override.
 
@@ -760,7 +717,7 @@ Removes one stored feature override.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-getfeatureoverrides-1-electron2d-projectsetting-0"></a>
-### `public IReadOnlyList<string> GetFeatureOverrides<T>(ProjectSetting<T> setting)`
+### `public static IReadOnlyList<string> GetFeatureOverrides<T>(ProjectSetting<T> setting)`
 
 Gets the stored feature tags for one setting in override precedence order.
 
@@ -782,7 +739,7 @@ Gets the stored feature tags for one setting in override precedence order.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-addcustomfeature-system-string"></a>
-### `public bool AddCustomFeature(string feature)`
+### `public static bool AddCustomFeature(string feature)`
 
 Adds a custom feature to the process feature set.
 
@@ -800,7 +757,7 @@ Adds a custom feature to the process feature set.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-removecustomfeature-system-string"></a>
-### `public bool RemoveCustomFeature(string feature)`
+### `public static bool RemoveCustomFeature(string feature)`
 
 Removes a custom feature from the process feature set.
 
@@ -818,7 +775,7 @@ Removes a custom feature from the process feature set.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-hasfeature-system-string"></a>
-### `public bool HasFeature(string feature)`
+### `public static bool HasFeature(string feature)`
 
 Determines whether a platform, build, architecture, or custom feature is active.
 
@@ -835,7 +792,7 @@ Determines whether a platform, build, architecture, or custom feature is active.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-getactivefeatures"></a>
-### `public IReadOnlyList<string> GetActiveFeatures()`
+### `public static IReadOnlyList<string> GetActiveFeatures()`
 
 Gets all active platform, build, architecture, and custom features.
 
@@ -846,7 +803,7 @@ Gets all active platform, build, architecture, and custom features.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-getorder-1-electron2d-projectsetting-0"></a>
-### `public int GetOrder<T>(ProjectSetting<T> setting)`
+### `public static int GetOrder<T>(ProjectSetting<T> setting)`
 
 Gets the persistence order assigned to a registered setting.
 
@@ -868,7 +825,7 @@ Gets the persistence order assigned to a registered setting.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-setorder-1-electron2d-projectsetting-0-system-int32"></a>
-### `public void SetOrder<T>(ProjectSetting<T> setting, int order)`
+### `public static void SetOrder<T>(ProjectSetting<T> setting, int order)`
 
 Changes the persistence and tooling order of a registered setting.
 
@@ -890,7 +847,7 @@ Changes the persistence and tooling order of a registered setting.
 - `Exception`: A property-list listener throws after the order has changed.
 
 <a id="m-electron2d-projectsettings-isbasic-1-electron2d-projectsetting-0"></a>
-### `public bool IsBasic<T>(ProjectSetting<T> setting)`
+### `public static bool IsBasic<T>(ProjectSetting<T> setting)`
 
 Gets whether a setting should appear in a reduced basic-settings view.
 
@@ -912,7 +869,7 @@ Gets whether a setting should appear in a reduced basic-settings view.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-setasbasic-1-electron2d-projectsetting-0-system-boolean"></a>
-### `public void SetAsBasic<T>(ProjectSetting<T> setting, bool basic)`
+### `public static void SetAsBasic<T>(ProjectSetting<T> setting, bool basic)`
 
 Sets whether a setting should appear in a reduced basic-settings view.
 
@@ -934,7 +891,7 @@ Sets whether a setting should appear in a reduced basic-settings view.
 - `Exception`: A property-list listener throws after the flag has changed.
 
 <a id="m-electron2d-projectsettings-isinternal-1-electron2d-projectsetting-0"></a>
-### `public bool IsInternal<T>(ProjectSetting<T> setting)`
+### `public static bool IsInternal<T>(ProjectSetting<T> setting)`
 
 Gets whether a setting is hidden from ordinary tooling discovery.
 
@@ -956,7 +913,7 @@ Gets whether a setting is hidden from ordinary tooling discovery.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-setasinternal-1-electron2d-projectsetting-0-system-boolean"></a>
-### `public void SetAsInternal<T>(ProjectSetting<T> setting, bool internalSetting)`
+### `public static void SetAsInternal<T>(ProjectSetting<T> setting, bool internalSetting)`
 
 Sets whether a setting is hidden from ordinary tooling discovery.
 
@@ -978,7 +935,7 @@ Sets whether a setting is hidden from ordinary tooling discovery.
 - `Exception`: A property-list listener throws after the flag has changed.
 
 <a id="m-electron2d-projectsettings-isrestartrequired-1-electron2d-projectsetting-0"></a>
-### `public bool IsRestartRequired<T>(ProjectSetting<T> setting)`
+### `public static bool IsRestartRequired<T>(ProjectSetting<T> setting)`
 
 Gets whether changing a setting requires the host application to restart.
 
@@ -1000,7 +957,7 @@ Gets whether changing a setting requires the host application to restart.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-setrestartifchanged-1-electron2d-projectsetting-0-system-boolean"></a>
-### `public void SetRestartIfChanged<T>(ProjectSetting<T> setting, bool restart)`
+### `public static void SetRestartIfChanged<T>(ProjectSetting<T> setting, bool restart)`
 
 Sets whether changing a setting requires the host application to restart.
 
@@ -1022,7 +979,7 @@ Sets whether changing a setting requires the host application to restart.
 - `Exception`: A property-list listener throws after the flag has changed.
 
 <a id="m-electron2d-projectsettings-getchangedsettings"></a>
-### `public IReadOnlyList<string> GetChangedSettings()`
+### `public static IReadOnlyList<string> GetChangedSettings()`
 
 Gets setting names included in the pending or currently delivered change notification.
 
@@ -1033,7 +990,7 @@ Gets setting names included in the pending or currently delivered change notific
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-checkchangedsettingsingroup-system-string"></a>
-### `public bool CheckChangedSettingsInGroup(string prefix)`
+### `public static bool CheckChangedSettingsInGroup(string prefix)`
 
 Checks whether any changed setting starts with a category prefix.
 
@@ -1049,7 +1006,7 @@ Checks whether any changed setting starts with a category prefix.
 - `ObjectDisposedException`: The registry is disposing or disposed.
 
 <a id="m-electron2d-projectsettings-load"></a>
-### `public void Load()`
+### `public static void Load()`
 
 Loads the project file and then merges the conventional override file when it exists.
 
@@ -1068,7 +1025,7 @@ Loads the project file and then merges the conventional override file when it ex
 Successful loading clears unsaved-value tracking and any pending change notification.
 
 <a id="m-electron2d-projectsettings-loadcustom-system-string"></a>
-### `public void LoadCustom(string path)`
+### `public static void LoadCustom(string path)`
 
 Merges a custom configuration file into the current settings after full validation.
 
@@ -1092,7 +1049,7 @@ Merges a custom configuration file into the current settings after full validati
 Values supplied only by the loaded file are treated as persisted and do not add unsaved names.
 
 <a id="m-electron2d-projectsettings-save"></a>
-### `public void Save()`
+### `public static void Save()`
 
 Saves the current document to [`ProjectSettings.ProjectFilePath`](ProjectSettings.md#p-electron2d-projectsettings-projectfilepath) using atomic replacement.
 
@@ -1107,7 +1064,7 @@ Saves the current document to [`ProjectSettings.ProjectFilePath`](ProjectSetting
 [`ProjectSettings.FlushChanges`](ProjectSettings.md#m-electron2d-projectsettings-flushchanges) completes; a failed save preserves both states.
 
 <a id="m-electron2d-projectsettings-savecustom-system-string"></a>
-### `public void SaveCustom(string path)`
+### `public static void SaveCustom(string path)`
 
 Saves the current document to an explicit file using atomic replacement.
 
@@ -1128,7 +1085,7 @@ Saves the current document to an explicit file using atomic replacement.
 [`ProjectSettings.FlushChanges`](ProjectSettings.md#m-electron2d-projectsettings-flushchanges) completes; a failed save preserves both states.
 
 <a id="m-electron2d-projectsettings-flushchanges"></a>
-### `public bool FlushChanges()`
+### `public static bool FlushChanges()`
 
 Raises one coalesced [`ProjectSettings.SettingsChanged`](ProjectSettings.md#e-electron2d-projectsettings-settingschanged) notification when changes are pending.
 
@@ -1142,7 +1099,7 @@ Raises one coalesced [`ProjectSettings.SettingsChanged`](ProjectSettings.md#e-el
 **Remarks:** The callback runs without the registry lock, so handlers may read or modify settings.
 
 <a id="m-electron2d-projectsettings-globalizepath-system-string"></a>
-### `public string GlobalizePath(string path)`
+### `public static string GlobalizePath(string path)`
 
 Converts a virtual or ordinary path to an absolute native operating-system path.
 
@@ -1164,7 +1121,7 @@ Converts a virtual or ordinary path to an absolute native operating-system path.
 resolve symbolic links and is not a filesystem security sandbox.
 
 <a id="m-electron2d-projectsettings-localizepath-system-string"></a>
-### `public string LocalizePath(string path)`
+### `public static string LocalizePath(string path)`
 
 Converts an ordinary path inside a configured root to a virtual project or user path.
 
@@ -1230,7 +1187,7 @@ Releases resources owned by a derived class.
 ## Event Descriptions
 
 <a id="e-electron2d-projectsettings-settingschanged"></a>
-### `public event Action<ProjectSettings> SettingsChanged`
+### `public static event Action<ProjectSettingsRegistry> SettingsChanged`
 
 Occurs after one or more settings change and [`ProjectSettings.FlushChanges`](ProjectSettings.md#m-electron2d-projectsettings-flushchanges) is called.
 
@@ -1261,7 +1218,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Lifecycle and threading
 
-All public registry operations preserve internal state under concurrency. Value/metadata transitions and document swaps are linearized by one lock. User validators run synchronously on caller threads and must themselves be deterministic, thread-safe, and free of registry mutations. Serialization, validators, file I/O, snapshots, and path operations may allocate/block and are not frame-hot APIs. Scalar/string setting definitions cache their most recently decoded representation; Engine timing reads therefore remain allocation-free after warm-up. Mutable reference values are never returned from that cache.
+All public static registry operations preserve internal state under concurrency. Value/metadata transitions and document swaps are linearized by one lock. User validators run synchronously on caller threads and must themselves be deterministic, thread-safe, and free of registry mutations. Serialization, validators, file I/O, snapshots, and path operations may allocate/block and are not frame-hot APIs. Scalar/string setting definitions cache their most recently decoded representation; Engine timing reads therefore remain allocation-free after warm-up. Mutable reference values are never returned from that cache.
 
 Isolated instances dispose their owned document and clear subscribers/state. The process singleton rejects disposal. Disposal during an active load validator is rejected so the transaction cannot be invalidated re-entrantly.
 

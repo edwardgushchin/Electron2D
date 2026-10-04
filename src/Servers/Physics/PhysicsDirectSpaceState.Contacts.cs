@@ -133,7 +133,7 @@ public sealed partial class PhysicsDirectSpaceState
                         b2Body_GetWorldPointVelocity(bodyID, colliderPoint);
                     bestDepth = depth;
                     best = new PhysicsRestInfo2D(candidate.Tag.ColliderRID,
-                        PhysicsServer.Instance.ResolveSceneObject(candidate.Tag.ColliderRID),
+                        PhysicsServer.Service.ResolveSceneObject(candidate.Tag.ColliderRID),
                         candidate.Tag.ShapeIndex, ToScene(colliderPoint),
                         new(-manifold.normal.X, -manifold.normal.Y),
                         new(velocity.X * PhysicsSpace.UnitsPerMeter,

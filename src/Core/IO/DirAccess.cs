@@ -99,7 +99,7 @@ public sealed class DirAccess : ElectronObject
     /// <exception cref="NotSupportedException"><paramref name="path"/> uses an unsupported virtual scheme.</exception>
     public static DirAccess Open(string path)
     {
-        var roots = ProjectSettings.Instance.GetPathRootsSnapshot();
+        var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         var (absolutePath, scope, root) = ResolveOpenPath(path, roots);
         RequireExistingDirectory(absolutePath);
         return new DirAccess(absolutePath, scope, root);
@@ -524,7 +524,7 @@ public sealed class DirAccess : ElectronObject
     {
         ValidateAbsolutePath(source);
         ValidateAbsolutePath(destination);
-        var roots = ProjectSettings.Instance.GetPathRootsSnapshot();
+        var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         CopyPhysical(
             ResolveStaticAbsolute(source, roots),
             ResolveStaticAbsolute(destination, roots),
@@ -567,7 +567,7 @@ public sealed class DirAccess : ElectronObject
     {
         ValidateAbsolutePath(source);
         ValidateAbsolutePath(destination);
-        var roots = ProjectSettings.Instance.GetPathRootsSnapshot();
+        var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         MovePhysical(ResolveStaticAbsolute(source, roots), ResolveStaticAbsolute(destination, roots));
     }
 
@@ -875,7 +875,7 @@ public sealed class DirAccess : ElectronObject
     private static DirAccess OpenAbsolute(string path)
     {
         ValidateAbsolutePath(path);
-        var roots = ProjectSettings.Instance.GetPathRootsSnapshot();
+        var roots = ProjectSettings.Service.GetPathRootsSnapshot();
         var (resolved, scope, root) = ResolveOpenPath(path, roots);
         RequireExistingDirectory(resolved);
         return new DirAccess(resolved, scope, root);
@@ -884,7 +884,7 @@ public sealed class DirAccess : ElectronObject
     private static string ResolveStaticAbsolute(string path)
     {
         ValidateAbsolutePath(path);
-        return ResolveStaticAbsolute(path, ProjectSettings.Instance.GetPathRootsSnapshot());
+        return ResolveStaticAbsolute(path, ProjectSettings.Service.GetPathRootsSnapshot());
     }
 
     private static string ResolveStaticAbsolute(

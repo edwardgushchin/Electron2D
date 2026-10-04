@@ -5,55 +5,55 @@ internal static class DisplayServerFocusEventsTests
 {
     public static void Run(DisplayServer display)
     {
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The focus probe needs one native window.");
         var windowId = SDL.GetWindowID(windows![0]);
         var order = new List<string>();
         using var loop = new FocusProbeLoop(order);
-        var previousAccumulation = Input.Instance.UseAccumulatedInput;
-        var previousTouchEmulation = Input.Instance.EmulateMouseFromTouch;
-        Engine.Instance.Start(loop);
+        var previousAccumulation = Input.UseAccumulatedInput;
+        var previousTouchEmulation = Input.EmulateMouseFromTouch;
+        Engine.Start(loop);
         try
         {
-            Input.Instance.UseAccumulatedInput = false;
-            Input.Instance.EmulateMouseFromTouch = true;
-            Input.Instance.ReleasePressedEvents();
-            void OnFocus(bool focused) => order.Add($"window:{focused}:{Input.Instance.IsKeyPressed(Key.A)}");
-            display.WindowFocusChanged += OnFocus;
+            Input.UseAccumulatedInput = false;
+            Input.EmulateMouseFromTouch = true;
+            Input.ReleasePressedEvents();
+            void OnFocus(bool focused) => order.Add($"window:{focused}:{Input.IsKeyPressed(Key.A)}");
+            DisplayServer.WindowFocusChanged += OnFocus;
             try
             {
                 PushWindow(windowId, SDL.EventType.WindowFocusGained);
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Check(order.SequenceEqual(["window:True:False", "loop:True:False"]),
                     "Focus gain reaches the window callback before the application notification.");
                 order.Clear();
 
                 PushKey(windowId, SDL.EventType.KeyDown);
-                display.ProcessEvents();
-                Check(Input.Instance.IsKeyPressed(Key.A), "The key press reaches Input before focus loss.");
+                DisplayServer.ProcessEvents();
+                Check(Input.IsKeyPressed(Key.A), "The key press reaches Input before focus loss.");
                 PushWindow(windowId, SDL.EventType.WindowFocusLost);
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Check(order.SequenceEqual(["window:False:True", "loop:False:True"]) &&
-                      !Input.Instance.IsKeyPressed(Key.A),
+                      !Input.IsKeyPressed(Key.A),
                     "Window and application focus callbacks observe pressed state before release.");
 
                 PushKey(windowId, SDL.EventType.KeyDown);
                 PushMouse(windowId, SDL.EventType.MouseButtonDown);
-                display.ProcessEvents();
-                Check(Input.Instance.IsKeyPressed(Key.A) && Input.Instance.IsMouseButtonPressed(MouseButton.Left),
+                DisplayServer.ProcessEvents();
+                Check(Input.IsKeyPressed(Key.A) && Input.IsMouseButtonPressed(MouseButton.Left),
                     "Native events for this window are not discarded solely because keyboard focus was lost.");
                 PushKey(windowId, SDL.EventType.KeyUp);
                 PushMouse(windowId, SDL.EventType.MouseButtonUp);
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
 
                 PushTouch(windowId, SDL.EventType.FingerDown);
-                display.ProcessEvents();
-                Check(Input.Instance.IsMouseButtonPressed(MouseButton.Left),
+                DisplayServer.ProcessEvents();
+                Check(Input.IsMouseButtonPressed(MouseButton.Left),
                     "A touch contact can begin without keyboard focus.");
                 PushTouch(windowId, SDL.EventType.FingerUp);
-                display.ProcessEvents();
-                Check(!Input.Instance.IsMouseButtonPressed(MouseButton.Left),
+                DisplayServer.ProcessEvents();
+                Check(!Input.IsMouseButtonPressed(MouseButton.Left),
                     "The touch contact releases its emulated mouse button.");
 
                 var callbackFailure = new InvalidOperationException("window focus failure");
@@ -63,19 +63,19 @@ internal static class DisplayServerFocusEventsTests
                     if (!focused)
                         throw callbackFailure;
                 };
-                display.WindowFocusChanged += failFocus;
+                DisplayServer.WindowFocusChanged += failFocus;
                 loop.FocusOutFailure = notificationFailure;
                 try
                 {
                     PushWindow(windowId, SDL.EventType.WindowFocusGained);
-                    display.ProcessEvents();
+                    DisplayServer.ProcessEvents();
                     PushKey(windowId, SDL.EventType.KeyDown);
-                    display.ProcessEvents();
+                    DisplayServer.ProcessEvents();
                     order.Clear();
                     PushWindow(windowId, SDL.EventType.WindowFocusLost);
                     try
                     {
-                        display.ProcessEvents();
+                        DisplayServer.ProcessEvents();
                         throw new InvalidOperationException("Both focus failures must be reported.");
                     }
                     catch (AggregateException errors)
@@ -84,28 +84,28 @@ internal static class DisplayServerFocusEventsTests
                               errors.Flatten().InnerExceptions.Contains(callbackFailure) &&
                               errors.Flatten().InnerExceptions.Contains(notificationFailure) &&
                               order.SequenceEqual(["window:False:True", "loop:False:True"]) &&
-                              !Input.Instance.IsKeyPressed(Key.A),
+                              !Input.IsKeyPressed(Key.A),
                             "Both focus failures survive while pressed input is released.");
                     }
                 }
                 finally
                 {
                     loop.FocusOutFailure = null;
-                    display.WindowFocusChanged -= failFocus;
+                    DisplayServer.WindowFocusChanged -= failFocus;
                 }
             }
             finally
             {
-                display.WindowFocusChanged -= OnFocus;
+                DisplayServer.WindowFocusChanged -= OnFocus;
             }
 
             PushWindow(windowId, SDL.EventType.WindowMouseLeave);
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             var hover = new List<string>();
             void Enter() => hover.Add("enter");
             void Exit() => hover.Add("exit");
-            display.WindowMouseEntered += Enter;
-            display.WindowMouseExited += Exit;
+            DisplayServer.WindowMouseEntered += Enter;
+            DisplayServer.WindowMouseExited += Exit;
             try
             {
                 PushWindow(windowId, SDL.EventType.WindowMouseLeave);
@@ -113,22 +113,22 @@ internal static class DisplayServerFocusEventsTests
                 PushWindow(windowId, SDL.EventType.WindowMouseEnter);
                 PushWindow(windowId, SDL.EventType.WindowMouseLeave);
                 PushWindow(windowId, SDL.EventType.WindowMouseLeave);
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Check(hover.SequenceEqual(["enter", "exit"]),
                     "Repeated hover messages publish only effective transitions.");
             }
             finally
             {
-                display.WindowMouseEntered -= Enter;
-                display.WindowMouseExited -= Exit;
+                DisplayServer.WindowMouseEntered -= Enter;
+                DisplayServer.WindowMouseExited -= Exit;
             }
         }
         finally
         {
-            Input.Instance.UseAccumulatedInput = previousAccumulation;
-            Input.Instance.EmulateMouseFromTouch = previousTouchEmulation;
-            Input.Instance.ReleasePressedEvents();
-            Engine.Instance.Stop();
+            Input.UseAccumulatedInput = previousAccumulation;
+            Input.EmulateMouseFromTouch = previousTouchEmulation;
+            Input.ReleasePressedEvents();
+            Engine.Stop();
         }
     }
 
@@ -201,7 +201,7 @@ internal static class DisplayServerFocusEventsTests
             if (what is NotificationApplicationFocusIn or NotificationApplicationFocusOut)
             {
                 var focused = what == NotificationApplicationFocusIn;
-                order.Add($"loop:{focused}:{Input.Instance.IsKeyPressed(Key.A)}");
+                order.Add($"loop:{focused}:{Input.IsKeyPressed(Key.A)}");
                 if (!focused && FocusOutFailure is not null)
                     throw FocusOutFailure;
             }

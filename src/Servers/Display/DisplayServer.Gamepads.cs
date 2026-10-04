@@ -26,9 +26,9 @@ public sealed partial class DisplayServer
 
     private void AddGamepad(uint instance, bool initial = false, bool refresh = false)
     {
-        if (Input.Instance.ShouldIgnoreDevice(SDL.GetJoystickVendorForID(instance), SDL.GetJoystickProductForID(instance))) return;
+        if (Input.ShouldIgnoreDevice(SDL.GetJoystickVendorForID(instance), SDL.GetJoystickProductForID(instance))) return;
         var guid = GetGamepadGUID(instance);
-        var mapped = SDL.IsGamepad(instance) && !Input.Instance.IsJoyMappingRemoved(guid);
+        var mapped = SDL.IsGamepad(instance) && !Input.Service.IsJoyMappingRemoved(guid);
         if (_gamepadsByInstance.TryGetValue(instance, out var prior) && prior.Mapped == mapped && !refresh) return;
         var handle = mapped ? SDL.OpenGamepad(instance) : SDL.OpenJoystick(instance);
         if (handle == 0) return;
@@ -55,10 +55,10 @@ public sealed partial class DisplayServer
             {
                 _gamepadsByInstance[instance] = gamepad;
                 _gamepadsByDevice[id] = gamepad;
-                Input.Instance.DisconnectNativeJoypad(id, notify: false);
+                Input.Service.DisconnectNativeJoypad(id, notify: false);
                 CloseHandle(prior);
             }
-            Input.Instance.ConnectNativeJoypad(id, name, guid, info, mapped, vibration, light, notify: false);
+            Input.Service.ConnectNativeJoypad(id, name, guid, info, mapped, vibration, light, notify: false);
         }
         catch
         {
@@ -74,7 +74,7 @@ public sealed partial class DisplayServer
         if (prior is null)
         {
             if (initial) _pendingGamepadConnections.Add(id);
-            else Input.Instance.EmitNativeJoypadConnection(id);
+            else Input.Service.EmitNativeJoypadConnection(id);
         }
     }
 
@@ -85,14 +85,14 @@ public sealed partial class DisplayServer
         _freeGamepadIDs.Add(gamepad.ID);
         CloseHandle(gamepad);
         var pending = _pendingGamepadConnections.Remove(gamepad.ID);
-        Input.Instance.DisconnectNativeJoypad(gamepad.ID, notify: !pending);
+        Input.Service.DisconnectNativeJoypad(gamepad.ID, notify: !pending);
     }
 
     private void CloseGamepads()
     {
         foreach (var gamepad in _gamepadsByInstance.Values)
         {
-            Input.Instance.DisconnectNativeJoypad(gamepad.ID, notify: false);
+            Input.Service.DisconnectNativeJoypad(gamepad.ID, notify: false);
             CloseHandle(gamepad);
         }
         _gamepadsByInstance.Clear();
@@ -104,7 +104,7 @@ public sealed partial class DisplayServer
     private void DispatchPendingGamepadConnections(ref List<Exception>? failures)
     {
         foreach (var id in _pendingGamepadConnections)
-            try { Input.Instance.EmitNativeJoypadConnection(id); }
+            try { Input.Service.EmitNativeJoypadConnection(id); }
             catch (Exception error) { (failures ??= []).Add(error); }
         _pendingGamepadConnections.Clear();
     }
@@ -143,7 +143,7 @@ public sealed partial class DisplayServer
                 Axis = axis,
                 AxisValue = value < 0 ? value / 32768f : value / 32767f
             };
-            Input.Instance.ParseInputEvent(input);
+            Input.ParseInputEvent(input);
         }
         else
         {
@@ -154,7 +154,7 @@ public sealed partial class DisplayServer
                 Pressed = type is SDL.EventType.GamepadButtonDown or SDL.EventType.JoystickButtonDown,
                 Pressure = type is SDL.EventType.GamepadButtonDown or SDL.EventType.JoystickButtonDown ? 1f : 0f
             };
-            Input.Instance.ParseInputEvent(input);
+            Input.ParseInputEvent(input);
         }
     }
 
@@ -162,19 +162,19 @@ public sealed partial class DisplayServer
     {
         EnsureOwner();
         if (!ShouldIgnoreGamepads()) return;
-        Input.Instance.ReleasePressedEvents();
+        Input.ReleasePressedEvents();
         foreach (var gamepad in _gamepadsByInstance.Values)
         {
             StopHandleVibration(gamepad);
-            Input.Instance.StopNativeJoypadVibration(gamepad.ID);
+            Input.Service.StopNativeJoypadVibration(gamepad.ID);
         }
     }
 
     internal bool ShouldIgnoreGamepads()
     {
-        if (!Input.Instance.IgnoreJoypadOnUnfocusedApplication) return false;
+        if (!Input.IgnoreJoypadOnUnfocusedApplication) return false;
         var flags = SDL.GetWindowFlags(GetWindow(MainWindowId));
-        return (flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0 || !WindowIsFocused();
+        return (flags & (SDL.WindowFlags.Hidden | SDL.WindowFlags.Minimized)) != 0 || !WindowIsFocusedCore();
     }
 
     internal void UpdateJoyMapping(string guid, string? mapping)
@@ -198,7 +198,7 @@ public sealed partial class DisplayServer
 
     private static void ApplyCustomMapping(uint instance)
     {
-        var mapping = Input.Instance.GetCustomJoyMapping(GetGamepadGUID(instance));
+        var mapping = Input.Service.GetCustomJoyMapping(GetGamepadGUID(instance));
         if (mapping is not null) SDL.SetGamepadMapping(instance, mapping);
     }
 

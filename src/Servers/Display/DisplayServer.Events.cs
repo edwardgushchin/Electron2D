@@ -22,71 +22,31 @@ public sealed partial class DisplayServer
     private SDL.Keymod _eventKeyModifiers;
     private bool _hasEventKeyModifiers;
 
-    /// <summary>Occurs when the operating system requests that the application quit.</summary>
-    /// <remarks>Delivery is synchronous during <see cref="ProcessEvents"/>. The server does not close automatically.</remarks>
-    public event Action? QuitRequested;
+    internal event Action? QuitRequestedCore;
 
-    /// <summary>Occurs when the native system theme changes.</summary>
-    /// <remarks>Delivery is synchronous in native event order during <see cref="ProcessEvents"/>. Query <see cref="IsDarkMode"/> after delivery to read the current theme.</remarks>
-    public event Action? SystemThemeChanged;
+    internal event Action? SystemThemeChangedCore;
 
-    /// <summary>Occurs when the main window receives a close request.</summary>
-    /// <remarks>Delivery is synchronous in native queue order during <see cref="ProcessEvents"/> or
-    /// <see cref="ForceProcessAndDropEvents"/> for the main window only. The server does not close automatically.
-    /// A failing handler does not prevent later queued events from being delivered; the pump reports its failure afterward.</remarks>
-    public event Action? CloseRequested;
+    internal event Action? CloseRequestedCore;
 
-    /// <summary>Occurs when the pointer enters the main window.</summary>
-    /// <remarks>Only effective pointer transitions for the main window notify, in native queue order during <see cref="ProcessEvents"/> or <see cref="ForceProcessAndDropEvents"/>. A failing handler does not prevent later queued events from being delivered.</remarks>
-    public event Action? WindowMouseEntered;
+    internal event Action? WindowMouseEnteredCore;
 
-    /// <summary>Occurs when the pointer leaves the main window.</summary>
-    /// <remarks>Only effective pointer transitions for the main window notify, in native queue order during <see cref="ProcessEvents"/> or <see cref="ForceProcessAndDropEvents"/>. A failing handler does not prevent later queued events from being delivered.</remarks>
-    public event Action? WindowMouseExited;
+    internal event Action? WindowMouseExitedCore;
 
-    /// <summary>Occurs when the main window's native display content scale changes.</summary>
-    /// <remarks>Delivery follows native event order during <see cref="ProcessEvents"/>. The notification does not include a DPI value: native content scale may change when a window moves between displays, and it is not a measurement of physical dots per inch. A failing handler does not prevent later queued events from being delivered.</remarks>
-    public event Action? WindowDpiChanged;
+    internal event Action? WindowDpiChangedCore;
 
-    /// <summary>Occurs when the main window's observed client rectangle changes.</summary>
-    /// <remarks>Receives the full rectangle in pixel coordinates on Wayland and platform-native window coordinates elsewhere, after the changed position or size has been committed and in native event order during <see cref="ProcessEvents"/>. On Wayland, the position is conventionally zero because the compositor does not disclose a reliable global position. Unchanged rectangles and events from other windows do not notify. Delivery is confined to the opening thread; a failing handler does not prevent later queued events from being delivered.</remarks>
-    public event Action<Rect2i>? WindowRectChanged;
+    internal event Action<Rect2i>? WindowRectChangedCore;
 
-    /// <summary>Occurs when the main window gains or loses keyboard focus.</summary>
-    /// <remarks>Delivery is synchronous for the main window during <see cref="ProcessEvents"/> or <see cref="ForceProcessAndDropEvents"/>. The window callback precedes the application notification. Losing focus releases tracked pressed input afterward, even when either callback fails; failures are reported after later queued events are delivered.</remarks>
-    public event Action<bool>? WindowFocusChanged;
+    internal event Action<bool>? WindowFocusChangedCore;
 
-    /// <summary>Occurs when the platform commits text input, including text composed through an IME.</summary>
-    /// <remarks>Delivery is synchronous during <see cref="ProcessEvents"/>; the input event retains no string state.</remarks>
-    public event Action<string>? TextInput;
+    internal event Action<string>? TextInputCore;
 
-    /// <summary>Occurs after the native input method updates its uncommitted composition.</summary>
-    /// <remarks>The text and Unicode-codepoint selection have already committed to <see cref="IMEGetText"/> and <see cref="IMEGetSelection"/>. Unknown negative native selection offsets become zero.</remarks>
-    public event Action<string, Vector2i>? TextEditing;
+    internal event Action<string, Vector2i>? TextEditingCore;
 
-    /// <summary>Occurs when the operating system finishes dropping one or more files onto the main window.</summary>
-    /// <remarks>Paths are copied from native event memory in arrival order. One completed drop produces one callback, even when it contains multiple files. The returned array belongs to the caller and remains valid after delivery.</remarks>
-    public event Action<IReadOnlyList<string>>? FilesDropped;
+    internal event Action<IReadOnlyList<string>>? FilesDroppedCore;
 
-    /// <summary>Drains native events and commits typed keyboard, mouse, touch and controller state before game callbacks.</summary>
-    /// <remarks>
-    /// The host calls this on the opening thread before advancing each Engine frame. Each input event is owned and
-    /// disposed by this server after synchronous delivery; handlers must duplicate an event they need to retain.
-    /// Malformed native pointer and touch values are rejected before tracked button, contact or timestamp state changes.
-    /// Controller connections update Input metadata before its connection event; device input uses borrowed typed events.
-    /// Callback failures are collected while later queued events continue, then thrown together after the queue drains.
-    /// Re-entry is rejected. No rendering or game frame is advanced here.
-    /// </remarks>
-    /// <exception cref="ObjectDisposedException">The server has been disposed.</exception>
-    /// <exception cref="InvalidOperationException">Called off the opening thread, re-entered, or called while the active main loop cannot accept input. Rejected calls leave the native queue untouched.</exception>
-    /// <exception cref="AggregateException">One or more native pointer/touch values or game callbacks failed; later queued events still run.</exception>
-    public void ProcessEvents() => ProcessEventsCore(dropInput: false);
+    internal void ProcessEventsCore() => ProcessEventsCore(dropInput: false);
 
-    /// <summary>Processes native window and controller connection events while discarding pending keyboard, pointer, touch, text and controller input.</summary>
-    /// <remarks>Tracked pressed state is released before draining the queue; window and quit callbacks still run.</remarks>
-    /// <exception cref="InvalidOperationException">Called off the owner thread or re-entered.</exception>
-    /// <exception cref="AggregateException">One or more delivered callbacks failed.</exception>
-    public void ForceProcessAndDropEvents() => ProcessEventsCore(dropInput: true);
+    internal void ForceProcessAndDropEventsCore() => ProcessEventsCore(dropInput: true);
 
     private void ProcessEventsCore(bool dropInput)
     {
@@ -94,7 +54,7 @@ public sealed partial class DisplayServer
         if (_processingEvents)
             throw new InvalidOperationException("Display event processing cannot be re-entered.");
         if (!dropInput)
-            Engine.Instance.MainLoop?.ValidateInputEventDispatch();
+            Engine.MainLoop?.ValidateInputEventDispatch();
 
         _processingEvents = true;
         _hasEventKeyModifiers = false;
@@ -109,7 +69,7 @@ public sealed partial class DisplayServer
                 _freeTouchIndexes.Clear();
                 _nextTouchIndex = 0;
                 _heldMouseButtons = MouseButtonMask.None;
-                Input.Instance.ReleasePressedEvents();
+                Input.ReleasePressedEvents();
             }
             while (SDL.PollEvent(out var nativeEvent))
             {
@@ -117,7 +77,7 @@ public sealed partial class DisplayServer
                     continue;
                 if ((SDL.EventType)nativeEvent.Type == SDL.EventType.MouseMotion &&
                     nativeEvent.Motion.WindowID == _sdlWindowId &&
-                    nativeEvent.Motion.Which != SDL.TouchMouseID && Input.Instance.UseAccumulatedInput)
+                    nativeEvent.Motion.Which != SDL.TouchMouseID && Input.UseAccumulatedInput)
                 {
                     if (_hasPendingMouseMotion && _pendingMouseMotion.Which != nativeEvent.Motion.Which)
                     {
@@ -223,13 +183,13 @@ public sealed partial class DisplayServer
         }
         if (type == SDL.EventType.Quit)
         {
-            QuitRequested?.Invoke();
+            QuitRequestedCore?.Invoke();
             return;
         }
 
         if (type == SDL.EventType.SystemThemeChanged)
         {
-            SystemThemeChanged?.Invoke();
+            SystemThemeChangedCore?.Invoke();
             return;
         }
 
@@ -258,14 +218,14 @@ public sealed partial class DisplayServer
                 if (!_mouseHovering)
                 {
                     _mouseHovering = true;
-                    WindowMouseEntered?.Invoke();
+                    WindowMouseEnteredCore?.Invoke();
                 }
                 break;
             case SDL.EventType.WindowMouseLeave:
                 if (_mouseHovering)
                 {
                     _mouseHovering = false;
-                    WindowMouseExited?.Invoke();
+                    WindowMouseExitedCore?.Invoke();
                 }
                 break;
             case SDL.EventType.WindowDisplayScaleChanged:
@@ -274,11 +234,11 @@ public sealed partial class DisplayServer
                     ReapplyWaylandWindowLimits();
                     RefreshBlankWindowSurface();
                 }
-                WindowDpiChanged?.Invoke();
+                WindowDpiChangedCore?.Invoke();
                 break;
             case SDL.EventType.WindowCloseRequested:
                 _pendingDroppedFiles = null;
-                CloseRequested?.Invoke();
+                CloseRequestedCore?.Invoke();
                 break;
             case SDL.EventType.WindowResized when !_waylandWindowPosition:
             case SDL.EventType.WindowPixelSizeChanged when _waylandWindowPosition:
@@ -289,7 +249,7 @@ public sealed partial class DisplayServer
                 if (resizedRect != _windowRect)
                 {
                     _windowRect = resizedRect;
-                    WindowRectChanged?.Invoke(resizedRect);
+                    WindowRectChangedCore?.Invoke(resizedRect);
                 }
                 break;
             case SDL.EventType.WindowMoved:
@@ -300,7 +260,7 @@ public sealed partial class DisplayServer
                 if (movedRect != _windowRect)
                 {
                     _windowRect = movedRect;
-                    WindowRectChanged?.Invoke(movedRect);
+                    WindowRectChangedCore?.Invoke(movedRect);
                 }
                 break;
             case SDL.EventType.WindowFocusGained:
@@ -325,13 +285,13 @@ public sealed partial class DisplayServer
             case SDL.EventType.TextInput:
                 _imeText = string.Empty;
                 _imeSelection = Vector2i.Zero;
-                TextInput?.Invoke(Marshal.PtrToStringUTF8(nativeEvent.Text.Text) ?? string.Empty);
+                TextInputCore?.Invoke(Marshal.PtrToStringUTF8(nativeEvent.Text.Text) ?? string.Empty);
                 break;
             case SDL.EventType.TextEditing:
                 _imeText = Marshal.PtrToStringUTF8(nativeEvent.Edit.Text) ?? string.Empty;
                 _imeSelection = new Vector2i(Math.Max(0, nativeEvent.Edit.Start),
                     Math.Max(0, nativeEvent.Edit.Length));
-                TextEditing?.Invoke(_imeText, _imeSelection);
+                TextEditingCore?.Invoke(_imeText, _imeSelection);
                 break;
             case SDL.EventType.MouseMotion when nativeEvent.Motion.Which != SDL.TouchMouseID:
                 DispatchMouseMotion(nativeEvent.Motion);
@@ -353,7 +313,7 @@ public sealed partial class DisplayServer
         {
             try
             {
-                WindowFocusChanged?.Invoke(focused);
+                WindowFocusChangedCore?.Invoke(focused);
             }
             catch (Exception exception)
             {
@@ -362,7 +322,7 @@ public sealed partial class DisplayServer
 
             try
             {
-                Engine.Instance.MainLoop?.Notify(focused
+                Engine.MainLoop?.Notify(focused
                     ? MainLoop.NotificationApplicationFocusIn
                     : MainLoop.NotificationApplicationFocusOut);
             }
@@ -374,7 +334,7 @@ public sealed partial class DisplayServer
         finally
         {
             if (!focused)
-                Input.Instance.ReleasePressedEvents();
+                Input.ReleasePressedEvents();
         }
 
         if (callbackFailure is not null && notificationFailure is not null)
@@ -396,14 +356,14 @@ public sealed partial class DisplayServer
                 if (_pendingDroppedFiles is { } pending)
                     pending.Add(path ?? string.Empty);
                 else
-                    FilesDropped?.Invoke(new[] { path ?? string.Empty });
+                    FilesDroppedCore?.Invoke(new[] { path ?? string.Empty });
                 break;
             case SDL.EventType.DropComplete:
                 {
                     var completed = _pendingDroppedFiles;
                     _pendingDroppedFiles = null;
                     if (completed is { Count: > 0 })
-                        FilesDropped?.Invoke(completed.ToArray());
+                        FilesDroppedCore?.Invoke(completed.ToArray());
                     break;
                 }
         }
@@ -445,7 +405,7 @@ public sealed partial class DisplayServer
             AltPressed = (modifiers & SDL.Keymod.Alt) != 0,
             MetaPressed = (modifiers & SDL.Keymod.GUI) != 0,
         };
-        Input.Instance.ParseInputEvent(@event);
+        Input.ParseInputEvent(@event);
     }
 
     private void DispatchMouseMotion(SDL.MouseMotionEvent source)
@@ -471,7 +431,7 @@ public sealed partial class DisplayServer
             ScreenVelocity = velocity,
         };
         SetPointerModifiers(@event);
-        Input.Instance.ParseInputEvent(@event);
+        Input.ParseInputEvent(@event);
     }
 
     private void DispatchMouseButton(SDL.MouseButtonEvent source)
@@ -504,7 +464,7 @@ public sealed partial class DisplayServer
             DoubleClick = source.Clicks >= 2,
         };
         SetPointerModifiers(@event);
-        Input.Instance.ParseInputEvent(@event);
+        Input.ParseInputEvent(@event);
     }
 
     private void DispatchMouseWheel(SDL.MouseWheelEvent source)
@@ -564,7 +524,7 @@ public sealed partial class DisplayServer
         Exception? pressFailure = null;
         try
         {
-            Input.Instance.ParseInputEvent(@event);
+            Input.ParseInputEvent(@event);
         }
         catch (Exception exception)
         {
@@ -573,7 +533,7 @@ public sealed partial class DisplayServer
         @event.Pressed = false;
         try
         {
-            Input.Instance.ParseInputEvent(@event);
+            Input.ParseInputEvent(@event);
         }
         catch (Exception releaseFailure) when (pressFailure is not null)
         {
@@ -602,7 +562,7 @@ public sealed partial class DisplayServer
         if (!down && !active)
             return;
 
-        var size = WindowGetSize();
+        var size = WindowGetSizeCore();
         var position = new Vector2(source.X * size.X, source.Y * size.Y);
         if (!position.IsFinite())
             throw new ArgumentOutOfRangeException(nameof(source), "Native touch coordinates must be finite.");
@@ -633,7 +593,7 @@ public sealed partial class DisplayServer
                 ScreenVelocity = velocity,
                 Pressure = Math.Clamp(source.Pressure, 0f, 1f),
             };
-            Input.Instance.ParseInputEvent(@event);
+            Input.ParseInputEvent(@event);
             return;
         }
 
@@ -648,7 +608,7 @@ public sealed partial class DisplayServer
                 Pressed = source.Type == SDL.EventType.FingerDown,
                 Canceled = source.Type == SDL.EventType.FingerCanceled,
             };
-            Input.Instance.ParseInputEvent(@event);
+            Input.ParseInputEvent(@event);
         }
         finally
         {
@@ -686,25 +646,13 @@ public sealed partial class DisplayServer
         return LogicalKeys.GetValueOrDefault(source);
     }
 
-    /// <summary>Maps a physical key to the logical key reported for the current keyboard layout.</summary>
-    /// <param name="physical">A physical key identity.</param>
-    /// <returns>The current logical key, or the supplied physical key when no layout mapping is available.</returns>
-    /// <remarks>The result reflects the active keyboard layout and modifier state at the time of the call. Modifier bits in <paramref name="physical"/> are preserved. Reverse Tab is normalized to Tab, as in key events. On Wayland, SDL's keypad lookup does not distinguish Num Lock or shifted navigation symbols, so those keys can retain their physical identity instead of the current logical symbol.</remarks>
-    /// <exception cref="ObjectDisposedException">The server is disposed.</exception>
-    /// <exception cref="InvalidOperationException">The call is not on the opening thread.</exception>
-    public Key KeyboardGetKeycodeFromPhysical(Key physical)
+    internal Key KeyboardGetKeycodeFromPhysicalCore(Key physical)
     {
         EnsureOwner();
         return MapPhysicalKey(physical, true);
     }
 
-    /// <summary>Maps a physical key to its localized label in the current keyboard layout.</summary>
-    /// <param name="physical">A physical key identity.</param>
-    /// <returns>The current label key, including a non-Latin Unicode scalar where applicable, or the supplied physical key when no layout mapping is available.</returns>
-    /// <remarks>The label follows the current layout and modifier state without event-keycode remapping. Modifier bits in <paramref name="physical"/> are preserved; key events use the same label mapping with their event modifier state. On Wayland, SDL's keypad lookup does not expose Num Lock's printable label and can retain the physical keypad identity.</remarks>
-    /// <exception cref="ObjectDisposedException">The server is disposed.</exception>
-    /// <exception cref="InvalidOperationException">The call is not on the opening thread.</exception>
-    public Key KeyboardGetLabelFromPhysical(Key physical)
+    internal Key KeyboardGetLabelFromPhysicalCore(Key physical)
     {
         EnsureOwner();
         return MapPhysicalKey(physical, false);

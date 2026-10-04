@@ -4,7 +4,7 @@ internal static class BaseButtonTests
 {
     internal static void Run()
     {
-        InputMap.Instance.LoadFromProjectSettings();
+        InputMap.LoadFromProjectSettings();
         VerifyStatesAndEdges(); VerifyTouchAndActions(); VerifyGroups(); VerifyFailureAndReentry();
         VerifyShortcutsAndTooltip(); VerifyLifecycleAndPacking(); VerifyWarmInput(); VerifyHoverBuffers();
         Console.WriteLine("Base buttons verify input edges, draw states, touch/action/shortcuts, groups, hooks/errors/reentry, lifecycle, packing and warmed zero allocations.");
@@ -87,7 +87,7 @@ internal static class BaseButtonTests
         var root = new TestViewport(); var b = new Probe { Size = new(30, 20), Shortcut = shortcut }; root.AddChild(b); using var tree = new SceneTree(root);
         var count = 0; b.Pressed += () => count++; using var press = new InputEventKey { Keycode = Key.F6, Pressed = true }; root.PushInput(press, true);
         Check(count == 1 && root.Unhandled == 0 && b.GetDrawMode() == BaseButton.DrawMode.HoverPressed, "The actual shortcut stage handles input and starts visual feedback without GUI focus.");
-        tree.ProcessFrame(ProjectSettings.Instance.GetWithOverride(ProjectSettings.ButtonShortcutFeedbackHighlightTime)); Check(b.GetDrawMode() == BaseButton.DrawMode.HoverPressed, "Feedback remains on its exact zero deadline.");
+        tree.ProcessFrame(ProjectSettings.GetWithOverride(ProjectSettings.ButtonShortcutFeedbackHighlightTime)); Check(b.GetDrawMode() == BaseButton.DrawMode.HoverPressed, "Feedback remains on its exact zero deadline.");
         tree.ProcessFrame(.001); Check(b.GetDrawMode() != BaseButton.DrawMode.HoverPressed, "Feedback ends after the unscaled deadline is crossed.");
         press.Echo = true; root.PushInput(press, true); press.Echo = false; b.Disabled = true; root.PushInput(press, true); Check(count == 1, "Echo and disabled shortcuts are ignored."); b.Disabled = false;
         b.ShortcutFeedback = false; root.PushInput(press, true); Check(count == 2 && b.GetDrawMode() != BaseButton.DrawMode.HoverPressed, "Disabling feedback retains executable shortcut activation.");

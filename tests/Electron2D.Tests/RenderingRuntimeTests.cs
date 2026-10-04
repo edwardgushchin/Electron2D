@@ -5,19 +5,19 @@ internal static partial class RenderingRuntimeTests
 {
     internal static void Run()
     {
-        var settings = ProjectSettings.Instance;
-        var method = settings.Get(ProjectSettings.RenderingMethod);
-        var fallback = settings.Get(ProjectSettings.RenderingFallback);
-        var limit = Engine.Instance.MaxFPS;
+        var settings = ProjectSettings.Service;
+        var method = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        var fallback = ProjectSettings.Get(ProjectSettings.RenderingFallback);
+        var limit = Engine.MaxFPS;
         try
         {
-            Engine.Instance.MaxFPS = 60;
-            settings.Set(ProjectSettings.RenderingFallback, false);
+            Engine.MaxFPS = 60;
+            ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RID_NATIVE") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyRenderingTextureRIDs(backend);
                     VerifyTextureProxies(backend);
                 }
@@ -27,7 +27,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyItemListRendering(backend);
                 }
                 return;
@@ -36,7 +36,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyGUIDragRendering(backend);
                 }
                 return;
@@ -45,7 +45,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyTextDeliveryNative(backend);
                 }
                 return;
@@ -54,7 +54,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyLayoutContainers(backend);
                 }
                 return;
@@ -63,7 +63,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyScrollRendering(backend);
                 }
                 return;
@@ -72,7 +72,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyTooltips(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyTooltips(backend);
                 }
                 return;
             }
@@ -80,7 +80,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyButtons(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyButtons(backend);
                 }
                 return;
             }
@@ -88,7 +88,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyTextureButton(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyTextureButton(backend);
                 }
                 return;
             }
@@ -96,7 +96,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyLabels(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyLabels(backend);
                 }
                 return;
             }
@@ -104,7 +104,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyFonts(backend); VerifyFontColors(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyFonts(backend); VerifyFontColors(backend);
                 }
                 return;
             }
@@ -112,7 +112,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifySliders(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifySliders(backend);
                 }
                 return;
             }
@@ -120,7 +120,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyThemePanels(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyThemePanels(backend);
                 }
                 return;
             }
@@ -128,7 +128,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyFlatStyles(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyFlatStyles(backend);
                 }
                 return;
             }
@@ -136,21 +136,21 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyStyleBoxes(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyStyleBoxes(backend);
                 }
                 return;
             }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPLIT_NATIVE") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
-                { settings.Set(ProjectSettings.RenderingMethod, backend); VerifySplitContainers(backend); }
+                { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifySplitContainers(backend); }
                 return;
             }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RECT") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyTextureRect(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyTextureRect(backend);
                 }
                 return;
             }
@@ -158,7 +158,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyFlowLayout(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyFlowLayout(backend);
                 }
                 return;
             }
@@ -166,7 +166,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyGridLayout(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyGridLayout(backend);
                 }
                 return;
             }
@@ -174,7 +174,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyBoxLayout(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyBoxLayout(backend);
                 }
                 return;
             }
@@ -182,7 +182,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyTextureProgress(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyTextureProgress(backend);
                 }
                 return;
             }
@@ -190,7 +190,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyNinePatch(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyNinePatch(backend);
                 }
                 return;
             }
@@ -198,7 +198,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyScreenVisibility(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyScreenVisibility(backend);
                 }
                 return;
             }
@@ -206,7 +206,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifySprite(backend);
                 }
                 return;
@@ -215,7 +215,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyControlClipping(backend);
                     VerifyRepeatedControlClipping(backend);
                     VerifyFrameAllocations(backend, controlClip: true);
@@ -227,7 +227,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasMaterialState();
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyCanvasMaterialFrame(backend);
                 }
                 return;
@@ -237,7 +237,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyShaderBooleans("BooleansHLSL"); VerifyShaderBooleans("BooleansGLSL");
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyShaderBooleanFrame(backend, "BooleansHLSL"); VerifyShaderBooleanFrame(backend, "BooleansGLSL");
                 }
                 return;
@@ -246,7 +246,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyNamedSamplerDefaults(backend, "TextureHlsl"); VerifyNamedSamplerDefaults(backend, "TextureGlsl");
                     if (backend == "gpu") { VerifyTextureFrame("TextureHlsl"); VerifyTextureFrame("TextureGlsl"); }
                 }
@@ -257,7 +257,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyShaderMatrices("MatricesHLSL"); VerifyShaderMatrices("MatricesGLSL");
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyShaderMatrixFrame(backend, "MatricesHLSL"); VerifyShaderMatrixFrame(backend, "MatricesGLSL");
                 }
                 return;
@@ -268,7 +268,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyShaderTriples();
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyShaderVectorFrame(backend, "ValuesHLSL"); VerifyShaderVectorFrame(backend, "ValuesGLSL");
                     if (backend == "gpu") VerifyShaderTripleFrame();
                 }
@@ -279,7 +279,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyShaderTimeContract("TimeHLSL"); VerifyShaderTimeContract("TimeGLSL");
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyShaderTimeFrame(backend, "TimeHLSL"); VerifyShaderTimeFrame(backend, "TimeGLSL");
                     if (backend == "gpu") VerifyShaderTimeOverflow();
                 }
@@ -289,7 +289,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyScenePaths(backend); VerifyPathDiagnostics(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyScenePaths(backend); VerifyPathDiagnostics(backend);
                 }
                 return;
             }
@@ -297,7 +297,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCurveTextureCanvas(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCurveTextureCanvas(backend);
                     if (backend == "gpu") { VerifyCurveTextureFrame("TextureHlsl"); VerifyCurveTextureFrame("TextureGlsl"); }
                 }
                 return;
@@ -306,7 +306,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyGradientCanvas(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyGradientCanvas(backend);
                     if (backend == "gpu") { VerifyGradientMaterial("TextureHlsl"); VerifyGradientMaterial("TextureGlsl"); }
                 }
                 return;
@@ -315,7 +315,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyNoiseTexture(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyNoiseTexture(backend);
                 }
                 return;
             }
@@ -323,7 +323,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
                     VerifyFrameAllocations(backend, canvasTransforms: true);
                     if (backend == "gpu") { VerifyCanvasCoordinates(backend, "CanvasHLSL"); VerifyCanvasCoordinates(backend, "CanvasGLSL"); }
                 }
@@ -333,7 +333,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCamera(backend); VerifyFrameAllocations(backend, cameraTracking: true);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCamera(backend); VerifyFrameAllocations(backend, cameraTracking: true);
                     if (backend == "gpu") { VerifyCamera(backend, "CanvasHLSL"); VerifyCamera(backend, "CanvasGLSL"); }
                 }
                 return;
@@ -342,7 +342,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyParallax(backend); VerifyLegacyParallax(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyParallax(backend); VerifyLegacyParallax(backend);
                 }
                 return;
             }
@@ -350,7 +350,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasLayer(backend); VerifyFrameAllocations(backend, canvasLayers: true);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasLayer(backend); VerifyFrameAllocations(backend, canvasLayers: true);
                     if (backend == "gpu") { VerifyCanvasLayer(backend, "CanvasHLSL"); VerifyCanvasLayer(backend, "CanvasGLSL"); }
                 }
                 return;
@@ -359,7 +359,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasMasks(backend); VerifyFrameAllocations(backend, canvasMasks: true);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasMasks(backend); VerifyFrameAllocations(backend, canvasMasks: true);
                     if (backend == "gpu") { VerifyCanvasMasks(backend, "CanvasHLSL"); VerifyCanvasMasks(backend, "CanvasGLSL"); }
                     else VerifyCulledShader();
                 }
@@ -369,7 +369,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyTransformNotifications(backend); VerifyFrameAllocations(backend, cameraTracking: true);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyTransformNotifications(backend); VerifyFrameAllocations(backend, cameraTracking: true);
                     if (backend == "gpu") { VerifyTransformNotifications(backend, "CanvasHLSL"); VerifyTransformNotifications(backend, "CanvasGLSL"); }
                 }
                 return;
@@ -378,7 +378,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasPolygons(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasPolygons(backend);
                     if (backend == "gpu") { VerifyCanvasPolygons(backend, "CanvasHLSL"); VerifyCanvasPolygons(backend, "CanvasGLSL"); }
                 }
                 return;
@@ -387,7 +387,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyLine(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyLine(backend);
                     if (backend == "gpu") { VerifyLine(backend, "CanvasHLSL"); VerifyLine(backend, "CanvasGLSL"); }
                 }
                 return;
@@ -396,7 +396,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyPolygonNode(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyPolygonNode(backend);
                     if (backend == "gpu") { VerifyPolygonNode(backend, "CanvasHLSL"); VerifyPolygonNode(backend, "CanvasGLSL"); }
                 }
                 return;
@@ -405,7 +405,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasStrokes(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasStrokes(backend);
                     if (backend == "gpu") { VerifyCanvasStrokes(backend, "CanvasHLSL"); VerifyCanvasStrokes(backend, "CanvasGLSL"); }
                 }
                 return;
@@ -414,7 +414,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasTiming(backend); VerifyFrameAllocations(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasTiming(backend); VerifyFrameAllocations(backend);
                     if (backend == "gpu") { VerifyCanvasTiming(backend, "CanvasHLSL"); VerifyCanvasTiming(backend, "CanvasGLSL"); }
                 }
                 return;
@@ -423,7 +423,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyAnimatedTexture(backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyAnimatedTexture(backend);
                 }
                 VerifyAnimatedTextureFailure();
                 return;
@@ -432,7 +432,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifySceneHierarchy(backend);
                 }
                 return;
@@ -452,7 +452,7 @@ internal static partial class RenderingRuntimeTests
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy") VerifyTextureCursor();
             foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
             {
-                settings.Set(ProjectSettings.RenderingMethod, backend);
+                ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
                 var software = VerifyCanvasSampling(backend);
                 VerifyShaderTimeFrame(backend, "TimeHLSL"); VerifyShaderTimeFrame(backend, "TimeGLSL");
                 if (backend == "gpu") VerifyShaderTimeOverflow();
@@ -531,20 +531,20 @@ internal static partial class RenderingRuntimeTests
             }
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy")
             {
-                settings.Set(ProjectSettings.RenderingMethod, "gpu");
+                ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
                 var rejected = new Window();
-                Reject<InvalidOperationException>(() => Engine.Instance.Run(rejected));
+                Reject<InvalidOperationException>(() => Engine.Run(rejected));
                 Released(rejected);
-                settings.Set(ProjectSettings.RenderingFallback, true);
+                ProjectSettings.Set(ProjectSettings.RenderingFallback, true);
                 VerifyFrame("compatibility");
             }
             Console.WriteLine("Rendering runtime checks passed.");
         }
         finally
         {
-            settings.Set(ProjectSettings.RenderingMethod, method);
-            settings.Set(ProjectSettings.RenderingFallback, fallback);
-            Engine.Instance.MaxFPS = limit;
+            ProjectSettings.Set(ProjectSettings.RenderingMethod, method);
+            ProjectSettings.Set(ProjectSettings.RenderingFallback, fallback);
+            Engine.MaxFPS = limit;
         }
     }
 
@@ -609,13 +609,13 @@ internal static partial class RenderingRuntimeTests
             Name = "hook",
             ReadyAction = node =>
             {
-                var server = RenderingServer.Instance!;
-                Check(server.GetCurrentRenderingMethod() == expectedBackend, "The requested backend is actually active.");
-                server.SetDefaultClearColor(Colors.Black);
+                var server = RenderingServer.Service!;
+                Check(RenderingServer.GetCurrentRenderingMethod() == expectedBackend, "The requested backend is actually active.");
+                RenderingServer.SetDefaultClearColor(Colors.Black);
                 Reject<InvalidOperationException>(server.Dispose);
-                Reject<InvalidOperationException>(DisplayServer.Instance!.Dispose);
-                server.FramePreDraw += () => Reject<InvalidOperationException>(() => Engine.Instance.AdvanceFrame(0));
-                server.FramePostDraw += () =>
+                Reject<InvalidOperationException>(DisplayServer.Service!.Dispose);
+                RenderingServer.FramePreDraw += () => Reject<InvalidOperationException>(() => Engine.AdvanceFrame(0));
+                RenderingServer.FramePostDraw += () =>
                 {
                     frames++;
                     using var frame = server.Readback();
@@ -648,7 +648,7 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(hook);
         try
         {
-            Check(Engine.Instance.Run(window) == 7 && frames == 3, "Scene frames submit and quit through Engine.Run.");
+            Check(Engine.Run(window) == 7 && frames == 3, "Scene frames submit and quit through Engine.Run.");
             Released(window);
             var output = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_OUTPUT");
             if (output is not null && first is not null)
@@ -715,9 +715,9 @@ internal static partial class RenderingRuntimeTests
         {
             ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!;
-            server.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames > 20) allocated += bytes;
@@ -725,7 +725,7 @@ internal static partial class RenderingRuntimeTests
             };
         }
         });
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 40 && allocated == 0,
             $"Warmed {backend} canvas preparation, sorting and native submission allocated {allocated} bytes in 20 frames.");
@@ -744,21 +744,21 @@ internal static partial class RenderingRuntimeTests
             DrawAction = n => n.DrawRect(new Rect2(0, 0, 48, 48), Colors.Red),
             ReadyAction = n =>
         {
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
-                using var frame = RenderingServer.Instance.Readback();
+                using var frame = RenderingServer.Service!.Readback();
                 Pixel(frame, 16, 16, Colors.Blue);
                 n.Tree!.Quit();
             };
         }
         });
-        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
-        else Engine.Instance.Run(window);
+        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));
+        else Engine.Run(window);
         Released(window);
         Check(!shader.IsDisposed && !material.IsDisposed, "Window cleanup does not dispose borrowed shading resources.");
         window = new Window();
         window.AddChild(new CanvasNode { DrawAction = _ => throw new InvalidOperationException("injected draw failure") });
-        Reject<InvalidOperationException>(() => Engine.Instance.Run(window));
+        Reject<InvalidOperationException>(() => Engine.Run(window));
         Released(window);
     }
 
@@ -854,11 +854,11 @@ internal static partial class RenderingRuntimeTests
         var right = new CanvasNode { Name = "right", Material = second, DrawAction = n => n.DrawRect(new Rect2(48, 0, 40, 48), Colors.White) };
         left.ReadyAction = n =>
         {
-            RenderingServer.Instance!.SetDefaultClearColor(Colors.Black);
-            RenderingServer.Instance.FramePostDraw += () =>
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 frames++;
-                using var frame = RenderingServer.Instance.Readback();
+                using var frame = RenderingServer.Service!.Readback();
                 Pixel(frame, 8, 16, Colors.Black);
                 Pixel(frame, 60, 16, Colors.Green);
                 Pixel(frame, 16, 16, frames switch { 1 => Colors.Red, 2 => new Color(0, 0, 0.5f, 1), 3 => new Color(0, 0, 0.25f, 1), _ => new Color(0.25f, 0, 0, 1) });
@@ -874,7 +874,7 @@ internal static partial class RenderingRuntimeTests
             };
         };
         window.AddChild(left); window.AddChild(right);
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 4, "Both source languages execute material scalars, arrays, vectors and shader reload on the GPU.");
     }
@@ -894,8 +894,8 @@ internal static partial class RenderingRuntimeTests
               Math.Abs(pixel.B - expected.B) <= 2f / 255 && Math.Abs(pixel.A - expected.A) <= 2f / 255,
             $"Pixel ({x},{y}): expected {expected}, got {pixel}.");
     }
-    private static void Released(Window window) => Check(window.IsDisposed && Engine.Instance.MainLoop is null &&
-        DisplayServer.Instance is null && RenderingServer.Instance is null, "All scene and graphics ownership is released.");
+    private static void Released(Window window) => Check(window.IsDisposed && Engine.MainLoop is null &&
+        DisplayServer.Service is null && RenderingServer.Service is null, "All scene and graphics ownership is released.");
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception
     {

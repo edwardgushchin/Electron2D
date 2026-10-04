@@ -13,8 +13,8 @@ internal static partial class RenderingRuntimeTests
         grid.AddChild(a); grid.AddChild(b); grid.AddChild(c); var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 if (frames == 1)
@@ -65,7 +65,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         VerifyGridWarm(backend, texture);
         Console.WriteLine($"Grid native remainders, RTL, visibility, reorder, resize, column reflow, capped rows and warmed process/layout/render passed: {backend}.");
     }
@@ -86,14 +86,14 @@ internal static partial class RenderingRuntimeTests
                 before = GC.GetAllocatedBytesForCurrentThread();
                 grid.Size = frames % 2 == 0 ? new(40, 30) : new(42, 32);
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 Check(first.Size == (frames % 2 == 0 ? new Vector2(18, 13) : new Vector2(19, 14)), "Warmed grid deferred layout finishes before native rendering.");
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && allocated == 0, $"Warmed {backend} grid ProcessFrameStarted-to-FramePostDraw resize/layout/render allocated {allocated} bytes over 64 measured frames.");
     }
 }

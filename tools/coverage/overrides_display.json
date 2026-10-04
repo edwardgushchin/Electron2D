@@ -397,11 +397,7 @@
       "reason": "Typed C# native-host bootstrap creates the SDL video connection and main window.",
       "adr": "ADR 0040"
     },
-    {
-      "electron2d": "property:Electron2D.DisplayServer.Instance()",
-      "reason": "Current process-wide display host readback follows the typed C# bootstrap lifecycle.",
-      "adr": "ADR 0040"
-    },
+
     {
       "electron2d": "method:Electron2D.DisplayServer.Dispose(System.Boolean)",
       "reason": "Protected deterministic SDL handle release overrides the engine-owned object lifecycle.",
@@ -411,7 +407,8 @@
       "electron2d": "method:Electron2D.DisplayServer.ValidateDisposal()",
       "reason": "Protected owner-thread validation overrides the engine-owned object lifecycle.",
       "adr": "ADR 0003/0014"
-    }
+    },
+    {"electron2d": "property:Electron2D.DisplayServer.IsAvailable()", "reason": "Observable availability gate for the session-scoped static service API; does not reserve its lifetime.", "adr": "ADR 0095"}
   ],
   "statusGroups": [
     {

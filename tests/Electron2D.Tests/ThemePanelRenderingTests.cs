@@ -23,8 +23,8 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 // Resource notifications and the resulting layout use separate deferred batches.
                 if (++frames % 2 != 0) return;
@@ -65,7 +65,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(!inherited.IsDisposed && !local.IsDisposed && !texture.IsDisposed, "Theme panel consumers retain borrowed resource ownership.");
         VerifyThemePanelWarm(backend, texture);
         Console.WriteLine($"Theme panels native defaults, Control/Window inheritance, overrides, borrowed mutations, margins, clearing and warmed frames passed: {backend}.");
@@ -88,14 +88,14 @@ internal static partial class RenderingRuntimeTests
                 style.SetContentMarginAll(frames % 2 == 0 ? 4 : 5);
                 container.Size = frames % 2 == 0 ? new(40, 30) : new(44, 34);
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 Check(child.Position == (frames % 2 == 0 ? new Vector2(4, 4) : new Vector2(5, 5)) && child.Size == (frames % 2 == 0 ? new Vector2(32, 22) : new Vector2(34, 24)), "Active style changes reach the native frame's content layout.");
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && draws == 128 && allocated == 0, $"Warmed {backend} theme notification/layout/recording/render allocated {allocated} bytes over 64 ProcessFrameStarted-to-FramePostDraw frames; recordings={draws}.");
     }
 }

@@ -1,6 +1,6 @@
 # AudioSample
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioSample` · **Source:** [AudioSample.cs](../../src/Scene/Resources/AudioSample.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -18,7 +18,7 @@ Loop bounds are frame indices, begin inclusive and end exclusive. Disabled ignor
 using var stream = new AudioStreamWAV { Data = new byte[44100] };
 using var sample = stream.GenerateSample();
 float[] pcm = sample.Data; // Independent inspection copy.
-AudioServer.Instance.RegisterStreamAsSample(stream);
+AudioServer.RegisterStreamAsSample(stream);
 ```
 
 ## API summary

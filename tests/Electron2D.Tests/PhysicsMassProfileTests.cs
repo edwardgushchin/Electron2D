@@ -23,7 +23,7 @@ internal static class PhysicsMassProfileTests
         body.CenterOfMass = Vector2.Zero;
         Reject<InvalidOperationException>(() => body.CenterOfMass = new(1, 0));
         using var tree = new SceneTree(root);
-        var state = PhysicsServer.Instance.BodyGetDirectState(body.GetRID())!;
+        var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         Check(state.CenterOfMassLocal.IsEqualApprox(new(20, 0)) && Near(1 / state.InverseInertia, 100),
             "Automatic native circle center and scene-unit polar inertia.");
         body.CenterOfMassMode = RigidCenterOfMassMode.Custom; body.CenterOfMass = new(5, 0);
@@ -39,7 +39,7 @@ internal static class PhysicsMassProfileTests
         Check(body.CenterOfMass == Vector2.Zero && state.CenterOfMassLocal.IsEqualApprox(new(20, 0)) && Near(1 / state.InverseInertia, 200),
             "Returning to Auto clears the stored custom center and preserves explicit inertia.");
         body.Inertia = 0; circle.Radius = 5;
-        Check(Near(PhysicsServer.Instance.BodyGetInertia(body.GetRID()), 37.5f) && body.Inertia == 0,
+        Check(Near(PhysicsServer.BodyGetInertia(body.GetRID()), 37.5f) && body.Inertia == 0,
             "Automatic inertia recomputes after a live resource revision without replacing the stored zero.");
         var oldMass = body.Mass; var oldInverse = state.InverseMass;
         Reject<ArgumentOutOfRangeException>(() => body.Mass = float.MaxValue);
@@ -61,54 +61,54 @@ internal static class PhysicsMassProfileTests
         body.LockRotation = false; Check(Near(1 / state.InverseInertia, 75), "Unlock restores the explicit polar moment.");
         var stationary = new StaticBody { Name = "stationary" };
         stationary.ShapeOwnerAddShape(stationary.CreateShapeOwner(null), circle); root.AddChild(stationary);
-        var server = PhysicsServer.Instance; server.BodySetMass(stationary.GetRID(), 6);
-        server.BodySetCenterOfMass(stationary.GetRID(), new(3, 4)); server.BodySetInertia(stationary.GetRID(), 20);
-        var stationaryState = server.BodyGetDirectState(stationary.GetRID())!;
+        var server = PhysicsServer.Service; PhysicsServer.BodySetMass(stationary.GetRID(), 6);
+        PhysicsServer.BodySetCenterOfMass(stationary.GetRID(), new(3, 4)); PhysicsServer.BodySetInertia(stationary.GetRID(), 20);
+        var stationaryState = PhysicsServer.BodyGetDirectState(stationary.GetRID())!;
         Check(stationaryState.InverseMass == 0 && stationaryState.InverseInertia == 0 &&
-            stationaryState.CenterOfMassLocal.IsEqualApprox(new(3, 4)) && server.BodyGetMass(stationary.GetRID()) == 6,
+            stationaryState.CenterOfMassLocal.IsEqualApprox(new(3, 4)) && PhysicsServer.BodyGetMass(stationary.GetRID()) == 6,
             "Non-rigid scene bodies share configured server profiles with role-correct physical inverse values.");
         root.RemoveChild(stationary); root.AddChild(stationary);
-        Check(server.BodyGetCenterOfMass(stationary.GetRID()).IsEqualApprox(new(3, 4)) && server.BodyGetInertia(stationary.GetRID()) == 20,
+        Check(PhysicsServer.BodyGetCenterOfMass(stationary.GetRID()).IsEqualApprox(new(3, 4)) && PhysicsServer.BodyGetInertia(stationary.GetRID()) == 20,
             "Non-rigid scene server profiles survive exit/reentry.");
     }
 
     private static void VerifyServerProfile()
     {
-        var server = PhysicsServer.Instance;
-        var body = server.BodyCreate(); var shape = server.CircleShapeCreate(); var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
+        var server = PhysicsServer.Service;
+        var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate(); var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
         try
         {
-            Check(server.BodyGetMass(body) == 1 && server.BodyGetInertia(body) == 0 && server.BodyGetCenterOfMass(body) == Vector2.Zero,
+            Check(PhysicsServer.BodyGetMass(body) == 1 && PhysicsServer.BodyGetInertia(body) == 0 && PhysicsServer.BodyGetCenterOfMass(body) == Vector2.Zero,
                 "Detached server bodies default to one kilogram and unresolved automatic geometry.");
-            server.BodyAddShape(body, shape, new(0, Vector2.One, 0, new(20, 0)));
-            server.BodySetSpace(body, space);
-            var state = server.BodyGetDirectState(body)!;
-            Check(state.InverseMass == 1 && Near(server.BodyGetInertia(body), 50) && server.BodyGetCenterOfMass(body).IsEqualApprox(new(20, 0)),
+            PhysicsServer.BodyAddShape(body, shape, new(0, Vector2.One, 0, new(20, 0)));
+            PhysicsServer.BodySetSpace(body, space);
+            var state = PhysicsServer.BodyGetDirectState(body)!;
+            Check(state.InverseMass == 1 && Near(PhysicsServer.BodyGetInertia(body), 50) && PhysicsServer.BodyGetCenterOfMass(body).IsEqualApprox(new(20, 0)),
                 "Server fixtures use configured kilograms instead of raw density mass.");
-            server.BodySetMass(body, 4); server.BodySetCenterOfMass(body, new(10, 0));
-            Check(Near(state.InverseMass, 0.25f) && Near(server.BodyGetInertia(body), 600), "Server custom center and geometry inertia execute.");
-            server.BodySetInertia(body, 100); server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-            Check(state.InverseMass == 0 && server.BodyGetMass(body) == 4 && server.BodyGetInertia(body) == 100 &&
+            PhysicsServer.BodySetMass(body, 4); PhysicsServer.BodySetCenterOfMass(body, new(10, 0));
+            Check(Near(state.InverseMass, 0.25f) && Near(PhysicsServer.BodyGetInertia(body), 600), "Server custom center and geometry inertia execute.");
+            PhysicsServer.BodySetInertia(body, 100); PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+            Check(state.InverseMass == 0 && PhysicsServer.BodyGetMass(body) == 4 && PhysicsServer.BodyGetInertia(body) == 100 &&
                 state.CenterOfMassLocal.IsEqualApprox(new(10, 0)), "Static server mode preserves configured values.");
-            server.BodySetMode(body, PhysicsServer.BodyMode.RigidLinear);
+            PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.RigidLinear);
             Check(Near(state.InverseMass, 0.25f) && state.InverseInertia == 0, "RigidLinear applies mass and prevents angular response.");
-            server.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
+            PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
             Check(Near(1 / state.InverseInertia, 100), "Dynamic mode restores the stored inertia override.");
-            server.BodySetSpace(body, default); server.BodySetMass(body, 5); server.BodySetCenterOfMass(body, new(8, 0));
-            server.BodySetSpace(body, space); state = server.BodyGetDirectState(body)!;
+            PhysicsServer.BodySetSpace(body, default); PhysicsServer.BodySetMass(body, 5); PhysicsServer.BodySetCenterOfMass(body, new(8, 0));
+            PhysicsServer.BodySetSpace(body, space); state = PhysicsServer.BodyGetDirectState(body)!;
             Check(Near(state.InverseMass, 0.2f) && state.CenterOfMassLocal.IsEqualApprox(new(8, 0)), "Detached edits and reentry retain the configured profile.");
-            server.BodyResetMassProperties(body);
-            Check(server.BodyGetMass(body) == 5 && Near(server.BodyGetInertia(body), 250) &&
-                server.BodyGetCenterOfMass(body).IsEqualApprox(new(20, 0)), "Reset selects both automatic channels while retaining mass.");
-            Reject<ArgumentOutOfRangeException>(() => server.BodySetMass(body, 0));
-            Reject<ArgumentOutOfRangeException>(() => server.BodySetInertia(body, float.NaN));
-            Check(server.BodyGetMass(body) == 5 && Near(server.BodyGetInertia(body), 250), "Rejected server edits cannot partially replace native data.");
+            PhysicsServer.BodyResetMassProperties(body);
+            Check(PhysicsServer.BodyGetMass(body) == 5 && Near(PhysicsServer.BodyGetInertia(body), 250) &&
+                PhysicsServer.BodyGetCenterOfMass(body).IsEqualApprox(new(20, 0)), "Reset selects both automatic channels while retaining mass.");
+            Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodySetMass(body, 0));
+            Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodySetInertia(body, float.NaN));
+            Check(PhysicsServer.BodyGetMass(body) == 5 && Near(PhysicsServer.BodyGetInertia(body), 250), "Rejected server edits cannot partially replace native data.");
         }
-        finally { server.FreeRID(body); server.FreeRID(shape); server.FreeRID(space); }
-        Reject<ArgumentException>(() => server.BodyGetMass(body));
-        var area = server.AreaCreate();
-        try { Reject<ArgumentException>(() => server.BodySetMass(area, 2)); }
-        finally { server.FreeRID(area); }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(shape); PhysicsServer.FreeRID(space); }
+        Reject<ArgumentException>(() => PhysicsServer.BodyGetMass(body));
+        var area = PhysicsServer.AreaCreate();
+        try { Reject<ArgumentException>(() => PhysicsServer.BodySetMass(area, 2)); }
+        finally { PhysicsServer.FreeRID(area); }
     }
 
     private static void VerifySegmentsAndEmptyBodies()
@@ -126,11 +126,11 @@ internal static class PhysicsMassProfileTests
             GravityScale = 0
         };
         root.AddChild(empty); using var tree = new SceneTree(root);
-        var state = PhysicsServer.Instance.BodyGetDirectState(body.GetRID())!;
+        var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         Check(Near(1 / state.InverseInertia, 600), "Zero-area line mass keeps length-weighted rod inertia.");
         body.CenterOfMassMode = RigidCenterOfMassMode.Custom; body.CenterOfMass = new(10, 0);
         Check(Near(1 / state.InverseInertia, 800), "Custom centers shift segment rod inertia by the same parallel-axis policy.");
-        var emptyState = PhysicsServer.Instance.BodyGetDirectState(empty.GetRID())!;
+        var emptyState = PhysicsServer.BodyGetDirectState(empty.GetRID())!;
         Check(Near(emptyState.InverseMass, 1f / 3) && Near(1 / emptyState.InverseInertia, 12) &&
             emptyState.CenterOfMassLocal.IsEqualApprox(new(5, 0)), "Explicit inertia works without collision geometry.");
         empty.ApplyTorqueImpulse(12); Check(Near(emptyState.AngularVelocity, 1), "Unshaped explicit inertia gives real angular impulse response.");
@@ -152,16 +152,16 @@ internal static class PhysicsMassProfileTests
         var stored = (RigidBody)copy.GetChild(0);
         Check(stored.Mass == 4 && stored.Inertia == 30 && stored.CenterOfMassMode == RigidCenterOfMassMode.Custom &&
             stored.CenterOfMass == new Vector2(2, 3), "PackedScene restores ordered mode/center/inertia configuration.");
-        var server = PhysicsServer.Instance;
+        var server = PhysicsServer.Service;
         Action<ElectronObject> fail = _ => throw new ApplicationException("profile");
         stored.PropertyListChanged += fail;
-        Check(Capture(() => server.BodyResetMassProperties(stored.GetRID())) is ApplicationException && stored.Inertia == 0 &&
+        Check(Capture(() => PhysicsServer.BodyResetMassProperties(stored.GetRID())) is ApplicationException && stored.Inertia == 0 &&
             stored.CenterOfMassMode == RigidCenterOfMassMode.Auto && stored.CenterOfMass == Vector2.Zero,
             "Reset commits both channels before a property-list callback failure.");
-        Check(Capture(() => server.BodySetCenterOfMass(stored.GetRID(), new(6, 7))) is ApplicationException && stored.CenterOfMass == new Vector2(6, 7),
+        Check(Capture(() => PhysicsServer.BodySetCenterOfMass(stored.GetRID(), new(6, 7))) is ApplicationException && stored.CenterOfMass == new Vector2(6, 7),
             "Server custom center is atomic even if a mode notification throws.");
         stored.PropertyListChanged -= fail;
-        Check(Task.Run(() => Capture(() => server.BodySetMass(stored.GetRID(), 2))).Result is InvalidOperationException,
+        Check(Task.Run(() => Capture(() => PhysicsServer.BodySetMass(stored.GetRID(), 2))).Result is InvalidOperationException,
             "Scene-owned server mass changes enforce owner thread even when frozen.");
         var moving = new MassDuringPose
         {
@@ -189,12 +189,12 @@ internal static class PhysicsMassProfileTests
             CenterOfMassMode = RigidCenterOfMassMode.Custom
         };
         body.ShapeOwnerAddShape(body.CreateShapeOwner(null), circle); root.AddChild(body); using var tree = new SceneTree(root);
-        var server = PhysicsServer.Instance; var rid = body.GetRID();
+        var server = PhysicsServer.Service; var rid = body.GetRID();
         for (var pass = 0; pass < 64; pass++) { ChangeProfile(); tree.PhysicsFrame(1d / 60); }
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var pass = 0; pass < 64; pass++) { ChangeProfile(); tree.PhysicsFrame(1d / 60); }
         Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed profile changes and active solver frames allocate zero managed bytes.");
-        void ChangeProfile() { body.Mass = 2; body.Inertia = 20; server.BodySetCenterOfMass(rid, new(2, 0)); server.BodySetMass(rid, 3); server.BodySetInertia(rid, 0); }
+        void ChangeProfile() { body.Mass = 2; body.Inertia = 20; PhysicsServer.BodySetCenterOfMass(rid, new(2, 0)); PhysicsServer.BodySetMass(rid, 3); PhysicsServer.BodySetInertia(rid, 0); }
     }
 
     private sealed class MassDuringPose : RigidBody
@@ -207,7 +207,7 @@ internal static class PhysicsMassProfileTests
             Rejected = Capture(() => Mass = 2) is InvalidOperationException &&
                 Capture(() => Inertia = 20) is InvalidOperationException &&
                 Capture(() => CenterOfMassMode = RigidCenterOfMassMode.Custom) is InvalidOperationException &&
-                Capture(() => PhysicsServer.Instance.BodySetCenterOfMass(GetRID(), new(4, 0))) is InvalidOperationException;
+                Capture(() => PhysicsServer.BodySetCenterOfMass(GetRID(), new(4, 0))) is InvalidOperationException;
         }
     }
 

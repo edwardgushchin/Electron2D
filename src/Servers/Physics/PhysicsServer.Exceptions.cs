@@ -5,12 +5,7 @@ public sealed partial class PhysicsServer
     private readonly Dictionary<RID, List<RID>> _bodyExceptions = [];
     private readonly Dictionary<RID, List<RID>> _jointBodyExceptions = [];
 
-    /// <summary>Excludes two bodies from ordinary contact and motion tests when either body lists the other.</summary>
-    /// <param name="body">The live scene or server body that owns the exception entry.</param>
-    /// <param name="exceptedBody">Any RID value; an unresolvable target remains inert.</param>
-    /// <exception cref="ArgumentException">The owner RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">The attached body is off-owner or its world is stepping.</exception>
-    public void BodyAddCollisionException(RID body, RID exceptedBody)
+    internal void BodyAddCollisionExceptionCore(RID body, RID exceptedBody)
     {
         ThrowIfDisposed();
         var space = GetBodySpace(body);
@@ -25,12 +20,7 @@ public sealed partial class PhysicsServer
         InvalidateBodyContacts(body);
     }
 
-    /// <summary>Removes one body-owned collision exception entry.</summary>
-    /// <param name="body">The live scene or server body that owns the entry.</param>
-    /// <param name="exceptedBody">The RID to remove; an absent entry is a no-op.</param>
-    /// <exception cref="ArgumentException">The owner RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">The attached body is off-owner or its world is stepping.</exception>
-    public void BodyRemoveCollisionException(RID body, RID exceptedBody)
+    internal void BodyRemoveCollisionExceptionCore(RID body, RID exceptedBody)
     {
         ThrowIfDisposed();
         var space = GetBodySpace(body);

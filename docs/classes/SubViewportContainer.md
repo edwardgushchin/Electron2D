@@ -32,7 +32,7 @@ var view = new SubViewport();
 view.AddChild(authoredDrawable);
 pane.AddChild(view);
 window.AddChild(pane);
-Engine.Instance.Run(window);
+Engine.Run(window);
 ```
 
 ## Constructor summary

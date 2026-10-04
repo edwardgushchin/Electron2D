@@ -22,7 +22,7 @@ public abstract partial class CollisionObject : Entity
     internal RID PhysicsRID => _rid;
 
     /// <summary>Creates an object in collision layer one with mask one.</summary>
-    protected CollisionObject() => _rid = PhysicsServer.Instance.RegisterSceneObject(this);
+    protected CollisionObject() => _rid = PhysicsServer.Service.RegisterSceneObject(this);
 
     /// <summary>Gets the stable server identity of this collision object.</summary>
     /// <returns>A nonempty RID unchanged by fixture rebuilds or scene attachment.</returns>
@@ -126,7 +126,7 @@ public abstract partial class CollisionObject : Entity
         try { base.Dispose(disposing); }
         finally
         {
-            if (disposing) { _shapeOwners.Clear(); _shapeSlots.Clear(); _childOwners.Clear(); PhysicsServer.Instance.UnregisterSceneObject(_rid); }
+            if (disposing) { _shapeOwners.Clear(); _shapeSlots.Clear(); _childOwners.Clear(); PhysicsServer.Service.UnregisterSceneObject(_rid); }
         }
     }
 

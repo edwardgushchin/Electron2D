@@ -12,7 +12,7 @@ internal static class LocalizationProjectSettingsTests
         Directory.CreateDirectory(user);
         try
         {
-            using (var saved = new ProjectSettings(project, user))
+            using (var saved = new ProjectSettingsRegistry(project, user))
             {
                 Check(!saved.Get(ProjectSettings.PseudolocalizationEnabled) &&
                     saved.Get(ProjectSettings.RootNodeAutoTranslate) &&
@@ -29,7 +29,7 @@ internal static class LocalizationProjectSettingsTests
                 saved.Set(ProjectSettings.RootNodeAutoTranslate, false);
                 saved.Save();
             }
-            using var loaded = new ProjectSettings(project, user);
+            using var loaded = new ProjectSettingsRegistry(project, user);
             loaded.Load();
             Check(loaded.Get(ProjectSettings.PseudolocalizationEnabled) &&
                 loaded.Get(ProjectSettings.PseudolocalizationFakeBIDI) &&
@@ -46,7 +46,7 @@ internal static class LocalizationProjectSettingsTests
         }
         finally { Directory.Delete(root, recursive: true); }
 
-        var settings = ProjectSettings.Instance;
+        var settings = ProjectSettings.Service;
         var main = TranslationServer.GetOrAddDomain("");
         var oldEnabled = TranslationServer.PseudolocalizationEnabled;
         var oldAccents = main.PseudolocalizationAccentsEnabled;
@@ -57,64 +57,64 @@ internal static class LocalizationProjectSettingsTests
         var oldPrefix = main.PseudolocalizationPrefix;
         var oldSuffix = main.PseudolocalizationSuffix;
         var oldSkipPlaceholders = main.PseudolocalizationSkipPlaceholdersEnabled;
-        var settingEnabled = settings.Get(ProjectSettings.PseudolocalizationEnabled);
-        var settingAccents = settings.Get(ProjectSettings.PseudolocalizationReplaceWithAccents);
-        var settingDoubleVowels = settings.Get(ProjectSettings.PseudolocalizationDoubleVowels);
-        var settingFakeBIDI = settings.Get(ProjectSettings.PseudolocalizationFakeBIDI);
-        var settingOverride = settings.Get(ProjectSettings.PseudolocalizationOverride);
-        var settingExpansion = settings.Get(ProjectSettings.PseudolocalizationExpansionRatio);
-        var settingPrefix = settings.Get(ProjectSettings.PseudolocalizationPrefix);
-        var settingSuffix = settings.Get(ProjectSettings.PseudolocalizationSuffix);
-        var settingSkipPlaceholders = settings.Get(ProjectSettings.PseudolocalizationSkipPlaceholders);
+        var settingEnabled = ProjectSettings.Get(ProjectSettings.PseudolocalizationEnabled);
+        var settingAccents = ProjectSettings.Get(ProjectSettings.PseudolocalizationReplaceWithAccents);
+        var settingDoubleVowels = ProjectSettings.Get(ProjectSettings.PseudolocalizationDoubleVowels);
+        var settingFakeBIDI = ProjectSettings.Get(ProjectSettings.PseudolocalizationFakeBIDI);
+        var settingOverride = ProjectSettings.Get(ProjectSettings.PseudolocalizationOverride);
+        var settingExpansion = ProjectSettings.Get(ProjectSettings.PseudolocalizationExpansionRatio);
+        var settingPrefix = ProjectSettings.Get(ProjectSettings.PseudolocalizationPrefix);
+        var settingSuffix = ProjectSettings.Get(ProjectSettings.PseudolocalizationSuffix);
+        var settingSkipPlaceholders = ProjectSettings.Get(ProjectSettings.PseudolocalizationSkipPlaceholders);
         try
         {
-            settings.Set(ProjectSettings.PseudolocalizationEnabled, true);
-            settings.Set(ProjectSettings.PseudolocalizationReplaceWithAccents, false);
-            settings.Set(ProjectSettings.PseudolocalizationDoubleVowels, false);
-            settings.Set(ProjectSettings.PseudolocalizationFakeBIDI, false);
-            settings.Set(ProjectSettings.PseudolocalizationOverride, true);
-            settings.Set(ProjectSettings.PseudolocalizationExpansionRatio, 0f);
-            settings.Set(ProjectSettings.PseudolocalizationPrefix, "<");
-            settings.Set(ProjectSettings.PseudolocalizationSuffix, ">");
-            settings.Set(ProjectSettings.PseudolocalizationSkipPlaceholders, true);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationEnabled, true);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationReplaceWithAccents, false);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationDoubleVowels, false);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationFakeBIDI, false);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationOverride, true);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationExpansionRatio, 0f);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationPrefix, "<");
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationSuffix, ">");
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationSkipPlaceholders, true);
 
             using var tree = new SceneTree(new Node());
-            Engine.Instance.Start(tree);
+            Engine.Start(tree);
             try
             {
                 Check(TranslationServer.PseudolocalizationEnabled &&
                     TranslationServer.Translate("", "a %s") == "<**%s>", "Engine startup applies project pseudolocalization before runtime work.");
-                settings.Set(ProjectSettings.PseudolocalizationEnabled, false);
-                settings.Set(ProjectSettings.PseudolocalizationOverride, false);
-                settings.Set(ProjectSettings.PseudolocalizationDoubleVowels, true);
-                settings.Set(ProjectSettings.PseudolocalizationPrefix, "{");
-                settings.Set(ProjectSettings.PseudolocalizationSuffix, "}");
-                settings.Set(ProjectSettings.PseudolocalizationFakeBIDI, true);
-                settings.Set(ProjectSettings.PseudolocalizationExpansionRatio, 0.5f);
-                settings.Set(ProjectSettings.PseudolocalizationSkipPlaceholders, false);
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationEnabled, false);
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationOverride, false);
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationDoubleVowels, true);
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationPrefix, "{");
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationSuffix, "}");
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationFakeBIDI, true);
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationExpansionRatio, 0.5f);
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationSkipPlaceholders, false);
                 TranslationServer.ReloadPseudolocalization();
                 Check(TranslationServer.PseudolocalizationEnabled &&
                     main.PseudolocalizationDoubleVowelsEnabled && main.PseudolocalizationFakeBIDIEnabled &&
                     main.PseudolocalizationExpansionRatio == 0.5f && !main.PseudolocalizationSkipPlaceholdersEnabled &&
                     main.PseudolocalizationPrefix == "{" && main.PseudolocalizationSuffix == "}",
                     "Reload updates transform options but preserves the runtime enablement switch.");
-                settings.Set(ProjectSettings.PseudolocalizationFakeBIDI, false);
+                ProjectSettings.Set(ProjectSettings.PseudolocalizationFakeBIDI, false);
                 TranslationServer.ReloadPseudolocalization();
                 Check(TranslationServer.Pseudolocalize("a") == "{aa}", "Reloaded settings change the actual text transform.");
             }
-            finally { Engine.Instance.Stop(); }
+            finally { Engine.Stop(); }
         }
         finally
         {
-            settings.Set(ProjectSettings.PseudolocalizationEnabled, settingEnabled);
-            settings.Set(ProjectSettings.PseudolocalizationReplaceWithAccents, settingAccents);
-            settings.Set(ProjectSettings.PseudolocalizationDoubleVowels, settingDoubleVowels);
-            settings.Set(ProjectSettings.PseudolocalizationFakeBIDI, settingFakeBIDI);
-            settings.Set(ProjectSettings.PseudolocalizationOverride, settingOverride);
-            settings.Set(ProjectSettings.PseudolocalizationExpansionRatio, settingExpansion);
-            settings.Set(ProjectSettings.PseudolocalizationPrefix, settingPrefix);
-            settings.Set(ProjectSettings.PseudolocalizationSuffix, settingSuffix);
-            settings.Set(ProjectSettings.PseudolocalizationSkipPlaceholders, settingSkipPlaceholders);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationEnabled, settingEnabled);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationReplaceWithAccents, settingAccents);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationDoubleVowels, settingDoubleVowels);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationFakeBIDI, settingFakeBIDI);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationOverride, settingOverride);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationExpansionRatio, settingExpansion);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationPrefix, settingPrefix);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationSuffix, settingSuffix);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationSkipPlaceholders, settingSkipPlaceholders);
             main.PseudolocalizationAccentsEnabled = oldAccents;
             main.PseudolocalizationDoubleVowelsEnabled = oldDoubleVowels;
             main.PseudolocalizationFakeBIDIEnabled = oldFakeBIDI;
@@ -131,9 +131,9 @@ internal static class LocalizationProjectSettingsTests
 
     private static void CheckLocaleSelection()
     {
-        var settings = ProjectSettings.Instance;
-        var oldTest = settings.Get(ProjectSettings.LocaleTest);
-        var oldFallbackSetting = settings.Get(ProjectSettings.LocaleFallback);
+        var settings = ProjectSettings.Service;
+        var oldTest = ProjectSettings.Get(ProjectSettings.LocaleTest);
+        var oldFallbackSetting = ProjectSettings.Get(ProjectSettings.LocaleFallback);
         var oldCulture = TranslationServer.Culture;
         var oldFallbackCulture = TranslationServer.FallbackCulture;
         using var regional = new Translation { Locale = "fr-FR" };
@@ -152,11 +152,11 @@ internal static class LocalizationProjectSettingsTests
                 "Locale score distinguishes exact, language, region, script and unrelated languages.");
             main.AddTranslation(regional);
             main.AddTranslation(english);
-            settings.Set(ProjectSettings.LocaleTest, "fr-CA");
-            settings.Set(ProjectSettings.LocaleFallback, "en");
+            ProjectSettings.Set(ProjectSettings.LocaleTest, "fr-CA");
+            ProjectSettings.Set(ProjectSettings.LocaleFallback, "en");
             using (var tree = new SceneTree(new Node()))
             {
-                Engine.Instance.Start(tree);
+                Engine.Start(tree);
                 try
                 {
                     Check(TranslationServer.Culture.Name == "fr-CA" && TranslationServer.FallbackCulture?.Name == "en" &&
@@ -172,30 +172,30 @@ internal static class LocalizationProjectSettingsTests
                     Check(standalone.Translate("Only English") == "English value" &&
                         standalone.TranslatePlural("pear", "pears", 2) == "many pears",
                         "Standalone domains use the same fallback for singular and plural lookup.");
-                    settings.Set(ProjectSettings.LocaleTest, "de-DE");
+                    ProjectSettings.Set(ProjectSettings.LocaleTest, "de-DE");
                     Check(TranslationServer.Culture.Name == "fr-CA", "Changing a startup locale setting does not switch the current run.");
                 }
-                finally { Engine.Instance.Stop(); }
+                finally { Engine.Stop(); }
             }
-            settings.Set(ProjectSettings.LocaleFallback, string.Empty);
+            ProjectSettings.Set(ProjectSettings.LocaleFallback, string.Empty);
             using (var tree = new SceneTree(new Node()))
             {
-                Engine.Instance.Start(tree);
+                Engine.Start(tree);
                 try
                 {
                     Check(TranslationServer.Culture.Name == "de-DE" && TranslationServer.FallbackCulture is null &&
                         TranslationServer.Translate("", "Only English") == "Only English",
                         "The next run applies the changed test locale and disabled fallback.");
                 }
-                finally { Engine.Instance.Stop(); }
+                finally { Engine.Stop(); }
             }
         }
         finally
         {
             main.RemoveTranslation(regional);
             main.RemoveTranslation(english);
-            settings.Set(ProjectSettings.LocaleTest, oldTest);
-            settings.Set(ProjectSettings.LocaleFallback, oldFallbackSetting);
+            ProjectSettings.Set(ProjectSettings.LocaleTest, oldTest);
+            ProjectSettings.Set(ProjectSettings.LocaleFallback, oldFallbackSetting);
             TranslationServer.Culture = oldCulture;
             TranslationServer.FallbackCulture = oldFallbackCulture;
         }

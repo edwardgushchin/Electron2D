@@ -26,7 +26,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid)
     internal bool ActiveBeforeStep;
     internal bool FieldsInitialized;
 
-    internal (PhysicsBody? Scene, PhysicsServerCollider? Server) Owners => PhysicsServer.Instance.ResolveBodyOwners(RID);
+    internal (PhysicsBody? Scene, PhysicsServerCollider? Server) Owners => PhysicsServer.Service.ResolveBodyOwners(RID);
     internal PhysicsSpace? Space { get { var owner = Owners; return owner.Scene?.Space ?? owner.Server?.Space; } }
     internal B2BodyId BodyID { get { var owner = Owners; return owner.Scene?.BackendID ?? owner.Server!.BackendID; } }
     internal bool Omitted { get => Owners.Scene is RigidBody rigid ? rigid.CustomIntegrator : OmitForces; }

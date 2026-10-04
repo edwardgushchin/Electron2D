@@ -110,7 +110,7 @@ public sealed class InputEventAction : InputEvent
         if (_action.Length == 0)
             return string.Empty;
 
-        return InputMap.Instance.TryGetFirstEventText(_action, out var text) ? text : _action;
+        return InputMap.Service.TryGetFirstEventText(_action, out var text) ? text : _action;
     }
 
     /// <inheritdoc />

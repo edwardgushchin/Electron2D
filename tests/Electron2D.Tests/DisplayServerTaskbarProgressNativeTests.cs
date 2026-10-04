@@ -5,7 +5,7 @@ internal static class DisplayServerTaskbarProgressNativeTests
 {
     public static void Run(DisplayServer display)
     {
-        if (display.GetName() != "Wayland")
+        if (DisplayServer.GetName() != "Wayland")
             return;
 
         var windows = SDL.GetWindows(out var count);
@@ -15,12 +15,12 @@ internal static class DisplayServerTaskbarProgressNativeTests
         var initialState = SDL.GetWindowProgressState(window);
         var initialValue = SDL.GetWindowProgressValue(window);
 
-        Expect<NotSupportedException>(() => display.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal));
-        Expect<NotSupportedException>(() => display.WindowSetTaskbarProgressValue(0.5f));
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetTaskbarProgressState((DisplayServer.ProgressState)99));
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetTaskbarProgressValue(float.NaN));
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal, 1));
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetTaskbarProgressValue(0.5f, 1));
+        Expect<NotSupportedException>(() => DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal));
+        Expect<NotSupportedException>(() => DisplayServer.WindowSetTaskbarProgressValue(0.5f));
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetTaskbarProgressState((DisplayServer.ProgressState)99));
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetTaskbarProgressValue(float.NaN));
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal, 1));
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.WindowSetTaskbarProgressValue(0.5f, 1));
 
         if (SDL.GetWindowProgressState(window) != initialState ||
             BitConverter.SingleToInt32Bits(SDL.GetWindowProgressValue(window)) != BitConverter.SingleToInt32Bits(initialValue))

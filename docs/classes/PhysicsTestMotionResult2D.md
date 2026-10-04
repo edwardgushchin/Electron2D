@@ -1,6 +1,6 @@
 # PhysicsTestMotionResult2D
 
-Last updated: 2026-09-26
+Last updated: 2026-10-04
 
 **Inherits:** ElectronObject · **Source:** [PhysicsTestMotion2D.cs](../../src/Servers/Physics/PhysicsTestMotion2D.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
@@ -14,7 +14,7 @@ Partial snippet with a registered `bodyRID` and live `parameters`:
 
 ```csharp
 using var result = new PhysicsTestMotionResult2D();
-if (PhysicsServer.Instance.BodyTestMotion(bodyRID, parameters, result))
+if (PhysicsServer.BodyTestMotion(bodyRID, parameters, result))
     Console.WriteLine(result.GetCollisionNormal());
 ```
 

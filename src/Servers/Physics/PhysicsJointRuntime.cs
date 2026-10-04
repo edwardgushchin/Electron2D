@@ -158,7 +158,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
                 break;
         }
         if (BackendID.index1 == 0) throw new InvalidOperationException("The physics backend did not create the joint.");
-        if (DisableCollision && BodyB.IsValid()) PhysicsServer.Instance.JointCollisionContribution(BodyA, BodyB, add: true);
+        if (DisableCollision && BodyB.IsValid()) PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: true);
     }
 
     internal void BodyLeaving(RID body)
@@ -182,7 +182,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     {
         if (BackendID.index1 != 0)
         {
-            if (DisableCollision && BodyB.IsValid()) PhysicsServer.Instance.JointCollisionContribution(BodyA, BodyB, add: false);
+            if (DisableCollision && BodyB.IsValid()) PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
             b2DestroyJoint(BackendID, wakeAttached: true);
         }
         BackendID = default; BodyAID = BodyBID = default;
@@ -192,11 +192,11 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     {
         if (DisableCollision == value) return;
         if (BackendID.index1 != 0 && DisableCollision && BodyB.IsValid())
-            PhysicsServer.Instance.JointCollisionContribution(BodyA, BodyB, add: false);
+            PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
         DisableCollision = value;
         if (BackendID.index1 != 0) b2Joint_SetCollideConnected(BackendID, !value);
         if (BackendID.index1 != 0 && value && BodyB.IsValid())
-            PhysicsServer.Instance.JointCollisionContribution(BodyA, BodyB, add: true);
+            PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: true);
         if (BodyA.IsValid()) MarkBodyDirty(BodyA);
         if (BodyB.IsValid()) MarkBodyDirty(BodyB);
     }
@@ -255,7 +255,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
 
     private static (PhysicsSpace? Space, B2BodyId ID, Transform Pose) Snapshot(RID body)
     {
-        var owners = PhysicsServer.Instance.ResolveBodyOwners(body);
+        var owners = PhysicsServer.Service.ResolveBodyOwners(body);
         return owners.Scene is { } scene ? (scene.Space, scene.BackendID, scene.GlobalTransform) :
             (owners.Server!.Space, owners.Server.BackendID, owners.Server.GetTransform());
     }
@@ -263,7 +263,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     {
         try
         {
-            var owners = PhysicsServer.Instance.ResolveBodyOwners(body);
+            var owners = PhysicsServer.Service.ResolveBodyOwners(body);
             return owners.Scene?.Space ?? owners.Server?.Space;
         }
         catch (ArgumentException) { return null; }
@@ -283,7 +283,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     {
         try
         {
-            var owners = PhysicsServer.Instance.ResolveBodyOwners(rid);
+            var owners = PhysicsServer.Service.ResolveBodyOwners(rid);
             if (owners.Scene is { } scene) scene.MarkShapesDirty(); else owners.Server!.MarkShapesDirty();
         }
         catch (ArgumentException) { }

@@ -58,8 +58,8 @@ internal static partial class RenderingRuntimeTests
         }; window.AddChild(transformed);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 if (frames == 1) File.WriteAllBytes($"/tmp/electron2d-fonts-{backend}.png", pixels.SavePNGToBuffer());
@@ -87,7 +87,7 @@ internal static partial class RenderingRuntimeTests
                 else window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(!font.IsDisposed && !arabic.IsDisposed && !hebrew.IsDisposed && !cjk.IsDisposed, "Closing text consumers preserves their borrowed font graph.");
         VerifyFontWarm(backend, font, quarter);
         VerifyFontRetirement(backend);
@@ -148,13 +148,13 @@ internal static partial class RenderingRuntimeTests
                 before = GC.GetAllocatedBytesForCurrentThread(); node.Position = new(frames & 1, 0);
                 node.SelfModulate = (frames & 1) == 0 ? Colors.White : new(1, .75f, .5f, 1); node.QueueRedraw();
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && node.Draws == 128 && allocated == 0,
             $"Warmed {backend} active text/phase/outline/transform/modulation mutation and record/render allocated {allocated} bytes in64 ProcessFrameStarted-to-FramePostDraw frames; recordings={node.Draws}.");
     }
@@ -167,11 +167,11 @@ internal static partial class RenderingRuntimeTests
         IDictionary? cache = null; Texture? glyph = null; SafeHandle[] handles = [];
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
             // Backend-only test inspection verifies native SafeHandle release without exposing diagnostics publicly.
             var renderer = typeof(RenderingServer).GetField("_backend", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(server)!;
             cache = (IDictionary)renderer.GetType().GetField("_textures", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(renderer)!;
-            server.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 frame++;
                 if (frame == 1)
@@ -207,13 +207,13 @@ internal static partial class RenderingRuntimeTests
                 }
                 else
                 {
-                    Check(!cache.Contains(glyph!) && handles.All(handle => handle.IsClosed) && ReferenceEquals(RenderingServer.Instance, server) && !window.IsDisposed,
+                    Check(!cache.Contains(glyph!) && handles.All(handle => handle.IsClosed) && ReferenceEquals(RenderingServer.Service, server) && !window.IsDisposed,
                         "The next frame releases retired glyph native handles before renderer shutdown.");
                     window.Tree!.Quit();
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window); glyph?.Dispose();
+        Engine.Run(window); Released(window); glyph?.Dispose();
         Check(frame == 5, "Glyph retirement and immutable command snapshots execute while the native renderer remains alive.");
     }
 }

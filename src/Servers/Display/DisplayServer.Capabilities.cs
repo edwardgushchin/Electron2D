@@ -79,32 +79,20 @@ public sealed partial class DisplayServer
         PipMode = 36,
     }
 
-    /// <summary>Reports whether the current backend advertises an integrated display capability.</summary>
-    /// <param name="feature">The display capability to query.</param>
-    /// <returns><see langword="true"/> for an integrated capability advertised for the current native driver or device state.</returns>
-    /// <remarks>
-    /// A false result may mean that the platform offers a service that this engine has not integrated. Text clipboard
-    /// access is available while open. Mouse follows connected devices; touchscreen also follows mouse-to-touch emulation. Pointer warp, cursor
-    /// shapes, content scale, native dialogs, primary selection, and input-method composition are advertised only on
-    /// the native drivers listed in the feature reference. On Wayland, icon support becomes known after a successful native icon request;
-    /// a false result before that request does not prove the compositor lacks the icon protocol. Other defined values and unknown numeric values return
-    /// false. On Wayland, a positive <see cref="Feature.Ime"/> or <see cref="Feature.NativeDialogFile"/> result does not yet
-    /// prove that the compositor text-input protocol or native file chooser is available. Native operations can still fail after a positive query.
-    /// </remarks>
-    public bool HasFeature(Feature feature)
+    internal bool HasFeatureCore(Feature feature)
     {
         EnsureOwner();
         var driver = SDL.GetCurrentVideoDriver();
         var desktop = driver is "windows" or "x11" or "wayland" or "cocoa";
         return feature switch
         {
-            Feature.Touchscreen => IsTouchscreenAvailable(),
+            Feature.Touchscreen => IsTouchscreenAvailableCore(),
             Feature.Mouse => SDL.HasMouse(),
             Feature.MouseWarp => driver is "windows" or "x11" or "cocoa" && SDL.HasMouse(),
             Feature.Clipboard => true,
             Feature.CursorShape or Feature.CustomCursorShape => desktop && SDL.HasMouse(),
             Feature.NativeDialog or Feature.NativeDialogFile => desktop,
-            Feature.Hidpi => desktop && GetScreenCount() > 0,
+            Feature.Hidpi => desktop && GetScreenCountCore() > 0,
             Feature.Icon => driver is "windows" or "x11" or "cocoa" ||
                 driver == "wayland" && _nativeWaylandIconAvailable,
             Feature.ClipboardPrimary => driver is "x11" or "wayland",

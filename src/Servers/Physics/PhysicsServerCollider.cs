@@ -72,8 +72,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
 
     internal void DetachBackend()
     {
-        if (IsArea) PhysicsServer.Instance.FindAreaRuntime(RID)?.Reset();
-        PhysicsServer.Instance.InvalidateBodyView(RID);
+        if (IsArea) PhysicsServer.Service.FindAreaRuntime(RID)?.Reset();
+        PhysicsServer.Service.InvalidateBodyView(RID);
         if (_space is null) return;
         CaptureMotion();
         b2DestroyBody(_bodyID);
@@ -254,10 +254,10 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         definition.isSensor = IsArea;
         if (!IsArea)
         {
-            var runtime = PhysicsServer.Instance.BodyRuntime(RID);
+            var runtime = PhysicsServer.Service.BodyRuntime(RID);
             PhysicsSpace.SetMaterial(ref definition, runtime.GetFriction(), runtime.GetBounce());
         }
-        definition.enablePreSolveEvents = !IsArea && PhysicsServer.Instance.HasBodyCollisionExceptions(RID);
+        definition.enablePreSolveEvents = !IsArea && PhysicsServer.Service.HasBodyCollisionExceptions(RID);
         definition.density = !IsArea && _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ? 1 : 0;
         for (var index = 0; index < _slots.Count; index++)
         {
@@ -265,12 +265,12 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
             if (slot.Disabled || slot.Shape.Geometry.IsDisposed) continue;
             var contact = !IsArea && slot.OneWay
                 ? new OneWayContactData(slot.Direction.Rotated(slot.LocalTransform.Rotation), slot.Margin) : null;
-            definition.enablePreSolveEvents = !IsArea && (contact is not null || PhysicsServer.Instance.HasBodyCollisionExceptions(RID));
+            definition.enablePreSolveEvents = !IsArea && (contact is not null || PhysicsServer.Service.HasBodyCollisionExceptions(RID));
             definition.userData = new B2UserData(new PhysicsFixtureTag(RID, index, contact));
             slot.Shape.Geometry.AppendToBody(_bodyID, slot.LocalTransform.Origin,
                 slot.LocalTransform.Rotation, definition, _backendShapes);
         }
-        if (!IsArea) PhysicsServer.Instance.BodyRuntime(RID).ApplyMassProfile();
+        if (!IsArea) PhysicsServer.Service.BodyRuntime(RID).ApplyMassProfile();
         _shapesDirty = false;
     }
 

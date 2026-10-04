@@ -34,8 +34,8 @@ public partial class Window : Viewport
     /// <remarks>Initial pixel-snapping choices read active project settings. No native resources are acquired until <see cref="Engine.Run"/>.</remarks>
     public Window()
     {
-        SnapTransformsToPixel = ProjectSettings.Instance.GetWithOverride(ProjectSettings.SnapTransformsToPixel);
-        SnapVerticesToPixel = ProjectSettings.Instance.GetWithOverride(ProjectSettings.SnapVerticesToPixel);
+        SnapTransformsToPixel = ProjectSettings.GetWithOverride(ProjectSettings.SnapTransformsToPixel);
+        SnapVerticesToPixel = ProjectSettings.GetWithOverride(ProjectSettings.SnapVerticesToPixel);
     }
 
     /// <summary>Gets or sets the native window title.</summary>
@@ -57,7 +57,7 @@ public partial class Window : Viewport
                 throw new ArgumentException("A window title cannot contain a null character.", nameof(value));
             if (Title == value)
                 return;
-            _display?.WindowSetTitle(value);
+            _display?.WindowSetTitleCore(value);
             _title = value;
             UpdateConfigurationWarnings();
             TitleChanged?.Invoke();
@@ -82,7 +82,7 @@ public partial class Window : Viewport
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Client dimensions must be positive.");
             if (_display is not null)
             {
-                _display.WindowSetSize(value);
+                _display.WindowSetSizeCore(value);
                 return;
             }
             CommitSize(value);
@@ -97,8 +97,8 @@ public partial class Window : Viewport
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public Vector2i MinSize
     {
-        get { ThrowIfDisposed(); return _display?.WindowGetMinSize() ?? _minSize; }
-        set { EnsureMutable(); ValidateLimits(value, MaxSize); _display?.WindowSetMinSize(value); _minSize = value; }
+        get { ThrowIfDisposed(); return _display?.WindowGetMinSizeCore() ?? _minSize; }
+        set { EnsureMutable(); ValidateLimits(value, MaxSize); _display?.WindowSetMinSizeCore(value); _minSize = value; }
     }
 
     /// <summary>Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis.</summary>
@@ -109,8 +109,8 @@ public partial class Window : Viewport
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public Vector2i MaxSize
     {
-        get { ThrowIfDisposed(); return _display?.WindowGetMaxSize() ?? _maxSize; }
-        set { EnsureMutable(); ValidateLimits(MinSize, value); _display?.WindowSetMaxSize(value); _maxSize = value; }
+        get { ThrowIfDisposed(); return _display?.WindowGetMaxSizeCore() ?? _maxSize; }
+        set { EnsureMutable(); ValidateLimits(MinSize, value); _display?.WindowSetMaxSizeCore(value); _maxSize = value; }
     }
 
     /// <summary>Gets or requests the client origin in native desktop coordinates.</summary>
@@ -122,8 +122,8 @@ public partial class Window : Viewport
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public Vector2i Position
     {
-        get { ThrowIfDisposed(); return _display?.WindowGetPosition() ?? _screenPosition ?? Vector2i.Zero; }
-        set { EnsureMutable(); _display?.WindowSetPosition(value); _screenPosition = value; }
+        get { ThrowIfDisposed(); return _display?.WindowGetPositionCore() ?? _screenPosition ?? Vector2i.Zero; }
+        set { EnsureMutable(); _display?.WindowSetPositionCore(value); _screenPosition = value; }
     }
 
     /// <summary>Gets or sets the root window's native visibility.</summary>
@@ -201,19 +201,19 @@ public partial class Window : Viewport
     /// <returns>The platform's current focus observation.</returns>
     /// <exception cref="InvalidOperationException">The window is inactive or accessed off-thread.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public bool HasFocus() => GetDisplay().WindowIsFocused();
+    public bool HasFocus() => GetDisplay().WindowIsFocusedCore();
 
     /// <summary>Requests keyboard focus and foreground placement from the native system.</summary>
     /// <remarks>The operating system may deny focus. Wayland submits no foreground activation request through this
     /// operation. Inspect HasFocus for the observed result.</remarks>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void GrabFocus() => GetDisplay().WindowMoveToForeground();
+    public void GrabFocus() => GetDisplay().WindowMoveToForegroundCore();
 
     /// <summary>Requests a platform attention indication until this window is focused.</summary>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void RequestAttention() => GetDisplay().WindowRequestAttention();
+    public void RequestAttention() => GetDisplay().WindowRequestAttentionCore();
 
     /// <inheritdoc />
     public override Rect2 GetVisibleRect()
@@ -260,36 +260,36 @@ public partial class Window : Viewport
         }
         else
         {
-            _display.WindowSetMinSize(_minSize);
-            _display.WindowSetMaxSize(_maxSize);
-            _display.WindowSetSize(_size);
+            _display.WindowSetMinSizeCore(_minSize);
+            _display.WindowSetMaxSizeCore(_maxSize);
+            _display.WindowSetSizeCore(_size);
         }
         foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus })
             if (GetFlag(flag))
-                _display.WindowSetFlag(flag, true);
+                _display.WindowSetFlagCore(flag, true);
         if (_currentScreen is { } screen)
-            _display.WindowSetCurrentScreen(screen);
+            _display.WindowSetCurrentScreenCore(screen);
         if (_screenPosition is { } position)
-            _display.WindowSetPosition(position);
+            _display.WindowSetPositionCore(position);
         if (_mode != WindowMode.Windowed)
-            _display.WindowSetMode(_mode);
-        _size = _display.WindowGetSize();
-        _display.CloseRequested += HandleClose;
-        _display.QuitRequested += HandleClose;
-        _display.WindowRectChanged += HandleRect;
-        _display.WindowFocusChanged += HandleFocus;
-        _display.WindowMouseEntered += HandleMouseEntered;
-        _display.WindowMouseExited += HandleMouseExited;
-        _display.WindowDpiChanged += HandleDPIChanged;
-        _display.TextInput += HandleTextInput;
-        _display.TextEditing += HandleTextEditing;
-        _display.FilesDropped += HandleFilesDropped;
+            _display.WindowSetModeCore(_mode);
+        _size = _display.WindowGetSizeCore();
+        _display.CloseRequestedCore += HandleClose;
+        _display.QuitRequestedCore += HandleClose;
+        _display.WindowRectChangedCore += HandleRect;
+        _display.WindowFocusChangedCore += HandleFocus;
+        _display.WindowMouseEnteredCore += HandleMouseEntered;
+        _display.WindowMouseExitedCore += HandleMouseExited;
+        _display.WindowDpiChangedCore += HandleDPIChanged;
+        _display.TextInputCore += HandleTextInput;
+        _display.TextEditingCore += HandleTextEditing;
+        _display.FilesDroppedCore += HandleFilesDropped;
         _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow());
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }
 
     internal Vector2 GetClientMousePosition() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); return _display!.GetClientMousePosition(); }
-    internal void WarpClientMouse(Vector2i position) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); _display!.WarpMouse(position); }
+    internal void WarpClientMouse(Vector2i position) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); _display!.WarpMouseCore(position); }
 
     internal void EnsureNativeOpen()
     {
@@ -305,22 +305,22 @@ public partial class Window : Viewport
         try { _renderer?.Close(); }
         catch (Exception error) { renderFailure = error; }
         finally { _renderer = null; display.ReleaseRenderingWindow(); }
-        display.CloseRequested -= HandleClose;
-        display.QuitRequested -= HandleClose;
-        display.WindowRectChanged -= HandleRect;
-        display.WindowFocusChanged -= HandleFocus;
-        display.WindowMouseEntered -= HandleMouseEntered;
-        display.WindowMouseExited -= HandleMouseExited;
-        display.WindowDpiChanged -= HandleDPIChanged;
-        display.TextInput -= HandleTextInput;
-        display.TextEditing -= HandleTextEditing;
-        display.FilesDropped -= HandleFilesDropped;
+        display.CloseRequestedCore -= HandleClose;
+        display.QuitRequestedCore -= HandleClose;
+        display.WindowRectChangedCore -= HandleRect;
+        display.WindowFocusChangedCore -= HandleFocus;
+        display.WindowMouseEnteredCore -= HandleMouseEntered;
+        display.WindowMouseExitedCore -= HandleMouseExited;
+        display.WindowDpiChangedCore -= HandleDPIChanged;
+        display.TextInputCore -= HandleTextInput;
+        display.TextEditingCore -= HandleTextEditing;
+        display.FilesDroppedCore -= HandleFilesDropped;
         try { display.Dispose(); _display = null; }
         catch (Exception error) when (renderFailure is not null) { throw new AggregateException(renderFailure, error); }
         if (renderFailure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(renderFailure).Throw();
     }
 
-    internal void PumpEvents() => GetDisplay().ProcessEvents();
+    internal void PumpEvents() => GetDisplay().ProcessEventsCore();
 
     internal void Render(SceneTree tree, double step) => tree.RenderCanvas(_renderer ?? throw new InvalidOperationException("Rendering has not started."), step);
 

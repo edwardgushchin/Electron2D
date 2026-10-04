@@ -36,9 +36,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!;
-            renderer.SetDefaultClearColor(Colors.Black);
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback();
                 frames++;
@@ -66,7 +66,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Check(frames == 4, "Control clipping rendered all four policy transitions.");
         Released(window);
         Console.WriteLine($"Control clipping pixels passed: {backend}.");
@@ -88,9 +88,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!;
-            renderer.SetDefaultClearColor(Colors.Black);
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback();
                 frames++;
@@ -106,7 +106,7 @@ internal static partial class RenderingRuntimeTests
                 window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Check(frames == 1, "Repeated Control clipping rendered one complete frame.");
         Released(window);
     }

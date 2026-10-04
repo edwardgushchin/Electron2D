@@ -78,7 +78,7 @@ internal static class SceneAnimationBlendTests
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         var descriptor = new PropertyDescriptor<Entity, Vector2>(nameof(Entity.Position), n => n.Position, (n, v) => n.Position = v);
         try
         {
@@ -90,8 +90,8 @@ internal static class SceneAnimationBlendTests
                 var window = new Window { Size = new(96, 64), Title = "Electron2D blended scene animation" }; var box = new Box { Name = "box" }; var player = new AnimationPlayer { PlaybackAutoCapture = false, CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Manual }; player.AddAnimationLibrary("", library); window.AddChild(box); window.AddChild(player); var stage = 0;
                 box.Start = () =>
                 {
-                    var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); player.Play("a"); player.Advance(0);
-                    renderer.FramePostDraw += () =>
+                    var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); player.Play("a"); player.Advance(0);
+                    RenderingServer.FramePostDraw += () =>
                     {
                         using var pixels = renderer.Readback(); var expected = stage switch { 0 or 1 or 2 => 16, 3 => 37, 4 or 7 => 48, 5 => 72, 6 => 60, _ => throw new InvalidOperationException("Unexpected blend stage.") };
                         Check(pixels.GetPixel(expected, 16).R > .9f && pixels.GetPixel(expected, 16).G < .1f, "Weighted/captured position reaches rendered pixels."); if (stage >= 3) Check(pixels.GetPixel(16, 16).R < .1f, "Old pose is cleared.");
@@ -108,10 +108,10 @@ internal static class SceneAnimationBlendTests
                         }
                     };
                 };
-                Check(Engine.Instance.Run(window) == 0 && stage == 8 && window.IsDisposed && !a.IsDisposed && !b.IsDisposed && !library.IsDisposed, "Blend host lifecycle and borrowed resources."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "scene-blend-host", backend, run, stages = stage, cleaned = window.IsDisposed }));
+                Check(Engine.Run(window) == 0 && stage == 8 && window.IsDisposed && !a.IsDisposed && !b.IsDisposed && !library.IsDisposed, "Blend host lifecycle and borrowed resources."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "scene-blend-host", backend, run, stages = stage, cleaned = window.IsDisposed }));
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class Box : Entity { internal Action? Start; protected override void OnReady() => Start?.Invoke(); protected override void OnDraw() => DrawRect(new(-3, -3, 6, 6), Colors.Red); }
     private static Animation Clip(double value, PropertyDescriptor<Probe, double>? property = null) { property ??= X; var a = new Animation { Length = 4 }; var i = a.AddTrack(property); a.TrackSetPath(i, "target:" + property.Name); a.TrackInsertKey(i, 0, value); return a; }

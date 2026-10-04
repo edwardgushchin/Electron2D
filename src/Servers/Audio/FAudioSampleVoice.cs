@@ -98,15 +98,15 @@ internal sealed unsafe class FAudioSampleVoice : IDisposable
     private void PauseCore(bool value) { if (_paused == value) return; FAudioContext.Check(value ? F.FAudioSourceVoice_Stop(_voice, 0, 0) : F.FAudioSourceVoice_Start(_voice, 0, 0), "pause sample"); _paused = value; }
     internal void SetPitch(float value) { Check(); lock (_context.Gate) SetPitchCore(value); }
     private void SetPitchCore(float value) { var old = _pitch; _pitch = value; try { RefreshPitch(); } catch { _pitch = old; throw; } }
-    internal void RefreshPitch() { Check(); var ratio = (double)_pitch * _request.PitchScale * AudioServer.Instance.PlaybackSpeedScale; if (ratio < F.FAUDIO_MIN_FREQ_RATIO || ratio > F.FAUDIO_MAX_FREQ_RATIO) throw new NotSupportedException("Native sample pitch requires a ratio of 1/1024 through 1024."); FAudioContext.Check(F.FAudioSourceVoice_SetFrequencyRatio(_voice, (float)ratio, 0), "set sample pitch"); }
+    internal void RefreshPitch() { Check(); var ratio = (double)_pitch * _request.PitchScale * AudioServer.PlaybackSpeedScale; if (ratio < F.FAUDIO_MIN_FREQ_RATIO || ratio > F.FAUDIO_MAX_FREQ_RATIO) throw new NotSupportedException("Native sample pitch requires a ratio of 1/1024 through 1024."); FAudioContext.Check(F.FAudioSourceVoice_SetFrequencyRatio(_voice, (float)ratio, 0), "set sample pitch"); }
     internal void SetVolume(float value, float routing) { Check(); lock (_context.Gate) SetVolumeCore(value, routing); }
     private void SetVolumeCore(float value, float routing) { var old = (_volume, _routing); _volume = value; _routing = routing; try { RefreshMatrix(); } catch { (_volume, _routing) = old; throw; } }
     internal void SetTarget(AudioStreamPlayer.MixTarget value) { Check(); lock (_context.Gate) { _target = value; RefreshMatrix(); } }
     internal void SetSpatial(float left, float right) { Check(); lock (_context.Gate) { _spatial = true; _left = left; _right = right; RefreshMatrix(); } }
     internal void SetSend(nint send) { Check(); lock (_context.Gate) { _context.SetSend(_voice, send); _send = send; RefreshMatrix(); } }
     internal void RefreshLooping() { Check(); lock (_context.Gate) { if (_active && !_ending) { var paused = _paused; PlayCore(Position); if (paused) PauseCore(true); } } }
-    internal void RefreshBus() { SetSend(AudioServer.Instance.ResolveBus(_request.Bus)); if (!Wrapped) { _routing = AudioServer.Instance.ResolveSourceGain(_request.Bus, 1); RefreshMatrix(); } }
-    internal void RefreshStandaloneGain() { if (!Wrapped) { _routing = AudioServer.Instance.ResolveSourceGain(_request.Bus, 1); RefreshMatrix(); } }
+    internal void RefreshBus() { SetSend(AudioServer.Service.ResolveBus(_request.Bus)); if (!Wrapped) { _routing = AudioServer.Service.ResolveSourceGain(_request.Bus, 1); RefreshMatrix(); } }
+    internal void RefreshStandaloneGain() { if (!Wrapped) { _routing = AudioServer.Service.ResolveSourceGain(_request.Bus, 1); RefreshMatrix(); } }
     internal void RefreshMatrix()
     {
         Check(); if (_spatial) { Array.Clear(_matrix); _matrix[0] = _volume * _routing * _left; _matrix[3] = _volume * _routing * _right; }

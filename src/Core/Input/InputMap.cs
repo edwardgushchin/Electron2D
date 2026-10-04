@@ -1,11 +1,12 @@
 namespace Electron2D;
 
 /// <summary>Owns the process-wide mapping from named game actions to typed input-event bindings.</summary>
-/// <remarks>
+/// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
+///
 /// Collection operations are lock-serialized and return snapshots. Binding resources remain caller-owned and mutable;
 /// callers must not mutate or dispose a binding concurrently with matching. Action names use ordinal comparison.
 /// </remarks>
-public sealed class InputMap : ElectronObject
+public sealed partial class InputMap : ElectronObject
 {
     /// <summary>Allows a controller binding to match the same control on every device.</summary>
     internal const int AllDevices = -1;
@@ -22,7 +23,7 @@ public sealed class InputMap : ElectronObject
 
     private InputMap()
     {
-        foreach (var (name, definition) in BuildProjectActions(ProjectSettings.Instance))
+        foreach (var (name, definition) in BuildProjectActions(ProjectSettings.Service))
         {
             _actions.Add(name, definition);
             _actionOrder.Add(name);
@@ -31,25 +32,13 @@ public sealed class InputMap : ElectronObject
         }
     }
 
-    /// <summary>Gets the process-wide action map.</summary>
-    /// <value>The same non-disposable instance for the lifetime of the process.</value>
-    public static InputMap Instance => SharedInstance;
+    internal static InputMap Service => SharedInstance;
 
-    /// <summary>Occurs after a project action map has replaced the live bindings.</summary>
-    /// <remarks>Raised synchronously outside the map lock. A throwing listener observes the committed map.</remarks>
-    public event Action? ProjectSettingsLoaded;
+    internal event Action? ProjectSettingsLoadedCore;
 
-    /// <summary>Replaces all actions with the typed <c>input/*</c> records in the process-wide project settings.</summary>
-    /// <remarks>Active project feature overrides are applied. Validation finishes before the live map changes.
-    /// Loaded bindings are borrowed by the map like manually
-    /// added bindings; references obtained from <see cref="ActionGetEvents"/> remain usable after a later reload.
-    /// This operation allocates and belongs in project setup, outside input dispatch. A loaded listener exception
-    /// propagates after the new map has committed.</remarks>
-    /// <exception cref="InvalidDataException">An input setting has the wrong type, schema version, or binding data.</exception>
-    /// <exception cref="ObjectDisposedException">The project settings registry is disposed.</exception>
-    public void LoadFromProjectSettings() => LoadFromProjectSettings(ProjectSettings.Instance);
+    internal void LoadFromProjectSettingsCore() => LoadFromProjectSettings(ProjectSettings.Service);
 
-    internal void LoadFromProjectSettings(ProjectSettings settings)
+    internal void LoadFromProjectSettings(ProjectSettingsRegistry settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
         var candidates = BuildProjectActions(settings);
@@ -74,11 +63,11 @@ public sealed class InputMap : ElectronObject
         }
 
         foreach (var action in previousActions.Concat(candidates.Select(static item => item.Name)).Distinct(StringComparer.Ordinal))
-            Input.Instance.OnActionMapChanged(action, removed: false);
-        ProjectSettingsLoaded?.Invoke();
+            Input.Service.OnActionMapChanged(action, removed: false);
+        ProjectSettingsLoadedCore?.Invoke();
     }
 
-    private static List<(string Name, ActionDefinition Definition)> BuildProjectActions(ProjectSettings settings)
+    private static List<(string Name, ActionDefinition Definition)> BuildProjectActions(ProjectSettingsRegistry settings)
     {
         var records = settings.GetRegisteredSettingsInGroup<InputActionSettings>("input/");
         var candidates = new List<(string Name, ActionDefinition Definition)>(records.Length);
@@ -117,34 +106,20 @@ public sealed class InputMap : ElectronObject
         }
     }
 
-    /// <summary>Gets whether an action exists.</summary>
-    /// <param name="action">The nonblank, case-sensitive action name.</param>
-    /// <returns><see langword="true"/> when registered.</returns>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
-    public bool HasAction(string action)
+    internal bool HasActionCore(string action)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         lock (_gate)
             return _actions.ContainsKey(action);
     }
 
-    /// <summary>Gets action names in registration order.</summary>
-    /// <returns>An immutable snapshot.</returns>
-    public IReadOnlyList<string> GetActions()
+    internal IReadOnlyList<string> GetActionsCore()
     {
         lock (_gate)
             return Array.AsReadOnly(_actionOrder.ToArray());
     }
 
-    /// <summary>Adds an empty action.</summary>
-    /// <param name="action">The nonblank, case-sensitive action name.</param>
-    /// <param name="deadzone">The analog threshold from zero through one.</param>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="deadzone"/> is outside zero through one, NaN, or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The action already exists.</exception>
-    public void AddAction(string action, float deadzone = DefaultDeadzone)
+    internal void AddActionCore(string action, float deadzone = DefaultDeadzone)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         ValidateDeadzone(deadzone, nameof(deadzone));
@@ -156,15 +131,10 @@ public sealed class InputMap : ElectronObject
             _actionOrder.Add(action);
         }
 
-        Input.Instance.OnActionMapChanged(action, removed: false);
+        Input.Service.OnActionMapChanged(action, removed: false);
     }
 
-    /// <summary>Removes an action and all of its bindings.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    public void EraseAction(string action)
+    internal void EraseActionCore(string action)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         lock (_gate)
@@ -176,50 +146,27 @@ public sealed class InputMap : ElectronObject
             _actionOrder.Remove(action);
         }
 
-        Input.Instance.OnActionMapChanged(action, removed: true);
+        Input.Service.OnActionMapChanged(action, removed: true);
     }
 
-    /// <summary>Gets an action's analog deadzone.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <returns>A value from zero through one.</returns>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    public float ActionGetDeadzone(string action)
+    internal float ActionGetDeadzoneCore(string action)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         lock (_gate)
             return GetActionUnderLock(action).Deadzone;
     }
 
-    /// <summary>Changes an action's analog deadzone.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <param name="deadzone">The new threshold from zero through one.</param>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="deadzone"/> is outside zero through one, NaN, or infinite.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    public void ActionSetDeadzone(string action, float deadzone)
+    internal void ActionSetDeadzoneCore(string action, float deadzone)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         ValidateDeadzone(deadzone, nameof(deadzone));
         lock (_gate)
             GetActionUnderLock(action).Deadzone = deadzone;
 
-        Input.Instance.OnActionMapChanged(action, removed: false);
+        Input.Service.OnActionMapChanged(action, removed: false);
     }
 
-    /// <summary>Adds an event binding to an action.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <param name="event">A live action-compatible event describing the binding.</param>
-    /// <remarks>An equal exact action binding is ignored. At most 32 bindings may belong to one action.
-    /// Binding lookup uses action matching; a public <see cref="InputEvent.IsMatch"/> result may be broader for synthetic action events.</remarks>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is invalid or <paramref name="event"/> is not action-compatible.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="event"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">The action already has 32 distinct bindings.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    /// <exception cref="ObjectDisposedException"><paramref name="event"/> is disposing or disposed.</exception>
-    public void ActionAddEvent(string action, InputEvent @event)
+    internal void ActionAddEventCore(string action, InputEvent @event)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         ArgumentNullException.ThrowIfNull(@event);
@@ -238,18 +185,10 @@ public sealed class InputMap : ElectronObject
             AttachBindingUnderLock(action, @event);
         }
 
-        Input.Instance.OnActionMapChanged(action, removed: false);
+        Input.Service.OnActionMapChanged(action, removed: false);
     }
 
-    /// <summary>Gets whether an action contains an exact event binding.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <param name="event">The binding configuration to find.</param>
-    /// <returns><see langword="true"/> when an exact action binding exists.</returns>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="event"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    /// <exception cref="ObjectDisposedException"><paramref name="event"/> is disposing or disposed.</exception>
-    public bool ActionHasEvent(string action, InputEvent @event)
+    internal bool ActionHasEventCore(string action, InputEvent @event)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         ArgumentNullException.ThrowIfNull(@event);
@@ -258,15 +197,7 @@ public sealed class InputMap : ElectronObject
             return FindEventIndex(GetActionUnderLock(action), @event, exactMatch: true) >= 0;
     }
 
-    /// <summary>Removes the first exact matching binding from an action, if present.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <param name="event">The binding configuration to remove.</param>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="event"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    /// <exception cref="ObjectDisposedException"><paramref name="event"/> is disposing or disposed.</exception>
-    /// <remarks>An absent binding leaves the action unchanged. Removing a binding invalidates its cached action state.</remarks>
-    public void ActionEraseEvent(string action, InputEvent @event)
+    internal void ActionEraseEventCore(string action, InputEvent @event)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         ArgumentNullException.ThrowIfNull(@event);
@@ -286,15 +217,10 @@ public sealed class InputMap : ElectronObject
         }
 
         if (removed)
-            Input.Instance.OnActionMapChanged(action, removed: false);
+            Input.Service.OnActionMapChanged(action, removed: false);
     }
 
-    /// <summary>Removes every binding from an action.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    public void ActionEraseEvents(string action)
+    internal void ActionEraseEventsCore(string action)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         lock (_gate)
@@ -304,43 +230,20 @@ public sealed class InputMap : ElectronObject
                 DetachBindingUnderLock(action, binding);
             definition.Events.Clear();
         }
-        Input.Instance.OnActionMapChanged(action, removed: false);
+        Input.Service.OnActionMapChanged(action, removed: false);
     }
 
-    /// <summary>Gets an action's bindings in registration order.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <returns>An immutable snapshot containing the original binding references.</returns>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    public IReadOnlyList<InputEvent> ActionGetEvents(string action)
+    internal IReadOnlyList<InputEvent> ActionGetEventsCore(string action)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         lock (_gate)
             return Array.AsReadOnly(GetActionUnderLock(action).Events.ToArray());
     }
 
-    /// <summary>Tests whether an event belongs to an action.</summary>
-    /// <param name="event">The live event to test.</param>
-    /// <param name="action">The registered action name.</param>
-    /// <param name="exactMatch">Whether modifiers and analog direction must match exactly.</param>
-    /// <returns><see langword="true"/> when the event matches the action.</returns>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="event"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    /// <exception cref="ObjectDisposedException"><paramref name="event"/> or a tested binding is disposing or disposed.</exception>
-    public bool EventIsAction(InputEvent @event, string action, bool exactMatch = false) =>
-        TryGetActionStatus(@event, action, exactMatch, out _);
+    internal bool EventIsActionCore(InputEvent @event, string action, bool exactMatch = false) =>
+    TryGetActionStatus(@event, action, exactMatch, out _);
 
-    /// <summary>Gets a human-readable disjunction of an action's concrete bindings.</summary>
-    /// <param name="action">The registered action name.</param>
-    /// <returns>The localized no-input message, or concrete binding descriptions joined by a localized separator.</returns>
-    /// <remarks>Synthetic <see cref="InputEventAction"/> bindings are indirection and are omitted. Translation uses this map's inherited translation domain and enabled state; each concrete event supplies its own description.</remarks>
-    /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
-    /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
-    /// <exception cref="ObjectDisposedException">A binding is disposing or disposed.</exception>
-    public string GetActionDescription(string action)
+    internal string GetActionDescriptionCore(string action)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         lock (_gate)
@@ -522,7 +425,7 @@ public sealed class InputMap : ElectronObject
         }
 
         foreach (var action in actions)
-            Input.Instance.OnActionMapChanged(action, removed: false);
+            Input.Service.OnActionMapChanged(action, removed: false);
     }
 
     private void OnBindingDisposed(InputEvent binding)
@@ -550,7 +453,7 @@ public sealed class InputMap : ElectronObject
         }
 
         foreach (var action in actions)
-            Input.Instance.OnActionMapChanged(action, removed: false);
+            Input.Service.OnActionMapChanged(action, removed: false);
     }
 
     private static void ValidateDeadzone(float deadzone, string parameterName)

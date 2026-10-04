@@ -1,6 +1,6 @@
 # AudioEffectSpectrumAnalyzer
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectSpectrumAnalyzer` · **Source:** [AudioEffectSpectrumAnalyzer.cs](../../src/Scene/Resources/AudioEffectSpectrumAnalyzer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -14,10 +14,10 @@ An audio bus analyzer that passes stereo PCM through unchanged while preparing q
 
 ```csharp
 using var analyzer = new AudioEffectSpectrumAnalyzer { FFTSize = AudioFFTSize.Size512 };
-AudioServer.Instance.AddBusEffect(0, analyzer);
-var instance = (AudioEffectSpectrumAnalyzerInstance)AudioServer.Instance.GetBusEffectInstance(0, 0);
+AudioServer.AddBusEffect(0, analyzer);
+var instance = (AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(0, 0);
 Vector2 lowBand = instance.GetMagnitudeForFrequencyRange(80, 250);
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 The instance is borrowed; do not dispose or directly process it. Reacquire it after changing the bus effect chain.

@@ -15,9 +15,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black);
-            var software = renderer.GetCurrentRenderingDriverName() == "software";
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            var software = RenderingServer.GetCurrentRenderingDriverName() == "software";
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = renderer.Readback();
                 // The software input truncates half-texel crop boundaries before interpolation.
@@ -59,7 +59,7 @@ internal static partial class RenderingRuntimeTests
                 else if (frames == 12) node.Texture = null;
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 13, "All texture rectangle visible states completed.");
+        Engine.Run(window); Released(window); Check(frames == 13, "All texture rectangle visible states completed.");
         VerifyTextureRectWarm(backend, texture);
         Console.WriteLine($"Texture rectangle seven stretches/reflections/nested-atlas tile/null and warmed frame checks passed ({backend}).");
     }
@@ -75,7 +75,7 @@ internal static partial class RenderingRuntimeTests
                 before = GC.GetAllocatedBytesForCurrentThread();
                 if (frames < 84) { node.FlipH = frames % 2 == 0; node.Size = new(frames % 2 == 0 ? 16 : 18, 16); }
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
                 if (frames is >= 20 and < 84) active += bytes;
@@ -83,7 +83,7 @@ internal static partial class RenderingRuntimeTests
                 if (++frames == 148) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(active == 0 && idle == 0, $"Texture rectangle warm process/minimum/record/render allocated {active}/{idle} managed bytes ({backend}).");
     }
 }

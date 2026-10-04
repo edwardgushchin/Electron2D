@@ -53,14 +53,14 @@ public abstract partial class Viewport
 
     private DefaultCanvasItemTextureFilter _canvasFilter = DefaultCanvasItemTextureFilter.Linear;
     private DefaultCanvasItemTextureRepeat _canvasRepeat;
-    private AnisotropicFiltering _anisotropy = (AnisotropicFiltering)ProjectSettings.Instance.GetWithOverride(ProjectSettings.AnisotropicFilteringLevel);
+    private AnisotropicFiltering _anisotropy = (AnisotropicFiltering)ProjectSettings.GetWithOverride(ProjectSettings.AnisotropicFilteringLevel);
     private TextureFilter _filterCache = TextureFilter.Linear;
     private TextureRepeat _repeatCache = TextureRepeat.Disabled;
     private static readonly PropertyDescriptor[] ViewportSamplingProperties =
     [
         new PropertyDescriptor<Viewport, DefaultCanvasItemTextureFilter>(nameof(CanvasItemDefaultTextureFilter), n => n.CanvasItemDefaultTextureFilter, (n, v) => n.CanvasItemDefaultTextureFilter = v, _ => DefaultCanvasItemTextureFilter.Linear, stored: true),
         new PropertyDescriptor<Viewport, DefaultCanvasItemTextureRepeat>(nameof(CanvasItemDefaultTextureRepeat), n => n.CanvasItemDefaultTextureRepeat, (n, v) => n.CanvasItemDefaultTextureRepeat = v, _ => DefaultCanvasItemTextureRepeat.Disabled, stored: true),
-        new PropertyDescriptor<Viewport, AnisotropicFiltering>(nameof(AnisotropicFilteringLevel), n => n.AnisotropicFilteringLevel, (n, v) => n.AnisotropicFilteringLevel = v, _ => (AnisotropicFiltering)ProjectSettings.Instance.GetWithOverride(ProjectSettings.AnisotropicFilteringLevel), stored: true),
+        new PropertyDescriptor<Viewport, AnisotropicFiltering>(nameof(AnisotropicFilteringLevel), n => n.AnisotropicFilteringLevel, (n, v) => n.AnisotropicFilteringLevel = v, _ => (AnisotropicFiltering)ProjectSettings.GetWithOverride(ProjectSettings.AnisotropicFilteringLevel), stored: true),
     ];
 
     /// <summary>Gets or sets filtering used when no canvas ancestor selects an explicit filter.</summary>

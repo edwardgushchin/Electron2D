@@ -1,8 +1,10 @@
 # Input domain
 
-Last updated: 2026-09-30
+Last updated: 2026-10-04
 
 ## Responsibility
+
+Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 Input owns typed input-event values, the process-wide action map, raw and mapped input state, frame-latched transitions, and delivery into the active node hierarchy. Its pointer controls delegate to the active Display domain, which provides the SDL native event source and owns native cursor/window state. Input itself does not call SDL.
 
@@ -30,7 +32,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 
 ## Dependency direction
 
-Input depends on Core object/resource lifecycle, math and typed ProjectSettings snapshots. `Engine` registers the two process singletons and `MainLoop` owns transition-window completion. Scene consumes Input events for node delivery. Pointer controls query `DisplayServer.Instance` and use its owner-thread native operations; Input stores the default cursor policy while DisplayServer owns the current native cursor. Input has no direct SDL, renderer, audio, physics, networking, or editor dependency.
+Input depends on Core object/resource lifecycle, math and typed ProjectSettings snapshots. `Engine` registers the two process singletons and `MainLoop` owns transition-window completion. Scene consumes Input events for node delivery. Pointer controls query `DisplayServer` and use its owner-thread native operations; Input stores the default cursor policy while DisplayServer owns the current native cursor. Input has no direct SDL, renderer, audio, physics, networking, or editor dependency.
 
 ## Domain-wide invariants
 

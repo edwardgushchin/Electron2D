@@ -16,8 +16,8 @@ internal static partial class RenderingRuntimeTests
             camera.Position = center;
             camera.ForceUpdateTransform();
             camera.TransformChanged += _ => notices++;
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePreDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePreDraw += () =>
             {
                 if (frames == 0)
                 {
@@ -30,7 +30,7 @@ internal static partial class RenderingRuntimeTests
                     Check(camera.GetScreenCenterPosition() == center + new Vector2(20, 0), "Force publishes the camera before this submission.");
                 }
             };
-            server.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 Pixel(pixels, 21, 21, frames == 1 ? Colors.Red : Colors.Black);
@@ -42,7 +42,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 4, "Four queued/forced camera frames.");
+        Engine.Run(window); Released(window); Check(frames == 4, "Four queued/forced camera frames.");
         Console.WriteLine($"Transform notification native camera pixels passed: {backend}/{fixture ?? "default"}.");
     }
 }

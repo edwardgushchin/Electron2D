@@ -15,13 +15,13 @@ public partial class Window
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public WindowMode Mode
     {
-        get { ThrowIfDisposed(); return _display is null ? _mode : _display.WindowGetMode(); }
+        get { ThrowIfDisposed(); return _display is null ? _mode : _display.WindowGetModeCore(); }
         set
         {
             EnsureMutable();
             if (!Enum.IsDefined(value))
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown window mode.");
-            _display?.WindowSetMode(value);
+            _display?.WindowSetModeCore(value);
             _mode = value;
         }
     }
@@ -37,12 +37,12 @@ public partial class Window
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public int CurrentScreen
     {
-        get { ThrowIfDisposed(); return _display?.WindowGetCurrentScreen() ?? _currentScreen ?? 0; }
+        get { ThrowIfDisposed(); return _display?.WindowGetCurrentScreenCore() ?? _currentScreen ?? 0; }
         set
         {
             EnsureMutable();
             ArgumentOutOfRangeException.ThrowIfNegative(value);
-            _display?.WindowSetCurrentScreen(value);
+            _display?.WindowSetCurrentScreenCore(value);
             _currentScreen = value;
         }
     }
@@ -96,7 +96,7 @@ public partial class Window
         EnsureMutable();
         if (GetFlag(flag) == enabled)
             return;
-        _display?.WindowSetFlag(flag, enabled);
+        _display?.WindowSetFlagCore(flag, enabled);
         var bit = 1u << (int)flag;
         _flags = enabled ? _flags | bit : _flags & ~bit;
     }
@@ -105,7 +105,7 @@ public partial class Window
     /// <returns>Whether resizing is allowed; the compositor may impose further restrictions.</returns>
     /// <exception cref="InvalidOperationException">An active window is accessed off-thread.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowed() ?? !Unresizable; }
+    public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowedCore() ?? !Unresizable; }
 
     /// <summary>Gets the outer window origin, including native borders when visible and active.</summary>
     /// <returns>Desktop coordinates; Position while hidden or detached.</returns>
@@ -113,7 +113,7 @@ public partial class Window
     /// <exception cref="InvalidOperationException">The caller is not the owner or native geometry is unavailable.</exception>
     /// <exception cref="OverflowException">The outer position exceeds integer coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2i GetPositionWithDecorations() => _display is null || !Visible ? Position : GetDisplay().WindowGetPositionWithDecorations();
+    public Vector2i GetPositionWithDecorations() => _display is null || !Visible ? Position : GetDisplay().WindowGetPositionWithDecorationsCore();
 
     /// <summary>Gets the outer window size, including native borders when visible and active.</summary>
     /// <returns>Native window units; on Wayland, client pixels because decoration extents are unavailable.
@@ -121,7 +121,7 @@ public partial class Window
     /// <exception cref="InvalidOperationException">The caller is not the owner or native geometry is unavailable.</exception>
     /// <exception cref="OverflowException">The outer size exceeds integer dimensions.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2i GetSizeWithDecorations() => _display is null || !Visible ? Size : GetDisplay().WindowGetSizeWithDecorations();
+    public Vector2i GetSizeWithDecorations() => _display is null || !Visible ? Size : GetDisplay().WindowGetSizeWithDecorationsCore();
 
     /// <summary>Requests centering of the active client area in its current screen's usable rectangle.</summary>
     /// <remarks>Requires global positioning. Wayland rejects the request.</remarks>
@@ -132,7 +132,7 @@ public partial class Window
     public void MoveToCenter()
     {
         EnsureMutable();
-        var area = GetDisplay().ScreenGetUsableRect(CurrentScreen);
+        var area = GetDisplay().ScreenGetUsableRectCore(CurrentScreen);
         var size = Size;
         Position = new Vector2i(checked((int)((long)area.Position.X + ((long)area.Size.X - size.X) / 2)),
             checked((int)((long)area.Position.Y + ((long)area.Size.Y - size.Y) / 2)));
@@ -145,7 +145,7 @@ public partial class Window
     /// control owns its own preedit cleanup when focus or native window focus changes.</remarks>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetIMEActive(bool active) { EnsureMutable(); GetDisplay().WindowSetIMEActive(active); }
+    public void SetIMEActive(bool active) { EnsureMutable(); GetDisplay().WindowSetIMEActiveCore(active); }
 
     /// <summary>Requests native IME candidate placement at a client-coordinate caret.</summary>
     /// <param name="position">Caret position in client pixels on Wayland and native window units elsewhere.</param>
@@ -154,7 +154,7 @@ public partial class Window
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="OverflowException">The position cannot be represented in native coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetIMEPosition(Vector2i position) { EnsureMutable(); GetDisplay().WindowSetIMEPosition(position); }
+    public void SetIMEPosition(Vector2i position) { EnsureMutable(); GetDisplay().WindowSetIMEPositionCore(position); }
 
     /// <summary>Requests a native taskbar progress indication for the active window.</summary>
     /// <param name="state">The progress indication to show.</param>
@@ -162,7 +162,7 @@ public partial class Window
     /// <exception cref="NotSupportedException">Taskbar integration is unavailable, including Wayland.</exception>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetTaskbarProgressState(DisplayServer.ProgressState state) { EnsureMutable(); GetDisplay().WindowSetTaskbarProgressState(state); }
+    public void SetTaskbarProgressState(DisplayServer.ProgressState state) { EnsureMutable(); GetDisplay().WindowSetTaskbarProgressStateCore(state); }
 
     /// <summary>Requests a native taskbar progress fraction for the active window.</summary>
     /// <param name="value">A finite fraction from zero to one, inclusive.</param>
@@ -170,7 +170,7 @@ public partial class Window
     /// <exception cref="NotSupportedException">Taskbar integration is unavailable, including Wayland.</exception>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetTaskbarProgressValue(float value) { EnsureMutable(); GetDisplay().WindowSetTaskbarProgressValue(value); }
+    public void SetTaskbarProgressValue(float value) { EnsureMutable(); GetDisplay().WindowSetTaskbarProgressValueCore(value); }
 
     /// <summary>Occurs on an effective native pointer entry before subsequent frame callbacks.</summary>
     /// <remarks>Delivered synchronously on the owner thread. GUI occlusion and embedded viewports are absent.</remarks>

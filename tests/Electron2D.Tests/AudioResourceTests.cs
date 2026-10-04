@@ -36,7 +36,7 @@ internal static class AudioResourceTests
     private static void VerifyInterpolationVectors()
     {
         var bytes = new byte[1024]; for (var i = 0; i < 512; i++) BinaryPrimitives.WriteInt16LittleEndian(bytes.AsSpan(i * 2), (short)((i % 5 + 1) * 1000));
-        using var source = new AudioStreamWAV { Data = bytes, SampleFormat = AudioStreamWAV.Format.PCM16, MixRate = (int)AudioServer.Instance.GetMixRate() };
+        using var source = new AudioStreamWAV { Data = bytes, SampleFormat = AudioStreamWAV.Format.PCM16, MixRate = (int)AudioServer.GetMixRate() };
         using var playback = source.InstantiatePlayback(); playback.Start(); var half = playback.MixAudio(.5f, 6);
         float[] expected = [0, -62.5f, 0, 437.5f, 1000, 1500];
         for (var i = 0; i < expected.Length; i++) Check(MathF.Abs(half[i].X - expected[i] / 32767) < .000001f, "Independent cubic history/fraction vector.");

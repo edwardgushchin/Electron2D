@@ -6,102 +6,105 @@ Last updated: 2026-10-04
 
 **Inherits:** [ElectronObject](ElectronObject.md).
 
+Public static declarations are in [`AudioServer.API.cs`](../../src/Servers/Audio/AudioServer.API.cs).
+
 ## Description
 
-Borrowed process-wide service; disposing it throws before logical disposal. The first owner-bound operation claims its configuration thread; passive singleton/rate/speed reads and worker resource mixing do not claim ownership. Later foreign configuration rejects. Native output opens lazily for playback or device queries; runtime bus records remain after native closure. Buses form sends to earlier indices, with unknown/self/later targets falling back to Master. Master stays at index zero. Graph edits prepare replacement submix nodes and redirect existing native sources under the audio mix lock, preserving playback identity, exact cursor, history, pause and polyphony. On failure the configured metadata remains committed, all native output is closed and callers may retry playback. Mute affects a bus and its downstream output; solo retains paths carrying soloed sources, filtering direct unrelated Master sources. Peak meters read actual native post-volume submix samples. Lock/Unlock pair around caller critical sections; native mixing uses that same gate. Native teardown releases every player slot, bus, master and engine even after custom playback cleanup failures. Ordered public effects now execute before bus gain and final peak metering. Sample registration is cold, transactional and weak-keyed; explicit re-registration captures edits for subsequent voices while active voices retain their snapshot. Engine closure clears registrations. Bus-layout resources and output selection/latency remain separate dependencies.
+Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
+
+Borrowed process-wide service; disposing it throws before logical disposal. The first owner-bound operation claims its configuration thread; passive singleton/rate/speed reads and worker resource mixing do not claim ownership. Later foreign configuration rejects. Native output opens lazily for playback or device queries; runtime bus records remain after native closure. Buses form sends to earlier indices, with unknown/self/later targets falling back to Master. Master stays at index zero. Graph edits prepare replacement submix nodes and redirect existing native sources under the audio mix lock, preserving playback identity, exact cursor, history, pause and polyphony. On failure the configured metadata remains committed, all native output is closed and callers may retry playback. Mute affects a bus and its downstream output; solo retains paths carrying soloed sources, filtering direct unrelated Master sources. Peak meters read actual native post-volume submix samples. Lock/Unlock pair around caller critical sections; native mixing uses that same gate. Native teardown releases every player slot, bus, master and engine even after custom playback cleanup failures. Ordered public static effects now execute before bus gain and final peak metering. Sample registration is cold, transactional and weak-keyed; explicit re-registration captures edits for subsequent voices while active voices retain their snapshot. Engine closure clears registrations. Bus-layout resources and output selection/latency remain separate dependencies.
 
 ## API summary
 
 | Full signature | Contract |
 | --- | --- |
-| `public event System.Action? BusLayoutChanged` | Occurs after the bus list or routing graph changes. |
-| `public event System.Action<System.Int32, System.String, System.String>? BusRenamed` | Occurs after a bus rename commits. |
+| `public static event System.Action? BusLayoutChanged` | Occurs after the bus list or routing graph changes. |
+| `public static event System.Action<System.Int32, System.String, System.String>? BusRenamed` | Occurs after a bus rename commits. |
 | Lifecycle | Arguments are the index, old name and unique new name. |
-| `public System.Void AddBus(System.Int32 atPosition = -1)` | Adds a uniquely named bus at an index or appends it. |
+| `public static System.Void AddBus(System.Int32 atPosition = -1)` | Adds a uniquely named bus at an index or appends it. |
 | atPosition | Insertion index; minus one appends. Master remains at zero. |
 | System.ArgumentOutOfRangeException | The insertion range or bus limit is invalid. |
-| `public System.Int32 GetBusChannels(System.Int32 index)` | Gets the number of stereo channel pairs on a bus. Actual native output channels divided by two. |
+| `public static System.Int32 GetBusChannels(System.Int32 index)` | Gets the number of stereo channel pairs on a bus. Actual native output channels divided by two. |
 | index | Live bus index. |
-| `public System.Int32 GetBusIndex(System.String busName)` | Gets the index of a bus by exact name. Minus one when absent. |
+| `public static System.Int32 GetBusIndex(System.String busName)` | Gets the index of a bus by exact name. Minus one when absent. |
 | busName | Nonnull exact bus name. |
-| `public System.String GetBusName(System.Int32 index)` | Gets a bus name. The unique exact name. |
+| `public static System.String GetBusName(System.Int32 index)` | Gets a bus name. The unique exact name. |
 | index | Live bus index. |
-| `public System.Single GetBusPeakVolumeLeftDB(System.Int32 index, System.Int32 channel)` | Gets the measured left-channel bus peak in decibels. Measured peak, with silence bounded at minus 200 dB. |
-| index | Live bus index. |
-| channel | Stereo pair index. |
-| `public System.Single GetBusPeakVolumeRightDB(System.Int32 index, System.Int32 channel)` | Gets the measured right-channel bus peak in decibels. Measured peak, with silence bounded at minus 200 dB. |
+| `public static System.Single GetBusPeakVolumeLeftDB(System.Int32 index, System.Int32 channel)` | Gets the measured left-channel bus peak in decibels. Measured peak, with silence bounded at minus 200 dB. |
 | index | Live bus index. |
 | channel | Stereo pair index. |
-| `public System.String GetBusSend(System.Int32 index)` | Gets the requested named send target. The requested target; invalid or later targets resolve to Master during mixing. |
+| `public static System.Single GetBusPeakVolumeRightDB(System.Int32 index, System.Int32 channel)` | Gets the measured right-channel bus peak in decibels. Measured peak, with silence bounded at minus 200 dB. |
 | index | Live bus index. |
-| `public System.Single GetBusVolumeDB(System.Int32 index)` | Gets bus gain in decibels. Gain in dB. |
+| channel | Stereo pair index. |
+| `public static System.String GetBusSend(System.Int32 index)` | Gets the requested named send target. The requested target; invalid or later targets resolve to Master during mixing. |
 | index | Live bus index. |
-| `public System.Single GetBusVolumeLinear(System.Int32 index)` | Gets the linear bus gain. Ten raised to dB/20. |
+| `public static System.Single GetBusVolumeDB(System.Int32 index)` | Gets bus gain in decibels. Gain in dB. |
 | index | Live bus index. |
-| `public System.String GetDriverName()` | Gets the actual native audio driver. The SDL audio driver after output preparation. |
-| `public System.Single GetMixRate()` | Gets the active audio mix frequency. 44100 Hz before output preparation, otherwise actual native mix frequency. |
-| `public System.String[] GetOutputDeviceList()` | Copied full SDL names, starting with Default; duplicate names appear once. |
-| `public string OutputDevice { get; set; }` | Default initially; exact live playback device selection. |
-| `public double GetOutputLatency()` | Reported device chunk plus queued source PCM duration, in seconds. |
-| `public Electron2D.AudioServer.SpeakerMode GetSpeakerMode()` | Gets the native output channel arrangement. The current speaker selector. |
-| `public System.Double GetTimeSinceLastMix()` | Gets elapsed time since the last actual native mix quantum. Seconds, zero before native output exists. |
-| `public System.Double GetTimeToNextMix()` | Gets the estimated time until the next native quantum. Nonnegative seconds based on actual quantum size and mix timestamp. |
-| `public System.Boolean IsBusMute(System.Int32 index)` | Gets whether a bus is mute. The current flag. |
+| `public static System.Single GetBusVolumeLinear(System.Int32 index)` | Gets the linear bus gain. Ten raised to dB/20. |
 | index | Live bus index. |
-| `public System.Boolean IsBusSolo(System.Int32 index)` | Gets whether a bus is solo. The current flag. |
+| `public static System.String GetDriverName()` | Gets the actual native audio driver. The SDL audio driver after output preparation. |
+| `public static System.Single GetMixRate()` | Gets the active audio mix frequency. 44100 Hz before output preparation, otherwise actual native mix frequency. |
+| `public static System.String[] GetOutputDeviceList()` | Copied full SDL names, starting with Default; duplicate names appear once. |
+| `public static string OutputDevice { get; set; }` | Default initially; exact live playback device selection. |
+| `public static double GetOutputLatency()` | Reported device chunk plus queued source PCM duration, in seconds. |
+| `public static Electron2D.AudioServer.SpeakerMode GetSpeakerMode()` | Gets the native output channel arrangement. The current speaker selector. |
+| `public static System.Double GetTimeSinceLastMix()` | Gets elapsed time since the last actual native mix quantum. Seconds, zero before native output exists. |
+| `public static System.Double GetTimeToNextMix()` | Gets the estimated time until the next native quantum. Nonnegative seconds based on actual quantum size and mix timestamp. |
+| `public static System.Boolean IsBusMute(System.Int32 index)` | Gets whether a bus is mute. The current flag. |
 | index | Live bus index. |
-| `public System.Void Lock()` | Locks configuration for an explicit caller-owned critical section. |
+| `public static System.Boolean IsBusSolo(System.Int32 index)` | Gets whether a bus is solo. The current flag. |
+| index | Live bus index. |
+| `public static System.Void Lock()` | Locks configuration for an explicit caller-owned critical section. |
 | Lifecycle | Pair with Unlock in finally; this protects the owned bus/playback state, not arbitrary game code. |
-| `public System.Void MoveBus(System.Int32 index, System.Int32 toIndex)` | Moves a non-Master bus; minus one moves it to the end. |
+| `public static System.Void MoveBus(System.Int32 index, System.Int32 toIndex)` | Moves a non-Master bus; minus one moves it to the end. |
 | index | Live non-Master source index. |
 | toIndex | Destination insertion index; minus one appends. |
 | System.ArgumentOutOfRangeException | An index is invalid or identifies Master. |
-| `public System.Void RemoveBus(System.Int32 index)` | Removes a non-Master bus, redirecting unresolved sends to Master. |
+| `public static System.Void RemoveBus(System.Int32 index)` | Removes a non-Master bus, redirecting unresolved sends to Master. |
 | index | Live nonzero bus index. |
 | System.ArgumentOutOfRangeException | The index is invalid or identifies Master. |
-| `public System.Void SetBusMute(System.Int32 index, System.Boolean enable)` | Sets the bus mute flag and updates live native gains. |
+| `public static System.Void SetBusMute(System.Int32 index, System.Boolean enable)` | Sets the bus mute flag and updates live native gains. |
 | index | Live bus index. |
 | enable | New flag. |
-| `public System.Void SetBusName(System.Int32 index, System.String name)` | Renames a bus, updating named sends and resolving duplicate names. |
+| `public static System.Void SetBusName(System.Int32 index, System.String name)` | Renames a bus, updating named sends and resolving duplicate names. |
 | index | Live non-Master index. |
 | name | Requested nonnull name. |
 | System.ArgumentOutOfRangeException | The index is invalid or identifies Master. |
-| `public System.Void SetBusSend(System.Int32 index, System.String send)` | Sets a non-Master bus send target. |
+| `public static System.Void SetBusSend(System.Int32 index, System.String send)` | Sets a non-Master bus send target. |
 | index | Live non-Master bus index. |
 | send | Nonnull requested target name. |
-| `public System.Void SetBusSolo(System.Int32 index, System.Boolean enable)` | Sets the bus solo flag and updates live native gains. |
+| `public static System.Void SetBusSolo(System.Int32 index, System.Boolean enable)` | Sets the bus solo flag and updates live native gains. |
 | index | Live bus index. |
 | enable | New flag. |
-| `public System.Void SetBusVolumeDB(System.Int32 index, System.Single volumeDB)` | Sets finite bus gain in decibels. |
+| `public static System.Void SetBusVolumeDB(System.Int32 index, System.Single volumeDB)` | Sets finite bus gain in decibels. |
 | index | Live bus index. |
 | volumeDB | Finite gain. |
 | System.ArgumentOutOfRangeException | The gain is not finite. |
-| `public System.Void SetBusVolumeLinear(System.Int32 index, System.Single volumeLinear)` | Sets nonnegative finite linear bus gain. |
+| `public static System.Void SetBusVolumeLinear(System.Int32 index, System.Single volumeLinear)` | Sets nonnegative finite linear bus gain. |
 | index | Live bus index. |
 | volumeLinear | Zero mutes through negative infinity decibels. |
-| `public System.Void Unlock()` | Releases one matching configuration lock. |
+| `public static System.Void Unlock()` | Releases one matching configuration lock. |
 | System.Threading.SynchronizationLockException | The calling thread owns no matching lock. |
 | `protected override System.Void ValidateDisposal()` | Projects the inherited typed callback; see the concrete behavior above and base-class contract. |
 | Lifecycle | The process-wide service has process lifetime; engine teardown closes its native resources. |
 | System.InvalidOperationException | Always thrown for the borrowed singleton. |
-| `public System.Int32 BusCount { get; set; }` | Gets or sets the number of bus records, including the required Master. One initially; values must be between one and 255. |
+| `public static System.Int32 BusCount { get; set; }` | Gets or sets the number of bus records, including the required Master. One initially; values must be between one and 255. |
 | System.ArgumentOutOfRangeException | The count is outside the valid range. |
 | System.InvalidOperationException | Access is off-owner. |
-| `public static Electron2D.AudioServer Instance { get;  }` | Gets the process-wide audio service. The borrowed singleton; applications configure it rather than disposing it. |
-| `public System.Single PlaybackSpeedScale { get; set; }` | Gets or sets the positive global playback-rate multiplier. One initially; actual player pitch combines this value with its local scale. |
+| `public static System.Single PlaybackSpeedScale { get; set; }` | Gets or sets the positive global playback-rate multiplier. One initially; actual player pitch combines this value with its local scale. |
 | System.ArgumentOutOfRangeException | The value is nonpositive or nonfinite. |
 
 ## Recording API summary
 
 | Full signature | Contract |
 | --- | --- |
-| `public float GetInputMixRate()` | Prepared actual recording frequency; lazy paused preparation. |
-| `public string[] GetInputDeviceList()` | Copied exact native names plus Default. |
-| `public string InputDevice { get; set; }` | Default initially; prepare-before-commit device switch. |
-| `public void SetInputDeviceActive(bool active)` | Explicit start/global pause, typed errors. |
-| `public int GetInputBufferLengthFrames()` | Four native quanta, zero before preparation/after engine closure. |
-| `public int GetInputFramesAvailable()` | Unread server frames, zero through capacity. |
-| `public Vector2[] GetInputFrames(int frames)` | Whole-count copied stereo read or empty without consumption. |
+| `public static float GetInputMixRate()` | Prepared actual recording frequency; lazy paused preparation. |
+| `public static string[] GetInputDeviceList()` | Copied exact native names plus Default. |
+| `public static string InputDevice { get; set; }` | Default initially; prepare-before-commit device switch. |
+| `public static void SetInputDeviceActive(bool active)` | Explicit start/global pause, typed errors. |
+| `public static int GetInputBufferLengthFrames()` | Four native quanta, zero before preparation/after engine closure. |
+| `public static int GetInputFramesAvailable()` | Unread server frames, zero through capacity. |
+| `public static Vector2[] GetInputFrames(int frames)` | Whole-count copied stereo read or empty without consumption. |
 
 ## Recording member descriptions
 
@@ -138,12 +141,11 @@ Nonnegative count; negative throws ArgumentOutOfRangeException. Exactly enough i
 Partial owner-thread snippet; retrieve frames on later scene frames while capture proceeds.
 
 ```csharp
-var audio = AudioServer.Instance;
-ProjectSettings.Instance.Set(ProjectSettings.AudioDriverEnableInput, true);
-audio.SetInputDeviceActive(true);
+ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, true);
+AudioServer.SetInputDeviceActive(true);
 // On a later scene callback:
-Vector2[] recorded = audio.GetInputFrames(audio.GetInputFramesAvailable());
-audio.SetInputDeviceActive(false);
+Vector2[] recorded = AudioServer.GetInputFrames(AudioServer.GetInputFramesAvailable());
+AudioServer.SetInputDeviceActive(false);
 ```
 
 Engine shutdown releases both input/output, stops standalone microphone playbacks and clears requests. Last output-player detachment closes output while retaining independent input. Capture callbacks use their own ring gate and never enter AudioServer.Lock; caller mix locking does not protect input history. Public copy/availability operations synchronize input internally. See [recording verification](../components/audio-playback.md#recording-input).
@@ -154,8 +156,8 @@ If the final automatic native pause fails, its microphone request is still relea
 
 | Full signature | Contract |
 | --- | --- |
-| `public bool IsStreamRegisteredAsSample(AudioStream stream)` | Queries the borrowed live resource identity on the owner. |
-| `public void RegisterStreamAsSample(AudioStream stream)` | Transactionally generates/replaces a cold sample snapshot; unsupported resources and callback reentry reject. |
+| `public static bool IsStreamRegisteredAsSample(AudioStream stream)` | Queries the borrowed live resource identity on the owner. |
+| `public static void RegisterStreamAsSample(AudioStream stream)` | Transactionally generates/replaces a cold sample snapshot; unsupported resources and callback reentry reject. |
 
 ## Method Descriptions
 
@@ -169,7 +171,7 @@ Transactionally generates/replaces a cold sample snapshot; unsupported resources
 
 ## Verification and limits
 
-[Audio verification](../components/audio-playback.md#verification) distinguishes CPU behavior, actual native mixed PCM, public host lifecycle, packaging and physical listening. [ADR 0047](../decisions/audio.md#adr-0047) owns the backend/decoder boundary. Inherited members are documented on their declaring class.
+[Audio verification](../components/audio-playback.md#verification) distinguishes CPU behavior, actual native mixed PCM, public static host lifecycle, packaging and physical listening. [ADR 0047](../decisions/audio.md#adr-0047) owns the backend/decoder boundary. Inherited members are documented on their declaring class.
 
 [Own reference coverage](../coverage/classes/AudioServer.md) retains missing and Partial members separately.
 
@@ -181,16 +183,16 @@ Transactionally generates/replaces a cold sample snapshot; unsupported resources
 
 | Signature | Contract |
 | --- | --- |
-| `public void AddBusEffect(int busIndex, AudioEffect effect, int atPosition = -1)` | Inserts an enabled borrowed resource. |
-| `public int GetBusEffectCount(int busIndex)` | Includes disabled entries; does not prepare output. |
-| `public AudioEffect GetBusEffect(int busIndex, int effectIndex)` | Exact borrowed configured resource. |
-| `public AudioEffectInstance GetBusEffectInstance(int busIndex, int effectIndex, int channel = 0)` | Borrowed live stereo-pair state; prepares output when needed. |
-| `public void RemoveBusEffect(int busIndex, int effectIndex)` | Removes resource reference and recreates edited chain. |
-| `public void SwapBusEffects(int busIndex, int effectIndex, int byEffectIndex)` | Swaps order and recreates edited chain. |
-| `public bool IsBusEffectEnabled(int busIndex, int effectIndex)` | Requested flag independent of bypass. |
-| `public void SetBusEffectEnabled(int busIndex, int effectIndex, bool enabled)` | Toggles native processing without resetting state. |
-| `public bool IsBusBypassingEffects(int busIndex)` | Requested bypass flag. |
-| `public void SetBusBypassEffects(int busIndex, bool enable)` | Suppresses all public effects; retains gain/metering. |
+| `public static void AddBusEffect(int busIndex, AudioEffect effect, int atPosition = -1)` | Inserts an enabled borrowed resource. |
+| `public static int GetBusEffectCount(int busIndex)` | Includes disabled entries; does not prepare output. |
+| `public static AudioEffect GetBusEffect(int busIndex, int effectIndex)` | Exact borrowed configured resource. |
+| `public static AudioEffectInstance GetBusEffectInstance(int busIndex, int effectIndex, int channel = 0)` | Borrowed live stereo-pair state; prepares output when needed. |
+| `public static void RemoveBusEffect(int busIndex, int effectIndex)` | Removes resource reference and recreates edited chain. |
+| `public static void SwapBusEffects(int busIndex, int effectIndex, int byEffectIndex)` | Swaps order and recreates edited chain. |
+| `public static bool IsBusEffectEnabled(int busIndex, int effectIndex)` | Requested flag independent of bypass. |
+| `public static void SetBusEffectEnabled(int busIndex, int effectIndex, bool enabled)` | Toggles native processing without resetting state. |
+| `public static bool IsBusBypassingEffects(int busIndex)` | Requested bypass flag. |
+| `public static void SetBusBypassEffects(int busIndex, bool enable)` | Suppresses all public static effects; retains gain/metering. |
 
 <a id="addbuseffect"></a>
 ### AddBusEffect
@@ -224,7 +226,7 @@ Requested flag defaults true and is independent of bypass. Disabled effects pass
 <a id="setbusbypasseffects"></a>
 ### IsBusBypassingEffects and SetBusBypassEffects
 
-Bypass defaults false. It passes PCM around all public effects without changing enabled flags, ownership or processing state. Final gain, mute/solo, sends and peak metering remain active. Restoring bypass resumes enabled effects. Hooks requesting silence run before bus mute/gain when enabled.
+Bypass defaults false. It passes PCM around all public static effects without changing enabled flags, ownership or processing state. Final gain, mute/solo, sends and peak metering remain active. Restoring bypass resumes enabled effects. Hooks requesting silence run before bus mute/gain when enabled.
 
 ## Effect runtime and verification
 
@@ -254,11 +256,10 @@ The engine prepares a new paused native stream and its staging storage before co
 Prepares native output on first query and returns a finite driver-buffering snapshot in seconds: `openedDeviceFrames / openedDeviceFrequency + queuedSourceBytes / (mixFrequency × mixChannels × sizeof(float))`. Initial preparation queries the opened stream; normal output callbacks refresh the cache. Repeated owner-thread reads, including inside Lock/Unlock, use the cache and allocate no measured bytes. This is the driver's current reported chunk/queue duration; it does not measure additional audio-server, network/Bluetooth, speaker or DAC delay. It replaces the FAudio fixed two-quantum estimate with opened SDL device/queue data.
 
 ```csharp
-AudioServer audio = AudioServer.Instance;
-string[] devices = audio.GetOutputDeviceList();
-audio.OutputDevice = devices.First(name => name != "Default");
-double bufferedSeconds = audio.GetOutputLatency();
-audio.OutputDevice = "Default";
+string[] devices = AudioServer.GetOutputDeviceList();
+AudioServer.OutputDevice = devices.First(name => name != "Default");
+double bufferedSeconds = AudioServer.GetOutputLatency();
+AudioServer.OutputDevice = "Default";
 ```
 
 This partial owner-thread snippet requires an available named output. [AudioOutputTests](../../tests/Electron2D.Tests/AudioOutputTests.cs) executes active/paused stream and sample switches, borrowed playback/effect identity, format retention, PCM, invalid names, owner guards, lock-held calls, preference reapplication and warmed allocation. Current logical 2/4/6/8 profiles and two actual Window host cycles on each Wayland renderer are checked. Additional end-to-end audible latency, physical listening, other hardware/drivers/platforms and SDL/OS allocations remain separate limits.

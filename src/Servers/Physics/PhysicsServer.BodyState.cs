@@ -28,12 +28,7 @@ public sealed partial class PhysicsServer
             if (_bodyRuntimes.TryGetValue(body, out var runtime)) runtime.View = null;
     }
 
-    /// <summary>Gets a live owner-thread view of an attached body, or null while detached.</summary>
-    /// <param name="body">A live scene or server body RID.</param>
-    /// <returns>A cached view tied to this backend attachment; caller disposal invalidates only that view.</returns>
-    /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">The caller is off-owner or the solver is stepping.</exception>
-    public PhysicsDirectBodyState? BodyGetDirectState(RID body)
+    internal PhysicsDirectBodyState? BodyGetDirectStateCore(RID body)
     {
         ThrowIfDisposed();
         var runtime = BodyRuntime(body);
@@ -43,56 +38,32 @@ public sealed partial class PhysicsServer
         return runtime.GetView(space, runtime.BodyID);
     }
 
-    /// <summary>Sets or clears the body's post-solver force-integration callback.</summary>
-    /// <param name="body">A live body RID.</param>
-    /// <param name="callback">Owner-thread callback invoked before state synchronization, or null to clear.</param>
-    /// <remarks>Scene bodies retain their tree-owned pose synchronization. Registration does not enable custom integration.</remarks>
-    public void BodySetForceIntegrationCallback(RID body, Action<PhysicsDirectBodyState>? callback)
+    internal void BodySetForceIntegrationCallbackCore(RID body, Action<PhysicsDirectBodyState>? callback)
     {
         ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); runtime.ForceCallback = callback;
     }
 
-    /// <summary>Sets a post-solver force callback with strongly typed user data.</summary>
-    /// <typeparam name="T">The user data type.</typeparam>
-    /// <param name="body">A live body RID.</param>
-    /// <param name="callback">Callback receiving the view and user data, or null to clear.</param>
-    /// <param name="userData">Data retained with the registered callback.</param>
-    /// <remarks>The adapter is allocated at registration; invocation does not box value-type data.</remarks>
-    public void BodySetForceIntegrationCallback<T>(RID body, Action<PhysicsDirectBodyState, T>? callback, T userData) =>
-        BodySetForceIntegrationCallback(body, callback is null ? null : state => callback(state, userData));
+    internal void BodySetForceIntegrationCallbackCore<T>(RID body, Action<PhysicsDirectBodyState, T>? callback, T userData) =>
+    BodySetForceIntegrationCallbackCore(body, callback is null ? null : state => callback(state, userData));
 
-    /// <summary>Sets or clears an owner-thread observer of the body's solved state.</summary>
-    /// <param name="body">A live body RID.</param>
-    /// <param name="callback">Post-integration state callback, or null to clear.</param>
-    /// <remarks>A previous user callback is replaced. Scene-owned pose synchronization remains mandatory.</remarks>
-    public void BodySetStateSyncCallback(RID body, Action<PhysicsDirectBodyState>? callback)
+    internal void BodySetStateSyncCallbackCore(RID body, Action<PhysicsDirectBodyState>? callback)
     {
         ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); runtime.SyncCallback = callback;
     }
 
-    /// <summary>Enables or disables omission of automatic gravity, damping and accumulated forces.</summary>
-    /// <param name="body">A live body RID.</param>
-    /// <param name="enable">True for manual force integration; impulses and solver contacts remain active.</param>
-    public void BodySetOmitForceIntegration(RID body, bool enable)
+    internal void BodySetOmitForceIntegrationCore(RID body, bool enable)
     {
         ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable();
         if (runtime.Owners.Scene is RigidBody rigid) rigid.CustomIntegrator = enable;
         else runtime.OmitForces = enable;
     }
 
-    /// <summary>Tests whether a body omits automatic force integration.</summary>
-    /// <param name="body">A live body RID.</param>
-    /// <returns>The current custom-integration policy.</returns>
-    public bool BodyIsOmittingForceIntegration(RID body)
+    internal bool BodyIsOmittingForceIntegrationCore(RID body)
     {
         ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); return runtime.Omitted;
     }
 
-    /// <summary>Sets the maximum retained contact-point count for a body.</summary>
-    /// <param name="body">A live body RID.</param>
-    /// <param name="amount">Nonnegative cap; zero disables contact snapshots.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The cap is negative.</exception>
-    public void BodySetMaxContactsReported(RID body, int amount)
+    internal void BodySetMaxContactsReportedCore(RID body, int amount)
     {
         ThrowIfDisposed(); if (amount < 0) throw new ArgumentOutOfRangeException(nameof(amount));
         var runtime = BodyRuntime(body); runtime.EnsureMutable();
@@ -100,10 +71,7 @@ public sealed partial class PhysicsServer
         else runtime.MaxContacts = amount;
     }
 
-    /// <summary>Gets the body's configured contact-point limit.</summary>
-    /// <param name="body">A live body RID.</param>
-    /// <returns>The nonnegative limit; zero disables contact snapshots.</returns>
-    public int BodyGetMaxContactsReported(RID body)
+    internal int BodyGetMaxContactsReportedCore(RID body)
     {
         ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); return runtime.ContactLimit;
     }

@@ -28,7 +28,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     private struct Callback { internal F.FAudioVoiceCallback Functions; internal nint User; }
     internal FAudioStreamVoice(FAudioContext context, AudioStreamPlayback playback, nint send)
     {
-        context.EnsureOwner(); _context = context; _send = send; _playback = playback; if (playback.GetSamplePlayback() is { } request) { _frames = []; _ring = _output = _tail = _matrix = _previousMatrix = []; _sample = context.CreateSample(request, AudioServer.Instance.GetSample(request.Stream), send); _sample.Wrapped = true; return; }
+        context.EnsureOwner(); _context = context; _send = send; _playback = playback; if (playback.GetSamplePlayback() is { } request) { _frames = []; _ring = _output = _tail = _matrix = _previousMatrix = []; _sample = context.CreateSample(request, AudioServer.Service.GetSample(request.Stream), send); _sample.Wrapped = true; return; }
         _frames = new Vector2[context.QuantumFrames + 64]; _ring = new float[context.QuantumFrames * context.Channels * 4]; _output = new float[context.QuantumFrames * context.Channels]; _tail = new float[_output.Length]; _matrix = new float[context.Channels * 2]; _previousMatrix = new float[_matrix.Length];
         lock (context.Gate) try
             {
@@ -115,7 +115,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     internal bool SamplingPaused => _paused || !_active;
     internal void ConfigureSampleChild(FAudioSampleVoice sample)
     {
-        sample.SetPitch(_pitch); sample.SetVolume(_volume, AudioServer.Instance.ResolveSourceGain(sample.RequestedBus, 1)); sample.SetTarget(_target);
+        sample.SetPitch(_pitch); sample.SetVolume(_volume, AudioServer.Service.ResolveSourceGain(sample.RequestedBus, 1)); sample.SetTarget(_target);
         if (_spatial) sample.SetSpatial(_spatialLeft, _spatialRight); sample.Pause(_paused || !_active);
     }
     private void RefreshSampleChildren() => _playback.UpdateNativeOwner(this);
@@ -231,7 +231,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
         if (_sample is { } sample)
         {
             if (playback.GetSamplePlayback() is not { } request) throw new InvalidOperationException("Sample/stream mode changed without releasing its slot.");
-            var next = _context.CreateSample(request, AudioServer.Instance.GetSample(request.Stream), _send); next.Wrapped = true;
+            var next = _context.CreateSample(request, AudioServer.Service.GetSample(request.Stream), _send); next.Wrapped = true;
             try { next.SetPitch(_pitch); next.SetVolume(_volume, _routingGain); next.SetTarget(_target); if (_spatial) next.SetSpatial(_spatialLeft, _spatialRight); } catch { next.Dispose(); throw; }
             sample.Dispose(); var old = _playback; old.SceneOwner = null; old.UpdateNativeOwner(null); _playback = playback; playback.SceneOwner = this; _sample = next; old.Dispose(); return;
         }

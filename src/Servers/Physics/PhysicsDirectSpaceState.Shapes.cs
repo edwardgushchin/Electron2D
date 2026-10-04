@@ -73,7 +73,7 @@ public sealed partial class PhysicsDirectSpaceState
                 else if (!Overlaps(query, other, otherTransform) &&
                          !SweepsInto(query, other, otherTransform, motion, 1f)) continue;
                 hits.Add(new(candidate.Tag.ColliderRID,
-                    PhysicsServer.Instance.ResolveSceneObject(candidate.Tag.ColliderRID),
+                    PhysicsServer.Service.ResolveSceneObject(candidate.Tag.ColliderRID),
                     candidate.Tag.ShapeIndex));
                 break;
             }
@@ -158,9 +158,9 @@ public sealed partial class PhysicsDirectSpaceState
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);
-        var space = PhysicsServer.Instance.GetSceneSpace(_spaceRID);
+        var space = PhysicsServer.Service.GetSceneSpace(_spaceRID);
         space.PrepareForQuery();
-        var shape = parameters.Shape ?? PhysicsServer.Instance.GetShapeGeometry(parameters.ShapeRID);
+        var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
         _queryRaySlide = (shape as SeparationRayShape)?.SlideOnSlope;
         _queryProxies.Clear();
         shape.AppendQueryProxies(_queryProxies);

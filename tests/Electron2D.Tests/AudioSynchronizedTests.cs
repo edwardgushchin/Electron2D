@@ -73,7 +73,7 @@ internal static class AudioSynchronizedTests
         a.FactoryHook = () => stream.SetSyncStream(0, b); Reject<InvalidOperationException>(() => stream.InstantiatePlayback()); a.FactoryHook = null;
         a.FactoryHook = () => stream.InstantiatePlayback(); Reject<InvalidOperationException>(() => stream.InstantiatePlayback()); a.FactoryHook = null;
         // A rejected recursive factory must not strand a recursive audio monitor entry.
-        Check(Task.Run(() => { AudioServer.Instance.Lock(); AudioServer.Instance.Unlock(); }).Wait(TimeSpan.FromSeconds(2)), "Recursive rejection releases the audio gate.");
+        Check(Task.Run(() => { AudioServer.Lock(); AudioServer.Unlock(); }).Wait(TimeSpan.FromSeconds(2)), "Recursive rejection releases the audio gate.");
         a.CursorHook = () => playback.GetPlaybackPosition(); Reject<InvalidOperationException>(() => playback.GetPlaybackPosition()); a.CursorHook = null;
         a.FailDispose = b.FailDispose = true; Reject<Exception>(() => playback.Dispose()); Check(playback.IsDisposed && a.Instances.All(p => p.IsDisposed) && b.Instances.All(p => p.IsDisposed), "Cleanup failures finalize the aggregate and all owned children."); a.FailDispose = b.FailDispose = false;
         using var victim = new AudioStreamSynchronized { StreamCount = 1 }; victim.SetSyncStream(0, a); a.FactoryHook = () => victim.Dispose(); Reject<ObjectDisposedException>(() => victim.InstantiatePlayback()); Check(a.Last!.IsDisposed, "Resource disposal during factory releases the prepared child."); a.FactoryHook = null;
@@ -99,14 +99,14 @@ internal static class AudioSynchronizedTests
     private static void Native()
     {
         using var positive = new Probe(new(.2f, .2f)) { Wave = true }; using var negative = new Probe(new(-.2f, -.2f)) { Wave = true }; using var stream = new AudioStreamSynchronized { StreamCount = 2 }; stream.SetSyncStream(0, positive); stream.SetSyncStream(1, negative);
-        var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root); player.Play(); var native = AudioServer.Instance.Native;
+        var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root); player.Play(); var native = AudioServer.Service.Native;
         Wait(native, 20); native.PrepareCapture(native.QuantumFrames * native.Channels * 8); Wait(native, 10); Check(native.CapturedPCM().All(v => Math.Abs(v) < 1e-6), "Opposite coherent children cancel through actual FAudio PCM.");
         stream.SetSyncStreamVolume(1, -200); Wait(native, 10); native.PrepareCapture(native.QuantumFrames * native.Channels * 8); Wait(native, 10); Check(native.CapturedPCM().Any(v => Math.Abs(v) > .1f), "Live gain exposes the real waveform without restarting.");
         Wait(native, 20); var before = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == before && FAudioContext.AllocationCalls == calls, "64 warmed native mix passes allocate zero measured bytes/calls.");
         player.StreamPaused = true; Wait(native, 20); before = native.MixManagedBytes; calls = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == before && FAudioContext.AllocationCalls == calls, "64 warmed paused native passes allocate zero measured bytes/calls."); player.StreamPaused = false;
         stream.SetSyncStream(1, negative); Check(!player.GetStreamPlayback().IsPlaying(), "Owner structural edit stops and replaces attached child states."); player.Stop(); player.Play(); positive.MixHook = () => stream.SetSyncStream(0, negative); Wait(native, 5); Reject<Exception>(() => tree.ProcessFrame(.01)); Check(!player.IsPlaying(), "Native reentrant structural mutation is contained and reported at owner frame."); positive.MixHook = null;
         player.Play(); player.Stop(); Check(!positive.IsDisposed && !negative.IsDisposed && !stream.IsDisposed, "Player owns playbacks and borrows resources.");
-        var settings = ProjectSettings.Instance; var enabled = settings.Get(ProjectSettings.AudioDriverEnableInput); settings.Set(ProjectSettings.AudioDriverEnableInput, true);
+        var settings = ProjectSettings.Service; var enabled = ProjectSettings.Get(ProjectSettings.AudioDriverEnableInput); ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, true);
         try
         {
             using var microphone = new AudioStreamMicrophone(); using var random = new AudioStreamRandomizer(); random.AddStream(-1, microphone);
@@ -114,10 +114,10 @@ internal static class AudioSynchronizedTests
             Task.Run(() => { Reject<InvalidOperationException>(() => handle.Dispose()); Reject<InvalidOperationException>(() => monitored.SetSyncStream(0, positive)); }).GetAwaiter().GetResult();
             Check(!handle.IsDisposed && ReferenceEquals(monitored.GetSyncStream(0), random) && handle.IsPlaying(), "Microphone ownership propagates through mixed composites before off-owner disposal/edit can consume state.");
             Task.Run(() => Reject<InvalidOperationException>(() => monitored.InstantiatePlayback())).GetAwaiter().GetResult();
-            monitored.SetSyncStream(0, positive); Check(AudioServer.Instance.CurrentInput?.Active != true, "Owner cohort replacement releases nested microphone capture.");
+            monitored.SetSyncStream(0, positive); Check(AudioServer.Service.CurrentInput?.Active != true, "Owner cohort replacement releases nested microphone capture.");
             player.Stop();
         }
-        finally { settings.Set(ProjectSettings.AudioDriverEnableInput, enabled); }
+        finally { ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, enabled); }
     }
     private static void Wait(FAudioContext context, long count) { var end = context.MixPasses + count; var watch = System.Diagnostics.Stopwatch.StartNew(); while (context.MixPasses < end) { if (watch.Elapsed > TimeSpan.FromSeconds(5)) throw new InvalidOperationException("Native audio did not advance."); Thread.Sleep(1); } }
     private sealed class Probe(Vector2 sample) : AudioStream

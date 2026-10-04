@@ -1,6 +1,6 @@
 # InputEventMouseButton
 
-Last updated: 2026-09-24
+Last updated: 2026-10-04
 
 **Inherits:** [InputEventMouse](InputEventMouse.md)
 
@@ -28,7 +28,7 @@ The following focused snippet uses the current public API. Names not declared in
 
 ```csharp
 using var click = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true };
-Input.Instance.ParseInputEvent(click);
+Input.ParseInputEvent(click);
 ```
 
 ## Constructors

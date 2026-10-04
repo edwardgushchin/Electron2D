@@ -116,9 +116,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; var before = 0L; var allocated = 0L;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before; if (++frames > 20) allocated += bytes;
                 using var image = server.Readback();
@@ -134,8 +134,8 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 40) { Check(allocated == 0 && nodes.All(n => n.Draws == 1), "Matrix values and reload retain geometry without warm render allocations."); window.Tree!.Quit(); }
             };
         };
-        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
-        else Engine.Instance.Run(window);
+        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));
+        else Engine.Run(window);
         Released(window);
         Console.WriteLine(backend == "compatibility" ? $"Shader matrix fallback rejection and cleanup passed: {fixture}." :
             $"Shader matrix pixels/reload/cleanup passed: {backend}/{fixture}; {frames} frames, {allocated} warm bytes.");

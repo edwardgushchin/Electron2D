@@ -10,48 +10,48 @@ internal static partial class RenderingRuntimeTests
         source.Fill(Colors.Yellow);
         using var texture = ImageTexture.CreateFromImage(source);
         texture.SetSizeOverride(new Vector2i(512, 512));
-        display.CursorSetCustomImage(texture, hotspot: new Vector2(1.75f, 0.25f));
+        DisplayServer.CursorSetCustomImage(texture, hotspot: new Vector2(1.75f, 0.25f));
         var installed = SDL3.SDL.GetCursor();
         Check(installed != 0 && !texture.IsDisposed && !source.IsDisposed, "A texture cursor borrows its source and uses original image pixels.");
-        Reject<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(texture, hotspot: new Vector2(2, 0)));
-        Reject<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(texture, hotspot: new Vector2(float.NaN, 0)));
+        Reject<ArgumentOutOfRangeException>(() => DisplayServer.CursorSetCustomImage(texture, hotspot: new Vector2(2, 0)));
+        Reject<ArgumentOutOfRangeException>(() => DisplayServer.CursorSetCustomImage(texture, hotspot: new Vector2(float.NaN, 0)));
         Exception? wrongThread = null;
-        var worker = new Thread(() => { try { display.CursorSetCustomImage(texture); } catch (Exception error) { wrongThread = error; } });
+        var worker = new Thread(() => { try { DisplayServer.CursorSetCustomImage(texture); } catch (Exception error) { wrongThread = error; } });
         worker.Start(); worker.Join();
         Check(wrongThread is InvalidOperationException, "Cursor conversion requires the display owner thread.");
         using var empty = new ImageTexture();
-        Reject<ArgumentException>(() => display.CursorSetCustomImage(empty));
+        Reject<ArgumentException>(() => DisplayServer.CursorSetCustomImage(empty));
         using var unrelated = new Shader();
-        Reject<ArgumentException>(() => display.CursorSetCustomImage(unrelated));
+        Reject<ArgumentException>(() => DisplayServer.CursorSetCustomImage(unrelated));
         Image? temporary = null;
         using var custom = new CursorTexture(() => temporary = source.GetRegion(new Rect2i(0, 0, 2, 2)));
-        Reject<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(custom, hotspot: new Vector2(2, 0)));
+        Reject<ArgumentOutOfRangeException>(() => DisplayServer.CursorSetCustomImage(custom, hotspot: new Vector2(2, 0)));
         Check(temporary is { IsDisposed: true }, "A failed cursor conversion releases the custom texture's temporary image.");
         using var oversized = new CursorTexture(() => temporary = Image.CreateEmpty(257, 1, false, Image.Format.Rgba8));
-        Reject<ArgumentException>(() => display.CursorSetCustomImage(oversized));
+        Reject<ArgumentException>(() => DisplayServer.CursorSetCustomImage(oversized));
         Check(temporary is { IsDisposed: true }, "The pixel size limit releases the oversized temporary image.");
         using var failure = new CursorTexture(() => throw new InvalidOperationException("injected cursor image failure"));
-        Reject<InvalidOperationException>(() => display.CursorSetCustomImage(failure));
+        Reject<InvalidOperationException>(() => DisplayServer.CursorSetCustomImage(failure));
         texture.Dispose(); source.Dispose();
-        Reject<ObjectDisposedException>(() => display.CursorSetCustomImage(texture));
+        Reject<ObjectDisposedException>(() => DisplayServer.CursorSetCustomImage(texture));
         Check(SDL3.SDL.GetCursor() == installed, "Failures and disposal preserve the copied native cursor.");
         using var customSuccess = new CursorTexture(() => temporary = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8));
-        display.CursorSetCustomImage(customSuccess, CursorShape.IBeam);
+        DisplayServer.CursorSetCustomImage(customSuccess, CursorShape.IBeam);
         Check(temporary is { IsDisposed: true } && !customSuccess.IsDisposed && SDL3.SDL.GetCursor() == installed,
             "Successful conversion releases only its temporary image and preserves other shape slots.");
         customSuccess.Dispose();
-        display.CursorSetShape(CursorShape.IBeam);
+        DisplayServer.CursorSetShape(CursorShape.IBeam);
         Check(SDL3.SDL.GetCursor() != 0 && SDL3.SDL.GetCursor() != installed, "A custom texture cursor survives source disposal.");
-        display.CursorSetShape(CursorShape.Arrow);
+        DisplayServer.CursorSetShape(CursorShape.Arrow);
         Check(SDL3.SDL.GetCursor() == installed, "Returning to the arrow restores its own texture cursor.");
-        display.CursorSetCustomImage(null);
+        DisplayServer.CursorSetCustomImage(null);
         Check(SDL3.SDL.GetCursor() != 0 && SDL3.SDL.GetCursor() != installed, "Null restores the system cursor without overload ambiguity.");
         using var closesDisplay = new CursorTexture(() =>
         {
             display.Dispose();
             return temporary = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8);
         });
-        Reject<ObjectDisposedException>(() => display.CursorSetCustomImage(closesDisplay));
+        Reject<ObjectDisposedException>(() => DisplayServer.CursorSetCustomImage(closesDisplay));
         Check(temporary is { IsDisposed: true }, "Disposal inside custom image capture prevents native access and releases the captured image.");
         Console.WriteLine("Texture cursor ownership and failure checks passed.");
     }
@@ -207,9 +207,9 @@ internal static partial class RenderingRuntimeTests
         var node = new CanvasNode { DrawAction = n => n.DrawRect(new Rect2(0, 0, 64, 64), Colors.White), Material = material };
         node.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 frames++;
                 using var frame = server.Readback();
@@ -277,7 +277,7 @@ internal static partial class RenderingRuntimeTests
             };
         };
         window.AddChild(node);
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 14 && !texture.IsDisposed && !detail.IsDisposed && !custom.IsDisposed,
             "Texture sampling, base-level LOD clamping, update/replacement, custom resources, binding reload and borrowed cleanup execute through Engine.Run.");
@@ -310,12 +310,12 @@ internal static partial class RenderingRuntimeTests
         };
         foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 96, 12), Colors.White); parent.AddChild(node); }
         var frames = 0; var before = 0L; var allocated = 0L;
-        var settings = ProjectSettings.Instance; var nearestMip = settings.Get(ProjectSettings.UseNearestMipmapFilter);
+        var settings = ProjectSettings.Service; var nearestMip = ProjectSettings.Get(ProjectSettings.UseNearestMipmapFilter);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before; if (++frames > 20) allocated += bytes;
                 using var image = server.Readback();
@@ -332,7 +332,7 @@ internal static partial class RenderingRuntimeTests
                     parent.TextureFilter = TextureFilter.NearestWithMipmapsAnisotropic;
                     window.CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.LinearWithMipmaps;
                     window.CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Enabled;
-                    settings.Set(ProjectSettings.UseNearestMipmapFilter, !nearestMip);
+                    ProjectSettings.Set(ProjectSettings.UseNearestMipmapFilter, !nearestMip);
                 }
                 if (frames == 2)
                 {
@@ -354,14 +354,14 @@ internal static partial class RenderingRuntimeTests
         };
         try
         {
-            if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
+            if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));
             else
             {
-                Engine.Instance.Run(window);
+                Engine.Run(window);
                 Check(frames == 40 && allocated == 0 && nodes[0].Draws == 2 && nodes[1].Draws == 1 && nodes[2].Draws == 2, $"Named sampler result: frames={frames}, allocated={allocated}, draws={string.Join(",", nodes.Select(n => n.Draws))}.");
             }
         }
-        finally { settings.Set(ProjectSettings.UseNearestMipmapFilter, nearestMip); }
+        finally { ProjectSettings.Set(ProjectSettings.UseNearestMipmapFilter, nearestMip); }
         Released(window);
         Check(!texture.IsDisposed && !detail.IsDisposed, "Named sampler teardown preserves borrowed texture resources.");
         Console.WriteLine($"Named sampler defaults passed: {backend}/{fixture}; {frames} frames; {allocated} warm rendering bytes.");
@@ -373,8 +373,8 @@ internal static partial class RenderingRuntimeTests
         using var material = new ShaderMaterial { Shader = shader };
         var window = new Window();
         window.AddChild(new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect2(0, 0, 10, 10), Colors.White) });
-        if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
-        else Reject<InvalidOperationException>(() => Engine.Instance.Run(window));
+        // Sampler validation runs before backend submission, so a missing texture fails on either backend.
+        Reject<InvalidOperationException>(() => Engine.Run(window));
         Released(window);
     }
 

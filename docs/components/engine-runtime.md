@@ -1,8 +1,10 @@
 # Engine runtime component
 
-Last updated: 2026-10-01
+Last updated: 2026-10-04
 
 ## Scope
+
+Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 This Core component coordinates one process-wide engine runtime: project-backed timing settings, fixed-step synchronization, time scaling, `MainLoop` attachment/finalization, frame metrics, architecture/version reporting, and a typed named-singleton registry. Engine.Run(Window) owns the ordinary windowed clock, event pump, frame limit, and cleanup on the calling main thread. Manual embedding can still supply elapsed time.
 

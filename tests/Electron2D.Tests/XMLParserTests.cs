@@ -121,7 +121,7 @@ internal static class XMLParserTests
         finally { File.Delete(path); }
 
         var virtualName = $"xml-parser-{Guid.NewGuid():N}.xml";
-        var virtualPath = System.IO.Path.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
+        var virtualPath = System.IO.Path.Combine(ProjectSettings.ProjectRoot, virtualName);
         try
         {
             File.WriteAllText(virtualPath, "<virtual/>");

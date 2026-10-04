@@ -81,7 +81,7 @@ public sealed class AudioStreamInteractive : AudioStream
         set
         {
             if ((uint)value > Capacity) throw new ArgumentOutOfRangeException(nameof(value));
-            var server = AudioServer.Instance; server.Lock();
+            var server = AudioServer.Service; server.LockCore();
             try
             {
                 lock (GraphGate)
@@ -97,7 +97,7 @@ public sealed class AudioStreamInteractive : AudioStream
                 }
                 NotifyLists(parameters: true);
             }
-            finally { server.Unlock(); }
+            finally { server.UnlockCore(); }
         }
     }
     /// <summary>Gets or sets the initial active clip index.</summary>
@@ -131,9 +131,9 @@ public sealed class AudioStreamInteractive : AudioStream
     /// <exception cref="ObjectDisposedException">This or the assigned stream is disposed.</exception>
     public void SetClipStream(int clipIndex, AudioStream? stream)
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try { lock (GraphGate) { CheckEdit(); Index(clipIndex); ValidateChild(stream); EditClip(clipIndex, _configuration.Clips[clipIndex] with { Stream = stream }, true); } }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     /// <summary>Gets a borrowed clip stream.</summary>
     /// <param name="clipIndex">Zero through 62.</param>
@@ -258,9 +258,9 @@ public sealed class AudioStreamInteractive : AudioStream
     {
         var c = Capture(); var clips = new Clip[Capacity]; Array.Fill(clips, new(string.Empty, null, AutoAdvanceMode.Disabled, 0));
         for (var i = 0; i < c.Count; i++) clips[i] = c.Clips[i] with { Stream = (AudioStream?)duplicateSubresource(c.Clips[i].Stream) };
-        var other = (AudioStreamInteractive)target; var server = AudioServer.Instance; server.Lock();
+        var other = (AudioStreamInteractive)target; var server = AudioServer.Service; server.LockCore();
         try { lock (GraphGate) { other.CheckEdit(); foreach (var clip in clips) other.ValidateChild(clip.Stream); other.Publish(new(clips, c.Count, c.Initial, new(c.Transitions), other._configuration.Version + 1)); } }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()

@@ -7,15 +7,15 @@ internal static class WindowRuntimeTests
 {
     public static void Run()
     {
-        var engine = Engine.Instance;
-        var oldLimit = engine.MaxFPS;
-        var settings = ProjectSettings.Instance;
-        var oldPseudolocalizationSetting = settings.Get(ProjectSettings.PseudolocalizationEnabled);
+        var engine = Engine.Service;
+        var oldLimit = Engine.MaxFPS;
+        var settings = ProjectSettings.Service;
+        var oldPseudolocalizationSetting = ProjectSettings.Get(ProjectSettings.PseudolocalizationEnabled);
         var oldPseudolocalizationEnabled = TranslationServer.PseudolocalizationEnabled;
-        var oldTestLocale = settings.Get(ProjectSettings.LocaleTest);
-        var oldFallbackLocale = settings.Get(ProjectSettings.LocaleFallback);
-        Reject<ArgumentOutOfRangeException>(() => engine.MaxFPS = -1);
-        engine.MaxFPS = 20;
+        var oldTestLocale = ProjectSettings.Get(ProjectSettings.LocaleTest);
+        var oldFallbackLocale = ProjectSettings.Get(ProjectSettings.LocaleFallback);
+        Reject<ArgumentOutOfRangeException>(() => Engine.MaxFPS = -1);
+        Engine.MaxFPS = 20;
         try
         {
             CheckNativeControls();
@@ -45,8 +45,8 @@ internal static class WindowRuntimeTests
                 var captured = detached.BeginSceneCapture();
                 try
                 {
-                    Reject<InvalidOperationException>(() => engine.Run(detached));
-                    Check(!detached.IsDisposed && DisplayServer.Instance is null && engine.MainLoop is null,
+                    Reject<InvalidOperationException>(() => Engine.Run(detached));
+                    Check(!detached.IsDisposed && DisplayServer.Service is null && Engine.MainLoop is null,
                         "Capture rejects activation before native acquisition or ownership transfer.");
                 }
                 finally { Entity.EndSceneCapture(captured); }
@@ -63,9 +63,9 @@ internal static class WindowRuntimeTests
             }
 
             var order = new List<string>();
-            settings.Set(ProjectSettings.PseudolocalizationEnabled, true);
-            settings.Set(ProjectSettings.LocaleTest, "fr-CA");
-            settings.Set(ProjectSettings.LocaleFallback, "en");
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationEnabled, true);
+            ProjectSettings.Set(ProjectSettings.LocaleTest, "fr-CA");
+            ProjectSettings.Set(ProjectSettings.LocaleFallback, "en");
             var window = NewWindow();
             var probe = new Probe
             {
@@ -74,9 +74,9 @@ internal static class WindowRuntimeTests
                     Check(TranslationServer.PseudolocalizationEnabled, "Native Run samples project pseudolocalization before scene ready.");
                     Check(TranslationServer.Culture.Name == "fr-CA" && TranslationServer.FallbackCulture?.Name == "en",
                         "Native Run samples project locale selection before scene ready.");
-                    Check(ReferenceEquals(engine.MainLoop, node.Tree) && window.Tree!.Root == window && node.GetWindow() == window && node.GetViewport() == window,
+                    Check(ReferenceEquals(Engine.MainLoop, node.Tree) && window.Tree!.Root == window && node.GetWindow() == window && node.GetViewport() == window,
                         "Scene children discover their actual root Window/Viewport before ready.");
-                    Check(window.GetWindowID() == 0 && DisplayServer.Instance is not null,
+                    Check(window.GetWindowID() == 0 && DisplayServer.Service is not null,
                         "Native window is open before scene ready.");
                     window.Title = "Live title";
                     Check(window.Title == "Live title", "Title round trips through the native backend.");
@@ -88,17 +88,17 @@ internal static class WindowRuntimeTests
                     Check(window.Visible && (SDL.GetWindowFlags(native) & SDL.WindowFlags.Hidden) == 0,
                         "Window visibility shows the native window.");
                     Check(window.GetVisibleRect().Position == Vector2.Zero, "Viewport client origin is zero.");
-                    Reject<InvalidOperationException>(() => engine.AdvanceFrame(0));
-                    Reject<InvalidOperationException>(engine.Stop);
+                    Reject<InvalidOperationException>(() => Engine.AdvanceFrame(0));
+                    Reject<InvalidOperationException>(Engine.Stop);
                     using var other = new Window();
-                    Reject<InvalidOperationException>(() => engine.Run(other));
+                    Reject<InvalidOperationException>(() => Engine.Run(other));
                     Check(!other.IsDisposed, "Rejected concurrent Run retains argument ownership.");
                     PushKey();
                 },
                 InputAction = (node, input) =>
                 {
                     if (input is not InputEventKey { Keycode: Key.A, Pressed: true }) return;
-                    Check(Input.Instance.IsKeyPressed(Key.A), "Native input commits before scene dispatch.");
+                    Check(Input.IsKeyPressed(Key.A), "Native input commits before scene dispatch.");
                     order.Add("input");
                     window.SetInputAsHandled();
                     Check(window.IsInputHandled(), "Viewport shares the scene's current input boundary.");
@@ -115,17 +115,17 @@ internal static class WindowRuntimeTests
                 {
                     Check(window.GetWindowID() == 0, "The native window outlives scene exit.");
                     using var other = new Window();
-                    Reject<InvalidOperationException>(() => engine.Run(other));
+                    Reject<InvalidOperationException>(() => Engine.Run(other));
                 }
             };
             window.AddChild(probe);
             var clock = Stopwatch.StartNew();
-            Check(engine.Run(window) == 17 && clock.ElapsedMilliseconds >= 40 && probe.Frames == 2 &&
+            Check(Engine.Run(window) == 17 && clock.ElapsedMilliseconds >= 40 && probe.Frames == 2 &&
                   order.IndexOf("physics") < order.LastIndexOf("process"), "Run enforces monotonic frame limiting and returns the requested code.");
             AssertReleased(window, probe);
-            settings.Set(ProjectSettings.PseudolocalizationEnabled, oldPseudolocalizationSetting);
-            settings.Set(ProjectSettings.LocaleTest, oldTestLocale);
-            settings.Set(ProjectSettings.LocaleFallback, oldFallbackLocale);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationEnabled, oldPseudolocalizationSetting);
+            ProjectSettings.Set(ProjectSettings.LocaleTest, oldTestLocale);
+            ProjectSettings.Set(ProjectSettings.LocaleFallback, oldFallbackLocale);
 
             window = NewWindow();
             probe = new Probe { ReadyAction = _ => PushClose() };
@@ -135,7 +135,7 @@ internal static class WindowRuntimeTests
             probe.InputAction = (_, input) =>
             {
                 if (input is not InputEventKey { Keycode: Key.B }) return;
-                Check(!Input.Instance.IsKeyPressed(Key.B), "PushInput does not alter global polling state.");
+                Check(!Input.IsKeyPressed(Key.B), "PushInput does not alter global polling state.");
                 pushedInputs++;
                 window.SetInputAsHandled();
             };
@@ -147,7 +147,7 @@ internal static class WindowRuntimeTests
                 window.PushInput(borrowed);
                 Check(!borrowed.IsDisposed, "Viewport borrows rather than disposes pushed input.");
             };
-            Check(engine.Run(window) == 0 && closeSignals == 1 && pushedInputs == 1 && probe.Frames == 0, "Default close quits before the first frame after signaling.");
+            Check(Engine.Run(window) == 0 && closeSignals == 1 && pushedInputs == 1 && probe.Frames == 0, "Default close quits before the first frame after signaling.");
             AssertReleased(window, probe);
 
             window = NewWindow();
@@ -158,7 +158,7 @@ internal static class WindowRuntimeTests
             };
             window.CloseRequested += () => window.Tree!.AutoAcceptQuit = false;
             window.AddChild(probe);
-            Check(engine.Run(window) == 23 && probe.Frames == 1, "A close handler can override default quit behavior.");
+            Check(Engine.Run(window) == 23 && probe.Frames == 1, "A close handler can override default quit behavior.");
             AssertReleased(window, probe);
 
             foreach (var phase in new[] { "ready", "input", "process", "exit", "close" })
@@ -173,7 +173,7 @@ internal static class WindowRuntimeTests
                 };
                 if (phase == "close") window.CloseRequested += () => Fail(phase);
                 window.AddChild(probe);
-                try { engine.Run(window); throw new Exception("Expected injected failure: " + phase); }
+                try { Engine.Run(window); throw new Exception("Expected injected failure: " + phase); }
                 catch (Exception error) when (error.ToString().Contains("injected " + phase, StringComparison.Ordinal)) { }
                 AssertReleased(window, probe);
             }
@@ -207,14 +207,14 @@ internal static class WindowRuntimeTests
                 },
                 ProcessAction = (node, _) => { Check(sizes > 0, "Client resize notifies before frame processing."); node.Tree!.Quit(); }
             });
-            engine.Run(window);
+            Engine.Run(window);
             AssertReleased(window);
 
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland")
             {
                 window = NewWindow();
                 window.Position = Vector2i.Zero;
-                Reject<NotSupportedException>(() => engine.Run(window));
+                Reject<NotSupportedException>(() => Engine.Run(window));
                 AssertReleased(window);
             }
 
@@ -222,23 +222,23 @@ internal static class WindowRuntimeTests
             using (var existing = DisplayServer.Open("Existing owner", new Vector2i(100, 100), hidden: true))
             {
                 window = NewWindow();
-                Reject<InvalidOperationException>(() => engine.Run(window));
-                Check(window.IsDisposed && ReferenceEquals(DisplayServer.Instance, existing), "Failed startup releases only transferred resources.");
-                existing.WindowSetTitle("Still alive");
+                Reject<InvalidOperationException>(() => Engine.Run(window));
+                Check(window.IsDisposed && ReferenceEquals(DisplayServer.Service, existing), "Failed startup releases only transferred resources.");
+                DisplayServer.WindowSetTitle("Still alive");
             }
 
             window = NewWindow();
             window.AddChild(new Probe { ReadyAction = node => Task.Run(() => node.Tree!.Quit(31)).GetAwaiter().GetResult() });
-            Check(engine.Run(window) == 31 && window.IsDisposed, "Cross-thread quit during ready works and startup observes it before frames.");
+            Check(Engine.Run(window) == 31 && window.IsDisposed, "Cross-thread quit during ready works and startup observes it before frames.");
             Console.WriteLine("Window runtime checks passed.");
         }
         finally
         {
-            settings.Set(ProjectSettings.PseudolocalizationEnabled, oldPseudolocalizationSetting);
-            settings.Set(ProjectSettings.LocaleTest, oldTestLocale);
-            settings.Set(ProjectSettings.LocaleFallback, oldFallbackLocale);
+            ProjectSettings.Set(ProjectSettings.PseudolocalizationEnabled, oldPseudolocalizationSetting);
+            ProjectSettings.Set(ProjectSettings.LocaleTest, oldTestLocale);
+            ProjectSettings.Set(ProjectSettings.LocaleFallback, oldFallbackLocale);
             TranslationServer.PseudolocalizationEnabled = oldPseudolocalizationEnabled;
-            engine.MaxFPS = oldLimit;
+            Engine.MaxFPS = oldLimit;
         }
     }
 
@@ -352,7 +352,7 @@ internal static class WindowRuntimeTests
                     node.Tree!.Quit();
                 }
             });
-            Engine.Instance.Run(window);
+            Engine.Run(window);
             AssertReleased(window);
             Check(files is { Count: 2 } && files[1] == "/tmp/второй.txt", "Managed drop data survives native disposal.");
             Reject<ObjectDisposedException>(() => window.GetFlag(WindowFlag.Borderless));
@@ -371,21 +371,21 @@ internal static class WindowRuntimeTests
                     PushDrop(buffers, SDL.EventType.DropFile, "/tmp/after-failure.txt");
                 }
             });
-            try { Engine.Instance.Run(window); throw new Exception("Expected pointer signal failure."); }
+            try { Engine.Run(window); throw new Exception("Expected pointer signal failure."); }
             catch (Exception error) when (error.ToString().Contains("injected pointer signal", StringComparison.Ordinal)) { }
             Check(deliveredAfterFailure, "A failing window signal does not strand later native events.");
             AssertReleased(window);
 
             window = NewWindow();
             window.CurrentScreen = int.MaxValue;
-            Reject<ArgumentOutOfRangeException>(() => Engine.Instance.Run(window));
+            Reject<ArgumentOutOfRangeException>(() => Engine.Run(window));
             AssertReleased(window);
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland")
                 foreach (var flag in new[] { WindowFlag.AlwaysOnTop, WindowFlag.NoFocus })
                 {
                     window = NewWindow();
                     window.SetFlag(flag, true);
-                    Reject<NotSupportedException>(() => Engine.Instance.Run(window));
+                    Reject<NotSupportedException>(() => Engine.Run(window));
                     AssertReleased(window);
                 }
         }
@@ -408,8 +408,8 @@ internal static class WindowRuntimeTests
 
     private static void Fail(string phase) => throw new InvalidOperationException("injected " + phase);
     private static void AssertReleased(Window window, Node? child = null) => Check(window.IsDisposed &&
-        (child is null || child.IsDisposed) && Engine.Instance.MainLoop is null && DisplayServer.Instance is null &&
-        !Input.Instance.IsKeyPressed(Key.A), "Run releases scene, window, loop attachment, and native input state.");
+        (child is null || child.IsDisposed) && Engine.MainLoop is null && DisplayServer.Service is null &&
+        !Input.IsKeyPressed(Key.A), "Run releases scene, window, loop attachment, and native input state.");
     private static nint NativeWindow()
     {
         var windows = SDL.GetWindows(out var count);

@@ -37,8 +37,8 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(node);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = server.Readback(); frames++;
                 var factor = frames == 5 ? 0.5f : 1;
@@ -67,7 +67,7 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 5) { Check(draws == 2, "Atlas metadata needs redraw; pixels and modulation reuse commands."); window.Tree!.Quit(); }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 5, "Five polygon frames completed.");
+        Engine.Run(window); Released(window); Check(frames == 5, "Five polygon frames completed.");
         Console.WriteLine($"Canvas polygon native pixels passed: {backend}/{fixture ?? "default"}.");
     }
 }

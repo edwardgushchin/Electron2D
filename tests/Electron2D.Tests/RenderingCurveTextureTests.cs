@@ -17,8 +17,8 @@ internal static partial class RenderingRuntimeTests
         var node = new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect2(0, 0, 64, 64), Colors.White) };
         node.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 stage++; using var frame = server.Readback();
                 var expected = stage switch
@@ -45,7 +45,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        window.AddChild(node); Engine.Instance.Run(window); Released(window);
+        window.AddChild(node); Engine.Run(window); Released(window);
         Check(stage == 8 && !curve.IsDisposed && !single.IsDisposed && !xyz.IsDisposed, "Eight frames, borrowed resources survive renderer cleanup.");
         Console.WriteLine($"Curve texture float/HDR channels and worker updates passed: {fixture}, {stage} stages.");
     }
@@ -58,17 +58,17 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(new CanvasNode
         {
             DrawAction = n => { n.DrawTextureRect(single, new Rect2(0, 0, 16, 16), false, new Color(.25f, .25f, .25f, 1)); n.DrawTextureRect(xyz, new Rect2(24, 0, 16, 16), false, new Color(.25f, .25f, .25f, 1)); },
-            ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
+            ReadyAction = n => RenderingServer.FramePostDraw += () =>
             {
-                using var image = RenderingServer.Instance.Readback(); Pixel(image, 8, 8, new Color(.5f, .5f, .5f, 1)); Pixel(image, 32, 8, new Color(0, .5f, 0, 1)); n.Tree!.Quit();
+                using var image = RenderingServer.Service!.Readback(); Pixel(image, 8, 8, new Color(.5f, .5f, .5f, 1)); Pixel(image, 32, 8, new Color(0, .5f, 0, 1)); n.Tree!.Quit();
             },
         });
-        try { Engine.Instance.Run(window); Console.WriteLine($"Curve texture canvas precision passed: {backend}."); }
+        try { Engine.Run(window); Console.WriteLine($"Curve texture canvas precision passed: {backend}."); }
         catch (NotSupportedException e) when (backend == "compatibility" && e.Message.Contains("HDR texture precision"))
         { Console.WriteLine("Curve texture floats explicitly rejected by this compatibility driver."); }
         Released(window);
         using var uninitialized = new CurveTexture();
         window = new Window(); window.AddChild(new CanvasNode { DrawAction = n => n.DrawTexture(uninitialized, Vector2.Zero) });
-        Reject<InvalidOperationException>(() => Engine.Instance.Run(window)); Released(window);
+        Reject<InvalidOperationException>(() => Engine.Run(window)); Released(window);
     }
 }

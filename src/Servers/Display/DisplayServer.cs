@@ -5,7 +5,8 @@ using SDL3;
 namespace Electron2D;
 
 /// <summary>Owns the process's native display connection and main window.</summary>
-/// <remarks>
+/// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
+///
 /// Open one server on the SDL main thread. Window and display calls are confined to the opening thread; dispose the
 /// server on that thread after the host stops its main loop. SDL window changes can be asynchronous under a window
 /// manager, so getters report observed state rather than the last requested value.
@@ -79,9 +80,7 @@ public sealed partial class DisplayServer : ElectronObject
         GC.SuppressFinalize(_window);
     }
 
-    /// <summary>Gets the active display server, if one has been opened.</summary>
-    /// <value>The active instance or <see langword="null"/> after disposal.</value>
-    public static DisplayServer? Instance
+    internal static DisplayServer? Service
     {
         get { lock (InstanceGate) return _instance; }
     }
@@ -179,13 +178,13 @@ public sealed partial class DisplayServer : ElectronObject
                         PresentBlankWindowSurface(window);
                     server = new DisplayServer(window, gtkStyle.GtkScreen, gtkStyle.GtkProvider, previousGamepadBackgroundHint);
                     server.InitializeGamepads();
-                    Input.Instance.SetNativeFlush(server.FlushBufferedInput);
+                    Input.Service.SetNativeFlush(server.FlushBufferedInput);
                     _instance = server;
                     return server;
                 }
                 catch
                 {
-                    Input.Instance.SetNativeFlush(null);
+                    Input.Service.SetNativeFlush(null);
                     if (server is null) SDL.DestroyWindow(window);
                     else
                     {
@@ -232,11 +231,7 @@ public sealed partial class DisplayServer : ElectronObject
             PresentBlankWindowSurface(window);
     }
 
-    /// <summary>Gets the display backend name.</summary>
-    /// <returns>The active backend's public name, such as <c>Wayland</c> or <c>X11</c>.</returns>
-    /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread or the video driver is unavailable.</exception>
-    public string GetName()
+    internal string GetNameCore()
     {
         EnsureOwner();
         return (SDL.GetCurrentVideoDriver() ?? throw SDLFailure("read the video driver name")) switch
@@ -253,24 +248,14 @@ public sealed partial class DisplayServer : ElectronObject
         };
     }
 
-    /// <summary>Reports whether the operating system currently requests a dark appearance.</summary>
-    /// <returns><see langword="true"/> only when the native system theme is dark.</returns>
-    /// <remarks>On Linux Wayland and X11, the system Settings portal must be available. An unknown or unset preference returns <see langword="false"/> without classifying the theme as light. Query on the opening thread after processing native events to observe changes.</remarks>
-    /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread.</exception>
-    public bool IsDarkMode()
+    internal bool IsDarkModeCore()
     {
         EnsureOwner();
         return (!_linuxPortalThemeDriver || _linuxPortalThemeSupported) &&
                SDL.GetSystemTheme() == SDL.SystemTheme.Dark;
     }
 
-    /// <summary>Reports whether the system can provide a light or dark appearance preference.</summary>
-    /// <returns><see langword="true"/> on Linux Wayland or X11 when the desktop Settings portal is available, even if no appearance is preferred; on other drivers, when the native theme is known.</returns>
-    /// <remarks>The Linux check queries the Settings portal when the server opens and requires interface version one or newer. A missing portal or native library returns <see langword="false"/>. On other drivers, an unknown theme returns <see langword="false"/>.</remarks>
-    /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread.</exception>
-    public bool IsDarkModeSupported()
+    internal bool IsDarkModeSupportedCore()
     {
         EnsureOwner();
         return _linuxPortalThemeDriver
@@ -278,38 +263,25 @@ public sealed partial class DisplayServer : ElectronObject
             : SDL.GetSystemTheme() != SDL.SystemTheme.Unknown;
     }
 
-    /// <summary>Gets the current number of connected displays.</summary>
-    /// <returns>The display count, which may change after hotplug events.</returns>
-    public int GetScreenCount()
+    internal int GetScreenCountCore()
     {
         EnsureOwner();
         return GetDisplays().Length;
     }
 
-    /// <summary>Reports whether hardware keyboard input is available.</summary>
-    /// <returns>On Android and iOS, whether SDL detects a connected keyboard; on other targets, <see langword="true"/>.</returns>
-    /// <remarks>The mobile result can change when devices are attached or removed. Query it on the opening thread.</remarks>
-    public bool HasHardwareKeyboard()
+    internal bool HasHardwareKeyboardCore()
     {
         EnsureOwner();
         return !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() || SDL.HasKeyboard();
     }
 
-    /// <summary>Gets whether the display is being kept awake by this process.</summary>
-    /// <returns><see langword="true"/> while native screen blanking is disabled.</returns>
-    /// <remarks>This reports SDL's process-wide screensaver setting, not an operating-system promise that the display stays on.</remarks>
-    public bool ScreenIsKeptOn()
+    internal bool ScreenIsKeptOnCore()
     {
         EnsureOwner();
         return !SDL.ScreenSaverEnabled();
     }
 
-    /// <summary>Requests that the display remain awake or resume normal power-saving behavior.</summary>
-    /// <param name="enable">Whether to inhibit native screen blanking.</param>
-    /// <remarks>The request applies to this process and is automatically released when SDL video quits.</remarks>
-    /// <exception cref="InvalidOperationException">The native video backend rejects the request.</exception>
-    /// <exception cref="AggregateException">The native request fails and its previous state cannot be restored.</exception>
-    public void ScreenSetKeepOn(bool enable)
+    internal void ScreenSetKeepOnCore(bool enable)
     {
         EnsureOwner();
         var wasEnabled = SDL.ScreenSaverEnabled();
@@ -324,10 +296,7 @@ public sealed partial class DisplayServer : ElectronObject
         throw failure;
     }
 
-    /// <summary>Gets the index of the current primary display.</summary>
-    /// <returns>The zero-based index or <see cref="InvalidScreen"/> when no display matches.</returns>
-    /// <remarks>Wayland does not expose a primary display and uses index zero.</remarks>
-    public int GetPrimaryScreen()
+    internal int GetPrimaryScreenCore()
     {
         EnsureOwner();
         if (SDL.GetCurrentVideoDriver() == "wayland")
@@ -337,10 +306,7 @@ public sealed partial class DisplayServer : ElectronObject
         return Array.IndexOf(displays, primary);
     }
 
-    /// <summary>Gets the global desktop position of a display.</summary>
-    /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
-    /// <returns>The upper-left position in platform-native desktop coordinates, or zero if the display is invalid.</returns>
-    public Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)
+    internal Vector2i ScreenGetPositionCore(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
         if (!TryGetDisplayID(screen, out var displayId) || !SDL.GetDisplayBounds(displayId, out var bounds))
@@ -348,10 +314,7 @@ public sealed partial class DisplayServer : ElectronObject
         return new Vector2i(bounds.X, bounds.Y);
     }
 
-    /// <summary>Gets the full size of a display.</summary>
-    /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
-    /// <returns>The display size in pixels on Wayland or platform-native desktop units elsewhere; zero if the display is invalid.</returns>
-    public Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)
+    internal Vector2i ScreenGetSizeCore(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
         if (!TryGetDisplayID(screen, out var displayId) || !SDL.GetDisplayBounds(displayId, out var bounds))
@@ -361,10 +324,7 @@ public sealed partial class DisplayServer : ElectronObject
             : new Vector2i(bounds.W, bounds.H);
     }
 
-    /// <summary>Gets the usable desktop rectangle of a display.</summary>
-    /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
-    /// <returns>The work area after platform-reserved bars are excluded; empty if the display is invalid. On Wayland, the full display position and physical pixel size are returned.</returns>
-    public Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)
+    internal Rect2i ScreenGetUsableRectCore(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
         if (!TryGetDisplayID(screen, out var displayId))
@@ -389,11 +349,7 @@ public sealed partial class DisplayServer : ElectronObject
             checked((int)Math.Round(bounds.H * (double)density)));
     }
 
-    /// <summary>Gets the content scale of a display or, on Wayland, the main window.</summary>
-    /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
-    /// <returns>A positive content scale, or one if the display is invalid. A Wayland display index reports an integer scale; the main-window selector can report a fractional scale.</returns>
-    /// <remarks>On Wayland, indexed scales round the current display mode's pixel density upward. The main-window selector reads its current window scale. Before the compositor assigns a preferred fractional scale to a newly created or hidden window, that value can be provisional; it can change after the first buffer is presented or the window moves to another output. Call this method on the opening thread.</remarks>
-    public float ScreenGetScale(int screen = ScreenOfMainWindow)
+    internal float ScreenGetScaleCore(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
         if (!TryGetDisplayID(screen, out var displayId))
@@ -420,14 +376,7 @@ public sealed partial class DisplayServer : ElectronObject
         return SDL.GetWindowTitle(GetWindow(windowId));
     }
 
-    /// <summary>Requests a new main-window title.</summary>
-    /// <param name="title">New UTF-8 title.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> does not identify the main window.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread or the native title request fails.</exception>
-    /// <exception cref="ObjectDisposedException">The display server has been disposed.</exception>
-    public void WindowSetTitle(string title, int windowId = MainWindowId)
+    internal void WindowSetTitleCore(string title, int windowId = MainWindowId)
     {
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(title);
@@ -435,10 +384,7 @@ public sealed partial class DisplayServer : ElectronObject
             throw SDLFailure("set window title");
     }
 
-    /// <summary>Gets the main window's client size.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>Pixel dimensions on Wayland and platform-native window dimensions elsewhere.</returns>
-    public Vector2i WindowGetSize(int windowId = MainWindowId)
+    internal Vector2i WindowGetSizeCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -452,12 +398,7 @@ public sealed partial class DisplayServer : ElectronObject
         return new Vector2i(width, height);
     }
 
-    /// <summary>Requests a new main-window client size.</summary>
-    /// <param name="size">Requested pixel dimensions on Wayland or platform-native window dimensions elsewhere.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>Wayland clamps each requested component below one to one before applying native minimum-size constraints. Other video drivers require positive dimensions.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">A dimension is not positive on a non-Wayland video driver.</exception>
-    public void WindowSetSize(Vector2i size, int windowId = MainWindowId)
+    internal void WindowSetSizeCore(Vector2i size, int windowId = MainWindowId)
     {
         EnsureOwner();
         var requestedSize = SDL.GetCurrentVideoDriver() == "wayland"
@@ -502,11 +443,7 @@ public sealed partial class DisplayServer : ElectronObject
         return density;
     }
 
-    /// <summary>Gets the main window's global desktop position.</summary>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>The upper-left position in platform-native desktop coordinates.</returns>
-    /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
-    public Vector2i WindowGetPosition(int windowId = MainWindowId)
+    internal Vector2i WindowGetPositionCore(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -516,11 +453,7 @@ public sealed partial class DisplayServer : ElectronObject
         return new Vector2i(x, y);
     }
 
-    /// <summary>Requests a global desktop position for the main window.</summary>
-    /// <param name="position">Upper-left position in platform-native desktop coordinates.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <exception cref="NotSupportedException">Wayland does not allow this top-level window to choose its desktop position.</exception>
-    public void WindowSetPosition(Vector2i position, int windowId = MainWindowId)
+    internal void WindowSetPositionCore(Vector2i position, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -535,34 +468,18 @@ public sealed partial class DisplayServer : ElectronObject
             throw new NotSupportedException("Wayland does not expose global top-level window coordinates.");
     }
 
-    /// <summary>Gets whether the system clipboard currently contains nonempty text.</summary>
-    /// <returns><see langword="true"/> when <see cref="ClipboardGet"/> returns nonempty text.</returns>
-    /// <remarks>Reads the clipboard on the opening thread. An unavailable text selection returns <see langword="false"/>.</remarks>
-    /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread.</exception>
-    public bool ClipboardHas()
+    internal bool ClipboardHasCore()
     {
-        return ClipboardGet().Length != 0;
+        return ClipboardGetCore().Length != 0;
     }
 
-    /// <summary>Gets text from the system clipboard.</summary>
-    /// <returns>The current text or an empty string when no text is available.</returns>
-    /// <remarks>Reads the system clipboard on the opening thread. Clipboard and primary-selection text are separate. On Wayland, the compositor sends a clipboard offer to a client with keyboard focus; a hidden or unfocused client may receive no text.</remarks>
-    /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread.</exception>
-    public string ClipboardGet()
+    internal string ClipboardGetCore()
     {
         EnsureOwner();
         return SDL.GetClipboardText();
     }
 
-    /// <summary>Replaces system clipboard text.</summary>
-    /// <param name="text">Text to place on the clipboard.</param>
-    /// <remarks>Requests replacement of the system clipboard on the opening thread. This does not change the primary selection. On Wayland, the compositor may require a recent input event before it accepts clipboard ownership; a successful native call alone does not prove another process can read the new text.</remarks>
-    /// <exception cref="ArgumentNullException"><paramref name="text"/> is null.</exception>
-    /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread or the native backend rejects the replacement.</exception>
-    public void ClipboardSet(string text)
+    internal void ClipboardSetCore(string text)
     {
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(text);
@@ -570,24 +487,13 @@ public sealed partial class DisplayServer : ElectronObject
             throw SDLFailure("set clipboard text");
     }
 
-    /// <summary>Gets text from the platform's primary selection.</summary>
-    /// <returns>The selected text, or an empty string when the backend has no primary selection.</returns>
-    /// <remarks>Primary selection is separate from the system clipboard and is available on Linux/Wayland. Read it on the opening thread. Wayland sends the selection offer only to a client with keyboard focus; a hidden or unfocused client may receive no text. Platforms without it may report an empty value.</remarks>
-    /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread.</exception>
-    public string ClipboardGetPrimary()
+    internal string ClipboardGetPrimaryCore()
     {
         EnsureOwner();
         return SDL.GetPrimarySelectionText();
     }
 
-    /// <summary>Replaces text in the platform's primary selection.</summary>
-    /// <param name="text">The selection text.</param>
-    /// <remarks>Requests replacement of the separate primary selection on the opening thread. The system clipboard is unchanged. On Wayland, the compositor may require a recent input event before it accepts selection ownership; a successful native call alone does not prove another process can read the new text.</remarks>
-    /// <exception cref="ArgumentNullException"><paramref name="text"/> is null.</exception>
-    /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the opening thread or the native backend rejects the selection.</exception>
-    public void ClipboardSetPrimary(string text)
+    internal void ClipboardSetPrimaryCore(string text)
     {
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(text);
@@ -617,8 +523,8 @@ public sealed partial class DisplayServer : ElectronObject
             DisposeDialogs();
             ReleasePointer();
             CloseGamepads();
-            Input.Instance.SetNativeFlush(null);
-            Input.Instance.ReleasePressedEvents();
+            Input.Service.SetNativeFlush(null);
+            Input.ReleasePressedEvents();
             _window.Dispose();
             RemoveGTKTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
             SDL.QuitSubSystem(SDL.InitFlags.Gamepad);
@@ -694,9 +600,9 @@ public sealed partial class DisplayServer : ElectronObject
         var displays = GetDisplays();
         var index = screen switch
         {
-            ScreenOfMainWindow => WindowGetCurrentScreen(),
-            ScreenPrimary => GetPrimaryScreen(),
-            ScreenWithKeyboardFocus => GetKeyboardFocusScreen(),
+            ScreenOfMainWindow => WindowGetCurrentScreenCore(),
+            ScreenPrimary => GetPrimaryScreenCore(),
+            ScreenWithKeyboardFocus => GetKeyboardFocusScreenCore(),
             ScreenWithMouseFocus => GetMouseFocusScreen(displays),
             _ => screen,
         };
@@ -716,10 +622,10 @@ public sealed partial class DisplayServer : ElectronObject
     {
         if (SDL.GetCurrentVideoDriver() == "wayland")
             return 0;
-        var position = MouseGetPosition();
+        var position = MouseGetPositionCore();
         var point = new SDL.Point { X = position.X, Y = position.Y };
         var index = Array.IndexOf(displays, SDL.GetDisplayForPoint(in point));
-        return index >= 0 ? index : GetPrimaryScreen();
+        return index >= 0 ? index : GetPrimaryScreenCore();
     }
 
     private static InvalidOperationException SDLFailure(string action) =>

@@ -88,7 +88,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         ThrowIfDisposed();
         if (!from.IsFinite() || !to.IsFinite())
             throw new ArgumentOutOfRangeException(nameof(from), "Ray endpoints must be finite.");
-        var space = PhysicsServer.Instance.GetSceneSpace(_spaceRID);
+        var space = PhysicsServer.Service.GetSceneSpace(_spaceRID);
         space.PrepareForQuery();
         var motion = to - from;
         if (!motion.IsFinite()) throw new ArgumentOutOfRangeException(nameof(to), "Ray span exceeds the finite range.");
@@ -127,7 +127,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
-        var space = PhysicsServer.Instance.GetSceneSpace(_spaceRID);
+        var space = PhysicsServer.Service.GetSceneSpace(_spaceRID);
         space.PrepareForQuery();
         if (maxResults == 0 || parameters.CollisionMask == 0 ||
             !parameters.CollideWithBodies && !parameters.CollideWithAreas) return [];
@@ -184,7 +184,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
             var point = startsInside ? from : new Vector2(output.point.X * PhysicsSpace.UnitsPerMeter,
                 output.point.Y * PhysicsSpace.UnitsPerMeter);
             var normal = startsInside ? Vector2.Zero : new Vector2(output.normal.X, output.normal.Y);
-            best = new PhysicsRayResult2D(tag.ColliderRID, PhysicsServer.Instance.ResolveSceneObject(tag.ColliderRID),
+            best = new PhysicsRayResult2D(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID),
                 tag.ShapeIndex, point, normal);
         }
     }
@@ -196,7 +196,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         {
             var shape = shapes[index];
             if (!Eligible(shape, mask, excluded, out var tag) || !b2Shape_TestPoint(shape, point)) continue;
-            hits.Add(new(tag.ColliderRID, PhysicsServer.Instance.ResolveSceneObject(tag.ColliderRID), tag.ShapeIndex));
+            hits.Add(new(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID), tag.ShapeIndex));
         }
     }
 

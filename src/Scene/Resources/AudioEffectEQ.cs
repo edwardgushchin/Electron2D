@@ -129,7 +129,7 @@ internal sealed class AudioEffectEQInstance : AudioEffectInstance
     {
         _source = source;
         _left = new EQBand[source.GetBandCount()]; _right = new EQBand[_left.Length]; _gains = new float[_left.Length];
-        Prepare(AudioServer.Instance.GetMixRate());
+        Prepare(AudioServer.GetMixRate());
     }
 
     private void Prepare(float rate)
@@ -151,7 +151,7 @@ internal sealed class AudioEffectEQInstance : AudioEffectInstance
     /// <inheritdoc />
     protected override void OnProcess(ReadOnlySpan<Vector2> source, Span<Vector2> destination)
     {
-        var rate = AudioServer.Instance.GetMixRate();
+        var rate = AudioServer.GetMixRate();
         if (rate != _rate) Prepare(rate);
         _source.CopyLinearGains(_gains);
         for (var i = 0; i < source.Length; i++)

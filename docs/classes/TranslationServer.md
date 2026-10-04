@@ -1,6 +1,6 @@
 # TranslationServer
 
-Last updated: 2026-09-24
+Last updated: 2026-10-04
 
 **Inherits:** —
 
@@ -197,7 +197,7 @@ Removes all direct singular/plural registrations and resource registrations with
 <a id="reloadpseudolocalization"></a>
 ### `public static void ReloadPseudolocalization()`
 
-Reads the eight active transform settings from [`ProjectSettings.Instance`](ProjectSettings.md#p-electron2d-projectsettings-instance) and updates the main domain. It leaves the runtime `PseudolocalizationEnabled` switch unchanged. `Engine.Run` loads the project switch and these options before native scene activation; `Engine.Start` loads them before attaching a caller-supplied loop, whose scene may already have delivered ready callbacks. This managed reload does not reload asset remaps or send a translation-changed notification to an active scene.
+Reads the eight active transform settings from [`ProjectSettings`](ProjectSettings.md) and updates the main domain. It leaves the runtime `PseudolocalizationEnabled` switch unchanged. `Engine.Run` loads the project switch and these options before native scene activation; `Engine.Start` loads them before attaching a caller-supplied loop, whose scene may already have delivered ready callbacks. This managed reload does not reload asset remaps or send a translation-changed notification to an active scene.
 
 ## State and key rules
 

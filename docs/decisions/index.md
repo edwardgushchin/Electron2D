@@ -10,6 +10,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Agent-native development | [agent-native.md](agent-native.md) | 0090 |
 | C# scripting | [scripting.md](scripting.md) | 0091 |
 | Core object and runtime | [core-object-runtime.md](core-object-runtime.md) | 0003, 0005, 0009, 0010, 0015, 0016, 0050 |
+| Process-wide service API | [singleton-services.md](singleton-services.md) | 0095 |
 | Core configuration, data, and I/O | [core-data-io.md](core-data-io.md) | 0018, 0019, 0020, 0022, 0048, 0049 |
 | Core math | [core-math.md](core-math.md) | 0024, 0025, 0026, 0029, 0032, 0033, 0034, 0035 |
 | Scene | [scene.md](scene.md) | 0006, 0008, 0011, 0023, 0031, 0036, 0037 |

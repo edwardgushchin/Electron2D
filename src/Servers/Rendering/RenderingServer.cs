@@ -4,7 +4,8 @@ using System.Runtime.InteropServices;
 namespace Electron2D;
 
 /// <summary>Renders retained two-dimensional window and offscreen canvas commands.</summary>
-/// <remarks>Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
+/// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
+/// Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
 /// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Independent single-layer viewport targets and texture dependencies execute on both backends. Lights, general canvas clipping and device recovery
 /// are not integrated. Owned two-dimensional texture RIDs support copied images, compatible updates, replacement,
@@ -44,76 +45,46 @@ public sealed partial class RenderingServer : ElectronObject
         _window = window;
         _viewport = window;
         _backend = backend;
-        _clearColor = ProjectSettings.Instance.GetWithOverride(ProjectSettings.DefaultClearColor);
+        _clearColor = ProjectSettings.GetWithOverride(ProjectSettings.DefaultClearColor);
     }
 
-    /// <summary>Gets the rendering service belonging to the active Engine.Run invocation.</summary>
-    /// <value>Null before startup and after native cleanup.</value>
-    public static RenderingServer? Instance => Volatile.Read(ref _instance);
+    internal static RenderingServer? Service => Volatile.Read(ref _instance);
 
-    /// <summary>Gets or sets whether Engine.Run submits canvas frames.</summary>
-    /// <value>True by default. Disabling retains existing commands and pending redraw requests.</value>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The service is disposed.</exception>
-    public bool RenderLoopEnabled
+    internal bool RenderLoopEnabledCore
     {
         get { EnsureOwner(); return _renderLoopEnabled; }
         set { EnsureOwner(); _renderLoopEnabled = value; }
     }
 
-    /// <summary>Returns the active rendering method after startup and fallback selection.</summary>
-    /// <returns>gpu or compatibility.</returns>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The service is disposed.</exception>
-    public string GetCurrentRenderingMethod() { EnsureOwner(); return _backend.Method; }
+    internal string GetCurrentRenderingMethodCore() { EnsureOwner(); return _backend.Method; }
 
-    /// <summary>Returns the native driver selected by the active rendering backend.</summary>
-    /// <returns>The SDL GPU or SDL_Renderer driver name.</returns>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The service is disposed.</exception>
-    public string GetCurrentRenderingDriverName() { EnsureOwner(); return _backend.Driver; }
+    internal string GetCurrentRenderingDriverNameCore() { EnsureOwner(); return _backend.Driver; }
 
-    /// <summary>Gets the color used to clear the root framebuffer.</summary>
-    /// <returns>The current clear color, initialized from ProjectSettings.DefaultClearColor.</returns>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The service is disposed.</exception>
-    public Color GetDefaultClearColor() { EnsureOwner(); return _clearColor; }
+    internal Color GetDefaultClearColorCore() { EnsureOwner(); return _clearColor; }
 
-    /// <summary>Changes the root framebuffer clear color for subsequent frames.</summary>
-    /// <param name="color">A finite color; normalized framebuffer channels clamp to zero through one.</param>
-    /// <exception cref="ArgumentException">The color is not finite.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread.</exception>
-    /// <exception cref="ObjectDisposedException">The service is disposed.</exception>
-    public void SetDefaultClearColor(Color color)
+    internal void SetDefaultClearColorCore(Color color)
     {
         EnsureOwner();
         if (!color.IsFinite()) throw new ArgumentException("The clear color must be finite.", nameof(color));
         _clearColor = color;
     }
 
-    /// <summary>Occurs before the scene's canvas commands are prepared for a frame.</summary>
-    /// <remarks>Runs after animated textures advance and emit frame-change notifications, synchronously on the
-    /// owner thread within the scene execution barrier. A failing subscriber
-    /// aborts this frame and Engine.Run cleans up before propagating the error.</remarks>
-    public event Action? FramePreDraw;
+    internal event Action? FramePreDrawCore;
 
-    /// <summary>Occurs after the canvas frame is submitted to the active backend.</summary>
-    /// <remarks>Submission does not imply the GPU has completed or the compositor has displayed the frame.
-    /// Runs synchronously on the owner thread. Frame or event-pump re-entry is rejected.</remarks>
-    public event Action? FramePostDraw;
+    internal event Action? FramePostDrawCore;
 
     internal static RenderingServer Open(Window window, System.Runtime.InteropServices.SafeHandle nativeWindow)
     {
-        if (Instance is not null) throw new InvalidOperationException("A rendering server is already active.");
-        var settings = ProjectSettings.Instance;
-        var method = settings.GetWithOverride(ProjectSettings.RenderingMethod);
+        if (Service is not null) throw new InvalidOperationException("A rendering server is already active.");
+        var settings = ProjectSettings.Service;
+        var method = settings.GetWithOverrideCore(ProjectSettings.RenderingMethod);
         CanvasBackend backend;
         if (method == "compatibility") backend = new CompatibilityCanvasBackend(nativeWindow);
         else
         {
             try { backend = new GPUCanvasBackend(nativeWindow); }
             catch (Exception gpuError) when (gpuError is InvalidOperationException or NotSupportedException or DllNotFoundException &&
-                settings.GetWithOverride(ProjectSettings.RenderingFallback))
+                settings.GetWithOverrideCore(ProjectSettings.RenderingFallback))
             {
                 try { backend = new CompatibilityCanvasBackend(nativeWindow); }
                 catch (Exception fallbackError) { throw new AggregateException("Both canvas backends failed to initialize.", gpuError, fallbackError); }
@@ -178,10 +149,10 @@ public sealed partial class RenderingServer : ElectronObject
         try
         {
             AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
-            FramePreDraw?.Invoke();
+            FramePreDrawCore?.Invoke();
             if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step)) throw new InvalidOperationException("The render clock step is invalid.");
-            CanvasTime = (CanvasTime + step) % ProjectSettings.Instance.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
-            _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.Instance.PhysicsInterpolationFraction : 1f;
+            CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
+            _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.PhysicsInterpolationFraction : 1f;
             _activeFrames.Clear(); CaptureViewports(tree.Root);
             if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); Capture(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.IsVisibleInTree) node.PrepareCanvas(); }
             _activeFrames.Clear(); CaptureViewports(tree.Root);
@@ -191,7 +162,7 @@ public sealed partial class RenderingServer : ElectronObject
             for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (frame.Viewport is SubViewport sub && sub.RenderTargetUpdateMode is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
             _backend.EndFrame();
             foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); DispatchScreenVisibility(tree); }
-            FramePostDraw?.Invoke();
+            FramePostDrawCore?.Invoke();
         }
         finally
         {
@@ -443,9 +414,9 @@ public sealed partial class RenderingServer : ElectronObject
             }
             finally
             {
-                FramePreDraw = FramePostDraw = null; foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
+                FramePreDrawCore = FramePostDrawCore = null; foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
                 _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
-                if (ReferenceEquals(Instance, this)) Volatile.Write(ref _instance, null);
+                if (ReferenceEquals(Service, this)) Volatile.Write(ref _instance, null);
             }
             if (errors is not null) throw new AggregateException("Rendering cleanup failed.", errors);
         }

@@ -5,7 +5,7 @@ internal static class ScrollThemeTests
 {
     internal static void Run()
     {
-        var theme = ThemeDB.Instance.GetDefaultTheme();
+        var theme = ThemeDB.GetDefaultTheme();
         VerifyScrollBars(theme);
         VerifyContainer(theme);
         VerifyHints(theme);
@@ -33,7 +33,7 @@ internal static class ScrollThemeTests
         Check(ReferenceEquals(theme.GetStyleBox("scroll_focus", "HScrollBar"), focus) && ReferenceEquals(theme.GetStyleBox("scroll_focus", "VScrollBar"), focus),
             "Both scrollbar focus states reuse the existing shared control focus style.");
         var empty = theme.GetIcon("increment", "HScrollBar");
-        Check(empty is ImageTexture && empty.GetSize() == Vector2.Zero && empty.GetImage() is null && !ReferenceEquals(empty, ThemeDB.Instance.FallbackIcon),
+        Check(empty is ImageTexture && empty.GetSize() == Vector2.Zero && empty.GetImage() is null && !ReferenceEquals(empty, ThemeDB.FallbackIcon),
             "The built-in arrows are one real uninitialized zero-size image texture, not null or a replacement decoration.");
         foreach (var type in new[] { "HScrollBar", "VScrollBar" })
         {

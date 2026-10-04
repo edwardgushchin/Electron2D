@@ -303,7 +303,7 @@ public sealed partial class AudioStreamRandomizer : AudioStream
             Check(); if (!_started || child is null) { buffer.Clear(); return buffer.Length; }
             var count = child.MixInto(buffer, rateScale * _pitch); for (var i = 0; i < count; i++) buffer[i] *= _gain; buffer[count..].Clear(); return count;
         }
-        protected override void ValidateDisposal() { if (RequiresAudioOwner) AudioServer.Instance.Check(); base.ValidateDisposal(); }
+        protected override void ValidateDisposal() { if (RequiresAudioOwner) AudioServer.Service.Check(); base.ValidateDisposal(); }
         protected override void Dispose(bool disposing) { try { if (disposing) child?.Dispose(); } finally { base.Dispose(disposing); } }
     }
 }

@@ -62,10 +62,10 @@ internal static class PhysicsCollisionExceptionTests
 
         Reject<ArgumentNullException>(() => mover.AddCollisionExceptionWith(null!));
         Reject<ArgumentNullException>(() => mover.RemoveCollisionExceptionWith(null!));
-        PhysicsServer.Instance.BodyAddCollisionException(mover.GetRID(), default);
+        PhysicsServer.BodyAddCollisionException(mover.GetRID(), default);
         Check(mover.GetCollisionExceptions() is [null],
             "An opaque server exception can retain an empty RID without a matching scene body.");
-        PhysicsServer.Instance.BodyRemoveCollisionException(mover.GetRID(), default);
+        PhysicsServer.BodyRemoveCollisionException(mover.GetRID(), default);
         Check(mover.GetCollisionExceptions().Length == 0,
             "Invalid exception writes leave the prior list unchanged.");
         Reject<InvalidOperationException>(() => Task.Run(() => mover.AddCollisionExceptionWith(floor)).GetAwaiter().GetResult());
@@ -80,67 +80,67 @@ internal static class PhysicsCollisionExceptionTests
         Check(!mover.TestMove(Transform.Identity, new(0, 100)),
             "A body exception survives scene exit and recreates filtered fixtures on reentry.");
         Reject<InvalidOperationException>(() => Task.Run(mover.GetCollisionExceptions).GetAwaiter().GetResult());
-        var server = PhysicsServer.Instance;
-        var serverBody = server.BodyCreate();
-        server.BodySetMode(serverBody, PhysicsServer.BodyMode.Static);
-        server.BodySetSpace(serverBody, mover.GetWorld2D()!.Space);
-        server.BodyAddCollisionException(mover.GetRID(), serverBody);
+        var server = PhysicsServer.Service;
+        var serverBody = PhysicsServer.BodyCreate();
+        PhysicsServer.BodySetMode(serverBody, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodySetSpace(serverBody, mover.GetWorld2D()!.Space);
+        PhysicsServer.BodyAddCollisionException(mover.GetRID(), serverBody);
         Check(mover.GetCollisionExceptions() is [var sceneEntry, null] &&
               ReferenceEquals(sceneEntry, floor),
             "A server-only exception keeps its RID slot while scene enumeration returns null for its missing node.");
-        server.FreeRID(serverBody);
+        PhysicsServer.FreeRID(serverBody);
         Check(mover.GetCollisionExceptions() is [var liveEntry, null] && ReferenceEquals(liveEntry, floor),
             "A freed exception target remains an inert, readable RID slot until explicitly removed.");
-        server.BodyRemoveCollisionException(mover.GetRID(), serverBody);
+        PhysicsServer.BodyRemoveCollisionException(mover.GetRID(), serverBody);
     }
 
     private static void VerifyServerBodyExceptions()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var mover = server.BodyCreate();
-        var floor = server.BodyCreate();
-        var sensor = server.AreaCreate();
-        var circle = server.CircleShapeCreate();
-        var rectangle = server.RectangleShapeCreate();
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var mover = PhysicsServer.BodyCreate();
+        var floor = PhysicsServer.BodyCreate();
+        var sensor = PhysicsServer.AreaCreate();
+        var circle = PhysicsServer.CircleShapeCreate();
+        var rectangle = PhysicsServer.RectangleShapeCreate();
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
-        server.ShapeSetData(rectangle, floorGeometry);
-        server.BodyAddShape(mover, circle);
-        server.BodyAddShape(floor, rectangle);
-        server.BodySetMode(mover, PhysicsServer.BodyMode.Rigid);
-        server.BodySetMode(floor, PhysicsServer.BodyMode.Static);
-        server.BodySetTransform(floor, new(0, Vector2.One, 0, new(0, 80)));
-        server.BodySetSpace(mover, space);
-        server.BodySetSpace(floor, space);
-        server.AreaSetSpace(sensor, space);
-        Reject<ArgumentException>(() => server.BodyAddCollisionException(default, floor));
-        Reject<ArgumentException>(() => server.BodyAddCollisionException(sensor, floor));
-        server.BodyAddCollisionException(mover, sensor);
-        server.BodyRemoveCollisionException(mover, sensor);
-        server.BodyAddCollisionException(mover, floor);
+        PhysicsServer.ShapeSetData(rectangle, floorGeometry);
+        PhysicsServer.BodyAddShape(mover, circle);
+        PhysicsServer.BodyAddShape(floor, rectangle);
+        PhysicsServer.BodySetMode(mover, PhysicsServer.BodyMode.Rigid);
+        PhysicsServer.BodySetMode(floor, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodySetTransform(floor, new(0, Vector2.One, 0, new(0, 80)));
+        PhysicsServer.BodySetSpace(mover, space);
+        PhysicsServer.BodySetSpace(floor, space);
+        PhysicsServer.AreaSetSpace(sensor, space);
+        Reject<ArgumentException>(() => PhysicsServer.BodyAddCollisionException(default, floor));
+        Reject<ArgumentException>(() => PhysicsServer.BodyAddCollisionException(sensor, floor));
+        PhysicsServer.BodyAddCollisionException(mover, sensor);
+        PhysicsServer.BodyRemoveCollisionException(mover, sensor);
+        PhysicsServer.BodyAddCollisionException(mover, floor);
         using var query = new PhysicsTestMotionParameters2D { Motion = new(0, 100) };
         using var reverseQuery = new PhysicsTestMotionParameters2D
         {
             From = new(0, Vector2.One, 0, new(0, 80)),
             Motion = new(0, -100)
         };
-        Check(!server.BodyTestMotion(mover, query) &&
-              !server.BodyTestMotion(floor, reverseQuery),
+        Check(!PhysicsServer.BodyTestMotion(mover, query) &&
+              !PhysicsServer.BodyTestMotion(floor, reverseQuery),
             "An exception owned by one server body suppresses either direction of body motion.");
-        server.BodySetLinearVelocity(mover, new(0, 80));
-        for (var frame = 0; frame < 120; frame++) server.SpaceStep(space, 1d / 60);
-        Check(server.BodyGetTransform(mover).Origin.Y > 100,
+        PhysicsServer.BodySetLinearVelocity(mover, new(0, 80));
+        for (var frame = 0; frame < 120; frame++) PhysicsServer.SpaceStep(space, 1d / 60);
+        Check(PhysicsServer.BodyGetTransform(mover).Origin.Y > 100,
             "An explicit server world's regular solver lets the excepted body cross the floor.");
-        server.BodyRemoveCollisionException(mover, floor);
-        Check(server.BodyTestMotion(mover, query),
+        PhysicsServer.BodyRemoveCollisionException(mover, floor);
+        Check(PhysicsServer.BodyTestMotion(mover, query),
             "Removing the server exception restores motion contact.");
-        server.BodySetTransform(mover, Transform.Identity);
-        server.BodySetLinearVelocity(mover, new(0, 80));
-        for (var frame = 0; frame < 120; frame++) server.SpaceStep(space, 1d / 60);
-        Check(server.BodyGetTransform(mover).Origin.Y is > 45 and < 65,
+        PhysicsServer.BodySetTransform(mover, Transform.Identity);
+        PhysicsServer.BodySetLinearVelocity(mover, new(0, 80));
+        for (var frame = 0; frame < 120; frame++) PhysicsServer.SpaceStep(space, 1d / 60);
+        Check(PhysicsServer.BodyGetTransform(mover).Origin.Y is > 45 and < 65,
             "Removing a server exception re-enables solver contact in the same space.");
-        server.FreeRID(sensor); server.FreeRID(mover); server.FreeRID(floor);
-        server.FreeRID(circle); server.FreeRID(rectangle); server.FreeRID(space);
+        PhysicsServer.FreeRID(sensor); PhysicsServer.FreeRID(mover); PhysicsServer.FreeRID(floor);
+        PhysicsServer.FreeRID(circle); PhysicsServer.FreeRID(rectangle); PhysicsServer.FreeRID(space);
     }
 
     private static void Check(bool condition, string message)

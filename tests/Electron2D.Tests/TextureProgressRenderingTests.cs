@@ -23,8 +23,8 @@ internal static partial class RenderingRuntimeTests
         var frame = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frame++;
                 if (frame == 1) File.WriteAllBytes($"/tmp/electron2d-texture-progress-{backend}.png", pixels.SavePNGToBuffer());
@@ -49,7 +49,7 @@ internal static partial class RenderingRuntimeTests
                 else window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         VerifyProgressLayers(backend, texture);
         VerifyProgressNinePatch(backend, texture);
         VerifyProgressWarm(backend, texture);
@@ -72,15 +72,15 @@ internal static partial class RenderingRuntimeTests
         }; window.AddChild(bar); var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback();
                 if (++frames == 1) { Pixel(pixels, 3, 4, new(.5f, 0, .5f, 1)); Pixel(pixels, 5, 4, new(0, .5f, .5f, 1)); bar.TextureOver = null; bar.TintUnder = Colors.Blue; bar.TintProgress = Colors.White; }
                 else { Pixel(pixels, 4, 4, Colors.Blue); Pixel(pixels, 6, 4, Colors.White); window.Tree!.Quit(); }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
     }
     private static void VerifyProgressNinePatch(string backend, Texture texture)
     {
@@ -106,8 +106,8 @@ internal static partial class RenderingRuntimeTests
         }
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback();
                 for (var index = 0; index < bars.Count; index++) for (var y = 0; y < 16; y++) for (var x = 0; x < 20; x++)
@@ -118,7 +118,7 @@ internal static partial class RenderingRuntimeTests
                 window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
     }
     private static void VerifyProgressWarm(string backend, Texture texture)
     {
@@ -134,14 +134,14 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; long before = 0, allocated = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); bar.Value = frames % 2 == 0 ? 25 : 75; };
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); bar.Value = frames % 2 == 0 ? 25 : 75; };
+            RenderingServer.FramePostDraw += () =>
             {
                 if (++frames > 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (frames == 128) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(allocated == 0, $"Warmed {backend} radial value/render path allocates {allocated} managed bytes.");
+        Engine.Run(window); Released(window); Check(allocated == 0, $"Warmed {backend} radial value/render path allocates {allocated} managed bytes.");
     }
 }

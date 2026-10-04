@@ -331,23 +331,23 @@ public static class TranslationServer
     /// This managed reload does not reload asset remaps or notify an active scene of a translation change.</remarks>
     public static void ReloadPseudolocalization()
     {
-        var settings = ProjectSettings.Instance;
+        var settings = ProjectSettings.Service;
         var domain = GetOrAddDomain(string.Empty);
-        domain.PseudolocalizationAccentsEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationReplaceWithAccents);
-        domain.PseudolocalizationDoubleVowelsEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationDoubleVowels);
-        domain.PseudolocalizationFakeBIDIEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationFakeBIDI);
-        domain.PseudolocalizationOverrideEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationOverride);
-        domain.PseudolocalizationExpansionRatio = settings.GetWithOverride(ProjectSettings.PseudolocalizationExpansionRatio);
-        domain.PseudolocalizationPrefix = settings.GetWithOverride(ProjectSettings.PseudolocalizationPrefix);
-        domain.PseudolocalizationSuffix = settings.GetWithOverride(ProjectSettings.PseudolocalizationSuffix);
-        domain.PseudolocalizationSkipPlaceholdersEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationSkipPlaceholders);
+        domain.PseudolocalizationAccentsEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationReplaceWithAccents);
+        domain.PseudolocalizationDoubleVowelsEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationDoubleVowels);
+        domain.PseudolocalizationFakeBIDIEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationFakeBIDI);
+        domain.PseudolocalizationOverrideEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationOverride);
+        domain.PseudolocalizationExpansionRatio = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationExpansionRatio);
+        domain.PseudolocalizationPrefix = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationPrefix);
+        domain.PseudolocalizationSuffix = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationSuffix);
+        domain.PseudolocalizationSkipPlaceholdersEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationSkipPlaceholders);
     }
 
     internal static void LoadProjectLocalization()
     {
-        var settings = ProjectSettings.Instance;
-        var test = settings.GetWithOverride(ProjectSettings.LocaleTest).Trim();
-        var fallback = settings.GetWithOverride(ProjectSettings.LocaleFallback).Trim();
+        var settings = ProjectSettings.Service;
+        var test = settings.GetWithOverrideCore(ProjectSettings.LocaleTest).Trim();
+        var fallback = settings.GetWithOverrideCore(ProjectSettings.LocaleFallback).Trim();
         var culture = test.Length == 0 ? CultureInfo.CurrentUICulture : CultureInfo.GetCultureInfo(test.Replace('_', '-'));
         var fallbackCulture = fallback.Length == 0 ? null : CultureInfo.GetCultureInfo(fallback.Replace('_', '-'));
         ReloadPseudolocalization();
@@ -356,7 +356,7 @@ public static class TranslationServer
             _culture = culture;
             _fallbackCulture = fallbackCulture;
         }
-        PseudolocalizationEnabled = settings.GetWithOverride(ProjectSettings.PseudolocalizationEnabled);
+        PseudolocalizationEnabled = settings.GetWithOverrideCore(ProjectSettings.PseudolocalizationEnabled);
     }
 
     /// <summary>Resolves a singular message for the selected culture, nearby catalog locales and the project fallback.</summary>

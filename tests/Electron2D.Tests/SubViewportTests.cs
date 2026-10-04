@@ -26,7 +26,7 @@ internal static class SubViewportTests
     private sealed class Listener : Node { internal int Calls; internal Vector2 Position; protected override void OnInput(InputEvent inputEvent) { Calls++; if (inputEvent is InputEventMouse mouse) Position = mouse.Position; } }
     internal static void RunHost()
     {
-        Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_VIEWPORT_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_VIEWPORT_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         try
         {
             var scenario = Environment.GetEnvironmentVariable("ELECTRON2D_VIEWPORT_SCENARIO");
@@ -38,7 +38,7 @@ internal static class SubViewportTests
                 var window = new Window { Size = new(128, 96), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var viewport = new SubViewport { Name = "view", Size = new(32, 32), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var box = new Box { Position = new(4, 4) }; viewport.AddChild(box); var viewTexture = viewport.GetTexture(); var sprite = new Sprite { Texture = viewTexture, Centered = false, Position = new(40, 8), TextureFilter = TextureFilter.Nearest }; window.AddChild(viewport); window.AddChild(sprite); var stage = 0;
                 window.Ready += _ =>
                 {
-                    var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); Check(renderer.ViewportGetTexture(viewport.GetViewportRID()) == viewTexture.GetRID(), "Server viewport/texture RID projection."); renderer.FramePostDraw += () =>
+                    var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); Check(RenderingServer.ViewportGetTexture(viewport.GetViewportRID()) == viewTexture.GetRID(), "Server viewport/texture RID projection."); RenderingServer.FramePostDraw += () =>
                     {
                         using var pixels = renderer.Readback(); using var target = viewport.GetTexture().GetImage(); Check(target is not null, "Offscreen image completed.");
                         Check(box.GetWindow() == window, "Offscreen nodes retain the containing window.");
@@ -59,18 +59,18 @@ internal static class SubViewportTests
                         }
                     };
                 };
-                Check(Engine.Instance.Run(window) == 0 && stage == 11 && window.IsDisposed, "Offscreen host shutdown."); viewTexture.Dispose(); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "offscreen-host", backend, run, stages = stage, cleaned = window.IsDisposed }));
+                Check(Engine.Run(window) == 0 && stage == 11 && window.IsDisposed, "Offscreen host shutdown."); viewTexture.Dispose(); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "offscreen-host", backend, run, stages = stage, cleaned = window.IsDisposed }));
             }
             Dependencies(backend); Warm(backend); if (backend == "gpu") ShaderUniform();
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private static void Dependencies(string backend)
     {
         var window = new Window { Size = new(160, 96), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var a = new SubViewport { Name = "a", Size = new(64, 32), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var b = new SubViewport { Name = "b", Size = new(64, 32), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var source = new Box { Position = new(4, 4) }; a.AddChild(source); var textureA = a.GetTexture(); var textureB = b.GetTexture(); var input = new Sprite { Texture = textureA, Centered = false, TextureFilter = TextureFilter.Nearest }; b.AddChild(input); var output = new Sprite { Texture = textureB, Centered = false, Position = new(40, 8), TextureFilter = TextureFilter.Nearest }; window.AddChild(a); window.AddChild(b); window.AddChild(output); var stage = 0; using var material = new CanvasItemMaterial { BlendMode = BlendMode.PremultAlpha }; var feedback = new Sprite { Texture = textureA, Centered = false, Position = new(32, 0), TextureFilter = TextureFilter.Nearest, Material = material, Visible = false }; a.AddChild(feedback); var externalLayer = new CanvasLayer { CustomViewport = a }; var extra = new Box { Position = new(16, 16), Fill = Colors.Blue }; externalLayer.AddChild(extra); window.AddChild(externalLayer);
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback(); using var first = textureA.GetImage(); using var second = textureB.GetImage(); Check(stage == 4 || first is not null && second is not null, "Dependency targets complete before their consumer at stage " + stage);
                 if (stage == 0) { Pixel(image, 44, 12, Colors.Red); Pixel(first!, 16, 16, Colors.Blue); Pixel(image, 16, 16, Colors.Black); source.Fill = Colors.Green; source.QueueRedraw(); feedback.Visible = true; }
@@ -81,7 +81,7 @@ internal static class SubViewportTests
                 stage++;
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && stage == 5 && window.IsDisposed, "Dependency/feedback/hidden/detached host cleanup."); textureA.Dispose(); textureB.Dispose(); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "offscreen-dependencies", backend, stages = stage }));
+        Check(Engine.Run(window) == 0 && stage == 5 && window.IsDisposed, "Dependency/feedback/hidden/detached host cleanup."); textureA.Dispose(); textureB.Dispose(); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "offscreen-dependencies", backend, stages = stage }));
     }
     private static void Warm(string backend)
     {
@@ -101,7 +101,7 @@ internal static class SubViewportTests
                 before = GC.GetAllocatedBytesForCurrentThread();
                 if (phase == 0) { source.Fill = (frame & 1) == 0 ? Colors.Red : Colors.Green; source.Position = new((frame & 1) == 0 ? 4 : 8, 4); source.QueueRedraw(); }
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
                 var size = rootTexture.GetSize();
@@ -123,7 +123,7 @@ internal static class SubViewportTests
                 Check(++frame < 2048, "Native dimensions did not stabilize for warmed measurements.");
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && phase == 2 && active == 0 && idle == 0, $"Warm offscreen frames allocate active={active}, idle={idle} managed bytes.");
+        Check(Engine.Run(window) == 0 && phase == 2 && active == 0 && idle == 0, $"Warm offscreen frames allocate active={active}, idle={idle} managed bytes.");
         texture.Dispose(); rootTexture.Dispose();
         Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "offscreen-warm", backend, active, idle, frames = frame, coldResizes, measuredPerPhase = 64 }));
     }
@@ -132,9 +132,9 @@ internal static class SubViewportTests
         using var input = typeof(SubViewportTests).Assembly.GetManifestResourceStream("TestShaders.TextureHlsl.spv")!; using var memory = new MemoryStream(); input.CopyTo(memory); using var shader = Shader.CreateFromSPIRV(memory.ToArray()); using var material = new ShaderMaterial { Shader = shader }; using var image = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8); image.Fill(Colors.White); using var white = ImageTexture.CreateFromImage(image); var window = new Window { Size = new(96, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var viewport = new SubViewport { Name = "uniform_view", Size = new(32, 32) }; var source = new Box { Position = new(4, 4) }; viewport.AddChild(source); var texture = viewport.GetTexture(); material.SetShaderParameter("colorMap", texture); material.SetShaderParameter("detailMap", white); material.SetShaderParameter("tint", Colors.White); var sprite = new Sprite { Texture = white, Centered = false, Scale = new(32, 32), Position = Vector2.Zero, Material = material, TextureFilter = TextureFilter.Nearest }; window.AddChild(viewport); window.AddChild(sprite); var stage = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () => { using var pixels = renderer.Readback(); Pixel(pixels, 12, 12, stage == 0 ? Colors.Red : Colors.Green); using var serverImage = renderer.Texture2DGet(renderer.ViewportGetTexture(viewport.GetViewportRID())); Pixel(serverImage!, 4, 4, stage == 0 ? Colors.Red : Colors.Green); if (stage++ == 0) { source.Fill = Colors.Green; source.QueueRedraw(); } else window.Tree!.Quit(); };
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () => { using var pixels = renderer.Readback(); Pixel(pixels, 12, 12, stage == 0 ? Colors.Red : Colors.Green); using var serverImage = RenderingServer.Texture2DGet(RenderingServer.ViewportGetTexture(viewport.GetViewportRID())); Pixel(serverImage!, 4, 4, stage == 0 ? Colors.Red : Colors.Green); if (stage++ == 0) { source.Fill = Colors.Green; source.QueueRedraw(); } else window.Tree!.Quit(); };
         };
-        Check(Engine.Instance.Run(window) == 0 && stage == 2, "Uniform-only visibility dependency and live native rebinding."); texture.Dispose(); Console.WriteLine("Offscreen shader-uniform and server RID pixel checks passed.");
+        Check(Engine.Run(window) == 0 && stage == 2, "Uniform-only visibility dependency and live native rebinding."); texture.Dispose(); Console.WriteLine("Offscreen shader-uniform and server RID pixel checks passed.");
     }
     private sealed class Box : Entity { internal Color Fill = Colors.Red; protected override void OnDraw() => DrawRect(new(0, 0, 8, 8), Fill); }
     private static void Pixel(Image image, int x, int y, Color color) { var pixel = image.GetPixel(x, y); Check(Math.Abs(pixel.R - color.R) < .03 && Math.Abs(pixel.G - color.G) < .03 && Math.Abs(pixel.B - color.B) < .03, $"Pixel {x},{y}: {pixel} != {color}"); }

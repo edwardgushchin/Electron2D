@@ -83,7 +83,7 @@ internal static class AnimationGraphTests
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         var descriptor = new PropertyDescriptor<Entity, Vector2>(nameof(Entity.Position), n => n.Position, (n, v) => n.Position = v);
         try
         {
@@ -91,11 +91,11 @@ internal static class AnimationGraphTests
             {
                 using var a = new Animation { Length = 4 }; var ta = a.AddTrack(descriptor); a.TrackSetPath(ta, "box:Position"); a.TrackInsertKey(ta, 0, new Vector2(16, 16)); using var b = new Animation { Length = 4 }; var tb = b.AddTrack(descriptor); b.TrackSetPath(tb, "box:Position"); b.TrackInsertKey(tb, 0, new Vector2(64, 16));
                 using var graph = Basic(out var mix, out var first, out var second); using var library = new AnimationLibrary(); library.AddAnimation("a", a); library.AddAnimation("b", b); var window = new Window { Size = new(96, 64), Title = "Electron2D animation graph" }; var box = new Box { Name = "box" }; var tree = new AnimationTree { TreeRoot = graph, CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Manual }; tree.AddAnimationLibrary("", library); window.AddChild(box); window.AddChild(tree); var stage = 0;
-                box.Start = () => { var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); tree.Advance(0); renderer.FramePostDraw += () => { using var pixels = renderer.Readback(); var expected = 16 + stage * 12; Check(pixels.GetPixel(expected, 16).R > .9f && pixels.GetPixel(expected, 16).G < .1f, "Graph contribution reaches real rendered pixels."); if (stage > 0) Check(pixels.GetPixel(16, 16).R < .1f, "Old graph pose clears."); stage++; if (stage == 5) window.Tree!.Quit(); else { tree.SetParameter("mix", AnimationNodeBlend2.BlendAmount, stage * .25); tree.Advance(.1); } }; };
-                Check(Engine.Instance.Run(window) == 0 && stage == 5 && window.IsDisposed && !graph.IsDisposed && !library.IsDisposed, "Graph host cleanup and borrowed resources."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "animation-graph-host", backend, run, stages = stage, cleaned = window.IsDisposed })); first.Dispose(); second.Dispose(); mix.Dispose();
+                box.Start = () => { var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); tree.Advance(0); RenderingServer.FramePostDraw += () => { using var pixels = renderer.Readback(); var expected = 16 + stage * 12; Check(pixels.GetPixel(expected, 16).R > .9f && pixels.GetPixel(expected, 16).G < .1f, "Graph contribution reaches real rendered pixels."); if (stage > 0) Check(pixels.GetPixel(16, 16).R < .1f, "Old graph pose clears."); stage++; if (stage == 5) window.Tree!.Quit(); else { tree.SetParameter("mix", AnimationNodeBlend2.BlendAmount, stage * .25); tree.Advance(.1); } }; };
+                Check(Engine.Run(window) == 0 && stage == 5 && window.IsDisposed && !graph.IsDisposed && !library.IsDisposed, "Graph host cleanup and borrowed resources."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "animation-graph-host", backend, run, stages = stage, cleaned = window.IsDisposed })); first.Dispose(); second.Dispose(); mix.Dispose();
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class Box : Entity { internal Action? Start; protected override void OnReady() => Start?.Invoke(); protected override void OnDraw() => DrawRect(new(-3, -3, 6, 6), Colors.Red); }
     private static void Ownership()

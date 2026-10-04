@@ -14,22 +14,22 @@ internal static class DisplayServerDialogTests
 
         using var display = DisplayServer.Open("Dialog validation", new Vector2i(320, 240), hidden: true);
         Action<bool, IReadOnlyList<string>, int> unused = (_, _, _) => { };
-        Expect<ArgumentException>(() => display.DialogShow("title", "body", [], _ => { }));
-        Expect<ArgumentException>(() => display.DialogShow("title", "body", ["OK", ""], _ => { }));
-        Expect<ArgumentNullException>(() => display.DialogShow("title", "body", ["OK"], null!));
-        Expect<NotSupportedException>(() => display.FileDialogShow("", "", "", false,
+        Expect<ArgumentException>(() => DisplayServer.DialogShow("title", "body", [], _ => { }));
+        Expect<ArgumentException>(() => DisplayServer.DialogShow("title", "body", ["OK", ""], _ => { }));
+        Expect<ArgumentNullException>(() => DisplayServer.DialogShow("title", "body", ["OK"], null!));
+        Expect<NotSupportedException>(() => DisplayServer.FileDialogShow("", "", "", false,
             DisplayServer.FileDialogMode.OpenAny, [], unused));
-        Expect<ArgumentException>(() => display.FileDialogShow("", "", "", true,
+        Expect<ArgumentException>(() => DisplayServer.FileDialogShow("", "", "", true,
             DisplayServer.FileDialogMode.OpenFile, ["not-an-extension"], unused));
-        Expect<NotSupportedException>(() => display.FileDialogShow("", "", "", false,
+        Expect<NotSupportedException>(() => DisplayServer.FileDialogShow("", "", "", false,
             DisplayServer.FileDialogMode.OpenFile, [";Images;image/png"], unused));
-        Expect<ArgumentOutOfRangeException>(() => display.FileDialogShow("", "", "", false,
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.FileDialogShow("", "", "", false,
             (DisplayServer.FileDialogMode)99, [], unused));
-        Expect<ArgumentOutOfRangeException>(() => display.FileDialogShow("", "", "", false,
+        Expect<ArgumentOutOfRangeException>(() => DisplayServer.FileDialogShow("", "", "", false,
             DisplayServer.FileDialogMode.OpenFile, [], unused, 8));
-        Expect<ArgumentException>(() => display.FileDialogShow("", "", "", false,
+        Expect<ArgumentException>(() => DisplayServer.FileDialogShow("", "", "", false,
             DisplayServer.FileDialogMode.OpenFile, ["not-an-extension"], unused));
-        Expect<InvalidOperationException>(() => Task.Run(() => display.FileDialogShow("", "", "", false,
+        Expect<InvalidOperationException>(() => Task.Run(() => DisplayServer.FileDialogShow("", "", "", false,
             DisplayServer.FileDialogMode.OpenAny, [], unused)).GetAwaiter().GetResult());
 
         // Inject a copied native completion. A real chooser cannot be driven portably by the dummy video driver.
@@ -47,7 +47,7 @@ internal static class DisplayServerDialogTests
         var completion = completionConstructor.Invoke([callback, Array.Empty<string>(), 0, "injected native failure"]);
         queueCompletion.Invoke(display, [completion]);
         Expect<InvalidOperationException>(display.Dispose);
-        Expect<AggregateException>(display.ProcessEvents);
+        Expect<AggregateException>(DisplayServer.ProcessEvents);
         if (!called)
             throw new Exception("An asynchronous native failure must still complete the typed callback.");
     }

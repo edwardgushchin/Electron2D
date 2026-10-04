@@ -17,8 +17,8 @@ public partial class SplitContainer
         internal Dragger(SplitContainer owner, int index, bool multi = false)
         {
             Splitter = owner; Index = index; _multi = multi; FocusMode = multi ? FocusMode.None : FocusMode.Accessibility; MouseFilter = multi ? MouseFilter.Pass : MouseFilter.Stop;
-            MouseEntered += () => { _hover = true; QueueRedraw(); if (_multi && !Dragging && !Input.Instance.IsMouseButtonPressed(MouseButton.Left)) Splitter.ShowGrabber(Index); };
-            MouseExited += () => { _hover = false; QueueRedraw(); if (_multi && !Dragging && !Input.Instance.IsMouseButtonPressed(MouseButton.Left)) Splitter.ShowGrabber(-1); };
+            MouseEntered += () => { _hover = true; QueueRedraw(); if (_multi && !Dragging && !Input.IsMouseButtonPressed(MouseButton.Left)) Splitter.ShowGrabber(Index); };
+            MouseExited += () => { _hover = false; QueueRedraw(); if (_multi && !Dragging && !Input.IsMouseButtonPressed(MouseButton.Left)) Splitter.ShowGrabber(-1); };
         }
         private bool Available => !Splitter.IsDisposed && !Splitter._leaving && Splitter.IsInsideTree && Splitter.IsVisibleInTree && !Splitter._collapsed && Splitter._enabled && Splitter._children.Count >= 2 &&
             (!_multi || Parent is Dragger parent && parent.Available);
@@ -64,7 +64,7 @@ public partial class SplitContainer
             if (!_multi)
             {
                 var rtl = !Splitter._vertical && IsLayoutRTL(); var decrease = Splitter._vertical ? "ui_up" : rtl ? "ui_right" : "ui_left"; var increase = Splitter._vertical ? "ui_down" : rtl ? "ui_left" : "ui_right";
-                var minus = InputMap.Instance.HasAction(decrease) && input.IsActionPressed(decrease, true); var plus = InputMap.Instance.HasAction(increase) && input.IsActionPressed(increase, true);
+                var minus = InputMap.HasAction(decrease) && input.IsActionPressed(decrease, true); var plus = InputMap.HasAction(increase) && input.IsActionPressed(increase, true);
                 if (minus || plus)
                 {
                     Splitter.SetOffset(Index, Pixel(Splitter.Offset(Index) + Splitter.AxisSize * (minus ? -.1f : .1f))); Splitter.ClampSplitOffset(Index); AcceptEvent(); return;

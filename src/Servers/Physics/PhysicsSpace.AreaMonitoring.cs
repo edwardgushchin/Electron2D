@@ -13,13 +13,13 @@ internal sealed partial class PhysicsSpace
     {
         foreach (var area in _areas)
         {
-            var runtime = PhysicsServer.Instance.FindAreaRuntime(area.PhysicsRID);
+            var runtime = PhysicsServer.Service.FindAreaRuntime(area.PhysicsRID);
             if (runtime is { Monitoring: true }) ScanAreaMonitor(runtime, area.BackendShapes);
         }
         foreach (var area in _serverColliders)
         {
             if (!area.IsArea) continue;
-            var runtime = PhysicsServer.Instance.FindAreaRuntime(area.RID);
+            var runtime = PhysicsServer.Service.FindAreaRuntime(area.RID);
             if (runtime is { Monitoring: true }) ScanAreaMonitor(runtime, area.BackendShapes);
         }
     }
@@ -71,9 +71,9 @@ internal sealed partial class PhysicsSpace
 
     private void ForgetAreaMonitors(RID otherRID)
     {
-        foreach (var area in _areas) Forget(PhysicsServer.Instance.FindAreaRuntime(area.PhysicsRID), otherRID);
+        foreach (var area in _areas) Forget(PhysicsServer.Service.FindAreaRuntime(area.PhysicsRID), otherRID);
         foreach (var area in _serverColliders)
-            if (area.IsArea) Forget(PhysicsServer.Instance.FindAreaRuntime(area.RID), otherRID);
+            if (area.IsArea) Forget(PhysicsServer.Service.FindAreaRuntime(area.RID), otherRID);
     }
 
     private void Forget(PhysicsAreaRuntime? receiver, RID otherRID)
@@ -91,7 +91,7 @@ internal sealed partial class PhysicsSpace
             for (var index = 0; index < _serverAreaEvents.Count; index++)
             {
                 var item = _serverAreaEvents[index]; var receiver = item.Receiver;
-                if (PhysicsServer.Instance.FindAreaRuntime(receiver.RID) != receiver || receiver.Generation != item.Generation ||
+                if (PhysicsServer.Service.FindAreaRuntime(receiver.RID) != receiver || receiver.Generation != item.Generation ||
                     receiver.Space != this || item.Change.Entered && !receiver.Pairs.Contains(item.Change.Pair)) continue;
                 try { receiver.Raise(item.Change); }
                 catch (Exception error) { (errors ??= []).Add(error); }

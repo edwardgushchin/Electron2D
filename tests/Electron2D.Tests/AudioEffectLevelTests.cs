@@ -51,31 +51,31 @@ internal static class AudioEffectLevelTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var gain = new AudioEffectAmplify { VolumeLinear = 2 }; using var pan = new AudioEffectPanner();
         using var stream = AudioEffectTests.Constant(); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, gain); server.AddBusEffect(0, pan); player.Play(); var native = server.Native;
+            AudioServer.AddBusEffect(0, gain); AudioServer.AddBusEffect(0, pan); player.Play(); var native = server.Native;
             AudioEffectTests.Wait(native, 20); AudioEffectTests.CheckOutput(native, new(.4f, -.6f));
             pan.Pan = -1; AudioEffectTests.CheckOutput(native, new(-.2f, 0));
-            server.SetBusEffectEnabled(0, 1, false); AudioEffectTests.CheckOutput(native, new(.4f, -.6f));
-            server.SetBusEffectEnabled(0, 1, true); AudioEffectTests.Wait(native, 20);
+            AudioServer.SetBusEffectEnabled(0, 1, false); AudioEffectTests.CheckOutput(native, new(.4f, -.6f));
+            AudioServer.SetBusEffectEnabled(0, 1, true); AudioEffectTests.Wait(native, 20);
             var bytes = native.MixManagedBytes; var allocations = FAudioContext.AllocationCalls;
             AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == allocations, "64 active native passes allocate no measured bytes or custom FAudio calls.");
             player.StreamPaused = true; AudioEffectTests.Wait(native, 20); bytes = native.MixManagedBytes; allocations = FAudioContext.AllocationCalls;
             AudioEffectTests.Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == allocations, "64 paused native passes allocate no measured bytes or custom FAudio calls.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance;
+        var settings = ProjectSettings.Service;
         var renderer = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu";
-        var previous = settings.Get(ProjectSettings.RenderingMethod);
-        settings.Set(ProjectSettings.RenderingMethod, renderer);
+        var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, renderer);
         try
         {
             using var stream = AudioEffectTests.Constant(); using var gain = new AudioEffectAmplify { VolumeLinear = 2 };
@@ -83,15 +83,15 @@ internal static class AudioEffectLevelTests
             var window = new Window { Size = new(160, 96), Title = "Electron2D bus level" };
             var player = new AudioStreamPlayer { Stream = stream, Autoplay = true }; var scenario = new HostScenario(capture);
             window.AddChild(player); window.AddChild(scenario);
-            var server = AudioServer.Instance; server.AddBusEffect(0, gain); server.AddBusEffect(0, pan); server.AddBusEffect(0, capture);
+            var server = AudioServer.Service; AudioServer.AddBusEffect(0, gain); AudioServer.AddBusEffect(0, pan); AudioServer.AddBusEffect(0, capture);
             try
             {
-                Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public native level host and cleanup.");
+                Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public native level host and cleanup.");
                 Console.WriteLine($"Audio level host: {renderer}, {scenario.Frames} captured processed frames, cleanup passed.");
             }
-            finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+            finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
 
     private sealed class HostScenario(AudioEffectCapture capture) : Node

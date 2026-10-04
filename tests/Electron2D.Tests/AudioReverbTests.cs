@@ -98,7 +98,7 @@ internal static class AudioReverbTests
         using var centered = effect.Instantiate(); var impulse = new Vector2[5000]; impulse[0] = new(1, 1); var tail = new Vector2[impulse.Length];
         centered.Process(impulse, tail);
         var first = Array.FindIndex(tail, f => Math.Abs(f.X) > .000001f || Math.Abs(f.Y) > .000001f);
-        var expectedFirst = (int)MathF.Round(.025306122448979593f * AudioServer.Instance.GetMixRate(), MidpointRounding.ToEven);
+        var expectedFirst = (int)MathF.Round(.025306122448979593f * AudioServer.GetMixRate(), MidpointRounding.ToEven);
         Check(first == expectedFirst && tail.All(f => f.X == f.Y) && tail.Skip(first).Any(f => Math.Abs(f.X) > .001f),
             "First comb reflection occurs at its tuned frame and zero spread keeps equal channels.");
         effect.Spread = 1; using var wide = effect.Instantiate(); wide.Process(impulse, tail);
@@ -122,12 +122,12 @@ internal static class AudioReverbTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectReverb { Wet = 0, Dry = 1 }; using var stream = AudioEffectTests.Constant();
         var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 20);
+            AudioServer.AddBusEffect(0, effect); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 20);
             AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
             effect.Wet = 1; effect.Dry = 0; AudioEffectTests.Wait(native, 80);
             native.PrepareCapture(native.QuantumFrames * native.Channels * 10); AudioEffectTests.Wait(native, 12);
@@ -138,59 +138,59 @@ internal static class AudioReverbTests
                 for (var frame = 0; frame < pcm.Length; frame += native.Channels)
                     for (var channel = 2; channel < native.Channels; channel++)
                         Check(Math.Abs(pcm[frame + channel]) < .0001f, "Front-pair reverb does not leak into unrelated speaker pairs.");
-            server.SetBusEffectEnabled(0, 0, false); AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
-            server.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
+            AudioServer.SetBusEffectEnabled(0, 0, false); AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
+            AudioServer.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
             var bytes = native.MixManagedBytes; var allocations = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == allocations, "64 active native reverb passes allocate zero measured bytes/calls.");
             player.StreamPaused = true; AudioEffectTests.Wait(native, 20); bytes = native.MixManagedBytes; allocations = FAudioContext.AllocationCalls;
             AudioEffectTests.Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == allocations,
                 "64 paused native reverb-tail passes allocate zero measured bytes/calls.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     private static void NativeTail()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectReverb { Dry = 0, Wet = 1, PredelayFeedback = 0 };
         var samples = new short[512]; samples[0] = 16384; samples[1] = -16384;
         using var stream = new AudioStreamWAV
         {
             SampleFormat = AudioStreamWAV.Format.PCM16,
             Stereo = true,
-            MixRate = (int)server.GetMixRate(),
+            MixRate = (int)AudioServer.GetMixRate(),
             Data = MemoryMarshal.AsBytes(samples.AsSpan()).ToArray()
         };
         var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); var native = server.Native;
+            AudioServer.AddBusEffect(0, effect); var native = server.Native;
             native.PrepareCapture(native.QuantumFrames * native.Channels * 130); player.Play(); AudioEffectTests.Wait(native, 130);
             var pcm = native.CapturedPCM(); var first = -1;
             for (var i = 0; i < pcm.Length; i += native.Channels)
                 if (Math.Abs(pcm[i]) > .005f || Math.Abs(pcm[i + 1]) > .005f) { first = i / native.Channels; break; }
-            Check(first >= .02f * server.GetMixRate() && first <= .1f * server.GetMixRate(),
+            Check(first >= .02f * AudioServer.GetMixRate() && first <= .1f * AudioServer.GetMixRate(),
                 $"Finite source produces native wet reverb only after the first comb reflection; first frame {first}.");
             tree.ProcessFrame(.01); Check(!player.IsPlaying(), "Finite source ended before the captured reverb tail.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod);
-        settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
         try
         {
             using var effect = new AudioEffectReverb { Dry = 0, Wet = 1 };
             using var stream = AudioEffectTests.Constant(); using var capture = new AudioEffectCapture { BufferLength = .1f };
             var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Stream = stream, Autoplay = true });
             var scenario = new HostScenario(capture); window.AddChild(scenario);
-            var server = AudioServer.Instance; server.AddBusEffect(0, effect); server.AddBusEffect(0, capture);
-            try { Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public reverb host processed and cleaned up."); }
-            finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+            var server = AudioServer.Service; AudioServer.AddBusEffect(0, effect); AudioServer.AddBusEffect(0, capture);
+            try { Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public reverb host processed and cleaned up."); }
+            finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class HostScenario(AudioEffectCapture capture) : Node
     {

@@ -22,7 +22,7 @@ public class StreamPeerUDS : StreamPeerSocket
     {
         CheckStream(); ArgumentException.ThrowIfNullOrEmpty(path); if (GetStatus() != StreamSocketStatus.None) throw new InvalidOperationException("A connection is already active.");
         var endpoint = new UnixDomainSocketEndPoint(path); if (NativeSocket is null) SetSocket(NetworkSockets.Create(AddressFamily.Unix, SocketType.Stream), StreamSocketStatus.None);
-        _path = path; Connect(endpoint, ProjectSettings.Instance.Get(ProjectSettings.UDSConnectTimeoutSeconds));
+        _path = path; Connect(endpoint, ProjectSettings.Get(ProjectSettings.UDSConnectTimeoutSeconds));
     }
     /// <summary>Returns the selected remote path, or empty after disconnection.</summary><returns>The endpoint path.</returns>
     public string GetConnectedPath() { CheckStream(); return NativeSocket is null ? "" : _path; }

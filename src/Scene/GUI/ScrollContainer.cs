@@ -99,7 +99,7 @@ public partial class ScrollContainer : Container
     {
         ClipContents = true;
         PropagateMaximumSize = false;
-        _deadzone = ProjectSettings.Instance.GetWithOverride(ProjectSettings.DefaultScrollDeadzone);
+        _deadzone = ProjectSettings.GetWithOverride(ProjectSettings.DefaultScrollDeadzone);
         _hBar.FocusMode = FocusMode.None;
         _vBar.FocusMode = FocusMode.None;
         _focusPanel.MouseFilter = MouseFilter.Ignore;

@@ -35,7 +35,7 @@ public abstract class AudioStreamPlaybackResampled : AudioStreamPlayback
         lock (ResampleGate)
         {
             ThrowIfDisposed();
-            var rate = OnGetStreamSamplingRate(); var ratio = (rate * rateScale * AudioServer.Instance.PlaybackSpeedScale) / (double)AudioServer.Instance.GetMixRate();
+            var rate = OnGetStreamSamplingRate(); var ratio = (rate * rateScale * AudioServer.PlaybackSpeedScale) / (double)AudioServer.GetMixRate();
             if (!double.IsFinite(ratio) || ratio < 0 || ratio * 65536 > ulong.MaxValue) throw new InvalidOperationException("Audio resampling rate exceeds the finite cursor range.");
             var increment = (ulong)(ratio * 65536); var mixed = -1;
             for (var i = 0; i < buffer.Length; i++)

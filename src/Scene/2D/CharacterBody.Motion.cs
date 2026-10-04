@@ -226,7 +226,7 @@ public partial class CharacterBody
         if (!FiniteMotion(motion)) throw new ArgumentOutOfRangeException(nameof(motion));
         _platformExclusion[0] = excluded;
         var from = GlobalTransform;
-        var result = PhysicsServer.Instance.TestMotionData(GetRID(), from, motion, _safeMargin,
+        var result = PhysicsServer.Service.TestMotionData(GetRID(), from, motion, _safeMargin,
             recoveryAsCollision, _platformExclusion, [], collideSeparationRay);
         if (!testOnly && result.Travel != Vector2.Zero)
             SetGlobalOrigin(from.Origin + result.Travel);
@@ -277,7 +277,7 @@ public partial class CharacterBody
         {
             _onWall = true;
             _wallNormal = normal;
-            if (PhysicsServer.Instance.ResolveSceneObject(result.ColliderRID) is not CharacterBody)
+            if (PhysicsServer.Service.ResolveSceneObject(result.ColliderRID) is not CharacterBody)
                 SetPlatform(result);
         }
     }

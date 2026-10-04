@@ -1,6 +1,6 @@
 # InputEventAction
 
-Last updated: 2026-09-24
+Last updated: 2026-10-04
 
 **Inherits:** [InputEvent](InputEvent.md)
 
@@ -31,7 +31,7 @@ The following focused snippet uses the current public API. Names not declared in
 
 ```csharp
 using var action = new InputEventAction { Action = "jump", Pressed = true, Strength = 1f };
-Input.Instance.ParseInputEvent(action);
+Input.ParseInputEvent(action);
 ```
 
 ## Constructors

@@ -7,14 +7,14 @@ public sealed partial class AudioStreamPlaybackPolyphonic
     private readonly HashSet<AudioStream> _preparedRoots = new(ReferenceEqualityComparer.Instance);
     internal void PrepareStream(AudioStream stream, AudioServer.PlaybackType type, string bus)
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try
         {
             Check(); Idle(); Owner(); _source.ValidateChild(stream); stream.EnsurePlaybackOwner(); _ = Random.Shared.NextDouble();
             _busy = true; _source.EnterCall(0);
             try { PrepareStreamCore(stream, type, bus); _preparedRoots.Add(stream); } finally { AudioStream.ExitCall(); _busy = false; }
         }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     private void PrepareStreamCore(AudioStream stream, AudioServer.PlaybackType type, string bus)
     {
@@ -34,8 +34,8 @@ public sealed partial class AudioStreamPlaybackPolyphonic
                 if (ReferenceEquals(playback, this) || playback.SceneOwner is not null || playback.CompositeOwner is not null) throw new InvalidOperationException("Prepared factories must return independent owned playbacks.");
                 for (var i = 0; i < count; i++) if (ReferenceEquals(children[i].Playback, playback)) throw new InvalidOperationException("Prepared slots cannot share playback state.");
                 playback.CompositeOwner = this; playback.PrepareQueuedControls();
-                var transport = type == AudioServer.PlaybackType.Default ? (ProjectSettings.Instance.GetWithOverride(ProjectSettings.AudioGeneralDefaultPlaybackType) == AudioDefaultPlaybackType.Sample ? AudioServer.PlaybackType.Sample : AudioServer.PlaybackType.Stream) : type;
-                if (transport == AudioServer.PlaybackType.Sample && stream.CanBeSampled()) { var request = new AudioSamplePlayback(stream) { Bus = bus }; playback.SetSamplePlayback(request); request.Native = AudioServer.Instance.PrepareSample(request); }
+                var transport = type == AudioServer.PlaybackType.Default ? (ProjectSettings.GetWithOverride(ProjectSettings.AudioGeneralDefaultPlaybackType) == AudioDefaultPlaybackType.Sample ? AudioServer.PlaybackType.Sample : AudioServer.PlaybackType.Stream) : type;
+                if (transport == AudioServer.PlaybackType.Sample && stream.CanBeSampled()) { var request = new AudioSamplePlayback(stream) { Bus = bus }; playback.SetSamplePlayback(request); request.Native = AudioServer.Service.PrepareSample(request); }
                 playback.CompositeOwner = this;
             }
             _prepared.Add(stream, children);

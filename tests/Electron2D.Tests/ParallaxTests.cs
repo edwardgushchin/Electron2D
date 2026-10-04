@@ -90,8 +90,8 @@ internal static partial class RenderingRuntimeTests
         window.Ready += _ =>
         {
             camera.ForceUpdateScroll();
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 Pixel(pixels, 1, 1, Colors.Red); Pixel(pixels, 17, 1, Colors.Red);
@@ -107,7 +107,7 @@ internal static partial class RenderingRuntimeTests
                 else window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 2 && mark.Draws == 1, "Repeated canvas uses retained drawing after camera motion.");
         Console.WriteLine($"Parallax native repeat pixels passed: {backend}.");
     }

@@ -15,10 +15,10 @@ internal sealed class ThemeOwner : IDisposable
     internal readonly Store<Color> Colors = new(static (t, n, k) => t.HasColor(n, k), static (t, n, k) => t.GetColor(n, k), static () => Electron2D.Colors.Black,
         validate: static value => { if (!value.IsFinite()) throw new ArgumentException("Theme colors must be finite.", nameof(value)); });
     internal readonly Store<int> Constants = new(static (t, n, k) => t.HasConstant(n, k), static (t, n, k) => t.GetConstant(n, k), static () => 0);
-    internal readonly Store<int> FontSizes = new(static (t, n, k) => t.HasFontSize(n, k), static (t, n, k) => t.GetFontSize(n, k), static () => ThemeDB.Instance.FallbackFontSize);
-    internal readonly Store<Font?> Fonts = new(static (t, n, k) => t.HasFont(n, k), static (t, n, k) => t.GetFont(n, k), static () => ThemeDB.Instance.FallbackFont, true);
-    internal readonly Store<Texture?> Icons = new(static (t, n, k) => t.HasIcon(n, k), static (t, n, k) => t.GetIcon(n, k), static () => ThemeDB.Instance.FallbackIcon, true);
-    internal readonly Store<StyleBox?> Styles = new(static (t, n, k) => t.HasStyleBox(n, k), static (t, n, k) => t.GetStyleBox(n, k), static () => ThemeDB.Instance.FallbackStyleBox, true);
+    internal readonly Store<int> FontSizes = new(static (t, n, k) => t.HasFontSize(n, k), static (t, n, k) => t.GetFontSize(n, k), static () => ThemeDB.FallbackFontSize);
+    internal readonly Store<Font?> Fonts = new(static (t, n, k) => t.HasFont(n, k), static (t, n, k) => t.GetFont(n, k), static () => ThemeDB.FallbackFont, true);
+    internal readonly Store<Texture?> Icons = new(static (t, n, k) => t.HasIcon(n, k), static (t, n, k) => t.GetIcon(n, k), static () => ThemeDB.FallbackIcon, true);
+    internal readonly Store<StyleBox?> Styles = new(static (t, n, k) => t.HasStyleBox(n, k), static (t, n, k) => t.GetStyleBox(n, k), static () => ThemeDB.FallbackStyleBox, true);
     private readonly Node _owner;
     private readonly Action _check, _mutate;
     private readonly Action<Resource> _sourceChanged, _overrideChanged;
@@ -67,14 +67,14 @@ internal sealed class ThemeOwner : IDisposable
         _generation++;
         if (!entering)
         {
-            ThemeDB.Instance.ContextChanged -= _globalChanged; _tree = null; _sourceAction = null; _selfAction = null; _overrideAction = null; Invalidate(); return;
+            ThemeDB.Service.ContextChanged -= _globalChanged; _tree = null; _sourceAction = null; _selfAction = null; _overrideAction = null; Invalidate(); return;
         }
         var tree = _owner.Tree!; var generation = _generation;
         _ownerThread = Environment.CurrentManagedThreadId; _tree = tree;
         _sourceAction = () => { if (!_disposed && generation == _generation && ReferenceEquals(_tree, tree)) Propagate(); };
         _selfAction = () => { if (!_disposed && generation == _generation && ReferenceEquals(_tree, tree)) NotifySelf(); };
         _overrideAction = () => { if (!_disposed && generation == _generation && ReferenceEquals(_tree, tree)) OverrideChanged(); };
-        ThemeDB.Instance.ContextChanged += _globalChanged;
+        ThemeDB.Service.ContextChanged += _globalChanged;
     }
     private void SourceChanged(Resource source) { if (ReferenceEquals(source, _theme)) Defer(true); }
     private void SourceDisposed(ElectronObject source) { if (ReferenceEquals(source, _theme)) Defer(true); }
@@ -153,7 +153,7 @@ internal sealed class ThemeOwner : IDisposable
     {
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme && theme.GetTypeVariationBase(_variation).Length > 0) return theme;
-        var defaults = ThemeDB.Instance.GetDefaultTheme();
+        var defaults = ThemeDB.GetDefaultTheme();
         return defaults.GetTypeVariationBase(_variation).Length > 0 ? defaults : null;
     }
     private void BuildTypes(string type)
@@ -182,7 +182,7 @@ internal sealed class ThemeOwner : IDisposable
             if (owner._theme is { IsDisposed: false } theme)
                 foreach (var candidate in _types)
                     if (store.Has(theme, name, candidate)) { value = store.Get(theme, name, candidate); if (_tree is not null && cacheGeneration == _cacheGeneration) store.Cache[(name, type)] = value; return value; }
-        var defaults = ThemeDB.Instance.GetDefaultTheme();
+        var defaults = ThemeDB.GetDefaultTheme();
         foreach (var candidate in _types)
             if (store.Has(defaults, name, candidate)) { value = store.Get(defaults, name, candidate); if (_tree is not null && cacheGeneration == _cacheGeneration) store.Cache[(name, type)] = value; return value; }
         value = store.Fallback(); if (_tree is not null && cacheGeneration == _cacheGeneration) store.Cache[(name, type)] = value; return value;
@@ -195,7 +195,7 @@ internal sealed class ThemeOwner : IDisposable
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme)
                 foreach (var candidate in _types) if (store.Has(theme, name, candidate)) return true;
-        var defaults = ThemeDB.Instance.GetDefaultTheme();
+        var defaults = ThemeDB.GetDefaultTheme();
         foreach (var candidate in _types) if (store.Has(defaults, name, candidate)) return true;
         return false;
     }
@@ -204,21 +204,21 @@ internal sealed class ThemeOwner : IDisposable
         CheckQuery();
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme && theme.HasDefaultBaseScale()) return theme.DefaultBaseScale;
-        var defaults = ThemeDB.Instance.GetDefaultTheme(); return defaults.HasDefaultBaseScale() ? defaults.DefaultBaseScale : ThemeDB.Instance.FallbackBaseScale;
+        var defaults = ThemeDB.GetDefaultTheme(); return defaults.HasDefaultBaseScale() ? defaults.DefaultBaseScale : ThemeDB.FallbackBaseScale;
     }
     internal Font? DefaultFont()
     {
         CheckQuery();
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme && theme.HasDefaultFont()) return theme.DefaultFont;
-        var defaults = ThemeDB.Instance.GetDefaultTheme(); return defaults.HasDefaultFont() ? defaults.DefaultFont : ThemeDB.Instance.FallbackFont;
+        var defaults = ThemeDB.GetDefaultTheme(); return defaults.HasDefaultFont() ? defaults.DefaultFont : ThemeDB.FallbackFont;
     }
     internal int DefaultFontSize()
     {
         CheckQuery();
         for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
             if (owner._theme is { IsDisposed: false } theme && theme.HasDefaultFontSize()) return theme.DefaultFontSize;
-        var defaults = ThemeDB.Instance.GetDefaultTheme(); return defaults.HasDefaultFontSize() ? defaults.DefaultFontSize : ThemeDB.Instance.FallbackFontSize;
+        var defaults = ThemeDB.GetDefaultTheme(); return defaults.HasDefaultFontSize() ? defaults.DefaultFontSize : ThemeDB.FallbackFontSize;
     }
     internal bool HasOverride<T>(Store<T> store, string name) { CheckQuery(); ValidateName(name); return store.Overrides.ContainsKey(name); }
     internal void SetOverride<T>(Store<T> store, string name, T value)
@@ -269,7 +269,7 @@ internal sealed class ThemeOwner : IDisposable
     public void Dispose()
     {
         if (_disposed) return; _disposed = true;
-        if (_tree is not null) ThemeDB.Instance.ContextChanged -= _globalChanged;
+        if (_tree is not null) ThemeDB.Service.ContextChanged -= _globalChanged;
         _tree = null; _sourceAction = null; _selfAction = null; _overrideAction = null;
         if (_theme is { } theme) { theme.Changed -= _sourceChanged; theme.Disposed -= _sourceDisposed; }
         foreach (var resource in _sources.Keys) { resource.Changed -= _overrideChanged; resource.Disposed -= _overrideDisposed; }

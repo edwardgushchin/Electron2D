@@ -154,7 +154,7 @@ public partial class Theme : Resource
     public virtual int GetFontSize(string name, string themeType)
     {
         lock (_gate) { CheckQuery(name, themeType); if (TryItem(_fontSizes, name, themeType, out var value) && value > 0) return value; if (_defaultFontSize > 0) return _defaultFontSize; }
-        return ThemeDB.Instance.FallbackFontSize;
+        return ThemeDB.FallbackFontSize;
     }
     /// <summary>Tests for a positive entry or a positive local default, without using the global fallback.</summary>
     /// <param name="name">The item key.</param><param name="themeType">The exact theme-type key.</param><returns>True when this theme supplies a usable size.</returns>
@@ -179,7 +179,7 @@ public partial class Theme : Resource
     public virtual Font? GetFont(string name, string themeType)
     {
         lock (_gate) { CheckQuery(name, themeType); if (TryItem(_fonts, name, themeType, out var value) && value is not null) return value; if (_defaultFont is not null) return _defaultFont; }
-        return ThemeDB.Instance.FallbackFont;
+        return ThemeDB.FallbackFont;
     }
     /// <summary>Tests for a nonnull font entry or local default; universal fallback fonts do not count.</summary>
     /// <param name="name">The item key.</param><param name="themeType">The exact theme-type key.</param><returns>True when a nonnull identity is stored.</returns>
@@ -204,7 +204,7 @@ public partial class Theme : Resource
     public virtual Texture? GetIcon(string name, string themeType)
     {
         lock (_gate) { CheckQuery(name, themeType); if (TryItem(_icons, name, themeType, out var value) && value is not null) return value; }
-        return ThemeDB.Instance.FallbackIcon;
+        return ThemeDB.FallbackIcon;
     }
     /// <summary>Tests for a nonnull icon entry; placeholders and fallback icons do not count.</summary>
     /// <param name="name">The item key.</param><param name="themeType">The exact theme-type key.</param><returns>True when a nonnull identity is stored.</returns>
@@ -229,7 +229,7 @@ public partial class Theme : Resource
     public virtual StyleBox? GetStyleBox(string name, string themeType)
     {
         lock (_gate) { CheckQuery(name, themeType); if (TryItem(_styles, name, themeType, out var value) && value is not null) return value; }
-        return ThemeDB.Instance.FallbackStyleBox;
+        return ThemeDB.FallbackStyleBox;
     }
     /// <summary>Tests for a nonnull style entry; placeholders and fallback styles do not count.</summary>
     /// <param name="name">The item key.</param><param name="themeType">The exact theme-type key.</param><returns>True when a nonnull identity is stored.</returns>

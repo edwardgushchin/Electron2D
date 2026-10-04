@@ -5,7 +5,7 @@ namespace Electron2D;
 /// canvas targets and optional logical stretch. Canvas transforms, sampling and pixel-snapping policies apply to each target. Window input is localized through the inverse final transform.</remarks>
 public abstract partial class Viewport : Node
 {
-    private protected Viewport() => _guiDragThreshold = ProjectSettings.Instance.GetWithOverride(ProjectSettings.DefaultGUIDragThreshold);
+    private protected Viewport() => _guiDragThreshold = ProjectSettings.GetWithOverride(ProjectSettings.DefaultGUIDragThreshold);
 
     /// <summary>Returns the client rectangle in viewport coordinates.</summary>
     /// <returns>A zero-origin rectangle in client units, independent of desktop and node position.</returns>

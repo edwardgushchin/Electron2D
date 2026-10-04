@@ -43,7 +43,7 @@ internal static class CanvasCompositionTests
     }
     internal static void RunHost()
     {
-        Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_COMPOSITION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_COMPOSITION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         try
         {
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy")
@@ -51,7 +51,7 @@ internal static class CanvasCompositionTests
                 CanvasClipTests.RejectSoftware();
                 Copy(backend, null);
                 var rejected = new Window(); var softwareGroup = new CanvasGroup(); softwareGroup.AddChild(new Box()); rejected.AddChild(softwareGroup);
-                Reject<NotSupportedException>(() => Engine.Instance.Run(rejected)); Check(rejected.IsDisposed, "Software group capability cleanup."); return;
+                Reject<NotSupportedException>(() => Engine.Run(rejected)); Check(rejected.IsDisposed, "Software group capability cleanup."); return;
             }
             CanvasClipTests.RunHost(backend);
             Group(backend); ParentYSort(backend); Copy(backend, null); Offscreen(backend); Warm(backend);
@@ -59,14 +59,14 @@ internal static class CanvasCompositionTests
             else RejectMipmaps();
             RejectNested();
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private static void Group(string backend)
     {
         var window = new Window { Size = new(128, 96) }; var group = new CanvasGroup { ClipChildren = ClipChildrenMode.Only, Position = new(8, 8), FitMargin = 0, ClearMargin = 0, SelfModulate = new(1, 1, 1, .5f) }; var a = new Box(); var b = new Box { Position = new(8, 0) }; var escaped = new Box { Position = new(0, 24), Fill = Colors.Lime, ZIndex = 1 }; group.AddChild(a); group.AddChild(new BackBufferCopy { CopyMode = BackBufferCopyMode.Viewport }); group.AddChild(b); group.AddChild(escaped); window.AddChild(group); window.AddChild(new Box { Position = new(80, 8), Fill = Colors.Blue }); var mask = new MaskedGroup { Name = "mask", Position = new(48, 48), FitMargin = 500, SelfModulate = new(1, 1, 1, .5f) }; mask.AddChild(new Box()); window.AddChild(mask); window.AddChild(new MaskedGroup { Name = "empty", Position = new(80, 48) }); var stage = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback();
                 if (stage == 0) { Pixel(image, 12, 12, new(.5f, 0, 0)); Pixel(image, 20, 12, new(.5f, 0, 0)); Pixel(image, 12, 36, Colors.Lime); group.SelfModulate = new(1, 1, 1, .25f); }
@@ -78,7 +78,7 @@ internal static class CanvasCompositionTests
                 Pixel(image, 84, 12, Colors.Blue); Pixel(image, 52, 52, new(.5f, 0, 0)); Pixel(image, 60, 52, Colors.Black); Pixel(image, 84, 52, Colors.Black); stage++;
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && stage == 6 && window.IsDisposed, "Group host lifecycle."); Console.WriteLine($"CanvasGroup opacity, overlaps, same-Z isolation, transforms, visibility and Y-sort passed ({backend}).");
+        Check(Engine.Run(window) == 0 && stage == 6 && window.IsDisposed, "Group host lifecycle."); Console.WriteLine($"CanvasGroup opacity, overlaps, same-Z isolation, transforms, visibility and Y-sort passed ({backend}).");
     }
     private static void ParentYSort(string backend)
     {
@@ -88,20 +88,20 @@ internal static class CanvasCompositionTests
         var outside = new Box { Position = new(0, 8), Fill = Colors.Blue }; parent.AddChild(outside); window.AddChild(parent); var stage = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
         {
             using var image = renderer.Readback(); Pixel(image, 4, 20, stage == 0 ? Colors.Blue : new(.5f, 0, 0));
             if (stage++ == 0) outside.Position = new(0, -8); else window.Tree!.Quit();
         };
         };
-        Check(Engine.Instance.Run(window) == 0 && stage == 2, "Ancestor Y-sort group boundary."); Console.WriteLine($"Ancestor Y-sort retains atomic group and internal child sorting ({backend}).");
+        Check(Engine.Run(window) == 0 && stage == 2, "Ancestor Y-sort group boundary."); Console.WriteLine($"Ancestor Y-sort retains atomic group and internal child sorting ({backend}).");
     }
     private static void Copy(string backend, ShaderMaterial? material)
     {
         var window = new Window { Size = new(96, 64), CanvasCullMask = 1 }; var red = new Box { Extent = new(96, 64) }; var copy = new BackBufferCopy { Position = new(8, 8), Rect = new(0, 0, 16, 16) }; var blue = new Box { Fill = Colors.Blue, Extent = new(96, 64) }; var reader = new Box { Fill = Colors.White, Position = new(8, 8), Material = material }; window.AddChild(red); window.AddChild(copy); window.AddChild(blue); if (material is not null) window.AddChild(reader); var stage = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
                 using var screen = renderer.ReadbackBackBuffer(window); using var image = renderer.Readback();
                 if (stage == 0) { Pixel(screen, 12, 12, Colors.Red); if (material is not null) Pixel(image, 12, 12, Colors.Red); copy.CopyMode = BackBufferCopyMode.Viewport; }
@@ -116,7 +116,7 @@ internal static class CanvasCompositionTests
                 stage++;
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && stage == 9, "Copy host lifecycle."); Console.WriteLine($"BackBufferCopy rect/full/sentinel/clipping/disabled/visibility/mask/Z/negative-size passed ({backend}, shader={material is not null}).");
+        Check(Engine.Run(window) == 0 && stage == 9, "Copy host lifecycle."); Console.WriteLine($"BackBufferCopy rect/full/sentinel/clipping/disabled/visibility/mask/Z/negative-size passed ({backend}, shader={material is not null}).");
     }
     private static void Offscreen(string backend)
     {
@@ -126,21 +126,21 @@ internal static class CanvasCompositionTests
         window.AddChild(view); window.AddChild(new Sprite { Texture = texture, Centered = false, Position = new(8, 8), TextureFilter = TextureFilter.Nearest, Material = premultiplied }); var stage = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
         {
             using var output = renderer.Readback(); using var target = texture.GetImage(); var opacity = stage == 0 ? .5f : .25f;
             Check(target is not null && Math.Abs(target.GetPixel(4, 4).A - opacity) < .03, "Independent group target alpha."); Pixel(output, 12, 12, new(opacity, 0, 0));
             if (stage == 0) group.SelfModulate = new(1, 1, 1, .25f); else if (stage == 1) view.Size = new(64, 32); else window.Tree!.Quit(); stage++;
         };
         };
-        Check(Engine.Instance.Run(window) == 0 && stage == 3, "Offscreen composition lifecycle."); texture.Dispose(); Console.WriteLine($"Independent SubViewport group composition and resize passed ({backend}).");
+        Check(Engine.Run(window) == 0 && stage == 3, "Offscreen composition lifecycle."); texture.Dispose(); Console.WriteLine($"Independent SubViewport group composition and resize passed ({backend}).");
     }
     private static void Effects(ShaderMaterial material, string language)
     {
         var window = new Window { Size = new(128, 64) }; window.AddChild(new Box { Extent = new(128, 64) }); window.AddChild(new BackBufferCopy { CopyMode = BackBufferCopyMode.Viewport }); window.AddChild(new Box { Fill = Colors.Blue, Extent = new(128, 64) }); var group = new CanvasGroup { Position = new(8, 8), FitMargin = 10, ClearMargin = 0, Material = material }; var child = new Box { Fill = Colors.Lime }; group.AddChild(child); window.AddChild(group); material.SetShaderParameter("offset", new Vector2(8, 0)); material.SetShaderParameter("unpremultiply", 1f); var stage = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback();
                 if (stage == 0) { Pixel(image, 28, 12, Colors.Red); group.ClearMargin = 10; }
@@ -150,7 +150,7 @@ internal static class CanvasCompositionTests
                 stage++;
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && stage == 4, "Group effect host lifecycle."); material.SetShaderParameter("lod", 0f); material.SetShaderParameter("unpremultiply", 0f); Console.WriteLine($"Group custom screen shader, clear margin, generated LOD and opacity passed ({language}).");
+        Check(Engine.Run(window) == 0 && stage == 4, "Group effect host lifecycle."); material.SetShaderParameter("lod", 0f); material.SetShaderParameter("unpremultiply", 0f); Console.WriteLine($"Group custom screen shader, clear margin, generated LOD and opacity passed ({language}).");
     }
     private static void Warm(string backend)
     {
@@ -158,22 +158,22 @@ internal static class CanvasCompositionTests
         window.Ready += _ =>
         {
             window.Tree!.ProcessFrameStarted += _ => { frameSize = texture.GetSize(); before = GC.GetAllocatedBytesForCurrentThread(); if (phase == 0) { a.Fill = (frame & 1) == 0 ? Colors.Red : Colors.Blue; a.QueueRedraw(); group.SelfModulate = new(1, 1, 1, (frame & 1) == 0 ? .5f : .25f); group.FitMargin = (frame & 1) == 0 ? 0 : 2; copy.CopyMode = (frame & 1) == 0 ? BackBufferCopyMode.Viewport : BackBufferCopyMode.Rect; } };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before; var size = texture.GetSize();
                 if (size != priorSize || size != frameSize) { warm = 32; cold++; } else if (warm > 0) warm--; else { Check(bytes == 0, $"Composition phase {phase} frame {frame}: {bytes} managed bytes."); if (phase == 0) active += bytes; else idle += bytes; if (++measured == 64) { measured = 0; if (phase++ == 0) warm = 32; else window.Tree!.Quit(); } }
                 priorSize = size; Check(++frame < 2048, "Composition native dimensions did not stabilize.");
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && phase == 2 && active == 0 && idle == 0, "Warm composition lifecycle."); texture.Dispose(); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "canvas-composition-warm", backend, frame, cold, active, idle, measuredPerPhase = 64 }));
+        Check(Engine.Run(window) == 0 && phase == 2 && active == 0 && idle == 0, "Warm composition lifecycle."); texture.Dispose(); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "canvas-composition-warm", backend, frame, cold, active, idle, measuredPerPhase = 64 }));
     }
     private static void RejectMipmaps()
     {
-        var window = new Window(); var group = new CanvasGroup { UseMipmaps = true }; group.AddChild(new Box()); window.AddChild(group); Reject<NotSupportedException>(() => Engine.Instance.Run(window)); Check(window.IsDisposed, "Rejected mipmap cleanup."); Console.WriteLine("Compatibility group mipmaps reject before submission and clean up.");
+        var window = new Window(); var group = new CanvasGroup { UseMipmaps = true }; group.AddChild(new Box()); window.AddChild(group); Reject<NotSupportedException>(() => Engine.Run(window)); Check(window.IsDisposed, "Rejected mipmap cleanup."); Console.WriteLine("Compatibility group mipmaps reject before submission and clean up.");
     }
     private static void RejectNested()
     {
-        var window = new Window(); var outer = new CanvasGroup(); var inner = new CanvasGroup(); inner.AddChild(new Box()); outer.AddChild(inner); window.AddChild(outer); Reject<NotSupportedException>(() => Engine.Instance.Run(window)); Check(window.IsDisposed, "Rejected nested group cleanup.");
+        var window = new Window(); var outer = new CanvasGroup(); var inner = new CanvasGroup(); inner.AddChild(new Box()); outer.AddChild(inner); window.AddChild(outer); Reject<NotSupportedException>(() => Engine.Run(window)); Check(window.IsDisposed, "Rejected nested group cleanup.");
     }
     private static void Pixel(Image image, int x, int y, Color expected)
     { var actual = image.GetPixel(x, y); Check(Math.Abs(actual.R - expected.R) < .04 && Math.Abs(actual.G - expected.G) < .04 && Math.Abs(actual.B - expected.B) < .04, $"Composition pixel {x},{y}: {actual} != {expected}."); }

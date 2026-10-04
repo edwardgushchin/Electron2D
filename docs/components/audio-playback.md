@@ -2,6 +2,9 @@
 
 Last updated: 2026-10-04
 
+
+Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
+
 ## Scope and types
 
 Implements reusable [AudioStream](../classes/AudioStream.md), caller-owned [AudioStreamPlayback](../classes/AudioStreamPlayback.md), prepared cubic [AudioStreamPlaybackResampled](../classes/AudioStreamPlaybackResampled.md), copied [AudioStreamWAV](../classes/AudioStreamWAV.md), typed [AudioWAVImportOptions](../classes/AudioWAVImportOptions.md), non-spatial [AudioStreamPlayer](../classes/AudioStreamPlayer.md), spatial [AudioStreamEmitter](../classes/AudioStreamEmitter.md), viewport [AudioListener](../classes/AudioListener.md) and borrowed singleton [AudioServer](../classes/AudioServer.md). Format/playback/speaker/mix selectors and shared AudioLoopMode retain numeric identities.
@@ -30,7 +33,7 @@ Partial scene snippet; attach this player to a root Node/Window. Runtime Autopla
 using var stream = AudioStreamWAV.LoadFromFile("res://audio/click.wav");
 var player = new AudioStreamPlayer { Stream = stream, Autoplay = true, VolumeDB = -12 };
 window.AddChild(player);
-Engine.Instance.Run(window);
+Engine.Run(window);
 ```
 
 ## Dependencies and limits

@@ -119,43 +119,43 @@ internal static class AudioLimiterTests
     }
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectLimiter { ThresholdDB = -18, CeilingDB = -12, SoftClipDB = 24 };
         using var stream = AudioEffectTests.Constant(); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 20);
-            var borrowed = server.GetBusEffectInstance(0, 0);
+            AudioServer.AddBusEffect(0, effect); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 20);
+            var borrowed = AudioServer.GetBusEffectInstance(0, 0);
             AudioEffectTests.CheckOutput(native, new(Mathf.DBToLinear(-12), -Mathf.DBToLinear(-12)));
             Reject<InvalidOperationException>(() => borrowed.Process([Vector2.Zero], new Vector2[1])); Reject<InvalidOperationException>(borrowed.Dispose);
             effect.CeilingDB = -6; AudioEffectTests.Wait(native, 8); AudioEffectTests.CheckOutput(native, new(Mathf.DBToLinear(-6), -Mathf.DBToLinear(-6)));
-            server.SetBusEffectEnabled(0, 0, false); AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
-            server.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
+            AudioServer.SetBusEffectEnabled(0, 0, false); AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
+            AudioServer.SetBusEffectEnabled(0, 0, true); AudioEffectTests.Wait(native, 20);
             var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native active passes allocate zero measured bytes/calls.");
             player.StreamPaused = true; AudioEffectTests.Wait(native, 20); bytes = native.MixManagedBytes; calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native paused passes allocate zero measured bytes/calls.");
-            server.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !effect.IsDisposed, "Removed bus state invalidates but resource survives.");
+            AudioServer.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !effect.IsDisposed, "Removed bus state invalidates but resource survives.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod);
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; settings.Set(ProjectSettings.RenderingMethod, backend);
+        var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         try
         {
             for (var run = 0; run < 2; run++)
             {
                 using var effect = new AudioEffectLimiter { ThresholdDB = -18, CeilingDB = -12, SoftClipDB = 24 }; using var stream = AudioEffectTests.Constant(); using var capture = new AudioEffectCapture { BufferLength = .1f };
                 var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Stream = stream, Autoplay = true }); var scenario = new HostScenario(capture); window.AddChild(scenario);
-                var server = AudioServer.Instance; server.AddBusEffect(0, effect); server.AddBusEffect(0, capture);
-                try { Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public soft-limiter host processed and cleaned up."); }
-                finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+                var server = AudioServer.Service; AudioServer.AddBusEffect(0, effect); AudioServer.AddBusEffect(0, capture);
+                try { Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public soft-limiter host processed and cleaned up."); }
+                finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
                 Console.WriteLine(JsonSerializer.Serialize(new { scenario = "soft-limiter-host", backend, run, scenario.Completed, cleaned = window.IsDisposed }));
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class HostScenario(AudioEffectCapture capture) : Node
     {

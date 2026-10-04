@@ -29,8 +29,8 @@ internal static partial class RenderingRuntimeTests
         var frame = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frame++;
                 if (frame == 1) File.WriteAllBytes($"/tmp/electron2d-nine-patch-{backend}.png", pixels.SavePNGToBuffer());
@@ -46,7 +46,7 @@ internal static partial class RenderingRuntimeTests
                 else window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         VerifyNinePatchAtlas(backend, texture);
         VerifyNinePatchWarm(backend, texture);
         Console.WriteLine($"Nine-patch nine axis combinations, center suppression, atlas and warmed native frames passed: {backend}.");
@@ -70,15 +70,15 @@ internal static partial class RenderingRuntimeTests
         }; window.AddChild(panel);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback();
                 Pixel(pixels, 10, 10, Colors.Black); Pixel(pixels, 16, 16, new(.5f, .5f, .5f, 1));
                 window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
     }
 
     private static void VerifyNinePatchWarm(string backend, Texture texture)
@@ -97,15 +97,15 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(panel); var frames = 0; long before = 0, allocated = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); panel.Size = frames % 2 == 0 ? new(30, 20) : new(32, 22); };
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); panel.Size = frames % 2 == 0 ? new(30, 20) : new(32, 22); };
+            RenderingServer.FramePostDraw += () =>
             {
                 if (++frames > 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (frames == 128) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && allocated == 0, $"Warmed resized {backend} nine-patch frames allocate {allocated} bytes.");
     }
 }

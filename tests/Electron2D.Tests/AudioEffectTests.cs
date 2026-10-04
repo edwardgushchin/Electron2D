@@ -13,11 +13,11 @@ internal static class AudioEffectTests
     }
     private static void ResourceAndRing()
     {
-        using var settings = new ProjectSettings(Directory.GetCurrentDirectory(), Path.Combine(Path.GetTempPath(), "e2d-effect-settings")); Check(settings.Get(ProjectSettings.AudioBusesChannelDisableTime) == 2 && settings.Get(ProjectSettings.AudioBusesChannelDisableThresholdDB) == -60, "Typed bus activity defaults."); Reject<ArgumentOutOfRangeException>(() => settings.Set(ProjectSettings.AudioBusesChannelDisableTime, -1)); Reject<ArgumentException>(() => settings.Set(ProjectSettings.AudioBusesChannelDisableThresholdDB, float.NaN));
+        using var settings = new ProjectSettingsRegistry(Directory.GetCurrentDirectory(), Path.Combine(Path.GetTempPath(), "e2d-effect-settings")); Check(settings.Get(ProjectSettings.AudioBusesChannelDisableTime) == 2 && settings.Get(ProjectSettings.AudioBusesChannelDisableThresholdDB) == -60, "Typed bus activity defaults."); Reject<ArgumentOutOfRangeException>(() => settings.Set(ProjectSettings.AudioBusesChannelDisableTime, -1)); Reject<ArgumentException>(() => settings.Set(ProjectSettings.AudioBusesChannelDisableThresholdDB, float.NaN));
         using var capture = new AudioEffectCapture(); Check(capture.BufferLength == .1f && capture.GetBufferLengthFrames() == 0 && capture.GetFramesAvailable() == 0 && capture.CanGetBuffer(0), "Uninitialized capture defaults.");
         Reject<ArgumentOutOfRangeException>(() => capture.GetBuffer(-1)); Reject<ArgumentOutOfRangeException>(() => capture.CanGetBuffer(-1));
         foreach (var value in new[] { 0f, -1, float.NaN, float.PositiveInfinity }) Reject<ArgumentOutOfRangeException>(() => capture.BufferLength = value);
-        capture.BufferLength = 128 / AudioServer.Instance.GetMixRate(); using var instance = capture.Instantiate();
+        capture.BufferLength = 128 / AudioServer.GetMixRate(); using var instance = capture.Instantiate();
         Check(capture.GetBufferLengthFrames() == 256 && instance.ProcessSilence(), "Strictly larger power-of-two capture with silence processing.");
         var source = Enumerable.Range(0, 128).Select(i => new Vector2(i, -i)).ToArray(); var output = new Vector2[128]; instance.Process(source, output); Check(output.SequenceEqual(source), "Capture preserves exact finite PCM, including bus values beyond unity.");
         instance.Process(source, output); Check(capture.GetFramesAvailable() == 128 && capture.GetPushedFrames() == 128 && capture.GetDiscardedFrames() == 128, "Whole-block overflow retains earlier data.");
@@ -72,35 +72,35 @@ internal static class AudioEffectTests
     }
     private static void NativeGraph()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
-        while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0);
-        server.AddBus(); server.SetBusName(1, "Captured");
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
+        while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0);
+        AudioServer.AddBus(); AudioServer.SetBusName(1, "Captured");
         using var scale = new ArithmeticEffect(2, Vector2.Zero); using var offset = new ArithmeticEffect(1, new(.1f, .05f)); using var capture = new AudioEffectCapture { BufferLength = .2f };
         var root = new Node(); using var stream = Constant(); var player = new AudioStreamPlayer { Stream = stream, Bus = "Captured" }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(1, scale); server.AddBusEffect(1, capture, int.MaxValue); server.AddBusEffect(1, offset, 1); Check(server.GetBusEffectCount(1) == 3 && ReferenceEquals(server.GetBusEffect(1, 1), offset), "Ordered insertion and append policy.");
-            var instance = server.GetBusEffectInstance(1, 0); Reject<InvalidOperationException>(instance.Dispose); Reject<InvalidOperationException>(() => instance.Process([], [])); Reject<ArgumentOutOfRangeException>(() => server.GetBusEffectInstance(1, 0, server.GetBusChannels(1)));
-            Reject<ArgumentOutOfRangeException>(() => server.GetBusEffect(-1, 0)); Reject<ArgumentOutOfRangeException>(() => server.RemoveBusEffect(1, 3)); Reject<ArgumentNullException>(() => server.AddBusEffect(1, null!));
-            Task.Run(() => Reject<InvalidOperationException>(() => server.SetBusEffectEnabled(1, 0, false))).GetAwaiter().GetResult();
-            player.Play(); var native = server.Native; Wait(native, 20); server.SetBusVolumeLinear(1, .5f);
-            CheckCapture(capture, native, new(.5f, -.55f)); CheckOutput(native, new(.25f, -.275f)); Check(server.GetBusPeakVolumeLeftDB(1, 0) > -14, "Meter follows public effects and final gain.");
-            server.SetBusMute(1, true); CheckCapture(capture, native, new(.5f, -.55f)); CheckOutput(native, Vector2.Zero); server.SetBusMute(1, false);
-            server.SetBusBypassEffects(1, true); capture.ClearBuffer(); Wait(native, 8); Check(capture.GetFramesAvailable() == 0 && server.IsBusEffectEnabled(1, 0) && server.IsBusBypassingEffects(1), "Bypass suppresses capture without changing enable flags."); CheckOutput(native, new(.1f, -.15f));
-            server.SetBusEffectEnabled(1, 0, false); server.SetBusBypassEffects(1, false); CheckCapture(capture, native, new(.3f, -.25f)); server.SetBusEffectEnabled(1, 0, true); Check(ReferenceEquals(instance, server.GetBusEffectInstance(1, 0)), "Enable/bypass retain instance identity.");
-            server.SetBusSend(1, "Missing"); Check(ReferenceEquals(instance, server.GetBusEffectInstance(1, 0)), "Routing graph rebuild retains effect identity.");
-            server.SwapBusEffects(1, 0, 1); Check(instance.IsDisposed && !scale.IsDisposed, "Structural edits invalidate old instances, retain borrowed resources."); CheckCapture(capture, native, new(.6f, -.5f));
-            using var bad = new ArithmeticEffect(1, Vector2.Zero) { FailFactory = true }; var before = server.GetBusEffectInstance(1, 0); Reject<ApplicationException>(() => server.AddBusEffect(1, bad)); Check(server.GetBusEffectCount(1) == 3 && ReferenceEquals(before, server.GetBusEffectInstance(1, 0)), "Factory failure preserves live chain.");
-            bad.FailFactory = false; bad.ReenterServer = true; Reject<InvalidOperationException>(() => server.AddBusEffect(1, bad)); Check(server.GetBusEffectCount(1) == 3, "Factory reentrancy rejects before configuration mutation.");
+            AudioServer.AddBusEffect(1, scale); AudioServer.AddBusEffect(1, capture, int.MaxValue); AudioServer.AddBusEffect(1, offset, 1); Check(AudioServer.GetBusEffectCount(1) == 3 && ReferenceEquals(AudioServer.GetBusEffect(1, 1), offset), "Ordered insertion and append policy.");
+            var instance = AudioServer.GetBusEffectInstance(1, 0); Reject<InvalidOperationException>(instance.Dispose); Reject<InvalidOperationException>(() => instance.Process([], [])); Reject<ArgumentOutOfRangeException>(() => AudioServer.GetBusEffectInstance(1, 0, AudioServer.GetBusChannels(1)));
+            Reject<ArgumentOutOfRangeException>(() => AudioServer.GetBusEffect(-1, 0)); Reject<ArgumentOutOfRangeException>(() => AudioServer.RemoveBusEffect(1, 3)); Reject<ArgumentNullException>(() => AudioServer.AddBusEffect(1, null!));
+            Task.Run(() => Reject<InvalidOperationException>(() => AudioServer.SetBusEffectEnabled(1, 0, false))).GetAwaiter().GetResult();
+            player.Play(); var native = server.Native; Wait(native, 20); AudioServer.SetBusVolumeLinear(1, .5f);
+            CheckCapture(capture, native, new(.5f, -.55f)); CheckOutput(native, new(.25f, -.275f)); Check(AudioServer.GetBusPeakVolumeLeftDB(1, 0) > -14, "Meter follows public effects and final gain.");
+            AudioServer.SetBusMute(1, true); CheckCapture(capture, native, new(.5f, -.55f)); CheckOutput(native, Vector2.Zero); AudioServer.SetBusMute(1, false);
+            AudioServer.SetBusBypassEffects(1, true); capture.ClearBuffer(); Wait(native, 8); Check(capture.GetFramesAvailable() == 0 && AudioServer.IsBusEffectEnabled(1, 0) && AudioServer.IsBusBypassingEffects(1), "Bypass suppresses capture without changing enable flags."); CheckOutput(native, new(.1f, -.15f));
+            AudioServer.SetBusEffectEnabled(1, 0, false); AudioServer.SetBusBypassEffects(1, false); CheckCapture(capture, native, new(.3f, -.25f)); AudioServer.SetBusEffectEnabled(1, 0, true); Check(ReferenceEquals(instance, AudioServer.GetBusEffectInstance(1, 0)), "Enable/bypass retain instance identity.");
+            AudioServer.SetBusSend(1, "Missing"); Check(ReferenceEquals(instance, AudioServer.GetBusEffectInstance(1, 0)), "Routing graph rebuild retains effect identity.");
+            AudioServer.SwapBusEffects(1, 0, 1); Check(instance.IsDisposed && !scale.IsDisposed, "Structural edits invalidate old instances, retain borrowed resources."); CheckCapture(capture, native, new(.6f, -.5f));
+            using var bad = new ArithmeticEffect(1, Vector2.Zero) { FailFactory = true }; var before = AudioServer.GetBusEffectInstance(1, 0); Reject<ApplicationException>(() => AudioServer.AddBusEffect(1, bad)); Check(AudioServer.GetBusEffectCount(1) == 3 && ReferenceEquals(before, AudioServer.GetBusEffectInstance(1, 0)), "Factory failure preserves live chain.");
+            bad.FailFactory = false; bad.ReenterServer = true; Reject<InvalidOperationException>(() => AudioServer.AddBusEffect(1, bad)); Check(AudioServer.GetBusEffectCount(1) == 3, "Factory reentrancy rejects before configuration mutation.");
             Wait(native, 20); var bytes = native.MixManagedBytes; var allocations = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == allocations, "64 warmed active native effect passes allocate zero measured bytes/calls.");
-            server.SetBusEffectEnabled(1, 0, false); server.SetBusEffectEnabled(1, 1, false); player.StreamPaused = true; Wait(native, 8); capture.ClearBuffer(); Wait(native, 20); Check(capture.GetFramesAvailable() > 0 && capture.GetBuffer(capture.GetFramesAvailable()).All(f => f == Vector2.Zero), "Capture processes silent/paused bus."); bytes = native.MixManagedBytes; allocations = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == allocations, "64 paused effect passes allocate zero measured bytes/calls."); player.StreamPaused = false; server.SetBusEffectEnabled(1, 0, true); server.SetBusEffectEnabled(1, 1, true);
+            AudioServer.SetBusEffectEnabled(1, 0, false); AudioServer.SetBusEffectEnabled(1, 1, false); player.StreamPaused = true; Wait(native, 8); capture.ClearBuffer(); Wait(native, 20); Check(capture.GetFramesAvailable() > 0 && capture.GetBuffer(capture.GetFramesAvailable()).All(f => f == Vector2.Zero), "Capture processes silent/paused bus."); bytes = native.MixManagedBytes; allocations = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == allocations, "64 paused effect passes allocate zero measured bytes/calls."); player.StreamPaused = false; AudioServer.SetBusEffectEnabled(1, 0, true); AudioServer.SetBusEffectEnabled(1, 1, true);
             scale.FailProcess = true; Wait(native, 4); Reject<AggregateException>(() => tree.ProcessFrame(.01)); tree.ProcessFrame(.01); CheckOutput(native, Vector2.Zero); scale.FailProcess = false;
-            server.RemoveBusEffect(1, 1); CheckCapture(capture, native, new(.3f, -.25f));
-            var borrowed = server.GetBusEffectInstance(1, 0); server.RemoveBus(1); Check(borrowed.IsDisposed && !capture.IsDisposed && player.IsPlaying(), "Bus removal destroys instances and reroutes source.");
-            server.AddBusEffect(0, capture); CheckCapture(capture, native, new(.2f, -.3f)); var master = server.GetBusEffectInstance(0, 0); server.CloseNative(); Check(master.IsDisposed && server.GetBusEffectCount(0) == 1 && !capture.IsDisposed, "Engine closure retains configuration/borrowed resource.");
-            var reopened = server.GetBusEffectInstance(0, 0); Check(!reopened.IsDisposed && !ReferenceEquals(reopened, master), "Cold query prepares fresh instance after output closure."); server.RemoveBusEffect(0, 0);
+            AudioServer.RemoveBusEffect(1, 1); CheckCapture(capture, native, new(.3f, -.25f));
+            var borrowed = AudioServer.GetBusEffectInstance(1, 0); AudioServer.RemoveBus(1); Check(borrowed.IsDisposed && !capture.IsDisposed && player.IsPlaying(), "Bus removal destroys instances and reroutes source.");
+            AudioServer.AddBusEffect(0, capture); CheckCapture(capture, native, new(.2f, -.3f)); var master = AudioServer.GetBusEffectInstance(0, 0); server.CloseNative(); Check(master.IsDisposed && AudioServer.GetBusEffectCount(0) == 1 && !capture.IsDisposed, "Engine closure retains configuration/borrowed resource.");
+            var reopened = AudioServer.GetBusEffectInstance(0, 0); Check(!reopened.IsDisposed && !ReferenceEquals(reopened, master), "Cold query prepares fresh instance after output closure."); AudioServer.RemoveBusEffect(0, 0);
         }
-        finally { tree.Dispose(); server.CloseNative(); server.BusCount = 1; while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); AudioServer.BusCount = 1; while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
     private static void CheckCapture(AudioEffectCapture capture, FAudioContext native, Vector2 expected)
     {
@@ -108,45 +108,45 @@ internal static class AudioEffectTests
     }
     private static void NativeFailuresAndActivity()
     {
-        var server = AudioServer.Instance; var settings = ProjectSettings.Instance; var oldTime = settings.Get(ProjectSettings.AudioBusesChannelDisableTime); settings.Set(ProjectSettings.AudioBusesChannelDisableTime, .03f);
+        var server = AudioServer.Service; var settings = ProjectSettings.Service; var oldTime = ProjectSettings.Get(ProjectSettings.AudioBusesChannelDisableTime); ProjectSettings.Set(ProjectSettings.AudioBusesChannelDisableTime, .03f);
         var root = new Node(); using var silent = Constant(); silent.Data = new byte[44100 * 4]; var player = new AudioStreamPlayer { Stream = silent }; root.AddChild(player); using var tree = new SceneTree(root); using var effect = new ArithmeticEffect(1, Vector2.Zero);
         try
         {
-            server.AddBusEffect(0, effect); var native = server.Native; Wait(native, 4); Check(effect.ProcessCalls == 0, "Inactive silent bus skips default hooks."); player.Play(); Wait(native, 8); Check(effect.ProcessCalls > 0, "Active silent source still invokes hooks.");
+            AudioServer.AddBusEffect(0, effect); var native = server.Native; Wait(native, 4); Check(effect.ProcessCalls == 0, "Inactive silent bus skips default hooks."); player.Play(); Wait(native, 8); Check(effect.ProcessCalls > 0, "Active silent source still invokes hooks.");
             player.StreamPaused = true; Wait(native, 12); var count = effect.ProcessCalls; Wait(native, 8); Check(effect.ProcessCalls == count, "Stopped source tail expires using actual mix frames and configured timeout.");
-            player.StreamPaused = false; effect.FailSilence = true; player.Stop(); Wait(native, 12); Reject<AggregateException>(() => tree.ProcessFrame(.01)); effect.FailSilence = false; server.RemoveBusEffect(0, 0);
-            using var reused = new ArithmeticEffect(1, Vector2.Zero); server.AddBusEffect(0, reused); var borrowed = server.GetBusEffectInstance(0, 0); reused.Reuse = borrowed; Reject<InvalidOperationException>(() => server.AddBusEffect(0, reused)); Check(server.GetBusEffectCount(0) == 1 && !borrowed.IsDisposed, "Reused attached factory state rejects without disposing live instance."); reused.Reuse = null;
-            reused.FailDispose = true; Reject<AggregateException>(() => server.RemoveBusEffect(0, 0)); Check(borrowed.IsDisposed && server.GetBusEffectCount(0) == 0, "Disposal-hook failure completes removal and logical cleanup.");
-            using var disposed = new AudioEffectCapture(); server.AddBusEffect(0, disposed); disposed.Dispose(); Wait(native, 4); Reject<AggregateException>(() => tree.ProcessFrame(.01)); server.RemoveBusEffect(0, 0);
-            server.SetBusVolumeDB(0, float.MaxValue); Wait(native, 4); Reject<AggregateException>(() => tree.ProcessFrame(.01)); server.SetBusVolumeDB(0, 0); Wait(native, 4); tree.ProcessFrame(.01);
+            player.StreamPaused = false; effect.FailSilence = true; player.Stop(); Wait(native, 12); Reject<AggregateException>(() => tree.ProcessFrame(.01)); effect.FailSilence = false; AudioServer.RemoveBusEffect(0, 0);
+            using var reused = new ArithmeticEffect(1, Vector2.Zero); AudioServer.AddBusEffect(0, reused); var borrowed = AudioServer.GetBusEffectInstance(0, 0); reused.Reuse = borrowed; Reject<InvalidOperationException>(() => AudioServer.AddBusEffect(0, reused)); Check(AudioServer.GetBusEffectCount(0) == 1 && !borrowed.IsDisposed, "Reused attached factory state rejects without disposing live instance."); reused.Reuse = null;
+            reused.FailDispose = true; Reject<AggregateException>(() => AudioServer.RemoveBusEffect(0, 0)); Check(borrowed.IsDisposed && AudioServer.GetBusEffectCount(0) == 0, "Disposal-hook failure completes removal and logical cleanup.");
+            using var disposed = new AudioEffectCapture(); AudioServer.AddBusEffect(0, disposed); disposed.Dispose(); Wait(native, 4); Reject<AggregateException>(() => tree.ProcessFrame(.01)); AudioServer.RemoveBusEffect(0, 0);
+            AudioServer.SetBusVolumeDB(0, float.MaxValue); Wait(native, 4); Reject<AggregateException>(() => tree.ProcessFrame(.01)); AudioServer.SetBusVolumeDB(0, 0); Wait(native, 4); tree.ProcessFrame(.01);
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); settings.Set(ProjectSettings.AudioBusesChannelDisableTime, oldTime); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); ProjectSettings.Set(ProjectSettings.AudioBusesChannelDisableTime, oldTime); }
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend); var fps = Engine.Instance.MaxFPS; Engine.Instance.MaxFPS = 60;
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); var fps = Engine.MaxFPS; Engine.MaxFPS = 60;
         try
         {
             for (var run = 0; run < 3; run++)
             {
                 using var stream = Constant(); using var capture = new AudioEffectCapture { BufferLength = .1f }; var window = new Window { Size = new(160, 96), Title = "Electron2D bus capture" }; var player = new AudioStreamPlayer { Stream = stream, Autoplay = true }; var scenario = new HostScenario(player, capture, run == 2); window.AddChild(player); window.AddChild(scenario);
-                AudioServer.Instance.AddBusEffect(0, capture);
+                AudioServer.AddBusEffect(0, capture);
                 try
                 {
-                    if (run == 2) { var failed = false; try { Engine.Instance.Run(window); } catch (AggregateException error) { failed = error.Flatten().InnerExceptions.Any(e => e.Message == "Effect host failure fixture."); } Check(failed && window.IsDisposed, "Failed public host cleanup."); }
-                    else Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed && !stream.IsDisposed, "Public effect/capture host lifecycle.");
+                    if (run == 2) { var failed = false; try { Engine.Run(window); } catch (AggregateException error) { failed = error.Flatten().InnerExceptions.Any(e => e.Message == "Effect host failure fixture."); } Check(failed && window.IsDisposed, "Failed public host cleanup."); }
+                    else Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed && !stream.IsDisposed, "Public effect/capture host lifecycle.");
                     Check(scenario.Instance!.IsDisposed && !capture.IsDisposed, "Host releases bus instances, borrows capture resource.");
                     Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "audio-effect-host", backend, run, scenario.Frames, cleaned = window.IsDisposed }));
                 }
-                finally { if (!window.IsDisposed) window.Dispose(); AudioServer.Instance.RemoveBusEffect(0, 0); AudioServer.Instance.CloseNative(); }
+                finally { if (!window.IsDisposed) window.Dispose(); AudioServer.RemoveBusEffect(0, 0); AudioServer.Service.CloseNative(); }
             }
         }
-        finally { Engine.Instance.MaxFPS = fps; settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { Engine.MaxFPS = fps; ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class HostScenario(AudioStreamPlayer player, AudioEffectCapture capture, bool fail) : Node
     {
         internal bool Completed; internal int Frames; internal AudioEffectInstance? Instance; private double _elapsed;
-        protected override void OnReady() { Instance = AudioServer.Instance.GetBusEffectInstance(0, 0); ProcessEnabled = true; }
+        protected override void OnReady() { Instance = AudioServer.GetBusEffectInstance(0, 0); ProcessEnabled = true; }
         protected override void OnProcess(double delta)
         {
             _elapsed += delta; var available = capture.GetFramesAvailable(); if (available > 0) { var pcm = capture.GetBuffer(available); Frames += pcm.Length; Completed |= pcm.Any(f => f.DistanceTo(new(.2f, -.3f)) < .0001f); }
@@ -178,7 +178,7 @@ internal static class AudioEffectTests
         internal int ProcessCalls;
         internal int InvalidFactory;
         internal AudioEffectInstance? Reuse;
-        protected override AudioEffectInstance OnInstantiate() { if (FailFactory) throw new ApplicationException("Effect factory fixture."); if (ReenterServer) AudioServer.Instance.AddBus(); if (InvalidFactory == 1) return null!; var instance = Reuse ?? new ArithmeticInstance(this, scale, offset); if (InvalidFactory == 2) instance.Dispose(); return instance; }
+        protected override AudioEffectInstance OnInstantiate() { if (FailFactory) throw new ApplicationException("Effect factory fixture."); if (ReenterServer) AudioServer.AddBus(); if (InvalidFactory == 1) return null!; var instance = Reuse ?? new ArithmeticInstance(this, scale, offset); if (InvalidFactory == 2) instance.Dispose(); return instance; }
         protected override Resource CreateDuplicateInstance() => new ArithmeticEffect(scale, offset);
     }
     private sealed class ArithmeticInstance(ArithmeticEffect source, float scale, Vector2 offset) : AudioEffectInstance
@@ -187,7 +187,7 @@ internal static class AudioEffectTests
         {
             Interlocked.Increment(ref source.ProcessCalls);
             if (source.FailProcess) throw new ApplicationException("Effect process fixture."); if (source.ReenterInstance) ProcessSilence();
-            if (source.ReenterLock) AudioServer.Instance.Unlock();
+            if (source.ReenterLock) AudioServer.Unlock();
             for (var i = 0; i < input.Length; i++) output[i] = source.FailOutput ? new(float.NaN, 0) : input[i] * scale + offset;
         }
         protected override bool OnProcessSilence() { if (source.FailSilence) throw new ApplicationException("Effect silence fixture."); return false; }

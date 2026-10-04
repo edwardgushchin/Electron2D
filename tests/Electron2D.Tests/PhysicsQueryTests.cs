@@ -64,10 +64,10 @@ internal static class PhysicsQueryTests
         Check(ReferenceEquals(world, area.GetWorld2D()) && world.Space.IsValid(),
             "Canvas items in one tree share a physics world and space RID.");
         var direct = world.DirectSpaceState;
-        Check(ReferenceEquals(direct, PhysicsServer.Instance.SpaceGetDirectState(world.Space)),
+        Check(ReferenceEquals(direct, PhysicsServer.SpaceGetDirectState(world.Space)),
             "World and server access return the same live direct-space view.");
-        Reject<InvalidOperationException>(() => PhysicsServer.Instance.FreeRID(bodyRID));
-        Reject<InvalidOperationException>(() => PhysicsServer.Instance.FreeRID(world.Space));
+        Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(bodyRID));
+        Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(world.Space));
 
         using var ray = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 200));
         var hit = direct.IntersectRay(ray);
@@ -111,21 +111,21 @@ internal static class PhysicsQueryTests
         Check(direct.IntersectPoint(point).Any(candidate => candidate.ColliderRID == bodyRID),
             "A point query detects a scene body even when its collision mask is zero.");
 
-        var server = PhysicsServer.Instance;
-        var serverBody = server.BodyCreate();
-        var serverShape = server.CircleShapeCreate();
-        server.BodySetMode(serverBody, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(serverBody, serverShape);
-        server.BodySetTransform(serverBody, new(0, Vector2.One, 0, new(50, 50)));
-        server.BodySetSpace(serverBody, world.Space);
+        var server = PhysicsServer.Service;
+        var serverBody = PhysicsServer.BodyCreate();
+        var serverShape = PhysicsServer.CircleShapeCreate();
+        PhysicsServer.BodySetMode(serverBody, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(serverBody, serverShape);
+        PhysicsServer.BodySetTransform(serverBody, new(0, Vector2.One, 0, new(50, 50)));
+        PhysicsServer.BodySetSpace(serverBody, world.Space);
         point.Position = new(50, 50);
         Check(direct.IntersectPoint(point) is [var serverHit] &&
               serverHit.ColliderRID == serverBody && serverHit.Collider is null,
             "A server-created collider shares the SceneTree solver space and typed query view.");
-        server.FreeRID(serverBody);
-        server.FreeRID(serverShape);
+        PhysicsServer.FreeRID(serverBody);
+        PhysicsServer.FreeRID(serverShape);
         Reject<InvalidOperationException>(() => Task.Run(() => direct.IntersectRay(ray)).GetAwaiter().GetResult());
-        Reject<InvalidOperationException>(() => PhysicsServer.Instance.Dispose());
+        Reject<InvalidOperationException>(() => PhysicsServer.Service.Dispose());
         direct.Dispose();
         var reopened = world.DirectSpaceState;
         Check(!ReferenceEquals(direct, reopened) && reopened.IntersectRay(ray)?.ColliderRID == bodyRID,
@@ -144,20 +144,20 @@ internal static class PhysicsQueryTests
 
     private static void VerifyServerResourcesAndPointQueries()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var body = server.BodyCreate();
-        var shape = server.CircleShapeCreate();
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var body = PhysicsServer.BodyCreate();
+        var shape = PhysicsServer.CircleShapeCreate();
         using var circle = new CircleShape();
-        server.ShapeSetData(shape, circle);
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(body, shape);
-        server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 50)));
-        server.BodySetSpace(body, space);
-        Check(server.BodyGetSpace(body) == space && server.BodyGetMode(body) == PhysicsServer.BodyMode.Static,
+        PhysicsServer.ShapeSetData(shape, circle);
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(body, shape);
+        PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 50)));
+        PhysicsServer.BodySetSpace(body, space);
+        Check(PhysicsServer.BodyGetSpace(body) == space && PhysicsServer.BodyGetMode(body) == PhysicsServer.BodyMode.Static,
             "A server-created body is attached to its explicit space with its requested mode.");
         using var ray = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 100));
-        var direct = server.SpaceGetDirectState(space);
+        var direct = PhysicsServer.SpaceGetDirectState(space);
         var hit = direct.IntersectRay(ray);
         Check(hit is { } bodyHit && bodyHit.ColliderRID == body && bodyHit.Collider is null &&
               bodyHit.ColliderID == 0 && bodyHit.ShapeIndex == 0 && bodyHit.Position.Y is > 39 and < 41,
@@ -166,33 +166,33 @@ internal static class PhysicsQueryTests
         var pointHits = direct.IntersectPoint(point);
         Check(pointHits.Length == 1 && pointHits[0].ColliderRID == body && pointHits[0].Collider is null,
             "Point queries return a typed result for server-only filled geometry.");
-        server.BodyAddShape(body, shape, disabled: true);
-        Check(server.BodyGetShapeCount(body) == 2 && direct.IntersectPoint(point).Length == 1,
+        PhysicsServer.BodyAddShape(body, shape, disabled: true);
+        Check(PhysicsServer.BodyGetShapeCount(body) == 2 && direct.IntersectPoint(point).Length == 1,
             "A disabled body slot is indexed but contributes no fixture.");
-        server.BodySetShapeDisabled(body, 1, false);
+        PhysicsServer.BodySetShapeDisabled(body, 1, false);
         pointHits = direct.IntersectPoint(point);
         Check(pointHits.Length == 2 && pointHits[0].ShapeIndex == 0 && pointHits[1].ShapeIndex == 1,
             "Enabling the slot creates a second stable query shape index.");
-        server.BodySetShapeDisabled(body, 1, true);
-        server.BodyRemoveShape(body, 1);
-        Check(server.BodyGetShapeCount(body) == 1 && direct.IntersectPoint(point).Length == 1,
+        PhysicsServer.BodySetShapeDisabled(body, 1, true);
+        PhysicsServer.BodyRemoveShape(body, 1);
+        Check(PhysicsServer.BodyGetShapeCount(body) == 1 && direct.IntersectPoint(point).Length == 1,
             "Removing the slot releases its fixture without changing the first slot.");
-        Reject<ArgumentOutOfRangeException>(() => server.BodySetShapeDisabled(body, 9, true));
-        Reject<ArgumentOutOfRangeException>(() => server.BodyRemoveShape(body, 9));
+        Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodySetShapeDisabled(body, 9, true));
+        Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodyRemoveShape(body, 9));
 
-        var area = server.AreaCreate();
-        var areaShape = server.RectangleShapeCreate();
+        var area = PhysicsServer.AreaCreate();
+        var areaShape = PhysicsServer.RectangleShapeCreate();
         using var rectangle = new RectangleShape { Size = new(40, 10) };
-        server.ShapeSetData(areaShape, rectangle);
-        server.AreaAddShape(area, areaShape, disabled: true);
-        server.AreaSetTransform(area, new(0, Vector2.One, 0, new(0, 25)));
-        server.AreaSetSpace(area, space);
-        Check(server.AreaGetSpace(area) == space && server.AreaGetShapeCount(area) == 1,
+        PhysicsServer.ShapeSetData(areaShape, rectangle);
+        PhysicsServer.AreaAddShape(area, areaShape, disabled: true);
+        PhysicsServer.AreaSetTransform(area, new(0, Vector2.One, 0, new(0, 25)));
+        PhysicsServer.AreaSetSpace(area, space);
+        Check(PhysicsServer.AreaGetSpace(area) == space && PhysicsServer.AreaGetShapeCount(area) == 1,
             "A server-only Area joins the same live solver space with its disabled slot.");
         ray.CollideWithAreas = true;
         Check(direct.IntersectRay(ray)?.ColliderRID == body,
             "A disabled server Area sensor cannot answer rays.");
-        server.AreaSetShapeDisabled(area, 0, false);
+        PhysicsServer.AreaSetShapeDisabled(area, 0, false);
         hit = direct.IntersectRay(ray);
         Check(hit is { } areaHit && areaHit.ColliderRID == area && areaHit.Position.Y is > 19 and < 21,
             "Enabling Area rays selects the closer server-only sensor.");
@@ -201,7 +201,7 @@ internal static class PhysicsQueryTests
         pointHits = direct.IntersectPoint(point);
         Check(pointHits.Length == 1 && pointHits[0].ColliderRID == area,
             "Point queries include server-only Areas only when enabled.");
-        server.AreaSetCollisionLayer(area, 2);
+        PhysicsServer.AreaSetCollisionLayer(area, 2);
         point.CollisionMask = 1;
         Check(direct.IntersectPoint(point).Length == 0,
             "A point query checks the Area layer rather than its collision mask.");
@@ -210,11 +210,11 @@ internal static class PhysicsQueryTests
             "A matching layer restores the Area point result.");
         point.CollisionMask = uint.MaxValue;
 
-        var secondBody = server.BodyCreate();
-        server.BodySetMode(secondBody, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(secondBody, shape);
-        server.BodySetTransform(secondBody, new(0, Vector2.One, 0, new(0, 50)));
-        server.BodySetSpace(secondBody, space);
+        var secondBody = PhysicsServer.BodyCreate();
+        PhysicsServer.BodySetMode(secondBody, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(secondBody, shape);
+        PhysicsServer.BodySetTransform(secondBody, new(0, Vector2.One, 0, new(0, 50)));
+        PhysicsServer.BodySetSpace(secondBody, space);
         point.Position = new(0, 50);
         pointHits = direct.IntersectPoint(point, 1);
         Check(pointHits.Length == 1 && pointHits[0].ColliderRID == body,
@@ -234,90 +234,90 @@ internal static class PhysicsQueryTests
         circle.Radius = 20;
         Check(direct.IntersectRay(new PhysicsRayQueryParameters2D { From = new(0, 0), To = new(0, 100) })?.Position.Y is > 39 and < 41,
             "Caller resource edits do not alter server-owned shape data.");
-        server.ShapeSetData(shape, circle);
+        PhysicsServer.ShapeSetData(shape, circle);
         ray.CollideWithAreas = false;
         hit = direct.IntersectRay(ray);
         Check(hit is { } resizedHit && resizedHit.Position.Y is > 29 and < 31 && resizedHit.ShapeIndex == 0,
             "Replacing shared server shape data rebuilds referenced fixtures with stable owner indices.");
-        using var copy = server.ShapeGetData(shape);
+        using var copy = PhysicsServer.ShapeGetData(shape);
         Check(copy is CircleShape copied && copied.Radius == 20 && !ReferenceEquals(copy, circle),
             "ShapeGetData returns an independent typed resource copy.");
         using var replacement = new CircleShape { Radius = 15 };
-        Reject<InvalidOperationException>(() => Task.Run(() => server.ShapeSetData(shape, replacement)).GetAwaiter().GetResult());
-        using var retained = server.ShapeGetData(shape);
+        Reject<InvalidOperationException>(() => Task.Run(() => PhysicsServer.ShapeSetData(shape, replacement)).GetAwaiter().GetResult());
+        using var retained = PhysicsServer.ShapeGetData(shape);
         Check(retained is CircleShape retainedCircle && retainedCircle.Radius == 20,
             "An off-owner attached shape update rejects without changing server geometry.");
-        Reject<InvalidOperationException>(() => Task.Run(() => server.BodyGetSpace(body)).GetAwaiter().GetResult());
-        Reject<ArgumentException>(() => server.ShapeSetData(shape, rectangle));
-        Reject<ArgumentException>(() => server.BodySetSpace(shape, space));
-        Reject<ArgumentOutOfRangeException>(() => server.BodySetMode(body, (PhysicsServer.BodyMode)99));
-        Reject<ArgumentOutOfRangeException>(() => server.SpaceStep(space, -1));
+        Reject<InvalidOperationException>(() => Task.Run(() => PhysicsServer.BodyGetSpace(body)).GetAwaiter().GetResult());
+        Reject<ArgumentException>(() => PhysicsServer.ShapeSetData(shape, rectangle));
+        Reject<ArgumentException>(() => PhysicsServer.BodySetSpace(shape, space));
+        Reject<ArgumentOutOfRangeException>(() => PhysicsServer.BodySetMode(body, (PhysicsServer.BodyMode)99));
+        Reject<ArgumentOutOfRangeException>(() => PhysicsServer.SpaceStep(space, -1));
 
-        server.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
-        server.SpaceStep(space, 1d / 60);
-        var movedPosition = server.BodyGetTransform(body).Origin.Y;
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
+        PhysicsServer.SpaceStep(space, 1d / 60);
+        var movedPosition = PhysicsServer.BodyGetTransform(body).Origin.Y;
         Check(movedPosition > 50,
             "Explicit server spaces advance a dynamic body through the real solver.");
-        var transientSpace = server.SpaceCreate(); server.SpaceSetActive(transientSpace, true);
-        server.BodySetSpace(body, transientSpace);
-        Check(MathF.Abs(server.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f &&
-              server.SpaceGetDirectState(transientSpace).IntersectRay(ray)?.ColliderRID == body,
+        var transientSpace = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(transientSpace, true);
+        PhysicsServer.BodySetSpace(body, transientSpace);
+        Check(MathF.Abs(PhysicsServer.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f &&
+              PhysicsServer.SpaceGetDirectState(transientSpace).IntersectRay(ray)?.ColliderRID == body,
             "A dynamic body carries its solved pose and geometry into another explicit space.");
-        server.BodySetSpace(body, space);
-        server.FreeRID(transientSpace);
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        Check(MathF.Abs(server.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f,
+        PhysicsServer.BodySetSpace(body, space);
+        PhysicsServer.FreeRID(transientSpace);
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        Check(MathF.Abs(PhysicsServer.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f,
             "Switching to static mode preserves the solved pose.");
-        server.BodySetMode(body, PhysicsServer.BodyMode.Kinematic);
-        server.SpaceStep(space, 1d / 60);
-        Check(MathF.Abs(server.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f,
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Kinematic);
+        PhysicsServer.SpaceStep(space, 1d / 60);
+        Check(MathF.Abs(PhysicsServer.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f,
             "Entering kinematic mode clears earlier dynamic velocity.");
-        server.BodySetLinearVelocity(body, new(0, 60));
-        server.SpaceStep(space, 1d / 60);
-        var kinematicPosition = server.BodyGetTransform(body).Origin.Y;
+        PhysicsServer.BodySetLinearVelocity(body, new(0, 60));
+        PhysicsServer.SpaceStep(space, 1d / 60);
+        var kinematicPosition = PhysicsServer.BodyGetTransform(body).Origin.Y;
         Check(kinematicPosition > movedPosition + 0.5f,
             "A server kinematic body advances by its velocity and reports the solved pose.");
-        server.BodySetMode(body, PhysicsServer.BodyMode.RigidLinear);
-        Check(server.BodyGetMode(body) == PhysicsServer.BodyMode.RigidLinear,
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.RigidLinear);
+        Check(PhysicsServer.BodyGetMode(body) == PhysicsServer.BodyMode.RigidLinear,
             "RigidLinear remains an executable distinct mode with rotation locking.");
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        var otherSpace = server.SpaceCreate(); server.SpaceSetActive(otherSpace, true);
-        server.BodySetSpace(body, otherSpace);
-        Check(server.BodyGetSpace(body) == otherSpace &&
-              server.SpaceGetDirectState(otherSpace).IntersectRay(ray)?.ColliderRID == body,
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        var otherSpace = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(otherSpace, true);
+        PhysicsServer.BodySetSpace(body, otherSpace);
+        Check(PhysicsServer.BodyGetSpace(body) == otherSpace &&
+              PhysicsServer.SpaceGetDirectState(otherSpace).IntersectRay(ray)?.ColliderRID == body,
             "A server body moves between spaces without losing its shape or pose.");
-        server.BodySetSpace(body, space);
-        server.FreeRID(otherSpace);
-        server.FreeRID(shape);
+        PhysicsServer.BodySetSpace(body, space);
+        PhysicsServer.FreeRID(otherSpace);
+        PhysicsServer.FreeRID(shape);
         Check(direct.IntersectRay(ray) is null, "Freeing a shape removes geometry from its users.");
         Check(shape.IsValid(), "Freeing a resource does not turn its copied RID value into zero.");
-        Reject<ArgumentException>(() => server.ShapeGetData(shape));
-        var newer = server.CircleShapeCreate();
+        Reject<ArgumentException>(() => PhysicsServer.ShapeGetData(shape));
+        var newer = PhysicsServer.CircleShapeCreate();
         Check(newer > shape, "A freed RID is never reassigned to a later shape.");
-        server.FreeRID(newer);
-        server.FreeRID(space);
-        Check(!server.BodyGetSpace(body).IsValid() && !server.AreaGetSpace(area).IsValid(),
+        PhysicsServer.FreeRID(newer);
+        PhysicsServer.FreeRID(space);
+        Check(!PhysicsServer.BodyGetSpace(body).IsValid() && !PhysicsServer.AreaGetSpace(area).IsValid(),
             "Freeing a space detaches its server-created colliders.");
         Reject<ArgumentException>(() => direct.IntersectRay(ray));
-        server.FreeRID(body);
-        server.FreeRID(secondBody);
-        server.AreaRemoveShape(area, 0);
-        Check(server.AreaGetShapeCount(area) == 0, "AreaRemoveShape clears its indexed sensor slot.");
-        Reject<ArgumentOutOfRangeException>(() => server.AreaSetShapeDisabled(area, 0, true));
-        server.FreeRID(areaShape);
-        server.FreeRID(area);
+        PhysicsServer.FreeRID(body);
+        PhysicsServer.FreeRID(secondBody);
+        PhysicsServer.AreaRemoveShape(area, 0);
+        Check(PhysicsServer.AreaGetShapeCount(area) == 0, "AreaRemoveShape clears its indexed sensor slot.");
+        Reject<ArgumentOutOfRangeException>(() => PhysicsServer.AreaSetShapeDisabled(area, 0, true));
+        PhysicsServer.FreeRID(areaShape);
+        PhysicsServer.FreeRID(area);
     }
 
     private static void VerifyServerShapeFamilies()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var body = server.BodyCreate();
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        var capsuleRID = server.CapsuleShapeCreate();
-        var segmentRID = server.SegmentShapeCreate();
-        var convexRID = server.ConvexPolygonShapeCreate();
-        var concaveRID = server.ConcavePolygonShapeCreate();
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var body = PhysicsServer.BodyCreate();
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        var capsuleRID = PhysicsServer.CapsuleShapeCreate();
+        var segmentRID = PhysicsServer.SegmentShapeCreate();
+        var convexRID = PhysicsServer.ConvexPolygonShapeCreate();
+        var concaveRID = PhysicsServer.ConcavePolygonShapeCreate();
         using var capsule = new CapsuleShape();
         using var segment = new SegmentShape { A = new(0, -10), B = new(0, 10) };
         var vertices = new Vector2[12];
@@ -328,16 +328,16 @@ internal static class PhysicsQueryTests
         }
         using var convex = new ConvexPolygonShape { Points = vertices };
         using var concave = new ConcavePolygonShape { Segments = [new(-10, 0), new(10, 0)] };
-        server.ShapeSetData(capsuleRID, capsule);
-        server.ShapeSetData(segmentRID, segment);
-        server.ShapeSetData(convexRID, convex);
-        server.ShapeSetData(concaveRID, concave);
-        server.BodyAddShape(body, capsuleRID);
-        server.BodyAddShape(body, segmentRID, new(0, Vector2.One, 0, new(100, 0)));
-        server.BodyAddShape(body, convexRID, new(0, Vector2.One, 0, new(200, 0)));
-        server.BodyAddShape(body, concaveRID, new(0, Vector2.One, 0, new(300, 0)));
-        server.BodySetSpace(body, space);
-        var direct = server.SpaceGetDirectState(space);
+        PhysicsServer.ShapeSetData(capsuleRID, capsule);
+        PhysicsServer.ShapeSetData(segmentRID, segment);
+        PhysicsServer.ShapeSetData(convexRID, convex);
+        PhysicsServer.ShapeSetData(concaveRID, concave);
+        PhysicsServer.BodyAddShape(body, capsuleRID);
+        PhysicsServer.BodyAddShape(body, segmentRID, new(0, Vector2.One, 0, new(100, 0)));
+        PhysicsServer.BodyAddShape(body, convexRID, new(0, Vector2.One, 0, new(200, 0)));
+        PhysicsServer.BodyAddShape(body, concaveRID, new(0, Vector2.One, 0, new(300, 0)));
+        PhysicsServer.BodySetSpace(body, space);
+        var direct = PhysicsServer.SpaceGetDirectState(space);
         using var ray = PhysicsRayQueryParameters2D.Create(new(0, -50), new(0, 50));
         Check(direct.IntersectRay(ray)?.ShapeIndex == 0, "A server capsule fixture answers a ray query.");
         ray.From = new(50, 0); ray.To = new(150, 0);
@@ -348,12 +348,12 @@ internal static class PhysicsQueryTests
         ray.From = new(300, -50); ray.To = new(300, 50);
         Check(direct.IntersectRay(ray)?.ShapeIndex == 3,
             "A server concave pair answers a ray query without a solid interior.");
-        server.FreeRID(body);
-        server.FreeRID(capsuleRID);
-        server.FreeRID(segmentRID);
-        server.FreeRID(convexRID);
-        server.FreeRID(concaveRID);
-        server.FreeRID(space);
+        PhysicsServer.FreeRID(body);
+        PhysicsServer.FreeRID(capsuleRID);
+        PhysicsServer.FreeRID(segmentRID);
+        PhysicsServer.FreeRID(convexRID);
+        PhysicsServer.FreeRID(concaveRID);
+        PhysicsServer.FreeRID(space);
     }
 
     private static void Check(bool condition, string message)

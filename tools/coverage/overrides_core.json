@@ -549,7 +549,7 @@
       "reason": "Typed flags and C# error behavior for the same filesystem mutation (ADR 0020)."
     },
     {
-      "electron2d": "method:Electron2D.ProjectSettings.GetPropertyDescriptors()",
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.GetPropertyDescriptors()",
       "godot": "Object::method:_get_property_list()",
       "reason": "Inherited typed descriptor callback for registered settings (ADRs 0005 and 0019)."
     },
@@ -994,11 +994,7 @@
       "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
       "adr": "adr-0019"
     },
-    {
-      "electron2d": "property:Electron2D.ProjectSettings.Instance()",
-      "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
-      "adr": "adr-0019"
-    },
+
     {
       "electron2d": "T:Electron2D.EventConnection",
       "reason": "Typed event subscription/disconnection replacing dynamic signals.",
@@ -1145,7 +1141,7 @@
       "adr": "adr-0003"
     },
     {
-      "electron2d": "method:Electron2D.ProjectSettings.Dispose(System.Boolean)",
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.Dispose(System.Boolean)",
       "reason": "Derived IDisposable cleanup hook.",
       "adr": "adr-0003"
     },
@@ -1155,20 +1151,63 @@
       "adr": "adr-0003"
     },
     {
-      "electron2d": "constructor:Electron2D.ProjectSettings..ctor(System.String)",
+      "electron2d": "constructor:Electron2D.ProjectSettingsRegistry..ctor(System.String)",
       "reason": "Directory-backed managed settings construction; upstream singleton has no constructor declaration.",
       "adr": "adr-0019"
     },
     {
-      "electron2d": "constructor:Electron2D.ProjectSettings..ctor(System.String,System.String)",
+      "electron2d": "constructor:Electron2D.ProjectSettingsRegistry..ctor(System.String,System.String)",
       "reason": "Explicit project and user-data roots for the managed directory-backed registry; upstream singleton has no constructor declaration.",
       "adr": "adr-0019"
     },
     {
-      "electron2d": "method:Electron2D.ProjectSettings.ValidateDisposal()",
+      "electron2d": "method:Electron2D.ProjectSettingsRegistry.ValidateDisposal()",
       "reason": "Protected lifetime and owner-thread validation override with no upstream callback.",
       "adr": "adr-0009"
-    }
+    },
+    {"electron2d": "T:Electron2D.ProjectSettingsRegistry", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "event:Electron2D.ProjectSettingsRegistry.SettingsChanged()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.AddCustomFeature(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.CheckChangedSettingsInGroup(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.ClearFeatureOverride`1(ProjectSetting<T>,System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.ConfigurePaths(System.String,System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.FlushChanges()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetActiveFeatures()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetChangedSettings()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetFeatureOverrides`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetOrder`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetSettingNames(System.Boolean)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetWithOverride`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GetWithOverride`1(ProjectSetting<T>,System.Collections.Generic.IEnumerable<System.String>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Get`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.GlobalizePath(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.HasFeature(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.HasSetting`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.IsBasic`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.IsInternal`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.IsRestartRequired`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Load()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.LoadCustom(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.LocalizePath(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Register`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.RemoveCustomFeature(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Reset`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Save()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SaveCustom(System.String)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetAsBasic`1(ProjectSetting<T>,System.Boolean)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetAsInternal`1(ProjectSetting<T>,System.Boolean)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetFeatureOverride`1(ProjectSetting<T>,System.String,T)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetInitialValue`1(ProjectSetting<T>,T)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetOrder`1(ProjectSetting<T>,System.Int32)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.SetRestartIfChanged`1(ProjectSetting<T>,System.Boolean)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Set`1(ProjectSetting<T>,T)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "method:Electron2D.ProjectSettingsRegistry.Unregister`1(ProjectSetting<T>)", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.OverrideFilePath()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectDataPath()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectFilePath()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectRoot()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.UserDataRoot()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.Version()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"}
   ],
   "statusGroups": [
     {

@@ -47,9 +47,9 @@ internal static class SceneDiagnosticsTests
         root.AddChild(path); follower.Reparent(path, false); Check(follower.GetConfigurationWarnings().Length == 0, "Direct parent with no curve is valid.");
         var canvas = new Entity { Visible = false }; root.AddChild(canvas); follower.Reparent(canvas, false); Check(follower.GetConfigurationWarnings().Length == 0, "Hidden ancestor suppresses warning."); canvas.Show(); Check(follower.GetConfigurationWarnings().Length == 1, "Visible invalid ancestor warns.");
         follower.Dispose(); Reject<ObjectDisposedException>(() => follower.GetConfigurationWarnings()); Reject<ObjectDisposedException>(follower.UpdateConfigurationWarnings); Reject<ObjectDisposedException>(() => tree.EditedSceneRoot = follower);
-        var settings = ProjectSettings.Instance; var color = settings.Get(ProjectSettings.DebugPathsColor);
-        try { Reject<System.Text.Json.JsonException>(() => settings.Set(ProjectSettings.DebugPathsColor, new Color(float.NaN, 0, 0))); Check(settings.Get(ProjectSettings.DebugPathsColor) == color, "Invalid color leaves state unchanged."); }
-        finally { settings.Set(ProjectSettings.DebugPathsColor, color); }
+        var settings = ProjectSettings.Service; var color = ProjectSettings.Get(ProjectSettings.DebugPathsColor);
+        try { Reject<System.Text.Json.JsonException>(() => ProjectSettings.Set(ProjectSettings.DebugPathsColor, new Color(float.NaN, 0, 0))); Check(ProjectSettings.Get(ProjectSettings.DebugPathsColor) == color, "Invalid color leaves state unchanged."); }
+        finally { ProjectSettings.Set(ProjectSettings.DebugPathsColor, color); }
         using var huge = new Curve2D(); huge.AddPoint(Vector2.Zero); huge.AddPoint(new(11_000_000, 0));
         var debugPath = new ScenePath { Name = "Debug", Curve = huge }; root.AddChild(debugPath); tree.DebugPathsHint = true;
         Reject<InvalidOperationException>(debugPath.PrepareCanvas); tree.DebugPathsHint = false; debugPath.PrepareCanvas();

@@ -1,6 +1,6 @@
 # EngineVersionInfo
 
-Last updated: 2026-09-21
+Last updated: 2026-10-04
 
 **Inherits:** —
 
@@ -23,7 +23,7 @@ Describes the version embedded in the Electron2D assembly.
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-EngineVersionInfo version = Engine.Instance.VersionInfo;
+EngineVersionInfo version = Engine.VersionInfo;
 Console.WriteLine(version.String);
 ```
 

@@ -31,17 +31,7 @@ public sealed partial class DisplayServer
     private int _pendingNativeDialogs;
     private bool _dialogsDisposed;
 
-    /// <summary>Shows a modal native message with buttons in the supplied order.</summary>
-    /// <param name="title">Dialog title.</param>
-    /// <param name="description">Dialog body text.</param>
-    /// <param name="buttons">One or more nonempty button labels.</param>
-    /// <param name="callback">Receives the zero-based index reported by the native dialog. Dismissal without a button has platform-specific reporting.</param>
-    /// <remarks>The native message box blocks the owner thread; the callback runs on that thread before this method returns. Native appearance, button placement, and dismissal reporting depend on the operating system. On the verified Linux Wayland host, closing a one-button dialog reports button index zero.</remarks>
-    /// <exception cref="ArgumentNullException">A required argument is null.</exception>
-    /// <exception cref="ArgumentException">No valid button label was supplied.</exception>
-    /// <exception cref="ObjectDisposedException">The display server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The native dialog could not be shown or the call is off the owner thread.</exception>
-    public void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)
+    internal void DialogShowCore(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)
     {
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(title);
@@ -87,31 +77,15 @@ public sealed partial class DisplayServer
         }
     }
 
-    /// <summary>Opens a native file or folder chooser and delivers its result during a later event pump.</summary>
-    /// <param name="title">Requested dialog title; the native platform may ignore it.</param>
-    /// <param name="currentDirectory">Initial filesystem directory, or an empty string for the platform default.</param>
-    /// <param name="filename">Initial filename for file modes, or an empty string. Linux uses it only for SaveFile.</param>
-    /// <param name="showHidden">Requests hidden files. This SDL chooser ignores the preference; on Linux this matches the native contract.</param>
-    /// <param name="mode">The selection mode. <see cref="FileDialogMode.OpenAny"/> has no equivalent in the current native backend.</param>
-    /// <param name="filters">Extension filters such as <c>*.png,*.jpg;Images</c>. File modes accept but do not apply a trailing MIME section; MIME-only filters are unavailable. Folder mode ignores filters.</param>
-    /// <param name="callback">Receives success, selected paths, and the selected filter index. Cancellation and native failure both deliver false and an empty path list.</param>
-    /// <param name="parentWindowId">The parent window ID; only <see cref="MainWindowId"/> is owned.</param>
-    /// <remarks>The native callback may run on another thread. Paths are copied immediately and the typed callback runs only on the owner thread during <see cref="ProcessEvents"/>. A native failure still completes the callback, then the event pump reports it in an aggregate exception. Disposal is rejected until the native chooser completes and its result has been pumped. The operating system may ignore the title, initial location, or filters; Android may return content URIs instead of filesystem paths.</remarks>
-    /// <exception cref="ArgumentNullException">A required argument is null.</exception>
-    /// <exception cref="ArgumentException">A filter is malformed.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">The mode or window ID is invalid.</exception>
-    /// <exception cref="NotSupportedException">The mode is <see cref="FileDialogMode.OpenAny"/> or a file-mode filter contains only MIME types.</exception>
-    /// <exception cref="ObjectDisposedException">The display server is disposing or disposed.</exception>
-    /// <exception cref="InvalidOperationException">The native chooser could not be launched or the call is off the owner thread.</exception>
-    public void FileDialogShow(
-        string title,
-        string currentDirectory,
-        string filename,
-        bool showHidden,
-        FileDialogMode mode,
-        IReadOnlyList<string> filters,
-        Action<bool, IReadOnlyList<string>, int> callback,
-        int parentWindowId = MainWindowId)
+    internal void FileDialogShowCore(
+    string title,
+    string currentDirectory,
+    string filename,
+    bool showHidden,
+    FileDialogMode mode,
+    IReadOnlyList<string> filters,
+    Action<bool, IReadOnlyList<string>, int> callback,
+    int parentWindowId = MainWindowId)
     {
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(title);
