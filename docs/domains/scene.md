@@ -174,3 +174,7 @@ SubViewport composes as a neutral Node with independently rendered children. Pac
 [CanvasGroup and BackBufferCopy](../components/canvas-rendering.md#group-composition-and-screen-snapshots) now execute native same-Z group composition and ordered screen snapshots. GPU screen-reading HLSL/GLSL and generated group mipmaps share existing materials; compatibility retains explicit shader/mipmap/software blend gates. [Canvas alpha masks](../components/canvas-rendering.md#canvas-alpha-masks) now execute through CanvasItem.ClipChildren; nested captures, writable screen reads and editor inspector integration retain explicit boundaries.
 
 [Embedded viewport containers and GUI](../components/canvas-rendering.md#embedded-viewport-containers-and-gui) now execute native SubViewportContainer composition, stretch/shrink, independent GUI state and connected input/drag routing. Public input reentry remains rejected; native subwindows, multiview, editor/file workflows and other-platform acceptance remain separate.
+
+## Text-field authoring
+
+[LineEdit](../classes/LineEdit.md) has typed stored properties and an in-memory PackedScene factory. Runtime TextInput/IME uses the existing focused Control route, including embedded viewport focus. History, scalar selection and typed text dragging execute under the scene owner; closing the host does not enqueue minimum-size work. Editor/file authoring and absent popup/native keyboard services retain their own gates.

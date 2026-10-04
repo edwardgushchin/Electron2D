@@ -1299,6 +1299,691 @@
       "godot": "Control::method:_structured_text_parser(Array:,String:)",
       "electron2d": "method:Electron2D.Control.OnStructuredTextParser(System.Collections.Generic.IReadOnlyList<System.String>,System.String)",
       "reason": "ADR 0046: typed text policies and Label execute through real FreeType/HarfBuzz shaping, private ICU 78.3 dictionary/locale boundaries, scalar-indexed bidi contexts, retained glyph images and shared themes. LabelTests, TextLayoutBreakTests and native LabelRenderingTests cover values, state, RTL, wrapping, effects, visibility, clipping, packing, callback failures and warmed frames on the current Linux backend profile; other text platforms retain explicit gates."
+    },
+    {
+      "godot": "class:LineEdit",
+      "electron2d": "T:Electron2D.LineEdit",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum:ExpandMode",
+      "electron2d": "T:Electron2D.LineEditIconExpandMode",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum:MenuItems",
+      "electron2d": "T:Electron2D.LineEditMenuAction",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:ExpandMode.EXPAND_MODE_FIT_TO_LINE_EDIT",
+      "electron2d": "enumValue:Electron2D.LineEditIconExpandMode.FitToLineEdit()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:ExpandMode.EXPAND_MODE_FIT_TO_TEXT",
+      "electron2d": "enumValue:Electron2D.LineEditIconExpandMode.FitToText()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:ExpandMode.EXPAND_MODE_ORIGINAL_SIZE",
+      "electron2d": "enumValue:Electron2D.LineEditIconExpandMode.OriginalSize()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_CLEAR",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.Clear()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_COPY",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.Copy()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_CUT",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.Cut()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_DIR_AUTO",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.DirectionAuto()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_DIR_INHERITED",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.DirectionInherited()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_DIR_LTR",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.DirectionLTR()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_DIR_RTL",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.DirectionRTL()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_DISPLAY_UCC",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.DisplayUCC()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_EMOJI_AND_SYMBOL",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.EmojiAndSymbols()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_PASTE",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.Paste()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_REDO",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.Redo()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_SELECT_ALL",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.SelectAll()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_UNDO",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.Undo()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:apply_ime()",
+      "electron2d": "method:Electron2D.LineEdit.ApplyIME()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:cancel_ime()",
+      "electron2d": "method:Electron2D.LineEdit.CancelIME()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:clear()",
+      "electron2d": "method:Electron2D.LineEdit.Clear()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:delete_char_at_caret()",
+      "electron2d": "method:Electron2D.LineEdit.DeleteCharAtCaret()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:delete_text(int:,int:)",
+      "electron2d": "method:Electron2D.LineEdit.DeleteText(System.Int32,System.Int32)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:deselect()",
+      "electron2d": "method:Electron2D.LineEdit.Deselect()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:edit(bool:)",
+      "electron2d": "method:Electron2D.LineEdit.Edit(System.Boolean)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:get_next_composite_character_column(int:)",
+      "electron2d": "method:Electron2D.LineEdit.GetNextCompositeCharacterColumn(System.Int32)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:get_previous_composite_character_column(int:)",
+      "electron2d": "method:Electron2D.LineEdit.GetPreviousCompositeCharacterColumn(System.Int32)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:get_scroll_offset()",
+      "electron2d": "method:Electron2D.LineEdit.GetScrollOffset()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:get_selected_text()",
+      "electron2d": "method:Electron2D.LineEdit.GetSelectedText()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:get_selection_from_column()",
+      "electron2d": "method:Electron2D.LineEdit.GetSelectionFromColumn()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:get_selection_to_column()",
+      "electron2d": "method:Electron2D.LineEdit.GetSelectionToColumn()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:has_ime_text()",
+      "electron2d": "method:Electron2D.LineEdit.HasIMEText()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:has_redo()",
+      "electron2d": "method:Electron2D.LineEdit.HasRedo()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:has_selection()",
+      "electron2d": "method:Electron2D.LineEdit.HasSelection()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:has_undo()",
+      "electron2d": "method:Electron2D.LineEdit.HasUndo()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:insert_text_at_caret(String:)",
+      "electron2d": "method:Electron2D.LineEdit.InsertTextAtCaret(System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:is_editing()",
+      "electron2d": "method:Electron2D.LineEdit.IsEditing()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:menu_option(int:)",
+      "electron2d": "method:Electron2D.LineEdit.MenuOption(Electron2D.LineEditMenuAction)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:select(int:,int:)",
+      "electron2d": "method:Electron2D.LineEdit.Select(System.Int32,System.Int32)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:select_all()",
+      "electron2d": "method:Electron2D.LineEdit.SelectAll()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::method:unedit()",
+      "electron2d": "method:Electron2D.LineEdit.Unedit()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:alignment",
+      "electron2d": "property:Electron2D.LineEdit.Alignment()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:backspace_deletes_composite_character_enabled",
+      "electron2d": "property:Electron2D.LineEdit.BackspaceDeletesCompositeCharacterEnabled()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:caret_blink",
+      "electron2d": "property:Electron2D.LineEdit.CaretBlink()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:caret_blink_interval",
+      "electron2d": "property:Electron2D.LineEdit.CaretBlinkInterval()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:caret_column",
+      "electron2d": "property:Electron2D.LineEdit.CaretColumn()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:caret_force_displayed",
+      "electron2d": "property:Electron2D.LineEdit.CaretForceDisplayed()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:caret_mid_grapheme",
+      "electron2d": "property:Electron2D.LineEdit.CaretMidGrapheme()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:clear_button_enabled",
+      "electron2d": "property:Electron2D.LineEdit.ClearButtonEnabled()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:deselect_on_focus_loss_enabled",
+      "electron2d": "property:Electron2D.LineEdit.DeselectOnFocusLossEnabled()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:drag_and_drop_selection_enabled",
+      "electron2d": "property:Electron2D.LineEdit.DragAndDropSelectionEnabled()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:draw_control_chars",
+      "electron2d": "property:Electron2D.LineEdit.DrawControlChars()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:editable",
+      "electron2d": "property:Electron2D.LineEdit.Editable()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:expand_to_text_length",
+      "electron2d": "property:Electron2D.LineEdit.ExpandToTextLength()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:flat",
+      "electron2d": "property:Electron2D.LineEdit.Flat()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:icon_expand_mode",
+      "electron2d": "property:Electron2D.LineEdit.IconExpandMode()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:keep_editing_on_text_submit",
+      "electron2d": "property:Electron2D.LineEdit.KeepEditingOnTextSubmit()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:language",
+      "electron2d": "property:Electron2D.LineEdit.Language()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:max_length",
+      "electron2d": "property:Electron2D.LineEdit.MaxLength()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:middle_mouse_paste_enabled",
+      "electron2d": "property:Electron2D.LineEdit.MiddleMousePasteEnabled()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:mouse_default_cursor_shape",
+      "electron2d": "property:Electron2D.Control.MouseDefaultCursorShape()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:placeholder_text",
+      "electron2d": "property:Electron2D.LineEdit.PlaceholderText()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:right_icon",
+      "electron2d": "property:Electron2D.LineEdit.RightIcon()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:right_icon_scale",
+      "electron2d": "property:Electron2D.LineEdit.RightIconScale()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:secret",
+      "electron2d": "property:Electron2D.LineEdit.Secret()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:secret_character",
+      "electron2d": "property:Electron2D.LineEdit.SecretCharacter()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:select_all_on_focus",
+      "electron2d": "property:Electron2D.LineEdit.SelectAllOnFocus()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:selecting_enabled",
+      "electron2d": "property:Electron2D.LineEdit.SelectingEnabled()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:shortcut_keys_enabled",
+      "electron2d": "property:Electron2D.LineEdit.ShortcutKeysEnabled()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:structured_text_bidi_override",
+      "electron2d": "property:Electron2D.LineEdit.StructuredTextBIDIOverride()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:structured_text_bidi_override_options",
+      "electron2d": "property:Electron2D.LineEdit.StructuredTextBIDIOverrideOptions()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:text",
+      "electron2d": "property:Electron2D.LineEdit.Text()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::property:text_direction",
+      "electron2d": "property:Electron2D.LineEdit.TextDirection()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::signal:editing_toggled(bool:)",
+      "electron2d": "event:Electron2D.LineEdit.EditingToggled()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::signal:text_change_rejected(String:)",
+      "electron2d": "event:Electron2D.LineEdit.TextChangeRejected()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::signal:text_changed(String:)",
+      "electron2d": "event:Electron2D.LineEdit.TextChanged()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::signal:text_submitted(String:)",
+      "electron2d": "event:Electron2D.LineEdit.TextSubmitted()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:caret_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:caret_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:clear",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:clear_button_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:clear_button_color_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:font_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:font_placeholder_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:font_selected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:font_uneditable_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:minimum_character_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:normal",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:read_only",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::theme_item:selection_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_copy",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUICopy()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_cut",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUICut()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_paste",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIPaste()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_redo",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIRedo()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_swap_input_direction",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUISwapInputDirection()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_backspace",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextBackspace()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_backspace_all_to_left",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextBackspaceAllToLeft()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_backspace_word",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextBackspaceWord()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_down",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretDown()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_left",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretLeft()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_line_end",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretLineEnd()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_line_start",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretLineStart()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_page_down",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretPageDown()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_page_up",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretPageUp()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_right",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretRight()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_up",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretUp()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_word_left",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretWordLeft()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_caret_word_right",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCaretWordRight()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_delete",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextDelete()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_delete_all_to_right",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextDeleteAllToRight()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_delete_word",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextDeleteWord()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_select_all",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextSelectAll()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_submit",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextSubmit()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_undo",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIUndo()",
+      "reason": "Permanent typed project action settings consumed by LineEdit; remapping uses the existing InputMap settings transaction. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_ALM",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertALM()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_FSI",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertFSI()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_LRE",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertLRE()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_LRI",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertLRI()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_LRM",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertLRM()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_LRO",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertLRO()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_PDF",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertPDF()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_PDI",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertPDI()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_RLE",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertRLE()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_RLI",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertRLI()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_RLM",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertRLM()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_RLO",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertRLO()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_SHY",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertSHY()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_WJ",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertWJ()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_ZWJ",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertZWJ()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_INSERT_ZWNJ",
+      "electron2d": "enumValue:Electron2D.LineEditMenuAction.InsertZWNJ()",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -2151,6 +2836,210 @@
         "TextServer::method:parse_structured_text(int:TextServer.StructuredTextParser,Array:,String:)",
         "TextServerExtension::method:_parse_structured_text(int:TextServer.StructuredTextParser,Array:,String:)"
       ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified.",
+      "godot": [
+        "LineEdit::enum:ExpandMode",
+        "LineEdit::enum_value:ExpandMode.EXPAND_MODE_FIT_TO_LINE_EDIT",
+        "LineEdit::enum_value:ExpandMode.EXPAND_MODE_FIT_TO_TEXT",
+        "LineEdit::enum_value:ExpandMode.EXPAND_MODE_ORIGINAL_SIZE",
+        "LineEdit::enum_value:MenuItems.MENU_CLEAR",
+        "LineEdit::enum_value:MenuItems.MENU_COPY",
+        "LineEdit::enum_value:MenuItems.MENU_CUT",
+        "LineEdit::enum_value:MenuItems.MENU_DIR_AUTO",
+        "LineEdit::enum_value:MenuItems.MENU_DIR_INHERITED",
+        "LineEdit::enum_value:MenuItems.MENU_DIR_LTR",
+        "LineEdit::enum_value:MenuItems.MENU_DIR_RTL",
+        "LineEdit::enum_value:MenuItems.MENU_DISPLAY_UCC",
+        "LineEdit::enum_value:MenuItems.MENU_PASTE",
+        "LineEdit::enum_value:MenuItems.MENU_REDO",
+        "LineEdit::enum_value:MenuItems.MENU_SELECT_ALL",
+        "LineEdit::enum_value:MenuItems.MENU_UNDO",
+        "LineEdit::method:apply_ime()",
+        "LineEdit::method:cancel_ime()",
+        "LineEdit::method:clear()",
+        "LineEdit::method:delete_char_at_caret()",
+        "LineEdit::method:delete_text(int:,int:)",
+        "LineEdit::method:deselect()",
+        "LineEdit::method:edit(bool:)",
+        "LineEdit::method:get_next_composite_character_column(int:)",
+        "LineEdit::method:get_previous_composite_character_column(int:)",
+        "LineEdit::method:get_scroll_offset()",
+        "LineEdit::method:get_selected_text()",
+        "LineEdit::method:get_selection_from_column()",
+        "LineEdit::method:get_selection_to_column()",
+        "LineEdit::method:has_ime_text()",
+        "LineEdit::method:has_redo()",
+        "LineEdit::method:has_selection()",
+        "LineEdit::method:has_undo()",
+        "LineEdit::method:insert_text_at_caret(String:)",
+        "LineEdit::method:is_editing()",
+        "LineEdit::method:select(int:,int:)",
+        "LineEdit::method:select_all()",
+        "LineEdit::method:unedit()",
+        "LineEdit::property:alignment",
+        "LineEdit::property:backspace_deletes_composite_character_enabled",
+        "LineEdit::property:caret_blink",
+        "LineEdit::property:caret_blink_interval",
+        "LineEdit::property:caret_column",
+        "LineEdit::property:caret_force_displayed",
+        "LineEdit::property:caret_mid_grapheme",
+        "LineEdit::property:clear_button_enabled",
+        "LineEdit::property:deselect_on_focus_loss_enabled",
+        "LineEdit::property:drag_and_drop_selection_enabled",
+        "LineEdit::property:draw_control_chars",
+        "LineEdit::property:editable",
+        "LineEdit::property:expand_to_text_length",
+        "LineEdit::property:flat",
+        "LineEdit::property:focus_mode",
+        "LineEdit::property:icon_expand_mode",
+        "LineEdit::property:keep_editing_on_text_submit",
+        "LineEdit::property:language",
+        "LineEdit::property:max_length",
+        "LineEdit::property:middle_mouse_paste_enabled",
+        "LineEdit::property:mouse_default_cursor_shape",
+        "LineEdit::property:placeholder_text",
+        "LineEdit::property:right_icon",
+        "LineEdit::property:right_icon_scale",
+        "LineEdit::property:secret",
+        "LineEdit::property:secret_character",
+        "LineEdit::property:select_all_on_focus",
+        "LineEdit::property:selecting_enabled",
+        "LineEdit::property:shortcut_keys_enabled",
+        "LineEdit::property:structured_text_bidi_override",
+        "LineEdit::property:structured_text_bidi_override_options",
+        "LineEdit::property:text",
+        "LineEdit::property:text_direction",
+        "LineEdit::signal:editing_toggled(bool:)",
+        "LineEdit::signal:text_change_rejected(String:)",
+        "LineEdit::signal:text_changed(String:)",
+        "LineEdit::signal:text_submitted(String:)",
+        "LineEdit::theme_item:caret_color",
+        "LineEdit::theme_item:caret_width",
+        "LineEdit::theme_item:clear",
+        "LineEdit::theme_item:clear_button_color",
+        "LineEdit::theme_item:clear_button_color_pressed",
+        "LineEdit::theme_item:focus",
+        "LineEdit::theme_item:font",
+        "LineEdit::theme_item:font_color",
+        "LineEdit::theme_item:font_outline_color",
+        "LineEdit::theme_item:font_placeholder_color",
+        "LineEdit::theme_item:font_selected_color",
+        "LineEdit::theme_item:font_size",
+        "LineEdit::theme_item:font_uneditable_color",
+        "LineEdit::theme_item:minimum_character_width",
+        "LineEdit::theme_item:normal",
+        "LineEdit::theme_item:outline_size",
+        "LineEdit::theme_item:read_only",
+        "LineEdit::theme_item:selection_color"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified. Editing/display and typed commands execute. Completion additionally requires PopupMenu/Popup/Window menu presentation and native symbol-picker plus virtual-keyboard services; no menu visibility or virtual-keyboard state facade is shipped.",
+      "godot": [
+        "LineEdit::enum:MenuItems",
+        "LineEdit::method:menu_option(int:)",
+        "class:LineEdit"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Requires the real PopupMenu : Popup : Window owner, transient native/embedded popup focus and input routing, submenu tree and menu lifetime. First connected popup slice must bind LineEdit GetMenu/IsMenuVisible/ContextMenuEnabled and the two submenu identifiers to that owner; current typed commands already execute without popup presentation.",
+      "godot": [
+        "LineEdit::enum_value:MenuItems.MENU_SUBMENU_INSERT_UCC",
+        "LineEdit::enum_value:MenuItems.MENU_SUBMENU_TEXT_DIR",
+        "LineEdit::method:get_menu()",
+        "LineEdit::method:is_menu_visible()",
+        "LineEdit::property:context_menu_enabled"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Requires DisplayServer native/mobile/browser virtual-keyboard show/hide services with keyboard-kind, text/caret selection, window coordinates and lifetime; current Linux Feature.VirtualKeyboard is false. First service-backed virtual-keyboard slice then integrates LineEdit focus/edit/show policies and eight keyboard values.",
+      "godot": [
+        "LineEdit::enum:VirtualKeyboardType",
+        "LineEdit::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_DEFAULT",
+        "LineEdit::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_EMAIL_ADDRESS",
+        "LineEdit::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_MULTILINE",
+        "LineEdit::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_NUMBER",
+        "LineEdit::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_NUMBER_DECIMAL",
+        "LineEdit::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_PASSWORD",
+        "LineEdit::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_PHONE",
+        "LineEdit::enum_value:VirtualKeyboardType.KEYBOARD_TYPE_URL",
+        "LineEdit::property:virtual_keyboard_enabled",
+        "LineEdit::property:virtual_keyboard_show_on_focus",
+        "LineEdit::property:virtual_keyboard_type"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Requires DisplayServer native emoji/symbol picker availability and presentation service. Linux service is absent; MenuOption(EmojiAndSymbols) reports NotSupportedException while other commands execute. First native picker slice then binds the menu enable policy and picker selector.",
+      "godot": [
+        "LineEdit::enum_value:MenuItems.MENU_EMOJI_AND_SYMBOL",
+        "LineEdit::property:emoji_menu_enabled"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0051: menu count sentinel is not an executable semantic command and is omitted from the typed command enum.",
+      "godot": [
+        "LineEdit::enum_value:MenuItems.MENU_MAX"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified.",
+      "godot": [
+        "ProjectSettings::property:input/ui_copy",
+        "ProjectSettings::property:input/ui_cut",
+        "ProjectSettings::property:input/ui_paste",
+        "ProjectSettings::property:input/ui_redo",
+        "ProjectSettings::property:input/ui_swap_input_direction",
+        "ProjectSettings::property:input/ui_text_backspace",
+        "ProjectSettings::property:input/ui_text_backspace_all_to_left",
+        "ProjectSettings::property:input/ui_text_backspace_word",
+        "ProjectSettings::property:input/ui_text_caret_down",
+        "ProjectSettings::property:input/ui_text_caret_left",
+        "ProjectSettings::property:input/ui_text_caret_line_end",
+        "ProjectSettings::property:input/ui_text_caret_line_start",
+        "ProjectSettings::property:input/ui_text_caret_page_down",
+        "ProjectSettings::property:input/ui_text_caret_page_up",
+        "ProjectSettings::property:input/ui_text_caret_right",
+        "ProjectSettings::property:input/ui_text_caret_up",
+        "ProjectSettings::property:input/ui_text_caret_word_left",
+        "ProjectSettings::property:input/ui_text_caret_word_right",
+        "ProjectSettings::property:input/ui_text_delete",
+        "ProjectSettings::property:input/ui_text_delete_all_to_right",
+        "ProjectSettings::property:input/ui_text_delete_word",
+        "ProjectSettings::property:input/ui_text_select_all",
+        "ProjectSettings::property:input/ui_text_submit",
+        "ProjectSettings::property:input/ui_undo"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_ALM",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_FSI",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_LRE",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_LRI",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_LRM",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_LRO",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_PDF",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_PDI",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_RLE",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_RLI",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_RLM",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_RLO",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_SHY",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_WJ",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_ZWJ",
+        "LineEdit::enum_value:MenuItems.MENU_INSERT_ZWNJ"
+      ],
+      "reason": "Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
     }
   ],
   "extras": [
@@ -2333,6 +3222,66 @@
       "electron2d": "enumValue:Electron2D.FontStyle.None()",
       "reason": "Typed flags zero value represents the absence of Bold and Italic; no independent font capability.",
       "adr": "ADR 0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.LineEdit..ctor()",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.OnCanDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.OnDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.OnGUIInput(Electron2D.InputEvent)",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.OnGetDragData(Electron2D.Vector2)",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.OnIMECompositionChanged(System.String,Electron2D.Vector2i)",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.LineEdit.OnTextInput(System.String)",
+      "state": "Implemented",
+      "reason": "Typed constructor, scene/lifecycle/input/resource hook or permanent text-action configuration for the executable single-line editor. Executable LineEdit editing/display slice under ADRs 0008/0038/0046/0051/0083: scalar text limits, complete shaped-line caret and visual selection geometry, grapheme and word movement, horizontal scrolling, password/placeholder display, focus/edit state, native committed/preedit input, selection/clipboard, undo/redo, Unicode-control commands, typed packing, themed backgrounds/focus/outline/icons and text drag/drop. Pinned line_edit.cpp/text_server.cpp audit. LineEditTests verifies boundary/rejection/history/storage/action/IME/drag/failure paths, native X11 Linux GPU/compatibility pixels and input, clipboard restoration and 64 warmed caret/selection render-mutation intervals with zero managed bytes. TextChangeRejected and history notifications see committed state before observers; native InputEvent resource copies and text-shaping mutations are outside that warm measurement. Native allocator totals, cross-platform text/virtual keyboard and owner acceptance remain unverified."
     }
   ]
 }

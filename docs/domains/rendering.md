@@ -116,3 +116,7 @@ On the current Linux Wayland Vulkan profile, remapping a previously presented ro
 [CanvasGroup and BackBufferCopy](../components/canvas-rendering.md#group-composition-and-screen-snapshots) now execute native same-Z group composition and ordered screen snapshots. GPU screen-reading HLSL/GLSL and generated group mipmaps share existing materials; compatibility retains explicit shader/mipmap/software blend gates. [Canvas alpha masks](../components/canvas-rendering.md#canvas-alpha-masks) now execute through CanvasItem.ClipChildren; nested captures, writable screen reads and editor inspector integration retain explicit boundaries.
 
 [Embedded viewport containers and GUI](../components/canvas-rendering.md#embedded-viewport-containers-and-gui) now execute native SubViewportContainer composition, stretch/shrink, independent GUI state and connected input/drag routing. Public input reentry remains rejected; native subwindows, multiview, editor/file workflows and other-platform acceptance remain separate.
+
+## Single-line text fields
+
+[LineEdit](../classes/LineEdit.md) executes themed shaped text editing, scalar limits, BiDi carets/selection, IME, clipboard/history, Unicode-control command dispatch and text drag/drop through existing font and canvas backends. LineEditTests verifies Linux x64 X11 GPU/compatibility pixels and native text input plus 64 warmed caret/selection render-mutation frames with zero managed allocation. Popup/native keyboard/picker integration and other platform/owner acceptance remain separate.

@@ -1,6 +1,6 @@
 # ThemeDB
 
-Last updated: 2026-10-01
+Last updated: 2026-10-04
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
@@ -102,3 +102,7 @@ Built-in FlowContainer/HFlowContainer/VFlowContainer entries provide h_separatio
 ## Split defaults
 
 The built-in theme now supplies SplitContainer/HSplitContainer/VSplitContainer separation=12, minimum_grab_thickness=6, autohide=1, empty bar backgrounds, four directional SVG grabber/touch assets and inherited touch tints .3/.6/1. The icons use the existing runtime adaptation notice and ordinary theme resource ownership. SplitContainerTests and native split checks exercise lookup, minimum contribution, drawing and attached residency; nonunit scale and the remaining default GUI catalog retain existing limits.
+
+## LineEdit defaults
+
+[ThemeDB.LineEdit.cs](../../src/Scene/Resources/ThemeDB.LineEdit.cs) supplies normal/read-only/focus styles, the borrowed built-in font, font/placeholder/selection/caret/outline colors, minimum-character/caret/outline constants and a real SVG clear icon for [LineEdit](LineEdit.md). Right-icon and clear-button modulation use typed theme color lookup. LineEditTests verifies executable rendering; no popup or virtual-keyboard theme facade is created.

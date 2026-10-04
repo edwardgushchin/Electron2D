@@ -49,6 +49,7 @@ public sealed partial class SceneTree : MainLoop
     private ConcurrentQueue<DeletionRequest> _deletions = new();
     private List<Node>? _activationReadied;
     private bool _acceptingWork = true;
+    internal bool IsClosing { get { lock (_workGate) return !_acceptingWork || IsDisposed; } }
     private bool _constructionComplete;
     private bool _isChangingPause;
     private bool _isDispatchingInput;

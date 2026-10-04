@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1320,3 +1320,7 @@ Typed built-in nonnegative finite timeout in seconds, read during output prepara
 ## AudioGeneralDefaultPlaybackType
 
 `public static ProjectSetting<AudioDefaultPlaybackType> AudioGeneralDefaultPlaybackType { get; }` registers `audio/general/default_playback_type`, default Stream=0. Sample=1 selects native finite buffers for sample-capable streams and falls back to streaming otherwise. Undefined values reject; .web overrides retain the existing feature-override mechanism/platform gate. [AudioDefaultPlaybackType](AudioDefaultPlaybackType.md) has a distinct value set from the per-request server selector.
+
+## Text editing actions
+
+The `InputUIText*`, `InputUICopy`, `InputUICut`, `InputUIPaste`, `InputUIUndo`, `InputUIRedo` and `InputUISwapInputDirection` permanent typed InputActionSettings entries provide the default [LineEdit](LineEdit.md) keyboard actions. Their stored definitions participate in the existing InputMap transaction and can be remapped by a project. Shift extends caret movement after matching without Shift. LineEditTests exercises submission, movement, deletion and history on the prepared scene GUI path.

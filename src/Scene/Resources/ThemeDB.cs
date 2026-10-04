@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <remarks>The singleton and its built-in resources are borrowed. Project theme-file loading
 /// and skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
 /// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.
-/// Initial service construction decodes the built-in slider, button and scroll-hint icons through the SVG image codec at scale one.</remarks>
+/// Initial service construction decodes the built-in slider, button, text-field and scroll-hint icons through the SVG image codec at scale one.</remarks>
 public sealed partial class ThemeDB : ElectronObject
 {
     private static readonly Dictionary<string, Type> NativeTypes = typeof(ElectronObject).Assembly.GetExportedTypes()
@@ -38,7 +38,7 @@ public sealed partial class ThemeDB : ElectronObject
         foreach (var side in new[] { "left", "top", "right", "bottom" }) _defaultTheme.SetConstant("margin_" + side, "MarginContainer", 0);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
-        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); }
+        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); AddLineEditDefaults(); }
         catch
         {
             _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();

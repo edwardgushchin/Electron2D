@@ -420,6 +420,105 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<int> DefaultGUIDragThreshold { get; } =
         new("gui/common/drag_threshold", 10);
 
+    /// <summary>Defines the default keyboard binding for ui_text_submit.</summary>
+    /// <value>The permanent typed input/ui_text_submit setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextSubmit { get; } = new("input/ui_text_submit", new InputActionSettings
+    {
+        Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.KeypadEnter }]
+    });
+
+    /// <summary>Defines the default keyboard binding for ui_text_select_all.</summary>
+    /// <value>The permanent typed input/ui_text_select_all setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextSelectAll { get; } = CreateDefaultKeyAction("ui_text_select_all", Key.A, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_copy.</summary>
+    /// <value>The permanent typed input/ui_copy setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUICopy { get; } = CreateDefaultKeyAction("ui_copy", Key.C, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_cut.</summary>
+    /// <value>The permanent typed input/ui_cut setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUICut { get; } = CreateDefaultKeyAction("ui_cut", Key.X, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_paste.</summary>
+    /// <value>The permanent typed input/ui_paste setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUIPaste { get; } = CreateDefaultKeyAction("ui_paste", Key.V, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_undo.</summary>
+    /// <value>The permanent typed input/ui_undo setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUIUndo { get; } = CreateDefaultKeyAction("ui_undo", Key.Z, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_redo.</summary>
+    /// <value>The permanent typed input/ui_redo setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUIRedo { get; } = CreateDefaultKeyAction("ui_redo", Key.Z, KeyModifierMask.CommandOrControl | KeyModifierMask.Shift);
+
+    /// <summary>Defines the default keyboard binding for ui_text_backspace.</summary>
+    /// <value>The permanent typed input/ui_text_backspace setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextBackspace { get; } = CreateDefaultKeyAction("ui_text_backspace", Key.Backspace, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_backspace_word.</summary>
+    /// <value>The permanent typed input/ui_text_backspace_word setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextBackspaceWord { get; } = CreateDefaultKeyAction("ui_text_backspace_word", Key.Backspace, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_text_backspace_all_to_left.</summary>
+    /// <value>The permanent typed input/ui_text_backspace_all_to_left setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextBackspaceAllToLeft { get; } = CreateDefaultKeyAction("ui_text_backspace_all_to_left", Key.Backspace, KeyModifierMask.Alt);
+
+    /// <summary>Defines the default keyboard binding for ui_text_delete.</summary>
+    /// <value>The permanent typed input/ui_text_delete setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextDelete { get; } = CreateDefaultKeyAction("ui_text_delete", Key.Delete, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_delete_word.</summary>
+    /// <value>The permanent typed input/ui_text_delete_word setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextDeleteWord { get; } = CreateDefaultKeyAction("ui_text_delete_word", Key.Delete, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_text_delete_all_to_right.</summary>
+    /// <value>The permanent typed input/ui_text_delete_all_to_right setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextDeleteAllToRight { get; } = CreateDefaultKeyAction("ui_text_delete_all_to_right", Key.Delete, KeyModifierMask.Alt);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_left.</summary>
+    /// <value>The permanent typed input/ui_text_caret_left setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretLeft { get; } = CreateDefaultKeyAction("ui_text_caret_left", Key.Left, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_right.</summary>
+    /// <value>The permanent typed input/ui_text_caret_right setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretRight { get; } = CreateDefaultKeyAction("ui_text_caret_right", Key.Right, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_word_left.</summary>
+    /// <value>The permanent typed input/ui_text_caret_word_left setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretWordLeft { get; } = CreateDefaultKeyAction("ui_text_caret_word_left", Key.Left, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_word_right.</summary>
+    /// <value>The permanent typed input/ui_text_caret_word_right setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretWordRight { get; } = CreateDefaultKeyAction("ui_text_caret_word_right", Key.Right, KeyModifierMask.CommandOrControl);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_line_start.</summary>
+    /// <value>The permanent typed input/ui_text_caret_line_start setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretLineStart { get; } = CreateDefaultKeyAction("ui_text_caret_line_start", Key.Home, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_line_end.</summary>
+    /// <value>The permanent typed input/ui_text_caret_line_end setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretLineEnd { get; } = CreateDefaultKeyAction("ui_text_caret_line_end", Key.End, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_up.</summary>
+    /// <value>The permanent typed input/ui_text_caret_up setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretUp { get; } = CreateDefaultKeyAction("ui_text_caret_up", Key.Up, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_down.</summary>
+    /// <value>The permanent typed input/ui_text_caret_down setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretDown { get; } = CreateDefaultKeyAction("ui_text_caret_down", Key.Down, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_page_up.</summary>
+    /// <value>The permanent typed input/ui_text_caret_page_up setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretPageUp { get; } = CreateDefaultKeyAction("ui_text_caret_page_up", Key.PageUp, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_text_caret_page_down.</summary>
+    /// <value>The permanent typed input/ui_text_caret_page_down setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretPageDown { get; } = CreateDefaultKeyAction("ui_text_caret_page_down", Key.PageDown, 0);
+
+    /// <summary>Defines the default keyboard binding for ui_swap_input_direction.</summary>
+    /// <value>The permanent typed input/ui_swap_input_direction setting; projects may override its bindings.</value>
+    public static ProjectSetting<InputActionSettings> InputUISwapInputDirection { get; } = CreateDefaultKeyAction("ui_swap_input_direction", Key.QuoteLeft, KeyModifierMask.CommandOrControl);
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -516,6 +615,31 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(InputUIMenu, isBasic: false);
         RegisterInternal(InputUIAccept, isBasic: false);
         RegisterInternal(InputUICancel, isBasic: false);
+        RegisterInternal(InputUITextSubmit, isBasic: false);
+        RegisterInternal(InputUITextSelectAll, isBasic: false);
+        RegisterInternal(InputUICopy, isBasic: false);
+        RegisterInternal(InputUICut, isBasic: false);
+        RegisterInternal(InputUIPaste, isBasic: false);
+        RegisterInternal(InputUIUndo, isBasic: false);
+        RegisterInternal(InputUIRedo, isBasic: false);
+        RegisterInternal(InputUITextBackspace, isBasic: false);
+        RegisterInternal(InputUITextBackspaceWord, isBasic: false);
+        RegisterInternal(InputUITextBackspaceAllToLeft, isBasic: false);
+        RegisterInternal(InputUITextDelete, isBasic: false);
+        RegisterInternal(InputUITextDeleteWord, isBasic: false);
+        RegisterInternal(InputUITextDeleteAllToRight, isBasic: false);
+        RegisterInternal(InputUITextCaretLeft, isBasic: false);
+        RegisterInternal(InputUITextCaretRight, isBasic: false);
+        RegisterInternal(InputUITextCaretWordLeft, isBasic: false);
+        RegisterInternal(InputUITextCaretWordRight, isBasic: false);
+        RegisterInternal(InputUITextCaretLineStart, isBasic: false);
+        RegisterInternal(InputUITextCaretLineEnd, isBasic: false);
+        RegisterInternal(InputUITextCaretUp, isBasic: false);
+        RegisterInternal(InputUITextCaretDown, isBasic: false);
+        RegisterInternal(InputUITextCaretPageUp, isBasic: false);
+        RegisterInternal(InputUITextCaretPageDown, isBasic: false);
+        RegisterInternal(InputUISwapInputDirection, isBasic: false);
+
         RegisterInternal(ButtonShortcutFeedbackHighlightTime, isBasic: false);
         RegisterInternal(TooltipDelaySeconds, isBasic: false);
         RegisterInternal(IncrementalSearchMaxIntervalMsec, isBasic: false);
@@ -1902,6 +2026,31 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, InputUIMenu) ||
         ReferenceEquals(setting, InputUIAccept) ||
         ReferenceEquals(setting, InputUICancel) ||
+        ReferenceEquals(setting, InputUITextSubmit) ||
+        ReferenceEquals(setting, InputUITextSelectAll) ||
+        ReferenceEquals(setting, InputUICopy) ||
+        ReferenceEquals(setting, InputUICut) ||
+        ReferenceEquals(setting, InputUIPaste) ||
+        ReferenceEquals(setting, InputUIUndo) ||
+        ReferenceEquals(setting, InputUIRedo) ||
+        ReferenceEquals(setting, InputUITextBackspace) ||
+        ReferenceEquals(setting, InputUITextBackspaceWord) ||
+        ReferenceEquals(setting, InputUITextBackspaceAllToLeft) ||
+        ReferenceEquals(setting, InputUITextDelete) ||
+        ReferenceEquals(setting, InputUITextDeleteWord) ||
+        ReferenceEquals(setting, InputUITextDeleteAllToRight) ||
+        ReferenceEquals(setting, InputUITextCaretLeft) ||
+        ReferenceEquals(setting, InputUITextCaretRight) ||
+        ReferenceEquals(setting, InputUITextCaretWordLeft) ||
+        ReferenceEquals(setting, InputUITextCaretWordRight) ||
+        ReferenceEquals(setting, InputUITextCaretLineStart) ||
+        ReferenceEquals(setting, InputUITextCaretLineEnd) ||
+        ReferenceEquals(setting, InputUITextCaretUp) ||
+        ReferenceEquals(setting, InputUITextCaretDown) ||
+        ReferenceEquals(setting, InputUITextCaretPageUp) ||
+        ReferenceEquals(setting, InputUITextCaretPageDown) ||
+        ReferenceEquals(setting, InputUISwapInputDirection) ||
+
         ReferenceEquals(setting, ButtonShortcutFeedbackHighlightTime) ||
         ReferenceEquals(setting, TooltipDelaySeconds) ||
         ReferenceEquals(setting, IncrementalSearchMaxIntervalMsec) ||

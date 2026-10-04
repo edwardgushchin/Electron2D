@@ -8,7 +8,7 @@ internal readonly record struct TextLayoutKey(string Text, int FontSize, float W
     int MaxLines, TextLineBreakFlags Breaks, TextJustificationFlags Justification, TextDirection Direction, TextOrientation Orientation, bool Multiline = false);
 
 internal readonly record struct TextLayoutOptions(float LineSpacing = 0, float ParagraphSpacing = 0, string Language = "",
-    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null);
+    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false);
 
 internal readonly record struct TextLayoutLine(int Start, int End, int GlyphStart, int GlyphCount, float Width, float Ascent,
     float Descent, float CrossOffset, bool ParagraphEnd, int ParagraphLevel)
@@ -18,7 +18,7 @@ internal readonly record struct TextLayoutLine(int Start, int End, int GlyphStar
 
 // Each instance belongs to its font cache or a single consumer. Buffers survive rebuilds;
 // native resources and cached glyph textures remain borrowed from the font faces.
-internal sealed class TextLayout
+internal sealed partial class TextLayout
 {
     private readonly TextBIDI _bidi = new();
     private uint[] _scalars = [], _shapeScalars = [];
@@ -83,7 +83,7 @@ internal sealed class TextLayout
     private void BuildCore(Font font, TextLayoutKey key, TextLayoutOptions? options)
     {
         _font = font; _options = options ?? new TextLayoutOptions(Overrun: 1, VisibleCharacters: -1);
-        Key = key; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
+        Key = key; _caretsReady = false; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
         Decode(key.Text); CharacterCount = _count;
         if (_options.VisibleBehavior == 0 && _options.VisibleCharacters >= 0) _count = Math.Min(_count, _options.VisibleCharacters);
         ResolveProperties(); MeasureParagraphs(); BreakLines(); NaturalWidth = 0;
@@ -360,6 +360,7 @@ internal sealed class TextLayout
         else AppendRuns(start, end, _paragraphLevels[start]);
         foreach (var run in _runs)
         {
+            if (_options.PreserveControl && _nonprinting[run.Start]) { AddMissingGlyph(run.Start); continue; }
             if (IsSpecial(_scalars[run.Start]))
             {
                 var tab = _scalars[run.Start] == '\t';
@@ -412,9 +413,9 @@ internal sealed class TextLayout
         for (var i = start; i < end;)
         {
             var level = i >= trailing ? paragraphLevel : _levels[i];
-            var runEnd = i + 1; var special = IsSpecial(_scalars[i]);
+            var runEnd = i + 1; var special = IsSpecial(_scalars[i]) || _options.PreserveControl && _nonprinting[i];
             if (!special)
-                while (runEnd < end && !IsSpecial(_scalars[runEnd]) && ReferenceEquals(_faces[runEnd], _faces[i]) &&
+                while (runEnd < end && !IsSpecial(_scalars[runEnd]) && !(_options.PreserveControl && _nonprinting[runEnd]) && ReferenceEquals(_faces[runEnd], _faces[i]) &&
                     _scripts[runEnd] == _scripts[i] && (runEnd >= trailing ? paragraphLevel : _levels[runEnd]) == level) runEnd++;
             _runs.Add(new(i, runEnd, _faces[i], _scripts[i], level)); i = runEnd;
         }
@@ -437,7 +438,7 @@ internal sealed class TextLayout
     private void AddMissingGlyph(int index)
     {
         var scalar = _scalars[index];
-        if (IsIgnorable(index) || scalar is 0x200b or 0x2060 or 0xfeff) return;
+        if (!_options.PreserveControl && (IsIgnorable(index) || scalar is 0x200b or 0x2060 or 0xfeff)) return;
         var size = TextMissingGlyph.Size(Key.FontSize, scalar);
         var vertical = Key.Orientation == TextOrientation.Vertical;
         var offset = vertical ? new Vector2(-MathF.Round(size.X * .5f, MidpointRounding.AwayFromZero), size.Y) : Vector2.Zero;
@@ -625,7 +626,7 @@ internal sealed class TextLayout
     }
 
     internal void Draw(CanvasItem canvas, Vector2 baseline, Color color, int outline = 0, float oversampling = 0,
-        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false)
+        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false, Rect2? clipRect = null)
     {
         if (IsBusy) throw new InvalidOperationException("An active text layout cannot record itself recursively.");
         for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
@@ -634,14 +635,14 @@ internal sealed class TextLayout
             if (_builtFontGeneration != read.Generation) { Build(_font, Key, _options); continue; }
             if (!read.IsCurrent) continue;
             _active++;
-            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth); return; }
+            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect); return; }
             finally { _active--; }
         }
         throw Font.UnsettledRead();
     }
 
     private void DrawCore(CanvasItem canvas, Vector2 baseline, Color color, int outline, float oversampling,
-        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth)
+        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth, Rect2? clipRect)
     {
         if (firstLine < 0 || firstLine >= _lines.Count) return;
         var end = Key.MaxLines < 0 ? _lines.Count : Math.Min(Key.MaxLines, _lines.Count);
@@ -666,7 +667,7 @@ internal sealed class TextLayout
                 if (glyph.Missing)
                 {
                     if (clipToWidth && Key.Width > 0 && (glyph.Position.X - glyph.Offset.X < 0 || glyph.Position.X - glyph.Offset.X + glyph.Advance > Key.Width)) continue;
-                    if (!outlinePass) TextMissingGlyph.Draw(canvas, Key.FontSize, origin + glyph.Position, glyph.Index, color);
+                    if (!outlinePass) TextMissingGlyph.Draw(canvas, Key.FontSize, origin + glyph.Position, glyph.Index, color, clipRect, _options.PreserveControl);
                     continue;
                 }
                 for (var repeat = 0; repeat < glyph.Repeat; repeat++)
@@ -679,7 +680,7 @@ internal sealed class TextLayout
                     var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(repeat * glyph.Advance, 0) : new Vector2(0, repeat * glyph.Advance);
                     var position = origin + glyph.Position + offset;
                     var image = glyph.Face!.GetGlyph(glyph.Index, Key.FontSize, outline, oversampling, position, out var rasterPosition);
-                    DrawGlyph(canvas, image, rasterPosition, color, !outlinePass && glyph.Face.ModulateColorGlyphs);
+                    DrawGlyph(canvas, image, rasterPosition, color, !outlinePass && glyph.Face.ModulateColorGlyphs, clipRect);
                 }
             }
         }
@@ -706,11 +707,20 @@ internal sealed class TextLayout
         return default;
     }
 
-    internal static void DrawGlyph(CanvasItem canvas, FontGlyph glyph, Vector2 baseline, Color color, bool modulateColor = false)
+    internal static void DrawGlyph(CanvasItem canvas, FontGlyph glyph, Vector2 baseline, Color color, bool modulateColor = false, Rect2? clipRect = null)
     {
         if (glyph.Colored && !modulateColor) color = new Color(1, 1, 1, color.A);
         if (glyph.Texture is not null && glyph.Size.X > 0 && glyph.Size.Y > 0)
-            canvas.DrawTextureRect(glyph.Texture, new Rect2(baseline + glyph.Offset, glyph.Size), false, color);
+        {
+            var rect = new Rect2(baseline + glyph.Offset, glyph.Size);
+            if (clipRect is { } clip)
+            {
+                var clipped = rect.Intersection(clip); if (!clipped.HasArea()) return;
+                var scale = glyph.Texture.GetSize() / glyph.Size;
+                canvas.DrawTextureRectRegion(glyph.Texture, clipped, new Rect2((clipped.Position - rect.Position) * scale, clipped.Size * scale), color, clipUV: false);
+            }
+            else canvas.DrawTextureRect(glyph.Texture, rect, false, color);
+        }
     }
     private float TabAdvance(float width, ref int index)
     {

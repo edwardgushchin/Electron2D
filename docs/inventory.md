@@ -8,6 +8,9 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Text](components/text.md) | [`LineEdit`](classes/LineEdit.md) | [`LineEdit.cs`](../src/Scene/GUI/LineEdit.cs) | Current | Executable single-line editing, shaping/IME, selection/history/clipboard, commands and dragging; popup/native keyboard/picker prerequisites remain. |
+| [Rendering](domains/rendering.md) | [Text](components/text.md) | [`LineEditIconExpandMode`](classes/LineEditIconExpandMode.md) | [`LineEdit.cs`](../src/Scene/GUI/LineEdit.cs) | Current | Typed original, text and field icon fitting. |
+| [Rendering](domains/rendering.md) | [Text](components/text.md) | [`LineEditMenuAction`](classes/LineEditMenuAction.md) | [`LineEdit.Menu.cs`](../src/Scene/GUI/LineEdit.Menu.cs) | Current | Typed editing and Unicode commands; native symbol picker remains unavailable. |
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#embedded-viewport-containers-and-gui) | [SubViewportContainer](classes/SubViewportContainer.md) | [SubViewportContainer.cs](../src/Scene/GUI/SubViewportContainer.cs) | Current | Native embedded textures, stretch/shrink and typed nested input. |
 | [Scene](domains/scene.md) | [Scene tree](components/scene-tree.md) | [ViewportGUIState](classes/ViewportGUIState.md) | [ViewportGUIState.cs](../src/Scene/Main/ViewportGUIState.cs) | Internal | Per-viewport prepared GUI state and connected drag ownership. |
 | [Scene](domains/scene.md) | [Scene tree](components/scene-tree.md) | [SceneTree.GUIScope](classes/SceneTree.GUIScope.md) | [SceneTree.GUIState.cs](../src/Scene/Main/SceneTree.GUIState.cs) | Private | Allocation-free synchronous context restoration. |

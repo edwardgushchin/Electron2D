@@ -27,3 +27,7 @@ Warmed local button/group state, routed shortcuts and reusable hover buffers all
 MenuButton and OptionButton require a real PopupMenu; LinkButton URI activation requires the OS URL-opening service. Independent native popup windows, accessibility semantics, drag/drop and scroll gesture ownership remain separate domains. The current root tooltip host does not claim those APIs. [ADR 0083](../decisions/rendering.md#adr-0083) owns themes, [ADR 0046](../decisions/rendering.md#adr-0046) owns text and [ADR 0023](../decisions/scene.md#adr-0023) owns typed scene storage.
 
 Embedded Controls now reuse the same button/focus/tooltip hooks in independent viewport contexts. Connected SubViewportContainer sections forward input and share drag targets/previews; native cursor/keyboard focus pixels are checked by SubViewportContainerTests. Temporary input Resource-copy and native/other-platform limits remain unchanged.
+
+## Text-field interaction
+
+[LineEdit](../classes/LineEdit.md) integrates Control focus, GUIInput, TextInput, IMECompositionChanged and drag hooks for a real single-line editor. Its editing/display tests cover managed authoring and native X11 GPU/compatibility hosts. Popup menus, native virtual keyboards and native symbol-picker presentation retain their exact separate services; the LineEdit coverage class remains Partial.

@@ -1,6 +1,6 @@
 # Text shaping and canvas fonts
 
-Last updated: 2026-09-27
+Last updated: 2026-10-04
 
 The text component owns dynamic font resources, Unicode paragraph layout and glyph textures. It consumes the existing Resource graph, theme lookup, ImageTexture and retained canvas rather than adding a second graphics stack. [ADR 0046](../decisions/rendering.md#adr-0046) records the precise native bridge and its executable reasons; [ADR 0012](../decisions/product.md#adr-0012) defines packaging and source ownership.
 
@@ -26,3 +26,7 @@ No native/backend types appear in the public font API. Public TextServer RID ope
 [FontTests](../../tests/Electron2D.Tests/FontTests.cs), [FontFileTests](../../tests/Electron2D.Tests/FontFileTests.cs), [FontResourceLoaderTests](../../tests/Electron2D.Tests/FontResourceLoaderTests.cs), [LabelSettingsTests](../../tests/Electron2D.Tests/LabelSettingsTests.cs) and [ThemeFontTests](../../tests/Electron2D.Tests/ThemeFontTests.cs) exercise public resources, atomic replacement, alias copying, missed callbacks, typed theme lookup, drawing guards and warmed operations. [FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) is the native pixel and frame-allocation gate for both current backends. Font pixels and 64 warmed active frames at zero managed bytes pass on Linux Wayland GPU and compatibility. The complete integrated managed suite passes, including ICU dictionary/locale boundaries and concurrent font retirement. Label pixels, effects, visibility, clipping and missed-callback refresh also pass on both backends, including 64 warmed active frames at zero managed bytes. FontLifetimeTests covers reentrant and parallel source replacement, reads during pre-delete notification and bounded mutation retries; native checks preserve recorded glyph pixels after font disposal and release retired backend handles on an unused frame. Native allocator counts, broad-scene performance, other-platform execution and owner acceptance are separate from these managed checks.
 
 A fresh self-contained Linux x64 HostExample publish passes native and license audits: 66 ELF payloads, 46 byte-identical required notices and exactly nine private text-boundary C exports. The private library has its own SONAME and no dynamic ICU dependency. Offline import checks verify the pinned Unicode closure, case tables and ICU source/data hashes. Cross-RID Windows packaging omits the Linux-only boundary library and build target; this does not establish Windows text execution.
+
+## Single-line editing
+
+[LineEdit](../classes/LineEdit.md) uses complete shaped-line caret/selection geometry, scalar editing, grapheme/word navigation, native IME/commits, history, typed command dispatch, clipboard and text dragging. Nonprinting control display emits clipped hexadecimal placeholders. Local text clipping also applies to glyph rasters and missing-glyph geometry; other consumers keep their previous unclipped path. Caret geometry is prepared once per layout, with linear hit testing and reused buffers. The LineEdit class page records the exact remaining popup, virtual-keyboard and picker prerequisites and test boundaries.
