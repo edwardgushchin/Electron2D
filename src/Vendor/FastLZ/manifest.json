@@ -1,0 +1,8 @@
+{
+  "source": "pinned reference thirdparty/misc FastLZ",
+  "commit": "ed1daf0bf001b61586d9930840f2f1394092c079",
+  "files": {
+    "fastlz.c": "e150086d0461ccf466962f24d7963d5eca5f6671e5e9f3ef7020c7e3540df6c8",
+    "fastlz.h": "e0fd69cf4a88e97f2b2603ba8865d5ca927f6e0f523f0fcdc401c240291b3fdb"
+  }
+}

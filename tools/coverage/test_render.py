@@ -368,6 +368,10 @@ def main():
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name
         assert "UPNPTests" in rows[0] and "read-only" in rows[0], name
+    for name, count in (("ENetConnection", 36), ("ENetPacketPeer", 48), ("ENetMultiplayerPeer", 8)):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows), name
+        assert "ENetTests" in rows[0] and "DTLS" in rows[0], name
     for name, count in (("PacketPeerDTLS", 11), ("DTLSServer", 3)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name

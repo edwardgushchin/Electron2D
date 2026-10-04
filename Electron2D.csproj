@@ -64,4 +64,5 @@
   </Target>
   <Import Project="tools/text-native.targets" />
   <Import Project="tools/audio-native.targets" />
+  <Import Project="tools/enet-native.targets" />
 </Project>

@@ -15,6 +15,7 @@ internal static class NativeLibraries
         {
             if (name == "HarfBuzzSharp") return NativeLibrary.Load("libHarfBuzzSharp", assembly, path);
             if (!OperatingSystem.IsLinux()) return 0;
+            if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.so", assembly, path);
             if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.so", assembly, path);
             if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
             // NuGet aliases are separate files. Use the same SONAME as native dependents and load core first,

@@ -225,9 +225,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [DirectionalLight3D](classes/DirectionalLight3D.md) | Light3D | Excluded | 17 |
 | [DisplayServer](classes/DisplayServer.md) | Object | Implemented | 552 |
 | [DrawableTexture2D](classes/DrawableTexture2D.md) | Texture2D | Blocked | 13 |
-| [ENetConnection](classes/ENetConnection.md) | RefCounted | Blocked | 35 |
-| [ENetMultiplayerPeer](classes/ENetMultiplayerPeer.md) | MultiplayerPeer | Blocked | 7 |
-| [ENetPacketPeer](classes/ENetPacketPeer.md) | PacketPeer | Blocked | 47 |
+| [ENetConnection](classes/ENetConnection.md) | RefCounted | Implemented | 35 |
+| [ENetMultiplayerPeer](classes/ENetMultiplayerPeer.md) | MultiplayerPeer | Implemented | 7 |
+| [ENetPacketPeer](classes/ENetPacketPeer.md) | PacketPeer | Implemented | 47 |
 | [EditorCommandPalette](classes/EditorCommandPalette.md) | ConfirmationDialog | Blocked | 2 |
 | [EditorContextMenuPlugin](classes/EditorContextMenuPlugin.md) | RefCounted | Blocked | 14 |
 | [EditorDebuggerPlugin](classes/EditorDebuggerPlugin.md) | RefCounted | Blocked | 8 |

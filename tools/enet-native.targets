@@ -1,0 +1,29 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DENetNativeRID Condition="'$(Electron2DENetNativeRID)' == '' and '$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</Electron2DENetNativeRID>
+    <Electron2DENetNativeRID Condition="'$(Electron2DENetNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</Electron2DENetNativeRID>
+    <Electron2DENetNativeEnabled Condition="'$(Electron2DENetNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'Linux' and ('$(Electron2DENetNativeRID)' == 'linux-x64' or '$(Electron2DENetNativeRID)' == 'linux-arm64')">true</Electron2DENetNativeEnabled>
+    <Electron2DENetNativeEnabled Condition="'$(Electron2DENetNativeEnabled)' == ''">false</Electron2DENetNativeEnabled>
+    <Electron2DENetNativeJobs Condition="'$(Electron2DENetNativeJobs)' == ''">4</Electron2DENetNativeJobs>
+    <_Electron2DENetSource>$(MSBuildThisFileDirectory)../src/Vendor/ENet</_Electron2DENetSource>
+    <_Electron2DENetWrapper>$(MSBuildThisFileDirectory)enet-native</_Electron2DENetWrapper>
+    <_Electron2DENetBuild>$(MSBuildThisFileDirectory)../obj/enet-native/$(Electron2DENetNativeRID)</_Electron2DENetBuild>
+    <_Electron2DENetLibrary>$(_Electron2DENetBuild)/libElectron2DENet.so</_Electron2DENetLibrary>
+    <_Electron2DENetLibrary Condition="'$(Electron2DENetNativeLibrary)' != ''">$(Electron2DENetNativeLibrary)</_Electron2DENetLibrary>
+    <_Electron2DENetToolchainArg Condition="'$(Electron2DENetNativeToolchain)' != ''">-DCMAKE_TOOLCHAIN_FILE=&quot;$(Electron2DENetNativeToolchain)&quot;</_Electron2DENetToolchainArg>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DENetInput Include="$(_Electron2DENetSource)/**/*.c;$(_Electron2DENetSource)/**/*.h;$(_Electron2DENetSource)/**/CMakeLists.txt;$(_Electron2DENetSource)/manifest.json;$(_Electron2DENetWrapper)/**/*;$(MSBuildThisFileDirectory)../src/Vendor/FastLZ/**/*;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DENetLibrary)" Condition="'$(Electron2DENetNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DENetNativeRID)/native/libElectron2DENet.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="true" PackagePath="runtimes/$(Electron2DENetNativeRID)/native/" Visible="false" />
+  </ItemGroup>
+  <Target Name="ValidateElectron2DENetNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DENetNativeEnabled)' == 'true'">
+    <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' or ('$(Electron2DENetNativeRID)' != 'linux-x64' and '$(Electron2DENetNativeRID)' != 'linux-arm64')" Text="The current enet native profile requires Linux x64/ARM64; a foreign profile must not package a host library." />
+    <Error Condition="'$(Electron2DENetNativeLibrary)' != '' and !Exists('$(_Electron2DENetLibrary)')" Text="Electron2DENetNativeLibrary must name an existing target library." />
+    <Error Condition="'$(Electron2DENetNativeLibrary)' == '' and '$(Electron2DENetNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)' and '$(Electron2DENetNativeToolchain)' == ''" Text="Cross-RID enet builds require a target CMake toolchain or prebuilt target library." />
+    <Error Condition="'$(Electron2DENetNativeLibrary)' == '' and !$([MSBuild]::IsOSPlatform('Linux')) and '$(Electron2DENetNativeToolchain)' == ''" Text="Building Linux enet on another OS requires an explicit CMake toolchain or prebuilt target library." />
+  </Target>
+  <Target Name="BuildElectron2DENetNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" DependsOnTargets="ValidateElectron2DENetNative" Condition="'$(Electron2DENetNativeEnabled)' == 'true' and '$(Electron2DENetNativeLibrary)' == ''" Inputs="@(_Electron2DENetInput);$(Electron2DENetNativeToolchain)" Outputs="$(_Electron2DENetLibrary)">
+    <Exec Command="cmake -S &quot;$(_Electron2DENetWrapper)&quot; -B &quot;$(_Electron2DENetBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release $(_Electron2DENetToolchainArg)" />
+    <Exec Command="cmake --build &quot;$(_Electron2DENetBuild)&quot; --target Electron2DENet --config Release --parallel $(Electron2DENetNativeJobs)" />
+  </Target>
+</Project>

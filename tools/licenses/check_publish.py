@@ -25,6 +25,7 @@ NATIVE_GROUPS = {
     "FreeType": ("libfreetype.so",),
     "HarfBuzz": ("libHarfBuzzSharp.so",),
     "FAudio": ("libFAudio.so.0",),
+    "ENet": ("libElectron2DENet.so",),
     "ICUText": ("libElectron2DTextBreak.so",),
     "libaom": ("libaom.so*",),
     "libavif": ("libavif.so*",),
@@ -49,7 +50,7 @@ def check(publish: Path) -> None:
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
     elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
-    assert len(elf) == 67, f"Expected 67 audited ELF files, found {len(elf)}"
+    assert len(elf) == 68, f"Expected 68 audited ELF files, found {len(elf)}"
     assert app in elf, "Expected the native application host"
     for name in elf:
         groups = [group for group, patterns in NATIVE_GROUPS.items()
@@ -63,7 +64,7 @@ def check(publish: Path) -> None:
     source = ROOT / "licence"
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
-    assert len(expected) == 52, f"Expected 52 license and notice files, found {len(expected)}"
+    assert len(expected) == 54, f"Expected 54 license and notice files, found {len(expected)}"
     assert {p.name for p in delivered.iterdir() if p.is_file()} == expected, "Unexpected published license files"
     for name in expected:
         assert (delivered / name).read_bytes() == (source / name).read_bytes(), name

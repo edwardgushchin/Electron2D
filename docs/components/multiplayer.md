@@ -41,3 +41,5 @@ MultiplayerAPI/SceneMultiplayer RPC/authority/path routing, replication/synchron
 [Typed scene multiplayer](scene-multiplayer.md) now consumes these peer contracts: nearest-branch Node/SceneTree assignment, direct typed RPC/codecs, bilateral authentication, original-sender custom messages and server relay. Transport readiness and scene RPC are executable; typed spawn/synchronizer/schema replication and its batching remain separate concrete dependencies.
 
 [Typed scene spawning and replication](scene-replication.md) now executes custom/automatic in-memory scene factories, pre-Ready state, late admission, visibility/RPC integration, property policies and real periodic/delta batching through SceneMultiplayer. Public branch replacement rebinds typed configurations after committed cleanup, including callback errors. File scene authoring and other acceptance gates remain separate.
+
+[Native ENet](enet.md) adds executable host/peer and server/client/mesh transport with real delivery modes, negotiated channels, DTLS and the existing scene consumers.

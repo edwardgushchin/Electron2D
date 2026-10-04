@@ -98,10 +98,13 @@ public class PacketPeerDTLS : PacketPeer
     protected override int NextPacketSize() => _status == TLSStatus.Connected ? _packets.NextSize : -1;
     /// <inheritdoc />
     protected override void ReadPacketCore(Span<byte> destination) => _packets.Take(destination);
+    internal void SetTransportMTU(int mtu) { CheckPacketPeer(); if (_session is null) throw new InvalidOperationException("DTLS session required."); TLSNative.Require(TLSNative.SSL_ctrl(_session.Pointer, 17, mtu, 0), "DTLS transport MTU failed."); }
+    internal void PutTransportPacket(ReadOnlySpan<byte> data) => SendPacket(data, 16384);
     /// <inheritdoc />
-    public override void PutPacket(ReadOnlySpan<byte> data)
+    public override void PutPacket(ReadOnlySpan<byte> data) => SendPacket(data, GetMaxPacketSize());
+    private void SendPacket(ReadOnlySpan<byte> data, int limit)
     {
-        CheckPacketPeer(); if (_polling) throw new InvalidOperationException("DTLS sending cannot reenter polling."); if (_status != TLSStatus.Connected || _session is null) throw new InvalidOperationException("Authenticated DTLS is required."); if (data.Length > GetMaxPacketSize()) throw new ArgumentException("The DTLS packet exceeds its advertised capacity.", nameof(data)); if (data.IsEmpty) return;
+        CheckPacketPeer(); if (_polling) throw new InvalidOperationException("DTLS sending cannot reenter polling."); if (_status != TLSStatus.Connected || _session is null) throw new InvalidOperationException("Authenticated DTLS is required."); if (data.Length > limit) throw new ArgumentException("The DTLS packet exceeds its advertised capacity.", nameof(data)); if (data.IsEmpty) return;
         try { Poll(); if (_session is null) throw new IOException("DTLS closed before sending."); TLSNative.ERR_clear_error(); var result = TLSNative.Write(_session.Pointer, data); var error = result > 0 ? 0 : TLSNative.SSL_get_error(_session.Pointer, result); Handle(error); if (result != data.Length) throw new IOException("DTLS could not accept the complete packet."); Flush(); } catch { Fail(); throw; }
     }
     /// <summary>Sends a best-effort close notification and releases DTLS state without closing UDP.</summary><remarks>Available packets clear; retained security resources are released. Idle calls are valid.</remarks>

@@ -35,11 +35,12 @@ The license texts above are published together in `licence/`. The comparison dat
 
 ## Native files in the current self-contained Linux publish
 
-This inventory comes from a self-contained `linux-x64` HostExample publish on 2026-10-03. It contains 67 ELF files, including the application host and `createdump`; versioned and unversioned `.so` names are separate delivered files. Every ELF name is covered by exactly one row below. The runtime pack is .NET 10.0.1, with SDL3-CS.Linux 3.4.16, Image 3.4.6.9, Shadercross 3.0.0.11, MonoGame.Library.FreeType 2.13.2.5 HarfBuzzSharp.NativeAssets.Linux 14.2.1.201 and the private ICU 78.3 text backend plus FAudio 26.10. Other application names replace `HostExample` in the first row.
+This inventory comes from a self-contained `linux-x64` HostExample publish on 2026-10-04. It contains 68 ELF files, including the application host and `createdump`; versioned and unversioned `.so` names are separate delivered files. Every ELF name is covered by exactly one row below. The runtime pack is .NET 10.0.1, with SDL3-CS.Linux 3.4.16, Image 3.4.6.9, Shadercross 3.0.0.11, MonoGame.Library.FreeType 2.13.2.5 HarfBuzzSharp.NativeAssets.Linux 14.2.1.201 and the private ICU 78.3 text backend plus FAudio 26.10. Other application names replace `HostExample` in the first row.
 
 | Published native filenames, linux-x64 | Component and applicable license text |
 | --- | --- |
 | `HostExample`, `createdump`, `libSystem.*.so`, `libclrgc.so`, `libclrgcexp.so`, `libclrjit.so`, `libcoreclr.so`, `libcoreclrtraceptprovider.so`, `libhostfxr.so`, `libhostpolicy.so`, `libmscordaccore.so`, `libmscordbi.so` | .NET runtime 10.0.1: [MIT](dotnet-10.0.1-LICENSE.txt) and [runtime third-party notices](dotnet-10.0.1-ThirdPartyNotices.txt). An application has its own executable name in place of `HostExample`. |
+| `libElectron2DENet.so` | Unchanged ENet1.3.18 and FastLZ0.5.0: [ENet MIT](ENet-LICENSE.txt), [FastLZ MIT](FastLZ-LICENSE.txt); engine C socket/codec bridge: [MIT](Electron2D-LICENSE.txt). Host zlib/Zstandard libraries are not delivered. |
 | `libFAudio.so.0` | FAudio 26.10, source `6839b88e304a046ae1a609ff14a085371e02a4e0`: [zlib](FAudio-LICENSE.txt). Built with SDL3 and XNASONG disabled; no stb_vorbis/QOA C decoder is compiled into this native library. |
 | `libSDL3.so*` | SDL 3.4.16: [zlib](SDL-LICENSE.txt). |
 | `libfreetype.so` | MonoGame.Library.FreeType 2.13.2.5, native FreeType 2.13.3: [license selection notice](FreeType-LICENSE.txt), used under the [FreeType License](FreeType-FTL.txt). Its static dependencies are covered by [zlib 1.3.1](zlib-1.3.1-LICENSE.txt), [libpng 1.6.43](libpng-1.6.43-LICENSE.txt), [HarfBuzz 5.2.0](HarfBuzz-5.2.0-COPYING.txt) and [Brotli](Brotli-LICENSE.txt). |
@@ -59,7 +60,7 @@ This inventory comes from a self-contained `linux-x64` HostExample publish on 20
 
 Portions of this software are copyright © 2024 The FreeType Project (www.freetype.org). All rights reserved. FreeType is used under the FreeType License, not its alternative GPL license. The MonoGame wrapper's pinned build revision is `dcb1a58dc93c6b926fdce157ff66e4afd0e2914c`, with FreeType source `42608f77f20749dd6ddc9e0536788eaad70ea4b5`; its Linux build statically links dependencies and pins the zlib/libpng/HarfBuzz source wraps above. The delivered `libfreetype.so` SHA-256 is `28b83d3c5db8cc8d283ff68f3a63e2a491b7a9bfadc30388ad4a3838eb634bd7`. Exact Brotli build provenance remains to be reconciled before a release; the retained upstream MIT notice is included now. Native asset versions and file presence do not prove cross-platform execution.
 
-The publish contains 52 license and notice files, copied byte-for-byte into `licence/` by the Electron2D project. The private ICU closure is pinned to source commit `21d1eb0f306e1141c10931e914dfc038c06121da`; its 60-item data package is reproduced from the official release archive, with SHA-256 `64e407b570a21a4b740531a14cd95f0cefc46cef3d8224fd09a0dd386fb7016a`. ICU symbols are hidden and independently suffixed, so the private library does not replace the platform ICU used by .NET. The referenced .NET and DirectXShaderCompiler texts came from the exact NuGet runtime packages listed above; libwebp's COPYING came from the Image package. The other texts were obtained from the corresponding upstream projects and retained without changing their terms.
+The publish contains 54 license and notice files, copied byte-for-byte into `licence/` by the Electron2D project. The private ICU closure is pinned to source commit `21d1eb0f306e1141c10931e914dfc038c06121da`; its 60-item data package is reproduced from the official release archive, with SHA-256 `64e407b570a21a4b740531a14cd95f0cefc46cef3d8224fd09a0dd386fb7016a`. ICU symbols are hidden and independently suffixed, so the private library does not replace the platform ICU used by .NET. The referenced .NET and DirectXShaderCompiler texts came from the exact NuGet runtime packages listed above; libwebp's COPYING came from the Image package. The other texts were obtained from the corresponding upstream projects and retained without changing their terms.
 
 ## Release audit boundary
 
@@ -110,3 +111,12 @@ Interactive clip playback adapts the [pinned interactive music source](https://g
 Playlist sequence metadata, full-range-swap order and outgoing fade semantics adapt pinned [audio_stream_playlist.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/interactive_music/audio_stream_playlist.cpp) and [header](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/interactive_music/audio_stream_playlist.h). The existing [MIT runtime adaptation notice](CanvasStyleGeometry-LICENSE.txt) accompanies this implementation; transactional ownership, finite guards and timing/boundary corrections are engine-owned. No vendor source or new dependency is introduced.
 
 The engine-owned output transport bridge adapts the pinned FAudio SDL3 platform callback/payload contract from [FAudio SDL3 platform source](https://github.com/FNA-XNA/FAudio/blob/6839b88e304a046ae1a609ff14a085371e02a4e0/src/FAudio_platform_sdl3.c). The existing [FAudio zlib notice](FAudio-LICENSE.txt) accompanies it. Vendored source remains unmodified; the bridge adds two internal engine exports to the same delivered libFAudio.so.0.
+
+## Native ENet transport
+
+The private Linux ENet library includes unchanged ENet 1.3.18 sources at commit
+`5a9c537fd464b3c6d3c55e1d3bd47588faf71b42` ([MIT notice](ENet-LICENSE.txt))
+and FastLZ 0.5.0 ([MIT notice](FastLZ-LICENSE.txt)). Its engine-owned socket and
+compression bridge links the host's zlib and Zstandard shared libraries. Those
+system libraries are prerequisites and are not copied into the publish payload.
+Source hashes and provenance are retained in the repository manifests.

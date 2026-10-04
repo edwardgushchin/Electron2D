@@ -37,3 +37,5 @@ Close notification/disconnect releases session/BIO/cookie/queued packets and sec
 These are headless native network checks, independent of display protocol. Other native platforms/browser hosts and packaging, routed-loss/throughput/native allocator totals, ENet integration and human/rendered/editor/agent acceptance remain separate gates. See [platform verification](../platform-verification.md) and [ADR 0094](../decisions/networking.md#adr-0094).
 
 Backend references: [datagram BIO pair](https://docs.openssl.org/3.6/man3/BIO_s_dgram_pair/), [cookie exchange](https://docs.openssl.org/3.6/man3/DTLSv1_listen/) and [DTLS retransmission timers](https://docs.openssl.org/3.6/man3/DTLSv1_handle_timeout/).
+
+The [ENet host consumer](enet.md) internally configures a larger transport MTU and accepts protocol datagrams through prepared record storage; this does not widen the standalone public 488-byte packet contract.

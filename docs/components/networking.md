@@ -37,3 +37,5 @@ After preparation, 64 buffer number cycles, 64 TCP number/read/write/poll cycles
 Consumer-defined transports inherit StreamPeer or PacketPeer and override typed span, progress, availability and raw payload capacity hooks. NetworkingTests integrates a one-byte-at-a-time consumer stream with primitive reads/writes and PacketPeerStream, and verifies custom packet bounds without consuming undersized reads. GetMaxPacketSize reports 65507 bytes conservatively for UDP and the configured outgoing payload limit for framed streams.
 
 [Typed multiplayer transports](multiplayer.md) now extend PacketPeer with identity, next-packet metadata, managed extension hooks and offline/WS/WSS transport owners. Higher scene multiplayer dispatch and other transport backends remain separate.
+
+[Native ENet](enet.md) adds executable host/peer and server/client/mesh transport with real delivery modes, negotiated channels, DTLS and the existing scene consumers.

@@ -11,6 +11,8 @@ using EngineTimer = Electron2D.Timer;
 
 NativeLibraryTests.Run();
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENET") == "1") { ENetTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DTLS") == "1") { DTLSTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UPNP") == "1") { UPNPTests.Run(); return; }
@@ -501,6 +503,7 @@ LineEditTests.Run();
 NetworkingTests.Run();
 UPNPTests.Run();
 DTLSTests.Run();
+ENetTests.Run();
 TLSTests.Run();
 HTTPTests.Run();
 WebSocketTests.Run();

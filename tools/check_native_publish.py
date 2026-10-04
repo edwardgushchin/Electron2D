@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a self-contained HostExample publish and its private Linux text ABI."""
+"""Check a self-contained HostExample publish and its private Linux text/ENet ABIs."""
 
 import json
 import re
@@ -62,6 +62,17 @@ def check(rid: str, publish: Path) -> None:
     if platform == "Linux":
         assert private_text.is_file(), "Missing private ICU text backend"
         check_private_text(rid, private_text)
+        enet = native / "libElectron2DENet.so"
+        assert enet.is_file() and not (publish / enet.name).exists(), "ENet must exist only in its RID directory"
+        header = enet.read_bytes()[:20]
+        assert header[:6] == b"\x7fELF\x02\x01" and int.from_bytes(header[18:20], "little") == {"linux-x64": 62, "linux-arm64": 183}[rid], "ENet ELF architecture mismatch"
+        dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(enet)], text=True)
+        assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libElectron2DENet.so"], "ENet SONAME mismatch"
+        needed = set(re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic))
+        assert needed == {"libz.so.1", "libzstd.so.1", "libc.so.6", {"linux-x64": "ld-linux-x86-64.so.2", "linux-arm64": "ld-linux-aarch64.so.1"}[rid]}, f"Unreviewed ENet dependencies: {needed}"
+        symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(enet)], text=True)
+        exports = {line.split()[-1] for line in symbols.splitlines()}
+        assert exports == {"e2d_enet_" + name for name in ("callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")}, "ENet private ABI export mismatch"
         audio = native / "libFAudio.so.0"
         assert audio.is_file(), "Missing pinned native audio backend"
         header = audio.read_bytes()[:20]
@@ -75,8 +86,9 @@ def check(rid: str, publish: Path) -> None:
         assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libFAudio.so.0"], "Audio SONAME mismatch"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
         assert not list(publish.rglob("libicu*")), "A private text publish must not deliver global ICU libraries"
-        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text backend verified (9 exports, no global ICU dependency)")
+        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text/ENet backends verified (9/13 exports, no global ICU dependency)")
     else:
+        assert not list(publish.rglob("libElectron2DENet.so")), "Linux ENet backend leaked into a foreign publish"
         assert not list(publish.rglob("libFAudio*")), "Linux audio library leaked into a foreign publish"
         assert not list(publish.rglob("libElectron2DTextBreak.so")), "Linux private text backend leaked into a foreign publish"
         print(f"{rid}: self-contained host and {platform} SDL/FreeType/HarfBuzz payload verified; private text backend is not supplied")

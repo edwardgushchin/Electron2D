@@ -3235,6 +3235,174 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ENetCompressionMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetCompressionMode",
+    "name": "ENetCompressionMode",
+    "signature": "public enum Electron2D.ENetCompressionMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetConnection",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "ENetConnection",
+    "signature": "public class Electron2D.ENetConnection",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetEvent",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "ENetEvent",
+    "signature": "public struct Electron2D.ENetEvent",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.ENetEvent\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetEventType",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetEventType",
+    "name": "ENetEventType",
+    "signature": "public enum Electron2D.ENetEventType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetHostStatistic",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetHostStatistic",
+    "name": "ENetHostStatistic",
+    "signature": "public enum Electron2D.ENetHostStatistic",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetMultiplayerPeer",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "ENetMultiplayerPeer",
+    "signature": "public class Electron2D.ENetMultiplayerPeer",
+    "visibility": "public",
+    "baseType": "Electron2D.MultiplayerPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetPacketFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetPacketFlags",
+    "name": "ENetPacketFlags",
+    "signature": "public enum Electron2D.ENetPacketFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetPacketPeer",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "ENetPacketPeer",
+    "signature": "public sealed class Electron2D.ENetPacketPeer",
+    "visibility": "public",
+    "baseType": "Electron2D.PacketPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetPeerState",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "ENetPeerState",
+    "signature": "public enum Electron2D.ENetPeerState",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ENetPeerStatistic",
+    "kind": "type",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "ENetPeerStatistic",
+    "signature": "public enum Electron2D.ENetPeerStatistic",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ElectronObject",
     "kind": "type",
     "declaringType": "Electron2D.ElectronObject",
@@ -9135,6 +9303,32 @@
     "value": "-4"
   },
   {
+    "id": "constant:Electron2D.ENetPacketPeer.PacketLossScale()",
+    "kind": "constant",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "PacketLossScale",
+    "signature": "public const System.UInt32 PacketLossScale = 65536",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": "65536"
+  },
+  {
+    "id": "constant:Electron2D.ENetPacketPeer.PacketThrottleScale()",
+    "kind": "constant",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "PacketThrottleScale",
+    "signature": "public const System.UInt32 PacketThrottleScale = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": "32"
+  },
+  {
     "id": "constant:Electron2D.ElectronObject.NotificationPostInitialize()",
     "kind": "constant",
     "declaringType": "Electron2D.ElectronObject",
@@ -12000,6 +12194,66 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ENetConnection..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": ".ctor",
+    "signature": "public ENetConnection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ENetEvent..ctor(Electron2D.ENetEventType,Electron2D.ENetPacketPeer,System.UInt32,System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": ".ctor",
+    "signature": "public ENetEvent(Electron2D.ENetEventType Type, Electron2D.ENetPacketPeer Peer, System.UInt32 Data, System.Int32 Channel)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Type",
+        "type": "Electron2D.ENetEventType",
+        "default": null
+      },
+      {
+        "name": "Peer",
+        "type": "Electron2D.ENetPacketPeer",
+        "default": null
+      },
+      {
+        "name": "Data",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "Channel",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ENetMultiplayerPeer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": ".ctor",
+    "signature": "public ENetMultiplayerPeer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -19027,6 +19281,552 @@
     "parameters": [],
     "returnType": "Electron2D.DomainWarpType",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetCompressionMode.FASTLZ()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetCompressionMode",
+    "name": "FASTLZ",
+    "signature": "public const Electron2D.ENetCompressionMode FASTLZ = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetCompressionMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetCompressionMode.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetCompressionMode",
+    "name": "None",
+    "signature": "public const Electron2D.ENetCompressionMode None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetCompressionMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetCompressionMode.RangeCoder()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetCompressionMode",
+    "name": "RangeCoder",
+    "signature": "public const Electron2D.ENetCompressionMode RangeCoder = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetCompressionMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetCompressionMode.ZLIB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetCompressionMode",
+    "name": "ZLIB",
+    "signature": "public const Electron2D.ENetCompressionMode ZLIB = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetCompressionMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetCompressionMode.ZSTD()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetCompressionMode",
+    "name": "ZSTD",
+    "signature": "public const Electron2D.ENetCompressionMode ZSTD = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetCompressionMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetEventType.Connect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetEventType",
+    "name": "Connect",
+    "signature": "public const Electron2D.ENetEventType Connect = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetEventType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetEventType.Disconnect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetEventType",
+    "name": "Disconnect",
+    "signature": "public const Electron2D.ENetEventType Disconnect = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetEventType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetEventType.Error()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetEventType",
+    "name": "Error",
+    "signature": "public const Electron2D.ENetEventType Error = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetEventType",
+    "value": "-1"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetEventType.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetEventType",
+    "name": "None",
+    "signature": "public const Electron2D.ENetEventType None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetEventType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetEventType.Receive()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetEventType",
+    "name": "Receive",
+    "signature": "public const Electron2D.ENetEventType Receive = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetEventType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetHostStatistic.TotalReceivedData()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetHostStatistic",
+    "name": "TotalReceivedData",
+    "signature": "public const Electron2D.ENetHostStatistic TotalReceivedData = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetHostStatistic",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetHostStatistic.TotalReceivedPackets()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetHostStatistic",
+    "name": "TotalReceivedPackets",
+    "signature": "public const Electron2D.ENetHostStatistic TotalReceivedPackets = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetHostStatistic",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetHostStatistic.TotalSentData()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetHostStatistic",
+    "name": "TotalSentData",
+    "signature": "public const Electron2D.ENetHostStatistic TotalSentData = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetHostStatistic",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetHostStatistic.TotalSentPackets()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetHostStatistic",
+    "name": "TotalSentPackets",
+    "signature": "public const Electron2D.ENetHostStatistic TotalSentPackets = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetHostStatistic",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPacketFlags.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPacketFlags",
+    "name": "None",
+    "signature": "public const Electron2D.ENetPacketFlags None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPacketFlags",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPacketFlags.Reliable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPacketFlags",
+    "name": "Reliable",
+    "signature": "public const Electron2D.ENetPacketFlags Reliable = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPacketFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPacketFlags.UnreliableFragment()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPacketFlags",
+    "name": "UnreliableFragment",
+    "signature": "public const Electron2D.ENetPacketFlags UnreliableFragment = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPacketFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPacketFlags.Unsequenced()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPacketFlags",
+    "name": "Unsequenced",
+    "signature": "public const Electron2D.ENetPacketFlags Unsequenced = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPacketFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.AcknowledgingConnect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "AcknowledgingConnect",
+    "signature": "public const Electron2D.ENetPeerState AcknowledgingConnect = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.AcknowledgingDisconnect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "AcknowledgingDisconnect",
+    "signature": "public const Electron2D.ENetPeerState AcknowledgingDisconnect = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.Connected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "Connected",
+    "signature": "public const Electron2D.ENetPeerState Connected = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.Connecting()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "Connecting",
+    "signature": "public const Electron2D.ENetPeerState Connecting = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.ConnectionPending()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "ConnectionPending",
+    "signature": "public const Electron2D.ENetPeerState ConnectionPending = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.ConnectionSucceeded()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "ConnectionSucceeded",
+    "signature": "public const Electron2D.ENetPeerState ConnectionSucceeded = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.DisconnectLater()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "DisconnectLater",
+    "signature": "public const Electron2D.ENetPeerState DisconnectLater = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.Disconnected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "Disconnected",
+    "signature": "public const Electron2D.ENetPeerState Disconnected = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.Disconnecting()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "Disconnecting",
+    "signature": "public const Electron2D.ENetPeerState Disconnecting = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerState.Zombie()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerState",
+    "name": "Zombie",
+    "signature": "public const Electron2D.ENetPeerState Zombie = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.LastRoundTripTime()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "LastRoundTripTime",
+    "signature": "public const Electron2D.ENetPeerStatistic LastRoundTripTime = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.LastRoundTripTimeVariance()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "LastRoundTripTimeVariance",
+    "signature": "public const Electron2D.ENetPeerStatistic LastRoundTripTimeVariance = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketLoss()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketLoss",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketLoss = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketLossEpoch()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketLossEpoch",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketLossEpoch = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketLossVariance()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketLossVariance",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketLossVariance = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketThrottle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketThrottle",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketThrottle = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketThrottleAcceleration()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketThrottleAcceleration",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketThrottleAcceleration = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketThrottleCounter()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketThrottleCounter",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketThrottleCounter = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketThrottleDeceleration()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketThrottleDeceleration",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketThrottleDeceleration = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketThrottleEpoch()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketThrottleEpoch",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketThrottleEpoch = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketThrottleInterval()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketThrottleInterval",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketThrottleInterval = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.PacketThrottleLimit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "PacketThrottleLimit",
+    "signature": "public const Electron2D.ENetPeerStatistic PacketThrottleLimit = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.RoundTripTime()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "RoundTripTime",
+    "signature": "public const Electron2D.ENetPeerStatistic RoundTripTime = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ENetPeerStatistic.RoundTripTimeVariance()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ENetPeerStatistic",
+    "name": "RoundTripTimeVariance",
+    "signature": "public const Electron2D.ENetPeerStatistic RoundTripTimeVariance = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerStatistic",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.FileAccessModeFlags.Read()",
@@ -64015,6 +64815,1374 @@
         "name": "windowId",
         "type": "System.Int32",
         "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.BandwidthLimit(System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "BandwidthLimit",
+    "signature": "public System.Void BandwidthLimit(System.UInt32 inBandwidth = 0, System.UInt32 outBandwidth = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      },
+      {
+        "name": "outBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.BandwidthThrottle()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "BandwidthThrottle",
+    "signature": "public System.Void BandwidthThrottle()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.Broadcast(System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.ENetPacketFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "Broadcast",
+    "signature": "public System.Void Broadcast(System.Int32 channel, System.ReadOnlySpan\u003CSystem.Byte\u003E packet, Electron2D.ENetPacketFlags flags)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "channel",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "packet",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.ENetPacketFlags",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.ChannelLimit(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "ChannelLimit",
+    "signature": "public System.Void ChannelLimit(System.Int32 maxChannels)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "maxChannels",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.Compress(Electron2D.ENetCompressionMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "Compress",
+    "signature": "public System.Void Compress(Electron2D.ENetCompressionMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.ENetCompressionMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.ConnectToHost(System.String,System.Int32,System.Int32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "ConnectToHost",
+    "signature": "public Electron2D.ENetPacketPeer ConnectToHost(System.String address, System.Int32 port, System.Int32 channels = 0, System.UInt32 data = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "address",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "channels",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "data",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.ENetPacketPeer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.CreateHost(System.Int32,System.Int32,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "CreateHost",
+    "signature": "public System.Void CreateHost(System.Int32 maxPeers = 32, System.Int32 maxChannels = 0, System.UInt32 inBandwidth = 0, System.UInt32 outBandwidth = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "maxPeers",
+        "type": "System.Int32",
+        "default": "32"
+      },
+      {
+        "name": "maxChannels",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "inBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      },
+      {
+        "name": "outBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.CreateHostBound(System.String,System.Int32,System.Int32,System.Int32,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "CreateHostBound",
+    "signature": "public System.Void CreateHostBound(System.String bindAddress, System.Int32 port, System.Int32 maxPeers = 32, System.Int32 maxChannels = 0, System.UInt32 inBandwidth = 0, System.UInt32 outBandwidth = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bindAddress",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "maxPeers",
+        "type": "System.Int32",
+        "default": "32"
+      },
+      {
+        "name": "maxChannels",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "inBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      },
+      {
+        "name": "outBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.DTLSClientSetup(System.String,Electron2D.TLSOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "DTLSClientSetup",
+    "signature": "public System.Void DTLSClientSetup(System.String hostname, Electron2D.TLSOptions clientOptions = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "hostname",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "clientOptions",
+        "type": "Electron2D.TLSOptions",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.DTLSServerSetup(Electron2D.TLSOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "DTLSServerSetup",
+    "signature": "public System.Void DTLSServerSetup(Electron2D.TLSOptions serverOptions)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "serverOptions",
+        "type": "Electron2D.TLSOptions",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.Destroy()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "Destroy",
+    "signature": "public System.Void Destroy()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.Flush()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "Flush",
+    "signature": "public System.Void Flush()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.GetLocalPort()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "GetLocalPort",
+    "signature": "public System.Int32 GetLocalPort()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.GetMaxChannels()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "GetMaxChannels",
+    "signature": "public System.Int32 GetMaxChannels()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.GetPeers()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "GetPeers",
+    "signature": "public Electron2D.ENetPacketPeer[] GetPeers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPacketPeer[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.PopStatistic(Electron2D.ENetHostStatistic)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "PopStatistic",
+    "signature": "public System.Double PopStatistic(Electron2D.ENetHostStatistic statistic)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "statistic",
+        "type": "Electron2D.ENetHostStatistic",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.RefuseNewConnections(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "RefuseNewConnections",
+    "signature": "public System.Void RefuseNewConnections(System.Boolean refuse)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "refuse",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.Service(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "Service",
+    "signature": "public Electron2D.ENetEvent Service(System.Int32 timeout = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "timeout",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.ENetEvent",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.SocketSend(System.String,System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "SocketSend",
+    "signature": "public System.Void SocketSend(System.String destinationAddress, System.Int32 destinationPort, System.ReadOnlySpan\u003CSystem.Byte\u003E packet)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destinationAddress",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "destinationPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "packet",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetConnection.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetConnection",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetEvent.Deconstruct(ref Electron2D.ENetEventType,ref Electron2D.ENetPacketPeer,ref System.UInt32,ref System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out Electron2D.ENetEventType Type, out Electron2D.ENetPacketPeer Peer, out System.UInt32 Data, out System.Int32 Channel)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Type",
+        "type": "ref Electron2D.ENetEventType",
+        "default": null
+      },
+      {
+        "name": "Peer",
+        "type": "ref Electron2D.ENetPacketPeer",
+        "default": null
+      },
+      {
+        "name": "Data",
+        "type": "ref System.UInt32",
+        "default": null
+      },
+      {
+        "name": "Channel",
+        "type": "ref System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetEvent.Equals(Electron2D.ENetEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.ENetEvent other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.ENetEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetEvent.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetEvent.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetEvent.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.AddMeshPeer(System.Int32,Electron2D.ENetConnection)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "AddMeshPeer",
+    "signature": "public System.Void AddMeshPeer(System.Int32 peerID, Electron2D.ENetConnection host)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "host",
+        "type": "Electron2D.ENetConnection",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.Close()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "Close",
+    "signature": "public override System.Void Close()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.CreateClient(System.String,System.Int32,System.Int32,System.UInt32,System.UInt32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "CreateClient",
+    "signature": "public System.Void CreateClient(System.String address, System.Int32 port, System.Int32 channelCount = 0, System.UInt32 inBandwidth = 0, System.UInt32 outBandwidth = 0, System.Int32 localPort = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "address",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "channelCount",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "inBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      },
+      {
+        "name": "outBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      },
+      {
+        "name": "localPort",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.CreateMesh(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "CreateMesh",
+    "signature": "public System.Void CreateMesh(System.Int32 uniqueID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "uniqueID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.CreateServer(System.Int32,System.Int32,System.Int32,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "CreateServer",
+    "signature": "public System.Void CreateServer(System.Int32 port, System.Int32 maxClients = 32, System.Int32 maxChannels = 0, System.UInt32 inBandwidth = 0, System.UInt32 outBandwidth = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "maxClients",
+        "type": "System.Int32",
+        "default": "32"
+      },
+      {
+        "name": "maxChannels",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "inBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      },
+      {
+        "name": "outBandwidth",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.DisconnectPeer(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "DisconnectPeer",
+    "signature": "public override System.Void DisconnectPeer(System.Int32 peer, System.Boolean force = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peer",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.Finalize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "Finalize",
+    "signature": "protected override System.Void Finalize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.GetAvailablePacketCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "GetAvailablePacketCount",
+    "signature": "public override System.Int32 GetAvailablePacketCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.GetConnectionStatus()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "GetConnectionStatus",
+    "signature": "public override Electron2D.MultiplayerConnectionStatus GetConnectionStatus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiplayerConnectionStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.GetMaxPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "GetMaxPacketSize",
+    "signature": "public override System.Int32 GetMaxPacketSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.GetPacketChannel()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "GetPacketChannel",
+    "signature": "public override System.Int32 GetPacketChannel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.GetPacketMode()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "GetPacketMode",
+    "signature": "public override Electron2D.TransferMode GetPacketMode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TransferMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.GetPacketPeer()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "GetPacketPeer",
+    "signature": "public override System.Int32 GetPacketPeer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.GetPeer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "GetPeer",
+    "signature": "public Electron2D.ENetPacketPeer GetPeer(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ENetPacketPeer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.GetUniqueID()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "GetUniqueID",
+    "signature": "public override System.Int32 GetUniqueID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.IsServer()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "IsServer",
+    "signature": "public override System.Boolean IsServer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.IsServerRelaySupported()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "IsServerRelaySupported",
+    "signature": "public override System.Boolean IsServerRelaySupported()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.NextPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "NextPacketSize",
+    "signature": "protected override System.Int32 NextPacketSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "Poll",
+    "signature": "public override System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "PutPacket",
+    "signature": "public override System.Void PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.ReadPacketCore(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "ReadPacketCore",
+    "signature": "protected override System.Void ReadPacketCore(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.SetBindIP(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "SetBindIP",
+    "signature": "public System.Void SetBindIP(System.String ip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ip",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetMultiplayerPeer.SetTargetPeer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "SetTargetPeer",
+    "signature": "public override System.Void SetTargetPeer(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.Finalize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "Finalize",
+    "signature": "protected override System.Void Finalize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.GetAvailablePacketCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "GetAvailablePacketCount",
+    "signature": "public override System.Int32 GetAvailablePacketCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.GetChannels()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "GetChannels",
+    "signature": "public System.Int32 GetChannels()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.GetMaxPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "GetMaxPacketSize",
+    "signature": "public override System.Int32 GetMaxPacketSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.GetPacketFlags()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "GetPacketFlags",
+    "signature": "public Electron2D.ENetPacketFlags GetPacketFlags()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPacketFlags",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.GetRemoteAddress()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "GetRemoteAddress",
+    "signature": "public System.String GetRemoteAddress()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.GetRemotePort()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "GetRemotePort",
+    "signature": "public System.Int32 GetRemotePort()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.GetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "GetState",
+    "signature": "public Electron2D.ENetPeerState GetState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPeerState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.GetStatistic(Electron2D.ENetPeerStatistic)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "GetStatistic",
+    "signature": "public System.Double GetStatistic(Electron2D.ENetPeerStatistic statistic)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "statistic",
+        "type": "Electron2D.ENetPeerStatistic",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.IsActive()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "IsActive",
+    "signature": "public System.Boolean IsActive()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.NextPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "NextPacketSize",
+    "signature": "protected override System.Int32 NextPacketSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.PeerDisconnect(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "PeerDisconnect",
+    "signature": "public System.Void PeerDisconnect(System.UInt32 data = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.PeerDisconnectLater(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "PeerDisconnectLater",
+    "signature": "public System.Void PeerDisconnectLater(System.UInt32 data = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.PeerDisconnectNow(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "PeerDisconnectNow",
+    "signature": "public System.Void PeerDisconnectNow(System.UInt32 data = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.Ping()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "Ping",
+    "signature": "public System.Void Ping()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.PingInterval(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "PingInterval",
+    "signature": "public System.Void PingInterval(System.UInt32 interval)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "interval",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "PutPacket",
+    "signature": "public override System.Void PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.ReadPacketCore(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "ReadPacketCore",
+    "signature": "protected override System.Void ReadPacketCore(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.Reset()",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "Reset",
+    "signature": "public System.Void Reset()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.Send(System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.ENetPacketFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "Send",
+    "signature": "public System.Void Send(System.Int32 channel, System.ReadOnlySpan\u003CSystem.Byte\u003E packet, Electron2D.ENetPacketFlags flags)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "channel",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "packet",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.ENetPacketFlags",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.SetTimeout(System.UInt32,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "SetTimeout",
+    "signature": "public System.Void SetTimeout(System.UInt32 timeout, System.UInt32 timeoutMin, System.UInt32 timeoutMax)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "timeout",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "timeoutMin",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "timeoutMax",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ENetPacketPeer.ThrottleConfigure(System.UInt32,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ENetPacketPeer",
+    "name": "ThrottleConfigure",
+    "signature": "public System.Void ThrottleConfigure(System.UInt32 interval, System.UInt32 acceleration, System.UInt32 deceleration)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "interval",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "acceleration",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "deceleration",
+        "type": "System.UInt32",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -115531,6 +117699,54 @@
     "value": null
   },
   {
+    "id": "operator:Electron2D.ENetEvent.op_Equality(Electron2D.ENetEvent,Electron2D.ENetEvent)",
+    "kind": "operator",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.ENetEvent left, Electron2D.ENetEvent right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.ENetEvent",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.ENetEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.ENetEvent.op_Inequality(Electron2D.ENetEvent,Electron2D.ENetEvent)",
+    "kind": "operator",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.ENetEvent left, Electron2D.ENetEvent right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.ENetEvent",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.ENetEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "operator:Electron2D.ImageMetrics.op_Equality(Electron2D.ImageMetrics,Electron2D.ImageMetrics)",
     "kind": "operator",
     "declaringType": "Electron2D.ImageMetrics",
@@ -127547,6 +129763,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ENetEvent.Channel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "Channel",
+    "signature": "public System.Int32 Channel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ENetEvent.Data()",
+    "kind": "property",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "Data",
+    "signature": "public System.UInt32 Data { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ENetEvent.Peer()",
+    "kind": "property",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "Peer",
+    "signature": "public Electron2D.ENetPacketPeer Peer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetPacketPeer",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ENetEvent.Type()",
+    "kind": "property",
+    "declaringType": "Electron2D.ENetEvent",
+    "name": "Type",
+    "signature": "public Electron2D.ENetEventType Type { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetEventType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ENetMultiplayerPeer.Host()",
+    "kind": "property",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "Host",
+    "signature": "public Electron2D.ENetConnection Host { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ENetConnection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ENetMultiplayerPeer.RefuseNewConnections()",
+    "kind": "property",
+    "declaringType": "Electron2D.ENetMultiplayerPeer",
+    "name": "RefuseNewConnections",
+    "signature": "public System.Boolean RefuseNewConnections { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

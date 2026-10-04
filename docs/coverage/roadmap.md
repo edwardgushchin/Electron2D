@@ -104,7 +104,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
 | ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
-| ADR 0094: The typed MultiplayerPeer contract now executes. Requires an ENet-capable native backend/packaging and typed ENet host/packet-peer/reliability ownership; plain UDP and WS do not supply ENet protocol. | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |

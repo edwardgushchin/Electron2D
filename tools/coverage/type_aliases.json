@@ -164,6 +164,11 @@
     "SceneReplicationConfig.ReplicationMode": "ReplicationMode",
     "UPNP.UPNPResult": "UPNPResult",
     "UPNPDevice.IGDStatus": "IGDStatus",
-    "PacketPeerDTLS.Status": "TLSStatus"
+    "PacketPeerDTLS.Status": "TLSStatus",
+    "ENetConnection.CompressionMode": "ENetCompressionMode",
+    "ENetConnection.EventType": "ENetEventType",
+    "ENetConnection.HostStatistic": "ENetHostStatistic",
+    "ENetPacketPeer.PeerState": "ENetPeerState",
+    "ENetPacketPeer.PeerStatistic": "ENetPeerStatistic"
   }
 }
