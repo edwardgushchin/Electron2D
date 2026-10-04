@@ -120,22 +120,25 @@ public partial class AnimationMixer : Node
     private void ApplyAnimationCore(Animation animation, double time, bool backward, double? previous = null, bool externalSeek = false, bool updateOnly = false)
     {
         if (animation.IsDisposed) return;
+        if (!AudioBindingsCurrent()) InvalidateBindings();
         if (_blendCaches.TryGetValue(animation, out var blended) && blended.Revision != animation.ChangeRevision) InvalidateBindings();
         if (!_legacyCaches.TryGetValue(animation, out var cache) || cache.Revision != animation.ChangeRevision)
         {
             if (cache is not null) foreach (var binding in cache.Bindings) { binding?.StopPlayback(); if (binding is not null) _nestedBindings.Remove(binding); }
             var root = _rootNode.Length == 0 ? this : GetNodeOrNull(_rootNode); var prepared = new AnimationBinding?[animation.GetTrackCount()];
-            if (root is not null) for (var i = 0; i < prepared.Length; i++) { prepared[i] = animation.Get(i).Bind(root); prepared[i]?.PrepareMethodCalls(MethodCallbackCapacity); if (animation.Get(i).Kind == Animation.TrackType.Animation) prepared[i]?.AttachBlend(this); }
+            if (root is not null) for (var i = 0; i < prepared.Length; i++) { prepared[i] = animation.Get(i).Bind(root); prepared[i]?.PrepareMethodCalls(MethodCallbackCapacity); if (animation.Get(i).Kind is Animation.TrackType.Animation or Animation.TrackType.Audio) prepared[i]?.AttachBlend(this); }
             cache = new(animation.ChangeRevision, prepared); _legacyCaches[animation] = cache;
         }
         if (!ReferenceEquals(_cachedAnimation, animation)) foreach (var binding in cache.Bindings) binding?.ResetPlayback();
         _bindings = cache.Bindings; _cachedAnimation = animation;
+        BeginAudioFrame();
         MethodExternalSeeking = externalSeek; MethodUpdateOnly = updateOnly; var bindings = _bindings; var revision = animation.ChangeRevision; var generation = _bindingGeneration;
         for (var i = 0; i < bindings.Length; i++) { if (IsDisposed || animation.IsDisposed || animation.ChangeRevision != revision || !ReferenceEquals(_cachedAnimation, animation)) break; bindings[i]?.Apply(animation, i, time, backward, previous, this, generation); }
+        FinishAudioFrame();
     }
     internal bool IsBindingCurrent(Animation animation, long generation) => !IsDisposed && _active && _bindingGeneration == generation && (ReferenceEquals(_cachedAnimation, animation) || (!_blendDirty && _blendCaches.ContainsKey(animation)));
     internal void EnsureAnimationMutable() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
-    internal void InvalidateBindings(bool rebuild = true) { InvalidateEvaluation(); if (rebuild) _blendDirty = true; ClearCapture(); StopNestedPlayback(); if (rebuild) { _legacyCaches.Clear(); _nestedBindings.Clear(); } }
+    internal void InvalidateBindings(bool rebuild = true) { InvalidateEvaluation(); if (rebuild) _blendDirty = true; ClearCapture(); StopNestedPlayback(); StopAudioPlayback(); if (rebuild) { _legacyCaches.Clear(); _nestedBindings.Clear(); ClearAudioBindings(); } }
     internal void Started(string name) => AnimationStarted?.Invoke(name);
     internal void Finished(string name) => AnimationFinished?.Invoke(name);
     private void TreeMutated(SceneTree tree) => InvalidateBindings();
@@ -160,6 +163,7 @@ public partial class AnimationMixer : Node
             if (_observedTree is not null) _observedTree.TreeChanged -= TreeMutated; _observedTree = null;
             foreach (var item in _libraries.Values) item.Library.Changed -= item.Changed;
             try { StopNestedPlayback(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { ClearAudioBindings(); } catch (Exception error) { CollectException(ref errors, error); }
             _nestedBindings.Clear(); _legacyCaches.Clear();
             _libraries.Clear(); _animationIndex.Clear(); _blendCaches.Clear(); _blendProperties.Clear(); _blendOrder.Clear(); _blendPropertySnapshot = [];
             try { InvalidateBindings(); } catch (Exception error) { CollectException(ref errors, error); }
@@ -169,6 +173,6 @@ public partial class AnimationMixer : Node
         ThrowCollected("Animation mixer cleanup failed.", errors);
     }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties).Concat(MethodProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties).Concat(MethodProperties).Concat(AudioProperties);
 
 }

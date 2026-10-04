@@ -1,6 +1,6 @@
 # AudioStreamRandomizer
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class AudioStreamRandomizer : AudioStream` · **Source:** [AudioStreamRandomizer.cs](../../src/Scene/Resources/AudioStreamRandomizer.cs).
 
@@ -355,3 +355,5 @@ Interactive parents now prepare child controls on the audio owner, including pau
 An associated native sample on a randomizer playback contributes the inherited audio-owner requirement alongside its selected child.
 
 [Dynamic polyphonic voices](../components/audio-playback.md#dynamic-polyphony) now integrate with this audio ownership/control path; native children inherit enclosing scene mix/pause/spatial controls and retain their own requested bus. Retired sample/input ownership stays owner-affine until cleanup.
+
+Animation audio bindings now prepare internal reusable child/native state and share a receiver transport. Ordinary public factory/player calls retain fresh playback semantics; prepared randomizer selection occurs at actual trigger/start. [Audio tracks](../components/scene-animation.md#audio-tracks) records ownership, gain/trim/seek, cache rebuild and native/host limits.

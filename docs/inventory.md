@@ -577,7 +577,7 @@ The existing AudioServer/FAudioContext also own live output selection and cached
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
-| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation`](classes/Animation.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Reusable typed property, Bézier, callback and nested-player timelines, timing, interpolation and markers. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation`](classes/Animation.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Reusable typed property, Bézier, callback, nested-player and audio-cue timelines, timing, interpolation and markers. |
 | [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationLibrary`](classes/AnimationLibrary.md) | [`AnimationLibrary.cs`](../src/Scene/Resources/AnimationLibrary.cs) | Current | Named borrowed animation resources with replacement, rename and forwarded changes. |
 | [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationMixer`](classes/AnimationMixer.md) | [`AnimationMixer.cs`](../src/Scene/Animation/AnimationMixer.cs) | Current | Scene animation namespaces, typed target caches and idle/physics/manual scheduling. |
 | [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationPlayer`](classes/AnimationPlayer.md) | [`AnimationPlayer.cs`](../src/Scene/Animation/AnimationPlayer.cs) | Current | Named clip playback, reverse, seek, queues, marker sections and endpoint loops. |
@@ -592,6 +592,8 @@ The existing AudioServer/FAudioContext also own live output selection and cached
 | [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [AnimationMixer.AnimationCallbackModeDiscrete](classes/AnimationMixer.AnimationCallbackModeDiscrete.md) | [AnimationMixer.Blending.cs](../src/Scene/Animation/AnimationMixer.Blending.cs) | Current | Typed discrete/continuous precedence with executable property accumulation. |
 
 The existing AnimationMixer/AnimationPlayer also use [AnimationBlendValue.cs](../src/Scene/Animation/AnimationBlendValue.cs), [AnimationMixer.Blending.cs](../src/Scene/Animation/AnimationMixer.Blending.cs) and [AnimationPlayer.Blending.cs](../src/Scene/Animation/AnimationPlayer.Blending.cs). Private numeric/algebra/array/string accumulators, typed property/capture entries, prepared clip bindings and outgoing Clip records are documented on the scene-animation component. They are runtime implementation types, with no exported value container.
+
+| [Scene](domains/scene.md) | [Audio tracks](components/scene-animation.md#audio-tracks) | [AnimationAudioKey](classes/AnimationAudioKey.md) | [Animation.AudioTracks.cs](../src/Scene/Resources/Animation.AudioTracks.cs) | Current | Borrowed source and finite start/end trim value data. |
 
 ## Animation graph definitions and controllers
 

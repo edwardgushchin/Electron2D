@@ -58,6 +58,7 @@ Initializes internal idle animation scheduling.
 | Complete C# signature | Contract |
 | --- | --- |
 | `public System.Boolean Active { get; set; }` | Gets or sets whether evaluation is active; defaults to true. |
+| `public System.Int32 AudioMaxPolyphony { get; set; }` | Gets or sets per-receiver audio cue capacity captured at binding preparation. |
 | `public Electron2D.AnimationMixer.AnimationCallbackModeDiscrete CallbackModeDiscrete { get; set; }` | Gets or sets discrete/continuous precedence, initially Recessive. |
 | `public Electron2D.AnimationMixer.AnimationCallbackModeMethod CallbackModeMethod { get; set; }` | Gets or sets method-key dispatch policy; defaults to Deferred. |
 | `public Electron2D.AnimationMixer.AnimationCallbackModeProcess CallbackModeProcess { get; set; }` | Gets or sets the internal update phase, initially idle. |
@@ -72,6 +73,23 @@ Initializes internal idle animation scheduling.
 `public System.Boolean Active { get; set; }`
 
 Gets or sets whether evaluation is active; defaults to true.
+
+<a id="member-e1e51644dfc3"></a>
+### AudioMaxPolyphony
+
+`public System.Int32 AudioMaxPolyphony { get; set; }`
+
+Gets or sets per-receiver audio cue capacity captured at binding preparation.
+
+Value: Thirty-two initially; zero through 128.
+
+Remarks: Mutation rebuilds prepared receiver transports. Zero selects intentionally silent cue playback. Receiver nodes and authored sources remain borrowed.
+
+System.ObjectDisposedException: The mixer is disposed.
+
+System.InvalidOperationException: Mutation is outside the attached scene owner thread or cleanup fails.
+
+System.ArgumentOutOfRangeException: Capacity is outside the supported bounds.
 
 <a id="member-b5c0af0070e1"></a>
 ### CallbackModeDiscrete
@@ -399,6 +417,8 @@ Occurs after explicit cache clearing.
 
 Resource keys do not own targets or callbacks. Animation containers copy independently; directly held arrays clone and direct Resource payloads use the graph deep-copy session, while custom nested mutable references remain borrowed. Player/mixer mutation obeys attached SceneTree owner affinity; failures/reentry abandon stale passes. Deferred accepted calls retain their typed payload until a safe point and skip disposed/deleting or moved targets. Prepared callback pool exhaustion throws; use PrepareMethodCallbacks between frames for the required burst.
 
-[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. Audio schedulers, state machines and disk/editor persistence retain their coverage triggers.
+[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. State machines and disk/editor persistence retain their coverage triggers.
 
 Nested animation tracks execute clip-name keys against borrowed child players, with latest-crossed-key ordering, child-length seek/loop rules, normal independent child clocks, update-only sampling and control-revision cleanup. [The complete contract and snippet](../components/scene-animation.md#nested-animation-tracks) explains callback/reentry/cycle rules, prepared direct/weighted caches and current native/headless evidence. AnimationNestedTrackTests covers 256 warmed recurring start/stop plus child property passes with zero managed bytes; two GPU and two compatibility Wayland hosts verify six actual poses and cleanup.
+
+[Audio tracks](../components/scene-animation.md#audio-tracks) execute borrowed cue sources on prepared player/emitter/polyphonic transports, with offsets, weighted gain, sample/stream selection, pause/cleanup and per-trigger random choices. Native PCM and two GPU/two compatibility public emitter hosts establish current Linux execution; physical listening, driver internals and other platforms remain unverified.

@@ -1,6 +1,6 @@
 # AudioStreamPlaybackPolyphonic
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioStreamPlaybackPolyphonic` · **Source:** [AudioStreamPlaybackPolyphonic.cs](../../src/Scene/Resources/AudioStreamPlaybackPolyphonic.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -114,3 +114,5 @@ Releases all owned child state and handles without disposing source resources. C
 ## Verification and limits
 
 [AudioPolyphonicTests](../../tests/Electron2D.Tests/AudioPolyphonicTests.cs) checks exact streamed ramp/sum/rate/offset/boundary behavior, IDs/capacity/short reads, source/factory/mix/stop failures and copies. Actual FAudio verifies Stream/Sample/default/fallback, gain/pitch/parent pause/volume and completion. [Dynamic polyphony](../components/audio-playback.md#dynamic-polyphony) distinguishes logical native channels, public hosts, allocation and physical/platform limits. Inherited usage tagging and general parameter dependencies remain on their declaring pages.
+
+Animation audio bindings now prepare internal reusable child/native state and share a receiver transport. Ordinary public factory/player calls retain fresh playback semantics; prepared randomizer selection occurs at actual trigger/start. [Audio tracks](../components/scene-animation.md#audio-tracks) records ownership, gain/trim/seek, cache rebuild and native/host limits.

@@ -1,6 +1,6 @@
 # AudioStreamEmitter
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -87,3 +87,5 @@ Typed interactive SwitchToClipParameter is stored/restored in PackedScene along 
 [Dynamic polyphonic voices](../components/audio-playback.md#dynamic-polyphony) now integrate with this audio ownership/control path; native children inherit enclosing scene mix/pause/spatial controls and retain their own requested bus. Retired sample/input ownership stays owner-affine until cleanup.
 
 [Playlist playback](../components/audio-playback.md#playlist-playback) now executes timed sequences/shuffle/fades through this audio contract, including scene/native fallback, prepared input controls and owner cleanup.
+
+Animation audio bindings now prepare internal reusable child/native state and share a receiver transport. Ordinary public factory/player calls retain fresh playback semantics; prepared randomizer selection occurs at actual trigger/start. [Audio tracks](../components/scene-animation.md#audio-tracks) records ownership, gain/trim/seek, cache rebuild and native/host limits.

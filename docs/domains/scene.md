@@ -164,3 +164,5 @@ MultiMeshInstance inherits Entity transforms/canvas policies and stores typed bo
 Typed scene animation also executes scalar Bézier property geometry and heterogeneous typed method keys through players/graphs, with prepared deferred capacity, safe-point callback lifetime and track-path filtering. See [Bézier and method tracks](../components/scene-animation.md#bézier-and-method-tracks). Audio schedulers, state machines and persistence retain their coverage triggers.
 
 [Nested animation tracks](../components/scene-animation.md#nested-animation-tracks) orchestrate existing child players with clip-name keys, seek/stop, normal child phases and revision-protected cleanup. Direct/weighted caches prepare separately and remain reusable through recurring control changes.
+
+[Audio tracks](../components/scene-animation.md#audio-tracks) execute borrowed sound cues on non-spatial and spatial receivers, including seek/trims/weights and bounded prepared starts. They share the animation clock and accepted FAudio transport.

@@ -270,6 +270,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimationAudioKey",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationAudioKey",
+    "name": "AnimationAudioKey",
+    "signature": "public struct Electron2D.AnimationAudioKey",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnimationBezierKey",
     "kind": "type",
     "declaringType": "Electron2D.AnimationBezierKey",
@@ -8700,6 +8713,35 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AnimationAudioKey..ctor(Electron2D.AudioStream,System.Double,System.Double)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationAudioKey",
+    "name": ".ctor",
+    "signature": "public AnimationAudioKey(Electron2D.AudioStream stream, System.Double startOffset = 0, System.Double endOffset = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "stream",
+        "type": "Electron2D.AudioStream",
+        "default": null
+      },
+      {
+        "name": "startOffset",
+        "type": "System.Double",
+        "default": "0"
+      },
+      {
+        "name": "endOffset",
+        "type": "System.Double",
+        "default": "0"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AnimationBezierKey..ctor(System.Double,Electron2D.Vector2,Electron2D.Vector2)",
     "kind": "constructor",
     "declaringType": "Electron2D.AnimationBezierKey",
@@ -13428,6 +13470,19 @@
     "parameters": [],
     "returnType": "Electron2D.Animation.TrackType",
     "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.Animation.TrackType.Audio()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Animation.TrackType",
+    "name": "Audio",
+    "signature": "public const Electron2D.Animation.TrackType Audio = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Animation.TrackType",
+    "value": "7"
   },
   {
     "id": "enumValue:Electron2D.Animation.TrackType.Bezier()",
@@ -30316,6 +30371,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Animation.AddAudioTrack(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AddAudioTrack",
+    "signature": "public System.Int32 AddAudioTrack(System.Int32 atPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Animation.AddBezierTrack\u00602(PropertyDescriptor\u003CTOwner, TValue\u003E,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Animation",
@@ -30487,6 +30561,247 @@
       {
         "name": "animation",
         "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackGetKeyEndOffset(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackGetKeyEndOffset",
+    "signature": "public System.Double AudioTrackGetKeyEndOffset(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackGetKeyStartOffset(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackGetKeyStartOffset",
+    "signature": "public System.Double AudioTrackGetKeyStartOffset(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackGetKeyStream(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackGetKeyStream",
+    "signature": "public Electron2D.AudioStream AudioTrackGetKeyStream(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStream",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackInsertKey(System.Int32,System.Double,Electron2D.AudioStream,System.Double,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackInsertKey",
+    "signature": "public System.Int32 AudioTrackInsertKey(System.Int32 track, System.Double time, Electron2D.AudioStream stream, System.Double startOffset = 0, System.Double endOffset = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "stream",
+        "type": "Electron2D.AudioStream",
+        "default": null
+      },
+      {
+        "name": "startOffset",
+        "type": "System.Double",
+        "default": "0"
+      },
+      {
+        "name": "endOffset",
+        "type": "System.Double",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackIsUseBlend(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackIsUseBlend",
+    "signature": "public System.Boolean AudioTrackIsUseBlend(System.Int32 track)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackSetKeyEndOffset(System.Int32,System.Int32,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackSetKeyEndOffset",
+    "signature": "public System.Void AudioTrackSetKeyEndOffset(System.Int32 track, System.Int32 key, System.Double offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackSetKeyStartOffset(System.Int32,System.Int32,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackSetKeyStartOffset",
+    "signature": "public System.Void AudioTrackSetKeyStartOffset(System.Int32 track, System.Int32 key, System.Double offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackSetKeyStream(System.Int32,System.Int32,Electron2D.AudioStream)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackSetKeyStream",
+    "signature": "public System.Void AudioTrackSetKeyStream(System.Int32 track, System.Int32 key, Electron2D.AudioStream stream)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "stream",
+        "type": "Electron2D.AudioStream",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AudioTrackSetUseBlend(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AudioTrackSetUseBlend",
+    "signature": "public System.Void AudioTrackSetUseBlend(System.Int32 track, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -102425,6 +102740,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AnimationAudioKey.EndOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationAudioKey",
+    "name": "EndOffset",
+    "signature": "public System.Double EndOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationAudioKey.StartOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationAudioKey",
+    "name": "StartOffset",
+    "signature": "public System.Double StartOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationAudioKey.Stream()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationAudioKey",
+    "name": "Stream",
+    "signature": "public Electron2D.AudioStream Stream { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStream",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AnimationBezierKey.InHandle()",
     "kind": "property",
     "declaringType": "Electron2D.AnimationBezierKey",
@@ -102513,6 +102867,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationMixer.AudioMaxPolyphony()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "AudioMaxPolyphony",
+    "signature": "public System.Int32 AudioMaxPolyphony { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

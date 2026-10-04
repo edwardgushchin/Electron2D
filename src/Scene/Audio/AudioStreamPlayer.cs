@@ -6,7 +6,7 @@ namespace Electron2D;
 /// custom mixing callbacks must support both serialized paths and cannot reenter audio configuration.
 /// The node owns its playbacks/voices and never disposes its stream. Use <see cref="AudioStreamEmitter"/>
 /// for a positioned scene source with attenuation, stereo panning and listener routing.</remarks>
-public class AudioStreamPlayer : Node
+public partial class AudioStreamPlayer : Node
 {
     /// <summary>Selects where non-spatial stereo audio is routed.</summary>
     public enum MixTarget

@@ -108,6 +108,7 @@ Gets or sets the authoring time-step hint, initially approximately one thirtieth
 | Complete C# signature | Contract |
 | --- | --- |
 | `public System.Int32 AddAnimationTrack(System.Int32 atPosition = -1)` | Adds a timeline controlling a relative AnimationPlayer by named clip keys. |
+| `public System.Int32 AddAudioTrack(System.Int32 atPosition = -1)` | Adds a node-only audio cue track targeting a player or spatial emitter. |
 | `public System.Int32 AddBezierTrack<TOwner, TValue>(PropertyDescriptor<TOwner, TValue> property, System.Int32 atPosition = -1)` | Adds a scalar Bézier property track with an immutable float/double descriptor. |
 | `public System.Void AddMarker(System.String name, System.Double time)` | Adds or moves a named marker, replacing any marker at approximately the same time and resetting its color. |
 | `public System.Int32 AddMethodTrack<TOwner>(System.Int32 atPosition = -1)` | Adds an event track whose keys use exact typed callback and argument payloads. |
@@ -115,6 +116,15 @@ Gets or sets the authoring time-step hint, initially approximately one thirtieth
 | `public System.String AnimationTrackGetKeyAnimation(System.Int32 track, System.Int32 key)` | Returns the exact child-animation name at a key. |
 | `public System.Int32 AnimationTrackInsertKey(System.Int32 track, System.Double time, System.String animation)` | Inserts or replaces a named child-animation key; [stop] stops controlled playback. |
 | `public System.Void AnimationTrackSetKeyAnimation(System.Int32 track, System.Int32 key, System.String animation)` | Replaces the exact child-animation name at a key. |
+| `public System.Double AudioTrackGetKeyEndOffset(System.Int32 track, System.Int32 key)` | Returns end trim seconds. |
+| `public System.Double AudioTrackGetKeyStartOffset(System.Int32 track, System.Int32 key)` | Returns start trim seconds. |
+| `public Electron2D.AudioStream AudioTrackGetKeyStream(System.Int32 track, System.Int32 key)` | Returns a key's borrowed source. |
+| `public System.Int32 AudioTrackInsertKey(System.Int32 track, System.Double time, Electron2D.AudioStream stream, System.Double startOffset = 0, System.Double endOffset = 0)` | Inserts or replaces a typed audio key, clamping negative trims to zero. |
+| `public System.Boolean AudioTrackIsUseBlend(System.Int32 track)` | Returns whether clip weight affects cue volume. |
+| `public System.Void AudioTrackSetKeyEndOffset(System.Int32 track, System.Int32 key, System.Double offset)` | Replaces finite end trim, clamping negative values. |
+| `public System.Void AudioTrackSetKeyStartOffset(System.Int32 track, System.Int32 key, System.Double offset)` | Replaces finite start trim, clamping negative values. |
+| `public System.Void AudioTrackSetKeyStream(System.Int32 track, System.Int32 key, Electron2D.AudioStream stream)` | Replaces a key's borrowed source. |
+| `public System.Void AudioTrackSetUseBlend(System.Int32 track, System.Boolean enable)` | Sets whether clip weight affects cue volume. |
 | `public Electron2D.Vector2 BezierTrackGetKeyInHandle(System.Int32 track, System.Int32 key)` | Returns the incoming key control offset. |
 | `public Electron2D.Vector2 BezierTrackGetKeyOutHandle(System.Int32 track, System.Int32 key)` | Returns the outgoing key control offset. |
 | `public System.Double BezierTrackGetKeyValue(System.Int32 track, System.Int32 key)` | Returns a scalar Bézier key value. |
@@ -192,6 +202,21 @@ Returns: The inserted track index.
 System.ObjectDisposedException: The animation is disposed.
 
 System.ArgumentOutOfRangeException: The insertion index is invalid.
+
+<a id="member-72ad856c5006"></a>
+### AddAudioTrack
+
+`public System.Int32 AddAudioTrack(System.Int32 atPosition = -1)`
+
+Adds a node-only audio cue track targeting a player or spatial emitter.
+
+atPosition: Insertion index or minus one to append.
+
+Returns: The inserted index.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
 
 <a id="member-a3735a66a664"></a>
 ### AddBezierTrack
@@ -327,6 +352,179 @@ System.ObjectDisposedException: The animation is disposed.
 System.ArgumentOutOfRangeException: An index is invalid.
 
 System.ArgumentNullException: The name is null.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-5523f6c2395a"></a>
+### AudioTrackGetKeyEndOffset
+
+`public System.Double AudioTrackGetKeyEndOffset(System.Int32 track, System.Int32 key)`
+
+Returns end trim seconds.
+
+track: Track index.
+
+key: Key index.
+
+Returns: Nonnegative seconds.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-d06bd347ace7"></a>
+### AudioTrackGetKeyStartOffset
+
+`public System.Double AudioTrackGetKeyStartOffset(System.Int32 track, System.Int32 key)`
+
+Returns start trim seconds.
+
+track: Track index.
+
+key: Key index.
+
+Returns: Nonnegative seconds.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-d4390c2d3240"></a>
+### AudioTrackGetKeyStream
+
+`public Electron2D.AudioStream AudioTrackGetKeyStream(System.Int32 track, System.Int32 key)`
+
+Returns a key's borrowed source.
+
+track: Track index.
+
+key: Key index.
+
+Returns: Source or null.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-4be4949b481f"></a>
+### AudioTrackInsertKey
+
+`public System.Int32 AudioTrackInsertKey(System.Int32 track, System.Double time, Electron2D.AudioStream stream, System.Double startOffset = 0, System.Double endOffset = 0)`
+
+Inserts or replaces a typed audio key, clamping negative trims to zero.
+
+track: Existing audio track.
+
+time: Finite seconds.
+
+stream: Borrowed source or null.
+
+startOffset: Finite start trim.
+
+endOffset: Finite end trim.
+
+Returns: Sorted key index.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-1dabfd59b69d"></a>
+### AudioTrackIsUseBlend
+
+`public System.Boolean AudioTrackIsUseBlend(System.Int32 track)`
+
+Returns whether clip weight affects cue volume.
+
+track: Audio track index.
+
+Returns: True initially.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-136ca1e6adb4"></a>
+### AudioTrackSetKeyEndOffset
+
+`public System.Void AudioTrackSetKeyEndOffset(System.Int32 track, System.Int32 key, System.Double offset)`
+
+Replaces finite end trim, clamping negative values.
+
+track: Track index.
+
+key: Key index.
+
+offset: Finite seconds.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-b34fb9d063a9"></a>
+### AudioTrackSetKeyStartOffset
+
+`public System.Void AudioTrackSetKeyStartOffset(System.Int32 track, System.Int32 key, System.Double offset)`
+
+Replaces finite start trim, clamping negative values.
+
+track: Track index.
+
+key: Key index.
+
+offset: Finite seconds.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-dc3857b84a99"></a>
+### AudioTrackSetKeyStream
+
+`public System.Void AudioTrackSetKeyStream(System.Int32 track, System.Int32 key, Electron2D.AudioStream stream)`
+
+Replaces a key's borrowed source.
+
+track: Track index.
+
+key: Key index.
+
+stream: Source or null.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-847a845128ed"></a>
+### AudioTrackSetUseBlend
+
+`public System.Void AudioTrackSetUseBlend(System.Int32 track, System.Boolean enable)`
+
+Sets whether clip weight affects cue volume.
+
+track: Audio track index.
+
+enable: Whether to scale gain.
+
+System.ObjectDisposedException: The animation or a borrowed source is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid or a numeric argument is nonfinite.
 
 System.InvalidOperationException: The track kind differs.
 
@@ -1107,6 +1305,8 @@ track: The zero-based existing track index.
 
 Resource keys do not own targets or callbacks. Animation containers copy independently; directly held arrays clone and direct Resource payloads use the graph deep-copy session, while custom nested mutable references remain borrowed. Player/mixer mutation obeys attached SceneTree owner affinity; failures/reentry abandon stale passes. Deferred accepted calls retain their typed payload until a safe point and skip disposed/deleting or moved targets. Prepared callback pool exhaustion throws; use PrepareMethodCallbacks between frames for the required burst.
 
-[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. Audio schedulers, state machines and disk/editor persistence retain their coverage triggers.
+[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. State machines and disk/editor persistence retain their coverage triggers.
 
 Nested animation tracks execute clip-name keys against borrowed child players, with latest-crossed-key ordering, child-length seek/loop rules, normal independent child clocks, update-only sampling and control-revision cleanup. [The complete contract and snippet](../components/scene-animation.md#nested-animation-tracks) explains callback/reentry/cycle rules, prepared direct/weighted caches and current native/headless evidence. AnimationNestedTrackTests covers 256 warmed recurring start/stop plus child property passes with zero managed bytes; two GPU and two compatibility Wayland hosts verify six actual poses and cleanup.
+
+[Audio tracks](../components/scene-animation.md#audio-tracks) execute borrowed cue sources on prepared player/emitter/polyphonic transports, with offsets, weighted gain, sample/stream selection, pause/cleanup and per-trigger random choices. Native PCM and two GPU/two compatibility public emitter hosts establish current Linux execution; physical listening, driver internals and other platforms remain unverified.

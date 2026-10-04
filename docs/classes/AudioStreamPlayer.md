@@ -1,6 +1,6 @@
 # AudioStreamPlayer
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public class Electron2D.AudioStreamPlayer` · **Source:** [AudioStreamPlayer.cs](../../src/Scene/Audio/AudioStreamPlayer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -122,3 +122,5 @@ AudioStreamPlayer inherits Node and plays streams independently of scene positio
 [Dynamic polyphonic voices](../components/audio-playback.md#dynamic-polyphony) now integrate with this audio ownership/control path; native children inherit enclosing scene mix/pause/spatial controls and retain their own requested bus. Retired sample/input ownership stays owner-affine until cleanup.
 
 [Playlist playback](../components/audio-playback.md#playlist-playback) now executes timed sequences/shuffle/fades through this audio contract, including scene/native fallback, prepared input controls and owner cleanup.
+
+Animation audio bindings now prepare internal reusable child/native state and share a receiver transport. Ordinary public factory/player calls retain fresh playback semantics; prepared randomizer selection occurs at actual trigger/start. [Audio tracks](../components/scene-animation.md#audio-tracks) records ownership, gain/trim/seek, cache rebuild and native/host limits.

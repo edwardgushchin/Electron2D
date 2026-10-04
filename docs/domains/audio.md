@@ -62,3 +62,5 @@ Scene players now preserve full attacks with 64-frame lookahead and execute prep
 [Linked compression and sidechain](../components/audio-playback.md#linked-compression-and-sidechain) now provides typed envelope/mix controls and named detection across native buses, preserving effects/gain/sends and current bus ordering. Prepared ingress and buffer publication stay internal; no new vendor dependency or public backend identity is exposed.
 
 [Output selection and buffering](../components/audio-playback.md#output-device-selection-and-driver-buffering) now switches live native transport without recreating playback/DSP state and publishes opened-device chunk/queue duration. End-to-end hardware/transport latency is outside that driver snapshot.
+
+[Animation audio cues](../components/scene-animation.md#audio-tracks) connect clip keys to the existing player/emitter/polyphonic backend with cold child/native preparation, weighted gain, trim/seek and controller cleanup. No separate audio clock/backend is introduced.

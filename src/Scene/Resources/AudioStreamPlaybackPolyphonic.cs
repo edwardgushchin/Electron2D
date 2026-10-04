@@ -5,7 +5,7 @@ namespace Electron2D;
 /// StopStream invalidates the ID immediately, retaining a streamed voice for one fade. Child factories
 /// and cleanup are cold; repeated mixing and scalar controls reuse prepared storage. The parent remains
 /// active after children finish, reports zero time/loops and ignores finite Start/Seek positions.</remarks>
-public sealed class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
+public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
 {
     /// <summary>Returned when no free voice exists or the requested stream is null.</summary>
     public const long InvalidID = -1;
@@ -13,10 +13,11 @@ public sealed class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     {
         internal AudioStream? Stream;
         internal AudioStreamPlayback? Playback;
+        internal PreparedChild? Prepared;
         internal bool Active, Pending, Finishing;
         internal uint Generation;
         internal double Offset;
-        internal float Gain = 1, PreviousGain = 1, Pitch = 1;
+        internal float Gain = 1, PreviousGain = 1, Pitch = 1, VariationGain = 1, VariationPitch = 1;
     }
     private readonly AudioStreamPolyphonic _source;
     private readonly Voice[] _voices;
@@ -40,7 +41,9 @@ public sealed class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     private static Exception? Release(Voice voice)
     {
         voice.Active = voice.Pending = voice.Finishing = false; var child = voice.Playback; voice.Playback = null; voice.Stream = null;
-        if (child is null) return null; child.CompositeOwner = null; child.UpdateNativeOwner(null);
+        if (child is null) return null;
+        if (voice.Prepared is { } prepared) { voice.Prepared = null; prepared.Used = false; try { if (!child.IsDisposed) child.Stop(); return null; } catch (Exception failure) { return failure; } }
+        child.CompositeOwner = null; child.UpdateNativeOwner(null);
         Exception? error = null; if (!child.IsDisposed) try { child.Stop(); } catch (Exception failure) { error = failure; }
         try { child.Dispose(); } catch (Exception failure) { error = AudioStreamSynchronized.Combine(error, failure); }
         return error;
@@ -63,6 +66,7 @@ public sealed class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
         try
         {
             Check(); Idle(); Owner(); if (stream is null) return InvalidID;
+            if (_preparedRoots.Contains(stream)) { _busy = true; _source.EnterCall(0); try { return PlayPrepared(stream, fromOffset, volumeDB, pitchScale); } finally { AudioStream.ExitCall(); _busy = false; } }
             if (!double.IsFinite(fromOffset) || playbackType is < AudioServer.PlaybackType.Default or >= AudioServer.PlaybackType.Max) throw new ArgumentOutOfRangeException(nameof(fromOffset)); ArgumentNullException.ThrowIfNull(bus); var gain = Gain(volumeDB); Pitch(pitchScale);
             var index = -1;
             for (var i = 0; i < _voices.Length; i++)
@@ -88,7 +92,7 @@ public sealed class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
                 }
                 child.UpdateNativeOwner(_nativeOwner); if ((!_active || !_nativeEnabled) && _nativeOwner is not null) child.GetSamplePlayback()?.Native?.Pause(true); Check(); ObjectDisposedException.ThrowIf(stream.IsDisposed, stream);
                 var voice = _voices[index]; var cleanup = Release(voice); if (cleanup is not null) throw cleanup;
-                voice.Stream = stream; voice.Playback = child; voice.Offset = fromOffset; voice.Gain = voice.PreviousGain = gain; voice.Pitch = pitchScale; voice.Generation = _generation; _generation = unchecked(_generation + 1); voice.Pending = child.GetSamplePlayback() is null; voice.Finishing = false; voice.Active = true; child = null;
+                voice.Stream = stream; voice.Playback = child; voice.Offset = fromOffset; voice.Gain = voice.PreviousGain = gain; voice.Pitch = pitchScale; voice.VariationPitch = 1; voice.VariationGain = 1; voice.Generation = _generation; _generation = unchecked(_generation + 1); voice.Pending = child.GetSamplePlayback() is null; voice.Finishing = false; voice.Active = true; child = null;
                 return ((long)index << 32) | voice.Generation;
             }
             catch (Exception error)
@@ -116,7 +120,7 @@ public sealed class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     /// <exception cref="ArithmeticException">Native gain coefficients overflow; prior configuration is preserved.</exception>
     public void SetStreamVolume(long stream, float volumeDB)
     {
-        var server = AudioServer.Instance; server.Lock(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); var gain = Gain(volumeDB); voice.Playback!.GetSamplePlayback()?.SetVoiceGain(gain); voice.Gain = gain; } finally { server.Unlock(); }
+        var server = AudioServer.Instance; server.Lock(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); var gain = Gain(volumeDB); gain *= voice.VariationGain; voice.Playback!.GetSamplePlayback()?.SetVoiceGain(gain); voice.Gain = gain; } finally { server.Unlock(); }
     }
     /// <summary>Updates a live child's pitch without resetting its cursor.</summary>
     /// <param name="stream">Parent-local ID; invalid IDs do nothing.</param>
@@ -127,7 +131,7 @@ public sealed class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     /// <exception cref="NotSupportedException">The effective native ratio is unsupported; prior configuration is preserved.</exception>
     public void SetStreamPitchScale(long stream, float pitchScale)
     {
-        var server = AudioServer.Instance; server.Lock(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); Pitch(pitchScale); if (voice.Playback!.GetSamplePlayback() is { } sample) { if (pitchScale == 0) throw new NotSupportedException("Native sample pitch must be positive."); sample.PitchScale = pitchScale; } voice.Pitch = pitchScale; } finally { server.Unlock(); }
+        var server = AudioServer.Instance; server.Lock(); try { Check(); Idle(); var voice = Find(stream); if (voice is null) return; Owner(); Pitch(pitchScale); pitchScale *= voice.VariationPitch; Pitch(pitchScale); if (voice.Playback!.GetSamplePlayback() is { } sample) { if (pitchScale == 0) throw new NotSupportedException("Native sample pitch must be positive."); sample.PitchScale = pitchScale; } voice.Pitch = pitchScale; } finally { server.Unlock(); }
     }
     /// <summary>Invalidates one ID and requests its final streamed fade or immediate native stop.</summary>
     /// <param name="stream">Parent-local ID; invalid IDs do nothing.</param>
@@ -201,5 +205,5 @@ public sealed class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
     /// <inheritdoc />
     protected override void ValidateDisposal() { var server = AudioServer.Instance; server.Lock(); try { Idle(); Owner(); } finally { server.Unlock(); } base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { lock (AudioServer.Instance.StreamGate) { _busy = true; try { var error = StopCore(false); if (error is not null) throw error; } finally { _nativeOwner = null; _busy = false; base.Dispose(disposing); } } } else base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { lock (AudioServer.Instance.StreamGate) { _busy = true; try { var error = StopCore(false); error = AudioStreamSynchronized.Combine(error, DisposePrepared()); if (error is not null) throw error; } finally { _nativeOwner = null; _busy = false; base.Dispose(disposing); } } } else base.Dispose(disposing); }
 }

@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
-/// <summary>A reusable timeline of typed property, scalar Bézier, method and child-animation keys plus named markers.</summary>
+/// <summary>A reusable timeline of typed property, scalar Bézier, method, child-animation and audio keys plus named markers.</summary>
 /// <remarks>Author on the scene owner thread. Tracks carry immutable typed descriptors and relative node paths;
 /// they never own target nodes. Keys are sorted, equal times replace, and copies have independent containers.
 /// Continuous tracks interpolate; discrete tracks hold the last key. Method keys invoke typed callbacks;
@@ -39,6 +39,8 @@ public sealed partial class Animation : Resource
         Bezier = 6,
         /// <summary>Keys control named clips on relative AnimationPlayer targets.</summary>
         Animation = 8,
+        /// <summary>Keys start borrowed audio sources on relative players or emitters.</summary>
+        Audio = 7,
     }
     /// <summary>Selects how neighboring value keys are sampled.</summary>
     public enum InterpolationType
@@ -301,7 +303,7 @@ public sealed partial class Animation : Resource
         foreach (var (name, marker) in _markers) { var delta = marker.Time - time; if (direction == 0 ? Math.Abs(delta) > 1e-5 : (direction > 0 ? delta <= 0 : delta > 0)) continue; var distance = Math.Abs(delta); if (distance < best || (distance == best && string.CompareOrdinal(name, result) < 0)) { best = distance; result = name; } }
         return result;
     }
-    internal bool HasEventTracks() { foreach (var track in _tracks) if (track.Enabled && (track.Kind == TrackType.Method || track.Kind == TrackType.Animation)) return true; return false; }
+    internal bool HasEventTracks() { foreach (var track in _tracks) if (track.Enabled && (track.Kind == TrackType.Method || track.Kind == TrackType.Animation || track.Kind == TrackType.Audio)) return true; return false; }
     internal bool HasDiscreteTracks() { foreach (var track in _tracks) if (track.Enabled && track.Update == UpdateMode.Discrete) return true; return false; }
     private void RefreshCaptureIncluded() { _captureIncluded = false; foreach (var track in _tracks) if (track.Update == UpdateMode.Capture) { _captureIncluded = true; break; } }
     internal void AddCapturedTrack(AnimationTrack track) => _tracks.Add(track);
@@ -333,6 +335,22 @@ internal abstract class AnimationTrack
     internal abstract TValue ReadKey<TValue>(int key);
     internal virtual string MethodName(int key) => throw new InvalidOperationException("Operation requires a method track.");
     internal virtual T MethodArguments<T>(int key) => throw new InvalidOperationException("Operation requires a method track.");
+    internal int FindLastCrossed(AnimationMixFrame frame, int index)
+    {
+        var cursor = frame.Previous!.Value; var remaining = frame.Movement; var start = frame.Start; var end = frame.End < 0 ? frame.Animation.Length : frame.End; var found = -1;
+        if (end <= start) return found; cursor = Math.Clamp(cursor, start, end);
+        while (remaining != 0)
+        {
+            var reverse = remaining < 0; var endpoint = reverse ? start : end; var travel = Math.Min(Math.Abs(remaining), Math.Abs(endpoint - cursor)); var next = cursor + (reverse ? -travel : travel); var key = Times.BinarySearch(next);
+            if (reverse) { if (key < 0) key = ~key; if (key < Times.Count && Times[key] < cursor) found = key; }
+            else { if (key < 0) key = ~key - 1; if (key >= 0 && Times[key] > cursor) found = key; }
+            var rest = remaining + (reverse ? travel : -travel); if (travel > 0 && rest == remaining) throw new InvalidOperationException("Event delta cannot make representable progress."); remaining = rest; cursor = next;
+            if (cursor != endpoint || frame.Animation.LoopMode == SpriteFrames.LoopMode.None) break;
+            if (frame.Animation.LoopMode == SpriteFrames.LoopMode.PingPong) remaining = -remaining;
+            else { cursor = reverse ? end : start; key = frame.Animation.TrackFindKey(index, cursor, Animation.FindMode.Exact, true); if (key >= 0) found = key; }
+        }
+        return found;
+    }
     internal abstract AnimationTrack Copy(bool deep = false, Func<Resource?, Resource?>? duplicate = null);
     internal abstract void MoveKey(int key, double time);
     internal abstract void RemoveKey(int key);
@@ -479,6 +497,8 @@ internal abstract class AnimationBinding
 {
     internal virtual void StopPlayback() { }
     internal virtual void ResetPlayback() { }
+    internal virtual void BeginFrame() { }
+    internal virtual void FinishFrame(AnimationMixer mixer) { }
     internal virtual void PrepareMethodCalls(int capacity) { }
     internal abstract void AttachBlend(AnimationMixer mixer);
     internal abstract void AddWeight(double weight, int pass);

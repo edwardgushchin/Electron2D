@@ -7,6 +7,8 @@ namespace Electron2D;
 public sealed class AudioStreamEmitter : Entity
 {
     private readonly AudioStreamPlayer _player = new();
+    internal AudioStreamPlayer AnimationPlayer => _player;
+    internal void RefreshAnimationSpatial() => RefreshSpatial(queryArea: true);
     private string _bus = "Master";
     private bool _autoplay, _autoplayPending;
     private uint _areaMask;

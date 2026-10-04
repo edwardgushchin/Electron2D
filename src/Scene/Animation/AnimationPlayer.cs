@@ -96,7 +96,8 @@ public partial class AnimationPlayer : AnimationMixer
         if (name.Length == 0) name = _assigned; var animation = RequireAnimation(name); ObjectDisposedException.ThrowIf(animation.IsDisposed, animation); ValidateSection(animation, startTime, endTime);
         BeginTransition(BlendDuration(name, customBlend));
         _hasPlayback = true;
-        var changed = name != _assigned; if (changed) StopNestedPlayback(); var wasPlaying = _playing; var start = BoundStart(startTime); var end = BoundEnd(animation, endTime);
+        var changed = name != _assigned; if (changed) { StopNestedPlayback(); StopAudioPlayback(); }
+        var wasPlaying = _playing; var start = BoundStart(startTime); var end = BoundEnd(animation, endTime);
         if (changed || _position < start || _position > end || (fromEnd && customSpeed < 0 && _position <= start) || (!fromEnd && customSpeed > 0 && _position >= end)) _position = fromEnd ? end : start;
         _methodSeekPending = changed || !wasPlaying || _position == (fromEnd ? end : start); _methodSeekExternal = false;
         _assigned = name; _customSpeed = customSpeed; _pingDirection = 1; _start = startTime; _end = endTime; _playing = true; _queue.Clear(); _playRevision++; InvalidateEvaluation();

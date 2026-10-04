@@ -68,12 +68,13 @@ public partial class AnimationMixer
     }
     private void EnsureBlendCaches()
     {
+        if (!AudioBindingsCurrent()) _blendDirty = true;
         if (!_blendDirty)
         {
             foreach (var (animation, cache) in _blendCaches) if (!animation.IsDisposed && animation.ChangeRevision != cache.Revision) { _blendDirty = true; break; }
         }
         if (!_blendDirty) return;
-        StopNestedPlayback(); _nestedBindings.Clear(); _legacyCaches.Clear();
+        StopNestedPlayback(); _nestedBindings.Clear(); _legacyCaches.Clear(); ClearAudioBindings();
         _blendCaches.Clear(); _blendProperties.Clear(); _blendOrder.Clear(); ClearCapture();
         var root = RootNode.Length == 0 ? this : GetNodeOrNull(RootNode);
         foreach (var name in GetAnimationList())
@@ -101,6 +102,7 @@ public partial class AnimationMixer
         if (_captureRemaining <= 1e-5) ClearCapture();
         var captureWeight = _captureValues.Length == 0 ? 0 : TweenMath.Ease(_captureRemaining, _captureTransition, _captureEase);
         Animation.Finite(captureWeight); var frameWeight = 1 - captureWeight;
+        BeginAudioFrame();
         var properties = _blendPropertySnapshot;
         foreach (var property in properties) property.Begin();
         for (var index = 0; index < frames.Length; index++)
@@ -117,6 +119,7 @@ public partial class AnimationMixer
                 cache.Bindings[i]?.Mix(frame, i, weight * (frame.TrackWeights is null ? 1 : frame.TrackWeights[i]), this, generation);
             if (frame.Animation.IsDisposed || revision != frame.Animation.ChangeRevision) return;
         }
+        FinishAudioFrame();
         var captures = _captureValues; var snapshot = _captureAnimation; var captureRevision = snapshot?.ChangeRevision;
         foreach (var capture in captures)
         {

@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>Selection occurs at InstantiatePlayback, with shared history per resource. Start retains that choice
 /// and samples variation again. Pool edits do not retarget captured playback. Mix uses the child PCM path.
 /// Authoring and property discovery may allocate; warmed successful mixing does not.</remarks>
-public sealed class AudioStreamRandomizer : AudioStream
+public sealed partial class AudioStreamRandomizer : AudioStream
 {
     /// <summary>Selects the next borrowed stream.</summary>
     public enum PlaybackMode
@@ -187,6 +187,20 @@ public sealed class AudioStreamRandomizer : AudioStream
     private double TotalWeight(bool excludeLast)
     {
         double result = 0; foreach (var entry in _entries) if (entry.Stream is not null && entry.Weight > 0 && (!excludeLast || !ReferenceEquals(entry.Stream, _last))) result += entry.Weight; return result;
+    }
+    internal ulong PreparedShape()
+    {
+        lock (GraphGate) { ulong hash = (uint)_entries.Length; foreach (var entry in _entries) hash = unchecked(hash * 1099511628211UL ^ (entry.Stream?.InstanceID ?? 0)); return hash; }
+    }
+    internal AudioStream? SelectPrepared(out float pitch, out float gain)
+    {
+        lock (GraphGate)
+        {
+            ThrowIfDisposed(); var selected = ChooseStream(); if (selected is not null) _last = selected;
+            pitch = (float)Math.Exp((Random.Shared.NextDouble() * 2 - 1) * Math.Log(_pitch)); gain = (float)Mathf.DBToLinear((Random.Shared.NextDouble() * 2 - 1) * _volume);
+            if (!float.IsFinite(pitch) || pitch <= 0 || !float.IsFinite(gain)) throw new InvalidOperationException("Random variation exceeds finite mixing values.");
+            return selected;
+        }
     }
     /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback()

@@ -2326,12 +2326,6 @@
       "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate."
     },
     {
-      "godot": "Animation::enum:TrackType",
-      "electron2d": "T:Electron2D.Animation.TrackType",
-      "state": "Partial",
-      "reason": "ADR 0093 typed method/B\u00e9zier execution. AnimationSpecialTrackTests verifies scalar cubic time/value handles, typed mixed-signature callback keys/copies, forward/reverse/sections/seeks/loops, graph path filters and weighted curves, deferred/immediate mutation/failure/disposal, prepared capacity exhaustion/reuse and 256 warmed scalar and deferred frames with zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify five actual curve/color pixel poses with borrowed-resource cleanup. Native/driver allocations, other platforms, disk/editor round trips and human acceptance remain unverified. Value, Method, Bezier and Animation are declared. Audio remains unimplemented; 3D track roles remain excluded."
-    },
-    {
       "godot": "Animation::enum:UpdateMode",
       "electron2d": "T:Electron2D.Animation.UpdateMode",
       "state": "Implemented",
@@ -2434,28 +2428,10 @@
       "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate."
     },
     {
-      "godot": "Animation::method:add_track(int:Animation.TrackType,int:)",
-      "electron2d": "method:Electron2D.Animation.AddTrack`2(PropertyDescriptor<TOwner, TValue>,System.Int32,Func<TValue, TValue, System.Double, TValue>)",
-      "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
-    },
-    {
       "godot": "Animation::method:clear()",
       "electron2d": "method:Electron2D.Animation.Clear()",
       "state": "Implemented",
       "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate."
-    },
-    {
-      "godot": "Animation::method:copy_track(int:,Animation:)",
-      "electron2d": "method:Electron2D.Animation.CopyTrack(System.Int32,Electron2D.Animation)",
-      "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
-    },
-    {
-      "godot": "Animation::method:find_track(NodePath:,int:Animation.TrackType)",
-      "electron2d": "method:Electron2D.Animation.FindTrack(System.String,Electron2D.Animation.TrackType)",
-      "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:get_marker_at_time(float:)",
@@ -2560,28 +2536,10 @@
       "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate."
     },
     {
-      "godot": "Animation::method:track_get_key_value(int:,int:)",
-      "electron2d": "method:Electron2D.Animation.TrackGetKeyValue`1(System.Int32,System.Int32)",
-      "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
-    },
-    {
       "godot": "Animation::method:track_get_path(int:)",
       "electron2d": "method:Electron2D.Animation.TrackGetPath(System.Int32)",
       "state": "Implemented",
       "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate."
-    },
-    {
-      "godot": "Animation::method:track_get_type(int:)",
-      "electron2d": "method:Electron2D.Animation.TrackGetType(System.Int32)",
-      "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
-    },
-    {
-      "godot": "Animation::method:track_insert_key(int:,float:,Variant:,float:)",
-      "electron2d": "method:Electron2D.Animation.TrackInsertKey`1(System.Int32,System.Double,TValue,System.Double)",
-      "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:track_is_compressed(int:)",
@@ -2666,12 +2624,6 @@
       "electron2d": "method:Electron2D.Animation.TrackSetKeyTransition(System.Int32,System.Int32,System.Double)",
       "state": "Implemented",
       "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate."
-    },
-    {
-      "godot": "Animation::method:track_set_key_value(int:,int:,Variant:)",
-      "electron2d": "method:Electron2D.Animation.TrackSetKeyValue`1(System.Int32,System.Int32,TValue)",
-      "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:track_set_path(int:,NodePath:)",
@@ -4538,6 +4490,120 @@
       "electron2d": "method:Electron2D.Animation.AnimationTrackSetKeyAnimation(System.Int32,System.Int32,System.String)",
       "state": "Implemented",
       "reason": "ADR 0093 nested player execution. AnimationNestedTrackTests verifies typed string authoring/copies, latest crossed key/reverse/sections/loops, child-length seek/loop rules, stop/update-only, graph node filters/silent clocks, source/cache cleanup, self/mutual synchronous recursion and observer failure/reentry/takeover. 256 warmed nested start/stop plus child property passes allocate zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify six actual child poses, state and borrowed-resource shutdown. Native/driver allocation, other platforms, disk/editor round trips and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::enum_value:TrackType.TYPE_AUDIO",
+      "electron2d": "enumValue:Electron2D.Animation.TrackType.Audio()",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_get_key_end_offset(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackGetKeyEndOffset(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_get_key_start_offset(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackGetKeyStartOffset(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_get_key_stream(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackGetKeyStream(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_insert_key(int:,float:,Resource:,float:,float:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackInsertKey(System.Int32,System.Double,Electron2D.AudioStream,System.Double,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_is_use_blend(int:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackIsUseBlend(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_set_key_end_offset(int:,int:,float:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackSetKeyEndOffset(System.Int32,System.Int32,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_set_key_start_offset(int:,int:,float:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackSetKeyStartOffset(System.Int32,System.Int32,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_set_key_stream(int:,int:,Resource:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackSetKeyStream(System.Int32,System.Int32,Electron2D.AudioStream)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:audio_track_set_use_blend(int:,bool:)",
+      "electron2d": "method:Electron2D.Animation.AudioTrackSetUseBlend(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "AnimationMixer::property:audio_max_polyphony",
+      "electron2d": "property:Electron2D.AnimationMixer.AudioMaxPolyphony()",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::enum:TrackType",
+      "electron2d": "T:Electron2D.Animation.TrackType",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
+    },
+    {
+      "godot": "Animation::method:add_track(int:Animation.TrackType,int:)",
+      "electron2d": "method:Electron2D.Animation.AddTrack`2(PropertyDescriptor<TOwner, TValue>,System.Int32,Func<TValue, TValue, System.Double, TValue>)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
+    },
+    {
+      "godot": "Animation::method:copy_track(int:,Animation:)",
+      "electron2d": "method:Electron2D.Animation.CopyTrack(System.Int32,Electron2D.Animation)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
+    },
+    {
+      "godot": "Animation::method:find_track(NodePath:,int:Animation.TrackType)",
+      "electron2d": "method:Electron2D.Animation.FindTrack(System.String,Electron2D.Animation.TrackType)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
+    },
+    {
+      "godot": "Animation::method:track_get_key_value(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetKeyValue`1(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
+    },
+    {
+      "godot": "Animation::method:track_get_type(int:)",
+      "electron2d": "method:Electron2D.Animation.TrackGetType(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
+    },
+    {
+      "godot": "Animation::method:track_insert_key(int:,float:,Variant:,float:)",
+      "electron2d": "method:Electron2D.Animation.TrackInsertKey`1(System.Int32,System.Double,TValue,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
+    },
+    {
+      "godot": "Animation::method:track_set_key_value(int:,int:,Variant:)",
+      "electron2d": "method:Electron2D.Animation.TrackSetKeyValue`1(System.Int32,System.Int32,TValue)",
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified. Value, Method, Bezier, Audio and Animation cover all applicable 2D runtime kinds; 3D transform/blend-shape roles remain excluded. Typed descriptors/keys replace arbitrary property/argument containers."
     }
   ],
   "extras": [
@@ -6620,6 +6686,36 @@
       "electron2d": "method:Electron2D.Animation.AddAnimationTrack(System.Int32)",
       "state": "Implemented",
       "reason": "ADR 0093 exact factory projection of add_track(TYPE_ANIMATION) to a node-only AnimationPlayer role with typed string keys. ADR 0093 nested player execution. AnimationNestedTrackTests verifies typed string authoring/copies, latest crossed key/reverse/sections/loops, child-length seek/loop rules, stop/update-only, graph node filters/silent clocks, source/cache cleanup, self/mutual synchronous recursion and observer failure/reentry/takeover. 256 warmed nested start/stop plus child property passes allocate zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify six actual child poses, state and borrowed-resource shutdown. Native/driver allocation, other platforms, disk/editor round trips and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "T:Electron2D.AnimationAudioKey",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed audio key value/borrowed resource/trim container or exact add_track(TYPE_AUDIO) node-role factory projection. ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationAudioKey..ctor(Electron2D.AudioStream,System.Double,System.Double)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed audio key value/borrowed resource/trim container or exact add_track(TYPE_AUDIO) node-role factory projection. ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.Animation.AddAudioTrack(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed audio key value/borrowed resource/trim container or exact add_track(TYPE_AUDIO) node-role factory projection. ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationAudioKey.EndOffset()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed audio key value/borrowed resource/trim container or exact add_track(TYPE_AUDIO) node-role factory projection. ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationAudioKey.StartOffset()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed audio key value/borrowed resource/trim container or exact add_track(TYPE_AUDIO) node-role factory projection. ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimationAudioKey.Stream()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed audio key value/borrowed resource/trim container or exact add_track(TYPE_AUDIO) node-role factory projection. ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -9257,7 +9353,6 @@
       "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Other track enum members and full generic key-interpolation edge profiles (integer rounding, nonlinear values, ping-pong edge controls and out-of-duration keys) remain applicable unfinished work.",
       "godot": [
         "Animation::enum:InterpolationType",
-        "Animation::enum:TrackType",
         "Animation::method:value_track_interpolate(int:,float:,bool:)"
       ]
     },
@@ -9265,18 +9360,7 @@
       "state": "Unimplemented",
       "reason": "ADR 0093: value-property authoring/playback now executes. This applicable member remains unimplemented; it is not blocked on the first scene animation slice.",
       "godot": [
-        "Animation::enum_value:TrackType.TYPE_AUDIO",
-        "Animation::method:audio_track_get_key_end_offset(int:,int:)",
-        "Animation::method:audio_track_get_key_start_offset(int:,int:)",
-        "Animation::method:audio_track_get_key_stream(int:,int:)",
-        "Animation::method:audio_track_insert_key(int:,float:,Resource:,float:,float:)",
-        "Animation::method:audio_track_is_use_blend(int:)",
-        "Animation::method:audio_track_set_key_end_offset(int:,int:,float:)",
-        "Animation::method:audio_track_set_key_start_offset(int:,int:,float:)",
-        "Animation::method:audio_track_set_key_stream(int:,int:,Resource:)",
-        "Animation::method:audio_track_set_use_blend(int:,bool:)",
         "Animation::method:optimize(float:,float:,int:)",
-        "AnimationMixer::property:audio_max_polyphony",
         "AnimationPlayer::enum:AnimationMethodCallMode",
         "AnimationPlayer::enum_value:AnimationMethodCallMode.ANIMATION_METHOD_CALL_DEFERRED",
         "AnimationPlayer::enum_value:AnimationMethodCallMode.ANIMATION_METHOD_CALL_IMMEDIATE",
@@ -9300,19 +9384,6 @@
         "Animation::method:rotation_track_interpolate(int:,float:,bool:)",
         "Animation::method:scale_track_insert_key(int:,float:,Vector3:)",
         "Animation::method:scale_track_interpolate(int:,float:,bool:)"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start.",
-      "godot": [
-        "Animation::method:add_track(int:Animation.TrackType,int:)",
-        "Animation::method:copy_track(int:,Animation:)",
-        "Animation::method:find_track(NodePath:,int:Animation.TrackType)",
-        "Animation::method:track_get_key_value(int:,int:)",
-        "Animation::method:track_get_type(int:)",
-        "Animation::method:track_insert_key(int:,float:,Variant:,float:)",
-        "Animation::method:track_set_key_value(int:,int:,Variant:)"
       ]
     },
     {
@@ -9625,6 +9696,31 @@
         "Animation::method:animation_track_get_key_animation(int:,int:)",
         "Animation::method:animation_track_insert_key(int:,float:,StringName:)",
         "Animation::method:animation_track_set_key_animation(int:,int:,StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0093/0047 prepared audio-track execution. AnimationAudioTrackTests verifies typed keys/copies/trims, native stream/sample PCM, startup/elapsed seek/update-only, receiver pause/controller stop/cache cleanup, end trim/zero capacity, randomizer/graph and 64 warmed repeated cue starts with zero owner managed bytes and no engine native allocation-call growth. Two Linux Wayland GPU and two compatibility emitter hosts check native PCM/control/cleanup and actual canvas output. SDL dummy is transport capture, not physical listening; native library/driver internals, other platforms, editor/disk and human acceptance remain unverified.",
+      "godot": [
+        "Animation::enum_value:TrackType.TYPE_AUDIO",
+        "Animation::method:audio_track_get_key_end_offset(int:,int:)",
+        "Animation::method:audio_track_get_key_start_offset(int:,int:)",
+        "Animation::method:audio_track_get_key_stream(int:,int:)",
+        "Animation::method:audio_track_insert_key(int:,float:,Resource:,float:,float:)",
+        "Animation::method:audio_track_is_use_blend(int:)",
+        "Animation::method:audio_track_set_key_end_offset(int:,int:,float:)",
+        "Animation::method:audio_track_set_key_start_offset(int:,int:,float:)",
+        "Animation::method:audio_track_set_key_stream(int:,int:,Resource:)",
+        "Animation::method:audio_track_set_use_blend(int:,bool:)",
+        "AnimationMixer::property:audio_max_polyphony",
+        "Animation::enum:TrackType",
+        "Animation::method:add_track(int:Animation.TrackType,int:)",
+        "Animation::method:copy_track(int:,Animation:)",
+        "Animation::method:find_track(NodePath:,int:Animation.TrackType)",
+        "Animation::method:track_get_key_value(int:,int:)",
+        "Animation::method:track_get_type(int:)",
+        "Animation::method:track_insert_key(int:,float:,Variant:,float:)",
+        "Animation::method:track_set_key_value(int:,int:,Variant:)"
       ]
     }
   ]
