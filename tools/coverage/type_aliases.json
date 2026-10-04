@@ -163,6 +163,7 @@
     "MultiplayerSynchronizer.VisibilityUpdateMode": "VisibilityUpdateMode",
     "SceneReplicationConfig.ReplicationMode": "ReplicationMode",
     "UPNP.UPNPResult": "UPNPResult",
-    "UPNPDevice.IGDStatus": "IGDStatus"
+    "UPNPDevice.IGDStatus": "IGDStatus",
+    "PacketPeerDTLS.Status": "TLSStatus"
   }
 }

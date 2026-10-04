@@ -216,7 +216,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CylinderMesh](classes/CylinderMesh.md) | PrimitiveMesh | Excluded | 7 |
 | [CylinderShape3D](classes/CylinderShape3D.md) | Shape3D | Excluded | 2 |
 | [DPITexture](classes/DPITexture.md) | Texture2D | Blocked | 11 |
-| [DTLSServer](classes/DTLSServer.md) | RefCounted | Blocked | 2 |
+| [DTLSServer](classes/DTLSServer.md) | RefCounted | Implemented | 2 |
 | [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | Joint2D | Partial | 4 |
 | [Decal](classes/Decal.md) | VisualInstance3D | Excluded | 23 |
 | [Dictionary](classes/Dictionary.md) | — | Excluded | 40 |
@@ -588,7 +588,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PackedVector3Array](classes/PackedVector3Array.md) | — | Excluded | 31 |
 | [PackedVector4Array](classes/PackedVector4Array.md) | — | Excluded | 30 |
 | [PacketPeer](classes/PacketPeer.md) | RefCounted | Implemented | 7 |
-| [PacketPeerDTLS](classes/PacketPeerDTLS.md) | PacketPeer | Unimplemented | 10 |
+| [PacketPeerDTLS](classes/PacketPeerDTLS.md) | PacketPeer | Implemented | 10 |
 | [PacketPeerExtension](classes/PacketPeerExtension.md) | PacketPeer | Implemented | 4 |
 | [PacketPeerStream](classes/PacketPeerStream.md) | PacketPeer | Implemented | 3 |
 | [PacketPeerUDP](classes/PacketPeerUDP.md) | PacketPeer | Implemented | 13 |

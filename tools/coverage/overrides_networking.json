@@ -3029,6 +3029,76 @@
       "godot": "UPNPDevice::property:service_type",
       "electron2d": "property:Electron2D.UPNPDevice.ServiceType()",
       "reason": "ADR 0094 executable synchronous native UPNP/UPNPDevice: ordered borrowed device memberships, native IPv4/IPv6 SSDP multicast/interface/source-port/TTL configuration, location/target dedup and substring filtering, per-device XML description/URLBase/WANIP/WANPPP assessment, actual connected status and assigned external IP, routed local client identity, GET and SOAP over existing HTTPClient, escaped Add/DeletePortMapping/GetExternalIPAddress and exact typed UPNPResult/IGDStatus identities. Discovery/commands are explicit allocating cold work; five-second HTTP deadlines, one-MiB bodies, DTD prohibition/depth limits and 256-identity discovery budget bound input. UPNPTests independently verifies native multicast discovery, IPv4/IPv6 SOAP headers/payloads/faults, malformed/empty/non-IGD/invalid-control descriptions, validation/lifetime and public Node/SceneTree workflow; 64 metadata-query cycles allocate zero managed bytes. A real IPv4 gateway discovery/status/external-address query passed read-only. Real gateway mapping mutations, IPv6 routed multicast, other hosts/native allocator/human/editor/rendered acceptance remain separate gates."
+    },
+    {
+      "godot": "class:DTLSServer",
+      "electron2d": "T:Electron2D.DTLSServer",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "DTLSServer::method:setup(TLSOptions:)",
+      "electron2d": "method:Electron2D.DTLSServer.Setup(Electron2D.TLSOptions)",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "DTLSServer::method:take_connection(PacketPeerUDP:)",
+      "electron2d": "method:Electron2D.DTLSServer.TakeConnection(Electron2D.PacketPeerUDP)",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "class:PacketPeerDTLS",
+      "electron2d": "T:Electron2D.PacketPeerDTLS",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::enum:Status",
+      "electron2d": "T:Electron2D.TLSStatus",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::enum_value:Status.STATUS_CONNECTED",
+      "electron2d": "enumValue:Electron2D.TLSStatus.Connected()",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::enum_value:Status.STATUS_DISCONNECTED",
+      "electron2d": "enumValue:Electron2D.TLSStatus.Disconnected()",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::enum_value:Status.STATUS_ERROR",
+      "electron2d": "enumValue:Electron2D.TLSStatus.Error()",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::enum_value:Status.STATUS_ERROR_HOSTNAME_MISMATCH",
+      "electron2d": "enumValue:Electron2D.TLSStatus.ErrorHostnameMismatch()",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::enum_value:Status.STATUS_HANDSHAKING",
+      "electron2d": "enumValue:Electron2D.TLSStatus.Handshaking()",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::method:connect_to_peer(PacketPeerUDP:,String:,TLSOptions:)",
+      "electron2d": "method:Electron2D.PacketPeerDTLS.ConnectToPeer(Electron2D.PacketPeerUDP,System.String,Electron2D.TLSOptions)",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::method:disconnect_from_peer()",
+      "electron2d": "method:Electron2D.PacketPeerDTLS.DisconnectFromPeer()",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::method:get_status()",
+      "electron2d": "method:Electron2D.PacketPeerDTLS.GetStatus()",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "godot": "PacketPeerDTLS::method:poll()",
+      "electron2d": "method:Electron2D.PacketPeerDTLS.Poll()",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
     }
   ],
   "extras": [
@@ -4381,6 +4451,71 @@
       "electron2d": "method:Electron2D.UPNPDevice.ValidateDisposal()",
       "state": "Implemented",
       "reason": "Typed constructor or owner-validated inherited disposal hook for synchronous gateway discovery/control. ADR 0094 executable synchronous native UPNP/UPNPDevice: ordered borrowed device memberships, native IPv4/IPv6 SSDP multicast/interface/source-port/TTL configuration, location/target dedup and substring filtering, per-device XML description/URLBase/WANIP/WANPPP assessment, actual connected status and assigned external IP, routed local client identity, GET and SOAP over existing HTTPClient, escaped Add/DeletePortMapping/GetExternalIPAddress and exact typed UPNPResult/IGDStatus identities. Discovery/commands are explicit allocating cold work; five-second HTTP deadlines, one-MiB bodies, DTD prohibition/depth limits and 256-identity discovery budget bound input. UPNPTests independently verifies native multicast discovery, IPv4/IPv6 SOAP headers/payloads/faults, malformed/empty/non-IGD/invalid-control descriptions, validation/lifetime and public Node/SceneTree workflow; 64 metadata-query cycles allocate zero managed bytes. A real IPv4 gateway discovery/status/external-address query passed read-only. Real gateway mapping mutations, IPv6 routed multicast, other hosts/native allocator/human/editor/rendered acceptance remain separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.DTLSServer..ctor()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PacketPeerDTLS..ctor()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.DTLSServer.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.DTLSServer.Finalize()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.DTLSServer.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.PacketPeerDTLS.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.PacketPeerDTLS.Finalize()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.PacketPeerDTLS.GetAvailablePacketCount()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.PacketPeerDTLS.GetMaxPacketSize()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.PacketPeerDTLS.NextPacketSize()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.PacketPeerDTLS.PutPacket(System.ReadOnlySpan<System.Byte>)",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.PacketPeerDTLS.ReadPacketCore(System.Span<System.Byte>)",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.PacketPeerDTLS.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "Typed construction/finalization/disposal or concrete inherited PacketPeer packet/availability/owner hook. ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates."
     }
   ],
   "statusGroups": [
@@ -4528,15 +4663,6 @@
     {
       "state": "Blocked",
       "godot": [
-        "class:DTLSServer",
-        "DTLSServer::method:setup(TLSOptions:)",
-        "DTLSServer::method:take_connection(PacketPeerUDP:)"
-      ],
-      "reason": "ADR 0094: Requires executable PacketPeerDTLS and DTLS server-cookie/handshake ownership over existing UDP transports."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
         "class:ENetConnection",
         "ENetConnection::enum:CompressionMode",
         "ENetConnection::enum:EventType",
@@ -4643,23 +4769,6 @@
         "ENetPacketPeer::method:throttle_configure(int:,int:,int:)"
       ],
       "reason": "ADR 0094: The typed MultiplayerPeer contract now executes. Requires an ENet-capable native backend/packaging and typed ENet host/packet-peer/reliability ownership; plain UDP and WS do not supply ENet protocol."
-    },
-    {
-      "state": "Unimplemented",
-      "godot": [
-        "class:PacketPeerDTLS",
-        "PacketPeerDTLS::enum:Status",
-        "PacketPeerDTLS::enum_value:Status.STATUS_CONNECTED",
-        "PacketPeerDTLS::enum_value:Status.STATUS_DISCONNECTED",
-        "PacketPeerDTLS::enum_value:Status.STATUS_ERROR",
-        "PacketPeerDTLS::enum_value:Status.STATUS_ERROR_HOSTNAME_MISMATCH",
-        "PacketPeerDTLS::enum_value:Status.STATUS_HANDSHAKING",
-        "PacketPeerDTLS::method:connect_to_peer(PacketPeerUDP:,String:,TLSOptions:)",
-        "PacketPeerDTLS::method:disconnect_from_peer()",
-        "PacketPeerDTLS::method:get_status()",
-        "PacketPeerDTLS::method:poll()"
-      ],
-      "reason": "ADR 0094: UDP, TLSOptions/key/certificate resources and the selected system OpenSSL 3 library are available. Next connected DTLS slice implements datagram BIO integration, polled packet handshake/retransmission/timers, server cookies and PacketPeer ownership. Existing stream TLS behavior does not implement DTLS packet transport."
     },
     {
       "state": "Blocked",
@@ -5326,6 +5435,26 @@
         "UPNPDevice::property:service_type",
         "class:UPNP",
         "class:UPNPDevice"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0094 executable DTLS packets/server state: PacketPeerDTLS borrows connected PacketPeerUDP, DTLSServer prepares retained identity and address/scope/port-bound HMAC-SHA256 cookies; existing TLSOptions and shared TLSStatus under ADR 0051 preserve trust/name/role/error identities. Linux system OpenSSL 3.2+ fixed 64-KiB datagram BIO pairs implement DTLS1.2, complete record input/output, cookie challenges on the same logical peer and polled native retransmission timers. Preserve 488-byte advertised capacity, empty-send no-op, bounded whole-packet queues, undersized read preservation, generation/reentry/owner/security-resource cleanup. DTLSTests executes public Node/SceneTree/UDPServer packet workflow, first-hello loss/retry, cookie challenge, anti-replay/bad-MAC recovery, name/custom/system/unsafe trust, rollback/lifetime and independent OpenSSL CLI peers in both roles; 64 prepared active/idle cycles allocate zero managed bytes. Native OpenSSL allocation, foreign/browser/routed/performance, ENet and human/rendered/editor acceptance remain separate gates.",
+      "godot": [
+        "DTLSServer::method:setup(TLSOptions:)",
+        "DTLSServer::method:take_connection(PacketPeerUDP:)",
+        "PacketPeerDTLS::enum:Status",
+        "PacketPeerDTLS::enum_value:Status.STATUS_CONNECTED",
+        "PacketPeerDTLS::enum_value:Status.STATUS_DISCONNECTED",
+        "PacketPeerDTLS::enum_value:Status.STATUS_ERROR",
+        "PacketPeerDTLS::enum_value:Status.STATUS_ERROR_HOSTNAME_MISMATCH",
+        "PacketPeerDTLS::enum_value:Status.STATUS_HANDSHAKING",
+        "PacketPeerDTLS::method:connect_to_peer(PacketPeerUDP:,String:,TLSOptions:)",
+        "PacketPeerDTLS::method:disconnect_from_peer()",
+        "PacketPeerDTLS::method:get_status()",
+        "PacketPeerDTLS::method:poll()",
+        "class:DTLSServer",
+        "class:PacketPeerDTLS"
       ]
     }
   ]

@@ -8,6 +8,8 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
+| [Networking](domains/networking.md) | [Native DTLS](components/dtls.md) | [PacketPeerDTLS](classes/PacketPeerDTLS.md) | [PacketPeerDTLS.cs](../src/Core/Networking/PacketPeerDTLS.cs) | Current | Authenticated packet/cookie/lifetime consumer under ADR 0094. |
+| [Networking](domains/networking.md) | [Native DTLS](components/dtls.md) | [DTLSServer](classes/DTLSServer.md) | [DTLSServer.cs](../src/Core/Networking/DTLSServer.cs) | Current | Authenticated packet/cookie/lifetime consumer under ADR 0094. |
 | [Networking](domains/networking.md) | [UPNP gateway control](components/upnp.md) | [UPNP](classes/UPNP.md) | [UPNP.cs](../src/Core/Networking/UPNP.cs) | Current | Synchronous typed discovery/control, bounded parsing and borrowed lifetime under ADR 0094. |
 | [Networking](domains/networking.md) | [UPNP gateway control](components/upnp.md) | [UPNPDevice](classes/UPNPDevice.md) | [UPNPDevice.cs](../src/Core/Networking/UPNPDevice.cs) | Current | Synchronous typed discovery/control, bounded parsing and borrowed lifetime under ADR 0094. |
 | [Networking](domains/networking.md) | [UPNP gateway control](components/upnp.md) | [UPNPResult](classes/UPNPResult.md) | [UPNPResult.cs](../src/Core/Networking/UPNPResult.cs) | Current | Synchronous typed discovery/control, bounded parsing and borrowed lifetime under ADR 0094. |

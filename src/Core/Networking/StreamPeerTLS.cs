@@ -2,14 +2,14 @@ using System.Security.Authentication;
 using System.Security.Cryptography;
 namespace Electron2D;
 
-/// <summary>Describes a TLS session independently of the underlying stream connection.</summary>
+/// <summary>Describes a TLS or DTLS session independently of the underlying transport.</summary>
 public enum TLSStatus
 {
-    /// <summary>No TLS session is attached.</summary>
+    /// <summary>No TLS or DTLS session is attached.</summary>
     Disconnected = 0,
-    /// <summary>The polled TLS handshake is in progress.</summary>
+    /// <summary>The polled TLS or DTLS handshake is in progress.</summary>
     Handshaking = 1,
-    /// <summary>Authenticated TLS application bytes can be transferred.</summary>
+    /// <summary>Authenticated TLS bytes or DTLS packets can be transferred.</summary>
     Connected = 2,
     /// <summary>The session failed; the borrowed transport remains caller-owned.</summary>
     Error = 3,

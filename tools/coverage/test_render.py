@@ -368,6 +368,11 @@ def main():
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name
         assert "UPNPTests" in rows[0] and "read-only" in rows[0], name
+    for name, count in (("PacketPeerDTLS", 11), ("DTLSServer", 3)):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows), name
+        assert "DTLSTests" in rows[0] and "OpenSSL" in rows[0], name
+    assert "Electron2D.TLSStatus" in pages[CLASS_PAGES / "PacketPeerDTLS.md"]
     crypto_rows = 0
     for name in ("Crypto", "HashingContext", "HMACContext", "AESContext"):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()

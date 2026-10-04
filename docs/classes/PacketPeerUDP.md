@@ -257,3 +257,5 @@ Queue overflow or traffic for another shared-server endpoint can leave this peer
 ## Verification and limits
 
 [NetworkingTests](../../tests/Electron2D.Tests/NetworkingTests.cs) verifies the exercised native Linux x64 IPv4/IPv6 loopback and UDS paths, binary/framing/queue edges, lifecycle, owner checks, scene request/reply and warmed allocation boundaries. Native allocator totals, other hosts/browser transport, real routed traffic, network throughput and owner acceptance remain unverified. Dynamic-value wire encoding is excluded under ADR 0001; raw typed bytes are executable. See [coverage](../coverage/classes/PacketPeerUDP.md).
+
+A [DTLS packet session](PacketPeerDTLS.md) may borrow this connected endpoint. It captures the internal connection generation; Close/listener detachment/reopening invalidates that session without transferring UDP disposal. The caller preserves exclusive raw packet access while DTLS is attached.

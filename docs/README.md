@@ -14,6 +14,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Production source root: `src/`, organized by engine module while retaining the flat public `Electron2D` namespace.
 - Architecture context: `decisions/index.md` routes to bounded domain decision documents; read only the affected documents and explicit cross-domain dependencies. No decision document may exceed 500 lines.
 - Target framework: .NET 10 (`net10.0`), with target-specific Android, iOS and tvOS frameworks selected by runtime identifier.
+- [Native DTLS packets](components/dtls.md) supports authenticated UDP packet delivery, server cookies and explicit handshake/retransmission polling; independent native client/server processes verify the local DTLS 1.2 profile.
 - [UPNP gateway discovery/control](components/upnp.md) supports native SSDP, typed device assessment and synchronous SOAP query/port mappings; verification boundaries include a real read-only gateway workflow.
 - Implemented domains: Core, Input, Scene, Localization, Resources, Display, Rendering, Navigation, Physics, Audio and Networking. Each domain page records its exact capabilities and remaining gaps.
 - Implemented components include object/resource lifetime, math, configuration and I/O, input, scene scheduling, window lifecycle, translation, CPU images and codecs, canvas drawing, typed shader materials, GUI/text, navigation, physics and audio playback/recording. The [inventory](inventory.md) links implemented production types to their source and reference pages.

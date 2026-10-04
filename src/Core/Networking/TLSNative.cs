@@ -16,19 +16,20 @@ internal sealed class TLSHandle : SafeHandle
 internal static unsafe partial class TLSNative
 {
     private const string SSL = "libssl.so.3", Crypto = "libcrypto.so.3";
-    internal static void CheckBackend()
+    internal static void CheckBackend(bool datagram = false)
     {
         if (!OperatingSystem.IsLinux() || IntPtr.Size != 8) throw new PlatformNotSupportedException("TLS currently requires the 64-bit Linux OpenSSL 3 backend.");
-        try { if (TLS_method() == 0) throw new PlatformNotSupportedException("OpenSSL TLS is unavailable."); }
+        try { if (datagram && BIO_s_dgram_pair() == 0) throw new PlatformNotSupportedException("OpenSSL datagram BIOs are unavailable."); if (TLS_method() == 0) throw new PlatformNotSupportedException("OpenSSL TLS is unavailable."); }
+        catch (EntryPointNotFoundException error) { throw new PlatformNotSupportedException("DTLS requires OpenSSL 3.2 datagram BIO support.", error); }
         catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires system OpenSSL 3 libraries.", error); }
     }
-    internal static TLSHandle CreateContext(TLSOptions options)
+    internal static TLSHandle CreateContext(TLSOptions options, bool datagram = false)
     {
-        CheckBackend(); ERR_clear_error(); var pointer = SSL_CTX_new(TLS_method()); if (pointer == 0) throw Failure("TLS context creation failed.");
+        CheckBackend(datagram); ERR_clear_error(); var pointer = SSL_CTX_new(datagram ? DTLS_method() : TLS_method()); if (pointer == 0) throw Failure("TLS context creation failed.");
         var context = new TLSHandle(pointer, SSL_CTX_free);
         try
         {
-            Require(SSL_CTX_ctrl(pointer, 123, 0x303, 0), "TLS 1.2 minimum configuration failed.");
+            Require(SSL_CTX_ctrl(pointer, 123, datagram ? 0xfefd : 0x303, 0), datagram ? "DTLS 1.2 minimum configuration failed." : "TLS 1.2 minimum configuration failed.");
             SSL_CTX_set_verify(pointer, options.IsServer() || options.IsUnsafeClient() && options.GetTrustedCAChain() is null ? 0 : 1, 0);
             if (!options.IsServer() && options.GetTrustedCAChain() is null && !options.IsUnsafeClient()) Require(SSL_CTX_set_default_verify_paths(pointer), "System TLS trust is unavailable.");
             return context;
@@ -56,13 +57,14 @@ internal static unsafe partial class TLSNative
     {
         fixed (byte* p = data) { var cursor = p; var pointer = d2i_X509(0, ref cursor, data.Length); if (pointer == 0) throw Failure("TLS certificate import failed."); return new(pointer, X509_free); }
     }
-    internal static TLSHandle CreateSession(nint context, bool server, string name, bool validateName, out TLSHandle network)
+    internal static TLSHandle CreateSession(nint context, bool server, string name, bool validateName, out TLSHandle network, bool datagram = false)
     {
         var pointer = SSL_new(context); if (pointer == 0) throw Failure("TLS session creation failed."); var session = new TLSHandle(pointer, SSL_free); network = null!;
         try
         {
-            Require(BIO_new_bio_pair(out var inner, 65536, out var outer, 65536), "TLS I/O allocation failed.");
+            nint inner, outer; Require(datagram ? BIO_new_bio_dgram_pair(out inner, 65536, out outer, 65536) : BIO_new_bio_pair(out inner, 65536, out outer, 65536), "TLS I/O allocation failed.");
             network = new(outer, BIO_free_void); SSL_set_bio(pointer, inner, inner);
+            if (datagram) { SSL_set_options(pointer, 1UL << 12); Require(SSL_ctrl(pointer, 17, 1200, 0), "DTLS MTU configuration failed."); Require(BIO_ctrl(inner, 42, 1200, 0), "DTLS BIO MTU configuration failed."); }
             SSL_ctrl(pointer, 33, 3, 0);
             if (server) SSL_set_accept_state(pointer);
             else
@@ -92,8 +94,28 @@ internal static unsafe partial class TLSNative
     internal static int WriteBIO(nint bio, ReadOnlySpan<byte> bytes) { fixed (byte* p = bytes) return BIO_write(bio, p, bytes.Length); }
     internal static int Read(nint ssl, Span<byte> bytes) { fixed (byte* p = bytes) return SSL_read(ssl, p, bytes.Length); }
     internal static int Write(nint ssl, ReadOnlySpan<byte> bytes) { fixed (byte* p = bytes) return SSL_write(ssl, p, bytes.Length); }
+    internal static void ConfigureDTLSCookies(nint context) { SSL_CTX_set_cookie_generate_cb(context, &GenerateCookie); SSL_CTX_set_cookie_verify_cb(context, &VerifyCookie); }
+    [UnmanagedCallersOnly(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static int GenerateCookie(nint ssl, byte* output, uint* size)
+    {
+        var cookie = SSL_get_ex_data(ssl, 0); if (cookie == 0) return 0; new ReadOnlySpan<byte>((void*)cookie, 32).CopyTo(new Span<byte>(output, 32)); *size = 32; return 1;
+    }
+    [UnmanagedCallersOnly(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static int VerifyCookie(nint ssl, byte* input, uint size)
+    {
+        var cookie = SSL_get_ex_data(ssl, 0); return cookie != 0 && size == 32 && CryptographicOperations.FixedTimeEquals(new ReadOnlySpan<byte>((void*)cookie, 32), new ReadOnlySpan<byte>(input, 32)) ? 1 : 0;
+    }
     internal static int Peek(nint ssl) { byte value; return SSL_peek(ssl, &value, 1); }
     [LibraryImport(SSL)] internal static partial nint TLS_method();
+    [LibraryImport(SSL)] private static partial nint DTLS_method();
+    [LibraryImport(SSL)] internal static partial ulong SSL_set_options(nint ssl, ulong options);
+    [LibraryImport(SSL)] internal static partial long SSL_ctrl(nint ssl, int command, long value, nint pointer);
+    [LibraryImport(SSL)] internal static partial int SSL_set_ex_data(nint ssl, int index, nint data);
+    [LibraryImport(SSL)] private static partial nint SSL_get_ex_data(nint ssl, int index);
+    [LibraryImport(SSL)] private static partial void SSL_CTX_set_cookie_generate_cb(nint context, delegate* unmanaged[Cdecl]<nint, byte*, uint*, int> callback);
+    [LibraryImport(SSL)] private static partial void SSL_CTX_set_cookie_verify_cb(nint context, delegate* unmanaged[Cdecl]<nint, byte*, uint, int> callback);
+    [LibraryImport(Crypto)] private static partial nint BIO_s_dgram_pair();
+    [LibraryImport(Crypto)] private static partial int BIO_new_bio_dgram_pair(out nint first, nuint firstSize, out nint second, nuint secondSize);
     [LibraryImport(SSL)] private static partial nint SSL_CTX_new(nint method);
     [LibraryImport(SSL)] private static partial void SSL_CTX_free(nint context);
     [LibraryImport(SSL)] private static partial long SSL_CTX_ctrl(nint context, int command, long value, nint pointer);
@@ -108,7 +130,6 @@ internal static unsafe partial class TLSNative
     [LibraryImport(SSL)] private static partial void SSL_set_bio(nint ssl, nint read, nint write);
     [LibraryImport(SSL)] private static partial void SSL_set_connect_state(nint ssl);
     [LibraryImport(SSL)] private static partial void SSL_set_accept_state(nint ssl);
-    [LibraryImport(SSL)] private static partial long SSL_ctrl(nint ssl, int command, long value, nint pointer);
     [LibraryImport(SSL)] private static partial int SSL_set1_host(nint ssl, byte* name);
     [LibraryImport(SSL)] private static partial nint SSL_get0_param(nint ssl);
     [LibraryImport(SSL)] internal static partial int SSL_do_handshake(nint ssl);

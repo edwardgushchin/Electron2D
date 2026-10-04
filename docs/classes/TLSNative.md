@@ -11,3 +11,5 @@ Internal source-generated OpenSSL 3 imports, context/trust/server-identity setup
 ## Verification
 
 [TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) executes native TLS over fragmented public streams and TCP, trust/name/failure/lifetime/finalization paths and independent SslStream interoperability. Prepared active/idle cycles measure managed allocation; external OpenSSL native allocation totals and other hosts remain unverified.
+
+DTLS additionally probes OpenSSL 3.2 datagram-BIO capability before setup, prepares fixed 64 KiB datagram pairs/MTU, cookie callbacks and native timer progress. Existing stream sessions retain their original BIO preparation. [DTLS](../components/dtls.md) documents packet ownership and independent process verification.

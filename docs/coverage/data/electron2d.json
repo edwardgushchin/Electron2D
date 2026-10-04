@@ -3023,6 +3023,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DTLSServer",
+    "kind": "type",
+    "declaringType": "Electron2D.DTLSServer",
+    "name": "DTLSServer",
+    "signature": "public class Electron2D.DTLSServer",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DampedSpringJoint",
     "kind": "type",
     "declaringType": "Electron2D.DampedSpringJoint",
@@ -5521,6 +5536,21 @@
     "signature": "public abstract class Electron2D.PacketPeer",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PacketPeerDTLS",
+    "kind": "type",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "PacketPeerDTLS",
+    "signature": "public class Electron2D.PacketPeerDTLS",
+    "visibility": "public",
+    "baseType": "Electron2D.PacketPeer",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -11916,6 +11946,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.DTLSServer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.DTLSServer",
+    "name": ".ctor",
+    "signature": "public DTLSServer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.DampedSpringJoint..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.DampedSpringJoint",
@@ -12939,6 +12982,19 @@
     "name": ".ctor",
     "signature": "protected PacketPeer()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PacketPeerDTLS..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": ".ctor",
+    "signature": "public PacketPeerDTLS()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -61769,6 +61825,89 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DTLSServer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DTLSServer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DTLSServer.Finalize()",
+    "kind": "method",
+    "declaringType": "Electron2D.DTLSServer",
+    "name": "Finalize",
+    "signature": "protected override System.Void Finalize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DTLSServer.Setup(Electron2D.TLSOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.DTLSServer",
+    "name": "Setup",
+    "signature": "public System.Void Setup(Electron2D.TLSOptions serverOptions)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "serverOptions",
+        "type": "Electron2D.TLSOptions",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DTLSServer.TakeConnection(Electron2D.PacketPeerUDP)",
+    "kind": "method",
+    "declaringType": "Electron2D.DTLSServer",
+    "name": "TakeConnection",
+    "signature": "public Electron2D.PacketPeerDTLS TakeConnection(Electron2D.PacketPeerUDP udpPeer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "udpPeer",
+        "type": "Electron2D.PacketPeerUDP",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PacketPeerDTLS",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DTLSServer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.DTLSServer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DampedSpringJoint.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.DampedSpringJoint",
@@ -84865,6 +85004,196 @@
     "id": "method:Electron2D.PacketPeer.ValidateDisposal()",
     "kind": "method",
     "declaringType": "Electron2D.PacketPeer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.ConnectToPeer(Electron2D.PacketPeerUDP,System.String,Electron2D.TLSOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "ConnectToPeer",
+    "signature": "public System.Void ConnectToPeer(Electron2D.PacketPeerUDP packetPeer, System.String hostname, Electron2D.TLSOptions clientOptions = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "packetPeer",
+        "type": "Electron2D.PacketPeerUDP",
+        "default": null
+      },
+      {
+        "name": "hostname",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "clientOptions",
+        "type": "Electron2D.TLSOptions",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.DisconnectFromPeer()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "DisconnectFromPeer",
+    "signature": "public System.Void DisconnectFromPeer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.Finalize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "Finalize",
+    "signature": "protected override System.Void Finalize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.GetAvailablePacketCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "GetAvailablePacketCount",
+    "signature": "public override System.Int32 GetAvailablePacketCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.GetMaxPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "GetMaxPacketSize",
+    "signature": "public override System.Int32 GetMaxPacketSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.GetStatus()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "GetStatus",
+    "signature": "public Electron2D.TLSStatus GetStatus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TLSStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.NextPacketSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "NextPacketSize",
+    "signature": "protected override System.Int32 NextPacketSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "Poll",
+    "signature": "public System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "PutPacket",
+    "signature": "public override System.Void PutPacket(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.ReadPacketCore(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
+    "name": "ReadPacketCore",
+    "signature": "protected override System.Void ReadPacketCore(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PacketPeerDTLS.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.PacketPeerDTLS",
     "name": "ValidateDisposal",
     "signature": "protected override System.Void ValidateDisposal()",
     "visibility": "protected",

@@ -9,6 +9,8 @@ namespace Electron2D;
 /// Bind/connection/destination resolution and first endpoint queries are cold operations; caller-span packet cycles reuse storage.</remarks>
 public class PacketPeerUDP : PacketPeer
 {
+    internal long ConnectionGeneration { get; private set; }
+    internal DatagramAddress ConnectedAddress { get { CheckPacketPeer(); if (!_connected || _remote is null) throw new InvalidOperationException("A connected UDP endpoint is required."); return DatagramAddress.Capture(_remote); } }
     private Socket? _socket;
     private SocketAddress? _remote, _receiveAddress;
     private IPAddress? _destinationAddress;
@@ -66,7 +68,7 @@ public class PacketPeerUDP : PacketPeer
     public void Close() { CheckPacketPeer(); CloseCore(); _queue.Prepare(65536); }
     private void CloseCore()
     {
-        var server = _server; _server = null; if (server is not null) server.RemovePeer(_serverAddress, this); else _socket?.Dispose();
+        ConnectionGeneration++; var server = _server; _server = null; if (server is not null) server.RemovePeer(_serverAddress, this); else _socket?.Dispose();
         _socket = null; _remote = null; _receiveAddress = null; _connected = false; _localPort = 0; _queue.Clear();
     }
     private void PollPackets()
@@ -134,11 +136,11 @@ public class PacketPeerUDP : PacketPeer
     }
     internal void Attach(UDPServer server, Socket socket, DatagramAddress address, int localPort)
     {
-        _server = server; _socket = socket; _serverAddress = address; _connected = true; _localPort = localPort;
+        ConnectionGeneration++; _server = server; _socket = socket; _serverAddress = address; _connected = true; _localPort = localPort;
         _lastAddress = address; _lastHost = null; _destinationAddress = address.Address(); _destinationPort = address.Port; _remote = NetworkSockets.Endpoint(socket, address.Address(), address.Port).Serialize();
     }
     internal void Store(DatagramAddress address, ReadOnlySpan<byte> packet) => _queue.Store(address, packet);
-    internal void DetachServer() { _server = null; _socket = null; _remote = null; _connected = false; _localPort = 0; _queue.Clear(); }
+    internal void DetachServer() { ConnectionGeneration++; _server = null; _socket = null; _remote = null; _connected = false; _localPort = 0; _queue.Clear(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) CloseCore(); base.Dispose(disposing); }
 }
