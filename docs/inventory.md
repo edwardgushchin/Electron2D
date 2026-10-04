@@ -616,3 +616,12 @@ The existing AnimationMixer/AnimationPlayer also use [AnimationBlendValue.cs](..
 | [Scene](domains/scene.md) | [Animation graphs](components/scene-animation.md#animation-graphs) | [AnimationPlayMode](classes/AnimationPlayMode.md) | [AnimationNodeAnimation.cs](../src/Scene/Animation/AnimationNodeAnimation.cs) | Current | Forward and Backward are the same two-value clip-direction contract for every graph clip leaf. |
 | [Scene](domains/scene.md) | [Animation graphs](components/scene-animation.md#animation-graphs) | [AnimationNode.FilterAction](classes/AnimationNode.FilterAction.md) | [AnimationNode.cs](../src/Scene/Animation/AnimationNode.cs) | Current | Ignore multiplies all input paths; Pass only selected paths; Stop only unselected paths; Blend multiplies selected paths and passes other paths unchanged. |
 | [Scene](domains/scene.md) | [Animation graphs](components/scene-animation.md#animation-graphs) | [Animation.LoopedFlag](classes/Animation.LoopedFlag.md) | [../Resources/Animation.cs](../src/Scene/Animation/../Resources/Animation.cs) | Current | None, End and Start identify a crossed clip endpoint for graph scheduling. |
+
+## Animation blend spaces
+
+| Domain | Component | Type | Source | State | Role |
+| --- | --- | --- | --- | --- | --- |
+| [Scene](domains/scene.md) | [Blend spaces](components/scene-animation.md#blend-spaces) | [AnimationNodeBlendSpace1D](classes/AnimationNodeBlendSpace1D.md) | [AnimationNodeBlendSpace1D.cs](../src/Scene/Animation/AnimationNodeBlendSpace1D.cs) | Current | Typed point mixing or shared mode domain with executable per-tree clocks. |
+| [Scene](domains/scene.md) | [Blend spaces](components/scene-animation.md#blend-spaces) | [AnimationNodeBlendSpace2D](classes/AnimationNodeBlendSpace2D.md) | [AnimationNodeBlendSpace2D.cs](../src/Scene/Animation/AnimationNodeBlendSpace2D.cs) | Current | Typed point mixing or shared mode domain with executable per-tree clocks. |
+| [Scene](domains/scene.md) | [Blend spaces](components/scene-animation.md#blend-spaces) | [AnimationBlendMode](classes/AnimationBlendMode.md) | [AnimationBlendSpace.cs](../src/Scene/Animation/AnimationBlendSpace.cs) | Current | Typed point mixing or shared mode domain with executable per-tree clocks. |
+| [Scene](domains/scene.md) | [Blend spaces](components/scene-animation.md#blend-spaces) | [AnimationSyncMode](classes/AnimationSyncMode.md) | [AnimationBlendSpace.cs](../src/Scene/Animation/AnimationBlendSpace.cs) | Current | Typed point mixing or shared mode domain with executable per-tree clocks. |

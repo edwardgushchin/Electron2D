@@ -31,6 +31,7 @@ public class AnimationTree : AnimationMixer
     private readonly List<double[]> _frameWeights = [];
     private readonly HashSet<AnimationNode> _watched = new(ReferenceEqualityComparer.Instance);
     private long _graphGeneration;
+    internal long GraphGeneration => _graphGeneration;
     private SceneTree? _graphTree;
     /// <summary>Initializes deterministic mixing and ForceContinuous discrete evaluation.</summary>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
@@ -135,7 +136,7 @@ public class AnimationTree : AnimationMixer
         if (node is AnimationNodeBlendTree blendTree) foreach (var child in instance.Children.Values) for (var i = 0; i < child.Inputs.Length; i++) { var source = blendTree.Connection(child.Name, i); if (source.Length != 0) child.Inputs[i] = instance.Children[source]; }
         stack.Remove(node); return instance;
     }
-    internal AnimationGraphTime BlendChild(AnimationGraphContext parent, AnimationGraphInstance child, double time, bool seek, bool external, double blend, AnimationNode.FilterAction filter, bool sync, bool test)
+    internal AnimationGraphTime BlendChild(AnimationGraphContext parent, AnimationGraphInstance child, double time, bool seek, bool external, double blend, AnimationNode.FilterAction filter, bool sync, bool test, double? delta = null)
     {
         Animation.Finite(time); Animation.Finite(blend); Animation.Valid(filter); var any = false;
         for (var i = 0; i < child.Weights.Length; i++)
@@ -147,7 +148,7 @@ public class AnimationTree : AnimationMixer
             child.Weights[i] = weight; any |= Math.Abs(weight) > 1e-12;
         }
         if (!seek && !sync && !any) time = 0;
-        return Evaluate(child, time, seek, external, test || parent.TestOnly, seek ? parent.Delta : time);
+        return Evaluate(child, time, seek, external, test || parent.TestOnly, delta ?? (seek ? parent.Delta : time));
     }
     private AnimationGraphTime Evaluate(AnimationGraphInstance instance, double time, bool seek, bool external, bool test, double? inheritedDelta = null)
     {

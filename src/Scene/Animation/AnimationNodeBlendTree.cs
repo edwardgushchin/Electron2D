@@ -52,7 +52,7 @@ public sealed class AnimationNodeBlendTree : AnimationRootNode
         if (!position.IsFinite()) throw new ArgumentOutOfRangeException(nameof(position));
         Action<Resource> changed = _ => ChildChanged(name); var entry = new Entry(node, position, changed); _nodes.Add(name, entry); AttachInputRemoval(entry); node.Changed += changed; node.AnimationNodeRemoved += ForwardRemoved; node.AnimationNodeRenamed += ForwardRenamed; node.NodeUpdated += ForwardUpdated; EmitGraphChanged();
     }
-    private static bool Contains(AnimationNode node, AnimationNode target, HashSet<AnimationNode> visited) { if (ReferenceEquals(node, target)) return true; if (!visited.Add(node)) return false; foreach (var child in node.Children()) if (Contains(child.Value, target, visited)) return true; return false; }
+    internal static bool Contains(AnimationNode node, AnimationNode target, HashSet<AnimationNode> visited) { if (ReferenceEquals(node, target)) return true; if (!visited.Add(node)) return false; foreach (var child in node.Children()) if (Contains(child.Value, target, visited)) return true; return false; }
     private static void AttachInputRemoval(Entry entry) { entry.InputRemoved = index => { entry.Inputs = entry.Inputs.Where((_, i) => i != index).ToArray(); }; entry.Node.InputRemoved += entry.InputRemoved; }
     private void ForwardRemoved(ulong id, string name) => Removed(id, name);
     private void ForwardRenamed(ulong id, string oldName, string newName) => Renamed(id, oldName, newName);

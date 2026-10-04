@@ -3848,6 +3848,396 @@
       "electron2d": "enumValue:Electron2D.Animation.LoopedFlag.Start()",
       "state": "Implemented",
       "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "class:AnimationNodeBlendSpace1D",
+      "electron2d": "T:Electron2D.AnimationNodeBlendSpace1D",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum:BlendMode",
+      "electron2d": "T:Electron2D.AnimationBlendMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum:SyncMode",
+      "electron2d": "T:Electron2D.AnimationSyncMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum_value:BlendMode.BLEND_MODE_DISCRETE",
+      "electron2d": "enumValue:Electron2D.AnimationBlendMode.Discrete()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum_value:BlendMode.BLEND_MODE_DISCRETE_CARRY",
+      "electron2d": "enumValue:Electron2D.AnimationBlendMode.DiscreteCarry()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum_value:BlendMode.BLEND_MODE_INTERPOLATED",
+      "electron2d": "enumValue:Electron2D.AnimationBlendMode.Interpolated()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum_value:SyncMode.SYNC_MODE_CYCLIC_CONSTANT",
+      "electron2d": "enumValue:Electron2D.AnimationSyncMode.CyclicConstant()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum_value:SyncMode.SYNC_MODE_CYCLIC_MUTABLE",
+      "electron2d": "enumValue:Electron2D.AnimationSyncMode.CyclicMutable()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum_value:SyncMode.SYNC_MODE_INDEPENDENT",
+      "electron2d": "enumValue:Electron2D.AnimationSyncMode.Independent()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::enum_value:SyncMode.SYNC_MODE_NONE",
+      "electron2d": "enumValue:Electron2D.AnimationSyncMode.None()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:add_blend_point(AnimationRootNode:,float:,int:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.AddBlendPoint(Electron2D.AnimationRootNode,System.Single,System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:find_blend_point_by_name(StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.FindBlendPointByName(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:get_blend_point_count()",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.GetBlendPointCount()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:get_blend_point_name(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.GetBlendPointName(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:get_blend_point_node(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.GetBlendPointNode(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:get_blend_point_position(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.GetBlendPointPosition(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:remove_blend_point(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.RemoveBlendPoint(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:reorder_blend_point(int:,int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.ReorderBlendPoint(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:set_blend_point_name(int:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.SetBlendPointName(System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:set_blend_point_node(int:,AnimationRootNode:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.SetBlendPointNode(System.Int32,Electron2D.AnimationRootNode)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::method:set_blend_point_position(int:,float:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.SetBlendPointPosition(System.Int32,System.Single)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::property:blend_mode",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.BlendMode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::property:cyclic_length",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.CyclicLength()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::property:max_space",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.MaxSpace()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::property:min_space",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.MinSpace()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::property:snap",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.Snap()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::property:sync",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.Sync()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::property:sync_mode",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.SyncMode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace1D::property:value_label",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace1D.ValueLabel()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "class:AnimationNodeBlendSpace2D",
+      "electron2d": "T:Electron2D.AnimationNodeBlendSpace2D",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum:BlendMode",
+      "electron2d": "T:Electron2D.AnimationBlendMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum:SyncMode",
+      "electron2d": "T:Electron2D.AnimationSyncMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum_value:BlendMode.BLEND_MODE_DISCRETE",
+      "electron2d": "enumValue:Electron2D.AnimationBlendMode.Discrete()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum_value:BlendMode.BLEND_MODE_DISCRETE_CARRY",
+      "electron2d": "enumValue:Electron2D.AnimationBlendMode.DiscreteCarry()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum_value:BlendMode.BLEND_MODE_INTERPOLATED",
+      "electron2d": "enumValue:Electron2D.AnimationBlendMode.Interpolated()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum_value:SyncMode.SYNC_MODE_CYCLIC_CONSTANT",
+      "electron2d": "enumValue:Electron2D.AnimationSyncMode.CyclicConstant()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum_value:SyncMode.SYNC_MODE_CYCLIC_MUTABLE",
+      "electron2d": "enumValue:Electron2D.AnimationSyncMode.CyclicMutable()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum_value:SyncMode.SYNC_MODE_INDEPENDENT",
+      "electron2d": "enumValue:Electron2D.AnimationSyncMode.Independent()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::enum_value:SyncMode.SYNC_MODE_NONE",
+      "electron2d": "enumValue:Electron2D.AnimationSyncMode.None()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:add_blend_point(AnimationRootNode:,Vector2:,int:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.AddBlendPoint(Electron2D.AnimationRootNode,Electron2D.Vector2,System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:add_triangle(int:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.AddTriangle(System.Int32,System.Int32,System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:find_blend_point_by_name(StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.FindBlendPointByName(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:get_blend_point_count()",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.GetBlendPointCount()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:get_blend_point_name(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.GetBlendPointName(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:get_blend_point_node(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.GetBlendPointNode(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:get_blend_point_position(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.GetBlendPointPosition(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:get_triangle_count()",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.GetTriangleCount()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:get_triangle_point(int:,int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.GetTrianglePoint(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:remove_blend_point(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.RemoveBlendPoint(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:remove_triangle(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.RemoveTriangle(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:reorder_blend_point(int:,int:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.ReorderBlendPoint(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:set_blend_point_name(int:,StringName:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.SetBlendPointName(System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:set_blend_point_node(int:,AnimationRootNode:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.SetBlendPointNode(System.Int32,Electron2D.AnimationRootNode)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::method:set_blend_point_position(int:,Vector2:)",
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.SetBlendPointPosition(System.Int32,Electron2D.Vector2)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:auto_triangles",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.AutoTriangles()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:blend_mode",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.BlendMode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:cyclic_length",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.CyclicLength()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:max_space",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.MaxSpace()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:min_space",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.MinSpace()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:snap",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.Snap()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:sync",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.Sync()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:sync_mode",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.SyncMode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:x_label",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.XLabel()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::property:y_label",
+      "electron2d": "property:Electron2D.AnimationNodeBlendSpace2D.YLabel()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeBlendSpace2D::signal:triangles_updated()",
+      "electron2d": "event:Electron2D.AnimationNodeBlendSpace2D.TrianglesUpdated()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
     }
   ],
   "extras": [
@@ -5575,6 +5965,116 @@
       "electron2d": "property:Electron2D.AnimationParameter.ValueType()",
       "state": "Implemented",
       "reason": "ADR 0093 graph parameter metadata/storage, typed native process hooks, existing Resource construction/copy/disposal and Node scheduling/metadata project the animation graph concept without a universal value container."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeBlendSpace1D..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeBlendSpace2D..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeBlendSpace1D.BlendPosition()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeBlendSpace2D.BlendPosition()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.OnGetCaption()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.OnGetChildByName(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.OnGetChildNodes()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.OnGetParameterList()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace1D.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetCaption()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetChildByName(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetChildNodes()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetParameterList()",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
     }
   ],
   "statusGroups": [
@@ -8450,6 +8950,83 @@
       "godot": [
         "AnimationTree::property:advance_expression_base_node"
       ]
+    },
+    {
+      "godot": [
+        "class:AnimationNodeBlendSpace1D",
+        "AnimationNodeBlendSpace1D::enum:BlendMode",
+        "AnimationNodeBlendSpace1D::enum:SyncMode",
+        "AnimationNodeBlendSpace1D::enum_value:BlendMode.BLEND_MODE_DISCRETE",
+        "AnimationNodeBlendSpace1D::enum_value:BlendMode.BLEND_MODE_DISCRETE_CARRY",
+        "AnimationNodeBlendSpace1D::enum_value:BlendMode.BLEND_MODE_INTERPOLATED",
+        "AnimationNodeBlendSpace1D::enum_value:SyncMode.SYNC_MODE_CYCLIC_CONSTANT",
+        "AnimationNodeBlendSpace1D::enum_value:SyncMode.SYNC_MODE_CYCLIC_MUTABLE",
+        "AnimationNodeBlendSpace1D::enum_value:SyncMode.SYNC_MODE_INDEPENDENT",
+        "AnimationNodeBlendSpace1D::enum_value:SyncMode.SYNC_MODE_NONE",
+        "AnimationNodeBlendSpace1D::method:add_blend_point(AnimationRootNode:,float:,int:,StringName:)",
+        "AnimationNodeBlendSpace1D::method:find_blend_point_by_name(StringName:)",
+        "AnimationNodeBlendSpace1D::method:get_blend_point_count()",
+        "AnimationNodeBlendSpace1D::method:get_blend_point_name(int:)",
+        "AnimationNodeBlendSpace1D::method:get_blend_point_node(int:)",
+        "AnimationNodeBlendSpace1D::method:get_blend_point_position(int:)",
+        "AnimationNodeBlendSpace1D::method:remove_blend_point(int:)",
+        "AnimationNodeBlendSpace1D::method:reorder_blend_point(int:,int:)",
+        "AnimationNodeBlendSpace1D::method:set_blend_point_name(int:,StringName:)",
+        "AnimationNodeBlendSpace1D::method:set_blend_point_node(int:,AnimationRootNode:)",
+        "AnimationNodeBlendSpace1D::method:set_blend_point_position(int:,float:)",
+        "AnimationNodeBlendSpace1D::property:blend_mode",
+        "AnimationNodeBlendSpace1D::property:cyclic_length",
+        "AnimationNodeBlendSpace1D::property:max_space",
+        "AnimationNodeBlendSpace1D::property:min_space",
+        "AnimationNodeBlendSpace1D::property:snap",
+        "AnimationNodeBlendSpace1D::property:sync",
+        "AnimationNodeBlendSpace1D::property:sync_mode",
+        "AnimationNodeBlendSpace1D::property:value_label"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": [
+        "class:AnimationNodeBlendSpace2D",
+        "AnimationNodeBlendSpace2D::enum:BlendMode",
+        "AnimationNodeBlendSpace2D::enum:SyncMode",
+        "AnimationNodeBlendSpace2D::enum_value:BlendMode.BLEND_MODE_DISCRETE",
+        "AnimationNodeBlendSpace2D::enum_value:BlendMode.BLEND_MODE_DISCRETE_CARRY",
+        "AnimationNodeBlendSpace2D::enum_value:BlendMode.BLEND_MODE_INTERPOLATED",
+        "AnimationNodeBlendSpace2D::enum_value:SyncMode.SYNC_MODE_CYCLIC_CONSTANT",
+        "AnimationNodeBlendSpace2D::enum_value:SyncMode.SYNC_MODE_CYCLIC_MUTABLE",
+        "AnimationNodeBlendSpace2D::enum_value:SyncMode.SYNC_MODE_INDEPENDENT",
+        "AnimationNodeBlendSpace2D::enum_value:SyncMode.SYNC_MODE_NONE",
+        "AnimationNodeBlendSpace2D::method:add_blend_point(AnimationRootNode:,Vector2:,int:,StringName:)",
+        "AnimationNodeBlendSpace2D::method:add_triangle(int:,int:,int:,int:)",
+        "AnimationNodeBlendSpace2D::method:find_blend_point_by_name(StringName:)",
+        "AnimationNodeBlendSpace2D::method:get_blend_point_count()",
+        "AnimationNodeBlendSpace2D::method:get_blend_point_name(int:)",
+        "AnimationNodeBlendSpace2D::method:get_blend_point_node(int:)",
+        "AnimationNodeBlendSpace2D::method:get_blend_point_position(int:)",
+        "AnimationNodeBlendSpace2D::method:get_triangle_count()",
+        "AnimationNodeBlendSpace2D::method:get_triangle_point(int:,int:)",
+        "AnimationNodeBlendSpace2D::method:remove_blend_point(int:)",
+        "AnimationNodeBlendSpace2D::method:remove_triangle(int:)",
+        "AnimationNodeBlendSpace2D::method:reorder_blend_point(int:,int:)",
+        "AnimationNodeBlendSpace2D::method:set_blend_point_name(int:,StringName:)",
+        "AnimationNodeBlendSpace2D::method:set_blend_point_node(int:,AnimationRootNode:)",
+        "AnimationNodeBlendSpace2D::method:set_blend_point_position(int:,Vector2:)",
+        "AnimationNodeBlendSpace2D::property:auto_triangles",
+        "AnimationNodeBlendSpace2D::property:blend_mode",
+        "AnimationNodeBlendSpace2D::property:cyclic_length",
+        "AnimationNodeBlendSpace2D::property:max_space",
+        "AnimationNodeBlendSpace2D::property:min_space",
+        "AnimationNodeBlendSpace2D::property:snap",
+        "AnimationNodeBlendSpace2D::property:sync",
+        "AnimationNodeBlendSpace2D::property:sync_mode",
+        "AnimationNodeBlendSpace2D::property:x_label",
+        "AnimationNodeBlendSpace2D::property:y_label",
+        "AnimationNodeBlendSpace2D::signal:triangles_updated()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
     }
   ]
 }

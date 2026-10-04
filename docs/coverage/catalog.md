@@ -30,8 +30,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationNodeAnimation](classes/AnimationNodeAnimation.md) | AnimationRootNode | Implemented | 11 |
 | [AnimationNodeBlend2](classes/AnimationNodeBlend2.md) | AnimationNodeSync | Implemented | 0 |
 | [AnimationNodeBlend3](classes/AnimationNodeBlend3.md) | AnimationNodeSync | Implemented | 0 |
-| [AnimationNodeBlendSpace1D](classes/AnimationNodeBlendSpace1D.md) | AnimationRootNode | Blocked | 28 |
-| [AnimationNodeBlendSpace2D](classes/AnimationNodeBlendSpace2D.md) | AnimationRootNode | Blocked | 35 |
+| [AnimationNodeBlendSpace1D](classes/AnimationNodeBlendSpace1D.md) | AnimationRootNode | Implemented | 28 |
+| [AnimationNodeBlendSpace2D](classes/AnimationNodeBlendSpace2D.md) | AnimationRootNode | Implemented | 35 |
 | [AnimationNodeBlendTree](classes/AnimationNodeBlendTree.md) | AnimationRootNode | Implemented | 18 |
 | [AnimationNodeExtension](classes/AnimationNodeExtension.md) | AnimationNode | Blocked | 3 |
 | [AnimationNodeOneShot](classes/AnimationNodeOneShot.md) | AnimationNodeSync | Blocked | 18 |

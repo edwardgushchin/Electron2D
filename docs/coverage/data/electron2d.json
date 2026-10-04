@@ -270,6 +270,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimationBlendMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationBlendMode",
+    "name": "AnimationBlendMode",
+    "signature": "public enum Electron2D.AnimationBlendMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnimationLibrary",
     "kind": "type",
     "declaringType": "Electron2D.AnimationLibrary",
@@ -444,6 +462,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimationNodeBlendSpace1D",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "AnimationNodeBlendSpace1D",
+    "signature": "public sealed class Electron2D.AnimationNodeBlendSpace1D",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationRootNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationNodeBlendSpace2D",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "AnimationNodeBlendSpace2D",
+    "signature": "public sealed class Electron2D.AnimationNodeBlendSpace2D",
+    "visibility": "public",
+    "baseType": "Electron2D.AnimationRootNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnimationNodeBlendTree",
     "kind": "type",
     "declaringType": "Electron2D.AnimationNodeBlendTree",
@@ -602,6 +650,24 @@
     "baseType": "Electron2D.AnimationNode",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationSyncMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationSyncMode",
+    "name": "AnimationSyncMode",
+    "signature": "public enum Electron2D.AnimationSyncMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -8615,6 +8681,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AnimationNodeBlendSpace1D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": ".ctor",
+    "signature": "public AnimationNodeBlendSpace1D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationNodeBlendSpace2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": ".ctor",
+    "signature": "public AnimationNodeBlendSpace2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AnimationNodeBlendTree..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AnimationNodeBlendTree",
@@ -13151,6 +13243,45 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.AnimationBlendMode.Discrete()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationBlendMode",
+    "name": "Discrete",
+    "signature": "public const Electron2D.AnimationBlendMode Discrete = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationBlendMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationBlendMode.DiscreteCarry()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationBlendMode",
+    "name": "DiscreteCarry",
+    "signature": "public const Electron2D.AnimationBlendMode DiscreteCarry = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationBlendMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationBlendMode.Interpolated()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationBlendMode",
+    "name": "Interpolated",
+    "signature": "public const Electron2D.AnimationBlendMode Interpolated = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationBlendMode",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeDiscrete.Dominant()",
     "kind": "enumValue",
     "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
@@ -13304,6 +13435,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AnimationPlayMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationSyncMode.CyclicConstant()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationSyncMode",
+    "name": "CyclicConstant",
+    "signature": "public const Electron2D.AnimationSyncMode CyclicConstant = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSyncMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationSyncMode.CyclicMutable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationSyncMode",
+    "name": "CyclicMutable",
+    "signature": "public const Electron2D.AnimationSyncMode CyclicMutable = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSyncMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationSyncMode.Independent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationSyncMode",
+    "name": "Independent",
+    "signature": "public const Electron2D.AnimationSyncMode Independent = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSyncMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationSyncMode.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationSyncMode",
+    "name": "None",
+    "signature": "public const Electron2D.AnimationSyncMode None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSyncMode",
     "value": "0"
   },
   {
@@ -25696,6 +25879,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.AnimationNodeBlendSpace2D.TrianglesUpdated()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "TrianglesUpdated",
+    "signature": "public event System.Action TrianglesUpdated",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.AnimationNodeBlendTree.NodeChanged()",
     "kind": "event",
     "declaringType": "Electron2D.AnimationNodeBlendTree",
@@ -27500,6 +27696,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AnimationParameter\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeBlendSpace1D.BlendPosition()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "BlendPosition",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CSystem.Single\u003E BlendPosition",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "field:Electron2D.AnimationNodeBlendSpace2D.BlendPosition()",
+    "kind": "field",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "BlendPosition",
+    "signature": "public static readonly Electron2D.AnimationParameter\u003CElectron2D.Vector2\u003E BlendPosition",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationParameter\u003CElectron2D.Vector2\u003E",
     "value": null
   },
   {
@@ -32331,6 +32553,924 @@
       }
     ],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.AddBlendPoint(Electron2D.AnimationRootNode,System.Single,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "AddBlendPoint",
+    "signature": "public System.Void AddBlendPoint(Electron2D.AnimationRootNode node, System.Single position, System.Int32 atIndex = -1, System.String name = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationRootNode",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "atIndex",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.FindBlendPointByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "FindBlendPointByName",
+    "signature": "public System.Int32 FindBlendPointByName(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.GetBlendPointCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "GetBlendPointCount",
+    "signature": "public System.Int32 GetBlendPointCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.GetBlendPointName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "GetBlendPointName",
+    "signature": "public System.String GetBlendPointName(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.GetBlendPointNode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "GetBlendPointNode",
+    "signature": "public Electron2D.AnimationRootNode GetBlendPointNode(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationRootNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.GetBlendPointPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "GetBlendPointPosition",
+    "signature": "public System.Single GetBlendPointPosition(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.OnGetChildByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "OnGetChildByName",
+    "signature": "protected override Electron2D.AnimationNode OnGetChildByName(System.String name)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.OnGetChildNodes()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "OnGetChildNodes",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E OnGetChildNodes()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.RemoveBlendPoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "RemoveBlendPoint",
+    "signature": "public System.Void RemoveBlendPoint(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.ReorderBlendPoint(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "ReorderBlendPoint",
+    "signature": "public System.Void ReorderBlendPoint(System.Int32 fromIndex, System.Int32 toIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.SetBlendPointName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "SetBlendPointName",
+    "signature": "public System.Void SetBlendPointName(System.Int32 point, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.SetBlendPointNode(System.Int32,Electron2D.AnimationRootNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "SetBlendPointNode",
+    "signature": "public System.Void SetBlendPointNode(System.Int32 point, Electron2D.AnimationRootNode node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationRootNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace1D.SetBlendPointPosition(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "SetBlendPointPosition",
+    "signature": "public System.Void SetBlendPointPosition(System.Int32 point, System.Single position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.AddBlendPoint(Electron2D.AnimationRootNode,Electron2D.Vector2,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "AddBlendPoint",
+    "signature": "public System.Void AddBlendPoint(Electron2D.AnimationRootNode node, Electron2D.Vector2 position, System.Int32 atIndex = -1, System.String name = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationRootNode",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "atIndex",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.AddTriangle(System.Int32,System.Int32,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "AddTriangle",
+    "signature": "public System.Void AddTriangle(System.Int32 x, System.Int32 y, System.Int32 z, System.Int32 atIndex = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "z",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "atIndex",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.FindBlendPointByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "FindBlendPointByName",
+    "signature": "public System.Int32 FindBlendPointByName(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.GetBlendPointCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "GetBlendPointCount",
+    "signature": "public System.Int32 GetBlendPointCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.GetBlendPointName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "GetBlendPointName",
+    "signature": "public System.String GetBlendPointName(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.GetBlendPointNode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "GetBlendPointNode",
+    "signature": "public Electron2D.AnimationRootNode GetBlendPointNode(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationRootNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.GetBlendPointPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "GetBlendPointPosition",
+    "signature": "public Electron2D.Vector2 GetBlendPointPosition(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.GetTriangleCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "GetTriangleCount",
+    "signature": "public System.Int32 GetTriangleCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.GetTrianglePoint(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "GetTrianglePoint",
+    "signature": "public System.Int32 GetTrianglePoint(System.Int32 triangle, System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "triangle",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetCaption()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "OnGetCaption",
+    "signature": "protected override System.String OnGetCaption()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetChildByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "OnGetChildByName",
+    "signature": "protected override Electron2D.AnimationNode OnGetChildByName(System.String name)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AnimationNode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetChildNodes()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "OnGetChildNodes",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E OnGetChildNodes()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CSystem.Collections.Generic.KeyValuePair\u003CSystem.String, Electron2D.AnimationNode\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "OnGetParameterList",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.AnimationParameter\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "OnProcess",
+    "signature": "protected override System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "seek",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "isExternalSeeking",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.RemoveBlendPoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "RemoveBlendPoint",
+    "signature": "public System.Void RemoveBlendPoint(System.Int32 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.RemoveTriangle(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "RemoveTriangle",
+    "signature": "public System.Void RemoveTriangle(System.Int32 triangle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "triangle",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.ReorderBlendPoint(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "ReorderBlendPoint",
+    "signature": "public System.Void ReorderBlendPoint(System.Int32 fromIndex, System.Int32 toIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.SetBlendPointName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "SetBlendPointName",
+    "signature": "public System.Void SetBlendPointName(System.Int32 point, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.SetBlendPointNode(System.Int32,Electron2D.AnimationRootNode)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "SetBlendPointNode",
+    "signature": "public System.Void SetBlendPointNode(System.Int32 point, Electron2D.AnimationRootNode node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "node",
+        "type": "Electron2D.AnimationRootNode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationNodeBlendSpace2D.SetBlendPointPosition(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "SetBlendPointPosition",
+    "signature": "public System.Void SetBlendPointPosition(System.Int32 point, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -99954,6 +101094,240 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace1D.BlendMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "BlendMode",
+    "signature": "public Electron2D.AnimationBlendMode BlendMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationBlendMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace1D.CyclicLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "CyclicLength",
+    "signature": "public System.Double CyclicLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace1D.MaxSpace()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "MaxSpace",
+    "signature": "public System.Single MaxSpace { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace1D.MinSpace()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "MinSpace",
+    "signature": "public System.Single MinSpace { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace1D.Snap()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "Snap",
+    "signature": "public System.Single Snap { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace1D.Sync()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "Sync",
+    "signature": "public System.Boolean Sync { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace1D.SyncMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "SyncMode",
+    "signature": "public Electron2D.AnimationSyncMode SyncMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSyncMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace1D.ValueLabel()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace1D",
+    "name": "ValueLabel",
+    "signature": "public System.String ValueLabel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.AutoTriangles()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "AutoTriangles",
+    "signature": "public System.Boolean AutoTriangles { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.BlendMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "BlendMode",
+    "signature": "public Electron2D.AnimationBlendMode BlendMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationBlendMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.CyclicLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "CyclicLength",
+    "signature": "public System.Double CyclicLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.MaxSpace()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "MaxSpace",
+    "signature": "public Electron2D.Vector2 MaxSpace { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.MinSpace()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "MinSpace",
+    "signature": "public Electron2D.Vector2 MinSpace { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.Snap()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "Snap",
+    "signature": "public Electron2D.Vector2 Snap { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.Sync()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "Sync",
+    "signature": "public System.Boolean Sync { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.SyncMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "SyncMode",
+    "signature": "public Electron2D.AnimationSyncMode SyncMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationSyncMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.XLabel()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "XLabel",
+    "signature": "public System.String XLabel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationNodeBlendSpace2D.YLabel()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationNodeBlendSpace2D",
+    "name": "YLabel",
+    "signature": "public System.String YLabel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

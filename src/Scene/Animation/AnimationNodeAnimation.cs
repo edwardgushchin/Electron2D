@@ -107,6 +107,8 @@ public sealed class AnimationNodeAnimation : AnimationRootNode
         }
         return c.Result.Remaining;
     }
+    internal double GraphLength(AnimationTree tree) => _customTimeline ? _length : tree.GetAnimation(_animation).Length;
+    internal static void CopyBackward(AnimationGraphInstance from, AnimationGraphInstance to, bool test) { if (!test) to.Set(Backward, from.Get(Backward), true); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNodeAnimation();
     /// <inheritdoc />
