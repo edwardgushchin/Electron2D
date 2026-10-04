@@ -48,7 +48,7 @@ def check(publish: Path) -> None:
     assert runtime == ["runtimepack.Microsoft.NETCore.App.Runtime.linux-x64/10.0.1"], f"Unreviewed runtime pack: {runtime}"
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
-    elf = [p.name for p in publish.iterdir() if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
+    elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
     assert len(elf) == 67, f"Expected 67 audited ELF files, found {len(elf)}"
     assert app in elf, "Expected the native application host"
     for name in elf:

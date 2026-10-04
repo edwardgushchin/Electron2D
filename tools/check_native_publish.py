@@ -55,11 +55,14 @@ def check(rid: str, publish: Path) -> None:
     assert actual == expected, f"Wrong SDL packages: {actual}"
     assert f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/10.0.1" in packages, "Missing self-contained runtime pack"
     assert all((publish / name).is_file() for name in names), f"Missing native render/text files: {names}"
-    private_text = publish / "libElectron2DTextBreak.so"
+    native = publish / "runtimes" / rid / "native"
+    private_text = native / "libElectron2DTextBreak.so"
+    assert not (publish / "libElectron2DTextBreak.so").exists(), "Private text library must be under runtimes/RID/native"
+    assert not (publish / "libFAudio.so.0").exists(), "Private audio library must be under runtimes/RID/native"
     if platform == "Linux":
         assert private_text.is_file(), "Missing private ICU text backend"
         check_private_text(rid, private_text)
-        audio = publish / "libFAudio.so.0"
+        audio = native / "libFAudio.so.0"
         assert audio.is_file(), "Missing pinned native audio backend"
         header = audio.read_bytes()[:20]
         assert header[:6] == b"\x7fELF\x02\x01" and int.from_bytes(header[18:20], "little") == {"linux-x64": 62, "linux-arm64": 183}[rid], "Audio ELF architecture mismatch"
@@ -71,11 +74,11 @@ def check(rid: str, publish: Path) -> None:
         assert {"e2d_audio_select_output", "e2d_audio_output_latency"} <= audio_exports, "Audio output bridge exports are missing"
         assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libFAudio.so.0"], "Audio SONAME mismatch"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
-        assert not list(publish.glob("libicu*")), "A private text publish must not deliver global ICU libraries"
+        assert not list(publish.rglob("libicu*")), "A private text publish must not deliver global ICU libraries"
         print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text backend verified (9 exports, no global ICU dependency)")
     else:
-        assert not list(publish.glob("libFAudio*")), "Linux audio library leaked into a foreign publish"
-        assert not private_text.exists(), "Linux private text backend leaked into a foreign publish"
+        assert not list(publish.rglob("libFAudio*")), "Linux audio library leaked into a foreign publish"
+        assert not list(publish.rglob("libElectron2DTextBreak.so")), "Linux private text backend leaked into a foreign publish"
         print(f"{rid}: self-contained host and {platform} SDL/FreeType/HarfBuzz payload verified; private text backend is not supplied")
 
 

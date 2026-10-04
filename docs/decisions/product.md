@@ -145,7 +145,7 @@ Native SDL deployment remains a separate platform constraint outside the verifie
 <a id="adr-0012"></a>
 ## ADR 0012: Vendor SDL3-CS and Box2D.NET managed source
 
-Last updated: 2026-09-25
+Last updated: 2026-10-04
 
 - Status: Accepted
 - Scope: Managed dependency ownership, deployment packaging, and future 2D physics, text and audio
@@ -169,6 +169,7 @@ SDL3-CS core binding source is pinned in `src/Vendor/SDL3-CS`, and Box2D.NET 3.1
 - Keep vendored types behind internal implementation boundaries. The public and protected Electron2D API must not expose SDL3-CS, Box2D.NET or FAudio binding types; verify the exported assembly surface when integrating each source tree. Physics, text and audio APIs use Electron2D types.
 - Engine consumers, including examples, games, and the editor, use only Electron2D's public API. They must not reference, import, or call SDL3-CS, Box2D.NET, FAudio or their native APIs, and must not declare backend package dependencies in their projects. Platform packages required by the engine flow from `Electron2D.csproj` into published applications. This rule applies to bootstrap code as well as scene code; backend probes belong in engine tests.
 - Native SDL remains a target-specific deployment dependency. Its binary packaging, host lifecycle, and native verification belong to the SDL integration and platform slices under ADR 0021. Vendor source does not imply a single physical deployment file.
+- Build and package the engine's private native libraries under `runtimes/<RID>/native`, matching native NuGet asset layout. Project references preserve this directory in build and publish outputs; native package entries use the same path. The engine resolver loads its private text/audio libraries from the assembly's runtime directory first, then permits ordinary .NET native resolution for NuGet consumers whose RID-specific deployment flattens native assets. Do not add root copies to project-reference outputs or require application backend setup.
 - ADR 0028 selects the SDL GPU and SDL_Renderer roles, HLSL/GLSL import/build compilation, the common SPIR-V path and SDL_shadercross backend integration. The initial canvas and shader integration implements these boundaries with the limits documented in the Rendering domain. The first physics scene-body profile is executable under ADR 0054; broader physics services remain coverage gaps.
 
 ### Consequences

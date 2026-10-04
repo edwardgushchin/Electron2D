@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+NativeLibraryTests.Run();
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINE_EDIT_HOST") == "1") { LineEditTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINE_EDIT") == "1") { LineEditTests.Run(); return; }
 

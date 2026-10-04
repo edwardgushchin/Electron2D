@@ -8,6 +8,8 @@ Implements reusable [AudioStream](../classes/AudioStream.md), caller-owned [Audi
 
 Internal FAudioContext owns engine/master/submix voices and native volume meters; FAudioStreamVoice owns callback/ring storage and one borrowed playback; AudioPCMCodec owns cold PCM/IMA/QOA encoding/decoding. Backend bindings and codec types are internal to Electron2D.dll. Vendor manifests pin FAudio 26.10 and qoa-fu; their executable algorithms are preserved, with namespace/visibility/diagnostic integration changes only.
 
+Native FAudio build and package entries use `runtimes/<RID>/native/libFAudio.so.0`, preserved in project-reference build/publish outputs. The [native resolver](../classes/NativeLibraries.md) loads the shared SDL3 core before FAudio and permits ordinary .NET resolution for flattened RID-specific NuGet deployments. Consumers require no backend dependency or loader configuration.
+
 ## Runtime flow and invariants
 
 WAV import validates RIFF chunks, PCM/IEEE-float dimensions and finite samples, uses the existing SDL WAV/conversion bindings, then performs typed edits and prepares encoded PCM/IMA/QOA. Encoded bytes and tags are copied; resource duplication is independent. Decode publishes an immutable versioned float PCM snapshot. Previously prepared resources refresh on their setter thread; warmed audio callbacks do not decode/allocate. Invalid compressed input fails on consumption. WAV SaveToWAV uses the existing AtomicFile writer; unsupported compressed save leaves an existing file intact.

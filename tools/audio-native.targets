@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <_Electron2DAudioInput Include="$(_Electron2DAudioSource)/**/*.c;$(_Electron2DAudioSource)/**/*.h;$(_Electron2DAudioSource)/**/CMakeLists.txt;$(_Electron2DAudioSource)/manifest.json;$(_Electron2DAudioWrapper)/**/*;$(MSBuildThisFileFullPath)" />
-    <None Include="$(_Electron2DAudioLibrary)" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'" Link="libFAudio.so.0" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(_Electron2DAudioLibrary)" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DAudioNativeRID)/native/libFAudio.so.0" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="true" PackagePath="runtimes/$(Electron2DAudioNativeRID)/native/" Visible="false" />
   </ItemGroup>
   <Target Name="ValidateElectron2DAudioNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'">
     <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' or ('$(Electron2DAudioNativeRID)' != 'linux-x64' and '$(Electron2DAudioNativeRID)' != 'linux-arm64')" Text="The current audio native profile requires Linux x64/ARM64; a foreign profile must not package a host library." />

@@ -20,7 +20,7 @@
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../src/Vendor/ICU/data/TextBreak78.dat" LogicalName="Electron2D.TextBreak.dat" />
     <_Electron2DTextNativeInput Include="$(MSBuildThisFileDirectory)../src/Vendor/ICU/**/*.cpp;$(MSBuildThisFileDirectory)../src/Vendor/ICU/**/*.h;$(MSBuildThisFileDirectory)../src/Vendor/ICU/manifest.json;$(MSBuildThisFileDirectory)../src/Servers/Text/Native/*;$(MSBuildThisFileFullPath)" />
-    <None Include="$(_Electron2DTextNativeLibrary)" Condition="'$(Electron2DTextNativeEnabled)' == 'true'" Link="libElectron2DTextBreak.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(_Electron2DTextNativeLibrary)" Condition="'$(Electron2DTextNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DTextNativeRID)/native/libElectron2DTextBreak.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="true" PackagePath="runtimes/$(Electron2DTextNativeRID)/native/" Visible="false" />
   </ItemGroup>
   <Target Name="ValidateElectron2DTextNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DTextNativeEnabled)' == 'true'">
     <Error Condition="'$(_Electron2DTextNativeSupported)' != 'true'" Text="The private text backend currently requires the Linux native platform and linux-x64 or linux-arm64 RID. Electron2DNativePlatform='$(Electron2DNativePlatform)' and Electron2DTextNativeRID='$(Electron2DTextNativeRID)' are not a supported text build profile; a prebuilt library or toolchain does not override the platform gate." />

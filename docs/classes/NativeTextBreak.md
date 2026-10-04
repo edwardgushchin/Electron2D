@@ -1,6 +1,6 @@
 # NativeTextBreak
 
-Last updated: 2026-09-27
+Last updated: 2026-10-04
 
 **Declaration:** `internal static unsafe partial class NativeTextBreak` · **Source:** [NativeTextBreak.cs](../../src/Servers/Text/NativeTextBreak.cs) · **Component:** [Text](../components/text.md)
 
@@ -18,6 +18,6 @@ Each call pins the string only while setting and reading the iterators. Both ite
 
 ## Packaging and verification
 
-The private library has its own identity and hides ICU symbols. It must not replace the globalization library used by .NET. [The native build targets](../../tools/text-native.targets), [upstream manifest](../../src/Vendor/ICU/UPSTREAM.md) and [ADR 0046](../decisions/rendering.md#adr-0046) define its source/data and platform gates. Linux x64 is the executed target; Linux ARM64 wiring requires its toolchain and remains unverified, while other native text targets require separate integration.
+The private library has its own identity and hides ICU symbols. It must not replace the globalization library used by .NET. Build, project-reference publish and NuGet package entries place it under `runtimes/<RID>/native/libElectron2DTextBreak.so`; [NativeLibraries](NativeLibraries.md) resolves that location before ordinary .NET native resolution. Its pinned data remains embedded in `Electron2D.dll`. [The native build targets](../../tools/text-native.targets), [upstream manifest](../../src/Vendor/ICU/UPSTREAM.md) and [ADR 0046](../decisions/rendering.md#adr-0046) define its source/data and platform gates. Linux x64 is the executed target; Linux ARM64 wiring requires its toolchain and remains unverified, while other native text targets require separate integration.
 
 [NativeTextBreakTests](../../tests/Electron2D.Tests/NativeTextBreakTests.cs) checks dictionary boundaries, locale tailoring, scalar positions, bounded cache eviction, concurrent use and warmed allocations. Text-layout tests additionally verify that those boundaries affect actual wrapping and justification. A Unicode default-rule conformance result alone does not prove dictionary segmentation.

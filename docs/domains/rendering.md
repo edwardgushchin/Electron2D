@@ -8,6 +8,8 @@ Shader import retains logical bool and boolean vectors/arrays in validated SPIR-
 
 Rendering turns retained scene commands and typed resources into frames for the active root Window and independent offscreen canvases. Runtime source is in `src/Servers/Rendering/`; it compiles into Electron2D.dll. SDL3-CS and owned SDL handles remain internal. DisplayServer exposes supported borrowed operating-system context identities under ADR 0042.
 
+The text component's private native boundary library uses `runtimes/<RID>/native` in build/package assets and project-reference publishes, with engine-owned resolution under [ADR 0012](../decisions/product.md#adr-0012). Its ICU data remains embedded in `Electron2D.dll`; this layout does not widen the native text platform gate.
+
 ## Components and public surface
 
 | Component | Public types and integration | State |
