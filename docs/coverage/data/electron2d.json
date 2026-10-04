@@ -2846,6 +2846,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CryptoKey",
+    "kind": "type",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "CryptoKey",
+    "signature": "public class Electron2D.CryptoKey",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CursorShape",
     "kind": "type",
     "declaringType": "Electron2D.CursorShape",
@@ -6560,6 +6575,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.StreamPeerTLS",
+    "kind": "type",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "StreamPeerTLS",
+    "signature": "public class Electron2D.StreamPeerTLS",
+    "visibility": "public",
+    "baseType": "Electron2D.StreamPeer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.StreamPeerUDS",
     "kind": "type",
     "declaringType": "Electron2D.StreamPeerUDS",
@@ -6740,6 +6770,39 @@
     "baseType": "Electron2D.SocketServer",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TLSOptions",
+    "kind": "type",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "TLSOptions",
+    "signature": "public sealed class Electron2D.TLSOptions",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TLSStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.TLSStatus",
+    "name": "TLSStatus",
+    "signature": "public enum Electron2D.TLSStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -7766,6 +7829,21 @@
     "declaringType": "Electron2D.World2D",
     "name": "World2D",
     "signature": "public sealed class Electron2D.World2D",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.X509Certificate",
+    "kind": "type",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "X509Certificate",
+    "signature": "public class Electron2D.X509Certificate",
     "visibility": "public",
     "baseType": "Electron2D.Resource",
     "interfaces": [
@@ -11010,6 +11088,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CryptoKey..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": ".ctor",
+    "signature": "public CryptoKey()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Curve..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Curve",
@@ -13037,6 +13128,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.StreamPeerTLS..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": ".ctor",
+    "signature": "public StreamPeerTLS()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.StreamPeerUDS..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.StreamPeerUDS",
@@ -13860,6 +13964,19 @@
     "declaringType": "Electron2D.Window",
     "name": ".ctor",
     "signature": "public Window()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.X509Certificate..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": ".ctor",
+    "signature": "public X509Certificate()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -25318,6 +25435,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.StructuredTextParser",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TLSStatus.Connected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TLSStatus",
+    "name": "Connected",
+    "signature": "public const Electron2D.TLSStatus Connected = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TLSStatus",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TLSStatus.Disconnected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TLSStatus",
+    "name": "Disconnected",
+    "signature": "public const Electron2D.TLSStatus Disconnected = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TLSStatus",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TLSStatus.Error()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TLSStatus",
+    "name": "Error",
+    "signature": "public const Electron2D.TLSStatus Error = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TLSStatus",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.TLSStatus.ErrorHostnameMismatch()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TLSStatus",
+    "name": "ErrorHostnameMismatch",
+    "signature": "public const Electron2D.TLSStatus ErrorHostnameMismatch = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TLSStatus",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.TLSStatus.Handshaking()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TLSStatus",
+    "name": "Handshaking",
+    "signature": "public const Electron2D.TLSStatus Handshaking = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TLSStatus",
     "value": "1"
   },
   {
@@ -56104,6 +56286,220 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.Finalize()",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "Finalize",
+    "signature": "protected override System.Void Finalize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.IsPublicOnly()",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "IsPublicOnly",
+    "signature": "public System.Boolean IsPublicOnly()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.Load(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "Load",
+    "signature": "public System.Void Load(System.String path, System.Boolean publicOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "publicOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.LoadFromString(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "LoadFromString",
+    "signature": "public System.Void LoadFromString(System.String key, System.Boolean publicOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "publicOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.Save(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "Save",
+    "signature": "public System.Void Save(System.String path, System.Boolean publicOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "publicOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.SaveToString(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "SaveToString",
+    "signature": "public System.String SaveToString(System.Boolean publicOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "publicOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CryptoKey.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.CryptoKey",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -92519,6 +92915,204 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.StreamPeerTLS.AcceptStream(Electron2D.StreamPeer,Electron2D.TLSOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "AcceptStream",
+    "signature": "public System.Void AcceptStream(Electron2D.StreamPeer stream, Electron2D.TLSOptions options)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "stream",
+        "type": "Electron2D.StreamPeer",
+        "default": null
+      },
+      {
+        "name": "options",
+        "type": "Electron2D.TLSOptions",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.ConnectToStream(Electron2D.StreamPeer,System.String,Electron2D.TLSOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "ConnectToStream",
+    "signature": "public System.Void ConnectToStream(Electron2D.StreamPeer stream, System.String commonName, Electron2D.TLSOptions options = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "stream",
+        "type": "Electron2D.StreamPeer",
+        "default": null
+      },
+      {
+        "name": "commonName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "options",
+        "type": "Electron2D.TLSOptions",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.DisconnectFromStream()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "DisconnectFromStream",
+    "signature": "public System.Void DisconnectFromStream()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.Finalize()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "Finalize",
+    "signature": "protected override System.Void Finalize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.GetAvailableBytes()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "GetAvailableBytes",
+    "signature": "public override System.Int32 GetAvailableBytes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.GetStatus()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "GetStatus",
+    "signature": "public Electron2D.TLSStatus GetStatus()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TLSStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.GetStream()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "GetStream",
+    "signature": "public Electron2D.StreamPeer GetStream()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StreamPeer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "Poll",
+    "signature": "public System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.ReadCore(System.Span\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "ReadCore",
+    "signature": "protected override System.Int32 ReadCore(System.Span\u003CSystem.Byte\u003E destination, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StreamPeerTLS.WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StreamPeerTLS",
+    "name": "WriteCore",
+    "signature": "protected override System.Int32 WriteCore(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Boolean block)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "block",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.StreamPeerUDS.Bind(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.StreamPeerUDS",
@@ -93883,6 +94477,151 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.StreamPeerTCP",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.Client(Electron2D.X509Certificate,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "Client",
+    "signature": "public static Electron2D.TLSOptions Client(Electron2D.X509Certificate trustedChain = null, System.String commonNameOverride = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "trustedChain",
+        "type": "Electron2D.X509Certificate",
+        "default": "null"
+      },
+      {
+        "name": "commonNameOverride",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.TLSOptions",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.ClientUnsafe(Electron2D.X509Certificate)",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "ClientUnsafe",
+    "signature": "public static Electron2D.TLSOptions ClientUnsafe(Electron2D.X509Certificate trustedChain = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "trustedChain",
+        "type": "Electron2D.X509Certificate",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.TLSOptions",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.GetCommonNameOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "GetCommonNameOverride",
+    "signature": "public System.String GetCommonNameOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.GetOwnCertificate()",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "GetOwnCertificate",
+    "signature": "public Electron2D.X509Certificate GetOwnCertificate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.X509Certificate",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.GetPrivateKey()",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "GetPrivateKey",
+    "signature": "public Electron2D.CryptoKey GetPrivateKey()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CryptoKey",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.GetTrustedCAChain()",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "GetTrustedCAChain",
+    "signature": "public Electron2D.X509Certificate GetTrustedCAChain()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.X509Certificate",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.IsServer()",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "IsServer",
+    "signature": "public System.Boolean IsServer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.IsUnsafeClient()",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "IsUnsafeClient",
+    "signature": "public System.Boolean IsUnsafeClient()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TLSOptions.Server(Electron2D.CryptoKey,Electron2D.X509Certificate)",
+    "kind": "method",
+    "declaringType": "Electron2D.TLSOptions",
+    "name": "Server",
+    "signature": "public static Electron2D.TLSOptions Server(Electron2D.CryptoKey key, Electron2D.X509Certificate certificate)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "Electron2D.CryptoKey",
+        "default": null
+      },
+      {
+        "name": "certificate",
+        "type": "Electron2D.X509Certificate",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TLSOptions",
     "value": null
   },
   {
@@ -104111,6 +104850,173 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.Load(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "Load",
+    "signature": "public System.Void Load(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.LoadFromString(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "LoadFromString",
+    "signature": "public System.Void LoadFromString(System.String certificates)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "certificates",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.Save(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "Save",
+    "signature": "public System.Void Save(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.SaveToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "SaveToString",
+    "signature": "public System.String SaveToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.X509Certificate.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.X509Certificate",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {

@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 ## Responsibility
 
@@ -131,3 +131,7 @@ Audio import/playback ownership and codec verification are documented in the [au
 MultiMesh owns copied finite packed 2D instance records and transient previous/current presentation pairs while borrowing Mesh. Duplicate storage is independent and follows inherited shallow/deep/scene-local resource graph rules. Resource edits commit before Changed callbacks; mesh consumers invalidate canvas safely on worker notifications. [The mesh component](../components/meshes.md#repeated-instance-resources) records cold allocation and warmed replay limits.
 
 AudioStreamSynchronized stores only active-prefix child/volume configuration in copies and scene graphs while retaining hidden slot assignments on the original resource. Child resources are borrowed; each playback owns independent child playback and scratch state. Structural factory/cleanup failures preserve or commit ownership at the documented boundary, and microphone composites preflight owner-thread cleanup. See [synchronized streams](../components/audio-playback.md#synchronized-streams).
+
+## TLS resources
+
+[Certificate and key resources](../components/tls.md) provide ordered chains, RSA/EC public/private material, PEM/DER files and typed weak ResourceLoader cache modes. They use ordinary Resource duplication/lifetime; active TLS use retains payload state until disconnect. General saver/serialization/editor workflows remain separate.

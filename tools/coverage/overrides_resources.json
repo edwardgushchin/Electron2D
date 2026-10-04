@@ -52,7 +52,7 @@
         "class:ResourceLoader"
       ],
       "state": "Partial",
-      "reason": "Synchronous image-texture loading, weak cache modes and type discovery execute; other resource formats, public format-loader plugins, UID/dependency catalogs and threaded loading remain separate."
+      "reason": "Synchronous image, font, WAV/MP3/Ogg and certificate/private-key loading, weak cache modes and typed discovery execute; further resource formats, public format-loader plugins, UID/dependency catalogs and threaded loading remain separate."
     },
     {
       "godot": [
@@ -64,7 +64,7 @@
         "ResourceLoader::enum_value:CacheMode.CACHE_MODE_REPLACE_DEEP"
       ],
       "state": "Implemented",
-      "reason": "All five numeric identities and ignore/reuse/replace behavior are verified for dependency-free image textures; deep modes coincide with their ordinary modes for this leaf format."
+      "reason": "All five numeric identities and ignore/reuse/replace behavior are verified for dependency-free image textures; deep modes coincide with their ordinary modes for this leaf format. TLS delivery also verifies .key/.crt typed loading, discovery, weak reuse/ignore and decode-before-replace through TLSTests under ADR 0094."
     },
     {
       "godot": [
@@ -72,7 +72,7 @@
         "ResourceLoader::method:get_cached_ref(String:)"
       ],
       "state": "Implemented",
-      "reason": "The existing process-wide weak ResourcePath registry supplies live cached identity; typed retrieval, disposal and cross-type lookup are tested."
+      "reason": "The existing process-wide weak ResourcePath registry supplies live cached identity; typed retrieval, disposal and cross-type lookup are tested. TLS delivery also verifies .key/.crt typed loading, discovery, weak reuse/ignore and decode-before-replace through TLSTests under ADR 0094."
     },
     {
       "godot": [
@@ -81,7 +81,7 @@
         "ResourceLoader::method:get_recognized_extensions_for_type(String:)"
       ],
       "state": "Partial",
-      "reason": "The typed synchronous PNG/JPEG/WebP/BMP/TGA/SVG ImageTexture path, extension lookup and cache modes execute with native Wayland Sprite pixels; remaining applicable resource formats, type hints and extensible format loaders are absent."
+      "reason": "Typed synchronous image, SFNT font, WAV/MP3/Ogg audio and X509Certificate .crt/CryptoKey .key paths, extension lookup and cache modes execute, including decode-before-replace failure preservation. Remaining applicable resource formats, type hints and extensible format loaders are absent; TLS resource use prevents payload replacement under ADR 0094."
     },
     {
       "godot": [

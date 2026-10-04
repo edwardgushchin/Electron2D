@@ -12,7 +12,7 @@ The domain uses core ElectronObject identity/disposal, typed project settings an
 
 ## Current implementation and limits
 
-The native Linux x64 low-level transport profile executes IPv4/IPv6 loopback and Unix-domain IPC. Browser raw sockets fail explicitly. Protocol owners for HTTP, TLS/DTLS/certificates, WebSocket, ENet/WebRTC, multiplayer and router discovery are absent and remain in [coverage](../coverage/index.md). Other-platform transport behavior, routed traffic and native allocator totals remain separate gates.
+The native Linux x64 low-level transport profile executes IPv4/IPv6 loopback and Unix-domain IPC. Browser raw sockets fail explicitly. [TLS streams and certificate/key resources](../components/tls.md) execute native Linux OpenSSL client/server exchange and typed resource loading. Protocol owners for HTTP, DTLS, WebSocket, ENet/WebRTC, multiplayer and router discovery are absent and remain in [coverage](../coverage/index.md). Other-platform transport behavior, routed traffic and native allocator totals remain separate gates.
 
 ## Verification
 

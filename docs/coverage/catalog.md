@@ -204,8 +204,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md) | Shape2D | Implemented | 2 |
 | [ConvexPolygonShape3D](classes/ConvexPolygonShape3D.md) | Shape3D | Excluded | 1 |
 | [CopyTransformModifier3D](classes/CopyTransformModifier3D.md) | BoneConstraint3D | Excluded | 39 |
-| [Crypto](classes/Crypto.md) | RefCounted | Blocked | 9 |
-| [CryptoKey](classes/CryptoKey.md) | Resource | Blocked | 5 |
+| [Crypto](classes/Crypto.md) | RefCounted | Unimplemented | 9 |
+| [CryptoKey](classes/CryptoKey.md) | Resource | Implemented | 5 |
 | [Cubemap](classes/Cubemap.md) | ImageTextureLayered | Excluded | 1 |
 | [CubemapArray](classes/CubemapArray.md) | ImageTextureLayered | Excluded | 1 |
 | [Curve](classes/Curve.md) | Resource | Implemented | 37 |
@@ -588,7 +588,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PackedVector3Array](classes/PackedVector3Array.md) | — | Excluded | 31 |
 | [PackedVector4Array](classes/PackedVector4Array.md) | — | Excluded | 30 |
 | [PacketPeer](classes/PacketPeer.md) | RefCounted | Implemented | 7 |
-| [PacketPeerDTLS](classes/PacketPeerDTLS.md) | PacketPeer | Blocked | 10 |
+| [PacketPeerDTLS](classes/PacketPeerDTLS.md) | PacketPeer | Unimplemented | 10 |
 | [PacketPeerExtension](classes/PacketPeerExtension.md) | PacketPeer | Implemented | 4 |
 | [PacketPeerStream](classes/PacketPeerStream.md) | PacketPeer | Implemented | 3 |
 | [PacketPeerUDP](classes/PacketPeerUDP.md) | PacketPeer | Implemented | 13 |
@@ -825,7 +825,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [StreamPeerGZIP](classes/StreamPeerGZIP.md) | StreamPeer | Unimplemented | 4 |
 | [StreamPeerSocket](classes/StreamPeerSocket.md) | StreamPeer | Implemented | 8 |
 | [StreamPeerTCP](classes/StreamPeerTCP.md) | StreamPeerSocket | Implemented | 6 |
-| [StreamPeerTLS](classes/StreamPeerTLS.md) | StreamPeer | Blocked | 12 |
+| [StreamPeerTLS](classes/StreamPeerTLS.md) | StreamPeer | Implemented | 12 |
 | [StreamPeerUDS](classes/StreamPeerUDS.md) | StreamPeerSocket | Implemented | 3 |
 | [String](classes/String.md) | — | Excluded | 132 |
 | [StringName](classes/StringName.md) | — | Excluded | 124 |
@@ -841,7 +841,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SyntaxHighlighter](classes/SyntaxHighlighter.md) | Resource | Blocked | 7 |
 | [SystemFont](classes/SystemFont.md) | Font | Blocked | 17 |
 | [TCPServer](classes/TCPServer.md) | SocketServer | Implemented | 3 |
-| [TLSOptions](classes/TLSOptions.md) | RefCounted | Blocked | 9 |
+| [TLSOptions](classes/TLSOptions.md) | RefCounted | Implemented | 9 |
 | [TabBar](classes/TabBar.md) | Control | Blocked | 99 |
 | [TabContainer](classes/TabContainer.md) | Container | Blocked | 85 |
 | [TextEdit](classes/TextEdit.md) | Control | Blocked | 299 |
@@ -1058,7 +1058,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | Shape2D | Unimplemented | 2 |
 | [WorldBoundaryShape3D](classes/WorldBoundaryShape3D.md) | Shape3D | Excluded | 1 |
 | [WorldEnvironment](classes/WorldEnvironment.md) | Node | Blocked | 3 |
-| [X509Certificate](classes/X509Certificate.md) | Resource | Blocked | 4 |
+| [X509Certificate](classes/X509Certificate.md) | Resource | Implemented | 4 |
 | [XMLParser](classes/XMLParser.md) | RefCounted | Implemented | 25 |
 | [XRAnchor3D](classes/XRAnchor3D.md) | XRNode3D | Excluded | 2 |
 | [XRBodyModifier3D](classes/XRBodyModifier3D.md) | SkeletonModifier3D | Excluded | 11 |

@@ -1,6 +1,6 @@
 # Third-party software
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 This page lists Electron2D's direct third-party integrations and backends selected by accepted decisions. **Selected** does not mean **integrated**. The project files, vendor provenance records and shader toolchain lock are the sources for exact versions; native packages may have their own transitive dependencies.
 
@@ -38,3 +38,5 @@ SDL3-CS already supplies the selected WAV loading bindings; IMA ADPCM is an engi
 ## Host-provided libraries
 
 Linux display integration directly probes the system's `libdbus-1.so.3`. GTK 3, GDK, GObject and libdecor's GTK plugin are optional host facilities used for native-looking Wayland window decorations where available. They are not engine-owned NuGet packages. See the [display component](components/display-server.md). This page is not an inventory of every operating-system library or transitive native codec dependency.
+
+Linux TLS directly loads host-provided OpenSSL 3 (`libssl.so.3` and `libcrypto.so.3`), with the system CA paths and crypto policy. The engine does not redistribute these libraries or vendor their source. Other TLS backend/packaging targets are not integrated; see [ADR 0094](decisions/networking.md#adr-0094). Resource PEM/DER parsing uses the .NET cryptography backend.

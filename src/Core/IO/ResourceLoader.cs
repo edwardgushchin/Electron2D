@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Loads supported resource files through the engine's typed resource path cache.</summary>
-/// <remarks>Supported resources are image textures, dynamic font files and WAV/MP3/Ogg audio.
+/// <remarks>Supported resources are image textures, dynamic font files, WAV/MP3/Ogg audio and certificate/private-key files.
 /// The returned resource belongs to the caller and is cached weakly while it remains live. Synchronous load
 /// operations serialize cache decisions; this service does not own caller resources or their renderer payloads.</remarks>
 public static class ResourceLoader
@@ -27,7 +27,7 @@ public static class ResourceLoader
     private static readonly string[] ImageExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg"];
 
     /// <summary>Loads a supported typed resource from an operating-system, res:// or user:// path.</summary>
-    /// <typeparam name="TResource"><see cref="ImageTexture"/>, <see cref="FontFile"/>, an implemented AudioStream type, or an assignable resource base type.</typeparam>
+    /// <typeparam name="TResource"><see cref="ImageTexture"/>, <see cref="FontFile"/>, an implemented AudioStream type, X509Certificate, CryptoKey, or an assignable resource base type.</typeparam>
     /// <param name="path">File path; the exact path string is the cache key.</param>
     /// <param name="cacheMode">Whether to reuse, ignore or refresh an existing live instance.</param>
     /// <returns>A caller-owned live resource. Reuse and Replace can return the same cached instance.</returns>
@@ -37,6 +37,7 @@ public static class ResourceLoader
     /// <exception cref="IOException">The file cannot be read.</exception>
     /// <exception cref="FormatException">Encoded audio is malformed or outside its verified channel profile.</exception>
     /// <exception cref="InvalidDataException">The encoded resource is malformed or exceeds supported limits.</exception>
+    /// <exception cref="System.Security.Cryptography.CryptographicException">Certificate/key input is malformed or does not match the requested key role.</exception>
     public static TResource Load<TResource>(string path, CacheMode cacheMode = CacheMode.Reuse)
         where TResource : Resource
     {
@@ -48,7 +49,7 @@ public static class ResourceLoader
         lock (LoadGate)
         {
             var cached = Resource.GetRegisteredPath(path);
-            if (cacheMode == CacheMode.Reuse && cached is ImageTexture or FontFile or AudioStream && cached is TResource reused) return reused;
+            if (cacheMode == CacheMode.Reuse && cached is ImageTexture or FontFile or AudioStream or X509Certificate or CryptoKey && cached is TResource reused) return reused;
             if (cacheMode == CacheMode.Reuse && cached is not null)
                 throw new InvalidOperationException("The cached resource has a different type.");
 
@@ -56,7 +57,15 @@ public static class ResourceLoader
                 (!typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) || IsExtension(path, FontExtensions));
             Resource loaded;
             var audioType = AudioType<TResource>(path);
-            if (audioType is not null)
+            var cryptoType = CryptoType<TResource>(path);
+            if (cryptoType is not null)
+            {
+                Resource created = cryptoType == typeof(CryptoKey) ? new CryptoKey() : new X509Certificate();
+                try { if (created is CryptoKey key) key.Load(path); else ((X509Certificate)created).Load(path); } catch { created.Dispose(); throw; }
+                if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == cryptoType) { using (created) { if (cached is CryptoKey key) key.ReloadFrom((CryptoKey)created); else ((X509Certificate)cached!).ReloadFrom((X509Certificate)created); } return (TResource)cached!; }
+                loaded = created;
+            }
+            else if (audioType is not null)
             {
                 AudioStream audio = audioType == typeof(AudioStreamWAV) ? AudioStreamWAV.LoadFromFile(path) : audioType == typeof(AudioStreamMP3) ? AudioStreamMP3.LoadFromFile(path) : AudioStreamOggVorbis.LoadFromFile(path);
                 if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is AudioStream existing && existing.GetType() == audioType)
@@ -75,6 +84,7 @@ public static class ResourceLoader
             }
             else
             {
+                if (typeof(CryptoKey).IsAssignableFrom(typeof(TResource)) || typeof(X509Certificate).IsAssignableFrom(typeof(TResource))) throw new NotSupportedException("The file extension does not match the requested security resource type.");
                 if (typeof(AudioStream).IsAssignableFrom(typeof(TResource))) throw new NotSupportedException("The file extension does not match the requested audio resource type.");
                 using var image = Image.LoadFromFile(path);
                 if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is ImageTexture texture)
@@ -104,7 +114,7 @@ public static class ResourceLoader
     /// <summary>Reports whether a supported resource file exists or is already cached.</summary>
     /// <typeparam name="TResource">Requested resource type or compatible base type.</typeparam>
     /// <param name="path">Exact cache path or file path.</param>
-    /// <returns>True when a live cached instance has this type, or a recognized image, font or audio file exists for it.</returns>
+    /// <returns>True when a live cached instance has this type, or a recognized resource file exists for it.</returns>
     /// <remarks>The cache is checked first, so a cached resource may outlive removal of its source file.</remarks>
     /// <exception cref="ArgumentException">The path is null or empty.</exception>
     public static bool Exists<TResource>(string path) where TResource : Resource
@@ -112,7 +122,7 @@ public static class ResourceLoader
         CheckFilePath(path);
         return Resource.GetRegisteredPath(path) is TResource ||
             (typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && IsExtension(path, ImageExtensions) ||
-             typeof(TResource).IsAssignableFrom(typeof(FontFile)) && IsExtension(path, FontExtensions) || AudioType<TResource>(path) is not null) && FileAccess.FileExists(path);
+             typeof(TResource).IsAssignableFrom(typeof(FontFile)) && IsExtension(path, FontExtensions) || AudioType<TResource>(path) is not null || CryptoType<TResource>(path) is not null) && FileAccess.FileExists(path);
     }
 
     /// <summary>Reports whether any live registered resource occupies an exact cache path.</summary>
@@ -148,11 +158,18 @@ public static class ResourceLoader
         if (typeof(TResource).IsAssignableFrom(typeof(AudioStreamWAV))) audio.Add("wav");
         if (typeof(TResource).IsAssignableFrom(typeof(AudioStreamMP3))) audio.Add("mp3");
         if (typeof(TResource).IsAssignableFrom(typeof(AudioStreamOggVorbis))) audio.Add("ogg");
+        if (typeof(TResource).IsAssignableFrom(typeof(CryptoKey))) audio.Add("key");
+        if (typeof(TResource).IsAssignableFrom(typeof(X509Certificate))) audio.Add("crt");
         if (images || fonts) return [.. images ? ImageExtensions : [], .. fonts ? FontExtensions : [], .. audio];
         return audio.ToArray();
 
     }
 
+    private static Type? CryptoType<TResource>(string path) where TResource : Resource
+    {
+        var type = System.IO.Path.GetExtension(path).ToLowerInvariant() switch { ".key" => typeof(CryptoKey), ".crt" => typeof(X509Certificate), _ => null };
+        return type is not null && typeof(TResource).IsAssignableFrom(type) ? type : null;
+    }
     private static Type? AudioType<TResource>(string path) where TResource : Resource
     {
         var requested = typeof(TResource);
@@ -162,7 +179,7 @@ public static class ResourceLoader
     }
     private static void CheckType<TResource>() where TResource : Resource
     {
-        if (!typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && !typeof(TResource).IsAssignableFrom(typeof(FontFile)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamWAV)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamMP3)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamOggVorbis)))
+        if (!typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && !typeof(TResource).IsAssignableFrom(typeof(FontFile)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamWAV)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamMP3)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamOggVorbis)) && !typeof(TResource).IsAssignableFrom(typeof(CryptoKey)) && !typeof(TResource).IsAssignableFrom(typeof(X509Certificate)))
             throw new NotSupportedException($"Resource files for {typeof(TResource).Name} are not integrated.");
     }
 

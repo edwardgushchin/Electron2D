@@ -1,6 +1,6 @@
 # Resource loading component
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 ## Scope and owned types
 
@@ -37,3 +37,7 @@ The GPU payload is managed by the existing texture renderer when the resource is
 ## Audio files
 
 WAV, MP3 and Ogg Vorbis participate through exact concrete types and compatible AudioStream/Resource base views. Discovery reports wav/mp3/ogg. Uncached existence requires a compatible extension; format mismatch rejects explicit audio loads. Reuse borrows the live cached identity; Ignore and IgnoreDeep preserve that identity while returning independent owned resources. Replace/ReplaceDeep validate before publishing into the same concrete audio wrapper and issue Changed afterward. A malformed file preserves old state; a throwing Changed callback follows committed replacement. Ogg reload owns an independent imported packet copy and retains retired imports for old playback captures. There is no external dependency graph in these file formats, so their deep cache modes equal ordinary modes. AudioCompressedTests checks identity, independent ignores, retained playback after reload, malformed rollback and typed discovery. General scene-file serialization and public format registration remain their own coverage dependencies.
+
+## Certificate/private-key loading
+
+X509Certificate `.crt` and CryptoKey `.key` files now execute through ResourceLoader with typed discovery, Exists, weak cache reuse, independent ignore and decode-before-replace that preserves cached metadata. PEM and DER input use the resource parsers; malformed replacement preserves the cached payload, and active TLS use rejects replacement. [TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) verifies this integration. See [TLS](tls.md) for certificate/key ownership, duplication, security and backend boundaries. No generic ResourceSaver/editor persistence is established.

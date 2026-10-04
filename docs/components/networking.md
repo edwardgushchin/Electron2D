@@ -26,7 +26,7 @@ Linux listener setup applies only SO_REUSEADDR through a private SafeHandle-pinn
 
 ## Exclusions and remaining integrations
 
-Dynamic value wire serialization and its encode-buffer-size property are excluded under ADR 0001; raw typed bytes and framing are implemented. TLS/DTLS/certificate/trust owners, HTTP/WebSocket protocols, resolver/interface services, ENet/WebRTC, multiplayer scene replication and router discovery remain separate complete slices. This layer does not establish networking permissions, routed delivery, protocol security or unified project/editor tooling. [ADR 0094](../decisions/networking.md#adr-0094) owns these boundaries.
+Dynamic value wire serialization and its encode-buffer-size property are excluded under ADR 0001; raw typed bytes and framing are implemented. [TLS streams and certificate/key resources](tls.md) are implemented with their own verified native Linux contract. DTLS, HTTP/WebSocket protocols, resolver/interface services, ENet/WebRTC, multiplayer scene replication and router discovery remain separate complete slices. This layer does not establish networking permissions, routed delivery, protocol security or unified project/editor tooling. [ADR 0094](../decisions/networking.md#adr-0094) owns these boundaries.
 
 ## Verification boundaries
 

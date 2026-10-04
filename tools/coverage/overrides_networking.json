@@ -589,6 +589,176 @@
       "godot": "StreamPeerExtension::method:_put_partial_data(const uint8_t*:,int:,int32_t*:)",
       "electron2d": "method:Electron2D.StreamPeer.WriteCore(System.ReadOnlySpan<System.Byte>,System.Boolean)",
       "reason": "ADR 0001/0094: managed user transports extend StreamPeer/PacketPeer directly through typed span/progress, availability and outgoing raw payload capacity hooks, replacing native pointer/error-out ABI. NetworkingTests executes consumer-defined fragmented streams, full primitive progress, packet framing and custom packet bounds; no native extension facade is required."
+    },
+    {
+      "godot": "class:CryptoKey",
+      "electron2d": "T:Electron2D.CryptoKey",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "CryptoKey::method:is_public_only()",
+      "electron2d": "method:Electron2D.CryptoKey.IsPublicOnly()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "CryptoKey::method:load(String:,bool:)",
+      "electron2d": "method:Electron2D.CryptoKey.Load(System.String,System.Boolean)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "CryptoKey::method:load_from_string(String:,bool:)",
+      "electron2d": "method:Electron2D.CryptoKey.LoadFromString(System.String,System.Boolean)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "CryptoKey::method:save(String:,bool:)",
+      "electron2d": "method:Electron2D.CryptoKey.Save(System.String,System.Boolean)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "CryptoKey::method:save_to_string(bool:)",
+      "electron2d": "method:Electron2D.CryptoKey.SaveToString(System.Boolean)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:StreamPeerTLS",
+      "electron2d": "T:Electron2D.StreamPeerTLS",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::enum:Status",
+      "electron2d": "T:Electron2D.TLSStatus",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::enum_value:Status.STATUS_CONNECTED",
+      "electron2d": "enumValue:Electron2D.TLSStatus.Connected()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::enum_value:Status.STATUS_DISCONNECTED",
+      "electron2d": "enumValue:Electron2D.TLSStatus.Disconnected()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::enum_value:Status.STATUS_ERROR",
+      "electron2d": "enumValue:Electron2D.TLSStatus.Error()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::enum_value:Status.STATUS_ERROR_HOSTNAME_MISMATCH",
+      "electron2d": "enumValue:Electron2D.TLSStatus.ErrorHostnameMismatch()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::enum_value:Status.STATUS_HANDSHAKING",
+      "electron2d": "enumValue:Electron2D.TLSStatus.Handshaking()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::method:accept_stream(StreamPeer:,TLSOptions:)",
+      "electron2d": "method:Electron2D.StreamPeerTLS.AcceptStream(Electron2D.StreamPeer,Electron2D.TLSOptions)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::method:connect_to_stream(StreamPeer:,String:,TLSOptions:)",
+      "electron2d": "method:Electron2D.StreamPeerTLS.ConnectToStream(Electron2D.StreamPeer,System.String,Electron2D.TLSOptions)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::method:disconnect_from_stream()",
+      "electron2d": "method:Electron2D.StreamPeerTLS.DisconnectFromStream()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::method:get_status()",
+      "electron2d": "method:Electron2D.StreamPeerTLS.GetStatus()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::method:get_stream()",
+      "electron2d": "method:Electron2D.StreamPeerTLS.GetStream()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "StreamPeerTLS::method:poll()",
+      "electron2d": "method:Electron2D.StreamPeerTLS.Poll()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:TLSOptions",
+      "electron2d": "T:Electron2D.TLSOptions",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:client(X509Certificate:,String:)",
+      "electron2d": "method:Electron2D.TLSOptions.Client(Electron2D.X509Certificate,System.String)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:client_unsafe(X509Certificate:)",
+      "electron2d": "method:Electron2D.TLSOptions.ClientUnsafe(Electron2D.X509Certificate)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:get_common_name_override()",
+      "electron2d": "method:Electron2D.TLSOptions.GetCommonNameOverride()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:get_own_certificate()",
+      "electron2d": "method:Electron2D.TLSOptions.GetOwnCertificate()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:get_private_key()",
+      "electron2d": "method:Electron2D.TLSOptions.GetPrivateKey()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:get_trusted_ca_chain()",
+      "electron2d": "method:Electron2D.TLSOptions.GetTrustedCAChain()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:is_server()",
+      "electron2d": "method:Electron2D.TLSOptions.IsServer()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:is_unsafe_client()",
+      "electron2d": "method:Electron2D.TLSOptions.IsUnsafeClient()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "TLSOptions::method:server(CryptoKey:,X509Certificate:)",
+      "electron2d": "method:Electron2D.TLSOptions.Server(Electron2D.CryptoKey,Electron2D.X509Certificate)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "class:X509Certificate",
+      "electron2d": "T:Electron2D.X509Certificate",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "X509Certificate::method:load(String:)",
+      "electron2d": "method:Electron2D.X509Certificate.Load(System.String)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "X509Certificate::method:load_from_string(String:)",
+      "electron2d": "method:Electron2D.X509Certificate.LoadFromString(System.String)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "X509Certificate::method:save(String:)",
+      "electron2d": "method:Electron2D.X509Certificate.Save(System.String)",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "godot": "X509Certificate::method:save_to_string()",
+      "electron2d": "method:Electron2D.X509Certificate.SaveToString()",
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
     }
   ],
   "extras": [
@@ -866,6 +1036,101 @@
       "electron2d": "method:Electron2D.PacketPeerUDP.GetMaxPacketSize()",
       "state": "Implemented",
       "reason": "ADR 0094: typed concrete raw payload capacity, lifetime, span overload, failure diagnostic or allocation budget for executable transport. NetworkingTests verifies exercised native Linux paths; other hosts and routed traffic remain separate."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CryptoKey..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.StreamPeerTLS..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "constructor:Electron2D.X509Certificate..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.CryptoKey.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.CryptoKey.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.CryptoKey.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.CryptoKey.Finalize()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.CryptoKey.OnResetState()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.CryptoKey.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.StreamPeerTLS.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.StreamPeerTLS.Finalize()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.StreamPeerTLS.GetAvailableBytes()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.StreamPeerTLS.ReadCore(System.Span<System.Byte>,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.StreamPeerTLS.WriteCore(System.ReadOnlySpan<System.Byte>,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.X509Certificate.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.X509Certificate.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.X509Certificate.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.X509Certificate.OnResetState()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "electron2d": "method:Electron2D.X509Certificate.ValidateDisposal()",
+      "state": "Implemented",
+      "reason": "ADR 0094: typed constructor, resource-copy/reset/disposal/finalization hook or shared TLS phase for executable TLS/security resources. ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
     }
   ],
   "statusGroups": [
@@ -1237,7 +1502,7 @@
         "HTTPClient::property:connection",
         "HTTPClient::property:read_chunk_size"
       ],
-      "reason": "ADR 0094: TCP streams execute; next slice is HTTP/1.1 request/response parsing, headers, body/chunk polling and proxy behavior. HTTPS additionally needs StreamPeerTLS/TLSOptions and trust resources."
+      "reason": "ADR 0094: TCP and TLS streams now execute; next complete slice is HTTP/1.1 request/response/header/body/chunk/proxy protocol with HTTP and HTTPS integration."
     },
     {
       "state": "Blocked",
@@ -1436,7 +1701,7 @@
       "reason": "ADR 0094: Requires typed MultiplayerPeer identity, connection status and channel/transfer contract; no network backend is needed."
     },
     {
-      "state": "Blocked",
+      "state": "Unimplemented",
       "godot": [
         "class:PacketPeerDTLS",
         "PacketPeerDTLS::enum:Status",
@@ -1450,7 +1715,7 @@
         "PacketPeerDTLS::method:get_status()",
         "PacketPeerDTLS::method:poll()"
       ],
-      "reason": "ADR 0094: Requires TLSOptions certificate/key/trust resources and a DTLS-capable backend with datagram handshake/retransmission; BCL SslStream alone does not supply DTLS."
+      "reason": "ADR 0094: UDP, TLSOptions/key/certificate resources and the selected system OpenSSL 3 library are available. Next connected DTLS slice implements datagram BIO integration, polled packet handshake/retransmission/timers, server cookies and PacketPeer ownership. Existing stream TLS behavior does not implement DTLS packet transport."
     },
     {
       "state": "Blocked",
@@ -1486,41 +1751,6 @@
         "StreamPeerGZIP::method:start_decompression(bool:,int:)"
       ],
       "reason": "ADR 0094: StreamPeer hooks and native compression libraries are available; next slice is incremental gzip/deflate compression/decompression over stream input and finish semantics."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:StreamPeerTLS",
-        "StreamPeerTLS::enum:Status",
-        "StreamPeerTLS::enum_value:Status.STATUS_CONNECTED",
-        "StreamPeerTLS::enum_value:Status.STATUS_DISCONNECTED",
-        "StreamPeerTLS::enum_value:Status.STATUS_ERROR",
-        "StreamPeerTLS::enum_value:Status.STATUS_ERROR_HOSTNAME_MISMATCH",
-        "StreamPeerTLS::enum_value:Status.STATUS_HANDSHAKING",
-        "StreamPeerTLS::method:accept_stream(StreamPeer:,TLSOptions:)",
-        "StreamPeerTLS::method:connect_to_stream(StreamPeer:,String:,TLSOptions:)",
-        "StreamPeerTLS::method:disconnect_from_stream()",
-        "StreamPeerTLS::method:get_status()",
-        "StreamPeerTLS::method:get_stream()",
-        "StreamPeerTLS::method:poll()"
-      ],
-      "reason": "ADR 0094: Requires TLSOptions plus certificate/key/trust resources, native/BCL TLS handshake and encrypted stream polling/ownership adaptation over existing StreamPeerTCP."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "class:TLSOptions",
-        "TLSOptions::method:client(X509Certificate:,String:)",
-        "TLSOptions::method:client_unsafe(X509Certificate:)",
-        "TLSOptions::method:get_common_name_override()",
-        "TLSOptions::method:get_own_certificate()",
-        "TLSOptions::method:get_private_key()",
-        "TLSOptions::method:get_trusted_ca_chain()",
-        "TLSOptions::method:is_server()",
-        "TLSOptions::method:is_unsafe_client()",
-        "TLSOptions::method:server(CryptoKey:,X509Certificate:)"
-      ],
-      "reason": "ADR 0094: Requires typed certificate/key/trust resources and a shared TLS configuration contract consumed by StreamPeerTLS and DTLS."
     },
     {
       "state": "Unimplemented",
@@ -1780,7 +2010,63 @@
         "WebSocketPeer::property:outbound_buffer_size",
         "WebSocketPeer::property:supported_protocols"
       ],
-      "reason": "ADR 0094: Native TCP and packet hooks are available; next slice is HTTP upgrade, WebSocket framing/masking, control frames, close handshake and bounded queues. Secure URL paths additionally require TLS."
+      "reason": "ADR 0094: Native TCP/TLS and packet hooks execute; next complete slice is HTTP upgrade, WebSocket framing/masking, control/close handshake and bounded queues for WS/WSS."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:CryptoKey",
+        "CryptoKey::method:is_public_only()",
+        "CryptoKey::method:load(String:,bool:)",
+        "CryptoKey::method:load_from_string(String:,bool:)",
+        "CryptoKey::method:save(String:,bool:)",
+        "CryptoKey::method:save_to_string(bool:)",
+        "class:StreamPeerTLS",
+        "StreamPeerTLS::enum:Status",
+        "StreamPeerTLS::enum_value:Status.STATUS_CONNECTED",
+        "StreamPeerTLS::enum_value:Status.STATUS_DISCONNECTED",
+        "StreamPeerTLS::enum_value:Status.STATUS_ERROR",
+        "StreamPeerTLS::enum_value:Status.STATUS_ERROR_HOSTNAME_MISMATCH",
+        "StreamPeerTLS::enum_value:Status.STATUS_HANDSHAKING",
+        "StreamPeerTLS::method:accept_stream(StreamPeer:,TLSOptions:)",
+        "StreamPeerTLS::method:connect_to_stream(StreamPeer:,String:,TLSOptions:)",
+        "StreamPeerTLS::method:disconnect_from_stream()",
+        "StreamPeerTLS::method:get_status()",
+        "StreamPeerTLS::method:get_stream()",
+        "StreamPeerTLS::method:poll()",
+        "class:TLSOptions",
+        "TLSOptions::method:client(X509Certificate:,String:)",
+        "TLSOptions::method:client_unsafe(X509Certificate:)",
+        "TLSOptions::method:get_common_name_override()",
+        "TLSOptions::method:get_own_certificate()",
+        "TLSOptions::method:get_private_key()",
+        "TLSOptions::method:get_trusted_ca_chain()",
+        "TLSOptions::method:is_server()",
+        "TLSOptions::method:is_unsafe_client()",
+        "TLSOptions::method:server(CryptoKey:,X509Certificate:)",
+        "class:X509Certificate",
+        "X509Certificate::method:load(String:)",
+        "X509Certificate::method:load_from_string(String:)",
+        "X509Certificate::method:save(String:)",
+        "X509Certificate::method:save_to_string()"
+      ],
+      "reason": "ADR 0094 TLS delivery: copied BCL PEM/DER key/ordered certificate-chain resources, typed weak loader cache, immutable borrowed TLS options, private Linux system OpenSSL 3 TLS 1.2/1.3 over any StreamPeer with prepared 64 KiB BIO pair and caller spans. TLSTests checks native client/server handshake, fragmented/128 KiB data, chain/expiry/DNS/IP/override/unsafe policies, independent SslStream interoperability both roles, close-notify/FIN/reuse, malformed input/identity rollback, key/cert retention, copies/cache/observer failures/finalization, owner rejection and 64 active/idle zero-managed-allocation polling cycles. Typed exceptions replace Error codes; mismatch status is assigned only to actual hostname/IP mismatch. Other platform packaging/backends, native OpenSSL allocator totals, routed throughput and owner acceptance remain separate gates."
+    },
+    {
+      "state": "Unimplemented",
+      "godot": [
+        "class:Crypto",
+        "Crypto::method:constant_time_compare(PackedByteArray:,PackedByteArray:)",
+        "Crypto::method:decrypt(CryptoKey:,PackedByteArray:)",
+        "Crypto::method:encrypt(CryptoKey:,PackedByteArray:)",
+        "Crypto::method:generate_random_bytes(int:)",
+        "Crypto::method:generate_rsa(int:)",
+        "Crypto::method:generate_self_signed_certificate(CryptoKey:,String:,String:,String:)",
+        "Crypto::method:hmac_digest(int:HashingContext.HashType,PackedByteArray:,PackedByteArray:)",
+        "Crypto::method:sign(int:HashingContext.HashType,PackedByteArray:,CryptoKey:)",
+        "Crypto::method:verify(int:HashingContext.HashType,PackedByteArray:,PackedByteArray:,CryptoKey:)"
+      ],
+      "reason": "ADR 0094: RSA/EC key and certificate resources plus portable BCL cryptography now execute. Next connected Crypto slice is typed hashing/HMAC digest contracts, random/RSA generation, self-signed certificate generation, RSA encrypt/decrypt and sign/verify; shared hash identities follow HashingContext. No facade or cryptographic operation is supplied merely by TLS."
     }
   ]
 }

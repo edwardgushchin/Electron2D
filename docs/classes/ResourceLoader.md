@@ -1,6 +1,6 @@
 # ResourceLoader
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Inherits:** None; static C# service
 
@@ -11,7 +11,7 @@ Last updated: 2026-10-02
 
 ## Description
 
-The first synchronous loader profile turns a PNG, JPEG, WebP, BMP, TGA or SVG file into a caller-owned `ImageTexture`. Decoding uses `Image.LoadFromFile`; the texture owns a copied pixel snapshot and uploads GPU data when drawn. `Load<TResource>` accepts `ImageTexture` or an assignable base such as `Texture` or `Resource`. Dynamic [FontFile](FontFile.md) loading also executes for SFNT font files through [Font](Font.md) or Resource base views. Other concrete resource formats remain separate integrations and fail explicitly.
+The first synchronous loader profile turns a PNG, JPEG, WebP, BMP, TGA or SVG file into a caller-owned `ImageTexture`. Decoding uses `Image.LoadFromFile`; the texture owns a copied pixel snapshot and uploads GPU data when drawn. `Load<TResource>` accepts `ImageTexture` or an assignable base such as `Texture` or `Resource`. Dynamic [FontFile](FontFile.md) loading also executes for SFNT font files through [Font](Font.md) or Resource base views. WAV/MP3/Ogg audio, X509Certificate `.crt` and CryptoKey `.key` files also execute through their typed decoders. Further concrete resource formats remain separate integrations and fail explicitly.
 
 The exact path string is the ordinal, case-sensitive cache key. The process-wide `Resource.ResourcePath` cache holds only weak references; it never owns or keeps a resource alive. Loads serialize cache decisions, but callers own returned resources and may dispose them. `GetCachedRef<TResource>` returns a borrowed reference and has no separate retention protocol. `res://`, `user://` and operating-system file paths follow `FileAccess` resolution.
 
@@ -74,3 +74,7 @@ A font owns its validated encoded bytes and native glyph data. Ignore returns a 
 ## Audio files
 
 WAV, MP3 and Ogg Vorbis participate through exact concrete types and compatible AudioStream/Resource base views. Discovery reports wav/mp3/ogg. Uncached existence requires a compatible extension; format mismatch rejects explicit audio loads. Reuse borrows the live cached identity; Ignore and IgnoreDeep preserve that identity while returning independent owned resources. Replace/ReplaceDeep validate before publishing into the same concrete audio wrapper and issue Changed afterward. A malformed file preserves old state; a throwing Changed callback follows committed replacement. Ogg reload owns an independent imported packet copy and retains retired imports for old playback captures. There is no external dependency graph in these file formats, so their deep cache modes equal ordinary modes. AudioCompressedTests checks identity, independent ignores, retained playback after reload, malformed rollback and typed discovery. General scene-file serialization and public format registration remain their own coverage dependencies.
+
+## Certificate and private-key files
+
+TLS integration adds X509Certificate `.crt` and CryptoKey `.key` files, including PEM chains and DER file input. GetRecognizedExtensionsForType and Exists include these actual families. Reuse preserves a live matching resource; Ignore creates an independent copy; Replace decodes fully before payload-only reload, preserving key/certificate payload on malformed input. Active TLS resource use rejects replacement. [TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) checks discovery, cache identities and replacement/failure behavior. General ResourceSaver remains absent.

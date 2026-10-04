@@ -1,6 +1,6 @@
 # Resource base component
 
-Last updated: 2026-09-24
+Last updated: 2026-10-04
 
 ## Scope
 
@@ -53,3 +53,7 @@ The component does not expose a public manual reference counter: managed memory 
 ## Verification
 
 The executable checks in `tests/Electron2D.Tests/Program.cs` cover positive, negative, concurrent, cyclic, callback-failure, partial-copy, cleanup, and packed-scene local-resource paths. Release build and generated XML documentation validation are part of the repository-wide completion checks.
+
+## TLS security resources
+
+X509Certificate and CryptoKey implement copied Resource state, change/failure behavior and typed `.crt`/`.key` ResourceLoader integration. [TLS](tls.md) owns retention and backend boundaries; active sessions prevent payload replacement/disposal. These formats do not establish a general ResourceSaver or editor serialization.
