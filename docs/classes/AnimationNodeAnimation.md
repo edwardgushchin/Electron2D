@@ -270,3 +270,5 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 ## Action-controller integration
 
 [Action controllers](../components/scene-animation.md#action-controllers) now use this graph contract. Virtual input mutation keeps policy/connection storage aligned; external seek delta is previous position minus requested time, predictive end flags support loop breaks, and prepared deferred lifecycle notices preserve delivery through repeated starts/finishes. Reentrant graph edits skip stale diagnostics.
+
+Method-key traversal retains the actual previous clip position and incoming movement across loop folds, reversal and stretched custom timelines; internal/external seek identity reaches the mixer. See [special tracks](../components/scene-animation.md#bézier-and-method-tracks).

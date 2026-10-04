@@ -1,14 +1,14 @@
-# Animation.TrackType
+# AnimationMixer.AnimationCallbackModeMethod
 
 Last updated: 2026-10-04
 
-- **Source:** [`src/Scene/Resources/Animation.cs`](../../src/Scene/Resources/Animation.cs)
+- **Source:** [`src/Scene/Animation/AnimationMixer.Methods.cs`](../../src/Scene/Animation/AnimationMixer.Methods.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum Electron2D.Animation.TrackType`
+- **Declaration:** `public enum Electron2D.AnimationMixer.AnimationCallbackModeMethod`
 
 ## Description
 
-Declared executable timeline kinds: Value (0), Method (5) and Bezier (6). Audio/nested-animation remain applicable coverage work; 3D track roles are excluded.
+Method-track dispatch policy: Deferred (0) uses a captured SceneTree safe-point batch; Immediate (1) invokes inside evaluation. Deferred is the default; detached execution invokes synchronously.
 
 The complete timing, copy/borrowing, validation, callback error/reentry and verification contract is on [Scene animation](../components/scene-animation.md), including [special tracks](../components/scene-animation.md#bézier-and-method-tracks). Author/edit on the scene owner thread; target nodes and authored resources remain borrowed. [ADR 0093](../decisions/scene-animation.md#adr-0093) owns the current implementation.
 
@@ -16,32 +16,24 @@ The complete timing, copy/borrowing, validation, callback error/reentry and veri
 
 | Complete C# signature | Contract |
 | --- | --- |
-| `public const Electron2D.Animation.TrackType Bezier = 6` | Keys describe scalar time/value cubic control handles. |
-| `public const Electron2D.Animation.TrackType Method = 5` | Keys invoke typed callbacks on relative node targets. |
-| `public const Electron2D.Animation.TrackType Value = 0` | Keys target one typed property. |
+| `public const Electron2D.AnimationMixer.AnimationCallbackModeMethod Deferred = 0` | Queue on the target SceneTree; detached targets invoke immediately. |
+| `public const Electron2D.AnimationMixer.AnimationCallbackModeMethod Immediate = 1` | Invoke while the controller evaluates the key. |
 
 ## Enumeration Descriptions
 
-<a id="member-49f255456f34"></a>
-### Bezier
+<a id="member-5513aeb6ef33"></a>
+### Deferred
 
-`public const Electron2D.Animation.TrackType Bezier = 6`
+`public const Electron2D.AnimationMixer.AnimationCallbackModeMethod Deferred = 0`
 
-Keys describe scalar time/value cubic control handles.
+Queue on the target SceneTree; detached targets invoke immediately.
 
-<a id="member-0748fa1ec340"></a>
-### Method
+<a id="member-66b1b723101d"></a>
+### Immediate
 
-`public const Electron2D.Animation.TrackType Method = 5`
+`public const Electron2D.AnimationMixer.AnimationCallbackModeMethod Immediate = 1`
 
-Keys invoke typed callbacks on relative node targets.
-
-<a id="member-69fe08bc71b6"></a>
-### Value
-
-`public const Electron2D.Animation.TrackType Value = 0`
-
-Keys target one typed property.
+Invoke while the controller evaluates the key.
 
 
 ## Lifecycle, verification and limits

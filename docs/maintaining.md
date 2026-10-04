@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -58,3 +58,5 @@ Component pages state scope, owned types, runtime flow, dependencies, invariants
 Document every public production declaration and protected extension point, including namespaces where supported, generic parameters, enum values, delegates, constructors, fields, constants, events, operators, and indexers. Adapt the upstream semantic contract to current Electron2D behavior across the inheritance chain. Do not claim unsupported editor, renderer, input, physics, serialization, networking, or other behavior.
 
 Use `<summary>` for a concise contract; `<param>` and `<typeparam>` for every parameter; `<returns>` or `<value>` for results; `<exception>` for intentionally exposed exceptions; `<remarks>` for lifecycle, ordering, threading, adaptations, and limits; and checked `<see cref="..."/>` and `<paramref name="..."/>` references. XML, Markdown, tests, implementation, and coverage must agree. Compile generated XML with missing or malformed documentation warnings treated as errors. Keep the external reference name out of production code, comments, XML, and all `README.md` files as required by the root instructions.
+
+Wiki XML lookup resolves method/type generic parameter positions and open constructed parameter types from the compiled snapshot before rendering. `python3 -B tools/wiki/test_generate.py` covers generic method and typed-key constructor identities; generation/check must preserve their actual XML summaries and member details. Generated output remains outside engine commits.

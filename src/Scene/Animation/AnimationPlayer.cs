@@ -17,7 +17,10 @@ public partial class AnimationPlayer : AnimationMixer
         new PropertyDescriptor<AnimationPlayer, string>(nameof(Autoplay), n => n.Autoplay, (n, v) => n.Autoplay = v, _ => ""),
         new PropertyDescriptor<AnimationPlayer, double>(nameof(SpeedScale), n => n.SpeedScale, (n, v) => n.SpeedScale = v, _ => 1),
     ];
+    /// <summary>Creates an idle player with inherited automatic scheduling and deferred method dispatch.</summary>
+    public AnimationPlayer() { }
     private string _assigned = "", _autoplay = "";
+    private bool _methodSeekPending, _methodSeekExternal;
     private bool _playing, _stopping;
     private double _position, _speedScale = 1, _customSpeed = 1, _start = -1, _end = -1;
     private int _pingDirection = 1;
@@ -94,6 +97,7 @@ public partial class AnimationPlayer : AnimationMixer
         _hasPlayback = true;
         var changed = name != _assigned; var wasPlaying = _playing; var start = BoundStart(startTime); var end = BoundEnd(animation, endTime);
         if (changed || _position < start || _position > end || (fromEnd && customSpeed < 0 && _position <= start) || (!fromEnd && customSpeed > 0 && _position >= end)) _position = fromEnd ? end : start;
+        _methodSeekPending = changed || !wasPlaying || _position == (fromEnd ? end : start); _methodSeekExternal = false;
         _assigned = name; _customSpeed = customSpeed; _pingDirection = 1; _start = startTime; _end = endTime; _playing = true; _queue.Clear(); _playRevision++; InvalidateEvaluation();
         var revision = _playRevision; if (changed) CurrentAnimationChanged?.Invoke(name);
         if (!IsDisposed && revision == _playRevision && (changed || !wasPlaying)) Started(name);
@@ -129,16 +133,16 @@ public partial class AnimationPlayer : AnimationMixer
         try
         {
             _blendClips.Clear(); _hasPlayback = false; _playing = false; _position = 0; _customSpeed = 1; _pingDirection = 1; _start = _end = -1; _queue.Clear(); _playRevision++; InvalidateBindings();
-            if (!keepState && HasAnimation(_assigned)) ApplyAnimation(GetAnimation(_assigned), 0, false);
+            if (!keepState && HasAnimation(_assigned)) ApplyAnimation(GetAnimation(_assigned), 0, false, updateOnly: true);
         }
         finally { _stopping = false; }
     }
     /// <summary>Seeks within the current section; update applies values immediately without completion events.</summary>
     /// <param name="seconds">The finite requested seek time, clamped to the current section.</param>
     /// <param name="update">Whether to apply values synchronously.</param>
-    /// <param name="updateOnly">Whether to suppress non-value track effects; the current profile has only value tracks.</param>
+    /// <param name="updateOnly">Whether to suppress method-key callbacks while still updating continuous/discrete properties and Bézier curves.</param>
     public void Seek(double seconds, bool update = false, bool updateOnly = false)
-    { EnsureAnimationMutable(); Animation.Finite(seconds); if (!Active || !HasAnimation(_assigned)) return; var animation = GetAnimation(_assigned); var previous = _position; _position = Math.Clamp(seconds, GetSectionStartTime(), GetSectionEndTime()); _playRevision++; InvalidateEvaluation(); if (update) { if (_blendClips.Count != 0 || NeedsBlending) MixPlayback(animation, _position, _position < previous, null, 0, false); else ApplyAnimation(animation, _position, _position < previous); } }
+    { EnsureAnimationMutable(); Animation.Finite(seconds); if (!Active || !HasAnimation(_assigned)) return; var animation = GetAnimation(_assigned); var previous = _position; _position = Math.Clamp(seconds, GetSectionStartTime(), GetSectionEndTime()); _playRevision++; InvalidateEvaluation(); _methodSeekPending = !update; _methodSeekExternal = true; if (update) { if (_blendClips.Count != 0 || NeedsBlending) MixPlayback(animation, _position, _position < previous, null, 0, false, externalSeek: true, updateOnly: updateOnly); else ApplyAnimation(animation, _position, _position < previous, externalSeek: true, updateOnly: updateOnly); } }
     /// <summary>Queues an existing animation; starts immediately when no animation is playing.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
     public void Queue(string name) { EnsureAnimationMutable(); RequireAnimation(name); if (!_playing) Play(name); else _queue.Enqueue(name); }
@@ -190,7 +194,8 @@ public partial class AnimationPlayer : AnimationMixer
         var name = _assigned; var revision = _playRevision;
         try
         {
-            if (_blendClips.Count != 0 || NeedsBlending) { _position = position; MixPlayback(animation, position, backward, previousPosition, delta, done); }
+            var initial = _methodSeekPending; var external = _methodSeekExternal; _methodSeekPending = false;
+            if (_blendClips.Count != 0 || NeedsBlending || animation.HasMethodTracks()) { _position = position; MixPlayback(animation, position, backward, previousPosition, delta, done, initial, external, primaryMovement: movement); }
             else if (animation.HasDiscreteTracks() && movement != 0 && span > 0)
             {
                 var remaining = movement; var cursor = previousPosition;

@@ -51,16 +51,33 @@ def plain(element):
 def xml_id(record):
     value = record["id"].split(":", 1)[1].replace("..ctor", ".#ctor")
     head, separator, parameters = value.partition("(")
-    head = re.sub(
-        r"<([^<>]+)>",
-        lambda match: ("``" if record["kind"] != "type" and match.start() > head.rfind(".") else "`")
-        + str(match.group(1).count(",") + 1),
-        head,
-    )
-    value = head + separator + parameters
-    value = re.sub(r"<([^<>]+)>", lambda m: "{" + m.group(1).replace(" ", "") + "}", value)
-    value = re.sub(r"\{([^{}]+)\}", lambda m: "{" + m.group(1).replace(" ", "") + "}", value)
-    value = value.removesuffix("()")
+    type_parameters = re.findall(r"<([^<>]+)>", record["declaringType"])
+    generic_names = {}
+    for group in type_parameters:
+        for index, name in enumerate(group.split(",")):
+            generic_names[name.strip()] = "`" + str(index)
+    method = re.search(re.escape(record["name"]) + r"<([^<>]+)>\(", record.get("signature", ""))
+    if method:
+        for index, name in enumerate(method.group(1).split(",")):
+            generic_names[name.strip()] = "``" + str(index)
+        head = re.sub(r"`(\d+)$", r"``\1", head)
+    head = re.sub(r"<([^<>]+)>", lambda m: "`" + str(m.group(1).count(",") + 1), head)
+    # Open constructed types lose FullName in reflection and export their simple name.
+    system_types = {"Action", "Func", "ReadOnlySpan", "Span", "Nullable"}
+    engine_types = {"AnimationMethodKey", "AnimationParameter", "ConfigKey", "ProjectSetting", "PropertyDescriptor"}
+    def token(match):
+        name = match.group()
+        if name in generic_names:
+            return generic_names[name]
+        if name in system_types:
+            return "System." + name
+        if name in engine_types:
+            return "Electron2D." + name
+        return name
+    parameters = re.sub(r"[A-Za-z_][\w.]*", token, parameters)
+    parameters = parameters.replace("<", "{").replace(">", "}")
+    parameters = re.sub(r"\bref ([\w.`]+(?:\{[^{}]+\})?(?:\[\])?)", r"\1@", parameters).replace(" ", "")
+    value = (head + separator + parameters).removesuffix("()")
     return KINDS[record["kind"]] + ":" + value
 
 

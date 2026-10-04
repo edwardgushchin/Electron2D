@@ -105,7 +105,7 @@ public partial class AnimationMixer : Node
     public void ClearCaches() { EnsureAnimationMutable(); InvalidateBindings(); CachesCleared?.Invoke(); }
     /// <summary>Evaluates a controller update. The base mixer has no playback source.</summary>
     internal virtual void AdvanceAnimation(double delta) { if (NeedsBlending) ApplyBlend([], delta); }
-    internal void ApplyAnimation(Animation animation, double time, bool backward, double? previous = null)
+    internal void ApplyAnimation(Animation animation, double time, bool backward, double? previous = null, bool externalSeek = false, bool updateOnly = false)
     {
         if (animation.IsDisposed) return;
         if (!ReferenceEquals(_cachedAnimation, animation) || _cachedRevision != animation.ChangeRevision)
@@ -113,9 +113,10 @@ public partial class AnimationMixer : Node
             var root = _rootNode.Length == 0 ? this : GetNodeOrNull(_rootNode);
             _bindings = new AnimationBinding?[animation.GetTrackCount()];
             if (root is not null) for (var i = 0; i < _bindings.Length; i++) _bindings[i] = animation.Get(i).Bind(root);
+            foreach (var binding in _bindings) binding?.PrepareMethodCalls(MethodCallbackCapacity);
             _cachedAnimation = animation; _cachedRevision = animation.ChangeRevision;
         }
-        var bindings = _bindings; var revision = animation.ChangeRevision; var generation = _bindingGeneration;
+        MethodExternalSeeking = externalSeek; MethodUpdateOnly = updateOnly; var bindings = _bindings; var revision = animation.ChangeRevision; var generation = _bindingGeneration;
         for (var i = 0; i < bindings.Length; i++) { if (IsDisposed || animation.IsDisposed || animation.ChangeRevision != revision || !ReferenceEquals(_cachedAnimation, animation)) break; bindings[i]?.Apply(animation, i, time, backward, previous, this, generation); }
     }
     internal bool IsBindingCurrent(Animation animation, long generation) => !IsDisposed && _active && _bindingGeneration == generation && (ReferenceEquals(_cachedAnimation, animation) || (!_blendDirty && _blendCaches.ContainsKey(animation)));
@@ -152,6 +153,6 @@ public partial class AnimationMixer : Node
         ThrowCollected("Animation mixer cleanup failed.", errors);
     }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties).Concat(MethodProperties);
 
 }

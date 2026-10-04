@@ -94,7 +94,11 @@ def engine_link(entry, from_class=True):
     name = entry["declaringType"].removeprefix("Electron2D.")
     page = ROOT / "docs/classes" / f"{name}.md"
     if not page.exists() and "<" in name:
-        page = ROOT / "docs/classes" / f"{name.split('<', 1)[0]}.Generic.md"
+        stem, arguments = name.split("<", 1)
+        arity = arguments.count(",") + 1
+        page = ROOT / "docs/classes" / f"{stem}.Generic{arity if arity > 1 else ''}.md"
+        if not page.exists():
+            page = ROOT / "docs/classes" / f"{stem}.Generic.md"
     if page.exists():
         prefix = "../../classes" if from_class else "../classes"
         return f"[{code(entry['signature'])}]({prefix}/{page.name})"

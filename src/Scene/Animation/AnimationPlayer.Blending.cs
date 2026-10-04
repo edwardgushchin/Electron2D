@@ -68,10 +68,10 @@ public partial class AnimationPlayer
             _blendClips.Add(new(_assigned, _position, _customSpeed, _pingDirection, _start, _end, duration, CurrentBlendAmount()));
         else _blendClips.Clear();
     }
-    private void MixPlayback(Animation animation, double position, bool backward, double? previous, double delta, bool done)
+    private void MixPlayback(Animation animation, double position, bool backward, double? previous, double delta, bool done, bool includeStart = false, bool externalSeek = false, bool updateOnly = false, double? primaryMovement = null)
     {
-        _mixFrames.Clear(); _mixFrames.Add(new(animation, position, backward, previous, CurrentBlendAmount(), GetSectionStartTime(), GetSectionEndTime(), delta * GetPlayingSpeed()));
-        if (done) { _blendClips.Clear(); _mixFrames[0] = new(animation, position, backward, previous, 1, GetSectionStartTime(), GetSectionEndTime(), delta * GetPlayingSpeed()); }
+        _mixFrames.Clear(); _mixFrames.Add(new(animation, position, backward, previous, CurrentBlendAmount(), GetSectionStartTime(), GetSectionEndTime(), primaryMovement ?? delta * GetPlayingSpeed(), IncludeStart: includeStart, ExternalSeeking: externalSeek, UpdateOnly: updateOnly));
+        if (done) { _blendClips.Clear(); _mixFrames[0] = new(animation, position, backward, previous, 1, GetSectionStartTime(), GetSectionEndTime(), primaryMovement ?? delta * GetPlayingSpeed(), IncludeStart: includeStart, ExternalSeeking: externalSeek, UpdateOnly: updateOnly); }
         else for (var i = 0; i < _blendClips.Count; i++)
             {
                 var clip = _blendClips[i]; clip.Left = Math.Max(0, clip.Left - Math.Abs(_speedScale * delta) / clip.Duration);

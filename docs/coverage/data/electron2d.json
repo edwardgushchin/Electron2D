@@ -270,6 +270,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimationBezierKey",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationBezierKey",
+    "name": "AnimationBezierKey",
+    "signature": "public struct Electron2D.AnimationBezierKey",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnimationBlendMode",
     "kind": "type",
     "declaringType": "Electron2D.AnimationBlendMode",
@@ -298,6 +311,32 @@
     "interfaces": [
       "System.IDisposable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E",
+    "name": "AnimationMethodKey\u00602",
+    "signature": "public sealed class Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E",
+    "visibility": "public",
+    "baseType": "AnimationMethodKey\u003CTOwner\u003E",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationMethodKey\u003CTOwner\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationMethodKey\u003CTOwner\u003E",
+    "name": "AnimationMethodKey\u00601",
+    "signature": "public abstract class Electron2D.AnimationMethodKey\u003CTOwner\u003E",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -341,6 +380,24 @@
     "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
     "name": "AnimationCallbackModeDiscrete",
     "signature": "public enum Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AnimationMixer.AnimationCallbackModeMethod",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeMethod",
+    "name": "AnimationCallbackModeMethod",
+    "signature": "public enum Electron2D.AnimationMixer.AnimationCallbackModeMethod",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -8643,6 +8700,35 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AnimationBezierKey..ctor(System.Double,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationBezierKey",
+    "name": ".ctor",
+    "signature": "public AnimationBezierKey(System.Double value, Electron2D.Vector2 inHandle = default, Electron2D.Vector2 outHandle = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "inHandle",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      },
+      {
+        "name": "outHandle",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AnimationLibrary..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AnimationLibrary",
@@ -8652,6 +8738,54 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E..ctor(System.String,Action\u003CTOwner, TArguments\u003E,TArguments)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E",
+    "name": ".ctor",
+    "signature": "public AnimationMethodKey(System.String name, Action\u003CTOwner, TArguments\u003E callback, TArguments arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "Action\u003CTOwner, TArguments\u003E",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "TArguments",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimationMethodKey\u003CTOwner\u003E..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimationMethodKey\u003CTOwner\u003E",
+    "name": ".ctor",
+    "signature": "protected AnimationMethodKey(System.String name)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -8910,7 +9044,7 @@
     "kind": "constructor",
     "declaringType": "Electron2D.AnimationParameter\u003CTValue\u003E",
     "name": ".ctor",
-    "signature": "public AnimationParameter\u00601(System.String name, TValue defaultValue, System.Boolean readOnly = false)",
+    "signature": "public AnimationParameter(System.String name, TValue defaultValue, System.Boolean readOnly = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -10171,7 +10305,7 @@
     "kind": "constructor",
     "declaringType": "Electron2D.ConfigKey\u003CT\u003E",
     "name": ".ctor",
-    "signature": "public ConfigKey\u00601(System.String section, System.String name)",
+    "signature": "public ConfigKey(System.String section, System.String name)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -10312,7 +10446,7 @@
     "kind": "constructor",
     "declaringType": "Electron2D.DragPayload\u003CT\u003E",
     "name": ".ctor",
-    "signature": "public DragPayload\u00601(T value)",
+    "signature": "public DragPayload(T value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11357,7 +11491,7 @@
     "kind": "constructor",
     "declaringType": "Electron2D.ProjectSetting\u003CT\u003E",
     "name": ".ctor",
-    "signature": "public ProjectSetting\u00601(System.String name, T defaultValue, Func\u003CT, System.Boolean\u003E validator = null)",
+    "signature": "public ProjectSetting(System.String name, T defaultValue, Func\u003CT, System.Boolean\u003E validator = null)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11468,7 +11602,7 @@
     "kind": "constructor",
     "declaringType": "Electron2D.PropertyDescriptor\u003CTOwner, TValue\u003E",
     "name": ".ctor",
-    "signature": "public PropertyDescriptor\u00602(System.String name, Func\u003CTOwner, TValue\u003E getter, Action\u003CTOwner, TValue\u003E setter = null, Func\u003CTOwner, TValue\u003E revertValue = null, Func\u003CTOwner, TValue, System.Boolean\u003E validator = null, System.Boolean stored = false)",
+    "signature": "public PropertyDescriptor(System.String name, Func\u003CTOwner, TValue\u003E getter, Action\u003CTOwner, TValue\u003E setter = null, Func\u003CTOwner, TValue\u003E revertValue = null, Func\u003CTOwner, TValue, System.Boolean\u003E validator = null, System.Boolean stored = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12852,7 +12986,7 @@
     "kind": "constructor",
     "declaringType": "Electron2D.WeakRef\u003CT\u003E",
     "name": ".ctor",
-    "signature": "public WeakRef\u00601(T target)",
+    "signature": "public WeakRef(T target)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13283,6 +13417,32 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.Animation.TrackType.Bezier()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Animation.TrackType",
+    "name": "Bezier",
+    "signature": "public const Electron2D.Animation.TrackType Bezier = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Animation.TrackType",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.Animation.TrackType.Method()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Animation.TrackType",
+    "name": "Method",
+    "signature": "public const Electron2D.Animation.TrackType Method = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Animation.TrackType",
+    "value": "5"
+  },
+  {
     "id": "enumValue:Electron2D.Animation.TrackType.Value()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Animation.TrackType",
@@ -13436,6 +13596,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeMethod.Deferred()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeMethod",
+    "name": "Deferred",
+    "signature": "public const Electron2D.AnimationMixer.AnimationCallbackModeMethod Deferred = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeMethod",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeMethod.Immediate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeMethod",
+    "name": "Immediate",
+    "signature": "public const Electron2D.AnimationMixer.AnimationCallbackModeMethod Immediate = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeMethod",
     "value": "1"
   },
   {
@@ -30098,6 +30284,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Animation.AddBezierTrack\u00602(PropertyDescriptor\u003CTOwner, TValue\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AddBezierTrack",
+    "signature": "public System.Int32 AddBezierTrack\u003CTOwner, TValue\u003E(PropertyDescriptor\u003CTOwner, TValue\u003E property, System.Int32 atPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "atPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Animation.AddMarker(System.String,System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.Animation",
@@ -30119,6 +30329,25 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AddMethodTrack\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AddMethodTrack",
+    "signature": "public System.Int32 AddMethodTrack\u003CTOwner\u003E(System.Int32 atPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -30148,6 +30377,238 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.BezierTrackGetKeyInHandle(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "BezierTrackGetKeyInHandle",
+    "signature": "public Electron2D.Vector2 BezierTrackGetKeyInHandle(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.BezierTrackGetKeyOutHandle(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "BezierTrackGetKeyOutHandle",
+    "signature": "public Electron2D.Vector2 BezierTrackGetKeyOutHandle(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.BezierTrackGetKeyValue(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "BezierTrackGetKeyValue",
+    "signature": "public System.Double BezierTrackGetKeyValue(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.BezierTrackInsertKey(System.Int32,System.Double,System.Double,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "BezierTrackInsertKey",
+    "signature": "public System.Int32 BezierTrackInsertKey(System.Int32 track, System.Double time, System.Double value, Electron2D.Vector2 inHandle = default, Electron2D.Vector2 outHandle = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "inHandle",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      },
+      {
+        "name": "outHandle",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.BezierTrackInterpolate(System.Int32,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "BezierTrackInterpolate",
+    "signature": "public System.Double BezierTrackInterpolate(System.Int32 track, System.Double time)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.BezierTrackSetKeyInHandle(System.Int32,System.Int32,Electron2D.Vector2,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "BezierTrackSetKeyInHandle",
+    "signature": "public System.Void BezierTrackSetKeyInHandle(System.Int32 track, System.Int32 key, Electron2D.Vector2 inHandle, System.Single balancedValueTimeRatio = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "inHandle",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "balancedValueTimeRatio",
+        "type": "System.Single",
+        "default": "1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.BezierTrackSetKeyOutHandle(System.Int32,System.Int32,Electron2D.Vector2,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "BezierTrackSetKeyOutHandle",
+    "signature": "public System.Void BezierTrackSetKeyOutHandle(System.Int32 track, System.Int32 key, Electron2D.Vector2 outHandle, System.Single balancedValueTimeRatio = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "outHandle",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "balancedValueTimeRatio",
+        "type": "System.Single",
+        "default": "1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.BezierTrackSetKeyValue(System.Int32,System.Int32,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "BezierTrackSetKeyValue",
+    "signature": "public System.Void BezierTrackSetKeyValue(System.Int32 track, System.Int32 key, System.Double value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -30433,6 +30894,54 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.MethodTrackGetName(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "MethodTrackGetName",
+    "signature": "public System.String MethodTrackGetName(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.MethodTrackGetParams\u00601(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "MethodTrackGetParams",
+    "signature": "public TArguments MethodTrackGetParams\u003CTArguments\u003E(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "TArguments",
     "value": null
   },
   {
@@ -30726,6 +31235,40 @@
       {
         "name": "value",
         "type": "TValue",
+        "default": null
+      },
+      {
+        "name": "transition",
+        "type": "System.Double",
+        "default": "1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.TrackInsertKey\u00602(System.Int32,System.Double,AnimationMethodKey\u003CTOwner, TArguments\u003E,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "TrackInsertKey",
+    "signature": "public System.Int32 TrackInsertKey\u003CTOwner, TArguments\u003E(System.Int32 track, System.Double time, AnimationMethodKey\u003CTOwner, TArguments\u003E value, System.Double transition = 1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "AnimationMethodKey\u003CTOwner, TArguments\u003E",
         "default": null
       },
       {
@@ -31081,6 +31624,35 @@
       {
         "name": "value",
         "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.TrackSetKeyValue\u00602(System.Int32,System.Int32,AnimationMethodKey\u003CTOwner, TArguments\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "TrackSetKeyValue",
+    "signature": "public System.Void TrackSetKeyValue\u003CTOwner, TArguments\u003E(System.Int32 track, System.Int32 key, AnimationMethodKey\u003CTOwner, TArguments\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "AnimationMethodKey\u003CTOwner, TArguments\u003E",
         "default": null
       }
     ],
@@ -31727,6 +32299,25 @@
       }
     ],
     "returnType": "TValue",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationMixer.PrepareMethodCallbacks(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "PrepareMethodCallbacks",
+    "signature": "public System.Void PrepareMethodCallbacks(System.Int32 pendingCallsPerTrack)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pendingCallsPerTrack",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -101720,6 +102311,84 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AnimationBezierKey.InHandle()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationBezierKey",
+    "name": "InHandle",
+    "signature": "public Electron2D.Vector2 InHandle { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationBezierKey.OutHandle()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationBezierKey",
+    "name": "OutHandle",
+    "signature": "public Electron2D.Vector2 OutHandle { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationBezierKey.Value()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationBezierKey",
+    "name": "Value",
+    "signature": "public System.Double Value { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E.Arguments()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E",
+    "name": "Arguments",
+    "signature": "public TArguments Arguments { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "TArguments",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E.Callback()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationMethodKey\u003CTOwner, TArguments\u003E",
+    "name": "Callback",
+    "signature": "public Action\u003CTOwner, TArguments\u003E Callback { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTOwner, TArguments\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationMethodKey\u003CTOwner\u003E.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationMethodKey\u003CTOwner\u003E",
+    "name": "Name",
+    "signature": "public System.String Name { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AnimationMixer.Active()",
     "kind": "property",
     "declaringType": "Electron2D.AnimationMixer",
@@ -101743,6 +102412,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationMixer.CallbackModeMethod()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "CallbackModeMethod",
+    "signature": "public Electron2D.AnimationMixer.AnimationCallbackModeMethod CallbackModeMethod { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeMethod",
     "value": null
   },
   {

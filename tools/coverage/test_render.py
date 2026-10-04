@@ -4,7 +4,7 @@
 import json
 import re
 
-from render import ALIASES, CLASS_PAGES, DATA, choose, coverage_target, render
+from render import ALIASES, CLASS_PAGES, DATA, choose, coverage_target, engine_link, render
 
 
 def check_texture_pages(pages, upstream):
@@ -41,6 +41,10 @@ def check_texture_pages(pages, upstream):
 def main():
     upstream = json.loads((DATA / "godot-4.7.2.json").read_text())
     engine = json.loads((DATA / "electron2d.json").read_text())
+    assert all("`" not in item["signature"] for item in engine if item["kind"] == "constructor"), "Constructor syntax must omit CLR generic arity"
+    for arity, suffix in [(1, "Generic"), (2, "Generic2")]:
+        key_type = next(item for item in engine if item["kind"] == "type" and item["declaringType"].startswith("Electron2D.AnimationMethodKey<") and item["declaringType"].count(",") + 1 == arity)
+        assert f"/AnimationMethodKey.{suffix}.md)" in engine_link(key_type), "Generic arities need their actual member-reference page"
     polygon = next(item for item in engine if item.get("name") == "DrawPolygon")
     defaults = {p["name"]: p["default"] for p in polygon["parameters"]}
     assert defaults["uvs"] == "default" and defaults["texture"] == "null", "Struct defaults are not nullable reference defaults"

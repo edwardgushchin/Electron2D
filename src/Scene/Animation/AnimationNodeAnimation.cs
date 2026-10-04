@@ -78,6 +78,7 @@ public sealed class AnimationNodeAnimation : AnimationRootNode
         var c = Current(); var clip = c.Tree.GetAnimation(_animation); ObjectDisposedException.ThrowIf(clip.IsDisposed, clip);
         var clipLength = clip.Length; var length = _customTimeline ? _length : clipLength; var loop = _customTimeline ? _loop : clip.LoopMode;
         var prior = GetParameter(CurrentPosition); var backward = GetParameter(Backward); var delta = c.Delta;
+        var movement = backward ? -delta : delta;
         var position = seek ? time : prior + (backward ? -delta : delta); var started = seek && !isExternalSeeking && time == 0;
         var willEnd = position + delta >= length - 1e-5;
         if (started) position = _advanceOnStart ? delta : 0;
@@ -90,18 +91,18 @@ public sealed class AnimationNodeAnimation : AnimationRootNode
         if (_customTimeline)
         {
             playback += _offset; previousPlayback += _offset;
-            if (_stretch) { var factor = clipLength / length; playback *= factor; previousPlayback *= factor; delta *= factor; }
+            if (_stretch) { var factor = clipLength / length; playback *= factor; previousPlayback *= factor; delta *= factor; movement *= factor; }
             if (!_stretch && loop == SpriteFrames.LoopMode.None) { if (_playMode == AnimationPlayMode.Forward) { start = _offset; end = start + length; } else { end = clipLength - _offset; start = end - length; } }
         }
         if (loop == SpriteFrames.LoopMode.Linear) { playback = Mathf.PosMod(playback, clipLength); previousPlayback = Mathf.PosMod(previousPlayback, clipLength); }
-        else if (loop == SpriteFrames.LoopMode.PingPong) { var phase = Mathf.PosMod(playback, clipLength * 2); playback = phase <= clipLength ? phase : clipLength * 2 - phase; }
+        else if (loop == SpriteFrames.LoopMode.PingPong) { var phase = Mathf.PosMod(playback, clipLength * 2); playback = phase <= clipLength ? phase : clipLength * 2 - phase; var prevPhase = Mathf.PosMod(previousPlayback, clipLength * 2); previousPlayback = prevPhase <= clipLength ? prevPhase : clipLength * 2 - prevPhase; }
         else playback = Math.Clamp(playback, 0, clipLength);
-        if (_playMode == AnimationPlayMode.Backward) { playback = clipLength - playback; previousPlayback = clipLength - previousPlayback; delta = -delta; }
+        if (_playMode == AnimationPlayMode.Backward) { playback = clipLength - playback; previousPlayback = clipLength - previousPlayback; delta = -delta; movement = -movement; }
         if (backward) delta = -delta;
         c.Result = new(length, position, timelineDelta, loop, willEnd); c.HasTime = true;
         if (!testOnly)
         {
-            c.Tree.AddClip(c.Instance, _animation, playback, delta, seek, 1, start, end);
+            c.Tree.AddClip(c.Instance, _animation, playback, movement, seek, 1, start, end, isExternalSeeking, previousPlayback);
             SetParameter(Backward, backward);
             if (started) c.Tree.GraphStarted(_animation);
             if (loop == SpriteFrames.LoopMode.None && prior < length && position >= length) c.Tree.GraphFinished(_animation);

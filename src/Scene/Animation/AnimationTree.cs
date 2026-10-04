@@ -115,7 +115,7 @@ public class AnimationTree : AnimationMixer
         foreach (var name in GetAnimationList())
         {
             var clip = GetAnimation(name); if (clip.IsDisposed || _clipMaps.ContainsKey(clip)) continue;
-            var map = new int[clip.GetTrackCount()]; for (var i = 0; i < map.Length; i++) { var track = clip.Get(i); var path = track.Path.Contains(':') ? track.Path : track.Path + ":" + track.PropertyName; if (!trackMap.TryGetValue(path, out var index)) { index = _trackPaths.Count; _trackPaths.Add(path); trackMap.Add(path, index); } map[i] = index; }
+            var map = new int[clip.GetTrackCount()]; for (var i = 0; i < map.Length; i++) { var track = clip.Get(i); var path = track.PropertyName.Length == 0 || track.Path.Contains(':') ? track.Path : track.Path + ":" + track.PropertyName; if (!trackMap.TryGetValue(path, out var index)) { index = _trackPaths.Count; _trackPaths.Add(path); trackMap.Add(path, index); } map[i] = index; }
             _clipMaps.Add(clip, (map, clip.ChangeRevision));
         }
         if (_root is not null) _rootInstance = Build(_root, "", "", null, new HashSet<AnimationNode>(ReferenceEqualityComparer.Instance), prior);
@@ -166,13 +166,13 @@ public class AnimationTree : AnimationMixer
         }
         finally { definition.Context = previous; instance.Evaluating = false; context.HasTime = false; }
     }
-    internal void AddClip(AnimationGraphInstance instance, string name, double time, double delta, bool seeked, double blend, double start = 0, double end = -1)
+    internal void AddClip(AnimationGraphInstance instance, string name, double time, double delta, bool seeked, double blend, double start = 0, double end = -1, bool external = false, double? previous = null)
     {
         Animation.Finite(time); Animation.Finite(delta); Animation.Finite(blend); var clip = GetAnimation(name); ObjectDisposedException.ThrowIf(clip.IsDisposed, clip);
         var map = _clipMaps[clip].Map; var index = _frames.Count;
         if (index == _frameWeights.Count) _frameWeights.Add(new double[map.Length]); else if (_frameWeights[index].Length != map.Length) _frameWeights[index] = new double[map.Length];
         var weights = _frameWeights[index]; for (var i = 0; i < weights.Length; i++) weights[i] = instance.Weights[map[i]];
-        _frames.Add(new(clip, time, delta < 0, seeked ? null : time - delta, blend, start, end, delta, weights));
+        _frames.Add(new(clip, time, delta < 0, seeked ? null : previous ?? time - delta, blend, start, end, delta, weights, ExternalSeeking: external));
     }
     private readonly Stack<GraphNotice> _notices = new();
     private sealed class GraphNotice

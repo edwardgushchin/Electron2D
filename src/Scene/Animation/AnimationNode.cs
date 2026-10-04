@@ -156,7 +156,7 @@ public class AnimationNode : Resource
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
     /// <exception cref="InvalidOperationException">Processing context is absent, an input is disconnected, or an external write targets a read-only slot.</exception>
     public void BlendAnimation(string animation, double time, double delta, bool seeked, bool isExternalSeeking, double blend, Animation.LoopedFlag loopedFlag = Animation.LoopedFlag.None)
-    { var c = Current(); Animation.Valid(loopedFlag); if (!c.TestOnly) c.Tree.AddClip(c.Instance, animation, time, delta, seeked, blend); }
+    { var c = Current(); Animation.Valid(loopedFlag); if (!c.TestOnly) c.Tree.AddClip(c.Instance, animation, time, delta, seeked, blend, external: isExternalSeeking); }
     /// <summary>Returns the display caption of this resource.</summary>
     /// <returns>The typed caption.</returns>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>

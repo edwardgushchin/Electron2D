@@ -3,9 +3,14 @@
 
 from xml.etree import ElementTree as ET
 
-from generate import member_heading, plain
+from generate import member_heading, plain, xml_id
 
 
 assert plain(ET.fromstring('<returns><see langword="true"/> when <paramref name="other"/> overlaps.</returns>')) == "true when other overlaps."
 assert member_heading({"kind": "constructor", "declaringType": "Electron2D.Rect2i", "name": ".ctor",
                        "parameters": [{"type": "System.Int32"}]}) == "Rect2i(System.Int32)"
+
+assert xml_id({"id": "method:Electron2D.Animation.AddBezierTrack`2(PropertyDescriptor<TOwner, TValue>,System.Int32)", "kind": "method", "declaringType": "Electron2D.Animation", "name": "AddBezierTrack", "signature": "public int AddBezierTrack<TOwner, TValue>(...)"}) == "M:Electron2D.Animation.AddBezierTrack``2(Electron2D.PropertyDescriptor{``0,``1},System.Int32)"
+assert xml_id({"id": "constructor:Electron2D.AnimationMethodKey<TOwner, TArguments>..ctor(System.String,Action<TOwner, TArguments>,TArguments)", "kind": "constructor", "declaringType": "Electron2D.AnimationMethodKey<TOwner, TArguments>", "name": ".ctor", "signature": ""}) == "M:Electron2D.AnimationMethodKey`2.#ctor(System.String,System.Action{`0,`1},`1)"
+
+assert xml_id({"id": "method:Electron2D.Vector2.Deconstruct(ref System.Single,ref System.Single)", "kind": "method", "declaringType": "Electron2D.Vector2", "name": "Deconstruct", "signature": ""}) == "M:Electron2D.Vector2.Deconstruct(System.Single@,System.Single@)"

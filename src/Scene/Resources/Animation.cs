@@ -2,13 +2,15 @@ using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
-/// <summary>A reusable timeline of strongly typed property keys and named time markers.</summary>
+/// <summary>A reusable timeline of typed property, scalar Bézier and method keys plus named markers.</summary>
 /// <remarks>Author on the scene owner thread. Tracks carry immutable typed descriptors and relative node paths;
 /// they never own target nodes. Keys are sorted, equal times replace, and copies have independent containers.
-/// Continuous tracks interpolate; discrete tracks hold the last key. Capture and other track families require
-/// their separate execution contracts. Edits raise Changed except imported metadata. Length defaults to one second.</remarks>
-public sealed class Animation : Resource
+/// Continuous tracks interpolate; discrete tracks hold the last key. Method keys invoke typed callbacks;
+/// scalar Bézier keys use time/value handle geometry. Capture is evaluated by AnimationMixer. Edits raise Changed except imported metadata. Length defaults to one second.</remarks>
+public sealed partial class Animation : Resource
 {
+    /// <summary>Creates an empty one-second nonlooping typed timeline.</summary>
+    public Animation() { }
     private static readonly PropertyDescriptor[] AnimationProperties =
     [
         new PropertyDescriptor<Animation, bool>(nameof(CaptureIncluded), n => n.CaptureIncluded),
@@ -31,6 +33,10 @@ public sealed class Animation : Resource
     {
         /// <summary>Keys target one typed property.</summary>
         Value = 0,
+        /// <summary>Keys invoke typed callbacks on relative node targets.</summary>
+        Method = 5,
+        /// <summary>Keys describe scalar time/value cubic control handles.</summary>
+        Bezier = 6,
     }
     /// <summary>Selects how neighboring value keys are sampled.</summary>
     public enum InterpolationType
@@ -98,7 +104,7 @@ public sealed class Animation : Resource
         _tracks.Insert(atPosition, new AnimationValueTrack<TOwner, TValue>(property, interpolate ?? TweenValue<TValue>.Interpolate));
         EmitChanged(); return atPosition;
     }
-    /// <summary>Returns the number of property tracks.</summary>
+    /// <summary>Returns the number of authored timeline tracks.</summary>
     public int GetTrackCount() { ThrowIfDisposed(); return _tracks.Count; }
     /// <summary>Removes one track and emits Changed.</summary>
     /// <param name="track">The zero-based existing track index.</param>
@@ -107,27 +113,27 @@ public sealed class Animation : Resource
     /// <param name="toAnimation">The live destination animation, whose track list receives an independent copy.</param>
     /// <param name="track">The zero-based existing track index.</param>
     public void CopyTrack(int track, Animation toAnimation) { var copy = Get(track).Copy(); ArgumentNullException.ThrowIfNull(toAnimation); toAnimation.ThrowIfDisposed(); toAnimation._tracks.Add(copy); toAnimation.RefreshCaptureIncluded(); toAnimation.EmitChanged(); }
-    /// <summary>Returns the first track with this exact relative path, or minus one.</summary>
+    /// <summary>Returns the first track with this exact relative path and kind, or minus one.</summary>
     /// <param name="path">The relative target path.</param>
     /// <param name="type">The executable track kind.</param>
-    public int FindTrack(string path, TrackType type = TrackType.Value) { ThrowIfDisposed(); Valid(type); ArgumentNullException.ThrowIfNull(path); return _tracks.FindIndex(t => t.Path == path); }
+    public int FindTrack(string path, TrackType type = TrackType.Value) { ThrowIfDisposed(); Valid(type); ArgumentNullException.ThrowIfNull(path); return _tracks.FindIndex(t => t.Path == path && t.Kind == type); }
     /// <summary>Returns the track kind.</summary>
     /// <param name="track">The zero-based existing track index.</param>
-    public TrackType TrackGetType(int track) { Get(track); return TrackType.Value; }
-    /// <summary>Returns a track's relative target node path, including its property suffix.</summary>
+    public TrackType TrackGetType(int track) => Get(track).Kind;
+    /// <summary>Returns a track's relative node path, including an optional property suffix.</summary>
     /// <param name="track">The zero-based existing track index.</param>
     public string TrackGetPath(int track) => Get(track).Path;
-    /// <summary>Sets a relative node path with an optional colon and the descriptor's exact property name.</summary>
+    /// <summary>Sets a relative node path; property tracks allow their exact descriptor suffix, and method tracks require a node-only path.</summary>
     /// <param name="track">The zero-based existing track index.</param>
     /// <param name="path">The relative node/property path.</param>
     public void TrackSetPath(int track, string path)
     {
         var item = Get(track); ArgumentNullException.ThrowIfNull(path);
         var colon = path.IndexOf(':');
-        if (colon >= 0 && path[(colon + 1)..] != item.PropertyName) throw new ArgumentException("Property suffix differs from the typed descriptor.", nameof(path));
+        if (colon >= 0 && (item.Kind == TrackType.Method || path[(colon + 1)..] != item.PropertyName)) throw new ArgumentException("Property suffix differs from the typed descriptor.", nameof(path));
         item.Path = path; item.NodePath = colon < 0 ? path : path[..colon]; EmitChanged();
     }
-    /// <summary>Returns whether a track contributes values.</summary>
+    /// <summary>Returns whether a track participates in property or callback evaluation.</summary>
     /// <param name="track">The zero-based existing track index.</param>
     public bool TrackIsEnabled(int track) => Get(track).Enabled;
     /// <summary>Enables or disables a track.</summary>
@@ -160,11 +166,11 @@ public sealed class Animation : Resource
     public void TrackSetInterpolationLoopWrap(int track, bool interpolation) { Get(track).LoopWrap = interpolation; EmitChanged(); }
     /// <summary>Returns the value update mode.</summary>
     /// <param name="track">The zero-based existing track index.</param>
-    public UpdateMode ValueTrackGetUpdateMode(int track) => Get(track).Update;
+    public UpdateMode ValueTrackGetUpdateMode(int track) => ValueTrack(track).Update;
     /// <summary>Sets continuous interpolation or discrete key holding.</summary>
     /// <param name="mode">The defined update or process mode.</param>
     /// <param name="track">The zero-based existing track index.</param>
-    public void ValueTrackSetUpdateMode(int track, UpdateMode mode) { Valid(mode); Get(track).Update = mode; RefreshCaptureIncluded(); EmitChanged(); }
+    public void ValueTrackSetUpdateMode(int track, UpdateMode mode) { Valid(mode); ValueTrack(track).Update = mode; RefreshCaptureIncluded(); EmitChanged(); }
     /// <summary>Returns the number of keys.</summary>
     /// <param name="track">The zero-based existing track index.</param>
     public int TrackGetKeyCount(int track) => Get(track).Times.Count;
@@ -189,17 +195,17 @@ public sealed class Animation : Resource
     /// <param name="transition">The typed argument for this operation, using the defaults described above.</param>
     public int TrackInsertKey<TValue>(int track, double time, TValue value, double transition = 1)
     { Finite(time); Finite(transition); var index = Typed<TValue>(track).Insert(time, value, transition); EmitChanged(); return index; }
-    /// <summary>Reads a key of the exact declared value type.</summary>
-    /// <typeparam name="TValue">The exact declared track value type.</typeparam>
+    /// <summary>Reads an exact typed key; method keys also admit their receiver-key base type.</summary>
+    /// <typeparam name="TValue">The declared value type, actual concrete method-key type or receiver-key base.</typeparam>
     /// <param name="key">The zero-based existing key index.</param>
     /// <param name="track">The zero-based existing track index.</param>
-    public TValue TrackGetKeyValue<TValue>(int track, int key) => Typed<TValue>(track).Values[key];
+    public TValue TrackGetKeyValue<TValue>(int track, int key) => Get(track).ReadKey<TValue>(key);
     /// <summary>Replaces a typed key value.</summary>
     /// <typeparam name="TValue">The exact declared track value type.</typeparam>
     /// <param name="track">The zero-based existing track index.</param>
     /// <param name="key">The zero-based existing key index.</param>
     /// <param name="value">The typed argument for this operation, using the defaults described above.</param>
-    public void TrackSetKeyValue<TValue>(int track, int key, TValue value) { Typed<TValue>(track).Values[key] = value; EmitChanged(); }
+    public void TrackSetKeyValue<TValue>(int track, int key, TValue value) { var item = Typed<TValue>(track); item.Values[key] = item.Normalize(value); EmitChanged(); }
     /// <summary>Moves a key in sorted time order; an exactly equal destination time is replaced.</summary>
     /// <param name="time">A finite key or marker time in seconds.</param>
     /// <param name="track">The zero-based existing track index.</param>
@@ -239,7 +245,7 @@ public sealed class Animation : Resource
     /// <param name="track">The zero-based existing track index.</param>
     /// <param name="time">A finite key or marker time in seconds.</param>
     /// <param name="backward">Whether to sample or search in reverse direction.</param>
-    public TValue ValueTrackInterpolate<TValue>(int track, double time, bool backward = false) { Finite(time); return Typed<TValue>(track).Sample(time, this, backward); }
+    public TValue ValueTrackInterpolate<TValue>(int track, double time, bool backward = false) { Finite(time); return (ValueTrack(track) as AnimationTypedTrack<TValue> ?? throw new InvalidCastException("Key type differs from track value type.")).Sample(time, this, backward); }
     /// <summary>Moves a track toward the end by one position.</summary>
     /// <param name="track">The zero-based existing track index.</param>
     public void TrackMoveUp(int track) { Get(track); if (track + 1 < _tracks.Count) TrackSwap(track, track + 1); }
@@ -293,10 +299,12 @@ public sealed class Animation : Resource
         foreach (var (name, marker) in _markers) { var delta = marker.Time - time; if (direction == 0 ? Math.Abs(delta) > 1e-5 : (direction > 0 ? delta <= 0 : delta > 0)) continue; var distance = Math.Abs(delta); if (distance < best || (distance == best && string.CompareOrdinal(name, result) < 0)) { best = distance; result = name; } }
         return result;
     }
+    internal bool HasMethodTracks() { foreach (var track in _tracks) if (track.Enabled && track.Kind == TrackType.Method) return true; return false; }
     internal bool HasDiscreteTracks() { foreach (var track in _tracks) if (track.Enabled && track.Update == UpdateMode.Discrete) return true; return false; }
     private void RefreshCaptureIncluded() { _captureIncluded = false; foreach (var track in _tracks) if (track.Update == UpdateMode.Capture) { _captureIncluded = true; break; } }
     internal void AddCapturedTrack(AnimationTrack track) => _tracks.Add(track);
     internal AnimationTrack Get(int track) { ThrowIfDisposed(); return _tracks[track]; }
+    private AnimationTrack ValueTrack(int index) { var track = Get(index); if (track.Kind != TrackType.Value) throw new InvalidOperationException("Operation requires a value track."); return track; }
     private AnimationTypedTrack<TValue> Typed<TValue>(int track) => Get(track) as AnimationTypedTrack<TValue> ?? throw new InvalidCastException("Key type differs from the track's declared type.");
     internal static void Finite(double value) { if (!double.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value), "A finite value is required."); }
     internal static void Valid<T>(T value) where T : struct, Enum { if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); }
@@ -314,11 +322,15 @@ public sealed class Animation : Resource
 internal abstract class AnimationTrack
 {
     internal string Path = "", NodePath = "";
+    internal virtual Animation.TrackType Kind => Animation.TrackType.Value;
     internal abstract string PropertyName { get; }
     internal bool Enabled = true, Imported, LoopWrap = true;
     internal Animation.InterpolationType Interpolation = Animation.InterpolationType.Linear;
     internal Animation.UpdateMode Update;
     internal readonly List<double> Times = [], Transitions = [];
+    internal abstract TValue ReadKey<TValue>(int key);
+    internal virtual string MethodName(int key) => throw new InvalidOperationException("Operation requires a method track.");
+    internal virtual T MethodArguments<T>(int key) => throw new InvalidOperationException("Operation requires a method track.");
     internal abstract AnimationTrack Copy(bool deep = false, Func<Resource?, Resource?>? duplicate = null);
     internal abstract void MoveKey(int key, double time);
     internal abstract void RemoveKey(int key);
@@ -328,10 +340,12 @@ internal abstract class AnimationTrack
 internal abstract class AnimationTypedTrack<T> : AnimationTrack
 {
     internal readonly List<T> Values = [];
+    internal override TValue ReadKey<TValue>(int key) { var value = Values[key]; if (typeof(T) == typeof(TValue)) return Unsafe.As<T, TValue>(ref value); throw new InvalidCastException("Key type differs from the declared value."); }
     internal readonly Func<T, T, double, T>? Interpolate;
     protected AnimationTypedTrack(Func<T, T, double, T>? interpolate) { Interpolate = interpolate; if (interpolate is null) Interpolation = Animation.InterpolationType.Nearest; }
+    internal virtual T Normalize(T value) => value;
     internal int Insert(double time, T value, double transition)
-    { var index = Times.BinarySearch(time); if (index >= 0) { Values[index] = value; Transitions[index] = transition; return index; } index = ~index; Times.Insert(index, time); Values.Insert(index, value); Transitions.Insert(index, transition); return index; }
+    { value = Normalize(value); var index = Times.BinarySearch(time); if (index >= 0) { Values[index] = value; Transitions[index] = transition; return index; } index = ~index; Times.Insert(index, time); Values.Insert(index, value); Transitions.Insert(index, transition); return index; }
     internal override void RemoveKey(int key) { Times.RemoveAt(key); Values.RemoveAt(key); Transitions.RemoveAt(key); }
     internal override void MoveKey(int key, double time) { var value = Values[key]; var transition = Transitions[key]; RemoveKey(key); Insert(time, value, transition); }
     internal override void ValidateInterpolation(Animation.InterpolationType mode)
@@ -460,6 +474,7 @@ internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, 
 }
 internal abstract class AnimationBinding
 {
+    internal virtual void PrepareMethodCalls(int capacity) { }
     internal abstract void AttachBlend(AnimationMixer mixer);
     internal abstract void AddWeight(double weight, int pass);
     internal abstract void SetRest();

@@ -135,7 +135,7 @@ static string Declaration(MemberInfo member, ParameterInfo[] parameters, string?
     var prefix = $"{VisibilityMember(member)}{modifier} ";
     return member switch
     {
-        ConstructorInfo => $"{prefix}{member.DeclaringType!.Name}({arguments})",
+        ConstructorInfo => $"{prefix}{member.DeclaringType!.Name.Split('`')[0]}({arguments})",
         MethodInfo method => $"{prefix}{returnType} {member.Name}" +
             (method.IsGenericMethodDefinition ? $"<{string.Join(", ", method.GetGenericArguments().Select(TypeName))}>" : "") +
             $"({arguments})",

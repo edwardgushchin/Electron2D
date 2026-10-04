@@ -1,47 +1,64 @@
-# Animation.TrackType
+# AnimationMethodKey<TOwner>
 
 Last updated: 2026-10-04
 
-- **Source:** [`src/Scene/Resources/Animation.cs`](../../src/Scene/Resources/Animation.cs)
+**Inherited By:** [AnimationMethodKey with arguments](AnimationMethodKey.Generic2.md)
+
+- **Source:** [`src/Scene/Resources/Animation.SpecialTracks.cs`](../../src/Scene/Resources/Animation.SpecialTracks.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum Electron2D.Animation.TrackType`
+- **Declaration:** `public abstract class AnimationMethodKey<TOwner> where TOwner : Node`
 
 ## Description
 
-Declared executable timeline kinds: Value (0), Method (5) and Bezier (6). Audio/nested-animation remain applicable coverage work; 3D track roles are excluded.
+Abstract receiver-typed identity for keys with heterogeneous exact payload signatures. Library consumers construct concrete keys; internal dispatch/copy hooks prevent external executable subclasses.
 
 The complete timing, copy/borrowing, validation, callback error/reentry and verification contract is on [Scene animation](../components/scene-animation.md), including [special tracks](../components/scene-animation.md#bézier-and-method-tracks). Author/edit on the scene owner thread; target nodes and authored resources remain borrowed. [ADR 0093](../decisions/scene-animation.md#adr-0093) owns the current implementation.
 
-## Enumeration summary
+## Examples
+
+Partial authoring snippet; existing scene/library variables are indicated where required.
+
+```csharp
+AnimationMethodKey<Entity> key = new AnimationMethodKey<Entity, bool>(
+    "visibility", static (target, visible) => target.Visible = visible, false);
+string name = key.Name;
+```
+
+## Constructor summary
 
 | Complete C# signature | Contract |
 | --- | --- |
-| `public const Electron2D.Animation.TrackType Bezier = 6` | Keys describe scalar time/value cubic control handles. |
-| `public const Electron2D.Animation.TrackType Method = 5` | Keys invoke typed callbacks on relative node targets. |
-| `public const Electron2D.Animation.TrackType Value = 0` | Keys target one typed property. |
+| `protected AnimationMethodKey(System.String name)` | Validates a nonblank diagnostic name. |
 
-## Enumeration Descriptions
+## Constructor Descriptions
 
-<a id="member-49f255456f34"></a>
-### Bezier
+<a id="member-894e11a45195"></a>
+### .ctor
 
-`public const Electron2D.Animation.TrackType Bezier = 6`
+`protected AnimationMethodKey(System.String name)`
 
-Keys describe scalar time/value cubic control handles.
+Validates a nonblank diagnostic name.
 
-<a id="member-0748fa1ec340"></a>
-### Method
+name: The exact diagnostic name.
 
-`public const Electron2D.Animation.TrackType Method = 5`
+System.ArgumentException: The name is null or blank.
 
-Keys invoke typed callbacks on relative node targets.
+## Property summary
 
-<a id="member-69fe08bc71b6"></a>
-### Value
+| Complete C# signature | Contract |
+| --- | --- |
+| `public System.String Name { get;  }` | Gets the exact diagnostic method name. |
 
-`public const Electron2D.Animation.TrackType Value = 0`
+## Property Descriptions
 
-Keys target one typed property.
+<a id="member-4a306a71ffec"></a>
+### Name
+
+`public System.String Name { get;  }`
+
+Gets the exact diagnostic method name.
+
+Value: The validated nonblank name; the delegate supplies executable identity.
 
 
 ## Lifecycle, verification and limits
