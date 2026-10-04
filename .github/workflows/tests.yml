@@ -1,0 +1,38 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Install native build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config zlib1g-dev
+      - name: Build SDL3 for headless tests
+        run: |
+          git clone --depth 1 --branch release-3.4.16 https://github.com/libsdl-org/SDL.git "$RUNNER_TEMP/SDL"
+          cmake -S "$RUNNER_TEMP/SDL" -B "$RUNNER_TEMP/sdl-build" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/sdl-install" \
+            -DCMAKE_INSTALL_LIBDIR=lib -DSDL_UNIX_CONSOLE_BUILD=ON \
+            -DSDL_X11=OFF -DSDL_WAYLAND=OFF -DSDL_TEST_LIBRARY=OFF
+          cmake --build "$RUNNER_TEMP/sdl-build" --parallel 2
+          cmake --install "$RUNNER_TEMP/sdl-build"
+      - name: Run standard runtime tests
+        env:
+          CMAKE_PREFIX_PATH: ${{ runner.temp }}/sdl-install
+          LD_LIBRARY_PATH: ${{ runner.temp }}/sdl-install/lib
+        run: dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release

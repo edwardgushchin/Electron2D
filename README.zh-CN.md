@@ -1,93 +1,81 @@
 <p align="right"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · 简体中文 · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português (BR)</a></p>
 
-<p align="center">
+<h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-dark.svg">
     <source media="(prefers-color-scheme: light) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-light.svg">
     <source media="(prefers-color-scheme: dark)" srcset="docs/design/assets/sprite/logo-primary-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/design/assets/sprite/logo-primary-light.svg">
-    <img alt="Electron2D — 面向 AI 智能体的跨平台 2D 游戏引擎" src="docs/design/assets/sprite/logo-primary-light.svg" width="900">
+    <img alt="Electron2D" src="docs/design/assets/sprite/logo-primary-light.svg" width="640">
   </picture>
+</h1>
+
+<p align="center">
+  <a href="#installation"><img alt="构建所需的 .NET 版本" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2FElectron2D.csproj&amp;query=substring-after%28%2FProject%2FPropertyGroup%2FTargetFramework%5Bnot%28%40Condition%29%5D%5B1%5D%2C+%27net%27%29&amp;label=.NET&amp;suffix=+SDK&amp;color=A63B75" height="28"></a>
+  <a href="#license"><img alt="引擎许可证" src="https://img.shields.io/badge/dynamic/regex?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2Flicence%2FElectron2D-LICENSE.txt&amp;search=%5E%5Cs%2A%28%5CS%2B%29%5Cs%2BLicense&amp;replace=%241&amp;label=%E8%AE%B8%E5%8F%AF%E8%AF%81&amp;color=A63B75" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="最新发布版本" src="https://img.shields.io/github/v/release/edwardgushchin/Electron2D?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E7%89%88%E6%9C%AC&amp;color=A63B75" height="28"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/edwardgushchin/Electron2D/graphs/contributors">贡献者</a> ·
-  <a href="https://github.com/edwardgushchin/Electron2D/commits/main">提交记录</a> ·
-  <a href="licence/Electron2D-LICENSE.txt">MIT 许可证</a>
+  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="main 分支的最近提交" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%9C%80%E5%90%8E%E6%8F%90%E4%BA%A4&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/apple-library.yml"><img alt="自动构建状态" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/apple-library.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%9E%84%E5%BB%BA&amp;branch=main" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/tests.yml"><img alt="测试 (GitHub Actions)" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/tests.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%B5%8B%E8%AF%95&amp;branch=main" height="28"></a>
 </p>
 
 <p align="center">
-  <img alt="面向智能体 · 跨平台 · 2D · 开发中" src="docs/design/assets/sprite/readme-badges.svg" width="405">
-</p>
-
-<p align="center">
-  <a href="#about">简介</a> ·
+  <a href="#quick-start">开始使用</a> ·
   <a href="#features">功能</a> ·
   <a href="#platforms">平台</a> ·
-  <a href="#installation">安装</a> ·
-  <a href="#quick-start">快速开始</a> ·
   <a href="#documentation">文档</a> ·
-  <a href="#examples">示例</a> ·
-  <a href="#feedback-and-contributing">反馈</a> ·
-  <a href="#license">许可证</a>
+  <a href="#feedback-and-contributing">参与</a>
 </p>
 
-<p align="center">
-  ⭐ <a href="https://github.com/edwardgushchin/Electron2D">在 GitHub 上为项目点星</a>，关注开发进展。
-</p>
+<p align="center">⭐ <a href="https://github.com/edwardgushchin/Electron2D">在 GitHub 上为我们点亮 Star</a> - 这会给我们很大的动力！</p>
 
 <a id="about"></a>
 
-## 🧭 简介
+## 关于项目
 
-Electron2D 是一款**面向 AI 智能体的跨平台 2D 游戏引擎**。
+Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与 AI 智能体共同开发游戏**。
 
-它旨在让开发者与编程智能体通过有文档说明的程序化操作共同开发游戏：创建和修改项目、构建、运行并验证结果。开发者应能够审阅这些改动和验证结果。[智能体原生架构](docs/decisions/agent-native.md#adr-0090)规定了 CLI 与编辑器共用的创作操作、无图形界面的模拟，以及对渲染结果的批量验证。
-
-统一的公共运行时 API 面向桌面、移动设备、电视和浏览器游戏。你可以用节点和资源搭建场景，并使用同一引擎提供的渲染、输入、物理、音频和 GUI 功能。
-
-**开发状态：**运行时、示例、测试和 API 文档仍在积极开发中。可视化编辑器、统一的项目 CLI、将场景持久化到文件以及公开的画面捕获工作流程尚未实现。下文分别列出了目标平台和已完成的运行验证。
+使用熟悉的 .NET 工具，以及 Codex、Claude Code 等 AI 助手，创作游戏世界和玩法。
 
 <a id="features"></a>
 
-## ✨ 功能
+## 功能
 
-- **智能体原生工作流程** — 设计目标是让编程智能体通过有文档说明的程序化操作查看和编辑场景、资源及项目设置，再构建、运行和验证游戏。尚缺的工具列在[实现路线图](docs/coverage/index.md)中。
-- **跨平台运行时** — 为桌面、移动设备、电视和浏览器游戏提供统一的引擎 API。请参阅[目标平台和当前验证情况](#platforms)。
-- **基于节点的场景** — `Node`、`CanvasItem` 和 `Entity` 层级结构，场景调度、计时器、补间动画，以及可在内存中复用的 `PackedScene` 实例。
-- **2D 渲染** — 精灵、动画、摄像机、纹理、文字、画布绘制，以及采用强类型 API 的 HLSL/GLSL 着色器材质。请参阅[渲染能力与限制](docs/domains/rendering.md)。
-- **GUI 组件** — 控件、容器、标签、按钮、文字输入、焦点导航和强类型主题。请参阅[场景领域文档](docs/domains/scene.md)。
-- **2D 物理** — 刚体、区域、碰撞形状、查询和关节，采用固定时间步模拟。请参阅[物理领域文档](docs/domains/physics.md)。
-- **音频** — WAV、MP3 和 Ogg Vorbis 播放、程序化音频流、输出总线及录音 API。请参阅[音频行为和验证范围](docs/domains/audio.md)。
-- **资源与 I/O** — 图像、字体、资源加载、强类型配置、文件访问和本地化。请参阅[资源](docs/domains/resources.md)和[核心](docs/domains/core.md)领域文档。
-- **C# 游戏逻辑** — 使用普通的 C# 类、属性、资源和事件，以及熟悉的 .NET 工具。
+- [图形](docs/domains/rendering.md)。精灵、纹理图集、摄像机、视差，以及图形和文字绘制。支持为材质导入 HLSL 和 GLSL 着色器。
+- [场景与动画](docs/domains/scene.md)。可复用的对象和关卡、逐帧动画、属性动画和计时器。
+- [物理](docs/domains/physics.md)。刚体、碰撞、区域、相交查询、铰链和弹簧。
+- [游戏界面](docs/domains/scene.md)。按钮、输入框、滚动、布局容器、字体和主题。
+- [音频](docs/domains/audio.md)。WAV、MP3 和 Ogg Vorbis、位置音效、混音、效果和录音。
+- [输入](docs/domains/input.md)。键盘、鼠标、触控和控制器。将输入映射到游戏操作。
+- [寻路](docs/domains/navigation.md)。在网格或指定点之间寻找路径，并考虑障碍物与移动代价。
+- [资源](docs/domains/resources.md)。加载图像、字体和音频。支持渐变、曲线和程序化纹理。
+- [本地化](docs/domains/localization.md)。翻译、复数形式和语言选择。
+- [网络](docs/domains/networking.md)。TCP、UDP、本地套接字和 TLS 加密连接。
 
-以上既包含已实现的功能领域，也包含产品的发展方向。各链接文档记录了 API 和后端仍存在的缺口。
+着色器材质需要 GPU 渲染器。兼容渲染器支持基础 2D 图形。详细说明和限制请参阅上方链接中的文档。
 
-<a id="platforms"></a>
+<a id="quick-start"></a>
 
-## 🖥️ 平台
+## 快速开始
 
-| 平台 | 编辑器目标 | 运行时目标 | 当前验证情况 |
-| --- | --- | --- | --- |
-| Windows | 计划支持 | x86、x64、ARM64 | 已映射原生软件包；尚未验证 Windows 上的运行 |
-| Linux | 计划支持 X11 和 Wayland | x64、ARM64 | 已检查 Linux x64 Wayland 宿主和渲染，以及 XWayland 渲染器；尚未验证 ARM64 |
-| macOS | 计划支持 | x64、ARM64 | 已映射原生软件包；尚未验证 macOS 上的运行 |
-| Android | — | 手机和平板的 ABI | 已在 ARM64 手机上检查画布、GPU 着色器和 CPU 物理；其他设备和宿主场景仍待验证 |
-| Android TV | — | Android ABI | 已在 32 位电视上检查画布兼容渲染和 CPU 物理；该设备没有 Vulkan 后端 |
-| iOS | — | 设备与模拟器 RID | 已映射原生软件包；用于 macOS 库构建的 CI 已准备，但尚未运行 |
-| tvOS | — | 设备与模拟器 RID | 已映射原生软件包；用于 macOS 库构建的 CI 已准备，但尚未运行 |
-| Web | — | `browser-wasm` | 已分别验证画布/物理和独立的 WebGPU 探针；产品级浏览器宿主和后端尚未完成 |
-
-编辑器面向桌面系统。仅有原生软件包或成功构建，并不意味着该平台已获得支持。Android 验证仅覆盖所列设备及图形、物理路径；应用生命周期、输入、音频、存储和发布打包仍需单独验证。
-
-[平台验证矩阵](docs/platform-verification.md)记录设备、渲染器、命令和限制。目前 Linux Wayland 是必需的原生验证环境。着色器材质需要 GPU 路径；兼容渲染器会明确拒绝不支持的材质。
+先运行“窗口与输入”示例。以下命令适用于使用 Wayland 的 Linux x64 环境。
 
 <a id="installation"></a>
 
-## 📦 安装
+### 所需工具
 
-安装 **.NET 10 SDK**，然后在仓库根目录克隆并构建运行时：
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) 和 Git。
+- CMake 3.20 或更高版本、Ninja，以及支持 C++17 的 C/C++ 编译器。
+- SDL3 开发包，包含头文件和 SDL3 的 CMake 配置。
+
+文本和音频的原生组件会随引擎一起构建。
+
+### 构建与运行
+
+克隆仓库并构建库：
 
 ```bash
 git clone https://github.com/edwardgushchin/Electron2D.git
@@ -95,51 +83,105 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-运行时会构建为 **`Electron2D.dll`**。请在应用项目中引用 `Electron2D.csproj`。项目会在还原和发布时提供相应的平台依赖。自包含应用发布包包含游戏可执行文件、`Electron2D.dll`、.NET 运行时及适用的原生库。
-
-<a id="quick-start"></a>
-
-## 🚀 快速开始
-
-在 Linux Wayland 上运行现有的**窗口与输入**示例：
+发布包含独立 .NET 运行时的示例并启动：
 
 ```bash
 dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-host-example
 /tmp/electron2d-host-example/HostExample
 ```
 
-按住方向键可移动场景节点；按 Escape 或关闭窗口可退出。此示例会在终端报告移动情况，但不会绘制场景。
+程序会打开一个窗口。方向键移动游戏对象，其坐标会显示在终端中。按 Escape 或关闭窗口可退出程序。此示例不绘制场景，而是展示引擎启动和输入处理。
 
-其[入口代码](examples/HostExample/Program.cs)配置 `Window`、添加场景并调用 `Engine.Run`。事件循环、帧计时和关闭流程由引擎负责。完整流程请参阅[示例指南](examples/HostExample/README.md)。
+[示例源码](examples/HostExample/Program.cs) · [运行说明](examples/HostExample/README.md)
+
+### 在自己的游戏中使用 Electron2D
+
+在 `Electron2D` 目录旁创建一个 .NET 10 控制台项目，并添加引擎项目引用。在仓库根目录执行以下命令：
+
+```bash
+dotnet new console -n MyGame -o ../MyGame --framework net10.0
+dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
+```
+
+将 `MyGame/Program.cs` 的内容替换为以下代码：
+
+```csharp
+using Electron2D;
+
+var window = new Window
+{
+    Title = "我的游戏",
+    Size = new Vector2i(960, 540)
+};
+
+return Engine.Run(window);
+```
+
+运行程序：
+
+```bash
+dotnet run --project ../MyGame/MyGame.csproj -c Release
+```
+
+使用 `AddChild` 将游戏对象添加到窗口。上方示例展示了帧更新和键盘输入处理。
+
+构建引擎会生成 `Electron2D.dll`。发布游戏时会包含引擎库和原生依赖；自包含发布还会包含 .NET 运行时。
+
+<a id="platforms"></a>
+
+## 平台
+
+游戏的目标平台和已完成的验证分列如下。可视化编辑器面向 Windows、Linux 和 macOS。
+
+| 游戏目标平台 | 本仓库已完成的验证 |
+| --- | --- |
+| Windows，x86 / x64 / ARM64 | 尚未验证运行 |
+| Linux，x64 / ARM64 | 已在 x64 上验证 Wayland 窗口、输入和渲染，也验证了 XWayland 渲染。尚未验证 ARM64 |
+| macOS，x64 / ARM64 | 尚未验证运行 |
+| Android，手机和平板 | 已在一台 ARM64 手机上验证渲染、着色器材质和物理 |
+| Android TV | 已在一台 32 位电视上验证兼容渲染器和物理 |
+| iOS 和 tvOS，设备与模拟器 | 已准备自动化库构建，尚未进行设备验证 |
+| 浏览器 | 已在独立测试程序中验证渲染和物理。尚未实现浏览器游戏运行支持 |
+
+Linux x64 的完整原生文本和音频库已构建。其他平台的构建与集成仍是独立任务。Android 和浏览器验证仅涵盖特定场景。
+
+设备型号、命令和验证范围见[平台报告](docs/platform-verification.md)。
+
+<a id="development"></a>
+
+## 引擎开发
+
+目前可通过 C# 和 .NET 使用 Electron2D。`PackedScene` 模板支持[类型化资源和场景文件](docs/components/resource-files.md)，并可在新进程中加载。可视化编辑器和游戏项目管理命令仍在计划中。
+
+与 AI 协作已纳入[引擎架构](docs/decisions/agent-native.md#adr-0090)：项目操作、游戏场景运行和图像验证需要通过有文档说明的工具完成。完整工具集仍待实现。
+
+下一步任务和各方法的状态见[开发路线图](docs/coverage/index.md)。已实现的行为在 API 参考中说明。
 
 <a id="documentation"></a>
 
-## 📚 文档
+## 文档
 
-- **[文档索引](docs/README.md)** — 领域和组件指南。
-- **[API 参考](docs/inventory.md)** — 已实现的生产代码类型及其类文档。
-- **[架构](docs/decisions/index.md)** — 当前的产品与运行时决策。
-- **[实现路线图](docs/coverage/index.md)** — 已实现、已适配和缺失的能力。
-- **[平台验证](docs/platform-verification.md)** — 运行证据与平台限制。
-- **[视觉识别](docs/design/identity.md)** — 已批准的 Sprite 方向、标志文件、色彩和字体。
+| 需求 | 文档 |
+| --- | --- |
+| 查找类或方法 | [API 参考](docs/inventory.md) |
+| 了解子系统 | [文档目录](docs/README.md) |
+| 准备着色器 | [HLSL 和 GLSL 导入工具](tools/shaders/README.md) |
+| 了解架构与设计决策 | [架构决策](docs/decisions/index.md) |
+| 选择开发任务 | [开发路线图](docs/coverage/index.md) |
 
 <a id="examples"></a>
 
-## 🎮 示例
-
-- **[窗口与输入](examples/HostExample/README.md)** — 仅使用公共 API 的可运行示例，包含窗口、场景节点、键盘输入和正常退出。
-
-[Android 设备探针](tests/Electron2D.AndroidProbe/README.md)和[浏览器着色器探针](tests/Electron2D.WebGpuProbe/README.md)是 `tests/` 下的验证工具，不是游戏示例。它们分别记录已验证的图形和物理路径。
+复现验证的说明分别见 [Android](tests/Electron2D.AndroidProbe/README.md) 和 [WebGPU](tests/Electron2D.WebGpuProbe/README.md) 文档。WebGPU 测试独立于引擎，用于验证浏览器能力。
 
 <a id="feedback-and-contributing"></a>
 
-## 💬 反馈与贡献
+## 参与项目
 
-请通过 [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) 报告错误、提出功能需求或讨论设计。报告运行时问题时，请注明引擎版本、平台、渲染器及最小复现步骤。
+通过 [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) 报告错误或提出功能建议。报告错误时，请注明引擎版本或提交、操作系统和渲染器，并附上最小复现示例及错误输出。
 
-欢迎提交 [Pull Request](https://github.com/edwardgushchin/Electron2D/pulls)。修改行为前请阅读[维护指南](docs/maintaining.md)和相关架构决策，并同时更新受影响的 API 文档与验证。
+通过 [Pull Request](https://github.com/edwardgushchin/Electron2D/pulls) 提交修复。开始前请阅读[维护指南](docs/maintaining.md)及相关架构决策。代码、测试和文档应一起更新。
 
-从仓库根目录运行可执行检查：
+在仓库根目录运行主要检查：
 
 ```bash
 dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release
@@ -148,12 +190,12 @@ tools/coverage/check.sh
 
 <a id="contributors"></a>
 
-## 👥 贡献者
-
-Electron2D 由 Eduard Gushchin 维护。仓库贡献者列表请参阅 [GitHub 页面](https://github.com/edwardgushchin/Electron2D/graphs/contributors)。
+项目由 [Eduard Gushchin](https://github.com/edwardgushchin) 维护。所有贡献者均列于 [GitHub 贡献者页面](https://github.com/edwardgushchin/Electron2D/graphs/contributors)。
 
 <a id="license"></a>
 
-## 📄 许可证
+## 许可证
 
-Electron2D 自有代码采用 [MIT 许可证](licence/Electron2D-LICENSE.txt)。依赖项保留各自的许可证；请参阅[第三方声明](licence/THIRD_PARTY_NOTICES.md)。许可证文本保存在 `licence/`，并按适用情况随应用发布包提供。
+Electron2D 采用 [MIT 许可证](licence/Electron2D-LICENSE.txt)。可用于商业游戏，但须保留版权声明和许可证文本。
+
+依赖项的许可证列于[第三方声明](licence/THIRD_PARTY_NOTICES.md)。分发游戏时，请附上这些依赖项要求的许可证文本，文件位于 `licence/` 目录。

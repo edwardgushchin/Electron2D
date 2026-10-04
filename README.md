@@ -1,93 +1,81 @@
 <p align="right">English · <a href="README.ru.md">Русский</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português (BR)</a></p>
 
-<p align="center">
+<h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-dark.svg">
     <source media="(prefers-color-scheme: light) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-light.svg">
     <source media="(prefers-color-scheme: dark)" srcset="docs/design/assets/sprite/logo-primary-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/design/assets/sprite/logo-primary-light.svg">
-    <img alt="Electron2D — Agent-native cross-platform 2D game engine" src="docs/design/assets/sprite/logo-primary-light.svg" width="900">
+    <img alt="Electron2D" src="docs/design/assets/sprite/logo-primary-light.svg" width="640">
   </picture>
+</h1>
+
+<p align="center">
+  <a href="#installation"><img alt="Required .NET version" src="https://img.shields.io/badge/dynamic/xml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2FElectron2D.csproj&amp;query=substring-after%28%2FProject%2FPropertyGroup%2FTargetFramework%5Bnot%28%40Condition%29%5D%5B1%5D%2C+%27net%27%29&amp;label=.NET&amp;suffix=+SDK&amp;color=A63B75" height="28"></a>
+  <a href="#license"><img alt="Engine license" src="https://img.shields.io/badge/dynamic/regex?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fedwardgushchin%2FElectron2D%2Fmain%2Flicence%2FElectron2D-LICENSE.txt&amp;search=%5E%5Cs%2A%28%5CS%2B%29%5Cs%2BLicense&amp;replace=%241&amp;label=License&amp;color=A63B75" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/releases"><img alt="Latest published release" src="https://img.shields.io/github/v/release/edwardgushchin/Electron2D?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Release&amp;color=A63B75" height="28"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/edwardgushchin/Electron2D/graphs/contributors">Contributors</a> ·
-  <a href="https://github.com/edwardgushchin/Electron2D/commits/main">Commits</a> ·
-  <a href="licence/Electron2D-LICENSE.txt">MIT license</a>
+  <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Last commit on main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Last+commit&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/apple-library.yml"><img alt="Automated build status" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/apple-library.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Build&amp;branch=main" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/tests.yml"><img alt="Tests (GitHub Actions)" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/tests.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Tests&amp;branch=main" height="28"></a>
 </p>
 
 <p align="center">
-  <img alt="Agent-native · Cross-platform · 2D · In development" src="docs/design/assets/sprite/readme-badges.svg" width="405">
-</p>
-
-<p align="center">
-  <a href="#about">About</a> ·
+  <a href="#quick-start">Get started</a> ·
   <a href="#features">Features</a> ·
   <a href="#platforms">Platforms</a> ·
-  <a href="#installation">Installation</a> ·
-  <a href="#quick-start">Quick Start</a> ·
   <a href="#documentation">Documentation</a> ·
-  <a href="#examples">Examples</a> ·
-  <a href="#feedback-and-contributing">Feedback</a> ·
-  <a href="#license">License</a>
+  <a href="#feedback-and-contributing">Contribute</a>
 </p>
 
-<p align="center">
-  ⭐ <a href="https://github.com/edwardgushchin/Electron2D">Star the project on GitHub</a> to follow its development.
-</p>
+<p align="center">⭐ <a href="https://github.com/edwardgushchin/Electron2D">Star us on GitHub</a> - it motivates us a lot!</p>
 
 <a id="about"></a>
 
-## 🧭 About
+## About
 
-Electron2D is an **agent-native, cross-platform 2D game engine**.
+Electron2D is a **free and open-source cross-platform 2D engine written in C# for developers and AI agents to build games together**.
 
-Designed for developers and coding agents to work on the same games through documented programmatic operations: create and edit projects, build, run and verify results. Changes and verification should remain reviewable by the developer. The [agent-native architecture](docs/decisions/agent-native.md#adr-0090) defines shared CLI/editor authoring, headless simulation and rendered batch verification.
-
-One public runtime API targets desktop, mobile, TV and browser games. Build scenes from nodes and resources, with rendering, input, physics, audio and GUI in the same engine.
-
-**Development status:** the runtime, examples, tests and API documentation are actively developed. The visual editor, unified project CLI, scene-file persistence and public capture workflow are not implemented yet. Cross-platform targets and verified execution are listed separately below.
+Create game worlds and mechanics with familiar .NET tools and AI assistants such as Codex or Claude Code.
 
 <a id="features"></a>
 
-## ✨ Features
+## Features
 
-- **Agent-native workflow** — Designed for coding agents to inspect and edit scenes, resources and project settings, then build, run and verify games through documented programmatic operations. The missing tooling is tracked in the [implementation roadmap](docs/coverage/index.md).
-- **Cross-platform runtime** — One engine API for desktop, mobile, TV and browser games. See the [platform targets and current verification](#platforms).
-- **Node-based scenes** — `Node`, `CanvasItem` and `Entity` hierarchies, scene scheduling, timers, tweens and reusable in-memory `PackedScene` instances.
-- **2D rendering** — Sprites, animation, cameras, textures, text, canvas drawing and typed HLSL/GLSL shader materials. See [rendering capabilities and limits](docs/domains/rendering.md).
-- **GUI building blocks** — Controls, containers, labels, buttons, text input, focus navigation and typed themes. See the [scene domain](docs/domains/scene.md).
-- **2D physics** — Bodies, areas, collision shapes, queries and joints, driven by fixed-step simulation. See the [physics domain](docs/domains/physics.md).
-- **Audio** — WAV, MP3 and Ogg Vorbis playback, procedural streams, output buses and recording APIs. See [audio behavior and verification limits](docs/domains/audio.md).
-- **Resources and I/O** — Images, fonts, resource loading, typed configuration, file access and localization. See the [resource domain](docs/domains/resources.md) and [core domain](docs/domains/core.md).
-- **C# game logic** — Write ordinary C# classes with properties, resources and events, using familiar .NET tools.
+- [Graphics](docs/domains/rendering.md). Sprites and atlases, cameras, parallax, shape and text drawing. HLSL and GLSL shader import for materials.
+- [Scenes and animation](docs/domains/scene.md). Reusable objects and levels, frame animation, property animation and timers.
+- [Physics](docs/domains/physics.md). Rigid bodies, collisions, areas, intersection queries, hinges and springs.
+- [Game UI](docs/domains/scene.md). Buttons, text fields, scrolling, layout containers, fonts and themes.
+- [Audio](docs/domains/audio.md). WAV, MP3 and Ogg Vorbis, positional audio, mixing, effects and recording.
+- [Input](docs/domains/input.md). Keyboard, mouse, touch and controllers. Map input to game actions.
+- [Pathfinding](docs/domains/navigation.md). Routes on a grid or between specified points, accounting for obstacles and movement costs.
+- [Resources](docs/domains/resources.md). Image, font and audio loading. Gradients, curves and procedural textures.
+- [Localization](docs/domains/localization.md). Translations, plural forms and language selection.
+- [Networking](docs/domains/networking.md). TCP, UDP and local sockets, TLS-encrypted connections.
 
-These are implemented capability areas and the stated product direction; each linked reference records the remaining API and backend gaps.
+Shader materials require the GPU renderer. The compatibility renderer supports basic 2D graphics. See the documentation linked above for details and limitations.
 
-<a id="platforms"></a>
+<a id="quick-start"></a>
 
-## 🖥️ Platforms
+## Quick start
 
-| Platform | Editor target | Runtime target | Current verification |
-| --- | --- | --- | --- |
-| Windows | Planned | x86, x64, ARM64 | Native packages mapped; Windows execution pending |
-| Linux | Planned; X11 and Wayland | x64, ARM64 | Linux x64 Wayland host/rendering checks and XWayland renderer checks; ARM64 execution pending |
-| macOS | Planned | x64, ARM64 | Native packages mapped; macOS execution pending |
-| Android | — | Phone and tablet ABIs | Tested ARM64 phone: canvas, GPU shaders and CPU physics; broader device/host checks pending |
-| Android TV | — | Android ABIs | Tested 32-bit TV: fallback canvas and CPU physics; its device has no Vulkan backend |
-| iOS | — | Device and simulator RIDs | Native packages mapped; macOS library-build CI prepared, run pending |
-| tvOS | — | Device and simulator RIDs | Native packages mapped; macOS library-build CI prepared, run pending |
-| Web | — | `browser-wasm` | Isolated canvas/physics and standalone WebGPU probes; product browser host/backend pending |
-
-The editor targets desktop systems. A mapped package or successful build alone does not establish platform support. Android checks cover the tested devices and graphics/physics paths, with lifecycle, input, audio, storage and release packaging still requiring their own verification.
-
-The [platform verification matrix](docs/platform-verification.md) records devices, renderers, commands and limits. Linux Wayland is the current required native verification gate. Shader materials require the GPU path; the compatibility renderer explicitly rejects unsupported material use.
+Start with the “Window and input” example. These commands are for Linux x64 with Wayland.
 
 <a id="installation"></a>
 
-## 📦 Installation
+### Requirements
 
-Install the **.NET 10 SDK**, then clone and build the runtime from the repository root:
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) and Git.
+- CMake 3.20 or later, Ninja, and C/C++ compilers with C++17 support.
+- An SDL3 development package containing the headers and SDL3 CMake configuration.
+
+The native text and audio components are built along with the engine.
+
+### Build and run
+
+Clone the repository and build the library:
 
 ```bash
 git clone https://github.com/edwardgushchin/Electron2D.git
@@ -95,51 +83,105 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-The runtime is built as **`Electron2D.dll`**. Reference `Electron2D.csproj` from your application project. The project supplies the engine's platform dependencies during restore and publish. A self-contained application publish contains the game executable, `Electron2D.dll`, the .NET runtime and the applicable native libraries.
-
-<a id="quick-start"></a>
-
-## 🚀 Quick Start
-
-Run the existing **window and input** example on Linux Wayland:
+Publish the example with its own .NET runtime and launch it:
 
 ```bash
 dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-host-example
 /tmp/electron2d-host-example/HostExample
 ```
 
-Hold the arrow keys to move its scene node; press Escape or close the window to quit. This example reports movement in the terminal and does not draw the scene.
+A window opens. The arrow keys move a game object, and its coordinates appear in the terminal. Escape or closing the window exits the application. This example does not draw the scene; it shows engine startup and input handling.
 
-Its [entry point](examples/HostExample/Program.cs) configures a `Window`, adds the scene and calls `Engine.Run`. The engine owns the event pump, frame timing and teardown. See the [example guide](examples/HostExample/README.md) for the full workflow.
+[Example source](examples/HostExample/Program.cs) · [Run instructions](examples/HostExample/README.md)
+
+### Use Electron2D in your game
+
+Create a .NET 10 console project alongside the `Electron2D` directory and add a project reference to the engine. Run these commands from the repository root:
+
+```bash
+dotnet new console -n MyGame -o ../MyGame --framework net10.0
+dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
+```
+
+Replace the contents of `MyGame/Program.cs` with this code:
+
+```csharp
+using Electron2D;
+
+var window = new Window
+{
+    Title = "My game",
+    Size = new Vector2i(960, 540)
+};
+
+return Engine.Run(window);
+```
+
+Run the application:
+
+```bash
+dotnet run --project ../MyGame/MyGame.csproj -c Release
+```
+
+Add game objects to the window with `AddChild`. The example above shows frame updates and keyboard handling.
+
+Building the engine produces `Electron2D.dll`. Publishing a game includes the engine library and native dependencies; a self-contained publish also includes the .NET runtime.
+
+<a id="platforms"></a>
+
+## Platforms
+
+Game targets and completed checks are listed separately. The visual editor targets Windows, Linux and macOS.
+
+| Game target | Checked in this repository |
+| --- | --- |
+| Windows, x86 / x64 / ARM64 | Execution has not been checked yet |
+| Linux, x64 / ARM64 | On x64, windowing, input and rendering have been checked under Wayland. Rendering has also been checked under XWayland. ARM64 has not been checked yet |
+| macOS, x64 / ARM64 | Execution has not been checked yet |
+| Android, phones and tablets | Rendering, shader materials and physics have been checked on one ARM64 phone |
+| Android TV | The compatibility renderer and physics have been checked on one 32-bit TV |
+| iOS and tvOS, devices and simulators | Automated library builds have been prepared. Device checks have not been run yet |
+| Browsers | Rendering and physics have been checked in a separate test application. Running a game in the browser is not implemented yet |
+
+The full set of native text and audio libraries has been built for Linux x64. Building and integrating them for other platforms remains separate work. Android and browser checks cover individual scenarios.
+
+See the [platform report](docs/platform-verification.md) for device models, commands and verification limits.
+
+<a id="development"></a>
+
+## Engine development
+
+You can currently use Electron2D through C# and .NET. `PackedScene` templates support typed [resource and scene files](docs/components/resource-files.md), including loading in a new process. A visual editor and commands for managing game projects remain planned.
+
+AI collaboration is part of the [engine architecture](docs/decisions/agent-native.md#adr-0090): project operations, game scenario execution and image verification must be available through documented tools. The full toolset is still to be implemented.
+
+Next tasks and the status of individual methods are listed in the [development roadmap](docs/coverage/index.md). Implemented behavior is documented in the API reference.
 
 <a id="documentation"></a>
 
-## 📚 Documentation
+## Documentation
 
-- **[Documentation index](docs/README.md)** — Domain and component guides.
-- **[API reference](docs/inventory.md)** — Implemented production types and their class pages.
-- **[Architecture](docs/decisions/index.md)** — Current product and runtime decisions.
-- **[Implementation roadmap](docs/coverage/index.md)** — Implemented, adapted and missing capabilities.
-- **[Platform verification](docs/platform-verification.md)** — Execution evidence and platform limits.
-- **[Visual identity](docs/design/identity.md)** — The approved Sprite direction, logo files, colors and typography.
+| You want to | Read |
+| --- | --- |
+| Find a class or method | [API reference](docs/inventory.md) |
+| Understand a subsystem | [Documentation index](docs/README.md) |
+| Prepare shaders | [HLSL and GLSL import tool](tools/shaders/README.md) |
+| Understand the architecture and decisions | [Architecture decisions](docs/decisions/index.md) |
+| Choose a development task | [Development roadmap](docs/coverage/index.md) |
 
 <a id="examples"></a>
 
-## 🎮 Examples
-
-- **[Window and input](examples/HostExample/README.md)** — A runnable public-API example with a window, scene node, keyboard input and clean exit.
-
-The [Android device probe](tests/Electron2D.AndroidProbe/README.md) and [browser shader probe](tests/Electron2D.WebGpuProbe/README.md) are verification tools under `tests/`. They document their tested graphics/physics paths separately from game examples.
+Separate instructions are available for reproducing the [Android](tests/Electron2D.AndroidProbe/README.md) and [WebGPU](tests/Electron2D.WebGpuProbe/README.md) checks. The WebGPU test checks browser capabilities separately from the engine.
 
 <a id="feedback-and-contributing"></a>
 
-## 💬 Feedback and Contributing
+## Contributing
 
-Use [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) for bug reports, feature requests and design feedback. Include the engine revision, platform, renderer and a minimal reproduction when reporting runtime behavior.
+Report bugs and suggest features in [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). For a bug report, include the engine version or commit, operating system and renderer. Attach a minimal example and the error output.
 
-[Pull requests](https://github.com/edwardgushchin/Electron2D/pulls) are welcome. Read the [maintenance guide](docs/maintaining.md) and relevant architectural decisions before changing behavior. Update the affected API documentation and verification together.
+Send fixes through [pull requests](https://github.com/edwardgushchin/Electron2D/pulls). Before starting, read the [maintenance guide](docs/maintaining.md) and architecture decisions for your topic. Update code, tests and documentation together.
 
-Run the executable checks from the repository root:
+Run the main checks from the repository root:
 
 ```bash
 dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release
@@ -148,12 +190,12 @@ tools/coverage/check.sh
 
 <a id="contributors"></a>
 
-## 👥 Contributors
-
-Electron2D is maintained by Eduard Gushchin. See the [contributors graph](https://github.com/edwardgushchin/Electron2D/graphs/contributors) for repository contributors.
+The project is maintained by [Eduard Gushchin](https://github.com/edwardgushchin). All contributors are listed on the [GitHub contributors page](https://github.com/edwardgushchin/Electron2D/graphs/contributors).
 
 <a id="license"></a>
 
-## 📄 License
+## License
 
-Electron2D-authored code is distributed under the [MIT License](licence/Electron2D-LICENSE.txt). Dependencies retain their own licenses; see the [third-party notices](licence/THIRD_PARTY_NOTICES.md). License texts are kept in `licence/` and accompany applicable application publishes.
+Electron2D is distributed under the [MIT license](licence/Electron2D-LICENSE.txt). You can use the engine in commercial games; retain the copyright notice and license text.
+
+Dependency licenses are listed in the [third-party notices](licence/THIRD_PARTY_NOTICES.md). When distributing a game, include the license texts required by those dependencies from the `licence/` directory.

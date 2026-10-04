@@ -1,6 +1,6 @@
 # Electron2D identity design
 
-Last updated: 2026-10-02
+Last updated: 2026-10-05
 
 Status: **Sprite is the approved Electron2D identity**, selected by the owner on 2026-10-02 from concept 02.8. The Code direction has been removed from active designs, source assets and the delivery package.
 
@@ -92,3 +92,11 @@ Fonts: [JetBrains Mono](https://www.jetbrains.com/lp/mono/) and [IBM Plex](https
 The six board exports and final document pages were visually inspected. Penpot validation returned no issues. Source SVG/XML and tokens JSON are validated separately; contrast values are calculated rather than inferred from a screenshot. The accompanying design document includes the boards, expanded application rules and delivery guidance.
 
 This verification covers design, exported graphics and document layout. It does not establish interactive website behavior, runtime rendering, native application acceptance or print-profile accuracy.
+
+## README badges
+
+The five README editions use dynamic Shields badges for the remote .NET target, license, latest release, main commit, Apple library build and Linux runtime tests. The links retain their respective source/workflow destinations, localized labels and alt text. At 28 px height, each image preserves its natural aspect ratio. The duplicate draft README and the former local static status SVGs are removed.
+
+Remote status is separate from local verification. On 2026-10-05 the remote main commit is dated 2026-10-04, no release is published and Apple run [37229223751](https://github.com/edwardgushchin/Electron2D/actions/runs/37229223751) failed. The new tests.yml configuration is prepared locally; its first GitHub execution remains pending. Dynamic badge output may show unavailable status until the workflow is published. Local runtime tests pass; this is not a CI-success claim.
+
+Local HTML asset/anchor checks and the workflow configuration are verified. Final GitHub rendering, the first remote test run and owner acceptance remain separate. The earlier local SVG inspection applies only to the retired static artwork, not to the final remote badge pixels.
