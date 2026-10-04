@@ -5195,6 +5195,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MultiplayerAPI",
+    "kind": "type",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "MultiplayerAPI",
+    "signature": "public abstract class Electron2D.MultiplayerAPI",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MultiplayerConnectionStatus",
     "kind": "type",
     "declaringType": "Electron2D.MultiplayerConnectionStatus",
@@ -5207,6 +5222,22 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.MultiplayerPacketHandler",
+    "kind": "type",
+    "declaringType": "Electron2D.MultiplayerPacketHandler",
+    "name": "MultiplayerPacketHandler",
+    "signature": "public delegate Electron2D.MultiplayerPacketHandler",
+    "visibility": "public",
+    "baseType": "System.MulticastDelegate",
+    "interfaces": [
+      "System.ICloneable",
+      "System.Runtime.Serialization.ISerializable"
     ],
     "parameters": null,
     "returnType": null,
@@ -6046,6 +6077,112 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RPCDecoder\u003CT\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.RPCDecoder\u003CT\u003E",
+    "name": "RPCDecoder\u00601",
+    "signature": "public delegate Electron2D.RPCDecoder\u003CT\u003E",
+    "visibility": "public",
+    "baseType": "System.MulticastDelegate",
+    "interfaces": [
+      "System.ICloneable",
+      "System.Runtime.Serialization.ISerializable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RPCEncoder\u003CT\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.RPCEncoder\u003CT\u003E",
+    "name": "RPCEncoder\u00601",
+    "signature": "public delegate Electron2D.RPCEncoder\u003CT\u003E",
+    "visibility": "public",
+    "baseType": "System.MulticastDelegate",
+    "interfaces": [
+      "System.ICloneable",
+      "System.Runtime.Serialization.ISerializable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RPCMethod",
+    "kind": "type",
+    "declaringType": "Electron2D.RPCMethod",
+    "name": "RPCMethod",
+    "signature": "public abstract class Electron2D.RPCMethod",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RPCMethod\u003CTNode, T\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.RPCMethod\u003CTNode, T\u003E",
+    "name": "RPCMethod\u00602",
+    "signature": "public sealed class Electron2D.RPCMethod\u003CTNode, T\u003E",
+    "visibility": "public",
+    "baseType": "Electron2D.RPCMethod",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RPCMode",
+    "kind": "type",
+    "declaringType": "Electron2D.RPCMode",
+    "name": "RPCMode",
+    "signature": "public enum Electron2D.RPCMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RPCOptions",
+    "kind": "type",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "RPCOptions",
+    "signature": "public struct Electron2D.RPCOptions",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.RPCOptions\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RPCRegistration",
+    "kind": "type",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "RPCRegistration",
+    "signature": "public struct Electron2D.RPCRegistration",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.RPCRegistration\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RandomNumberGenerator",
     "kind": "type",
     "declaringType": "Electron2D.RandomNumberGenerator",
@@ -6341,6 +6478,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SceneMultiplayer",
+    "kind": "type",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "SceneMultiplayer",
+    "signature": "public class Electron2D.SceneMultiplayer",
+    "visibility": "public",
+    "baseType": "Electron2D.MultiplayerAPI",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -12387,6 +12539,43 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.MultiplayerAPI..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": ".ctor",
+    "signature": "protected MultiplayerAPI()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MultiplayerPacketHandler..ctor(System.Object,System.IntPtr)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MultiplayerPacketHandler",
+    "name": ".ctor",
+    "signature": "public MultiplayerPacketHandler(System.Object object, System.IntPtr method)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "object",
+        "type": "System.Object",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "System.IntPtr",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.MultiplayerPeer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.MultiplayerPeer",
@@ -12938,6 +13127,164 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.RPCDecoder\u003CT\u003E..ctor(System.Object,System.IntPtr)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RPCDecoder\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public RPCDecoder(System.Object object, System.IntPtr method)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "object",
+        "type": "System.Object",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "System.IntPtr",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RPCEncoder\u003CT\u003E..ctor(System.Object,System.IntPtr)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RPCEncoder\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public RPCEncoder(System.Object object, System.IntPtr method)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "object",
+        "type": "System.Object",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "System.IntPtr",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RPCMethod\u003CTNode, T\u003E..ctor(System.UInt32,Action\u003CTNode, T\u003E,Func\u003CT, System.Int32\u003E,RPCEncoder\u003CT\u003E,RPCDecoder\u003CT\u003E)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RPCMethod\u003CTNode, T\u003E",
+    "name": ".ctor",
+    "signature": "public RPCMethod(System.UInt32 id, Action\u003CTNode, T\u003E method, Func\u003CT, System.Int32\u003E size, RPCEncoder\u003CT\u003E encode, RPCDecoder\u003CT\u003E decode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "Action\u003CTNode, T\u003E",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Func\u003CT, System.Int32\u003E",
+        "default": null
+      },
+      {
+        "name": "encode",
+        "type": "RPCEncoder\u003CT\u003E",
+        "default": null
+      },
+      {
+        "name": "decode",
+        "type": "RPCDecoder\u003CT\u003E",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RPCOptions..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": ".ctor",
+    "signature": "public RPCOptions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RPCOptions..ctor(Electron2D.RPCMode,System.Boolean,Electron2D.TransferMode,System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": ".ctor",
+    "signature": "public RPCOptions(Electron2D.RPCMode mode = Authority, System.Boolean callLocal = false, Electron2D.TransferMode transferMode = Reliable, System.Int32 channel = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mode",
+        "type": "Electron2D.RPCMode",
+        "default": "Authority"
+      },
+      {
+        "name": "callLocal",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "transferMode",
+        "type": "Electron2D.TransferMode",
+        "default": "Reliable"
+      },
+      {
+        "name": "channel",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RPCRegistration..ctor(Electron2D.RPCMethod,Electron2D.RPCOptions)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": ".ctor",
+    "signature": "public RPCRegistration(Electron2D.RPCMethod method, Electron2D.RPCOptions options)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "Electron2D.RPCMethod",
+        "default": null
+      },
+      {
+        "name": "options",
+        "type": "Electron2D.RPCOptions",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.RandomNumberGenerator..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.RandomNumberGenerator",
@@ -13298,6 +13645,19 @@
     "declaringType": "Electron2D.RigidBody",
     "name": ".ctor",
     "signature": "public RigidBody()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SceneMultiplayer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": ".ctor",
+    "signature": "public SceneMultiplayer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -26615,6 +26975,45 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.RPCMode.AnyPeer()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RPCMode",
+    "name": "AnyPeer",
+    "signature": "public const Electron2D.RPCMode AnyPeer = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RPCMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RPCMode.Authority()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RPCMode",
+    "name": "Authority",
+    "signature": "public const Electron2D.RPCMode Authority = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RPCMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RPCMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RPCMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.RPCMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RPCMode",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.RecursiveBehavior.Disabled()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RecursiveBehavior",
@@ -31139,6 +31538,71 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.MultiplayerAPI.ConnectedToServer()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ConnectedToServer",
+    "signature": "public event System.Action ConnectedToServer",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerAPI.ConnectionFailed()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ConnectionFailed",
+    "signature": "public event System.Action ConnectionFailed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerAPI.PeerConnected()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "PeerConnected",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E PeerConnected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerAPI.PeerDisconnected()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "PeerDisconnected",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E PeerDisconnected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiplayerAPI.ServerDisconnected()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ServerDisconnected",
+    "signature": "public event System.Action ServerDisconnected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.MultiplayerPeer.PeerConnected()",
     "kind": "event",
     "declaringType": "Electron2D.MultiplayerPeer",
@@ -31474,6 +31938,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.RigidBody\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneMultiplayer.PeerAuthenticating()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "PeerAuthenticating",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E PeerAuthenticating",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneMultiplayer.PeerAuthenticationFailed()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "PeerAuthenticationFailed",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E PeerAuthenticationFailed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SceneMultiplayer.PeerPacket()",
+    "kind": "event",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "PeerPacket",
+    "signature": "public event Electron2D.MultiplayerPacketHandler PeerPacket",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiplayerPacketHandler",
     "value": null
   },
   {
@@ -79689,6 +80192,413 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.MultiplayerAPI.CheckMultiplayer()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "CheckMultiplayer",
+    "signature": "protected System.Void CheckMultiplayer()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.CreateDefaultInterface()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "CreateDefaultInterface",
+    "signature": "public static Electron2D.MultiplayerAPI CreateDefaultInterface()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiplayerAPI",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.EmitConnectedToServer()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "EmitConnectedToServer",
+    "signature": "protected System.Void EmitConnectedToServer()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.EmitConnectionFailed()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "EmitConnectionFailed",
+    "signature": "protected System.Void EmitConnectionFailed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.EmitPeerConnected(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "EmitPeerConnected",
+    "signature": "protected System.Void EmitPeerConnected(System.Int32 id)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.EmitPeerDisconnected(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "EmitPeerDisconnected",
+    "signature": "protected System.Void EmitPeerDisconnected(System.Int32 id)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.EmitServerDisconnected()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "EmitServerDisconnected",
+    "signature": "protected System.Void EmitServerDisconnected()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.GetDefaultInterface()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "GetDefaultInterface",
+    "signature": "public static System.Func\u003CElectron2D.MultiplayerAPI\u003E GetDefaultInterface()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.MultiplayerAPI\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.GetPeers()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "GetPeers",
+    "signature": "public abstract System.Int32[] GetPeers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.GetRemoteSenderID()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "GetRemoteSenderID",
+    "signature": "public abstract System.Int32 GetRemoteSenderID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.GetUniqueID()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "GetUniqueID",
+    "signature": "public abstract System.Int32 GetUniqueID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.HasMultiplayerPeer()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "HasMultiplayerPeer",
+    "signature": "public System.Boolean HasMultiplayerPeer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.IsServer()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "IsServer",
+    "signature": "public System.Boolean IsServer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.ObjectConfigurationAdd(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ObjectConfigurationAdd",
+    "signature": "public abstract System.Void ObjectConfigurationAdd(System.String rootPath)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rootPath",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.ObjectConfigurationRemove(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ObjectConfigurationRemove",
+    "signature": "public abstract System.Void ObjectConfigurationRemove(System.String rootPath)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rootPath",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "Poll",
+    "signature": "public abstract System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.RPC\u00602(System.Int32,TNode,RPCMethod\u003CTNode, T\u003E,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "RPC",
+    "signature": "public abstract System.Void RPC\u003CTNode, T\u003E(System.Int32 peer, TNode node, RPCMethod\u003CTNode, T\u003E method, T arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peer",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "node",
+        "type": "TNode",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "RPCMethod\u003CTNode, T\u003E",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.SetDefaultInterface(System.Func\u003CElectron2D.MultiplayerAPI\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "SetDefaultInterface",
+    "signature": "public static System.Void SetDefaultInterface(System.Func\u003CElectron2D.MultiplayerAPI\u003E factory)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "factory",
+        "type": "System.Func\u003CElectron2D.MultiplayerAPI\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerAPI.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerPacketHandler.BeginInvoke(System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.AsyncCallback,System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerPacketHandler",
+    "name": "BeginInvoke",
+    "signature": "public virtual System.IAsyncResult BeginInvoke(System.Int32 id, System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.AsyncCallback callback, System.Object object)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.AsyncCallback",
+        "default": null
+      },
+      {
+        "name": "object",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.IAsyncResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerPacketHandler.EndInvoke(System.IAsyncResult)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerPacketHandler",
+    "name": "EndInvoke",
+    "signature": "public virtual System.Void EndInvoke(System.IAsyncResult result)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "result",
+        "type": "System.IAsyncResult",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiplayerPacketHandler.Invoke(System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiplayerPacketHandler",
+    "name": "Invoke",
+    "signature": "public virtual System.Void Invoke(System.Int32 id, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.MultiplayerPeer.Close()",
     "kind": "method",
     "declaringType": "Electron2D.MultiplayerPeer",
@@ -80490,6 +81400,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.GetMultiplayerAuthority()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetMultiplayerAuthority",
+    "signature": "public System.Int32 GetMultiplayerAuthority()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.GetNode(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -80525,6 +81448,19 @@
       }
     ],
     "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.GetNodeRPCConfig()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetNodeRPCConfig",
+    "signature": "public Electron2D.RPCRegistration[] GetNodeRPCConfig()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RPCRegistration[]",
     "value": null
   },
   {
@@ -80721,6 +81657,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.IsMultiplayerAuthority()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "IsMultiplayerAuthority",
+    "signature": "public System.Boolean IsMultiplayerAuthority()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Boolean",
     "value": null
   },
@@ -81005,6 +81954,83 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.RPCConfig(Electron2D.RPCMethod,System.Nullable\u003CElectron2D.RPCOptions\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "RPCConfig",
+    "signature": "public System.Void RPCConfig(Electron2D.RPCMethod method, System.Nullable\u003CElectron2D.RPCOptions\u003E options = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "Electron2D.RPCMethod",
+        "default": null
+      },
+      {
+        "name": "options",
+        "type": "System.Nullable\u003CElectron2D.RPCOptions\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.RPCID\u00602(System.Int32,RPCMethod\u003CTNode, T\u003E,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "RPCID",
+    "signature": "public System.Void RPCID\u003CTNode, T\u003E(System.Int32 id, RPCMethod\u003CTNode, T\u003E method, T arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "RPCMethod\u003CTNode, T\u003E",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.RPC\u00602(RPCMethod\u003CTNode, T\u003E,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "RPC",
+    "signature": "public System.Void RPC\u003CTNode, T\u003E(RPCMethod\u003CTNode, T\u003E method, T arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "method",
+        "type": "RPCMethod\u003CTNode, T\u003E",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.RemoveChild(Electron2D.Node)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -81113,6 +82139,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.SetMultiplayerAuthority(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "SetMultiplayerAuthority",
+    "signature": "public System.Void SetMultiplayerAuthority(System.Int32 id, System.Boolean recursive = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "recursive",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -88655,6 +89705,388 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RPCDecoder\u003CT\u003E.BeginInvoke(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.AsyncCallback,System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCDecoder\u003CT\u003E",
+    "name": "BeginInvoke",
+    "signature": "public virtual System.IAsyncResult BeginInvoke(System.ReadOnlySpan\u003CSystem.Byte\u003E source, System.AsyncCallback callback, System.Object object)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.AsyncCallback",
+        "default": null
+      },
+      {
+        "name": "object",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.IAsyncResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCDecoder\u003CT\u003E.EndInvoke(System.IAsyncResult)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCDecoder\u003CT\u003E",
+    "name": "EndInvoke",
+    "signature": "public virtual T EndInvoke(System.IAsyncResult result)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "result",
+        "type": "System.IAsyncResult",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCDecoder\u003CT\u003E.Invoke(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCDecoder\u003CT\u003E",
+    "name": "Invoke",
+    "signature": "public virtual T Invoke(System.ReadOnlySpan\u003CSystem.Byte\u003E source)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCEncoder\u003CT\u003E.BeginInvoke(T,System.Span\u003CSystem.Byte\u003E,System.AsyncCallback,System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCEncoder\u003CT\u003E",
+    "name": "BeginInvoke",
+    "signature": "public virtual System.IAsyncResult BeginInvoke(T value, System.Span\u003CSystem.Byte\u003E destination, System.AsyncCallback callback, System.Object object)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.AsyncCallback",
+        "default": null
+      },
+      {
+        "name": "object",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.IAsyncResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCEncoder\u003CT\u003E.EndInvoke(System.IAsyncResult)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCEncoder\u003CT\u003E",
+    "name": "EndInvoke",
+    "signature": "public virtual System.Int32 EndInvoke(System.IAsyncResult result)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "result",
+        "type": "System.IAsyncResult",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCEncoder\u003CT\u003E.Invoke(T,System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCEncoder\u003CT\u003E",
+    "name": "Invoke",
+    "signature": "public virtual System.Int32 Invoke(T value, System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCMethod.InvokeEncoded(Electron2D.Node,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCMethod",
+    "name": "InvokeEncoded",
+    "signature": "public System.Void InvokeEncoded(Electron2D.Node node, System.ReadOnlySpan\u003CSystem.Byte\u003E arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCMethod\u003CTNode, T\u003E.Decode(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCMethod\u003CTNode, T\u003E",
+    "name": "Decode",
+    "signature": "public T Decode(System.ReadOnlySpan\u003CSystem.Byte\u003E source)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCMethod\u003CTNode, T\u003E.Encode(T,System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCMethod\u003CTNode, T\u003E",
+    "name": "Encode",
+    "signature": "public System.Void Encode(T value, System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCMethod\u003CTNode, T\u003E.GetEncodedSize(T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCMethod\u003CTNode, T\u003E",
+    "name": "GetEncodedSize",
+    "signature": "public System.Int32 GetEncodedSize(T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCMethod\u003CTNode, T\u003E.Invoke(TNode,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCMethod\u003CTNode, T\u003E",
+    "name": "Invoke",
+    "signature": "public System.Void Invoke(TNode node, T arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "TNode",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCOptions.Equals(Electron2D.RPCOptions)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.RPCOptions other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.RPCOptions",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCOptions.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCOptions.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCOptions.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCRegistration.Equals(Electron2D.RPCRegistration)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.RPCRegistration other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.RPCRegistration",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCRegistration.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCRegistration.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RPCRegistration.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RandomNumberGenerator.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.RandomNumberGenerator",
@@ -92309,6 +93741,297 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneMultiplayer.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.CompleteAuth(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "CompleteAuth",
+    "signature": "public System.Void CompleteAuth(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.DisconnectPeer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "DisconnectPeer",
+    "signature": "public System.Void DisconnectPeer(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.GetAuthenticatingPeers()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "GetAuthenticatingPeers",
+    "signature": "public System.Int32[] GetAuthenticatingPeers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.GetPeers()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "GetPeers",
+    "signature": "public override System.Int32[] GetPeers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.GetRemoteSenderID()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "GetRemoteSenderID",
+    "signature": "public override System.Int32 GetRemoteSenderID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.GetUniqueID()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "GetUniqueID",
+    "signature": "public override System.Int32 GetUniqueID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.ObjectConfigurationAdd(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "ObjectConfigurationAdd",
+    "signature": "public override System.Void ObjectConfigurationAdd(System.String rootPath)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rootPath",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.ObjectConfigurationRemove(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "ObjectConfigurationRemove",
+    "signature": "public override System.Void ObjectConfigurationRemove(System.String rootPath)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rootPath",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.Poll()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "Poll",
+    "signature": "public override System.Void Poll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.RPC\u00602(System.Int32,TNode,RPCMethod\u003CTNode, T\u003E,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "RPC",
+    "signature": "public override System.Void RPC\u003CTNode, T\u003E(System.Int32 peer, TNode node, RPCMethod\u003CTNode, T\u003E method, T arguments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peer",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "node",
+        "type": "TNode",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "RPCMethod\u003CTNode, T\u003E",
+        "default": null
+      },
+      {
+        "name": "arguments",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.SendAuth(System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "SendAuth",
+    "signature": "public System.Void SendAuth(System.Int32 id, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.SendBytes(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32,Electron2D.TransferMode,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "SendBytes",
+    "signature": "public System.Void SendBytes(System.ReadOnlySpan\u003CSystem.Byte\u003E bytes, System.Int32 id = 0, Electron2D.TransferMode mode = Reliable, System.Int32 channel = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bytes",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.TransferMode",
+        "default": "Reliable"
+      },
+      {
+        "name": "channel",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneMultiplayer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneState.GetBaseSceneState()",
     "kind": "method",
     "declaringType": "Electron2D.SceneState",
@@ -92769,6 +94492,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SceneTree.GetMultiplayer(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "GetMultiplayer",
+    "signature": "public Electron2D.MultiplayerAPI GetMultiplayer(System.String forPath = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "forPath",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.MultiplayerAPI",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SceneTree.GetNodeCountInGroup(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",
@@ -93107,6 +94849,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SceneTree.SetMultiplayer(Electron2D.MultiplayerAPI,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "SetMultiplayer",
+    "signature": "public System.Void SetMultiplayer(Electron2D.MultiplayerAPI multiplayer, System.String rootPath = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiplayer",
+        "type": "Electron2D.MultiplayerAPI",
+        "default": null
+      },
+      {
+        "name": "rootPath",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -110533,6 +112299,102 @@
     "value": null
   },
   {
+    "id": "operator:Electron2D.RPCOptions.op_Equality(Electron2D.RPCOptions,Electron2D.RPCOptions)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.RPCOptions left, Electron2D.RPCOptions right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RPCOptions",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RPCOptions",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RPCOptions.op_Inequality(Electron2D.RPCOptions,Electron2D.RPCOptions)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.RPCOptions left, Electron2D.RPCOptions right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RPCOptions",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RPCOptions",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RPCRegistration.op_Equality(Electron2D.RPCRegistration,Electron2D.RPCRegistration)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.RPCRegistration left, Electron2D.RPCRegistration right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RPCRegistration",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RPCRegistration",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RPCRegistration.op_Inequality(Electron2D.RPCRegistration,Electron2D.RPCRegistration)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.RPCRegistration left, Electron2D.RPCRegistration right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RPCRegistration",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RPCRegistration",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "operator:Electron2D.Rect2.op_Equality(Electron2D.Rect2,Electron2D.Rect2)",
     "kind": "operator",
     "declaringType": "Electron2D.Rect2",
@@ -126697,6 +128559,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.MultiplayerAPI.MultiplayerPeer()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiplayerAPI",
+    "name": "MultiplayerPeer",
+    "signature": "public Electron2D.MultiplayerPeer MultiplayerPeer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiplayerPeer",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.MultiplayerPeer.RefuseNewConnections()",
     "kind": "property",
     "declaringType": "Electron2D.MultiplayerPeer",
@@ -126941,6 +128816,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.Multiplayer()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "Multiplayer",
+    "signature": "public Electron2D.MultiplayerAPI Multiplayer { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiplayerAPI",
     "value": null
   },
   {
@@ -130181,6 +132069,97 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RPCMethod.ID()",
+    "kind": "property",
+    "declaringType": "Electron2D.RPCMethod",
+    "name": "ID",
+    "signature": "public System.UInt32 ID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RPCOptions.CallLocal()",
+    "kind": "property",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "CallLocal",
+    "signature": "public System.Boolean CallLocal { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RPCOptions.Channel()",
+    "kind": "property",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "Channel",
+    "signature": "public System.Int32 Channel { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RPCOptions.Mode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "Mode",
+    "signature": "public Electron2D.RPCMode Mode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RPCMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RPCOptions.TransferMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RPCOptions",
+    "name": "TransferMode",
+    "signature": "public Electron2D.TransferMode TransferMode { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TransferMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RPCRegistration.Method()",
+    "kind": "property",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "Method",
+    "signature": "public Electron2D.RPCMethod Method { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RPCMethod",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RPCRegistration.Options()",
+    "kind": "property",
+    "declaringType": "Electron2D.RPCRegistration",
+    "name": "Options",
+    "signature": "public Electron2D.RPCOptions Options { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RPCOptions",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RandomNumberGenerator.Seed()",
     "kind": "property",
     "declaringType": "Electron2D.RandomNumberGenerator",
@@ -131078,6 +133057,97 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SceneMultiplayer.AuthCallback()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "AuthCallback",
+    "signature": "public Electron2D.MultiplayerPacketHandler AuthCallback { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiplayerPacketHandler",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneMultiplayer.AuthTimeout()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "AuthTimeout",
+    "signature": "public System.Double AuthTimeout { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneMultiplayer.MaxPacketBytes()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "MaxPacketBytes",
+    "signature": "public System.Int32 MaxPacketBytes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneMultiplayer.MultiplayerPeer()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "MultiplayerPeer",
+    "signature": "public Electron2D.MultiplayerPeer MultiplayerPeer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiplayerPeer",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneMultiplayer.RefuseNewConnections()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "RefuseNewConnections",
+    "signature": "public System.Boolean RefuseNewConnections { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneMultiplayer.RootPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "RootPath",
+    "signature": "public System.String RootPath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneMultiplayer.ServerRelay()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneMultiplayer",
+    "name": "ServerRelay",
+    "signature": "public System.Boolean ServerRelay { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.SceneTree.AutoAcceptQuit()",
     "kind": "property",
     "declaringType": "Electron2D.SceneTree",
@@ -131127,6 +133197,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneTree.MultiplayerPoll()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "MultiplayerPoll",
+    "signature": "public System.Boolean MultiplayerPoll { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

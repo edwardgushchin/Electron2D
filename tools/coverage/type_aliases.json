@@ -59,7 +59,8 @@
     "MultiMeshInstance2D": "MultiMeshInstance",
     "StreamPeerExtension": "StreamPeer",
     "PacketPeerExtension": "PacketPeer",
-    "MultiplayerPeerExtension": "MultiplayerPeer"
+    "MultiplayerPeerExtension": "MultiplayerPeer",
+    "MultiplayerAPIExtension": "MultiplayerAPI"
   },
   "enums": {
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",
@@ -157,6 +158,7 @@
     "MultiplayerPeer.ConnectionStatus": "MultiplayerConnectionStatus",
     "MultiplayerPeer.TransferMode": "TransferMode",
     "HashingContext.HashType": "HashType",
-    "AESContext.Mode": "AESMode"
+    "AESContext.Mode": "AESMode",
+    "MultiplayerAPI.RPCMode": "RPCMode"
   }
 }

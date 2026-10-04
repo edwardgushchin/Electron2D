@@ -110,3 +110,5 @@ The queue reuses each CanvasItem's LinkedListNode and one tree-owned list; norma
 Reusable [scene animation](scene-animation.md) uses Node internal idle/physics callbacks, before the node's public callback. Manual AnimationMixer mode does not create an automatic callback or separate clock.
 
 [Embedded viewport containers and GUI](canvas-rendering.md#embedded-viewport-containers-and-gui) now execute native SubViewportContainer composition, stretch/shrink, independent GUI state and connected input/drag routing. Public input reentry remains rejected; native subwindows, multiview, editor/file workflows and other-platform acceptance remain separate.
+
+[Typed scene multiplayer](scene-multiplayer.md) integrates default/borrowed branch interfaces before node entry, idle-frame polling before node callbacks, Node authority/configured RPC, structural path invalidation before observers and detach/default cleanup after node exit. Programmatic native WS/WSS tests execute client/server branches within one tree; this does not establish replication or editor/rendered/agent acceptance.

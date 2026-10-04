@@ -178,3 +178,5 @@ SubViewport composes as a neutral Node with independently rendered children. Pac
 ## Text-field authoring
 
 [LineEdit](../classes/LineEdit.md) has typed stored properties and an in-memory PackedScene factory. Runtime TextInput/IME uses the existing focused Control route, including embedded viewport focus. History, scalar selection and typed text dragging execute under the scene owner; closing the host does not enqueue minimum-size work. Editor/file authoring and absent popup/native keyboard services retain their own gates.
+
+[Typed scene multiplayer](../components/scene-multiplayer.md) executes owner-thread Node/SceneTree branch assignment and process polling, typed RPC/authority/local policy, authentication/deadlines and WS/WSS original-sender relay. Concrete spawning/property-schema synchronization remains the next dependent producer; other-platform/routed/native allocator and human/editor/rendered acceptance stay separate.

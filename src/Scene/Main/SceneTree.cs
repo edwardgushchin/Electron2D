@@ -23,6 +23,7 @@ public sealed partial class SceneTree : MainLoop
         new PropertyDescriptor<SceneTree, Node?>(nameof(CurrentScene), tree => tree.CurrentScene, (tree, value) => tree.CurrentScene = value, _ => null),
         new PropertyDescriptor<SceneTree, Node?>(nameof(EditedSceneRoot), tree => tree.EditedSceneRoot, (tree, value) => tree.EditedSceneRoot = value, _ => null),
         new PropertyDescriptor<SceneTree, bool>(nameof(DebugPathsHint), tree => tree.DebugPathsHint, (tree, value) => tree.DebugPathsHint = value, _ => false),
+        new PropertyDescriptor<SceneTree, bool>(nameof(MultiplayerPoll), tree => tree.MultiplayerPoll, (tree, value) => tree.MultiplayerPoll = value, _ => true),
         new PropertyDescriptor<SceneTree, bool>(nameof(AutoAcceptQuit), tree => tree.AutoAcceptQuit, (tree, value) => tree.AutoAcceptQuit = value, _ => true),
         new PropertyDescriptor<SceneTree, bool>(nameof(HasDeferredWork), tree => tree.HasDeferredWork),
         new PropertyDescriptor<SceneTree, ulong>(nameof(ProcessFrameCount), tree => tree.ProcessFrameCount),
@@ -120,6 +121,7 @@ public sealed partial class SceneTree : MainLoop
             _physicsInterpolation = ProjectSettings.Instance.GetWithOverride(ProjectSettings.PhysicsInterpolation);
             if (attachToEngine)
                 Engine.Instance.AttachConstructingTree(this);
+            InitializeMultiplayer();
             Initialize();
             root.EnterTree(this);
             root.MakeReady(readied);
@@ -180,8 +182,9 @@ public sealed partial class SceneTree : MainLoop
             }
             _tweens.Clear();
             ClearPendingWork();
+            FinalizeMultiplayer(ref errors);
             ClearEventSubscribers();
-            throw new AggregateException("SceneTree activation failed and was rolled back.", errors);
+            throw new AggregateException("SceneTree activation failed and was rolled back.", errors!);
         }
         finally
         {
@@ -1048,6 +1051,7 @@ public sealed partial class SceneTree : MainLoop
         catch (Exception error) { CollectException(ref errors, error); }
         _physicsWorld2D = null;
 
+        FinalizeMultiplayer(ref errors);
         DisposePendingScenes(ref errors);
 
         foreach (var timer in _timers.ToArray())
@@ -1189,6 +1193,7 @@ public sealed partial class SceneTree : MainLoop
 
     internal void NotifyNodeRenamed(Node node)
     {
+        InvalidateMultiplayerPaths();
         List<Exception>? errors = null;
 
         try
@@ -1212,7 +1217,7 @@ public sealed partial class SceneTree : MainLoop
         ThrowCollected("One or more node-renamed tree events failed.", errors);
     }
 
-    internal void NotifyTreeChanged() => TreeChanged?.Invoke(this);
+    internal void NotifyTreeChanged() { InvalidateMultiplayerPaths(); TreeChanged?.Invoke(this); }
 
     private void RunFrame(double delta, double unscaledDelta, bool physics)
     {
@@ -1249,7 +1254,7 @@ public sealed partial class SceneTree : MainLoop
                 CollectException(ref errors, error);
             }
 
-            if (!physics) FlushTransformNotifications(ref errors);
+            if (!physics) { PollMultiplayer(ref errors); FlushTransformNotifications(ref errors); }
             _scheduledNodes.Clear();
             CaptureScheduledNodes(physics);
             _scheduledNodes.Sort();

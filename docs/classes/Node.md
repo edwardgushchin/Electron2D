@@ -1441,3 +1441,105 @@ Identifies pointer entry into an embedded viewport.
 `public const System.Int32 NotificationVPMouseExit = 1011`
 
 Identifies pointer exit from an embedded viewport.
+
+## Scene multiplayer integration
+
+Nearest-branch assignment, automatic idle polling and typed RPC/authority configuration execute through [the component](../components/scene-multiplayer.md). RPC method tokens/codecs replace string/reflection invocation; configure derived nodes in their construction/factory for PackedScene reconstruction. Authority/configuration changes remain local and are not automatically replicated. API/transport ownership remains borrowed for caller-supplied interfaces.
+
+## Property summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public Electron2D.MultiplayerAPI Multiplayer { get;  }` | Gets the interface assigned to the nearest containing scene branch. |
+
+## Property Descriptions
+
+<a id="member-5bdf4007b028"></a>
+### Multiplayer
+
+`public Electron2D.MultiplayerAPI Multiplayer { get;  }`
+
+Gets the interface assigned to the nearest containing scene branch.
+
+Value: The default interface or most specific custom override; detached access fails.
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public System.Int32 GetMultiplayerAuthority()` | Gets the local node's configured multiplayer authority. |
+| `public Electron2D.RPCRegistration[] GetNodeRPCConfig()` | Returns caller-owned typed RPC configuration snapshots. |
+| `public System.Boolean IsMultiplayerAuthority()` | Reports whether this node's authority matches its assigned interface identity. |
+| `public System.Void RPCConfig(Electron2D.RPCMethod method, System.Nullable<Electron2D.RPCOptions> options = null)` | Configures a typed callable and its invocation policy. |
+| `public System.Void RPCID<TNode, T>(System.Int32 id, RPCMethod<TNode, T> method, T arguments)` | Projects inherited lifecycle behavior for this concrete type. |
+| `public System.Void RPC<TNode, T>(RPCMethod<TNode, T> method, T arguments)` | Projects inherited lifecycle behavior for this concrete type. |
+| `public System.Void SetMultiplayerAuthority(System.Int32 id, System.Boolean recursive = true)` | Sets a positive authority identity, optionally recursively for current descendants. |
+
+## Method Descriptions
+
+<a id="member-9a171ae4c306"></a>
+### GetMultiplayerAuthority
+
+`public System.Int32 GetMultiplayerAuthority()`
+
+Gets the local node's configured multiplayer authority.
+
+Returns: Server identity one initially.
+
+<a id="member-6c34da278ad1"></a>
+### GetNodeRPCConfig
+
+`public Electron2D.RPCRegistration[] GetNodeRPCConfig()`
+
+Returns caller-owned typed RPC configuration snapshots.
+
+Returns: Configured immutable tokens and copied policies.
+
+<a id="member-01e4daf317d2"></a>
+### IsMultiplayerAuthority
+
+`public System.Boolean IsMultiplayerAuthority()`
+
+Reports whether this node's authority matches its assigned interface identity.
+
+Returns: False for detached nodes.
+
+<a id="member-3775a292b1ed"></a>
+### RPCConfig
+
+`public System.Void RPCConfig(Electron2D.RPCMethod method, System.Nullable<Electron2D.RPCOptions> options = null)`
+
+Configures a typed callable and its invocation policy.
+
+method: Immutable receiver/codec token, unique per node by ID.
+
+options: Policy; null removes the configuration.
+
+Remarks: Tokens/closures are borrowed configuration. Configure derived nodes in their typed scene factory/constructor for scene reconstruction.
+
+<a id="member-f6a5c8552a83"></a>
+### RPCID
+
+`public System.Void RPCID<TNode, T>(System.Int32 id, RPCMethod<TNode, T> method, T arguments)`
+
+Projects inherited lifecycle behavior for this concrete type.
+
+<a id="member-e2a3f0bff655"></a>
+### RPC
+
+`public System.Void RPC<TNode, T>(RPCMethod<TNode, T> method, T arguments)`
+
+Projects inherited lifecycle behavior for this concrete type.
+
+<a id="member-06979d4dfd98"></a>
+### SetMultiplayerAuthority
+
+`public System.Void SetMultiplayerAuthority(System.Int32 id, System.Boolean recursive = true)`
+
+Sets a positive authority identity, optionally recursively for current descendants.
+
+id: Positive peer identity.
+
+recursive: True applies to current descendants; later children retain their own default/configuration.
+
+Remarks: This local configuration does not replicate itself; participants must agree separately.

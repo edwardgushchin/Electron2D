@@ -847,3 +847,57 @@ Shared [scene/server joint resources](../components/physics-joints.md) use the e
 The process-frame path collects pending native bus effect/gain failures before running its usual callbacks. It attempts ordinary frame dispatch even when those failures exist, then reports the combined error. Each failed effect reports once and remains silent until structural recreation; native exceptions never cross the callback boundary. AudioEffectTests and its failed public Engine.Run host verify this integration.
 
 Embedded GUI integration is implemented in [SceneTree.GUIState.cs](../../src/Scene/Main/SceneTree.GUIState.cs) and [ViewportGUIState](ViewportGUIState.md). The tree owns a viewport-state map and restores a prepared value scope after synchronous callbacks. Focus/hover/capture/input snapshots/tooltips stay independent; connected sections borrow shared drag state. Only direct container forwarding nests scene input. Parent snapshots and handled-owner state survive child dispatch and failure. Detachment attempts GUI and base lifetime cleanup even after callback errors.
+
+## Scene multiplayer integration
+
+Nearest-branch assignment, automatic idle polling and typed RPC/authority configuration execute through [the component](../components/scene-multiplayer.md). RPC method tokens/codecs replace string/reflection invocation; configure derived nodes in their construction/factory for PackedScene reconstruction. Authority/configuration changes remain local and are not automatically replicated. API/transport ownership remains borrowed for caller-supplied interfaces.
+
+## Property summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public System.Boolean MultiplayerPoll { get; set; }` | Gets or sets automatic process-frame multiplayer polling. |
+
+## Property Descriptions
+
+<a id="member-04597d844662"></a>
+### MultiplayerPoll
+
+`public System.Boolean MultiplayerPoll { get; set; }`
+
+Gets or sets automatic process-frame multiplayer polling.
+
+Value: True initially; polling occurs after the process-frame event and before node callbacks, including while paused.
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public Electron2D.MultiplayerAPI GetMultiplayer(System.String forPath = "")` | Gets a branch-specific override or the tree's default multiplayer interface. |
+| `public System.Void SetMultiplayer(Electron2D.MultiplayerAPI multiplayer, System.String rootPath = "")` | Assigns a borrowed interface to the default or an existing absolute scene branch. |
+
+## Method Descriptions
+
+<a id="member-82c74a431a2e"></a>
+### GetMultiplayer
+
+`public Electron2D.MultiplayerAPI GetMultiplayer(System.String forPath = "")`
+
+Gets a branch-specific override or the tree's default multiplayer interface.
+
+forPath: Absolute branch path; empty selects default. The most specific ancestor override wins.
+
+Returns: A borrowed live interface.
+
+<a id="member-af3cf6cc6239"></a>
+### SetMultiplayer
+
+`public System.Void SetMultiplayer(Electron2D.MultiplayerAPI multiplayer, System.String rootPath = "")`
+
+Assigns a borrowed interface to the default or an existing absolute scene branch.
+
+multiplayer: Live owner-thread interface; null removes a custom branch or creates a new default.
+
+rootPath: Empty selects default; an absolute existing node path selects a branch.
+
+Remarks: One interface can belong to only one tree/branch. Replacement detaches the old interface; only tree-created defaults are disposed by the tree.

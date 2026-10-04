@@ -374,6 +374,16 @@ def main():
     assert crypto_rows == 33
     assert "Electron2D.HashType" in pages[CLASS_PAGES / "HashingContext.md"]
     assert "Electron2D.AESMode" in pages[CLASS_PAGES / "AESContext.md"]
+    for name, expected in (("MultiplayerAPI", {"Implemented": 20, "Partial": 3}),
+                           ("MultiplayerAPIExtension", {"Implemented": 7, "Partial": 3}),
+                           ("SceneMultiplayer", {"Implemented": 14, "Partial": 1, "Blocked": 2, "Excluded": 1})):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
+                if row.startswith("| [`")]
+        assert len(rows) == sum(expected.values()), name
+        assert {state: sum(f" | {state} | " in row for row in rows)
+                for state in expected} == expected, name
+    assert "concrete MultiplayerSynchronizer" in pages[CLASS_PAGES / "SceneMultiplayer.md"]
+    assert "Electron2D.RPCMode" in pages[CLASS_PAGES / "MultiplayerAPI.md"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     button_rows = 0
     for name in ("BaseButton", "ButtonGroup", "Button", "CheckBox", "CheckButton", "TextureButton", "Shortcut", "InputEventShortcut"):

@@ -10,6 +10,7 @@ public partial class Node : ElectronObject
 {
     private static readonly PropertyDescriptor[] SceneNodeProperties =
     [
+        new PropertyDescriptor<Node, MultiplayerAPI>(nameof(Multiplayer), node => node.Multiplayer),
         new PropertyDescriptor<Node, string>(
             nameof(Name),
             node => node.Name,
