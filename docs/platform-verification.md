@@ -1,6 +1,6 @@
 # Platform verification matrix
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 This matrix records execution on hosts and devices available during this audit. A successful build or packaged native library is not a runtime check. A blocked backend is a measured result for this build and device, not a claim that an entire platform can never support it.
 
@@ -11,7 +11,7 @@ This matrix records execution on hosts and devices available during this audit. 
 | Samsung SM-A256E, Android API 36, `arm64-v8a` | Pass: `opengles2`, red readback `(1,0,0)` | Pass: Vulkan device with optional clip-distance, depth-clamping, indirect-first-instance and anisotropy disabled; red readback `(1,0,0)` | Pass: pinned HLSL SPIR-V material, red readback `(1,0,0)` | Pass: dynamic rectangle rests at `Y=80.009`, vertical velocity `0` after 120 steps |
 | MiTV-MSSP3, Android TV API 30, `armeabi-v7a` | Pass: `opengles2`, red readback `(1,0,0)` | Blocked: OpenGL ES 2 is advertised, Vulkan is not; SDL reports no supported GPU device even after optional features are disabled. `auto` falls back to `opengles2` and preserves the red pixel | Electron2D ShaderMaterial blocked before submission; standalone GLES2 fragment shader rendered red `(255,0,0,255)` with GL error `0` | Pass: dynamic rectangle rests at `Y=80.009`, vertical velocity `0` after 120 steps |
 | WebAssembly in the isolated SDL 3.4.16/Emscripten browser probe | Pass: direct SDL_Renderer red canvas in Chrome | Blocked: Chrome has WebGL2 and a WebGPU adapter/device, but this SDL build lists zero GPU drivers and `SDL_CreateGPUDevice(SPIRV)` returns null | Electron2D ShaderMaterial blocked; standalone Chrome WebGPU WGSL fragment shader rendered a red frame | Pass: managed Box2D contact at `Y=80.009` after 120 steps |
-| iOS/tvOS | Not run: [macOS CI](../.github/workflows/apple-library.yml) prepared but not executed | Not run | Not run | Not run |
+| iOS/tvOS | Not run: [RID CI](../.github/workflows/build.yml) checks library compilation separately | Not run | Not run | Not run |
 | Windows/macOS | Not run: no native host in this environment | Not run | Not run | Not run |
 
 ## Required native dependency builds
@@ -41,7 +41,23 @@ Completion requires reproducible target builds or provenance-checked prebuilt ar
 
 The Linux Wayland gate in [ADR 0021](decisions/product.md#adr-0021) remains the current release gate. The Android results cover these tested devices and paths; they do not establish lifecycle, controller input, audio, storage, signing, or store packaging. The Web engine result proves only the isolated fallback and managed physics probe; the separate [Chrome WebGPU shader probe](../tests/Electron2D.WebGpuProbe/README.md) rendered a red frame outside Electron2D. Chrome hardware acceleration is available. [ADR 0028](decisions/rendering.md#adr-0028) selects a separate WebGPU canvas backend with SPIR-V-to-WGSL translation, but it is not implemented yet. [SDL states that its GPU API currently has no Web backend](https://wiki.libsdl.org/SDL3/FAQDevelopment). Apple and desktop runtime claims require their own hosts and device checks.
 
-The Apple CI job uses a macOS 26 runner with Xcode 26.6, installs .NET 10 iOS/tvOS workloads and builds device and simulator RIDs. It checks library compilation and package resolution only; it cannot establish a signed app, physical-device rendering or shader acceptance. No Mac host is connected to this local task, and this workflow has not run yet.
+## Automated RID checks
+
+[Build](../.github/workflows/build.yml) and [Tests](../.github/workflows/tests.yml) share the complete 18-RID [matrix](../tools/ci/rids.json) and the same [target workflow](../.github/workflows/rid.yml). The matrix generator rejects missing, duplicate, extra or differently mapped RIDs relative to `Electron2D.csproj`. Both workflows run on main pushes, pull requests and manual dispatch, with fail-fast disabled so each target reports its own result. The two README badges aggregate these workflows; a successful badge covers the checks below, not full platform acceptance.
+
+| RIDs | Build | Tests |
+| --- | --- | --- |
+| `linux-x64`, `linux-arm64` | Runtime library and private native backends on matching CPU runners | Library/dependency/native ELF architecture checks and the full self-contained headless executable suite |
+| `win-x86`, `win-x64`, `win-arm64`, `osx-x64`, `osx-arm64` | Runtime library on target OS; Windows x86 uses the x64 host | Library/dependency checks and eight existing portable suites: geometry, paths, curves, random numbers, regex, XML, AStar and AStarGrid. A self-contained runner selects the target runtime, including x86 on Windows |
+| Four Android RIDs; six iOS/tvOS device and simulator RIDs; `browser-wasm` | Target library with its .NET workload; Apple uses macOS/Xcode | Artifact checks only: evaluated RID/TFM/platform, SDL package selection, DLL/XML presence and absence of foreign Linux private libraries. No target application is executed |
+
+Linux jobs use Ubuntu 26.04, whose system OpenSSL supports the datagram BIO needed by DTLS; an explicit symbol preflight prevents falling back to an older backend. The earlier Ubuntu 24.04 run [37241595991](https://github.com/edwardgushchin/Electron2D/actions/runs/37241595991) failed because system OpenSSL lacked `BIO_s_dgram_pair`. SDL 3.4.16 is built for headless checks, and zlib/Zstandard development packages support the private ENet build. These checks do not exercise Wayland/X11, rendering or hardware audio.
+
+Library compilation explicitly disables the trim analyzer (`EnableTrimAnalyzer=false`) because this gate builds the untrimmed library. The earlier Apple run [37241418897](https://github.com/edwardgushchin/Electron2D/actions/runs/37241418897) reached compilation and reported IL2026 in ThemeDB and JSON/ConfigFile reflection paths. Those trimming issues remain unresolved: successful untrimmed compilation is not trimmed/AOT application acceptance. Signing, native text/audio/transport integration, simulator/device execution and browser host integration remain separate work. The job summaries state each suite's scope; no unavailable runtime suite is labelled as executed.
+
+The new workflow has not been executed on GitHub in this local change. Native Windows, macOS, Apple and ARM64 runner results require a run of the committed revision; local cross-compilation and profile evaluation cannot establish them.
+
+Local checks on 2026-10-05 passed library compilation and `tools/ci/check_rid.py` for eleven RIDs: Linux x64, all five Windows/macOS targets, all four Android targets and browser WASM. The eight portable suites and the full headless suite both passed in a self-contained Linux x64 test publish with `LD_LIBRARY_PATH` unset. Windows/macOS/Android/browser execution, Linux ARM64 builds and all six Apple builds were not performed locally. The first local browser build reported missing `wasm-tools`; installing that workload and repeating the build resolved the prerequisite. The CI workflow installs each required workload itself.
 
 ## Native TLS transport profile
 

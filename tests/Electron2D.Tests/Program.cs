@@ -9,6 +9,20 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
+{
+    GeometryTests.Run();
+    PathTests.Run();
+    CurveTests.Run();
+    RandomNumberGeneratorTests.Run();
+    RegExTests.Run();
+    XMLParserTests.Run();
+    AStarTests.Run();
+    AStarGridTests.Run();
+    Console.WriteLine("Portable runtime checks passed: geometry, scene paths, curves, random, regex, XML and navigation.");
+    return;
+}
+
 NativeLibraryTests.Run();
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_ARCHIVE_CHILD") is { } archivePath) { ResourceArchiveTests.RunChild(archivePath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_ARCHIVE") == "1") { ResourceArchiveTests.Run(); return; }

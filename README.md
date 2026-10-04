@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Last commit on main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Last+commit&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/apple-library.yml"><img alt="Automated build status" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/apple-library.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Build&amp;branch=main" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/build.yml"><img alt="Automated build status" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/build.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Build&amp;branch=main" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/tests.yml"><img alt="Tests (GitHub Actions)" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/tests.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Tests&amp;branch=main" height="28"></a>
 </p>
 
@@ -144,6 +144,8 @@ Game targets and completed checks are listed separately. The visual editor targe
 | Browsers | Rendering and physics have been checked in a separate test application. Running a game in the browser is not implemented yet |
 
 The full set of native text and audio libraries has been built for Linux x64. Building and integrating them for other platforms remains separate work. Android and browser checks cover individual scenarios.
+
+The Build and Tests badges cover all 18 RIDs: library builds and artifact checks for every target, the full headless suite on Linux, and portable tests on Windows/macOS. Mobile, TV and browser application execution remains separate. See the [CI verification scope](docs/platform-verification.md#automated-rid-checks).
 
 See the [platform report](docs/platform-verification.md) for device models, commands and verification limits.
 

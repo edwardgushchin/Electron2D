@@ -1,0 +1,20 @@
+[
+  {"rid": "win-x86", "runner": "windows-2025", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "portable"},
+  {"rid": "win-x64", "runner": "windows-2025", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "portable"},
+  {"rid": "win-arm64", "runner": "windows-11-arm", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "portable"},
+  {"rid": "linux-x64", "runner": "ubuntu-26.04", "workload": "", "framework": "net10.0", "platform": "Linux", "suite": "full"},
+  {"rid": "linux-arm64", "runner": "ubuntu-26.04-arm", "workload": "", "framework": "net10.0", "platform": "Linux", "suite": "full"},
+  {"rid": "osx-x64", "runner": "macos-26-intel", "workload": "", "framework": "net10.0", "platform": "MacOS", "suite": "portable"},
+  {"rid": "osx-arm64", "runner": "macos-26", "workload": "", "framework": "net10.0", "platform": "MacOS", "suite": "portable"},
+  {"rid": "android-arm", "runner": "ubuntu-24.04", "workload": "android", "framework": "net10.0-android", "platform": "Android", "suite": "artifact"},
+  {"rid": "android-arm64", "runner": "ubuntu-24.04", "workload": "android", "framework": "net10.0-android", "platform": "Android", "suite": "artifact"},
+  {"rid": "android-x86", "runner": "ubuntu-24.04", "workload": "android", "framework": "net10.0-android", "platform": "Android", "suite": "artifact"},
+  {"rid": "android-x64", "runner": "ubuntu-24.04", "workload": "android", "framework": "net10.0-android", "platform": "Android", "suite": "artifact"},
+  {"rid": "ios-arm64", "runner": "macos-26", "workload": "ios", "framework": "net10.0-ios", "platform": "iOS", "suite": "artifact"},
+  {"rid": "iossimulator-arm64", "runner": "macos-26", "workload": "ios", "framework": "net10.0-ios", "platform": "iOS", "suite": "artifact"},
+  {"rid": "iossimulator-x64", "runner": "macos-26-intel", "workload": "ios", "framework": "net10.0-ios", "platform": "iOS", "suite": "artifact"},
+  {"rid": "tvos-arm64", "runner": "macos-26", "workload": "tvos", "framework": "net10.0-tvos", "platform": "tvOS", "suite": "artifact"},
+  {"rid": "tvossimulator-arm64", "runner": "macos-26", "workload": "tvos", "framework": "net10.0-tvos", "platform": "tvOS", "suite": "artifact"},
+  {"rid": "tvossimulator-x64", "runner": "macos-26-intel", "workload": "tvos", "framework": "net10.0-tvos", "platform": "tvOS", "suite": "artifact"},
+  {"rid": "browser-wasm", "runner": "ubuntu-24.04", "workload": "wasm-tools", "framework": "net10.0", "platform": "Web", "suite": "artifact"}
+]

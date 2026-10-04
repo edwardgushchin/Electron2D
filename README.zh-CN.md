@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="main 分支的最近提交" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%9C%80%E5%90%8E%E6%8F%90%E4%BA%A4&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/apple-library.yml"><img alt="自动构建状态" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/apple-library.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%9E%84%E5%BB%BA&amp;branch=main" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/build.yml"><img alt="自动构建状态" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/build.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%9E%84%E5%BB%BA&amp;branch=main" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/tests.yml"><img alt="测试 (GitHub Actions)" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/tests.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%E6%B5%8B%E8%AF%95&amp;branch=main" height="28"></a>
 </p>
 
@@ -144,6 +144,8 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 | 浏览器 | 已在独立测试程序中验证渲染和物理。尚未实现浏览器游戏运行支持 |
 
 Linux x64 的完整原生文本和音频库已构建。其他平台的构建与集成仍是独立任务。Android 和浏览器验证仅涵盖特定场景。
+
+构建和测试徽章覆盖全部 18 个 RID：每个目标的库构建与产物检查、Linux 的完整无窗口测试，以及 Windows/macOS 的可移植测试。移动设备、TV 和浏览器应用的运行验证仍需单独完成。参见 [CI 验证范围](docs/platform-verification.md#automated-rid-checks)。
 
 设备型号、命令和验证范围见[平台报告](docs/platform-verification.md)。
 

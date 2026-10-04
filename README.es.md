@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Último commit en main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%C3%9Altimo+commit&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/apple-library.yml"><img alt="Estado de la compilación automática" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/apple-library.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Compilaci%C3%B3n&amp;branch=main" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/build.yml"><img alt="Estado de la compilación automática" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/build.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Compilaci%C3%B3n&amp;branch=main" height="28"></a>
   <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/tests.yml"><img alt="Pruebas (GitHub Actions)" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/tests.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Pruebas&amp;branch=main" height="28"></a>
 </p>
 
@@ -144,6 +144,8 @@ Las plataformas objetivo del juego y las comprobaciones realizadas se indican po
 | Navegadores | Se han comprobado el renderizado y la física en una aplicación de prueba independiente. Todavía no se ha implementado la ejecución de juegos en el navegador |
 
 Se ha compilado el conjunto completo de bibliotecas nativas de texto y audio para Linux x64. Su compilación e integración en otras plataformas sigue siendo una tarea aparte. Las comprobaciones de Android y navegador abarcan escenarios concretos.
+
+Los indicadores de compilación y pruebas cubren los 18 RID: compilación de la biblioteca y comprobación de artefactos para cada destino, pruebas completas sin ventana en Linux y pruebas portables en Windows/macOS. La ejecución de aplicaciones en dispositivos móviles, TV y navegadores requiere comprobaciones separadas. Consulta el [alcance del CI](docs/platform-verification.md#automated-rid-checks).
 
 Consulta los modelos de dispositivos, los comandos y el alcance de las comprobaciones en el [informe de plataformas](docs/platform-verification.md).
 

@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -13,6 +13,10 @@ The [MIT license](../licence/Electron2D-LICENSE.txt) covers Electron2D-authored 
 For a desktop self-contained HostExample publish, run `python3 -B tools/check_native_publish.py RID /path/to/publish` after publishing without platform-selection overrides. The check requires an executable host, the matching .NET runtime pack, and the three SDL packages plus pinned native FreeType/HarfBuzz packages and the corresponding native libraries for that RID. For Linux, it also checks the private ICU library’s ELF architecture, unique SONAME, exact nine engine C exports and absence of a global ICU dependency; GNU `nm` and `readelf` are required for this inspection. The native audio check also verifies FAudio ELF architecture, SONAME, shared SDL3 dependency and an internal managed binding. The private ENet check also verifies ELF architecture, SONAME, exact thirteen exports and zlib/Zstandard/libc/ELF-loader dependencies. Foreign publishes must exclude all Linux private libraries. Native text is currently integrated for Linux x64/ARM64 profiles, with Linux x64 execution verified; a foreign package check does not establish text execution. The check does not verify execution on the target OS or replace its license audit.
 
 Private text/audio/ENet native assets belong under `runtimes/<RID>/native` in engine build output, NuGet package entries and project-reference publishes. The HostExample audit rejects root copies and inspects the selected runtime directory; the license audit includes nested ELF files. Verify loading with `LD_LIBRARY_PATH` unset and a working directory outside the output. NuGet consumer RID publishes may flatten native assets through the SDK; the engine resolver retains ordinary .NET resolution for that layout. NativeLibraryTests verifies the project-reference directory contract without claiming foreign-platform execution.
+
+## CI matrix
+
+Build and Tests consume `tools/ci/rids.json` through `python3 -B tools/ci/rids.py`; keep it synchronized with the accepted RID/platform mappings in `Electron2D.csproj`. `tools/ci/test_checks.py` exercises missing/duplicate mappings and wrong target/native artifacts. The reusable `.github/workflows/rid.yml` builds each target with its workload and uploads its library output. Tests additionally runs `tools/ci/check_rid.py RID OUTPUT` against MSBuild's evaluated `profile.json`, followed by the full Linux headless or portable desktop suite. The mobile/TV/browser entries perform artifact checks only. Read [the exact scope and limitations](platform-verification.md#automated-rid-checks) before interpreting the two aggregate badges. A green untrimmed-library build does not close trimming/AOT, native integration, application execution or the Wayland release gate.
 
 ## Public API and coverage
 

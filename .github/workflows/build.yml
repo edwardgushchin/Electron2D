@@ -1,4 +1,4 @@
-name: Tests
+name: Build
 
 on:
   push:
@@ -19,16 +19,15 @@ jobs:
       - run: python3 -B tools/ci/test_checks.py
       - id: rids
         run: python3 -B tools/ci/rids.py >> "$GITHUB_OUTPUT"
-  tests:
+  build:
     needs: matrix
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.rids) }}
-    name: Tests / ${{ matrix.rid }} / ${{ matrix.suite }}
+    name: Build / ${{ matrix.rid }}
     uses: ./.github/workflows/rid.yml
     with:
       rid: ${{ matrix.rid }}
       runner: ${{ matrix.runner }}
       workload: ${{ matrix.workload }}
       suite: ${{ matrix.suite }}
-      tests: true

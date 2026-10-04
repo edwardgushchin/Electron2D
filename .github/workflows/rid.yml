@@ -1,0 +1,106 @@
+name: RID checks
+
+on:
+  workflow_call:
+    inputs:
+      rid:
+        required: true
+        type: string
+      runner:
+        required: true
+        type: string
+      workload:
+        required: true
+        type: string
+      suite:
+        required: true
+        type: string
+      tests:
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  rid:
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+    env:
+      CI_RID: ${{ inputs.rid }}
+      CI_WORKLOAD: ${{ inputs.workload }}
+      CI_SUITE: ${{ inputs.suite }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install target workload
+        if: inputs.workload != ''
+        run: dotnet workload install "$CI_WORKLOAD"
+      - name: Check Apple toolchain
+        if: inputs.workload == 'ios' || inputs.workload == 'tvos'
+        run: xcodebuild -version
+      - name: Install Linux native prerequisites
+        if: inputs.suite == 'full'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config zlib1g-dev libzstd-dev libssl-dev ffmpeg
+          openssl version
+          python -c 'import ctypes; ctypes.CDLL("libcrypto.so.3").BIO_s_dgram_pair'
+      - name: Build SDL3 for headless Linux checks
+        if: inputs.suite == 'full'
+        run: |
+          git clone --depth 1 --branch release-3.4.16 https://github.com/libsdl-org/SDL.git "$RUNNER_TEMP/SDL"
+          cmake -S "$RUNNER_TEMP/SDL" -B "$RUNNER_TEMP/sdl-build" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/sdl-install" \
+            -DCMAKE_INSTALL_LIBDIR=lib -DSDL_UNIX_CONSOLE_BUILD=ON \
+            -DSDL_X11=OFF -DSDL_WAYLAND=OFF -DSDL_TEST_LIBRARY=OFF
+          cmake --build "$RUNNER_TEMP/sdl-build" --parallel 2
+          cmake --install "$RUNNER_TEMP/sdl-build"
+          echo "CMAKE_PREFIX_PATH=$RUNNER_TEMP/sdl-install" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$RUNNER_TEMP/sdl-install/lib" >> "$GITHUB_ENV"
+      - name: Build untrimmed runtime library
+        run: dotnet build Electron2D.csproj -c Release -r "$CI_RID" -p:EnableTrimAnalyzer=false -o "bin/ci/$CI_RID" --nologo
+      - name: Evaluate target profile
+        if: inputs.tests
+        run: dotnet msbuild Electron2D.csproj -p:RuntimeIdentifier="$CI_RID" -getProperty:RuntimeIdentifier,TargetFramework,Electron2DNativePlatform -getItem:PackageReference > "bin/ci/$CI_RID/profile.json"
+      - name: Check target library and dependency contract
+        if: inputs.tests
+        run: python -B tools/ci/check_rid.py "$CI_RID" "bin/ci/$CI_RID"
+      - name: Publish desktop test runner
+        if: inputs.tests && inputs.suite != 'artifact'
+        run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r "$CI_RID" --self-contained true -o "bin/ci-tests/$CI_RID" --nologo
+      - name: Run full headless runtime suite
+        if: inputs.tests && inputs.suite == 'full'
+        run: '"$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"'
+      - name: Run portable runtime suite
+        if: inputs.tests && inputs.suite == 'portable'
+        env:
+          ELECTRON2D_TEST_PORTABLE: '1'
+        run: |
+          executable="$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"
+          if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
+          "$executable"
+      - name: Record verification scope
+        if: inputs.tests
+        run: |
+          echo "### $CI_RID: $CI_SUITE" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$CI_SUITE" == artifact ]]; then
+            echo "Library, RID and dependency checks passed. Target execution is unavailable: production mobile/TV/browser host and native integration remain required." >> "$GITHUB_STEP_SUMMARY"
+          elif [[ "$CI_SUITE" == portable ]]; then
+            echo "Library contract and portable runtime suite passed. Native text/audio/networking, rendering and application-host acceptance are not covered." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Library contract and full headless runtime suite passed. Display/rendering and Wayland/X11 acceptance are separate checks." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.tests && 'tests' || 'build' }}-${{ inputs.rid }}
+          path: bin/ci/${{ inputs.rid }}/
+          if-no-files-found: error
