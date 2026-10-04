@@ -10,6 +10,8 @@ Internal FAudioContext owns engine/master/submix voices and native volume meters
 
 Native FAudio build and package entries use `runtimes/<RID>/native/libFAudio.so.0`, preserved in project-reference build/publish outputs. The [native resolver](../classes/NativeLibraries.md) loads the shared SDL3 core before FAudio and permits ordinary .NET resolution for flattened RID-specific NuGet deployments. Consumers require no backend dependency or loader configuration.
 
+Native audio output currently rejects platforms outside Linux. Target-specific FAudio builds with the engine-owned output bridge and shared SDL dependency, loading or static linking, transitive packaging and public audio/lifecycle checks are required deferred work for every accepted runtime RID under [ADR 0012](../decisions/product.md#adr-0012). The [native dependency backlog](../platform-verification.md#required-native-dependency-builds) records desktop, mobile/TV and Web prerequisites; copying the Linux binary or removing the platform guard alone does not implement them. Any target-specific backend replacement remains subject to ADR 0047.
+
 ## Runtime flow and invariants
 
 WAV import validates RIFF chunks, PCM/IEEE-float dimensions and finite samples, uses the existing SDL WAV/conversion bindings, then performs typed edits and prepares encoded PCM/IMA/QOA. Encoded bytes and tags are copied; resource duplication is independent. Decode publishes an immutable versioned float PCM snapshot. Previously prepared resources refresh on their setter thread; warmed audio callbacks do not decode/allocate. Invalid compressed input fails on consumption. WAV SaveToWAV uses the existing AtomicFile writer; unsupported compressed save leaves an existing file intact.

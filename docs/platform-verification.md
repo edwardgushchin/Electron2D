@@ -1,6 +1,6 @@
 # Platform verification matrix
 
-Last updated: 2026-09-25
+Last updated: 2026-10-04
 
 This matrix records execution on hosts and devices available during this audit. A successful build or packaged native library is not a runtime check. A blocked backend is a measured result for this build and device, not a claim that an entire platform can never support it.
 
@@ -13,6 +13,24 @@ This matrix records execution on hosts and devices available during this audit. 
 | WebAssembly in the isolated SDL 3.4.16/Emscripten browser probe | Pass: direct SDL_Renderer red canvas in Chrome | Blocked: Chrome has WebGL2 and a WebGPU adapter/device, but this SDL build lists zero GPU drivers and `SDL_CreateGPUDevice(SPIRV)` returns null | Electron2D ShaderMaterial blocked; standalone Chrome WebGPU WGSL fragment shader rendered a red frame | Pass: managed Box2D contact at `Y=80.009` after 120 steps |
 | iOS/tvOS | Not run: [macOS CI](../.github/workflows/apple-library.yml) prepared but not executed | Not run | Not run | Not run |
 | Windows/macOS | Not run: no native host in this environment | Not run | Not run | Not run |
+
+## Required native dependency builds
+
+[ADR 0012](decisions/product.md#adr-0012) requires target-specific native dependency builds for every accepted runtime RID under [ADR 0021](decisions/product.md#adr-0021). This is deferred implementation work. The current Linux/Wayland release gate does not waive it, and the rendering/physics observations above do not establish text or audio support.
+
+| Target RIDs | Current text/audio boundary | Required continuation |
+| --- | --- | --- |
+| `linux-x64` | Private ICU and FAudio build, package and execute locally. | Retain reproducible builds, notices and regression gates. X11 host checks remain separate from Wayland evidence. |
+| `linux-arm64` | Native build wiring exists; target execution is unverified. | Supply the target toolchain or audited prebuilt artifacts and run the text/audio checks on ARM64. |
+| `win-x86`, `win-x64`, `win-arm64` | SDL/FreeType/HarfBuzz packages are selected; private ICU and FAudio build/package integration is absent. Runtime text-boundary and audio-output guards reject Windows. | Build the missing native closure as Windows libraries, integrate resolution and verify each architecture on its target host. |
+| `osx-x64`, `osx-arm64` | SDL/FreeType/HarfBuzz packages are selected; private ICU and FAudio build/package integration is absent. Runtime text-boundary and audio-output guards reject macOS. | Build the missing native closure as macOS libraries, integrate resolution and verify each architecture on its target host. |
+| `android-arm`, `android-arm64`, `android-x86`, `android-x64` | SDL display probes exist; native text/audio integration is absent. | Supply the complete native closure and Android packaging/loading, then verify app lifecycle and text/audio. Android TV shares these RIDs but needs its own device/lifecycle acceptance. |
+| `ios-arm64`, `iossimulator-arm64`, `iossimulator-x64`, `tvos-arm64`, `tvossimulator-arm64`, `tvossimulator-x64` | Library/SDL package wiring does not establish native text/audio integration. | Supply target-native libraries with the required static-link/bundle integration and verify device and simulator hosts separately. |
+| `browser-wasm` | No production Web text/audio dependency build or host integration exists. | Build browser-compatible dependencies and integrate them into the Web host. Resolve any unsupported selected backend through an explicit decision under ADRs 0046/0047 before claiming equivalent text/audio behavior. |
+
+Each continuation must deliver the pinned native dependency closure actually used by that target, including SDL, FreeType, HarfBuzz, the private ICU source/data ABI and FAudio with its engine-owned output bridge where those backends apply. Use `runtimes/<RID>/native` for native package assets and preserve the engine's one-managed-assembly boundary. Target loader or linker setup belongs to the engine/host integration; game consumers must not add backend references or manual native initialization.
+
+Completion requires reproducible target builds or provenance-checked prebuilt artifacts; architecture, native imports/exports, private ICU identity/data and shared SDL identity checks; a fresh transitive application publish/bundle with matching notices and no foreign native payload; and public text/audio execution with lifecycle/error cleanup on the target host. Test actual multilingual boundaries and font output plus audio PCM/output behavior. A host build, a copied Linux `.so`, an evaluated RID, or successful package resolution alone cannot close this work. Remove the current platform guards only as part of a working, verified backend integration. Record build, packaging and execution evidence separately in this matrix; keep unimplemented targets explicit until those checks run.
 
 ## Reproduce the checked paths
 
