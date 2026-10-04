@@ -16,7 +16,8 @@ public abstract class Material : Resource
 /// <summary>Applies a programmable fragment shader to a node's canvas commands.</summary>
 /// <remarks>A null shader uses normal color drawing. An assigned shader requires the GPU backend, including
 /// an identity shader. Shader resources are borrowed; resource duplication follows the requested graph policy.
-/// Reserved TIME is filled by the renderer and excluded from parameter access, stored properties and value migration.</remarks>
+/// Reserved TIME and SCREEN_PIXEL_SIZE uniforms and SCREEN_TEXTURE sampling are filled by the renderer
+/// and excluded from parameter access, stored properties and value migration.</remarks>
 public sealed class ShaderMaterial : Material
 {
     private readonly object _gate = new();
@@ -271,16 +272,18 @@ internal sealed class MaterialState
     {
         lock (_gate)
             for (var i = 0; i < Textures.Length; i++)
-                target[i] = Program.Textures[i].IsCanvasTexture ? null : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name)
+                target[i] = Program.Textures[i].IsEngineTexture ? null : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name)
                     ?? throw new InvalidOperationException($"Texture parameter '{Program.Textures[i].Name}' has no texture or Shader default.");
     }
 
-    internal void PushUniforms(nint command, float time)
+    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize)
     {
         lock (_gate)
         {
             if (Program.TimeUniform is { } clock)
                 MemoryMarshal.Write(Buffers[clock.Buffer].AsSpan(clock.Offset, sizeof(float)), in time);
+            if (Program.ScreenPixelSizeUniform is { } pixels)
+                MemoryMarshal.Write(Buffers[pixels.Buffer].AsSpan(pixels.Offset, sizeof(float) * 2), in screenPixelSize);
             for (var i = 0; i < Buffers.Length; i++)
                 SDL.PushGPUFragmentUniformData(command, (uint)i, Buffers[i].AsSpan(), (uint)Buffers[i].Length);
         }

@@ -1,6 +1,6 @@
 # MaterialState
 
-Last updated: 2026-09-23
+Last updated: 2026-10-04
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -17,7 +17,7 @@ This fragment belongs inside the runtime and requires the surrounding owner stat
 
 ```csharp
 var state = material.GetCanvasState();
-state?.PushUniforms(commandBuffer, (float)renderTime);
+state?.PushUniforms(commandBuffer, (float)renderTime, inverseTargetSize);
 ```
 
 ## Member summary
@@ -30,7 +30,7 @@ state?.PushUniforms(commandBuffer, (float)renderTime);
 | `internal readonly Texture?[] Textures` | [Textures](#textures) |
 | `internal readonly Shader? Shader` | [Shader](#shader) |
 | `internal void CopyTextures(Span<Texture?> target)` | [Texture capture](#texture-capture) |
-| `internal void PushUniforms(nint command, float time)` | [Uniform upload](#uniform-upload) |
+| `internal void PushUniforms(nint command, float time, Vector2 screenPixelSize)` | [Uniform upload](#uniform-upload) |
 
 ## Member descriptions
 
@@ -74,10 +74,12 @@ Requires room for all slots, writes current overrides/defaults under the gate an
 
 ### Uniform upload
 
-`internal void PushUniforms(nint command, float time)`
+`internal void PushUniforms(nint command, float time, Vector2 screenPixelSize)`
 
 While holding the same gate used by setters, writes the supplied finite float32 render time to Program.TimeUniform when present, then pushes each complete padded buffer to the command buffer fragment binding. The backend supplies a valid live command. This method does not allocate new value storage.
 
 ## Verification and limits
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
+
+CopyTextures leaves renderer-owned command/screen sampler slots null for native binding. PushUniforms additionally writes inverse target dimensions into SCREEN_PIXEL_SIZE under the material lock; TIME remains independent. The state owns no native backbuffer. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).

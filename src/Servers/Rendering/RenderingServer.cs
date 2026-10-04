@@ -258,45 +258,47 @@ public sealed partial class RenderingServer : ElectronObject
             order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
         });
         _submittingTextures = true;
-        foreach (var item in _order)
-        {
-            CanvasItem? repeatSource = null;
-            for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.GetParentItem())
-                if ((ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero) ||
-                    (ancestor is ParallaxLayer layer && layer.RepeatPeriod != Vector2.Zero))
-                {
-                    repeatSource = ancestor;
-                    break;
-                }
-            if (repeatSource is null)
+        ComposeFrame(pixels);
+    }
+
+    private void AppendOrderedCanvas(RenderEntry item, Vector2i pixels)
+    {
+        CanvasItem? repeatSource = null;
+        for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.GetParentItem())
+            if ((ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero) ||
+                (ancestor is ParallaxLayer layer && layer.RepeatPeriod != Vector2.Zero))
             {
-                var clip = GetClip(item.Node, pixels);
-                if ((clip is null || clip.Value.HasArea()) && !HasEmptyOwnClip(item.Node, pixels))
-                {
-                    AppendScreenCanvas(item.Node, item.Transform, clip, pixels);
-                }
-                continue;
+                repeatSource = ancestor;
+                break;
             }
-            var size = repeatSource is Parallax current ? current.RepeatSize : ((ParallaxLayer)repeatSource).RepeatPeriod;
-            var times = repeatSource is Parallax repeated ? repeated.RepeatTimes : 1;
-            var sourceTransform = _repeatTransforms[repeatSource];
-            var start = size * -(times / 2);
-            var countX = size.X == 0 ? 0 : times;
-            var countY = size.Y == 0 ? 0 : times;
-            var repeatedClip = GetClip(item.Node, pixels, repeatSource);
-            if (repeatedClip is { } empty && !empty.HasArea() || HasEmptyOwnClip(item.Node, pixels, repeatSource)) continue;
-            for (long y = 0; y <= countY; y++)
-                for (long x = 0; x <= countX; x++)
-                {
-                    var transform = item.Transform;
-                    var displacement = repeatSource is Parallax
-                        ? start + new Vector2(x * size.X, y * size.Y)
-                        : new Vector2(x * size.X, y * size.Y);
-                    transform.Origin += sourceTransform.BasisXform(displacement);
-                    if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
-                    AppendScreenCanvas(item.Node, transform, repeatedClip, pixels);
-                }
+        if (repeatSource is null)
+        {
+            var clip = GetClip(item.Node, pixels);
+            if ((clip is null || clip.Value.HasArea()) && !HasEmptyOwnClip(item.Node, pixels))
+            {
+                AppendScreenCanvas(item.Node, item.Transform, clip, pixels);
+            }
+            return;
         }
+        var size = repeatSource is Parallax current ? current.RepeatSize : ((ParallaxLayer)repeatSource).RepeatPeriod;
+        var times = repeatSource is Parallax repeated ? repeated.RepeatTimes : 1;
+        var sourceTransform = _repeatTransforms[repeatSource];
+        var start = size * -(times / 2);
+        var countX = size.X == 0 ? 0 : times;
+        var countY = size.Y == 0 ? 0 : times;
+        var repeatedClip = GetClip(item.Node, pixels, repeatSource);
+        if (repeatedClip is { } empty && !empty.HasArea() || HasEmptyOwnClip(item.Node, pixels, repeatSource)) return;
+        for (long y = 0; y <= countY; y++)
+            for (long x = 0; x <= countX; x++)
+            {
+                var transform = item.Transform;
+                var displacement = repeatSource is Parallax
+                    ? start + new Vector2(x * size.X, y * size.Y)
+                    : new Vector2(x * size.X, y * size.Y);
+                transform.Origin += sourceTransform.BasisXform(displacement);
+                if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
+                AppendScreenCanvas(item.Node, transform, repeatedClip, pixels);
+            }
     }
 
     private void Capture(Node node)
@@ -321,7 +323,7 @@ public sealed partial class RenderingServer : ElectronObject
         }
         if (item.YSortEnabled)
         {
-            if (alreadyYSorted)
+            if (alreadyYSorted && item is not CanvasGroup)
             {
                 AddRenderEntry(item, transform);
                 return;
@@ -333,20 +335,21 @@ public sealed partial class RenderingServer : ElectronObject
             CollectionsMarshal.AsSpan(_ySort).Slice(first, count).Sort(static (left, right) =>
                 Mathf.IsEqualApprox(left.Transform.Origin.Y, right.Transform.Origin.Y) ? left.Order.CompareTo(right.Order) : left.Transform.Origin.Y.CompareTo(right.Transform.Origin.Y));
             for (var index = first; index < first + count; index++)
-                OrderCanvas(_ySort[index].Node, transform * _ySort[index].Transform, alreadyYSorted: true);
+                if (item is not CanvasGroup || !ReferenceEquals(_ySort[index].Node, item)) OrderCanvas(_ySort[index].Node, transform * _ySort[index].Transform, alreadyYSorted: true);
+            if (item is CanvasGroup) AddRenderEntry(item, transform);
             _ySort.RemoveRange(first, count);
             return;
         }
         OrderChildren(item, transform, behind: true);
-        AddRenderEntry(item, transform);
-        OrderChildren(item, transform, behind: false);
+        if (item is CanvasGroup) { OrderChildren(item, transform, behind: false); AddRenderEntry(item, transform); }
+        else { AddRenderEntry(item, transform); OrderChildren(item, transform, behind: false); }
     }
 
     private void AddRenderEntry(CanvasItem item, Transform transform)
     {
         if (item is Parallax parallax) _repeatTransforms[parallax] = transform;
         _canvasTransforms[item] = transform;
-        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
+        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform, ParentGroup(item)));
     }
 
     private bool HasEmptyOwnClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null) =>
@@ -410,7 +413,7 @@ public sealed partial class RenderingServer : ElectronObject
             if (_viewport.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
             var transform = parentTransform * local;
             _ySort.Add(new(child, transform, _ySort.Count));
-            if (child.YSortEnabled) CollectYSort(child, transform);
+            if (child.YSortEnabled && child is not CanvasGroup) CollectYSort(child, transform);
         }
     }
 
@@ -455,6 +458,6 @@ public sealed partial class RenderingServer : ElectronObject
         if (_ownerThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Rendering requires the scene owner thread.");
     }
 
-    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform);
+    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform, CanvasGroup? Group);
     private readonly record struct YSortEntry(CanvasItem Node, Transform Transform, int Order);
 }

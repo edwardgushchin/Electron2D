@@ -666,3 +666,14 @@ The existing AnimationMixer/AnimationPlayer also use [AnimationBlendValue.cs](..
 | [Rendering](domains/rendering.md) | [Offscreen targets](components/canvas-rendering.md#offscreen-canvas-targets) | [ViewportClearMode](classes/ViewportClearMode.md) | [SubViewport.cs](../src/Scene/Main/SubViewport.cs) | Current | Exact Always/Never/Once target retention policy. |
 | [Rendering](domains/rendering.md) | [Offscreen targets](components/canvas-rendering.md#offscreen-canvas-targets) | [ViewportUpdateMode](classes/ViewportUpdateMode.md) | [SubViewport.cs](../src/Scene/Main/SubViewport.cs) | Current | Exact Disabled/Once/WhenVisible/WhenParentVisible/Always submission policy. |
 | [Rendering](domains/rendering.md) | [Offscreen targets](components/canvas-rendering.md#offscreen-canvas-targets) | [CanvasRenderTarget](classes/CanvasRenderTarget.md) | [CanvasRenderTarget.cs](../src/Servers/Rendering/CanvasRenderTarget.cs) | Internal | Owned native completed/write image pair. |
+
+## Canvas group and screen composition
+
+| Domain | Component | Type | Source | State | Current role |
+| --- | --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Composition](components/canvas-rendering.md#group-composition-and-screen-snapshots) | [CanvasGroup](classes/CanvasGroup.md) | [CanvasGroup.cs](../src/Scene/2D/CanvasGroup.cs) | Current | Same-Z child capture and final owner composition. |
+| [Rendering](domains/rendering.md) | [Composition](components/canvas-rendering.md#group-composition-and-screen-snapshots) | [BackBufferCopy](classes/BackBufferCopy.md) | [BackBufferCopy.cs](../src/Scene/2D/BackBufferCopy.cs) | Current | Ordered transformed/viewport screen snapshot. |
+| [Rendering](domains/rendering.md) | [Composition](components/canvas-rendering.md#group-composition-and-screen-snapshots) | [BackBufferCopyMode](classes/BackBufferCopyMode.md) | [BackBufferCopy.cs](../src/Scene/2D/BackBufferCopy.cs) | Current | Exact copy policy domain. |
+| [Rendering](domains/rendering.md) | [Composition](components/canvas-rendering.md#group-composition-and-screen-snapshots) | [CanvasOperation](classes/CanvasOperation.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | Internal | Retained render-pass/copy boundaries. |
+
+CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [CanvasMesh.cs](../src/Servers/Rendering/CanvasMesh.cs) preserves draw-only coalescing across the shared mesh/canvas stream.

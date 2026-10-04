@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -85,3 +85,5 @@ Logical boolean annotations are retained in copied bytecode and checked against 
 ## Instance data input
 
 Fragment programs may consume raw float4 at location two, alongside tint location zero and UV location one. MultiMesh supplies its optional custom-data components independently of color multiplication; ordinary canvas geometry supplies zero. HLSL input semantics must compile to these locations (the tested signature uses active TEXCOORD0, TEXCOORD1 and TEXCOORD2 inputs). GLSL can use explicit layout locations. The built-in vertex stage forwards this channel; custom vertex programs remain pending. MultiMeshRenderingTests verifies two independent colors, live data replacement and compatibility's explicit shader rejection.
+
+Reserved SCREEN_TEXTURE and optional float2 SCREEN_PIXEL_SIZE now share the validated SPIR-V path with TEXTURE/TIME. They are excluded from material/default parameter lists and value migration; the renderer supplies the screen image and inverse current target dimensions. HLSL/GLSL fixtures exercise actual screen copying and group LOD. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).

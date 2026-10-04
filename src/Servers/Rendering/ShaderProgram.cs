@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null)
+internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null)
 {
     internal static readonly ShaderProgram Default = new(BuiltInShaders.Fragment, [], new(StringComparer.Ordinal), [new("TEXTURE", 0)]);
     internal readonly byte[] Code = code;
@@ -10,15 +10,17 @@ internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<s
     internal readonly Dictionary<string, ShaderUniform> Uniforms = uniforms;
     internal readonly ShaderTexture[] Textures = textures ?? [];
     internal readonly ShaderUniform? TimeUniform = timeUniform;
+    internal readonly ShaderUniform? ScreenPixelSizeUniform = screenPixelSizeUniform;
+    internal readonly bool UsesScreenTexture = (textures ?? []).Any(t => t.IsScreenTexture);
     internal readonly IReadOnlyList<PropertyDescriptor> Descriptors = Array.AsReadOnly(uniforms.Values.Select(u => u.Describe(u.Name))
-        .Concat((textures ?? []).Where(t => !t.IsCanvasTexture).Select(t => t.Describe(t.Name))).ToArray());
+        .Concat((textures ?? []).Where(t => !t.IsEngineTexture).Select(t => t.Describe(t.Name))).ToArray());
     internal readonly IReadOnlyList<PropertyDescriptor> MaterialDescriptors = Array.AsReadOnly(uniforms.Values.Select(u => u.Describe("shader_parameter/" + u.Name))
-        .Concat((textures ?? []).Where(t => !t.IsCanvasTexture).Select(t => t.Describe("shader_parameter/" + t.Name))).ToArray());
+        .Concat((textures ?? []).Where(t => !t.IsEngineTexture).Select(t => t.Describe("shader_parameter/" + t.Name))).ToArray());
 
     internal int FindTexture(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        for (var i = 0; i < Textures.Length; i++) if (!Textures[i].IsCanvasTexture && Textures[i].Name == name) return i;
+        for (var i = 0; i < Textures.Length; i++) if (!Textures[i].IsEngineTexture && Textures[i].Name == name) return i;
         throw new ArgumentException($"Shader has no sampled 2D texture named '{name}'.", nameof(name));
     }
 }
@@ -26,6 +28,8 @@ internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<s
 internal sealed record ShaderTexture(string Name, int Binding)
 {
     internal bool IsCanvasTexture => Name == "TEXTURE";
+    internal bool IsScreenTexture => Name == "SCREEN_TEXTURE";
+    internal bool IsEngineTexture => IsCanvasTexture || IsScreenTexture;
     internal PropertyDescriptor Describe(string propertyName) => new PropertyDescriptor<ShaderMaterial, Texture?>(propertyName,
         m => m.GetShaderParameter(Name), (m, t) => m.SetShaderParameter(Name, t), _ => null, stored: true);
 }

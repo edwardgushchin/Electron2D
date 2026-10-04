@@ -2179,6 +2179,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.BackBufferCopy",
+    "kind": "type",
+    "declaringType": "Electron2D.BackBufferCopy",
+    "name": "BackBufferCopy",
+    "signature": "public class Electron2D.BackBufferCopy",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.BackBufferCopyMode",
+    "kind": "type",
+    "declaringType": "Electron2D.BackBufferCopyMode",
+    "name": "BackBufferCopyMode",
+    "signature": "public enum Electron2D.BackBufferCopyMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.BaseButton",
     "kind": "type",
     "declaringType": "Electron2D.BaseButton",
@@ -2328,6 +2361,21 @@
     "declaringType": "Electron2D.Camera",
     "name": "Camera",
     "signature": "public class Electron2D.Camera",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CanvasGroup",
+    "kind": "type",
+    "declaringType": "Electron2D.CanvasGroup",
+    "name": "CanvasGroup",
+    "signature": "public class Electron2D.CanvasGroup",
     "visibility": "public",
     "baseType": "Electron2D.Entity",
     "interfaces": [
@@ -10072,6 +10120,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.BackBufferCopy..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.BackBufferCopy",
+    "name": ".ctor",
+    "signature": "public BackBufferCopy()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.BaseButton..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.BaseButton",
@@ -10180,6 +10241,19 @@
     "declaringType": "Electron2D.Camera",
     "name": ".ctor",
     "signature": "public Camera()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CanvasGroup..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CanvasGroup",
+    "name": ".ctor",
+    "signature": "public CanvasGroup()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -15194,6 +15268,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AxisStretchMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.BackBufferCopyMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BackBufferCopyMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.BackBufferCopyMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BackBufferCopyMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.BackBufferCopyMode.Rect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BackBufferCopyMode",
+    "name": "Rect",
+    "signature": "public const Electron2D.BackBufferCopyMode Rect = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BackBufferCopyMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.BackBufferCopyMode.Viewport()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BackBufferCopyMode",
+    "name": "Viewport",
+    "signature": "public const Electron2D.BackBufferCopyMode Viewport = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BackBufferCopyMode",
     "value": "2"
   },
   {
@@ -47144,6 +47257,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.BackBufferCopy.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.BackBufferCopy",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BackBufferCopy.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.BackBufferCopy",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.BaseButton.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.BaseButton",
@@ -48223,6 +48362,45 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasGroup.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasGroup",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasGroup.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasGroup",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasGroup.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasGroup",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -107986,6 +108164,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.BackBufferCopy.CopyMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.BackBufferCopy",
+    "name": "CopyMode",
+    "signature": "public Electron2D.BackBufferCopyMode CopyMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BackBufferCopyMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BackBufferCopy.Rect()",
+    "kind": "property",
+    "declaringType": "Electron2D.BackBufferCopy",
+    "name": "Rect",
+    "signature": "public Electron2D.Rect2 Rect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.BaseButton.ActionMode()",
     "kind": "property",
     "declaringType": "Electron2D.BaseButton",
@@ -108659,6 +108863,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasGroup.ClearMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasGroup",
+    "name": "ClearMargin",
+    "signature": "public System.Single ClearMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasGroup.FitMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasGroup",
+    "name": "FitMargin",
+    "signature": "public System.Single FitMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasGroup.UseMipmaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasGroup",
+    "name": "UseMipmaps",
+    "signature": "public System.Boolean UseMipmaps { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

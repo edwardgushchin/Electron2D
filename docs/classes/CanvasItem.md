@@ -1220,3 +1220,5 @@ texture: Optional live texture identity.
 System.ArgumentException: An identity is missing or disposed.
 
 Offscreen canvas selection and external CanvasLayer targets now choose their actual rendering viewport for default sampling and vertex snapping. Submitted masks/camera/final transforms and notifier bounds are per target. Native root visibility does not hide an independent offscreen canvas. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.
+
+Retained drawing and mesh batching coalesce only ordinary Draw operations. Group/copy boundaries preserve order, and CanvasGroup consumes the same canvas transform/clip/mask/material path. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).

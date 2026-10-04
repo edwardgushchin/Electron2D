@@ -3056,6 +3056,72 @@
       "godot": "StyleBoxTexture::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE_FIT",
       "electron2d": "enumValue:Electron2D.AxisStretchMode.TileFit()",
       "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "class:BackBufferCopy",
+      "electron2d": "T:Electron2D.BackBufferCopy",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "BackBufferCopy::enum:CopyMode",
+      "electron2d": "T:Electron2D.BackBufferCopyMode",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "BackBufferCopy::enum_value:CopyMode.COPY_MODE_DISABLED",
+      "electron2d": "enumValue:Electron2D.BackBufferCopyMode.Disabled()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "BackBufferCopy::enum_value:CopyMode.COPY_MODE_RECT",
+      "electron2d": "enumValue:Electron2D.BackBufferCopyMode.Rect()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "BackBufferCopy::enum_value:CopyMode.COPY_MODE_VIEWPORT",
+      "electron2d": "enumValue:Electron2D.BackBufferCopyMode.Viewport()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "BackBufferCopy::property:copy_mode",
+      "electron2d": "property:Electron2D.BackBufferCopy.CopyMode()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "BackBufferCopy::property:rect",
+      "electron2d": "property:Electron2D.BackBufferCopy.Rect()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "class:CanvasGroup",
+      "electron2d": "T:Electron2D.CanvasGroup",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "CanvasGroup::property:clear_margin",
+      "electron2d": "property:Electron2D.CanvasGroup.ClearMargin()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "CanvasGroup::property:fit_margin",
+      "electron2d": "property:Electron2D.CanvasGroup.FitMargin()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "godot": "CanvasGroup::property:use_mipmaps",
+      "electron2d": "property:Electron2D.CanvasGroup.UseMipmaps()",
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
     }
   ],
   "statusGroups": [
@@ -3778,7 +3844,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "First alpha-mask canvas composition slice must implement ClipChildren modes together with intermediate render surfaces, mask capture/composition, ordering and both backend capability/pixel checks; a stored mode without composition is not implementation.",
+      "reason": "Native target storage and group/copy command passes now exist. Trigger: first actual alpha-mask capture and mask-to-child compositor must implement ClipChildren modes, their group interaction/configuration warnings, ordering and backend pixel/capability checks; a stored mode without masking is not implementation.",
       "godot": [
         "CanvasItem::enum:ClipChildrenMode",
         "CanvasItem::enum_value:ClipChildrenMode.CLIP_CHILDREN_AND_DRAW",
@@ -4620,6 +4686,23 @@
       ],
       "state": "Partial",
       "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate. The remaining own property drag_area_highlight_in_editor requires the first real editor context/overlay slice under ADR 0027."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent.",
+      "godot": [
+        "class:BackBufferCopy",
+        "BackBufferCopy::enum:CopyMode",
+        "BackBufferCopy::enum_value:CopyMode.COPY_MODE_DISABLED",
+        "BackBufferCopy::enum_value:CopyMode.COPY_MODE_RECT",
+        "BackBufferCopy::enum_value:CopyMode.COPY_MODE_VIEWPORT",
+        "BackBufferCopy::property:copy_mode",
+        "BackBufferCopy::property:rect",
+        "class:CanvasGroup",
+        "CanvasGroup::property:clear_margin",
+        "CanvasGroup::property:fit_margin",
+        "CanvasGroup::property:use_mipmaps"
+      ]
     }
   ],
   "extras": [
@@ -5464,6 +5547,41 @@
     {
       "electron2d": "method:Electron2D.VSplitContainer.CreateSceneInstanceFactory()",
       "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "constructor:Electron2D.BackBufferCopy..ctor()",
+      "state": "Implemented",
+      "reason": "Typed constructor/scene factory, stored descriptor or configuration-warning override for native canvas composition. ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CanvasGroup..ctor()",
+      "state": "Implemented",
+      "reason": "Typed constructor/scene factory, stored descriptor or configuration-warning override for native canvas composition. ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "electron2d": "method:Electron2D.BackBufferCopy.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "Typed constructor/scene factory, stored descriptor or configuration-warning override for native canvas composition. ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "electron2d": "method:Electron2D.BackBufferCopy.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed constructor/scene factory, stored descriptor or configuration-warning override for native canvas composition. ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasGroup.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "Typed constructor/scene factory, stored descriptor or configuration-warning override for native canvas composition. ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasGroup.GetConfigurationWarnings()",
+      "state": "Implemented",
+      "reason": "Typed constructor/scene factory, stored descriptor or configuration-warning override for native canvas composition. ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasGroup.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "Typed constructor/scene factory, stored descriptor or configuration-warning override for native canvas composition. ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes remain a separately recorded prerequisite. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
     }
   ]
 }

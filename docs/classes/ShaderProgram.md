@@ -1,6 +1,6 @@
 # ShaderProgram
 
-Last updated: 2026-09-23
+Last updated: 2026-10-04
 
 - Declaration: `internal sealed class ShaderProgram`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -23,7 +23,7 @@ ShaderProgram program = ShaderCompiler.ValidateFragmentInterface(bytecode);
 
 | Declaration | Contract |
 | --- | --- |
-| `ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null)` | [Construction](#construction) |
+| `ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null)` | [Construction](#construction) |
 | `internal static readonly ShaderProgram Default` | [Default program](#default-program) |
 | `internal readonly byte[] Code` | [Code](#code) |
 | `internal readonly int[] BufferSizes` | [Buffer sizes](#buffer-sizes) |
@@ -38,7 +38,7 @@ ShaderProgram program = ShaderCompiler.ValidateFragmentInterface(bytecode);
 
 ### Construction
 
-`ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null)`
+`ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null)`
 
 Adopts the owned payload/layout, uses an empty texture list when omitted, and constructs read-only descriptor lists. Native resources are absent.
 
@@ -99,3 +99,5 @@ Returns the named texture index, excluding reserved TEXTURE. Null/blank or unkno
 ## Verification and limits
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
+
+The immutable reflected program includes UsesScreenTexture and optional ScreenPixelSizeUniform. Descriptors/FindTexture exclude both renderer-owned texture roles; resource uniforms retain their previous behavior. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).

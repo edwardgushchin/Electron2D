@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 ## Scope and implementation state
 
@@ -220,3 +220,11 @@ The self-contained linux-x64 test publish also passed the complete canvas textur
 AtlasTextureTests adds managed resource/graph checks and native atlas/Sprite readback on both canvas backends, HLSL/GLSL canvas shaders, and full-storage named material binding/update/failure checks.
 
 The importer also verifies the optional raw instance channel in HLSL and GLSL, rejects a float3 at location two without replacing valid output, and requires the built-in vertex stage to retain color/UV outputs when instance data is present. Native MultiMesh checks verify independent fragment values on GPU.
+
+## Screen reading
+
+SCREEN_TEXTURE is a renderer-owned sampled 2D binding in descriptor set two, at any otherwise valid contiguous slot. It is excluded from GetShaderUniformList/material descriptors and explicit texture/default parameter access. TEXTURE retains its binding-zero command role; both roles may coexist. SCREEN_PIXEL_SIZE is an optional non-array float32 vector of width two in a fragment uniform buffer at set three. Reflection rejects incompatible shapes or texture use; native submission writes inverse target dimensions before each material draw. TIME keeps its existing independent scalar role. Reserved values do not migrate as user values when shaders change.
+
+Use framebuffer fragment position multiplied by SCREEN_PIXEL_SIZE for viewport UVs: HLSL SV_Position.xy or GLSL gl_FragCoord.xy. SCREEN_TEXTURE uses linear/clamped sampling with available mip levels. Ordinary screen-reading draws snapshot once implicitly unless BackBufferCopy has supplied an explicit region; generated mips accompany GPU screen copies when screen-reading materials require the levels. Group materials consume the current transparent group buffer, and CanvasGroup.UseMipmaps controls generation after group children. Sampling a level not generated for the current group is not a supported result. BackBufferCopy region samples outside the copied region are unspecified. A group child cannot sample its active writable backbuffer.
+
+The checked [HLSL fixture](../../tests/Electron2D.Tests/Shaders/Screen.frag.hlsl) and [GLSL fixture](../../tests/Electron2D.Tests/Shaders/Screen.frag.glsl) compile through the pinned import tool and execute in CanvasCompositionTests. Both share typed tint/LOD/offset parameters and reserved target data. Compatibility rejects arbitrary shader materials. [The composition component](canvas-rendering.md#group-composition-and-screen-snapshots) records native pixels, mipmap, lifetime and allocation limits.

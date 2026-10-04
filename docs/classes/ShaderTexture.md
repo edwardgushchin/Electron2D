@@ -1,6 +1,6 @@
 # ShaderTexture
 
-Last updated: 2026-09-22
+Last updated: 2026-10-04
 
 - Declaration: `internal sealed record ShaderTexture(string Name, int Binding)`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -35,3 +35,5 @@ Builds a stored Texture-valued ShaderMaterial descriptor backed by its texture p
 ## Verification and limits
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
+
+IsCanvasTexture identifies TEXTURE; IsScreenTexture identifies SCREEN_TEXTURE; IsEngineTexture excludes either from material/default descriptor access. Ordinary named texture bindings keep their validated contiguous resource layout. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).

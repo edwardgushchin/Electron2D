@@ -117,12 +117,18 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 throw new NotSupportedException("The compatibility renderer does not execute shader materials.");
         if (Driver == "software")
             foreach (var batch in batches)
-                if (batch.Blend != BlendMode.Mix)
-                    throw new NotSupportedException($"The software compatibility renderer cannot execute {batch.Blend} canvas blending.");
+                if (batch.Blend != BlendMode.Mix || batch.GroupShader)
+                    throw new NotSupportedException($"The software compatibility renderer cannot execute {(batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend)} canvas blending.");
         var renderer = _renderer.DangerousGetHandle();
-        var size = output.Size;
+        var size = output.Size; var screen = false;
         foreach (var batch in batches)
-            if (batch.Texture is { } texture)
+        {
+            if (batch.Mipmaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
+            screen |= batch.Operation != CanvasOperation.Draw;
+        }
+        if (screen) _ = BackBuffer(output, false);
+        foreach (var batch in batches)
+            if (!batch.GroupShader && batch.Texture is { } texture)
             {
                 if (Driver == "software" && batch.Filter == TextureFilter.Linear)
                     throw new NotSupportedException("The software compatibility driver cannot linearly filter canvas triangles; select Nearest or a hardware renderer.");
@@ -156,6 +162,27 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
             Rect2i? activeClip = null;
             foreach (var batch in batches)
             {
+                if (batch.Operation == CanvasOperation.Copy)
+                {
+                    Check(SDL.SetRenderTarget(renderer, output.BackBuffer!.DangerousGetHandle()), "bind screen copy target");
+                    Check(SDL.SetRenderClipRect(renderer, 0), "clear copy clipping");
+                    if (batch.Region.HasArea())
+                    {
+                        var rect = new SDL.FRect { X = batch.Region.Position.X, Y = batch.Region.Position.Y, W = batch.Region.Size.X, H = batch.Region.Size.Y };
+                        Check(SDL.SetTextureBlendMode(output.Next.DangerousGetHandle(), SDL.BlendMode.None), "set screen copy blending");
+                        Check(SDL.RenderTexture(renderer, output.Next.DangerousGetHandle(), in rect, in rect), "copy screen region");
+                    }
+                    Check(SDL.SetRenderTarget(renderer, output.Next.DangerousGetHandle()), "restore canvas after copy");
+                    Check(SDL.SetRenderClipRect(renderer, 0), "reset canvas copy clipping"); activeClip = null;
+                    continue;
+                }
+                if (batch.Operation is CanvasOperation.GroupBegin or CanvasOperation.GroupEnd)
+                {
+                    var target = batch.Operation == CanvasOperation.GroupBegin ? output.BackBuffer! : output.Next;
+                    Check(SDL.SetRenderTarget(renderer, target.DangerousGetHandle()), "switch group render target");
+                    Check(SDL.SetRenderClipRect(renderer, 0), "reset group clipping"); activeClip = null;
+                }
+                if (batch.Count == 0 || batch.Clip is { } emptyClip && !emptyClip.HasArea()) continue;
                 if (batch.Clip != activeClip)
                 {
                     if (batch.Clip is { } clip)
@@ -168,8 +195,8 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 }
                 var mode = batch.Repeat == TextureRepeat.Enabled ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp;
                 Check(SDL.SetRenderTextureAddressMode(renderer, mode, mode), "set texture addressing");
-                var texture = batch.Texture is null ? 0 : TextureHandle(batch.Texture);
-                var blend = CanvasBlend(batch.Blend);
+                var texture = batch.GroupShader ? output.BackBuffer!.DangerousGetHandle() : batch.Texture is null ? 0 : TextureHandle(batch.Texture);
+                var blend = batch.Operation == CanvasOperation.GroupBegin ? SDL.BlendMode.None : CanvasBlend(batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend);
                 if (texture == 0) Check(SDL.SetRenderDrawBlendMode(renderer, blend), "set canvas geometry blending");
                 else Check(SDL.SetTextureBlendMode(texture, blend), "set canvas texture blending");
                 if (texture != 0) Check(SDL.SetTextureScaleMode(texture,
@@ -199,8 +226,9 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         if (texture is ViewportTexture view) { var viewport = view.Bound ?? throw new InvalidOperationException("The sampled viewport texture is unresolved."); return (FindTarget(viewport) ?? throw new InvalidOperationException("The sampled viewport has no native target.")).Current.DangerousGetHandle(); }
         return _textures[texture].Handle.DangerousGetHandle();
     }
-    internal override RenderHandle CreateTarget(Vector2i size, Color clear)
+    internal override RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false)
     {
+        if (mipmaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
         var renderer = _renderer.DangerousGetHandle(); var target = new RenderHandle(SDL.CreateTexture(renderer, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, _renderer);
         try
         {
@@ -258,11 +286,11 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         _textures[texture] = (handle, pixels);
     }
 
-    internal override Image Readback(CanvasRenderTarget output)
+    internal override Image Readback(CanvasRenderTarget output, bool backBuffer = false)
     {
         if (!output.HasFrame) throw new InvalidOperationException("No canvas frame has completed.");
         var renderer = _renderer.DangerousGetHandle();
-        Check(SDL.SetRenderTarget(renderer, output.Current.DangerousGetHandle()), "bind readback target");
+        Check(SDL.SetRenderTarget(renderer, (backBuffer ? output.BackBuffer ?? throw new InvalidOperationException("No screen backbuffer is available.") : output.Current).DangerousGetHandle()), "bind readback target");
         try
         {
             using var surface = new RenderHandle(SDL.RenderReadPixels(renderer, null), SDL.DestroySurface);

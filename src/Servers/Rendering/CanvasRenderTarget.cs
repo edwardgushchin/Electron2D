@@ -4,7 +4,8 @@ internal sealed class CanvasRenderTarget(RenderHandle current, RenderHandle next
 {
     internal RenderHandle Current = current, Next = next;
     internal readonly Vector2i Size = size;
-    internal bool HasFrame;
+    internal bool HasFrame, BackBufferMipmaps;
+    internal RenderHandle? BackBuffer;
     internal void Commit() { (Current, Next) = (Next, Current); HasFrame = true; }
-    public void Dispose() { try { Current.Dispose(); } finally { Next.Dispose(); } }
+    public void Dispose() { try { Current.Dispose(); } finally { try { Next.Dispose(); } finally { BackBuffer?.Dispose(); } } }
 }

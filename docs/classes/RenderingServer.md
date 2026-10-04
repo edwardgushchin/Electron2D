@@ -812,3 +812,5 @@ System.ObjectDisposedException: The renderer is disposed.
 Native canvas texture/program/material caches now span the complete multi-target frame. Texture2DGet resolves completed ViewportTexture images explicitly; ordinary viewport canvas/material sampling uses native storage. Readback/native submission mutation guards remain separate. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.
 
 Its private CanvasFrame owns reusable per-target node/order/geometry/batch buffers, transform maps and sampler scratch. Dependency recursion therefore preserves consumer buffers; frame completion clears borrowed references while retaining capacity.
+
+RenderingServer.Composition.cs collects same-Z group ranges, fits or retains owner geometry, inserts copy/clear/composite boundaries and guards unsupported nested/writable-buffer reads. Its internal screen readback is an explicit native probe, separate from ordinary frame submission. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).

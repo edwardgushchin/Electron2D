@@ -114,7 +114,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioStreamSynchronized](classes/AudioStreamSynchronized.md) | AudioStream | Implemented | 6 |
 | [AudioStreamWAV](classes/AudioStreamWAV.md) | AudioStream | Implemented | 21 |
 | [AwaitTweener](classes/AwaitTweener.md) | Tweener | Implemented | 1 |
-| [BackBufferCopy](classes/BackBufferCopy.md) | Node2D | Blocked | 6 |
+| [BackBufferCopy](classes/BackBufferCopy.md) | Node2D | Implemented | 6 |
 | [BaseButton](classes/BaseButton.md) | Control | Implemented | 29 |
 | [BaseMaterial3D](classes/BaseMaterial3D.md) | Material | Excluded | 289 |
 | [Basis](classes/Basis.md) | — | Excluded | 42 |
@@ -154,7 +154,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CameraFeed](classes/CameraFeed.md) | RefCounted | Blocked | 31 |
 | [CameraServer](classes/CameraServer.md) | Object | Blocked | 14 |
 | [CameraTexture](classes/CameraTexture.md) | Texture2D | Blocked | 4 |
-| [CanvasGroup](classes/CanvasGroup.md) | Node2D | Blocked | 3 |
+| [CanvasGroup](classes/CanvasGroup.md) | Node2D | Implemented | 3 |
 | [CanvasItem](classes/CanvasItem.md) | Node | Partial | 114 |
 | [CanvasItemMaterial](classes/CanvasItemMaterial.md) | Material | Partial | 16 |
 | [CanvasLayer](classes/CanvasLayer.md) | Node | Partial | 14 |

@@ -1,10 +1,10 @@
 # Entity
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Inherits:** [CanvasItem](CanvasItem.md)
 
-**Inherited By:** [AudioStreamEmitter](AudioStreamEmitter.md), [Camera](Camera.md), [Parallax](Parallax.md), [ParallaxLayer](ParallaxLayer.md), [Path](Path.md), [PathFollow](PathFollow.md), [Sprite](Sprite.md), [AnimatedSprite](AnimatedSprite.md), [Line](Line.md), [Polygon](Polygon.md), [RemoteTransform](RemoteTransform.md), [RayCast](RayCast.md)
+**Inherited By:** [CanvasGroup](CanvasGroup.md), [BackBufferCopy](BackBufferCopy.md), [AudioStreamEmitter](AudioStreamEmitter.md), [Camera](Camera.md), [Parallax](Parallax.md), [ParallaxLayer](ParallaxLayer.md), [Path](Path.md), [PathFollow](PathFollow.md), [Sprite](Sprite.md), [AnimatedSprite](AnimatedSprite.md), [Line](Line.md), [Polygon](Polygon.md), [RemoteTransform](RemoteTransform.md), [RayCast](RayCast.md)
 
 - **Source:** [Entity.cs](../../src/Scene/2D/Entity.cs)
 - **Namespace:** `Electron2D`
@@ -496,3 +496,5 @@ All own `Node2D` mapped members and its type row are Implemented after managed b
 - [0028: Rendering](../decisions/rendering.md#adr-0028)
 
 Transform assignments commit immediately, including equal values. Enabled local notifications run synchronously while attached; global notifications coalesce until scene delivery or inherited ForceUpdateTransform. GlobalTransform queries resolve the cached mathematical composition without consuming pending notifications. See [CanvasItem delivery](CanvasItem.md#transform-notification-delivery).
+
+CanvasGroup and BackBufferCopy now derive directly from Entity, preserving the separate spatial canvas branch and exact typed placement/factory rules. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).

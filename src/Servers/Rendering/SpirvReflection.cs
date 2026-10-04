@@ -64,6 +64,9 @@ internal static unsafe partial class SpirvReflection
                 var matrix = GetBaseType(field) == 13 && width == 2 && GetColumns(field) == 2;
                 if (name == "TIME" && (!fragment || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 1 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a fragment uniform buffer.");
+                if (name == "SCREEN_PIXEL_SIZE" && (!fragment || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 2 || GetColumns(field) != 1 || dimensions != 0))
+                    throw new NotSupportedException("The built-in SCREEN_PIXEL_SIZE requires a non-array float32 vector of width two in a fragment uniform buffer.");
+                if (name == "SCREEN_TEXTURE") throw new NotSupportedException("SCREEN_TEXTURE requires a sampled texture binding.");
                 if (GetBitWidth(field) != 32 || GetColumns(field) != 1 && !matrix || dimensions > 1)
                     throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, float2x2 matrix or a fixed one-dimensional array; other matrices and nested structs are not integrated yet.");
                 booleans.Remove(name, out var logical);
@@ -154,7 +157,7 @@ internal static unsafe partial class SpirvReflection
         {
             var slot = TextureBinding(resource);
             var name = Marshal.PtrToStringUTF8(resource.Name);
-            if (name == "TIME") throw new NotSupportedException("The built-in TIME is a float32 uniform, not a texture parameter.");
+            if (name is "TIME" or "SCREEN_PIXEL_SIZE") throw new NotSupportedException($"The built-in {name} requires a renderer-owned uniform, not a texture parameter.");
             if (name == "TEXTURE" && slot != 0) throw new NotSupportedException("The built-in TEXTURE requires binding zero in descriptor set 2.");
             if (string.IsNullOrWhiteSpace(name) || uniforms.ContainsKey(name) || textures.Any(t => t is not null && t.Name == name) || textures[slot] is not null)
                 throw new NotSupportedException("Texture names and bindings must be unique and must not collide with material uniforms.");
@@ -182,7 +185,8 @@ internal static unsafe partial class SpirvReflection
         }
         if (booleans.Count != 0) throw new ArgumentException("Shader type metadata names an absent or inactive uniform.", nameof(code));
         uniforms.Remove("TIME", out var timeUniform);
-        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform);
+        uniforms.Remove("SCREEN_PIXEL_SIZE", out var screenPixelSizeUniform);
+        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform);
     }
 
     [StructLayout(LayoutKind.Sequential)]

@@ -4,10 +4,12 @@ using SDL3;
 
 namespace Electron2D;
 
+internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd }
+
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,
     TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1,
-    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null)
+    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false)
 {
     internal byte[]? ShaderCode => Material?.Program.Code;
 }
@@ -18,7 +20,7 @@ internal abstract class CanvasBackend : IDisposable
     internal abstract string Driver { get; }
     internal abstract Vector2i GetPixelSize();
     private readonly Dictionary<Viewport, CanvasRenderTarget> _targets = new(ReferenceEqualityComparer.Instance);
-    internal abstract RenderHandle CreateTarget(Vector2i size, Color clear);
+    internal abstract RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false);
     internal CanvasRenderTarget Target(Viewport viewport, Vector2i size, Color clear)
     {
         if (_targets.TryGetValue(viewport, out var target) && target.Size == size) return target;
@@ -27,6 +29,12 @@ internal abstract class CanvasBackend : IDisposable
         try { next = CreateTarget(size, clear); } catch { current.Dispose(); throw; }
         var replacement = new CanvasRenderTarget(current, next, size); target?.Dispose(); _targets[viewport] = replacement; return replacement;
     }
+    internal RenderHandle BackBuffer(CanvasRenderTarget target, bool mipmaps)
+    {
+        if (target.BackBuffer is not null && (!mipmaps || target.BackBufferMipmaps)) return target.BackBuffer;
+        var replacement = CreateTarget(target.Size, default, mipmaps); target.BackBuffer?.Dispose();
+        target.BackBuffer = replacement; target.BackBufferMipmaps = mipmaps; return replacement;
+    }
     internal CanvasRenderTarget? FindTarget(Viewport viewport) => _targets.GetValueOrDefault(viewport);
     internal void ReleaseTarget(Viewport viewport) { if (_targets.Remove(viewport, out var target)) target.Dispose(); }
     protected void ReleaseTargets() { foreach (var target in _targets.Values) target.Dispose(); _targets.Clear(); }
@@ -34,7 +42,7 @@ internal abstract class CanvasBackend : IDisposable
     internal virtual void BeginFrame() { }
     internal virtual void EndFrame() { }
     internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time);
-    internal abstract Image Readback(CanvasRenderTarget target);
+    internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false);
     internal virtual nint GetNativeHandle(DisplayServer.HandleType type) =>
         throw new NotSupportedException($"The {Driver} renderer has no {type} identity.");
     public abstract void Dispose();

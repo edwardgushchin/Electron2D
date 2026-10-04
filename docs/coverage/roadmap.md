@@ -110,7 +110,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | ADR 0091 maps Script and CSharpScript to one future concrete C# Script : Resource, preserving applicable inherited/own capabilities and typed creation without a provider subclass. Trigger: first real script-resource loader/editor/authoring slice with compiled-type registration, source/build association, usable typed metadata, factories and lifetime/failure verification. Ordinary Node callbacks do not implement this resource API; no production Script exists. | 2 |
 | Skeleton: trigger is the typed 2D bone hierarchy, rest/pose transforms and skinning integration. | 2 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
-| Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028). | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
 | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 2 |
 | Trigger: first native or embedded popup/subwindow host with owned window/viewport composition, renderer references, per-window input/focus/capture routing and popup-stack hide/unwind behavior (ADRs 0008/0040). Root-only Viewport and GUI/theme are already executable; this is the remaining Window.popup/embedded ownership prerequisite. Popup base enters that first host slice; PopupMenu then delivers its menu model, theme and interaction as one complete consumer slice. | 2 |

@@ -6,6 +6,10 @@ namespace Electron2D;
 /// This interface accepts optional float4 color at location zero,
 /// float2 UV at location one, raw float4 instance data at location two, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
 /// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.
+/// SCREEN_TEXTURE at any contiguous sampled binding consumes the current viewport screen snapshot;
+/// an optional float2 SCREEN_PIXEL_SIZE uniform supplies inverse native target dimensions. Both are renderer-owned
+/// and excluded from material/default parameter access. The first ordinary screen-reading draw snapshots the canvas
+/// unless BackBufferCopy already supplied a region; a group material reads its completed transparent group image.
 /// An optional non-array float32 uniform named TIME receives render seconds, scaled by Engine.TimeScale and wrapped
 /// by ProjectSettings.RenderingTimeRolloverSeconds. It continues during scene pause and is not a material parameter.
 /// Logical boolean types are retained by validated metadata in the imported SPIR-V payload. External modules may
@@ -59,7 +63,7 @@ public sealed class Shader : Resource
         {
             ThrowIfDisposed(); _program = program;
             foreach (var entry in _defaultTextures)
-                if (!program.Textures.Any(t => t.Name == entry.Key)) _defaultTextures.Remove(entry.Key);
+                if (!program.Textures.Any(t => !t.IsEngineTexture && t.Name == entry.Key)) _defaultTextures.Remove(entry.Key);
         }
         EmitChanged();
     }

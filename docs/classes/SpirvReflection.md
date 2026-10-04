@@ -1,6 +1,6 @@
 # SpirvReflection
 
-Last updated: 2026-09-23
+Last updated: 2026-10-04
 
 - Declaration: `internal static unsafe partial class SpirvReflection`
 - Sources: [SpirvReflection.cs](../../src/Servers/Rendering/SpirvReflection.cs), [SpirvReflection.Booleans.cs](../../src/Servers/Rendering/SpirvReflection.Booleans.cs)
@@ -42,3 +42,5 @@ The optional internal sourceTypes table is used only by import preflight to reco
 ## Verification and limits
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
+
+Reflection validates reserved SCREEN_PIXEL_SIZE as a non-array fragment float32 vec2 and removes it from user uniforms. SCREEN_TEXTURE must be an ordinary supported sampled 2D binding, and reserved uniform names cannot masquerade as texture resources. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).

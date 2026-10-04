@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION_HOST") == "1") { CanvasCompositionTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOSITION") == "1") { CanvasCompositionTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_SHADER") == "1") { SubViewportTests.ShaderUniform(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_HOST") == "1") { SubViewportTests.RunHost(); return; }
@@ -461,6 +464,7 @@ AnimationSpecialTrackTests.Run();
 AnimationNestedTrackTests.Run();
 AnimationAudioTrackTests.Run();
 SubViewportTests.Run();
+CanvasCompositionTests.Run();
 AnimationStateMachineTests.Run();
 AudioGeneratorTests.Run();
 AudioInputTests.Run();

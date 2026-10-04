@@ -303,6 +303,7 @@ public abstract partial class CanvasItem
         finally { _drawing = false; _currentDrawingItem = previousDrawingItem; if (_meshes is not null) for (var i = _meshCount; i < _meshes.Count; i++) _meshes[i].Clear(); if (_multiMeshes is not null) for (var i = _multiMeshCount; i < _multiMeshes.Count; i++) _multiMeshes[i].Clear(); }
     }
 
+    internal bool HasCanvasCommands => _canvasCommands is { Count: > 0 };
     internal virtual Rect2? CanvasClipRect => null;
 
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
@@ -362,7 +363,7 @@ public abstract partial class CanvasItem
                 capturedMaterial = true;
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
-            if (batches.Count != 0 && batches[^1] is var last && last.Material == material && last.Texture == replay.Texture &&
+            if (batches.Count != 0 && batches[^1] is var last && last.Operation == CanvasOperation.Draw && last.Material == material && last.Texture == replay.Texture &&
                 last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
                 batches[^1] = last with { Count = last.Count + count };
             else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, clip));
