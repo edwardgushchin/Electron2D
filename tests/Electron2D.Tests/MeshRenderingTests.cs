@@ -6,9 +6,9 @@ internal static class MeshRenderingTests
     internal static void Run()
     {
         var method = Environment.GetEnvironmentVariable("ELECTRON2D_MESH_RENDERER") == "compatibility" ? "compatibility" : "gpu";
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, method);
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, method);
         try { VerifyPixels(method); VerifyPrimitives(method); VerifyWarm(method); }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private static void VerifyPixels(string method)
     {
@@ -17,20 +17,20 @@ internal static class MeshRenderingTests
         var node = new MeshInstance { Mesh = mesh, Position = new(4, 4) }; window.AddChild(node); RID owned = default; var frames = 0; var attributes = new byte[12 * 4]; var vertices = new byte[8 * 4];
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black);
-            owned = renderer.MeshCreate(); renderer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, MeshTests.Quad());
-            Check(renderer.MeshGetSurfaceCount(owned) == 1 && renderer.MeshSurfaceGetArrayLen(owned, 0) == 4, "Owned server mesh producer/query.");
-            Check(renderer.MeshSurfaceGetFormatVertexStride(mesh.SurfaceGetFormat(0), 4) == 8 && renderer.MeshSurfaceGetFormatAttributeStride(mesh.SurfaceGetFormat(0), 4) == 12, "Pinned 2D channel strides.");
-            Reject<NotSupportedException>(() => renderer.MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat.Vertex, 4));
-            Reject<NotSupportedException>(() => renderer.MeshSurfaceGetFormatAttributeStride((Mesh.ArrayFormat)2, 4));
-            Reject<ArgumentOutOfRangeException>(() => renderer.MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat.None, -1));
-            Reject<InvalidOperationException>(() => renderer.FreeRID(mesh.GetRID()));
-            Reject<InvalidOperationException>(() => renderer.MeshClear(mesh.GetRID()));
-            Task.Run(() => Reject<InvalidOperationException>(() => renderer.MeshGetSurfaceCount(owned))).GetAwaiter().GetResult();
-            renderer.FreeRID(owned); owned = renderer.MeshCreate();
-            renderer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.Green));
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            owned = RenderingServer.MeshCreate(); RenderingServer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, MeshTests.Quad());
+            Check(RenderingServer.MeshGetSurfaceCount(owned) == 1 && RenderingServer.MeshSurfaceGetArrayLen(owned, 0) == 4, "Owned server mesh producer/query.");
+            Check(RenderingServer.MeshSurfaceGetFormatVertexStride(mesh.SurfaceGetFormat(0), 4) == 8 && RenderingServer.MeshSurfaceGetFormatAttributeStride(mesh.SurfaceGetFormat(0), 4) == 12, "Pinned 2D channel strides.");
+            Reject<NotSupportedException>(() => RenderingServer.MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat.Vertex, 4));
+            Reject<NotSupportedException>(() => RenderingServer.MeshSurfaceGetFormatAttributeStride((Mesh.ArrayFormat)2, 4));
+            Reject<ArgumentOutOfRangeException>(() => RenderingServer.MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat.None, -1));
+            Reject<InvalidOperationException>(() => RenderingServer.FreeRID(mesh.GetRID()));
+            Reject<InvalidOperationException>(() => RenderingServer.MeshClear(mesh.GetRID()));
+            Task.Run(() => Reject<InvalidOperationException>(() => RenderingServer.MeshGetSurfaceCount(owned))).GetAwaiter().GetResult();
+            RenderingServer.FreeRID(owned); owned = RenderingServer.MeshCreate();
+            RenderingServer.MeshAddSurfaceFromArrays(owned, Mesh.PrimitiveType.Triangles, MeshTests.Quad(Colors.Green));
             window.AddChild(new DrawRIDNode(owned) { Position = new(64, 4) });
-            renderer.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback();
                 Pixel(image, 72, 12, Colors.Green);
@@ -53,7 +53,7 @@ internal static class MeshRenderingTests
                 else if (frames == 3) mesh.ClearSurfaces();
             };
         };
-        Engine.Instance.Run(window); Reject<ArgumentException>(() => RenderingMeshRegistry.Resolve(owned)); Check(window.IsDisposed && frames == 4, "Native mesh visible edit/remove phases.");
+        Engine.Run(window); Reject<ArgumentException>(() => RenderingMeshRegistry.Resolve(owned)); Check(window.IsDisposed && frames == 4, "Native mesh visible edit/remove phases.");
         Console.WriteLine($"Mesh native pixels passed ({method}).");
     }
     private sealed class DrawRIDNode(RID mesh) : Entity
@@ -75,8 +75,8 @@ internal static class MeshRenderingTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black);
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = renderer.Readback();
                 // Filled primitives and framebuffer-width primitives exercise every live topology without assuming edge rasterization equivalence.
@@ -90,7 +90,7 @@ internal static class MeshRenderingTests
                 frame.SavePNG($"/tmp/e2d-mesh-primitives-{method}.png"); frames++; window.Tree!.Quit();
             };
         };
-        try { Engine.Instance.Run(window); Check(frames == 1, "All mesh primitive topologies render."); }
+        try { Engine.Run(window); Check(frames == 1, "All mesh primitive topologies render."); }
         finally { foreach (var resource in resources) resource.Dispose(); }
     }
     private static void VerifyWarm(string method)
@@ -101,13 +101,13 @@ internal static class MeshRenderingTests
         var cpuBytes = new long[148]; var renderBytes = new long[148];
         window.Ready += _ =>
         {
-            RenderingServer.Instance!.FramePreDraw += () => { renderStart = GC.GetAllocatedBytesForCurrentThread(); cpuBytes[frames] = renderStart - start; };
+            RenderingServer.FramePreDraw += () => { renderStart = GC.GetAllocatedBytesForCurrentThread(); cpuBytes[frames] = renderStart - start; };
             window.Tree!.ProcessFrameStarted += _ =>
             {
                 start = GC.GetAllocatedBytesForCurrentThread();
                 if (frames < 84) { BinaryPrimitives.WriteSingleLittleEndian(bytes, frames % 2 == 0 ? 0 : 1); mesh.SurfaceUpdateVertexRegion(0, 0, bytes); }
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 var used = GC.GetAllocatedBytesForCurrentThread() - start;
                 renderBytes[frames] = GC.GetAllocatedBytesForCurrentThread() - renderStart;
@@ -115,7 +115,7 @@ internal static class MeshRenderingTests
                 if (++frames == 148) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         for (var i = 20; i < 148; i++) if (cpuBytes[i] != 0 || renderBytes[i] != 0) Console.WriteLine($"Mesh frame {i}: scene={cpuBytes[i]}, renderer={renderBytes[i]} managed bytes.");
         Check(active == 0 && idle == 0, $"Native mesh warm managed bytes active={active}, idle={idle}.");
         Console.WriteLine($"Mesh 64 active/64 idle warmed render frames passed ({method}).");

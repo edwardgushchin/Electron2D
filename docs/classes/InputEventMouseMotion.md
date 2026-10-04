@@ -1,6 +1,6 @@
 # InputEventMouseMotion
 
-Last updated: 2026-09-24
+Last updated: 2026-10-04
 
 **Inherits:** [InputEventMouse](InputEventMouse.md)
 
@@ -29,7 +29,7 @@ The following focused snippet uses the current public API. Names not declared in
 
 ```csharp
 using var motion = new InputEventMouseMotion { Position = new Vector2(120f, 80f), Relative = new Vector2(2f, -1f) };
-Input.Instance.ParseInputEvent(motion);
+Input.ParseInputEvent(motion);
 ```
 
 ## Constructors

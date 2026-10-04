@@ -21,7 +21,7 @@ internal static class RigidFreezeModeTests
         using var circle = new CircleShape(); var root = new Node();
         var body = new RigidBody { Mass = 2, Inertia = 100, LockRotation = true, CanSleep = false };
         Add(body, circle); root.AddChild(body); using var tree = new SceneTree(root);
-        var server = PhysicsServer.Instance; var state = server.BodyGetDirectState(body.GetRID())!;
+        var server = PhysicsServer.Service; var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         Check(body.FreezeMode == RigidFreezeMode.Static && (int)RigidFreezeMode.Kinematic == 1, "Freeze enum values and default.");
         body.FreezeMode = RigidFreezeMode.Kinematic;
         Check(!body.Freeze && b2Body_GetType(body.BackendID) == B2BodyType.b2_dynamicBody && Near(state.InverseMass, 0.5f),
@@ -31,7 +31,7 @@ internal static class RigidFreezeModeTests
             "Kinematic freeze changes the physical role without discarding the configured mass.");
         body.ApplyCentralImpulse(new(100, 100)); body.ConstantForce = new(100, 100); body.ConstantTorque = 100;
         body.Position = new(20, 0); body.Rotation = 0.1f;
-        state = server.BodyGetDirectState(body.GetRID())!;
+        state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         Check(state.Transform.Origin.IsEqualApprox(new(20, 0)), "A forced query presents the latest manual pose immediately.");
         tree.PhysicsFrame(0);
         Check(body.Position.IsEqualApprox(new(20, 0)), "Zero delta retains the manual target.");

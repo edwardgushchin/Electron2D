@@ -17,7 +17,7 @@ internal static class AudioRuntimeTests
     {
         using var stream = Tone(48000); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player);
         using var tree = new SceneTree(root); player.Play();
-        var server = AudioServer.Instance; var native = server.Native; native.PrepareCapture(48000);
+        var server = AudioServer.Service; var native = server.Native; native.PrepareCapture(48000);
         for (var i = 0; i < 40; i++) { Thread.Sleep(10); tree.ProcessFrame(.01); }
         var captured = native.CapturedPCM(); Check(captured.Any(value => MathF.Abs(value) > .1f), "Actual mixed native output contains the source waveform.");
         Check(native.MixPasses > 10 && player.GetPlaybackPosition() > .2, "Real native audio quanta advance the streamed voice.");
@@ -30,7 +30,7 @@ internal static class AudioRuntimeTests
         player.PitchScale = 2; player.Play(); Thread.Sleep(100); var fast = player.GetPlaybackPosition(); Check(fast is > .15 and < .4, "Playback time follows resampled pitch.");
         root.RemoveChild(player); var detached = player.GetPlaybackPosition(); Thread.Sleep(40); Check(player.GetPlaybackPosition() == detached, "Detached playback pauses and retains cursor."); root.AddChild(player); Thread.Sleep(40); Check(player.GetPlaybackPosition() > detached, "Reentry resumes the retained voice.");
         sourceLoop();
-        player.Stop(); server.Lock(); server.Lock(); try { tree.Dispose(); server.CloseNative(); } finally { server.Unlock(); server.Unlock(); }
+        player.Stop(); AudioServer.Lock(); AudioServer.Lock(); try { tree.Dispose(); server.CloseNative(); } finally { AudioServer.Unlock(); AudioServer.Unlock(); }
         var rejected = false; try { server.Dispose(); } catch (InvalidOperationException) { rejected = true; }
         Check(rejected && !server.IsDisposed, "Borrowed singleton disposal preserves lifetime.");
         void sourceLoop()

@@ -136,7 +136,7 @@ public sealed partial class Image
     private static void SaveEncodedFile(string path, byte[] data)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
-        AtomicFile.Write(ProjectSettings.Instance.GlobalizePath(path), data);
+        AtomicFile.Write(ProjectSettings.GlobalizePath(path), data);
     }
 
     private static string CodecFromPath(string path)

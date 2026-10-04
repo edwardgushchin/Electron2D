@@ -35,7 +35,7 @@ internal static class AudioCompressorTests
     private static void ReferencePCM()
     {
         using var resource = typeof(AudioCompressorTests).Assembly.GetManifestResourceStream("TestAudio.CompressorReference.json")!;
-        var cases = JsonSerializer.Deserialize<OracleCase[]>(resource)!.Where(c => c.Rate == AudioServer.Instance.GetMixRate()).ToArray(); Check(cases.Length == 7, "Seven C++ profiles at the current rate.");
+        var cases = JsonSerializer.Deserialize<OracleCase[]>(resource)!.Where(c => c.Rate == AudioServer.GetMixRate()).ToArray(); Check(cases.Length == 7, "Seven C++ profiles at the current rate.");
         var maxError = 0f;
         foreach (var item in cases)
         {
@@ -51,7 +51,7 @@ internal static class AudioCompressorTests
             Check(item.PCM.Length == input.Length * 2, "Every oracle frame accounted.");
             for (var i = 0; i < output.Length; i++) { maxError = Math.Max(maxError, Math.Abs(output[i].X - item.PCM[2 * i])); maxError = Math.Max(maxError, Math.Abs(output[i].Y - item.PCM[2 * i + 1])); }
         }
-        Check(maxError < .00001f, $"Compressor C++ maximum PCM error {maxError}."); Console.WriteLine($"Compressor C++ oracle: 7 profiles/14336 channel samples at {AudioServer.Instance.GetMixRate()} Hz; maximum error {maxError}.");
+        Check(maxError < .00001f, $"Compressor C++ maximum PCM error {maxError}."); Console.WriteLine($"Compressor C++ oracle: 7 profiles/14336 channel samples at {AudioServer.GetMixRate()} Hz; maximum error {maxError}.");
     }
     private static Vector2[] Vectors(float[] values) { var result = new Vector2[values.Length / 2]; for (var i = 0; i < result.Length; i++) result[i] = new(values[i * 2], values[i * 2 + 1]); return result; }
     private static void EdgesAndWarm()
@@ -77,32 +77,32 @@ internal static class AudioCompressorTests
     private static float Reduction(float detector, float threshold = -12) => Mathf.DBToLinear(-2.08136898f * Math.Max(0, Mathf.LinearToDB(detector / Mathf.DBToLinear(threshold))) * .75f);
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 3; server.SetBusName(1, "Music"); server.SetBusName(2, "Voice"); server.SetBusVolumeDB(2, -6);
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 3; AudioServer.SetBusName(1, "Music"); AudioServer.SetBusName(2, "Voice"); AudioServer.SetBusVolumeDB(2, -6);
         using var compressor = new AudioEffectCompressor { Threshold = -12, AttackUS = 0, ReleaseMS = 0, Sidechain = "Voice" }; using var capture = new AudioEffectCapture { BufferLength = .2f };
         using var music = AudioEffectTests.Constant(); using var voice = Constant(new(.9f, -.6f));
         var root = new Node(); var musicPlayer = new AudioStreamPlayer { Name = "MusicPlayer", Stream = music, Bus = "Music" }; var voicePlayer = new AudioStreamPlayer { Name = "VoicePlayer", Stream = voice, Bus = "Voice" }; root.AddChild(musicPlayer); root.AddChild(voicePlayer); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(1, compressor); server.AddBusEffect(1, capture); musicPlayer.Play(); voicePlayer.Play(); var native = server.Native; AudioEffectTests.Wait(native, 20);
-            var borrowed = server.GetBusEffectInstance(1, 0); CheckCapture(native, capture, new Vector2(.2f, -.3f) * Reduction(.9f * Mathf.DBToLinear(-6)), "Earlier bus is post-effects/gain detector.");
+            AudioServer.AddBusEffect(1, compressor); AudioServer.AddBusEffect(1, capture); musicPlayer.Play(); voicePlayer.Play(); var native = server.Native; AudioEffectTests.Wait(native, 20);
+            var borrowed = AudioServer.GetBusEffectInstance(1, 0); CheckCapture(native, capture, new Vector2(.2f, -.3f) * Reduction(.9f * Mathf.DBToLinear(-6)), "Earlier bus is post-effects/gain detector.");
             Reject<InvalidOperationException>(borrowed.Dispose);
-            server.MoveBus(1, -1); Check(ReferenceEquals(borrowed, server.GetBusEffectInstance(2, 0)), "Routing reorder preserves envelope identity.");
+            AudioServer.MoveBus(1, -1); Check(ReferenceEquals(borrowed, AudioServer.GetBusEffectInstance(2, 0)), "Routing reorder preserves envelope identity.");
             CheckCapture(native, capture, new Vector2(.2f, -.3f) * Reduction(.9f), "Later bus is direct raw detector before its gain.");
-            server.SetBusName(1, "Dialog"); voicePlayer.Bus = "Dialog";
+            AudioServer.SetBusName(1, "Dialog"); voicePlayer.Bus = "Dialog";
             CheckCapture(native, capture, new(.2f, -.3f), "Missing old name reads currently silent Master, not own input.");
             compressor.Sidechain = "Dialog"; CheckCapture(native, capture, new Vector2(.2f, -.3f) * Reduction(.9f), "Live name sees renamed later bus.");
-            using var silence = new AudioEffectAmplify { VolumeDB = float.NegativeInfinity }; server.AddBusEffect(1, silence);
+            using var silence = new AudioEffectAmplify { VolumeDB = float.NegativeInfinity }; AudioServer.AddBusEffect(1, silence);
             CheckCapture(native, capture, new Vector2(.2f, -.3f) * Reduction(.9f), "Later bus detector precedes its public effects.");
-            server.MoveBus(1, -1); CheckCapture(native, capture, new(.2f, -.3f), "Earlier bus detector includes its silencing effect.");
-            server.RemoveBusEffect(2, 0); server.SetBusVolumeDB(2, 0); server.SetBusSend(2, "Music");
+            AudioServer.MoveBus(1, -1); CheckCapture(native, capture, new(.2f, -.3f), "Earlier bus detector includes its silencing effect.");
+            AudioServer.RemoveBusEffect(2, 0); AudioServer.SetBusVolumeDB(2, 0); AudioServer.SetBusSend(2, "Music");
             compressor.Sidechain = "Music"; CheckCapture(native, capture, new Vector2(1.1f, -.9f) * Reduction(1.1f), "Self detector includes upstream sends before this effect.");
             compressor.Sidechain = ""; CheckCapture(native, capture, new Vector2(1.1f, -.9f) * Reduction(1.1f), "Empty sidechain uses the exact current effect input.");
-            server.SetBusBypassEffects(1, true); CheckCapture(native, capture, new Vector2(1.1f, -.9f) * Reduction(1.1f), "Bypassed capture does not consume frames while bus continues.", bypassed: true); server.SetBusBypassEffects(1, false);
+            AudioServer.SetBusBypassEffects(1, true); CheckCapture(native, capture, new Vector2(1.1f, -.9f) * Reduction(1.1f), "Bypassed capture does not consume frames while bus continues.", bypassed: true); AudioServer.SetBusBypassEffects(1, false);
             var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native sidechain passes allocate zero bytes/calls.");
             musicPlayer.StreamPaused = true; voicePlayer.StreamPaused = true; AudioEffectTests.Wait(native, 20); bytes = native.MixManagedBytes; calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed paused native passes allocate zero bytes/calls.");
-            server.RemoveBus(2); Check(!borrowed.IsDisposed, "Removing detector bus leaves target envelope alive.");
+            AudioServer.RemoveBus(2); Check(!borrowed.IsDisposed, "Removing detector bus leaves target envelope alive.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(1) > 0) server.RemoveBusEffect(1, 0); server.CloseNative(); server.BusCount = 1; }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(1) > 0) AudioServer.RemoveBusEffect(1, 0); server.CloseNative(); AudioServer.BusCount = 1; }
     }
     private static void CheckCapture(FAudioContext native, AudioEffectCapture capture, Vector2 expected, string message, bool bypassed = false)
     {
@@ -122,20 +122,20 @@ internal static class AudioCompressorTests
     }
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; settings.Set(ProjectSettings.RenderingMethod, backend);
+        var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         try
         {
             for (var run = 0; run < 2; run++)
             {
-                var server = AudioServer.Instance; server.BusCount = 3; server.SetBusName(1, "Music"); server.SetBusName(2, "Voice");
+                var server = AudioServer.Service; AudioServer.BusCount = 3; AudioServer.SetBusName(1, "Music"); AudioServer.SetBusName(2, "Voice");
                 using var compressor = new AudioEffectCompressor { Threshold = -12, AttackUS = 0, ReleaseMS = 0, Sidechain = "Voice" }; using var capture = new AudioEffectCapture { BufferLength = .2f }; using var music = AudioEffectTests.Constant(); using var voice = Constant(new(.9f, -.6f));
-                var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Name = "MusicPlayer", Stream = music, Bus = "Music", Autoplay = true }); window.AddChild(new AudioStreamPlayer { Name = "VoicePlayer", Stream = voice, Bus = "Voice", Autoplay = true }); var scenario = new HostScenario(capture); window.AddChild(scenario); server.AddBusEffect(1, compressor); server.AddBusEffect(1, capture);
-                try { Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public compressor host processed and cleaned up."); }
-                finally { if (!window.IsDisposed) window.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(1) > 0) server.RemoveBusEffect(1, 0); server.CloseNative(); server.BusCount = 1; }
+                var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Name = "MusicPlayer", Stream = music, Bus = "Music", Autoplay = true }); window.AddChild(new AudioStreamPlayer { Name = "VoicePlayer", Stream = voice, Bus = "Voice", Autoplay = true }); var scenario = new HostScenario(capture); window.AddChild(scenario); AudioServer.AddBusEffect(1, compressor); AudioServer.AddBusEffect(1, capture);
+                try { Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public compressor host processed and cleaned up."); }
+                finally { if (!window.IsDisposed) window.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(1) > 0) AudioServer.RemoveBusEffect(1, 0); server.CloseNative(); AudioServer.BusCount = 1; }
                 Console.WriteLine(JsonSerializer.Serialize(new { scenario = "compressor-host", backend, run, scenario.Completed, cleaned = window.IsDisposed }));
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class HostScenario(AudioEffectCapture capture) : Node
     {

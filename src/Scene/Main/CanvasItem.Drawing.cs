@@ -341,7 +341,7 @@ public abstract partial class CanvasItem
             if (replay.MultiMesh is { } instances)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.Instance.PhysicsInterpolationFraction : 1f;
+                var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.PhysicsInterpolationFraction : 1f;
                 instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true, fraction, outputSize);
                 continue;
             }

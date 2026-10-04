@@ -6,7 +6,7 @@ public partial class LineEdit
     private bool _dragAttempt, _dragHandled;
     private int _dragFrom, _dragTo;
     private DragPayload<string>? _dragPayload;
-    private bool CopyDrag => Input.Instance.IsKeyPressed(OperatingSystem.IsMacOS() ? Key.Meta : Key.Control);
+    private bool CopyDrag => Input.IsKeyPressed(OperatingSystem.IsMacOS() ? Key.Meta : Key.Control);
     /// <inheritdoc />
     protected override void OnTextInput(string text)
     {
@@ -31,7 +31,7 @@ public partial class LineEdit
         _ime = text; var count = ScalarCount(text); _imeSelection = new(Math.Clamp(selection.X, 0, count), Math.Clamp(selection.Y, 0, count - Math.Clamp(selection.X, 0, count)));
         Invalidate(); FitCaret(); ResetBlink(); if (changed) ChangedByUser();
     }
-    private bool Action(InputEvent input, string action) => InputMap.Instance.HasAction(action) && input.IsActionPressed(action, allowEcho: true, exactMatch: true);
+    private bool Action(InputEvent input, string action) => InputMap.HasAction(action) && input.IsActionPressed(action, allowEcho: true, exactMatch: true);
     /// <inheritdoc />
     protected override void OnGUIInput(InputEvent inputEvent)
     {
@@ -43,7 +43,7 @@ public partial class LineEdit
         if (inputEvent is InputEventMouseButton mouse)
         {
             if (mouse.ButtonIndex == MouseButton.Middle && mouse.Pressed && _editable && _middleMousePasteEnabled)
-            { Edit(); CaretColumn = HitColumn(mouse.Position); Deselect(); UserInsert(DisplayServer.Instance?.ClipboardGetPrimary() ?? ""); AcceptEvent(); return; }
+            { Edit(); CaretColumn = HitColumn(mouse.Position); Deselect(); UserInsert(DisplayServer.Service?.ClipboardGetPrimaryCore() ?? ""); AcceptEvent(); return; }
             if (mouse.ButtonIndex != MouseButton.Left) return;
             if (!mouse.Pressed)
             {
@@ -51,7 +51,7 @@ public partial class LineEdit
                 _pointerSelecting = false; if (_dragAttempt && _dragPayload is null) { _dragAttempt = false; MoveCaret(HitColumn(mouse.Position), false); }
                 var clear = _clearPressed; _clearPressed = false;
                 if (clear && IconRect().HasPoint(mouse.Position) && _editable) Clear();
-                if (_selecting && !_secret && DisplayServer.Instance is { } display && display.HasFeature(DisplayServer.Feature.ClipboardPrimary)) display.ClipboardSetPrimary(GetSelectedText());
+                if (_selecting && !_secret && DisplayServer.Service is { } display && display.HasFeatureCore(DisplayServer.Feature.ClipboardPrimary)) display.ClipboardSetPrimaryCore(GetSelectedText());
                 QueueRedraw(); AcceptEvent(); return;
             }
             Edit(); EnsureLayout();
@@ -82,7 +82,7 @@ public partial class LineEdit
             if (Action(key, "ui_text_select_all")) { SelectAll(); AcceptEvent(); return; }
             if (Action(key, "ui_copy")) { CopySelection(); AcceptEvent(); return; }
             if (Action(key, "ui_cut")) { if (_editable && !_secret && _selecting) { CopySelection(); DeleteRange(_selectionFrom, _selectionTo); ChangedByUser(); } AcceptEvent(); return; }
-            if (Action(key, "ui_paste")) { if (_editable) UserInsert(DisplayServer.Instance?.ClipboardGet() ?? ""); AcceptEvent(); return; }
+            if (Action(key, "ui_paste")) { if (_editable) UserInsert(DisplayServer.Service?.ClipboardGetCore() ?? ""); AcceptEvent(); return; }
             if (Action(key, "ui_undo")) { RestoreHistory(-1); AcceptEvent(); return; }
             if (Action(key, "ui_redo")) { RestoreHistory(1); AcceptEvent(); return; }
         }
@@ -119,7 +119,7 @@ public partial class LineEdit
         if (payload is not null && !_dragHandled && _editable && IsDragSuccessful() && !CopyDrag && _dragTo <= ScalarCount(_text) && ScalarSlice(_text, _dragFrom, _dragTo) == payload.Value) { DeleteRange(_dragFrom, _dragTo); ChangedByUser(); }
         _dragHandled = false;
     }
-    private void CopySelection() { if (!_secret && _selecting) DisplayServer.Instance?.ClipboardSet(GetSelectedText()); }
+    private void CopySelection() { if (!_secret && _selecting) DisplayServer.Service?.ClipboardSetCore(GetSelectedText()); }
     private void MoveCaret(int column, bool extend)
     {
         var previous = _caret; if (extend && _selectingEnabled) { if (!_selecting) _selectionAnchor = previous; _selectionFrom = Math.Min(_selectionAnchor, column); _selectionTo = Math.Max(_selectionAnchor, column); _selecting = _selectionFrom != _selectionTo; }

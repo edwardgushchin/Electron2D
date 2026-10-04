@@ -68,7 +68,7 @@ internal sealed class AudioEffectPitchShiftInstance : AudioEffectInstance
     {
         _source = source;
         var settings = source.Snapshot();
-        _rate = AudioServer.Instance.GetMixRate();
+        _rate = AudioServer.GetMixRate();
         if (!float.IsFinite(_rate) || _rate <= 0 || _rate > 1_000_000) throw new ArgumentOutOfRangeException(nameof(source), "Output rate exceeds prepared pitch-shift storage.");
         var size = 256 << (int)settings.Size;
         _left = new Channel(size); _right = new Channel(size);

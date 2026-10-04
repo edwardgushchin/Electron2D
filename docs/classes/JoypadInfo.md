@@ -1,6 +1,6 @@
 # JoypadInfo
 
-Last updated: 2026-09-24
+Last updated: 2026-10-04
 
 **Namespace:** `Electron2D`
 
@@ -17,9 +17,9 @@ Immutable typed projection of the native controller information returned by `Inp
 ## Example
 
 ```csharp
-foreach (var device in Input.Instance.GetConnectedJoypads())
+foreach (var device in Input.GetConnectedJoypads())
 {
-    if (Input.Instance.GetJoyInfo(device) is { } info)
+    if (Input.GetJoyInfo(device) is { } info)
         Console.WriteLine($"{info.RawName}: {info.VendorID:X4}/{info.ProductID:X4}");
 }
 ```

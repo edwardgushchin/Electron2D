@@ -98,7 +98,7 @@ internal sealed class AudioEffectReverbInstance : AudioEffectInstance
 
     internal AudioEffectReverbInstance(AudioEffectReverb source)
     {
-        _source = source; _rate = AudioServer.Instance.GetMixRate();
+        _source = source; _rate = AudioServer.GetMixRate();
         if (!float.IsFinite(_rate) || _rate <= 0 || _rate > 1_000_000)
             throw new ArgumentOutOfRangeException(nameof(source), "Output rate exceeds prepared reverb storage.");
         _left = new Channel(_rate, 0); _right = new Channel(_rate, .000521f);

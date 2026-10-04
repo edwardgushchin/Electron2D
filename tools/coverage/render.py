@@ -619,6 +619,8 @@ def render():
             updated = "2026-10-04"
         if name in {"Crypto", "CryptoKey", "X509Certificate", "HashingContext", "HMACContext", "AESContext", "HTTPClient", "HTTPRequest", "StreamPeerGZIP", "StreamPeerTCP", "WebSocketPeer", "WebSocketMultiplayerPeer", "MultiplayerPeer", "MultiplayerPeerExtension", "OfflineMultiplayerPeer", "MultiplayerAPI", "MultiplayerAPIExtension", "SceneMultiplayer", "MultiplayerSpawner", "MultiplayerSynchronizer", "SceneReplicationConfig", "ENetConnection", "ENetPacketPeer", "ENetMultiplayerPeer", "WebRTCMultiplayerPeer"}:
             updated = "2026-10-04"
+        if name in {"Engine", "ProjectSettings", "Input", "InputMap", "ThemeDB", "AudioServer", "PhysicsServer2D", "DisplayServer", "RenderingServer"}:
+            updated = "2026-10-04"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

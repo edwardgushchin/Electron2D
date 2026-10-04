@@ -2524,10 +2524,7 @@
       "electron2d": "method:Electron2D.AudioStreamWAV.OnIsMonophonic()",
       "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
     },
-    {
-      "electron2d": "property:Electron2D.AudioServer.Instance()",
-      "reason": "Borrowed process-wide service identity and disposal guard project the engine singleton lifecycle (ADRs 0005/0047); native output closes during engine teardown."
-    },
+
     {
       "electron2d": "property:Electron2D.AudioWAVImportOptions.Compression()",
       "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."

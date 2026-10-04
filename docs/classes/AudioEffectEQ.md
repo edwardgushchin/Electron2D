@@ -1,6 +1,6 @@
 # AudioEffectEQ
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public class Electron2D.AudioEffectEQ` · **Source:** [AudioEffectEQ.cs](../../src/Scene/Resources/AudioEffectEQ.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -18,8 +18,8 @@ Partial snippet in an audio-owner host; remove the effect before caller-owned re
 using var eq = new AudioEffectEQ10();
 eq.SetBandGainDB(2, 6); // 125 Hz
 eq.SetBandGainDB(8, -6); // 8 kHz
-AudioServer.Instance.AddBusEffect(0, eq);
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.AddBusEffect(0, eq);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 AudioEQTests.RunHost executes a public Window/Autoplay/EQ/capture path on both current Wayland renderers.

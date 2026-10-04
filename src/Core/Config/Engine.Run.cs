@@ -12,33 +12,13 @@ public sealed partial class Engine
 
     internal void AttachConstructingTree(SceneTree tree) => Volatile.Write(ref _mainLoop, tree);
 
-    /// <summary>Gets or sets the maximum process cadence used by Run.</summary>
-    /// <value>Zero, meaning unlimited, by default; otherwise a positive number of frames per second.</value>
-    /// <remarks>May change from any thread. Manual AdvanceFrame calls do not wait. Waiting uses monotonic,
-    /// unscaled time and continues to pump window events at intervals of at most ten milliseconds.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The limit is negative.</exception>
-    public int MaxFPS
+    internal int MaxFPSCore
     {
         get => Volatile.Read(ref _maxFps);
         set { ArgumentOutOfRangeException.ThrowIfNegative(value); Volatile.Write(ref _maxFps, value); }
     }
 
-    /// <summary>Runs a root window and its scene on the calling main thread until quit or failure.</summary>
-    /// <param name="window">A live, detached, parentless window, not queued for deletion.</param>
-    /// <returns>The exit code supplied by SceneTree.Quit, or zero for an automatically accepted close.</returns>
-    /// <remarks>The runtime owns the window and children after validation and successful reservation of the idle
-    /// engine, including failed native startup or scene activation. It opens the native window before ready, pumps
-    /// events before frames, limits cadence with MaxFPS, finalizes and disposes the scene, then releases native resources.
-    /// A new window may be run after successful cleanup. Native services opened directly through DisplayServer must
-    /// finish before teardown; pending asynchronous dialogs can reject native disposal and the error is reported. Manual Start/AdvanceFrame/Stop cannot interfere with this run.
-    /// Canvas frames are submitted after each successful process step. Project locale and pseudolocalization settings are sampled
-    /// before native window and scene activation. It does not install process-wide console or termination handlers.</remarks>
-    /// <exception cref="ArgumentNullException"><paramref name="window"/> is null.</exception>
-    /// <exception cref="ObjectDisposedException">The supplied window is disposed.</exception>
-    /// <exception cref="InvalidOperationException">The window is not detached, another lifecycle is active, the caller is not the native main thread, or startup fails.</exception>
-    /// <exception cref="AggregateException">Several callbacks or cleanup operations fail; all owned cleanup is attempted.</exception>
-    /// <exception cref="Exception">A callback or platform operation fails. All owned cleanup stages are attempted before the error escapes.</exception>
-    public int Run(Window window)
+    internal int RunCore(Window window)
     {
         ArgumentNullException.ThrowIfNull(window);
         ObjectDisposedException.ThrowIf(window.IsDisposed, window);
@@ -56,7 +36,7 @@ public sealed partial class Engine
         try
         {
             TranslationServer.LoadProjectLocalization();
-            Input.Instance.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.Instance.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
+            Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
             window.OpenNative();
             tree = new SceneTree(window, attachToEngine: true);
             Volatile.Write(ref _mainLoop, tree);
@@ -77,7 +57,7 @@ public sealed partial class Engine
                 window.Render(tree, renderStep);
                 while (!tree.QuitRequested)
                 {
-                    var limit = MaxFPS;
+                    var limit = MaxFPSCore;
                     if (limit == 0)
                         break;
                     var remaining = 1d / limit - Stopwatch.GetElapsedTime(lastFrame).TotalSeconds;

@@ -4,7 +4,7 @@ internal static partial class RenderingRuntimeTests
 {
     private static void VerifyCanvasTiming(string backend, string? fixture = null)
     {
-        var settings = ProjectSettings.Instance; var oldRollover = settings.Get(ProjectSettings.RenderingTimeRolloverSeconds); var oldScale = Engine.Instance.TimeScale;
+        var settings = ProjectSettings.Service; var oldRollover = ProjectSettings.Get(ProjectSettings.RenderingTimeRolloverSeconds); var oldScale = Engine.TimeScale;
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
         var window = new Window { Size = new(176, 112) }; var draws = 0; var frames = 0; var ticks = 0; var disabledTicks = 0;
@@ -37,22 +37,22 @@ internal static partial class RenderingRuntimeTests
             Tick = step =>
         {
             ticks++; lastStep = step;
-            if (frames == 6 && ++disabledTicks == 2) RenderingServer.Instance!.RenderLoopEnabled = true;
+            if (frames == 6 && ++disabledTicks == 2) RenderingServer.RenderLoopEnabled = true;
         }
         };
         probe.ProcessEnabled = true; window.AddChild(probe);
         try
         {
-            Engine.Instance.TimeScale = 1; settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d);
+            Engine.TimeScale = 1; ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d);
             window.Ready += _ =>
             {
-                var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
+                var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
                 Check(server.CanvasTime == 0, "Each renderer starts its clock at zero.");
-                var software = server.GetCurrentRenderingDriverName() == "software";
-                server.FramePreDraw += () => Check(server.CanvasTime == previousTime, "Pre-draw sees the previous render time.");
-                server.FramePostDraw += () =>
+                var software = RenderingServer.GetCurrentRenderingDriverName() == "software";
+                RenderingServer.FramePreDraw += () => Check(server.CanvasTime == previousTime, "Pre-draw sees the previous render time.");
+                RenderingServer.FramePostDraw += () =>
                 {
-                    frames++; var time = server.CanvasTime; var rollover = settings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
+                    frames++; var time = server.CanvasTime; var rollover = ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
                     Check(Math.Abs(time - (previousTime + lastStep) % rollover) < 1e-12, "Render time consumes the scheduled process step and active rollover.");
                     if (frames == 2) Check(time == previousTime && lastStep == 0, "TimeScale zero freezes intervals.");
                     if (frames == 3) Check(window.Tree!.Paused && lastStep > 0 && time > previousTime, "Paused scene still advances scaled rendering time.");
@@ -71,24 +71,24 @@ internal static partial class RenderingRuntimeTests
                     var scaled = image.GetPixel(55, 59).R; Check(scaled is > 0 and < 1, "Filled feather scales outside the original rectangle.");
                     var outline = image.GetPixel(98, 65).R; Check(outline is > 0 and < 1, "Outline uses compensated polyline feather.");
                     Pixel(image, 110, 65, Colors.Black); Pixel(image, 148, 60, Colors.Cyan); Pixel(image, 148, 61, Colors.Black);
-                    if (frames == 1) Engine.Instance.TimeScale = 0;
-                    if (frames == 2) { Engine.Instance.TimeScale = 2; window.Tree!.Paused = true; }
-                    if (frames == 3) { Engine.Instance.TimeScale = 1; window.Tree!.Paused = false; settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 0.025); }
-                    if (frames == 4) { settings.AddCustomFeature("canvas-time-test"); settings.SetFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "canvas-time-test", 0.035); }
-                    if (frames == 6) server.RenderLoopEnabled = false;
-                    if (frames == 7) { settings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "canvas-time-test"); settings.RemoveCustomFeature("canvas-time-test"); settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d); }
+                    if (frames == 1) Engine.TimeScale = 0;
+                    if (frames == 2) { Engine.TimeScale = 2; window.Tree!.Paused = true; }
+                    if (frames == 3) { Engine.TimeScale = 1; window.Tree!.Paused = false; ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 0.025); }
+                    if (frames == 4) { ProjectSettings.AddCustomFeature("canvas-time-test"); ProjectSettings.SetFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "canvas-time-test", 0.035); }
+                    if (frames == 6) RenderingServer.RenderLoopEnabled = false;
+                    if (frames == 7) { ProjectSettings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "canvas-time-test"); ProjectSettings.RemoveCustomFeature("canvas-time-test"); ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d); }
                     if (frames == 9) { Check(draws == 1, "Clock and backend state changes do not rerecord geometry."); changed = true; node.QueueRedraw(); }
                     if (frames >= 12 && seenRed && seenGreen) { Check(draws == 2, "Only explicit redraw rerecords intervals."); window.Tree!.Quit(); }
                     if (frames == 90) throw new InvalidOperationException("Both animation phases must become visible.");
                 };
             };
-            Engine.Instance.Run(window); Released(window);
+            Engine.Run(window); Released(window);
             Console.WriteLine($"Canvas rectangle and animation-clock pixels passed: {backend}/{fixture ?? "default"} ({frames} frames).");
         }
         finally
         {
-            settings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "canvas-time-test"); settings.RemoveCustomFeature("canvas-time-test");
-            settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, oldRollover); Engine.Instance.TimeScale = oldScale;
+            ProjectSettings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "canvas-time-test"); ProjectSettings.RemoveCustomFeature("canvas-time-test");
+            ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, oldRollover); Engine.TimeScale = oldScale;
         }
     }
     private sealed class CanvasTimeProbe : Node { internal Action<double>? Tick; protected override void OnProcess(double delta) => Tick?.Invoke(delta); }

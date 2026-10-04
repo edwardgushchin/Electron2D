@@ -16,7 +16,7 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
     internal AudioStreamPlaybackSynchronized(AudioStreamSynchronized source, AudioStreamPlayback?[] children, int count) { _source = source; _children = children; _count = count; }
     private void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(_source.IsDisposed, _source); }
     internal void EnsureIdle() { if (_busy || _querying) throw new InvalidOperationException("Synchronized child callbacks cannot reenter playback mutation or mixing."); }
-    internal void CheckControlOwner() { if (RequiresAudioOwner) AudioServer.Instance.Check(); }
+    internal void CheckControlOwner() { if (RequiresAudioOwner) AudioServer.Service.Check(); }
     private void CheckControl() { Check(); EnsureIdle(); CheckControlOwner(); if (_source.Editing) throw new InvalidOperationException("Synchronized factories/cleanup cannot mutate playback."); }
     internal AudioStreamPlayback?[] ReplaceChildren(AudioStreamPlayback?[] children, int count) { EnsureIdle(); var previous = _children; _children = children; _count = count; _active = false; UpdateNativeOwner(_nativeOwner); return previous; }
     internal static Exception? ReleaseChildren(AudioStreamPlayback?[] children)
@@ -32,9 +32,9 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
     internal override void UpdateNativeOwner(FAudioStreamVoice? owner, bool enabled = true) { _nativeOwner = owner; foreach (var child in _children) child?.UpdateNativeOwner(owner, enabled && _active); }
     internal override void PrepareQueuedControls()
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try { CheckControl(); foreach (var child in _children) child?.PrepareQueuedControls(); }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     private Exception? StopChildren(bool queued = false)
     {
@@ -42,8 +42,8 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
         foreach (var child in _children) if (child is not null && !child.IsDisposed) try { if (queued) child.StopQueued(); else child.Stop(); } catch (Exception failure) { error = AudioStreamSynchronized.Combine(error, failure); }
         return error;
     }
-    internal override void StartQueued(double time) { lock (AudioServer.Instance.StreamGate) StartCore(time, true); }
-    internal override void StopQueued() { lock (AudioServer.Instance.StreamGate) StopCore(true); }
+    internal override void StartQueued(double time) { lock (AudioServer.Service.StreamGate) StartCore(time, true); }
+    internal override void StopQueued() { lock (AudioServer.Service.StreamGate) StopCore(true); }
     private void StartCore(double fromPosition, bool queued)
     {
         Check(); EnsureIdle(); if (!queued) CheckControlOwner();
@@ -71,30 +71,30 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
     /// <inheritdoc />
     protected override void OnStart(double fromPosition)
     {
-        var server = AudioServer.Instance; server.Lock(); try { StartCore(fromPosition, false); } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { StartCore(fromPosition, false); } finally { server.UnlockCore(); }
     }
     /// <inheritdoc />
     protected override void OnStop()
     {
-        var server = AudioServer.Instance; server.Lock(); try { StopCore(false); } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { StopCore(false); } finally { server.UnlockCore(); }
     }
     /// <inheritdoc />
-    protected override bool OnIsPlaying() { lock (AudioServer.Instance.StreamGate) { Check(); return _active; } }
+    protected override bool OnIsPlaying() { lock (AudioServer.Service.StreamGate) { Check(); return _active; } }
     /// <inheritdoc />
     protected override void OnSeek(double time)
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try
         {
             CheckControl(); _busy = true;
             try { Exception? error = null; for (var i = 0; i < _count; i++) if (_children[i] is { } child) try { child.Seek(time); } catch (Exception failure) { error = AudioStreamSynchronized.Combine(error, failure); } if (error is not null) throw error; }
             finally { _busy = false; }
         }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     private double Cursor(bool loops)
     {
-        lock (AudioServer.Instance.StreamGate)
+        lock (AudioServer.Service.StreamGate)
         {
             Check(); if (_querying) throw new InvalidOperationException("Child cursor callbacks cannot reenter synchronized queries."); _querying = true;
             try
@@ -118,7 +118,7 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
     /// <inheritdoc />
     protected override int OnMix(Span<Vector2> buffer, float rateScale)
     {
-        lock (AudioServer.Instance.StreamGate)
+        lock (AudioServer.Service.StreamGate)
         {
             Check(); EnsureIdle(); buffer.Clear(); if (!_active) return 0; _busy = true;
             try
@@ -148,7 +148,7 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
     /// <inheritdoc />
     protected override void ValidateDisposal()
     {
-        var server = AudioServer.Instance; server.Lock(); try { EnsureIdle(); CheckControlOwner(); if (_source.Editing) throw new InvalidOperationException("Factory/cleanup cannot dispose synchronized playback."); } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { EnsureIdle(); CheckControlOwner(); if (_source.Editing) throw new InvalidOperationException("Factory/cleanup cannot dispose synchronized playback."); } finally { server.UnlockCore(); }
         base.ValidateDisposal();
     }
     /// <inheritdoc />
@@ -156,7 +156,7 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
     {
         if (disposing)
         {
-            lock (AudioServer.Instance.StreamGate)
+            lock (AudioServer.Service.StreamGate)
             {
                 _busy = true; _active = false;
                 try { _source.Unregister(this); var children = _children; _children = []; _count = 0; var error = ReleaseChildren(children); if (error is not null) throw error; }

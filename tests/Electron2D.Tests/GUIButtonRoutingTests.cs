@@ -4,7 +4,7 @@ internal static class GUIButtonRoutingTests
 {
     internal static void Run()
     {
-        InputMap.Instance.LoadFromProjectSettings();
+        InputMap.LoadFromProjectSettings();
         TouchCapture(); PositionalTransforms(); PausedInput(); MouseCapture();
         Console.WriteLine("GUI button routing verifies per-contact touch capture/cancellation, outside release, gestures, transformed drag, parent bubbling, processing gates and multi-button mouse capture.");
     }

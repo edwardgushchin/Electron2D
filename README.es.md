@@ -110,7 +110,7 @@ dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 -
 
 Mantén pulsadas las teclas de dirección para mover el nodo de la escena; pulsa Escape o cierra la ventana para salir. El ejemplo informa del movimiento en la terminal y no dibuja la escena.
 
-Su [punto de entrada](examples/HostExample/Program.cs) configura `Window`, añade la escena y llama a `Engine.Instance.Run`. El motor controla los eventos, los tiempos de fotograma y el cierre. Consulta la [guía del ejemplo](examples/HostExample/README.md) para ver el flujo completo.
+Su [punto de entrada](examples/HostExample/Program.cs) configura `Window`, añade la escena y llama a `Engine.Run`. El motor controla los eventos, los tiempos de fotograma y el cierre. Consulta la [guía del ejemplo](examples/HostExample/README.md) para ver el flujo completo.
 
 <a id="documentation"></a>
 

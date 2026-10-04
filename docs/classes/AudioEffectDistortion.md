@@ -1,6 +1,6 @@
 # AudioEffectDistortion
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectDistortion` · **Source:** [AudioEffectDistortion.cs](../../src/Scene/Resources/AudioEffectDistortion.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -20,9 +20,9 @@ using var distortion = new AudioEffectDistortion
     PreGain = 3,
     PostGain = -2
 };
-AudioServer.Instance.AddBusEffect(0, distortion);
+AudioServer.AddBusEffect(0, distortion);
 // Play a source routed through Master.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 Remove the effect before disposing the borrowed resource.

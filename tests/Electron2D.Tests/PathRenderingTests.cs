@@ -15,8 +15,8 @@ internal static partial class RenderingRuntimeTests
         var observer = new CanvasNode { Name = "observer" }; window.AddChild(observer); var stage = 0;
         observer.ReadyAction = _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black);
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = renderer.Readback();
                 switch (stage++)
@@ -41,17 +41,17 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && stage == 7, "Native path run completed all readback stages.");
+        Check(Engine.Run(window) == 0 && stage == 7, "Native path run completed all readback stages.");
         Released(window); Check(!horizontal.IsDisposed && !vertical.IsDisposed, "Scene borrows curve resources.");
         Console.WriteLine($"Scene paths {backend} movement, worker update and visibility readback passed.");
     }
 
     private static void VerifyPathDiagnostics(string backend)
     {
-        var settings = ProjectSettings.Instance; var savedColor = settings.Get(ProjectSettings.DebugPathsColor);
+        var settings = ProjectSettings.Service; var savedColor = ProjectSettings.Get(ProjectSettings.DebugPathsColor);
         try
         {
-            settings.Set(ProjectSettings.DebugPathsColor, Colors.Red);
+            ProjectSettings.Set(ProjectSettings.DebugPathsColor, Colors.Red);
             using var curve = new Curve2D(); curve.AddPoint(Vector2.Zero); curve.AddPoint(new(40, 0));
             using var zero = new Curve2D(); zero.AddPoint(Vector2.Zero); zero.AddPoint(Vector2.Zero);
             using var single = new Curve2D(); single.AddPoint(Vector2.Zero);
@@ -60,8 +60,8 @@ internal static partial class RenderingRuntimeTests
             var observer = new CanvasNode { Name = "observer" }; window.AddChild(observer); var stage = 0;
             observer.ReadyAction = _ =>
             {
-                var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black);
-                var tree = window.Tree!; var software = renderer.GetCurrentRenderingDriverName() == "software";
+                var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+                var tree = window.Tree!; var software = RenderingServer.GetCurrentRenderingDriverName() == "software";
                 tree.EditedSceneRoot = window; var refreshes = 0; var titleEvents = 0;
                 window.TitleChanged += () => titleEvents++;
                 Action<SceneTree, Node> changed = (_, node) => { Check(node == window, "Title refresh identifies its window."); refreshes++; Check(titleEvents == refreshes - 1, "Warning refresh precedes TitleChanged."); };
@@ -72,8 +72,8 @@ internal static partial class RenderingRuntimeTests
                 Check(rejected && window.Title == "Committed" && titleEvents == 1, "Native title commit survives warning failure.");
                 tree.NodeConfigurationWarningChanged -= fail; tree.NodeConfigurationWarningChanged -= changed;
 
-                settings.Set(ProjectSettings.DebugPathsColor, Colors.Blue); // Existing tree retains its sampled color.
-                renderer.FramePostDraw += () =>
+                ProjectSettings.Set(ProjectSettings.DebugPathsColor, Colors.Blue); // Existing tree retains its sampled color.
+                RenderingServer.FramePostDraw += () =>
                 {
                     using var pixels = renderer.Readback();
                     switch (stage++)
@@ -101,10 +101,10 @@ internal static partial class RenderingRuntimeTests
                     }
                 };
             };
-            Check(Engine.Instance.Run(window) == 0 && stage == 14, "Path diagnostics completed all readbacks.");
+            Check(Engine.Run(window) == 0 && stage == 14, "Path diagnostics completed all readbacks.");
             Released(window); Check(!curve.IsDisposed, "Diagnostics borrow curve resources.");
             Console.WriteLine($"Path diagnostics {backend} toggles, tangent markers, worker edits, transforms and visibility readback passed.");
         }
-        finally { settings.Set(ProjectSettings.DebugPathsColor, savedColor); }
+        finally { ProjectSettings.Set(ProjectSettings.DebugPathsColor, savedColor); }
     }
 }

@@ -56,10 +56,10 @@ internal static partial class RenderingRuntimeTests
         };
         node.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!;
-            Check(server.GetCurrentRenderingMethod() == backend, "The canvas texture backend is active.");
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            Check(RenderingServer.GetCurrentRenderingMethod() == backend, "The canvas texture backend is active.");
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 frames++;
                 using var frame = server.Readback();
@@ -104,7 +104,7 @@ internal static partial class RenderingRuntimeTests
             };
         };
         window.AddChild(node);
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 3 && !texture.IsDisposed, "Canvas texture ownership survives renderer shutdown.");
         Console.WriteLine($"Canvas texture checks passed: {backend}/{fixture ?? "default"}.");
@@ -127,9 +127,9 @@ internal static partial class RenderingRuntimeTests
                 n.DrawTextureRectRegion(texture, new Rect2(0, 0, 32, 8), new Rect2(0, 0, 8, 2));
                 n.DrawTextureRectRegion(texture, new Rect2(0, 16, 32, 8), new Rect2(0, 0, 8, 2), clipUV: false);
             },
-            ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
+            ReadyAction = n => RenderingServer.FramePostDraw += () =>
             {
-                using var frame = RenderingServer.Instance.Readback();
+                using var frame = RenderingServer.Service!.Readback();
                 Pixel(frame, 0, 1, new Color(0.125f, 0.5f, 0, 1));
                 Pixel(frame, 8, 1, new Color(8.5f / 32, 0.5f, 0, 1));
                 Pixel(frame, 31, 1, new Color(0.875f, 0.5f, 0, 1));
@@ -137,7 +137,7 @@ internal static partial class RenderingRuntimeTests
                 n.Tree!.Quit();
             }
         });
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
     }
 
     private static void VerifyCanvasHDR(string backend)
@@ -149,14 +149,14 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(new CanvasNode
         {
             DrawAction = n => n.DrawTextureRect(texture, new Rect2(0, 0, 16, 16), false, new Color(0.25f, 1, 1, 1)),
-            ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
+            ReadyAction = n => RenderingServer.FramePostDraw += () =>
             {
-                using var frame = RenderingServer.Instance.Readback();
+                using var frame = RenderingServer.Service!.Readback();
                 Pixel(frame, 8, 8, new Color(0.5f, 0, 0, 1));
                 n.Tree!.Quit();
             }
         });
-        try { Engine.Instance.Run(window); Console.WriteLine($"Canvas HDR precision passed: {backend}."); }
+        try { Engine.Run(window); Console.WriteLine($"Canvas HDR precision passed: {backend}."); }
         catch (NotSupportedException e) when (backend == "compatibility" && e.Message.Contains("HDR texture precision"))
         { Console.WriteLine("Canvas HDR precision explicitly rejected by this compatibility driver."); }
         Released(window);
@@ -182,12 +182,12 @@ internal static partial class RenderingRuntimeTests
         using var texture = ImageTexture.CreateFromImage(source);
         var window = new Window();
         window.AddChild(new CanvasNode { DrawAction = n => { n.DrawTexture(texture, Vector2.Zero); texture.Dispose(); } });
-        Reject<ObjectDisposedException>(() => Engine.Instance.Run(window));
+        Reject<ObjectDisposedException>(() => Engine.Run(window));
         Released(window);
         using var unreadable = new UnreadableTexture();
         window = new Window();
         window.AddChild(new CanvasNode { DrawAction = n => n.DrawTexture(unreadable, Vector2.Zero) });
-        Reject<InvalidOperationException>(() => Engine.Instance.Run(window));
+        Reject<InvalidOperationException>(() => Engine.Run(window));
         Released(window);
     }
 

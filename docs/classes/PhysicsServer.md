@@ -1,65 +1,67 @@
 # PhysicsServer
 
-Last updated: 2026-10-01
+Last updated: 2026-10-04
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
+Public static declarations are in [`PhysicsServer.API.cs`](../../src/Servers/Physics/PhysicsServer.API.cs).
+
 ## Description
+
+Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
 The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's existing Box2D world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the six implemented shape families. A server-created collider can join either kind of space; [World2D](World2D.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
 
 ## Example
 
 ```csharp
-var server = PhysicsServer.Instance;
-RID space = server.SpaceCreate();
-server.SpaceSetActive(space, true);
-RID body = server.BodyCreate();
-RID shape = server.CircleShapeCreate();
+RID space = PhysicsServer.SpaceCreate();
+PhysicsServer.SpaceSetActive(space, true);
+RID body = PhysicsServer.BodyCreate();
+RID shape = PhysicsServer.CircleShapeCreate();
 using var circle = new CircleShape { Radius = 12 };
-server.ShapeSetData(shape, circle);
-server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-server.BodyAddShape(body, shape);
-server.BodySetSpace(body, space);
+PhysicsServer.ShapeSetData(shape, circle);
+PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+PhysicsServer.BodyAddShape(body, shape);
+PhysicsServer.BodySetSpace(body, space);
 using var ray = PhysicsRayQueryParameters2D.Create(new(0, -40), new(0, 40));
-var hit = server.SpaceGetDirectState(space).IntersectRay(ray);
-server.FreeRID(body);
-server.FreeRID(shape);
-server.FreeRID(space);
+var hit = PhysicsServer.SpaceGetDirectState(space).IntersectRay(ray);
+PhysicsServer.FreeRID(body);
+PhysicsServer.FreeRID(shape);
+PhysicsServer.FreeRID(space);
 ```
 
 ## API summary
 
 | Member | Contract |
 | --- | --- |
-| `public static PhysicsServer Instance { get; }` | Shared process server. |
 | `public enum BodyMode` | [Static, Kinematic, Rigid, RigidLinear](PhysicsServer.BodyMode.md). |
-| `public RID SpaceCreate()` | Caller-owned inactive independent physics space. |
-| `public void SpaceStep(RID space, double delta)` | Advance only an explicitly created space; zero delta is inert. |
-| `public PhysicsDirectSpaceState SpaceGetDirectState(RID space)` | Cached query view of any live server/scene space. |
-| `public bool BodyTestMotion(RID body, PhysicsTestMotionParameters2D parameters, PhysicsTestMotionResult2D? result = null)` | Test a scene or server body against its current space without moving it; optionally fill typed output. |
-| `public void BodyAddCollisionException(RID body, RID exceptedBody)` / `BodyRemoveCollisionException(RID body, RID exceptedBody)` | Change a one-sided body-owned RID exception affecting both solver contacts and motion tests. |
-| `public RID BodyCreate()` / `AreaCreate()` | Detached rigid body or sensor Area with default layer/mask one. |
-| `public RID CircleShapeCreate()` / `RectangleShapeCreate()` | Default concrete geometry RIDs. |
-| `public RID CapsuleShapeCreate()` / `SegmentShapeCreate()` | Default concrete geometry RIDs. |
-| `public RID SeparationRayShapeCreate()` | Twenty-unit downward directed ray, SlideOnSlope false. |
-| `public RID ConvexPolygonShapeCreate()` / `ConcavePolygonShapeCreate()` | Empty polygon geometry RIDs. |
-| `public void ShapeSetData(RID shape, Shape data)` | Copy same-kind caller geometry into a server shape and rebuild users. |
-| `public Shape ShapeGetData(RID shape)` | Caller-owned independent geometry copy. |
-| `public void BodyAddShape(RID body, RID shape, Transform? transform = null, bool disabled = false)` | Add one indexed body shape slot; null transform is identity. |
-| `public void AreaAddShape(RID area, RID shape, Transform? transform = null, bool disabled = false)` | Add one indexed sensor shape slot. |
-| `public int BodyGetShapeCount(RID body)` / `AreaGetShapeCount(RID area)` | Count slots, including disabled ones. |
-| `public void BodySetShapeDisabled(RID body, int index, bool disabled)` / `AreaSetShapeDisabled(RID area, int index, bool disabled)` | Rebuild one indexed slot's fixtures. |
-| `public void BodyRemoveShape(RID body, int index)` / `AreaRemoveShape(RID area, int index)` | Remove one slot and its fixtures. |
-| `public void BodySetSpace(RID body, RID space)` / `AreaSetSpace(RID area, RID space)` | Attach to a live space; empty RID detaches. |
-| `public RID BodyGetSpace(RID body)` / `AreaGetSpace(RID area)` | Current space RID, or empty while detached. |
-| `public void BodySetTransform(RID body, Transform transform)` / `AreaSetTransform(RID area, Transform transform)` | Set finite unit-scale, zero-skew pose. |
-| `public Transform BodyGetTransform(RID body)` | Current solver pose, including dynamic movement. |
-| `public void BodySetLinearVelocity(RID body, Vector2 velocity)` | Finite scene units per second. |
-| `public void BodySetMode(RID body, BodyMode mode)` / `BodyMode BodyGetMode(RID body)` | Change/read the solver motion mode. |
-| `public void BodySetCollisionLayer(RID body, uint layer)` / `BodySetCollisionMask(RID body, uint mask)` | Rebuild body fixtures with 32-bit filters. |
-| `public void AreaSetCollisionLayer(RID area, uint layer)` | Rebuild Area sensor fixtures with 32-bit queryable layers. |
-| `public void FreeRID(RID rid)` | Free a caller-owned space, body, Area, joint or shape. |
+| `public static RID SpaceCreate()` | Caller-owned inactive independent physics space. |
+| `public static void SpaceStep(RID space, double delta)` | Advance only an explicitly created space; zero delta is inert. |
+| `public static PhysicsDirectSpaceState SpaceGetDirectState(RID space)` | Cached query view of any live server/scene space. |
+| `public static bool BodyTestMotion(RID body, PhysicsTestMotionParameters2D parameters, PhysicsTestMotionResult2D? result = null)` | Test a scene or server body against its current space without moving it; optionally fill typed output. |
+| `public static void BodyAddCollisionException(RID body, RID exceptedBody)` / `BodyRemoveCollisionException(RID body, RID exceptedBody)` | Change a one-sided body-owned RID exception affecting both solver contacts and motion tests. |
+| `public static RID BodyCreate()` / `AreaCreate()` | Detached rigid body or sensor Area with default layer/mask one. |
+| `public static RID CircleShapeCreate()` / `RectangleShapeCreate()` | Default concrete geometry RIDs. |
+| `public static RID CapsuleShapeCreate()` / `SegmentShapeCreate()` | Default concrete geometry RIDs. |
+| `public static RID SeparationRayShapeCreate()` | Twenty-unit downward directed ray, SlideOnSlope false. |
+| `public static RID ConvexPolygonShapeCreate()` / `ConcavePolygonShapeCreate()` | Empty polygon geometry RIDs. |
+| `public static void ShapeSetData(RID shape, Shape data)` | Copy same-kind caller geometry into a server shape and rebuild users. |
+| `public static Shape ShapeGetData(RID shape)` | Caller-owned independent geometry copy. |
+| `public static void BodyAddShape(RID body, RID shape, Transform? transform = null, bool disabled = false)` | Add one indexed body shape slot; null transform is identity. |
+| `public static void AreaAddShape(RID area, RID shape, Transform? transform = null, bool disabled = false)` | Add one indexed sensor shape slot. |
+| `public static int BodyGetShapeCount(RID body)` / `AreaGetShapeCount(RID area)` | Count slots, including disabled ones. |
+| `public static void BodySetShapeDisabled(RID body, int index, bool disabled)` / `AreaSetShapeDisabled(RID area, int index, bool disabled)` | Rebuild one indexed slot's fixtures. |
+| `public static void BodyRemoveShape(RID body, int index)` / `AreaRemoveShape(RID area, int index)` | Remove one slot and its fixtures. |
+| `public static void BodySetSpace(RID body, RID space)` / `AreaSetSpace(RID area, RID space)` | Attach to a live space; empty RID detaches. |
+| `public static RID BodyGetSpace(RID body)` / `AreaGetSpace(RID area)` | Current space RID, or empty while detached. |
+| `public static void BodySetTransform(RID body, Transform transform)` / `AreaSetTransform(RID area, Transform transform)` | Set finite unit-scale, zero-skew pose. |
+| `public static Transform BodyGetTransform(RID body)` | Current solver pose, including dynamic movement. |
+| `public static void BodySetLinearVelocity(RID body, Vector2 velocity)` | Finite scene units per second. |
+| `public static void BodySetMode(RID body, BodyMode mode)` / `BodyMode BodyGetMode(RID body)` | Change/read the solver motion mode. |
+| `public static void BodySetCollisionLayer(RID body, uint layer)` / `BodySetCollisionMask(RID body, uint mask)` | Rebuild body fixtures with 32-bit filters. |
+| `public static void AreaSetCollisionLayer(RID area, uint layer)` | Rebuild Area sensor fixtures with 32-bit queryable layers. |
+| `public static void FreeRID(RID rid)` | Free a caller-owned space, body, Area, joint or shape. |
 | `protected override void ValidateDisposal()` | Reject consumer disposal of the singleton. |
 
 ## Method descriptions
@@ -72,7 +74,7 @@ server.FreeRID(space);
 <a id="colliders"></a>
 ### Collider creation, shapes and ownership
 
-`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The six shape constructors correspond to the already implemented circle, rectangle, capsule, segment, convex and concave resource families. `ShapeSetData` rejects a disposed or different-kind Shape, duplicates caller data and rebuilds attached users; `ShapeGetData` returns another independent duplicate. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public query ShapeIndex. An explicit collider may be moved into the SceneTree's `World2D.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
+`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The six shape constructors correspond to the already implemented circle, rectangle, capsule, segment, convex and concave resource families. `ShapeSetData` rejects a disposed or different-kind Shape, duplicates caller data and rebuilds attached users; `ShapeGetData` returns another independent duplicate. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World2D.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
 
 <a id="body-state"></a>
 ### Body state and filters
@@ -98,20 +100,20 @@ Frees only caller-owned server resources. Joint free removes its native handle a
 
 | Signature | Contract |
 | --- | --- |
-| `public PhysicsDirectBodyState? BodyGetDirectState(RID body)` | Cached attachment view, null while detached. |
-| `public void BodySetForceIntegrationCallback(RID body, Action<PhysicsDirectBodyState>? callback)` | Set/clear a post-solver force callback. |
-| `public void BodySetForceIntegrationCallback<T>(RID body, Action<PhysicsDirectBodyState, T>? callback, T userData)` | Strongly typed data adapter allocated at registration. |
-| `public void BodySetStateSyncCallback(RID body, Action<PhysicsDirectBodyState>? callback)` | Set/clear the following sync observer. |
-| `public void BodySetOmitForceIntegration(RID body, bool enable)` | Control default gravity/damping/force omission. |
-| `public bool BodyIsOmittingForceIntegration(RID body)` | Read omission policy. |
-| `public void BodySetMaxContactsReported(RID body, int amount)` | Set a nonnegative contact-point cap. |
-| `public int BodyGetMaxContactsReported(RID body)` | Read the configured cap. |
+| `public static PhysicsDirectBodyState? BodyGetDirectState(RID body)` | Cached attachment view, null while detached. |
+| `public static void BodySetForceIntegrationCallback(RID body, Action<PhysicsDirectBodyState>? callback)` | Set/clear a post-solver force callback. |
+| `public static void BodySetForceIntegrationCallback<T>(RID body, Action<PhysicsDirectBodyState, T>? callback, T userData)` | Strongly typed data adapter allocated at registration. |
+| `public static void BodySetStateSyncCallback(RID body, Action<PhysicsDirectBodyState>? callback)` | Set/clear the following sync observer. |
+| `public static void BodySetOmitForceIntegration(RID body, bool enable)` | Control default gravity/damping/force omission. |
+| `public static bool BodyIsOmittingForceIntegration(RID body)` | Read omission policy. |
+| `public static void BodySetMaxContactsReported(RID body, int amount)` | Set a nonnegative contact-point cap. |
+| `public static int BodyGetMaxContactsReported(RID body)` | Read the configured cap. |
 
 Setters replace the previous user delegate; null clears it. Typed generic userdata replaces the dynamic callback boundary without invocation-time boxing. These APIs accept scene or server body identities and reject Area/wrong/stale RIDs. Attached access uses the owning space thread outside native stepping. Detached bodies retain callbacks, constants, omission and caps; they have no live view. Freeing a body clears that registry state.
 
 Force callback runs before the RigidBody integration hook and user sync observer. Scene-owned synchronization remains mandatory under the typed host architecture; a user sync observer supplements it. Scene pose/cache synchronization brackets hooks. Callback failures are collected; body removal safely invalidates captured entries. Recursive stepping and world disposal reject during callback dispatch. [PhysicsBodyStateTests](../../tests/Electron2D.Tests/PhysicsBodyStateTests.cs) checks these contracts under [ADR 0070](../decisions/physics.md#adr-0070).
 
-`public void AreaSetMonitorable(RID area, bool monitorable)` controls whether scene monitoring Areas detect a server-created Area. Server Areas default false; the next nonzero overlap scan adopts the flag. Attached changes require the space owner thread outside native stepping. Shape events carry its RID with a null scene Area. Scene-object overlap arrays stay scene-only. Server free preserves exit values and finishes registry cleanup despite callback failure. ShapePairEventTests verifies body and Area nullable payloads under ADR 0055.
+`public static void AreaSetMonitorable(RID area, bool monitorable)` controls whether scene monitoring Areas detect a server-created Area. Server Areas default false; the next nonzero overlap scan adopts the flag. Attached changes require the space owner thread outside native stepping. Shape events carry its RID with a null scene Area. Scene-object overlap arrays stay scene-only. Server free preserves exit values and finishes registry cleanup despite callback failure. ShapePairEventTests verifies body and Area nullable payloads under ADR 0055.
 
 ## Typed body mass parameters
 
@@ -200,16 +202,16 @@ Twenty concrete methods share one field profile with scene Area properties. Each
 
 | Full getter signature | Full setter signature | Value/default |
 | --- | --- | --- |
-| `public Area.SpaceOverride AreaGetGravitySpaceOverride(RID area)` | `public void AreaSetGravitySpaceOverride(RID area, Area.SpaceOverride value)` | Disabled; one of five independent reduction modes. |
-| `public float AreaGetGravity(RID area)` | `public void AreaSetGravity(RID area, float value)` | Signed scene units/s²: 9.80665 for server-only, 980 for scene. |
-| `public Vector2 AreaGetGravityVector(RID area)` | `public void AreaSetGravityVector(RID area, Vector2 value)` | Unnormalized direction/local point: (0, -1) server, (0, 1) scene. |
-| `public bool AreaGetGravityPoint(RID area)` | `public void AreaSetGravityPoint(RID area, bool value)` | False; point center shares scene GravityDirection/GravityPointCenter storage. |
-| `public float AreaGetGravityPointUnitDistance(RID area)` | `public void AreaSetGravityPointUnitDistance(RID area, float value)` | Zero; positive selects inverse-square falloff, nonpositive constant strength. |
-| `public Area.SpaceOverride AreaGetLinearDampSpaceOverride(RID area)` | `public void AreaSetLinearDampSpaceOverride(RID area, Area.SpaceOverride value)` | Disabled. |
-| `public float AreaGetLinearDamp(RID area)` | `public void AreaSetLinearDamp(RID area, float value)` | Signed inverse seconds, 0.1. |
-| `public Area.SpaceOverride AreaGetAngularDampSpaceOverride(RID area)` | `public void AreaSetAngularDampSpaceOverride(RID area, Area.SpaceOverride value)` | Disabled. |
-| `public float AreaGetAngularDamp(RID area)` | `public void AreaSetAngularDamp(RID area, float value)` | Signed inverse seconds, 1. |
-| `public int AreaGetPriority(RID area)` | `public void AreaSetPriority(RID area, int value)` | Zero; greater values run first. |
+| `public static Area.SpaceOverride AreaGetGravitySpaceOverride(RID area)` | `public static void AreaSetGravitySpaceOverride(RID area, Area.SpaceOverride value)` | Disabled; one of five independent reduction modes. |
+| `public static float AreaGetGravity(RID area)` | `public static void AreaSetGravity(RID area, float value)` | Signed scene units/s²: 9.80665 for server-only, 980 for scene. |
+| `public static Vector2 AreaGetGravityVector(RID area)` | `public static void AreaSetGravityVector(RID area, Vector2 value)` | Unnormalized direction/local point: (0, -1) server, (0, 1) scene. |
+| `public static bool AreaGetGravityPoint(RID area)` | `public static void AreaSetGravityPoint(RID area, bool value)` | False; point center shares scene GravityDirection/GravityPointCenter storage. |
+| `public static float AreaGetGravityPointUnitDistance(RID area)` | `public static void AreaSetGravityPointUnitDistance(RID area, float value)` | Zero; positive selects inverse-square falloff, nonpositive constant strength. |
+| `public static Area.SpaceOverride AreaGetLinearDampSpaceOverride(RID area)` | `public static void AreaSetLinearDampSpaceOverride(RID area, Area.SpaceOverride value)` | Disabled. |
+| `public static float AreaGetLinearDamp(RID area)` | `public static void AreaSetLinearDamp(RID area, float value)` | Signed inverse seconds, 0.1. |
+| `public static Area.SpaceOverride AreaGetAngularDampSpaceOverride(RID area)` | `public static void AreaSetAngularDampSpaceOverride(RID area, Area.SpaceOverride value)` | Disabled. |
+| `public static float AreaGetAngularDamp(RID area)` | `public static void AreaSetAngularDamp(RID area, float value)` | Signed inverse seconds, 1. |
+| `public static int AreaGetPriority(RID area)` | `public static void AreaSetPriority(RID area, int value)` | Zero; greater values run first. |
 
 ### Field method descriptions
 
@@ -260,11 +262,10 @@ A space's default profile starts from sampled ProjectSettings strength/vector/da
 Partial usage snippet (live `areaRID` in a stepped world):
 
 ```csharp
-var physics = PhysicsServer.Instance;
-physics.AreaSetGravitySpaceOverride(areaRID, Area.SpaceOverride.Replace);
-physics.AreaSetGravity(areaRID, 0);
-physics.AreaSetLinearDampSpaceOverride(areaRID, Area.SpaceOverride.Combine);
-physics.AreaSetLinearDamp(areaRID, 2);
+PhysicsServer.AreaSetGravitySpaceOverride(areaRID, Area.SpaceOverride.Replace);
+PhysicsServer.AreaSetGravity(areaRID, 0);
+PhysicsServer.AreaSetLinearDampSpaceOverride(areaRID, Area.SpaceOverride.Combine);
+PhysicsServer.AreaSetLinearDamp(areaRID, 2);
 ```
 
 [PhysicsServerAreaFieldTests](../../tests/Electron2D.Tests/PhysicsServerAreaFieldTests.cs) checks defaults, all ten branches, scene projection, mixed mode/priority/filter/lifecycle, actual server response, mutable space defaults/point fallback, failure recovery, callbacks/guards and zero managed bytes over 64 warmed active field frames on Linux/.NET 10. Native allocations, other platforms and owner visual acceptance are unverified. [ADR 0056](../decisions/physics-fields.md#adr-0056) owns the shared profile and typed selector adaptation.
@@ -278,59 +279,58 @@ Source: [PhysicsServer.Joints.cs](../../src/Servers/Physics/PhysicsServer.Joints
 
 | Signature | Contract |
 | --- | --- |
-| `public RID JointCreate()` | Caller-owned Empty identity, collision suppression true. |
-| `public void JointClear(RID joint)` | Remove connection, preserve RID and collision policy. |
-| `public JointType JointGetType(RID joint)` | Configured role, including pending connections and Empty. |
-| `public void JointDisableCollisionsBetweenBodies(RID joint, bool disable)` | Change pair suppression while preserving anchors. |
-| `public bool JointIsDisabledCollisionsBetweenBodies(RID joint)` | Stored policy, even for Empty. |
-| `public void JointMakePin(RID joint, Vector2 anchor, RID bodyA, RID bodyB = default)` | Global pivot; empty body B binds A to the fixed world. |
-| `public void JointMakeGroove(RID joint, Vector2 groove1A, Vector2 groove2A, Vector2 anchorB, RID bodyA = default, RID bodyB = default)` | Finite global guide on A; both body RIDs required. |
-| `public void JointMakeDampedSpring(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB = default)` | Two required bodies, global anchors, force and axial drag. |
-| `public float DampedSpringJointGetDamping(RID joint)` | [Shared concrete parameter](#dampedspringjointgetdamping). |
-| `public float DampedSpringJointGetRestLength(RID joint)` | [Shared concrete parameter](#dampedspringjointgetrestlength). |
-| `public float DampedSpringJointGetStiffness(RID joint)` | [Shared concrete parameter](#dampedspringjointgetstiffness). |
-| `public void DampedSpringJointSetDamping(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetdamping). |
-| `public void DampedSpringJointSetRestLength(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetrestlength). |
-| `public void DampedSpringJointSetStiffness(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetstiffness). |
-| `public bool PinJointGetAngularLimitEnabled(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitenabled). |
-| `public float PinJointGetAngularLimitLower(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitlower). |
-| `public float PinJointGetAngularLimitUpper(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitupper). |
-| `public bool PinJointGetMotorEnabled(RID joint)` | [Shared concrete parameter](#pinjointgetmotorenabled). |
-| `public float PinJointGetMotorMaxTorque(RID joint)` | [Shared concrete parameter](#pinjointgetmotormaxtorque). |
-| `public float PinJointGetMotorTargetVelocity(RID joint)` | [Shared concrete parameter](#pinjointgetmotortargetvelocity). |
-| `public void PinJointSetAngularLimitEnabled(RID joint, bool value)` | [Shared concrete parameter](#pinjointsetangularlimitenabled). |
-| `public void PinJointSetAngularLimitLower(RID joint, float value)` | [Shared concrete parameter](#pinjointsetangularlimitlower). |
-| `public void PinJointSetAngularLimitUpper(RID joint, float value)` | [Shared concrete parameter](#pinjointsetangularlimitupper). |
-| `public void PinJointSetMotorEnabled(RID joint, bool value)` | [Shared concrete parameter](#pinjointsetmotorenabled). |
-| `public void PinJointSetMotorMaxTorque(RID joint, float value)` | [Shared concrete parameter](#pinjointsetmotormaxtorque). |
-| `public void PinJointSetMotorTargetVelocity(RID joint, float value)` | [Shared concrete parameter](#pinjointsetmotortargetvelocity). |
+| `public static RID JointCreate()` | Caller-owned Empty identity, collision suppression true. |
+| `public static void JointClear(RID joint)` | Remove connection, preserve RID and collision policy. |
+| `public static JointType JointGetType(RID joint)` | Configured role, including pending connections and Empty. |
+| `public static void JointDisableCollisionsBetweenBodies(RID joint, bool disable)` | Change pair suppression while preserving anchors. |
+| `public static bool JointIsDisabledCollisionsBetweenBodies(RID joint)` | Stored policy, even for Empty. |
+| `public static void JointMakePin(RID joint, Vector2 anchor, RID bodyA, RID bodyB = default)` | Global pivot; empty body B binds A to the fixed world. |
+| `public static void JointMakeGroove(RID joint, Vector2 groove1A, Vector2 groove2A, Vector2 anchorB, RID bodyA = default, RID bodyB = default)` | Finite global guide on A; both body RIDs required. |
+| `public static void JointMakeDampedSpring(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB = default)` | Two required bodies, global anchors, force and axial drag. |
+| `public static float DampedSpringJointGetDamping(RID joint)` | [Shared concrete parameter](#dampedspringjointgetdamping). |
+| `public static float DampedSpringJointGetRestLength(RID joint)` | [Shared concrete parameter](#dampedspringjointgetrestlength). |
+| `public static float DampedSpringJointGetStiffness(RID joint)` | [Shared concrete parameter](#dampedspringjointgetstiffness). |
+| `public static void DampedSpringJointSetDamping(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetdamping). |
+| `public static void DampedSpringJointSetRestLength(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetrestlength). |
+| `public static void DampedSpringJointSetStiffness(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetstiffness). |
+| `public static bool PinJointGetAngularLimitEnabled(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitenabled). |
+| `public static float PinJointGetAngularLimitLower(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitlower). |
+| `public static float PinJointGetAngularLimitUpper(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitupper). |
+| `public static bool PinJointGetMotorEnabled(RID joint)` | [Shared concrete parameter](#pinjointgetmotorenabled). |
+| `public static float PinJointGetMotorMaxTorque(RID joint)` | [Shared concrete parameter](#pinjointgetmotormaxtorque). |
+| `public static float PinJointGetMotorTargetVelocity(RID joint)` | [Shared concrete parameter](#pinjointgetmotortargetvelocity). |
+| `public static void PinJointSetAngularLimitEnabled(RID joint, bool value)` | [Shared concrete parameter](#pinjointsetangularlimitenabled). |
+| `public static void PinJointSetAngularLimitLower(RID joint, float value)` | [Shared concrete parameter](#pinjointsetangularlimitlower). |
+| `public static void PinJointSetAngularLimitUpper(RID joint, float value)` | [Shared concrete parameter](#pinjointsetangularlimitupper). |
+| `public static void PinJointSetMotorEnabled(RID joint, bool value)` | [Shared concrete parameter](#pinjointsetmotorenabled). |
+| `public static void PinJointSetMotorMaxTorque(RID joint, float value)` | [Shared concrete parameter](#pinjointsetmotormaxtorque). |
+| `public static void PinJointSetMotorTargetVelocity(RID joint, float value)` | [Shared concrete parameter](#pinjointsetmotortargetvelocity). |
 
 ### Example
 
 ```csharp
-var physics = PhysicsServer.Instance;
-var space = physics.SpaceCreate();
-physics.SpaceSetActive(space, true);
-var first = physics.BodyCreate();
-var second = physics.BodyCreate();
-var link = physics.JointCreate();
+var space = PhysicsServer.SpaceCreate();
+PhysicsServer.SpaceSetActive(space, true);
+var first = PhysicsServer.BodyCreate();
+var second = PhysicsServer.BodyCreate();
+var link = PhysicsServer.JointCreate();
 try
 {
-    physics.BodySetMode(first, PhysicsServer.BodyMode.Static);
-    physics.BodySetTransform(second, new Transform(0, Vector2.One, 0, new Vector2(0, 50)));
-    physics.BodySetGravityScale(second, 0);
-    physics.BodySetSpace(first, space);
-    physics.BodySetSpace(second, space);
-    physics.JointMakeDampedSpring(link, Vector2.Zero, new Vector2(0, 50), first, second);
-    physics.DampedSpringJointSetRestLength(link, 25);
-    physics.SpaceStep(space, 1d / 60);
+    PhysicsServer.BodySetMode(first, PhysicsServer.BodyMode.Static);
+    PhysicsServer.BodySetTransform(second, new Transform(0, Vector2.One, 0, new Vector2(0, 50)));
+    PhysicsServer.BodySetGravityScale(second, 0);
+    PhysicsServer.BodySetSpace(first, space);
+    PhysicsServer.BodySetSpace(second, space);
+    PhysicsServer.JointMakeDampedSpring(link, Vector2.Zero, new Vector2(0, 50), first, second);
+    PhysicsServer.DampedSpringJointSetRestLength(link, 25);
+    PhysicsServer.SpaceStep(space, 1d / 60);
 }
 finally
 {
-    physics.FreeRID(link);
-    physics.FreeRID(first);
-    physics.FreeRID(second);
-    physics.FreeRID(space);
+    PhysicsServer.FreeRID(link);
+    PhysicsServer.FreeRID(first);
+    PhysicsServer.FreeRID(second);
+    PhysicsServer.FreeRID(space);
 }
 ```
 
@@ -398,7 +398,7 @@ finally
 
 Make validates geometry and every local anchor radius through ten million scene units, distinct live body identities and current world compatibility before removing the previous connection. Related active worlds require their owning thread and reject solver/synchronization phases. These checks also guard pending detached endpoints, membership changes and disposal; rejected operations preserve object lifetime. Wrong/stale/body/Area RIDs or wrong concrete setting roles throw ArgumentException; nonfinite or invalid scalar ranges throw ArgumentOutOfRangeException. A scene joint cannot be changed to another concrete node role or active foreign world (InvalidOperationException).
 
-Detached caller-owned connections retain sampled local frames and connect once both bodies share an active world; temporary departure or cross-world membership suspends them. Reentry uses fresh native IDs. Endpoint free clears dependents; world free leaves live resources detached and configured. Scene GetRID is borrowed and stable until node disposal; raw same-role server make/clear persists until scene geometry/path/name edits or reentry reclaim it. Scalar edits are bidirectional without replacing the public node. No joint owns or frees endpoint bodies.
+Detached caller-owned connections retain sampled local frames and connect once both bodies share an active world; temporary departure or cross-world membership suspends them. Reentry uses fresh native IDs. Endpoint free clears dependents; world free leaves live resources detached and configured. Scene GetRID is borrowed and stable until node disposal; raw same-role server make/clear persists until scene geometry/path/name edits or reentry reclaim it. Scalar edits are bidirectional without replacing the public static node. No joint owns or frees endpoint bodies.
 
 [PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) covers all three actual server responses, world pin, bidirectional settings, clear/replacement, defaults, lifecycle/failure/phase/thread rollback, independent exceptions and 64 warmed active typed-setting/spring frames with zero managed allocation on Linux/.NET 10. Native allocations, broad-scene stability/performance, other platforms and owner visual acceptance remain unverified. General joint positional bias/correction speed/force caps, linear pin softness and scene debug drawing remain exact coverage gaps; angular spring tuning does not supply them.
 
@@ -409,31 +409,30 @@ Source: [PhysicsServer.ShapeSlots.cs](../../src/Servers/Physics/PhysicsServer.Sh
 
 | Signature | Contract |
 | --- | --- |
-| `public RID BodyGetShape(RID body, int index)` | Borrowed shape identity, or empty for a disposed retained resource. |
-| `public RID AreaGetShape(RID area, int index)` | Same contract for an Area. |
-| `public Transform BodyGetShapeTransform(RID body, int index)` | Effective local slot pose. |
-| `public Transform AreaGetShapeTransform(RID area, int index)` | Effective local sensor pose. |
-| `public void BodySetShape(RID body, int index, RID shape)` | Replace geometry, retain index/pose/policies, borrow the shape. |
-| `public void AreaSetShape(RID area, int index, RID shape)` | Same for a sensor slot. |
-| `public void BodySetShapeTransform(RID body, int index, Transform transform)` | Finite unit-scale, zero-skew local pose for one slot. |
-| `public void AreaSetShapeTransform(RID area, int index, Transform transform)` | Same for a sensor slot. |
-| `public void BodyClearShapes(RID body)` | Remove all indexed shapes without freeing resources. |
-| `public void AreaClearShapes(RID area)` | Remove all sensor slots without freeing resources. |
-| `public void BodySetShapeAsOneWayCollision(RID body, int index, bool enable, float margin, Vector2? direction = null)` | One slot's directional body contacts/motion; null means down. |
+| `public static RID BodyGetShape(RID body, int index)` | Borrowed shape identity, or empty for a disposed retained resource. |
+| `public static RID AreaGetShape(RID area, int index)` | Same contract for an Area. |
+| `public static Transform BodyGetShapeTransform(RID body, int index)` | Effective local slot pose. |
+| `public static Transform AreaGetShapeTransform(RID area, int index)` | Effective local sensor pose. |
+| `public static void BodySetShape(RID body, int index, RID shape)` | Replace geometry, retain index/pose/policies, borrow the shape. |
+| `public static void AreaSetShape(RID area, int index, RID shape)` | Same for a sensor slot. |
+| `public static void BodySetShapeTransform(RID body, int index, Transform transform)` | Finite unit-scale, zero-skew local pose for one slot. |
+| `public static void AreaSetShapeTransform(RID area, int index, Transform transform)` | Same for a sensor slot. |
+| `public static void BodyClearShapes(RID body)` | Remove all indexed shapes without freeing resources. |
+| `public static void AreaClearShapes(RID area)` | Remove all sensor slots without freeing resources. |
+| `public static void BodySetShapeAsOneWayCollision(RID body, int index, bool enable, float margin, Vector2? direction = null)` | One slot's directional body contacts/motion; null means down. |
 
 ### Example
 
 Partial snippet: `bodyRID` is a live scene or server body. The caller owns `geometry` until FreeRID; its free removes any remaining slots that use it.
 
 ```csharp
-var physics = PhysicsServer.Instance;
-var geometry = physics.RectangleShapeCreate();
-physics.BodyAddShape(bodyRID, geometry);
-int index = physics.BodyGetShapeCount(bodyRID) - 1;
-physics.BodySetShapeTransform(bodyRID, index, new Transform(0, Vector2.One, 0, new Vector2(40, 0)));
-RID sameGeometry = physics.BodyGetShape(bodyRID, index);
-physics.BodyRemoveShape(bodyRID, index);
-physics.FreeRID(geometry);
+var geometry = PhysicsServer.RectangleShapeCreate();
+PhysicsServer.BodyAddShape(bodyRID, geometry);
+int index = PhysicsServer.BodyGetShapeCount(bodyRID) - 1;
+PhysicsServer.BodySetShapeTransform(bodyRID, index, new Transform(0, Vector2.One, 0, new Vector2(40, 0)));
+RID sameGeometry = PhysicsServer.BodyGetShape(bodyRID, index);
+PhysicsServer.BodyRemoveShape(bodyRID, index);
+PhysicsServer.FreeRID(geometry);
 ```
 
 <a id="bodygetshape"></a>
@@ -470,18 +469,17 @@ Source: [PhysicsServer.Activity.cs](../../src/Servers/Physics/PhysicsServer.Acti
 
 | Signature | Contract |
 | --- | --- |
-| `public void SetActive(bool active)` | Atomic process-wide policy for subsequent world intervals; default true. |
-| `public void SpaceSetActive(RID space, bool active)` | Local activation for a live scene or caller-owned world. |
-| `public bool SpaceIsActive(RID space)` | Stored local policy, independent of global suspension. |
+| `public static void SetActive(bool active)` | Atomic process-wide policy for subsequent world intervals; default true. |
+| `public static void SpaceSetActive(RID space, bool active)` | Local activation for a live scene or caller-owned world. |
+| `public static bool SpaceIsActive(RID space)` | Stored local policy, independent of global suspension. |
 
 ```csharp
-var physics = PhysicsServer.Instance;
-RID space = physics.SpaceCreate(); // Inactive.
-physics.SpaceSetActive(space, true);
-physics.SpaceStep(space, 1d / 60);
-physics.SpaceSetActive(space, false); // Retain this world's simulation state.
-physics.SpaceStep(space, 10);        // Skipped; no time backlog.
-physics.FreeRID(space);
+RID space = PhysicsServer.SpaceCreate(); // Inactive.
+PhysicsServer.SpaceSetActive(space, true);
+PhysicsServer.SpaceStep(space, 1d / 60);
+PhysicsServer.SpaceSetActive(space, false); // Retain this world's simulation state.
+PhysicsServer.SpaceStep(space, 10);        // Skipped; no time backlog.
+PhysicsServer.FreeRID(space);
 ```
 
 <a id="setactive"></a>

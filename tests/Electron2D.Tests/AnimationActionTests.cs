@@ -64,7 +64,7 @@ internal static class AnimationActionTests
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         var descriptor = new PropertyDescriptor<Entity, Vector2>(nameof(Entity.Position), n => n.Position, (n, v) => n.Position = v);
         Vector2[] expected = [new(16, 16), new(16, 16), new(32, 16), new(48, 16), new(48, 16), new(48, 16), new(60, 16), new(72, 16), new(72, 16), new(60, 16), new(48, 16), new(120, 32), new(48, 16)];
         try
@@ -76,16 +76,16 @@ internal static class AnimationActionTests
                 var window = new Window { Size = new(160, 64), Title = "Electron2D animation action controllers" }; var box = new Box { Name = "box" }; var tree = new AnimationTree { TreeRoot = graph, CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Manual }; tree.AddAnimationLibrary("", library); window.AddChild(box); window.AddChild(tree); var stage = 0;
                 box.Start = () =>
                 {
-                    var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); tree.Advance(0); renderer.FramePostDraw += () =>
+                    var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); tree.Advance(0); RenderingServer.FramePostDraw += () =>
                     {
                         using var pixels = renderer.Readback(); var at = expected[stage]; Check(pixels.GetPixel((int)at.X, (int)at.Y).R > .9f && pixels.GetPixel((int)at.X, (int)at.Y).G < .1f, "Composed transition/action pose reaches rendered pixels."); if (stage > 0 && expected[stage - 1] != at) { var old = expected[stage - 1]; Check(pixels.GetPixel((int)old.X, (int)old.Y).R < .1f, "Old action pose clears."); }
                         switch (stage++) { case 0: tree.SetParameter("transition", AnimationNodeTransition.TransitionRequest, "state_1"); tree.Advance(.5); break; case 1: tree.Advance(.5); break; case 2: tree.Advance(0); break; case 3: tree.SetParameter("shot", AnimationNodeOneShot.Request, AnimationOneShotRequest.Fire); tree.Advance(0); break; case 4: tree.Advance(.25); break; case 5: tree.Advance(.25); break; case 6: tree.Advance(0); break; case 7: tree.SetParameter("shot", AnimationNodeOneShot.Request, AnimationOneShotRequest.FadeOut); tree.Advance(0); tree.Advance(.25); break; case 8: tree.Advance(.25); break; case 9: tree.Advance(0); break; case 10: shot.MixMode = AnimationMixMode.Add; shot.FadeInTime = 0; tree.SetParameter("shot", AnimationNodeOneShot.Request, AnimationOneShotRequest.Fire); tree.Advance(0); break; case 11: tree.SetParameter("shot", AnimationNodeOneShot.Request, AnimationOneShotRequest.Abort); tree.Advance(0); break; case 12: window.Tree!.Quit(); break; }
                     };
                 };
-                try { Check(Engine.Instance.Run(window) == 0 && stage == 13 && window.IsDisposed && !shot.IsDisposed && !transition.IsDisposed && !library.IsDisposed, "Action host cleanup borrows resources."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "animation-actions-host", backend, run, stages = stage, cleaned = window.IsDisposed })); } finally { foreach (var clip in clips) clip.Dispose(); }
+                try { Check(Engine.Run(window) == 0 && stage == 13 && window.IsDisposed && !shot.IsDisposed && !transition.IsDisposed && !library.IsDisposed, "Action host cleanup borrows resources."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "animation-actions-host", backend, run, stages = stage, cleaned = window.IsDisposed })); } finally { foreach (var clip in clips) clip.Dispose(); }
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class Box : Entity { internal Action? Start; protected override void OnReady() => Start?.Invoke(); protected override void OnDraw() => DrawRect(new(-3, -3, 6, 6), Colors.Red); }
     private sealed class TestingGate : AnimationNode { internal bool TestOnly = true; internal TestingGate() => AddInput("in"); protected override double OnProcess(double time, bool seek, bool external, bool testOnly) => BlendInput(0, time, seek, external, 1, testOnly: TestOnly); }

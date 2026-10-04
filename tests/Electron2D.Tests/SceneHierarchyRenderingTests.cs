@@ -23,9 +23,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         observer.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback();
                 Pixel(image, 10, 10, Colors.White);
@@ -48,7 +48,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Check(frames == 2 && bridge.IsDisposed && separate.IsDisposed && visual.IsDisposed && !texture.IsDisposed, "Mixed hierarchy disposal and borrowed texture.");
         Released(window);
         Console.WriteLine($"Scene hierarchy pixel checks passed: {backend}.");

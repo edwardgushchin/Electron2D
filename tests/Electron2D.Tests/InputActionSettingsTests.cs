@@ -9,7 +9,7 @@ internal static class InputActionSettingsTests
             System.Text.Json.JsonSerializer.Deserialize<InputActionSettings>("{\"Version\":1,\"Unknown\":0}"));
         Reject<System.Text.Json.JsonException>(() =>
             System.Text.Json.JsonSerializer.Deserialize<InputBindingSettings>("{\"Kind\":0,\"Unknown\":0}"));
-        var map = InputMap.Instance;
+        var map = InputMap.Service;
         var root = IOPath.Combine(IOPath.GetTempPath(), "electron2d-input-" + Guid.NewGuid().ToString("N"));
         var project = IOPath.Combine(root, "project");
         var user = IOPath.Combine(root, "user");
@@ -19,7 +19,7 @@ internal static class InputActionSettingsTests
         try
         {
             var actionSetting = new ProjectSetting<InputActionSettings>("input/jump", new InputActionSettings());
-            using (var settings = new ProjectSettings(project, user))
+            using (var settings = new ProjectSettingsRegistry(project, user))
             {
                 settings.Register(actionSetting);
                 settings.Set(actionSetting, new InputActionSettings
@@ -38,7 +38,7 @@ internal static class InputActionSettingsTests
                 settings.Save();
             }
 
-            using var loaded = new ProjectSettings(project, user);
+            using var loaded = new ProjectSettingsRegistry(project, user);
             loaded.Register(actionSetting);
             loaded.Load();
             Reject<InvalidOperationException>(() => loaded.Unregister(ProjectSettings.InputUIFocusNext));
@@ -82,20 +82,20 @@ internal static class InputActionSettingsTests
             { Kind: InputBindingKind.Key, Keycode: Key.Space, Modifiers: 0 }
             ], "List selection retains the ordered Y-button and Space defaults.");
 
-            map.AddAction("temporary_action");
+            InputMap.AddAction("temporary_action");
             var loadedEvents = 0;
             void OnLoaded()
             {
                 loadedEvents++;
-                Check(map.HasAction("jump") && !map.HasAction("temporary_action"),
+                Check(InputMap.HasAction("jump") && !InputMap.HasAction("temporary_action"),
                     "Loaded notification observes the committed replacement map.");
             }
-            map.ProjectSettingsLoaded += OnLoaded;
+            InputMap.ProjectSettingsLoaded += OnLoaded;
             try
             {
                 map.LoadFromProjectSettings(loaded);
-                Check(loadedEvents == 1 && map.ActionGetDeadzone("jump") == 0.3f &&
-                    map.ActionGetEvents("jump").Count == 5 && map.HasAction("ui_focus_next"),
+                Check(loadedEvents == 1 && InputMap.ActionGetDeadzone("jump") == 0.3f &&
+                    InputMap.ActionGetEvents("jump").Count == 5 && InputMap.HasAction("ui_focus_next"),
                     "Loading replaces transient actions, restores built-ins and deduplicates ordered bindings.");
 
                 foreach (var (_, name, keycode, joyButton, joyAxis, axisValue) in directions)
@@ -103,23 +103,23 @@ internal static class InputActionSettingsTests
                     using var arrow = new InputEventKey { Keycode = keycode, Pressed = true };
                     using var dpad = new InputEventJoypadButton { ButtonIndex = joyButton, Device = 5, Pressed = true };
                     using var stick = new InputEventJoypadMotion { Axis = joyAxis, AxisValue = axisValue, Device = 9 };
-                    Check(map.ActionGetEvents(name).Count == 3 && map.EventIsAction(arrow, name, exactMatch: true) &&
-                        map.EventIsAction(dpad, name, exactMatch: true) && map.EventIsAction(stick, name, exactMatch: true),
+                    Check(InputMap.ActionGetEvents(name).Count == 3 && InputMap.EventIsAction(arrow, name, exactMatch: true) &&
+                        InputMap.EventIsAction(dpad, name, exactMatch: true) && InputMap.EventIsAction(stick, name, exactMatch: true),
                         "Every directional action matches all three default event kinds, including nonzero controller devices.");
                 }
 
                 foreach (var (_, name, keycode) in endpoints)
                 {
                     using var endpoint = new InputEventKey { Keycode = keycode, Pressed = true };
-                    Check(map.ActionGetEvents(name).Count == 1 && map.EventIsAction(endpoint, name, exactMatch: true),
+                    Check(InputMap.ActionGetEvents(name).Count == 1 && InputMap.EventIsAction(endpoint, name, exactMatch: true),
                         "Loaded Home and End actions match their real key events.");
                     endpoint.ShiftPressed = true;
-                    Check(!map.EventIsAction(endpoint, name, exactMatch: true), "Exact endpoint matching rejects an extra modifier.");
+                    Check(!InputMap.EventIsAction(endpoint, name, exactMatch: true), "Exact endpoint matching rejects an extra modifier.");
                 }
                 using var selectKey = new InputEventKey { Keycode = Key.Space, Pressed = true };
                 using var selectButton = new InputEventJoypadButton { ButtonIndex = JoyButton.Y, Device = 7, Pressed = true };
-                Check(map.EventIsAction(selectKey, "ui_select", exactMatch: true) &&
-                      map.EventIsAction(selectButton, "ui_select", exactMatch: true),
+                Check(InputMap.EventIsAction(selectKey, "ui_select", exactMatch: true) &&
+                      InputMap.EventIsAction(selectButton, "ui_select", exactMatch: true),
                     "Loaded list selection matches both keyboard and controller defaults.");
 
                 using var key = new InputEventKey { Keycode = Key.Space, ShiftPressed = true, Pressed = true };
@@ -127,27 +127,27 @@ internal static class InputActionSettingsTests
                 using var mouse = new InputEventMouseButton { ButtonIndex = MouseButton.Right, Pressed = true };
                 using var button = new InputEventJoypadButton { ButtonIndex = JoyButton.A, Device = 5, Pressed = true };
                 using var motion = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = -1f, Device = 9 };
-                Check(map.EventIsAction(key, "jump", exactMatch: true) &&
-                    !map.EventIsAction(plainKey, "jump", exactMatch: true) &&
-                    map.EventIsAction(mouse, "jump") && map.EventIsAction(button, "jump") &&
-                    map.EventIsAction(motion, "jump", exactMatch: true),
+                Check(InputMap.EventIsAction(key, "jump", exactMatch: true) &&
+                    !InputMap.EventIsAction(plainKey, "jump", exactMatch: true) &&
+                    InputMap.EventIsAction(mouse, "jump") && InputMap.EventIsAction(button, "jump") &&
+                    InputMap.EventIsAction(motion, "jump", exactMatch: true),
                     "Every stored event family resolves through live action matching.");
-                var retained = map.ActionGetEvents("jump")[0];
-                for (var index = 0; index < 64; index++) _ = map.EventIsAction(key, "jump", exactMatch: true);
+                var retained = InputMap.ActionGetEvents("jump")[0];
+                for (var index = 0; index < 64; index++) _ = InputMap.EventIsAction(key, "jump", exactMatch: true);
                 var allocationStart = GC.GetAllocatedBytesForCurrentThread();
                 var lastResult = false;
                 for (var index = 0; index < 1_024; index++)
-                    lastResult = map.EventIsAction(key, "jump", exactMatch: true);
+                    lastResult = InputMap.EventIsAction(key, "jump", exactMatch: true);
                 var allocated = GC.GetAllocatedBytesForCurrentThread() - allocationStart;
                 Check(lastResult && allocated == 0,
                     $"Warmed active matching of a loaded binding must allocate zero managed bytes; observed {allocated}.");
 
-                Input.Instance.ActionPress("jump");
-                Check(Input.Instance.IsActionPressed("jump"), "The loaded action can become pressed.");
+                Input.ActionPress("jump");
+                Check(Input.IsActionPressed("jump"), "The loaded action can become pressed.");
                 loaded.Set(actionSetting, new InputActionSettings { Version = 2 });
                 Reject<InvalidDataException>(() => map.LoadFromProjectSettings(loaded));
-                Check(loadedEvents == 1 && map.ActionGetEvents("jump").Count == 5 &&
-                    Input.Instance.IsActionPressed("jump"),
+                Check(loadedEvents == 1 && InputMap.ActionGetEvents("jump").Count == 5 &&
+                    Input.IsActionPressed("jump"),
                     "A future schema version leaves bindings, pressed state and notification unchanged.");
 
                 loaded.Set(actionSetting, new InputActionSettings
@@ -155,8 +155,8 @@ internal static class InputActionSettingsTests
                     Bindings = [new InputBindingSettings { Kind = InputBindingKind.JoypadMotion, JoyAxis = JoyAxis.LeftX }],
                 });
                 Reject<InvalidDataException>(() => map.LoadFromProjectSettings(loaded));
-                Check(loadedEvents == 1 && map.ActionGetEvents("jump").Count == 5 &&
-                    Input.Instance.IsActionPressed("jump"),
+                Check(loadedEvents == 1 && InputMap.ActionGetEvents("jump").Count == 5 &&
+                    Input.IsActionPressed("jump"),
                     "An invalid binding leaves the live map and pressed state unchanged.");
 
                 using (var lastButton = (InputEventJoypadButton)new InputBindingSettings
@@ -194,8 +194,8 @@ internal static class InputActionSettingsTests
                     ],
                 });
                 Reject<InvalidDataException>(() => map.LoadFromProjectSettings(loaded));
-                Check(loadedEvents == 1 && map.ActionGetEvents("jump").Count == 5 &&
-                    Input.Instance.IsActionPressed("jump"),
+                Check(loadedEvents == 1 && InputMap.ActionGetEvents("jump").Count == 5 &&
+                    Input.IsActionPressed("jump"),
                     "A late invalid controller binding must preserve the live map and pressed state.");
 
                 loaded.Set(actionSetting, new InputActionSettings
@@ -207,8 +207,8 @@ internal static class InputActionSettingsTests
                     ],
                 });
                 Reject<InvalidDataException>(() => map.LoadFromProjectSettings(loaded));
-                Check(loadedEvents == 1 && map.ActionGetEvents("jump").Count == 5 &&
-                    Input.Instance.IsActionPressed("jump"),
+                Check(loadedEvents == 1 && InputMap.ActionGetEvents("jump").Count == 5 &&
+                    Input.IsActionPressed("jump"),
                     "A late key-location-only binding must not replace the live map after a valid candidate.");
 
                 loaded.Set(actionSetting, new InputActionSettings
@@ -218,8 +218,8 @@ internal static class InputActionSettingsTests
                         Input.MaxEventsPerAction + 1).ToArray(),
                 });
                 Reject<InvalidDataException>(() => map.LoadFromProjectSettings(loaded));
-                Check(loadedEvents == 1 && map.ActionGetEvents("jump").Count == 5 &&
-                    Input.Instance.IsActionPressed("jump"),
+                Check(loadedEvents == 1 && InputMap.ActionGetEvents("jump").Count == 5 &&
+                    Input.IsActionPressed("jump"),
                     "More than 32 serialized records must fail before duplicate collapse or map replacement.");
 
                 loaded.Set(actionSetting, new InputActionSettings
@@ -227,25 +227,25 @@ internal static class InputActionSettingsTests
                     Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter }],
                 });
                 void ThrowingLoaded() => throw new InvalidOperationException("expected listener failure");
-                map.ProjectSettingsLoaded += ThrowingLoaded;
+                InputMap.ProjectSettingsLoaded += ThrowingLoaded;
                 try { Reject<InvalidOperationException>(() => map.LoadFromProjectSettings(loaded)); }
-                finally { map.ProjectSettingsLoaded -= ThrowingLoaded; }
-                Check(loadedEvents == 2 && map.ActionGetEvents("jump").Count == 1 &&
-                    !Input.Instance.IsActionPressed("jump") && retained is InputEventKey { Keycode: Key.Space },
+                finally { InputMap.ProjectSettingsLoaded -= ThrowingLoaded; }
+                Check(loadedEvents == 2 && InputMap.ActionGetEvents("jump").Count == 1 &&
+                    !Input.IsActionPressed("jump") && retained is InputEventKey { Keycode: Key.Space },
                     "A throwing listener sees the committed map; old borrowed bindings remain usable and pressed state clears.");
                 ((InputEventKey)retained).Keycode = Key.Backspace;
-                Check(map.ActionGetEvents("jump")[0] is InputEventKey { Keycode: Key.Enter },
+                Check(InputMap.ActionGetEvents("jump")[0] is InputEventKey { Keycode: Key.Enter },
                     "A former binding no longer mutates the replacement map.");
 
-                using var malformed = new ProjectSettings(project, user);
+                using var malformed = new ProjectSettingsRegistry(project, user);
                 malformed.Register(new ProjectSetting<string>("input/wrong_type", "value"));
                 Reject<InvalidDataException>(() => map.LoadFromProjectSettings(malformed));
-                Check(loadedEvents == 2 && map.ActionGetEvents("jump").Count == 1,
+                Check(loadedEvents == 2 && InputMap.ActionGetEvents("jump").Count == 1,
                     "A wrong typed input record cannot replace the live map.");
             }
-            finally { map.ProjectSettingsLoaded -= OnLoaded; }
+            finally { InputMap.ProjectSettingsLoaded -= OnLoaded; }
 
-            using var featured = new ProjectSettings(project, user);
+            using var featured = new ProjectSettingsRegistry(project, user);
             featured.Register(actionSetting);
             featured.Set(actionSetting, new InputActionSettings
             {
@@ -258,40 +258,40 @@ internal static class InputActionSettingsTests
             featured.AddCustomFeature("testsinput");
             map.LoadFromProjectSettings(featured);
             using var featuredKey = new InputEventKey { Keycode = Key.Enter, Pressed = true };
-            Check(map.EventIsAction(featuredKey, "jump", exactMatch: true) &&
-                map.ActionGetEvents("jump").Count == 1,
+            Check(InputMap.EventIsAction(featuredKey, "jump", exactMatch: true) &&
+                InputMap.ActionGetEvents("jump").Count == 1,
                 "The loaded map must use the active typed feature override.");
             featured.SetFeatureOverride(actionSetting, "testsinput", new InputActionSettings { Version = 2 });
             Reject<InvalidDataException>(() => map.LoadFromProjectSettings(featured));
-            Check(map.EventIsAction(featuredKey, "jump", exactMatch: true) &&
-                map.ActionGetEvents("jump").Count == 1,
+            Check(InputMap.EventIsAction(featuredKey, "jump", exactMatch: true) &&
+                InputMap.ActionGetEvents("jump").Count == 1,
                 "An invalid active override must preserve the previous map.");
         }
         finally
         {
-            map.LoadFromProjectSettings();
+            InputMap.LoadFromProjectSettings();
             Directory.Delete(root, recursive: true);
         }
 
         var processSetting = new ProjectSetting<InputActionSettings>(
             "input/tests_public_reload", new InputActionSettings());
-        ProjectSettings.Instance.Register(processSetting);
+        ProjectSettings.Register(processSetting);
         try
         {
-            ProjectSettings.Instance.Set(processSetting, new InputActionSettings
+            ProjectSettings.Set(processSetting, new InputActionSettings
             {
                 Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.F12 }],
             });
-            map.LoadFromProjectSettings();
+            InputMap.LoadFromProjectSettings();
             using var processKey = new InputEventKey { Keycode = Key.F12, Pressed = true };
-            Check(map.HasAction("tests_public_reload") &&
-                map.EventIsAction(processKey, "tests_public_reload", exactMatch: true),
+            Check(InputMap.HasAction("tests_public_reload") &&
+                InputMap.EventIsAction(processKey, "tests_public_reload", exactMatch: true),
                 "The public loader must read the process-wide typed settings registry.");
         }
         finally
         {
-            ProjectSettings.Instance.Unregister(processSetting);
-            map.LoadFromProjectSettings();
+            ProjectSettings.Unregister(processSetting);
+            InputMap.LoadFromProjectSettings();
         }
 
         Console.WriteLine("Typed project input-action loading checks passed.");

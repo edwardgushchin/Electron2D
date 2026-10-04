@@ -12,11 +12,11 @@ internal static class DisplayServerThemePortalNativeTests
         var signalTest = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THEME_SIGNALS") == "1";
 
         using var display = DisplayServer.Open("Electron2D hidden theme probe", new Vector2i(160, 120), hidden: true);
-        Check(display.IsDarkModeSupported() == (version >= 1), "Theme support follows the portal interface version.");
+        Check(DisplayServer.IsDarkModeSupported() == (version >= 1), "Theme support follows the portal interface version.");
         Check(SDL.GetSystemTheme() == NativeTheme(scheme), "SDL read the portal's initial color scheme.");
-        Check(display.IsDarkMode() == (version >= 1 && scheme == 1),
+        Check(DisplayServer.IsDarkMode() == (version >= 1 && scheme == 1),
             "The dark query requires both portal support and a dark preference.");
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         if (!signalTest)
         {
             Console.WriteLine($"PROBE_OK:{version}:{scheme}");
@@ -25,10 +25,10 @@ internal static class DisplayServerThemePortalNativeTests
 
         var delivered = 0;
         var expectedScheme = scheme;
-        display.SystemThemeChanged += () =>
+        DisplayServer.SystemThemeChanged += () =>
         {
             Check(SDL.GetSystemTheme() == NativeTheme(expectedScheme), "Theme state changes before callback delivery.");
-            Check(display.IsDarkMode() == (expectedScheme == 1), "Callback sees the current dark preference.");
+            Check(DisplayServer.IsDarkMode() == (expectedScheme == 1), "Callback sees the current dark preference.");
             delivered++;
         };
         foreach (var next in new[] { 2, 0, 1 })
@@ -41,7 +41,7 @@ internal static class DisplayServerThemePortalNativeTests
             var deadline = DateTime.UtcNow.AddSeconds(3);
             while (delivered < expectedCount && DateTime.UtcNow < deadline)
             {
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Thread.Sleep(10);
             }
             Check(delivered == expectedCount, "One native theme notification must reach the typed event.");

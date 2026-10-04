@@ -1,6 +1,6 @@
 # InputEventKey
 
-Last updated: 2026-09-30
+Last updated: 2026-10-04
 
 **Inherits:** [InputEventWithModifiers](InputEventWithModifiers.md)
 
@@ -34,7 +34,7 @@ The following focused snippet uses the current public API. Names not declared in
 
 ```csharp
 using var keyEvent = new InputEventKey { Keycode = Key.Space, Pressed = true };
-Input.Instance.ParseInputEvent(keyEvent);
+Input.ParseInputEvent(keyEvent);
 ```
 
 ## Constructors

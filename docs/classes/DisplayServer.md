@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -12,7 +12,13 @@ Last updated: 2026-10-02
 
 Owns one native SDL video connection and its main window.
 
+Public static declarations are in [`DisplayServer.API.cs`](../../src/Servers/Display/DisplayServer.API.cs).
+
 ## Description
+
+Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
+
+Public static operations use the active native service. `IsAvailable` reports whether it is published; operations and event subscription changes throw `InvalidOperationException` when absent. Event subscriptions belong to that session and do not transfer to later sessions.
 
 `Open` creates the sole process display server and a resizable high-density main window with a 64×64 minimum size in client pixels on Wayland or native window units on other desktop backends. Android uses its fullscreen surface size and does not set a minimum. A visible Wayland window presents a neutral blank surface so the compositor maps it before scene rendering exists. The caller owns it and must dispose it on the opening SDL main thread. Screen indexes are a live snapshot and may change after hotplug; negative selector constants choose the main-window, primary, keyboard-focus, or mouse-focus screen. Wayland keyboard-focus screen queries resolve to the primary screen because the protocol does not expose process-wide keyboard focus. Invalid screen queries return documented fallback values. Only window ID 0 is owned. Window and screen positions use SDL's platform-native desktop coordinates; macOS may use logical points. Wayland window size, bounds, and pointer coordinates use client pixels, while the implementation converts size requests to SDL's logical units. Wayland has no reliable global top-level window placement, so position and hit-testing methods reject that driver. Window-manager requests may be asynchronous or denied. Native failures throw `InvalidOperationException`; invalid IDs and values normally throw argument exceptions, except `WindowGetCurrentScreen` returns `InvalidScreen` for an unknown ID. Defined but unavailable window flags throw `NotSupportedException`. Exclusive fullscreen selects a native display mode where supported and can fail when no suitable mode is available; Wayland requests ordinary compositor fullscreen instead. `HasFeature` reports only capabilities integrated for the active driver.
 
@@ -28,7 +34,7 @@ Native key events carry independent logical, physical, and unmodified layout-lab
 
 Native message dialogs block the owner thread and return a typed button index through a callback. Native file choosers return asynchronously, possibly from an SDL worker thread; `ProcessEvents` delivers copied paths to game callbacks on the owner thread. A server with a pending chooser or an undelivered chooser result cannot be disposed; keep pumping until its callback runs. A dropped group of files produces one ordered `FilesDropped` list when SDL reports completion; interrupted groups are discarded. Wayland does not expose a reliable global desktop pointer position, so `MouseGetPosition` reads the last window-relative SDL pointer state; the mouse-focus screen selector uses index zero.
 
-The active server is a process singleton, not an `Engine` owned object. `ElectronObject` supplies identity, disposal state, numeric notifications, translation, and typed property discovery; see its [complete inherited reference](ElectronObject.md). Native SDL handles are private and released deterministically. Other threads may read `Instance`; all instance methods, event pumping, and disposal require the opening thread. Opening a server does not start a loop or renderer; the user-facing host example supplies a loop and Linux native packaging.
+The active server is a process singleton, not an `Engine` owned object. `ElectronObject` supplies identity, disposal state, numeric notifications, translation, and typed property discovery; see its [complete inherited reference](ElectronObject.md). Native SDL handles are private and released deterministically. Other threads may read `IsAvailable`; native operations, event pumping, and disposal require the opening thread. Opening a server does not start a loop or renderer; the user-facing host example supplies a loop and Linux native packaging.
 
 ## Examples
 
@@ -37,15 +43,15 @@ using Electron2D;
 
 using var display = DisplayServer.Open("My game", new Vector2i(800, 600));
 using var tree = new SceneTree(new Node());
-Engine.Instance.Start(tree);
+Engine.Start(tree);
 try
 {
-    display.ProcessEvents();
-    Engine.Instance.AdvanceFrame(0);
+    DisplayServer.ProcessEvents();
+    Engine.AdvanceFrame(0);
 }
 finally
 {
-    Engine.Instance.Stop();
+    Engine.Stop();
 }
 ```
 
@@ -80,100 +86,101 @@ display.FileDialogShow("Open image", "", "", false,
 
 ### Properties
 
+`public static bool IsAvailable { get; }` reports whether an active object is published. It is an observation, not a lifetime reservation; false means ordinary service calls and event subscription changes throw `InvalidOperationException`.
+
 | Signature | Contract |
 | --- | --- |
-| [`public static DisplayServer? Instance { get; }`](#property-instance) | Gets the active display server, if one has been opened. |
 
 ### Methods
 
 | Signature | Contract |
 | --- | --- |
-| [`public bool HasFeature(Feature feature)`](#method-hasfeature) | Reports whether the current backend exposes an executable capability. |
-| [`public void ProcessEvents()`](#method-processevents) | Drains native events and commits typed keyboard, mouse, touch and controller state before game callbacks. |
-| [`public void ForceProcessAndDropEvents()`](#method-forceprocessanddropevents) | Processes native window events while discarding pending keyboard, pointer, touch, and text input. |
-| [`public void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`](#method-dialogshow) | Shows a blocking native message dialog. |
-| [`public void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`](#method-filedialogshow) | Opens an asynchronous native file or folder chooser. |
-| [`public Key KeyboardGetKeycodeFromPhysical(Key physical)`](#method-keyboardgetkeycodefromphysical) | Maps a physical key to the logical key reported for the current keyboard layout. |
-| [`public Key KeyboardGetLabelFromPhysical(Key physical)`](#method-keyboardgetlabelfromphysical) | Maps a physical key to its localized label in the current keyboard layout. |
-| [`public void WindowSetIcon(Image image, int windowId = MainWindowId)`](#method-windowseticon) | Sets an icon specifically for the main window. |
-| [`public void SetIcon(Image image)`](#method-seticon) | Sets the application-default icon while the main window has no override. |
-| [`public MouseMode MouseGetMode()`](#method-mousegetmode) | Gets the last successfully requested mouse mode. |
-| [`public void MouseSetMode(MouseMode mode)`](#method-mousesetmode) | Requests cursor visibility, capture, and confinement as one mode. |
-| [`public Vector2i MouseGetPosition()`](#method-mousegetposition) | Gets desktop pointer coordinates or the window-relative position on Wayland. |
-| [`public MouseButtonMask MouseGetButtonState()`](#method-mousegetbuttonstate) | Gets the mouse buttons currently reported as held by SDL. |
-| [`public void WarpMouse(Vector2i position)`](#method-warpmouse) | Requests a client-area pointer move when the backend supports warping. |
-| [`public CursorShape CursorGetShape()`](#method-cursorgetshape) | Gets the last successfully selected standard pointer shape. |
-| [`public void CursorSetShape(CursorShape shape)`](#method-cursorsetshape) | Selects a standard pointer shape from the native cursor theme. |
-| [`public void CursorSetCustomImage(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#method-cursorsetcustomimage) | Sets or clears the image used for one pointer shape. |
-| [`public string IMEGetText()`](#method-imegettext) | Gets the most recently received native IME composition text. |
-| [`public Vector2i IMEGetSelection()`](#method-imegetselection) | Gets the current composition selection. |
-| [`public void WindowSetIMEActive(bool active, int windowId = MainWindowId)`](#method-windowsetimeactive) | Enables or disables native text input for the main window. |
-| [`public void WindowSetIMEPosition(Vector2i position, int windowId = MainWindowId)`](#method-windowsetimeposition) | Moves the native IME candidate area to a window-local text caret. |
-| [`public bool IsTouchscreenAvailable()`](#method-istouchscreenavailable) | Gets whether touch input is available from a device or mouse emulation. |
-| [`public int WindowGetCurrentScreen(int windowId = MainWindowId)`](#method-windowgetcurrentscreen) | Gets the current screen index containing the main window. |
-| [`public int GetKeyboardFocusScreen()`](#method-getkeyboardfocusscreen) | Gets the index of the display with keyboard focus. |
-| [`public int GetScreenFromRect(Rect2 rectangle)`](#method-getscreenfromrect) | Gets the display containing the largest portion of a desktop rectangle. |
-| [`public int[] GetWindowList()`](#method-getwindowlist) | Gets a snapshot of the engine-owned native window IDs. |
-| [`public nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)`](#method-windowgetnativehandle) | Gets a borrowed operating-system display, window or graphics-context identity. |
-| [`public int GetWindowAtScreenPosition(Vector2i position)`](#method-getwindowatscreenposition) | Finds the engine-owned window at a desktop position. |
-| [`public void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)`](#method-windowsetcurrentscreen) | Requests that the main window move to another connected display. |
-| [`public float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)`](#method-screengetrefreshrate) | Gets the current mode's refresh rate in hertz, or `-1` when unavailable. |
-| [`public float ScreenGetMaxScale()`](#method-screengetmaxscale) | Gets the largest reported content scale among connected displays. |
-| [`public Vector2i WindowGetMinSize(int windowId = MainWindowId)`](#method-windowgetminsize) | Gets the requested minimum client size. |
-| [`public void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetminsize) | Requests minimum client dimensions. |
-| [`public Vector2i WindowGetMaxSize(int windowId = MainWindowId)`](#method-windowgetmaxsize) | Gets the requested maximum client size. |
-| [`public void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetmaxsize) | Requests maximum client dimensions. |
-| [`public WindowMode WindowGetMode(int windowId = MainWindowId)`](#method-windowgetmode) | Gets the main window's current native mode. |
-| [`public void WindowSetMode(WindowMode mode, int windowId = MainWindowId)`](#method-windowsetmode) | Requests a native main-window mode. |
-| [`public bool WindowIsFocused(int windowId = MainWindowId)`](#method-windowisfocused) | Gets whether the main window currently has keyboard focus. |
-| [`public bool WindowGetFlag(WindowFlag flag, int windowId = MainWindowId)`](#method-windowgetflag) | Reads a supported native window flag. |
-| [`public void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId)`](#method-windowsetflag) | Requests a supported native window policy. |
-| [`public bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`](#method-windowismaximizeallowed) | Gets whether the current SDL resize policy permits a maximize request. |
-| [`public void WindowMoveToForeground(int windowId = MainWindowId)`](#method-windowmovetoforeground) | Requests native foreground on supported drivers; does nothing on Wayland. |
-| [`public void WindowRequestAttention(int windowId = MainWindowId)`](#method-windowrequestattention) | Requests user attention until the main window receives focus. |
-| [`public Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)`](#method-windowgetpositionwithdecorations) | Gets the main-window position including its left and top decorations. |
-| [`public Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId)`](#method-windowgetsizewithdecorations) | Gets the main-window size including native decorations. |
-| [`public void WindowSetTaskbarProgressState(ProgressState state, int windowId = MainWindowId)`](#method-windowsettaskbarprogressstate) | Requests a taskbar progress state where the desktop supports it. |
-| [`public void WindowSetTaskbarProgressValue(float value, int windowId = MainWindowId)`](#method-windowsettaskbarprogressvalue) | Requests a taskbar progress fraction where the desktop supports it. |
+| [`public static bool HasFeature(Feature feature)`](#method-hasfeature) | Reports whether the current backend exposes an executable capability. |
+| [`public static void ProcessEvents()`](#method-processevents) | Drains native events and commits typed keyboard, mouse, touch and controller state before game callbacks. |
+| [`public static void ForceProcessAndDropEvents()`](#method-forceprocessanddropevents) | Processes native window events while discarding pending keyboard, pointer, touch, and text input. |
+| [`public static void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`](#method-dialogshow) | Shows a blocking native message dialog. |
+| [`public static void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`](#method-filedialogshow) | Opens an asynchronous native file or folder chooser. |
+| [`public static Key KeyboardGetKeycodeFromPhysical(Key physical)`](#method-keyboardgetkeycodefromphysical) | Maps a physical key to the logical key reported for the current keyboard layout. |
+| [`public static Key KeyboardGetLabelFromPhysical(Key physical)`](#method-keyboardgetlabelfromphysical) | Maps a physical key to its localized label in the current keyboard layout. |
+| [`public static void WindowSetIcon(Image image, int windowId = MainWindowId)`](#method-windowseticon) | Sets an icon specifically for the main window. |
+| [`public static void SetIcon(Image image)`](#method-seticon) | Sets the application-default icon while the main window has no override. |
+| [`public static MouseMode MouseGetMode()`](#method-mousegetmode) | Gets the last successfully requested mouse mode. |
+| [`public static void MouseSetMode(MouseMode mode)`](#method-mousesetmode) | Requests cursor visibility, capture, and confinement as one mode. |
+| [`public static Vector2i MouseGetPosition()`](#method-mousegetposition) | Gets desktop pointer coordinates or the window-relative position on Wayland. |
+| [`public static MouseButtonMask MouseGetButtonState()`](#method-mousegetbuttonstate) | Gets the mouse buttons currently reported as held by SDL. |
+| [`public static void WarpMouse(Vector2i position)`](#method-warpmouse) | Requests a client-area pointer move when the backend supports warping. |
+| [`public static CursorShape CursorGetShape()`](#method-cursorgetshape) | Gets the last successfully selected standard pointer shape. |
+| [`public static void CursorSetShape(CursorShape shape)`](#method-cursorsetshape) | Selects a standard pointer shape from the native cursor theme. |
+| [`public static void CursorSetCustomImage(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#method-cursorsetcustomimage) | Sets or clears the image used for one pointer shape. |
+| [`public static string IMEGetText()`](#method-imegettext) | Gets the most recently received native IME composition text. |
+| [`public static Vector2i IMEGetSelection()`](#method-imegetselection) | Gets the current composition selection. |
+| [`public static void WindowSetIMEActive(bool active, int windowId = MainWindowId)`](#method-windowsetimeactive) | Enables or disables native text input for the main window. |
+| [`public static void WindowSetIMEPosition(Vector2i position, int windowId = MainWindowId)`](#method-windowsetimeposition) | Moves the native IME candidate area to a window-local text caret. |
+| [`public static bool IsTouchscreenAvailable()`](#method-istouchscreenavailable) | Gets whether touch input is available from a device or mouse emulation. |
+| [`public static int WindowGetCurrentScreen(int windowId = MainWindowId)`](#method-windowgetcurrentscreen) | Gets the current screen index containing the main window. |
+| [`public static int GetKeyboardFocusScreen()`](#method-getkeyboardfocusscreen) | Gets the index of the display with keyboard focus. |
+| [`public static int GetScreenFromRect(Rect2 rectangle)`](#method-getscreenfromrect) | Gets the display containing the largest portion of a desktop rectangle. |
+| [`public static int[] GetWindowList()`](#method-getwindowlist) | Gets a snapshot of the engine-owned native window IDs. |
+| [`public static nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)`](#method-windowgetnativehandle) | Gets a borrowed operating-system display, window or graphics-context identity. |
+| [`public static int GetWindowAtScreenPosition(Vector2i position)`](#method-getwindowatscreenposition) | Finds the engine-owned window at a desktop position. |
+| [`public static void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)`](#method-windowsetcurrentscreen) | Requests that the main window move to another connected display. |
+| [`public static float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)`](#method-screengetrefreshrate) | Gets the current mode's refresh rate in hertz, or `-1` when unavailable. |
+| [`public static float ScreenGetMaxScale()`](#method-screengetmaxscale) | Gets the largest reported content scale among connected displays. |
+| [`public static Vector2i WindowGetMinSize(int windowId = MainWindowId)`](#method-windowgetminsize) | Gets the requested minimum client size. |
+| [`public static void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetminsize) | Requests minimum client dimensions. |
+| [`public static Vector2i WindowGetMaxSize(int windowId = MainWindowId)`](#method-windowgetmaxsize) | Gets the requested maximum client size. |
+| [`public static void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetmaxsize) | Requests maximum client dimensions. |
+| [`public static WindowMode WindowGetMode(int windowId = MainWindowId)`](#method-windowgetmode) | Gets the main window's current native mode. |
+| [`public static void WindowSetMode(WindowMode mode, int windowId = MainWindowId)`](#method-windowsetmode) | Requests a native main-window mode. |
+| [`public static bool WindowIsFocused(int windowId = MainWindowId)`](#method-windowisfocused) | Gets whether the main window currently has keyboard focus. |
+| [`public static bool WindowGetFlag(WindowFlag flag, int windowId = MainWindowId)`](#method-windowgetflag) | Reads a supported native window flag. |
+| [`public static void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId)`](#method-windowsetflag) | Requests a supported native window policy. |
+| [`public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`](#method-windowismaximizeallowed) | Gets whether the current SDL resize policy permits a maximize request. |
+| [`public static void WindowMoveToForeground(int windowId = MainWindowId)`](#method-windowmovetoforeground) | Requests native foreground on supported drivers; does nothing on Wayland. |
+| [`public static void WindowRequestAttention(int windowId = MainWindowId)`](#method-windowrequestattention) | Requests user attention until the main window receives focus. |
+| [`public static Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)`](#method-windowgetpositionwithdecorations) | Gets the main-window position including its left and top decorations. |
+| [`public static Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId)`](#method-windowgetsizewithdecorations) | Gets the main-window size including native decorations. |
+| [`public static void WindowSetTaskbarProgressState(ProgressState state, int windowId = MainWindowId)`](#method-windowsettaskbarprogressstate) | Requests a taskbar progress state where the desktop supports it. |
+| [`public static void WindowSetTaskbarProgressValue(float value, int windowId = MainWindowId)`](#method-windowsettaskbarprogressvalue) | Requests a taskbar progress fraction where the desktop supports it. |
 | [`public static DisplayServer Open(string title, Vector2i size, bool hidden = false)`](#method-open) | Opens the native video subsystem and creates the main window. |
-| [`public string GetName()`](#method-getname) | Gets the current display backend name. |
-| [`public int GetScreenCount()`](#method-getscreencount) | Gets the current number of connected displays. |
-| [`public bool IsDarkMode()`](#method-isdarkmode) | Reports whether the current native system theme is dark. |
-| [`public bool IsDarkModeSupported()`](#method-isdarkmodesupported) | Reports Linux Wayland/X11 Settings portal support, or a known native theme on other drivers. |
-| [`public bool HasHardwareKeyboard()`](#method-hashardwarekeyboard) | Reports whether a physical keyboard is connected. |
-| [`public bool ScreenIsKeptOn()`](#method-screeniskepton) | Reports whether native screen blanking is disabled. |
-| [`public void ScreenSetKeepOn(bool enable)`](#method-screensetkeepon) | Requests screen wakefulness for this process. |
-| [`public int GetPrimaryScreen()`](#method-getprimaryscreen) | Gets the index of the current primary display. |
-| [`public Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`](#method-screengetposition) | Gets the global desktop position of a display. |
-| [`public Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`](#method-screengetsize) | Gets the full size of a display. |
-| [`public Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)`](#method-screengetusablerect) | Gets the usable desktop rectangle of a display. |
-| [`public float ScreenGetScale(int screen = ScreenOfMainWindow)`](#method-screengetscale) | Gets the display content scale reported by the native video system. |
-| [`public void WindowSetTitle(string title, int windowId = MainWindowId)`](#method-windowsettitle) | Requests a new main-window title. |
-| [`public Vector2i WindowGetSize(int windowId = MainWindowId)`](#method-windowgetsize) | Gets the main window's client size. |
-| [`public void WindowSetSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetsize) | Requests a new main-window client size. |
-| [`public Vector2i WindowGetPosition(int windowId = MainWindowId)`](#method-windowgetposition) | Gets the main window's global desktop position. |
-| [`public void WindowSetPosition(Vector2i position, int windowId = MainWindowId)`](#method-windowsetposition) | Requests a global desktop position for the main window. |
-| [`public bool ClipboardHas()`](#method-clipboardhas) | Gets whether the system clipboard currently contains text. |
-| [`public string ClipboardGet()`](#method-clipboardget) | Gets text from the system clipboard. |
-| [`public void ClipboardSet(string text)`](#method-clipboardset) | Replaces system clipboard text. |
-| [`public string ClipboardGetPrimary()`](#method-clipboardgetprimary) | Gets text from the platform's primary selection. |
-| [`public void ClipboardSetPrimary(string text)`](#method-clipboardsetprimary) | Replaces text in the platform's primary selection. |
+| [`public static string GetName()`](#method-getname) | Gets the current display backend name. |
+| [`public static int GetScreenCount()`](#method-getscreencount) | Gets the current number of connected displays. |
+| [`public static bool IsDarkMode()`](#method-isdarkmode) | Reports whether the current native system theme is dark. |
+| [`public static bool IsDarkModeSupported()`](#method-isdarkmodesupported) | Reports Linux Wayland/X11 Settings portal support, or a known native theme on other drivers. |
+| [`public static bool HasHardwareKeyboard()`](#method-hashardwarekeyboard) | Reports whether a physical keyboard is connected. |
+| [`public static bool ScreenIsKeptOn()`](#method-screeniskepton) | Reports whether native screen blanking is disabled. |
+| [`public static void ScreenSetKeepOn(bool enable)`](#method-screensetkeepon) | Requests screen wakefulness for this process. |
+| [`public static int GetPrimaryScreen()`](#method-getprimaryscreen) | Gets the index of the current primary display. |
+| [`public static Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`](#method-screengetposition) | Gets the global desktop position of a display. |
+| [`public static Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`](#method-screengetsize) | Gets the full size of a display. |
+| [`public static Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)`](#method-screengetusablerect) | Gets the usable desktop rectangle of a display. |
+| [`public static float ScreenGetScale(int screen = ScreenOfMainWindow)`](#method-screengetscale) | Gets the display content scale reported by the native video system. |
+| [`public static void WindowSetTitle(string title, int windowId = MainWindowId)`](#method-windowsettitle) | Requests a new main-window title. |
+| [`public static Vector2i WindowGetSize(int windowId = MainWindowId)`](#method-windowgetsize) | Gets the main window's client size. |
+| [`public static void WindowSetSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetsize) | Requests a new main-window client size. |
+| [`public static Vector2i WindowGetPosition(int windowId = MainWindowId)`](#method-windowgetposition) | Gets the main window's global desktop position. |
+| [`public static void WindowSetPosition(Vector2i position, int windowId = MainWindowId)`](#method-windowsetposition) | Requests a global desktop position for the main window. |
+| [`public static bool ClipboardHas()`](#method-clipboardhas) | Gets whether the system clipboard currently contains text. |
+| [`public static string ClipboardGet()`](#method-clipboardget) | Gets text from the system clipboard. |
+| [`public static void ClipboardSet(string text)`](#method-clipboardset) | Replaces system clipboard text. |
+| [`public static string ClipboardGetPrimary()`](#method-clipboardgetprimary) | Gets text from the platform's primary selection. |
+| [`public static void ClipboardSetPrimary(string text)`](#method-clipboardsetprimary) | Replaces text in the platform's primary selection. |
 
 ### Events
 
 | Signature | Contract |
 | --- | --- |
-| [`public event Action? QuitRequested`](#event-quitrequested) | Occurs when the operating system requests that the application quit. |
-| [`public event Action? SystemThemeChanged`](#event-systemthemechanged) | Occurs when SDL reports a native system-theme change. |
-| [`public event Action? CloseRequested`](#event-closerequested) | Occurs when the main window receives a close request. |
-| [`public event Action? WindowMouseEntered`](#event-windowmouseentered) | Occurs when the pointer enters the main window. |
-| [`public event Action? WindowMouseExited`](#event-windowmouseexited) | Occurs when the pointer leaves the main window. |
-| [`public event Action? WindowDpiChanged`](#event-windowdpichanged) | Occurs when the main window's native display content scale changes. |
-| [`public event Action<Rect2i>? WindowRectChanged`](#event-windowrectchanged) | Occurs after a change to the main window's complete client rectangle. |
-| [`public event Action<bool>? WindowFocusChanged`](#event-windowfocuschanged) | Occurs when the main window gains or loses keyboard focus. |
-| [`public event Action<string>? TextInput`](#event-textinput) | Occurs when the platform commits text input, including text composed through an IME. |
-| [`public event Action<string, Vector2i>? TextEditing`](#event-textediting) | Occurs after the native input method updates its uncommitted composition. |
-| [`public event Action<IReadOnlyList<string>>? FilesDropped`](#event-filesdropped) | Occurs once for a completed ordered group of dropped files. |
+| [`public static event Action? QuitRequested`](#event-quitrequested) | Occurs when the operating system requests that the application quit. |
+| [`public static event Action? SystemThemeChanged`](#event-systemthemechanged) | Occurs when SDL reports a native system-theme change. |
+| [`public static event Action? CloseRequested`](#event-closerequested) | Occurs when the main window receives a close request. |
+| [`public static event Action? WindowMouseEntered`](#event-windowmouseentered) | Occurs when the pointer enters the main window. |
+| [`public static event Action? WindowMouseExited`](#event-windowmouseexited) | Occurs when the pointer leaves the main window. |
+| [`public static event Action? WindowDpiChanged`](#event-windowdpichanged) | Occurs when the main window's native display content scale changes. |
+| [`public static event Action<Rect2i>? WindowRectChanged`](#event-windowrectchanged) | Occurs after a change to the main window's complete client rectangle. |
+| [`public static event Action<bool>? WindowFocusChanged`](#event-windowfocuschanged) | Occurs when the main window gains or loses keyboard focus. |
+| [`public static event Action<string>? TextInput`](#event-textinput) | Occurs when the platform commits text input, including text composed through an IME. |
+| [`public static event Action<string, Vector2i>? TextEditing`](#event-textediting) | Occurs after the native input method updates its uncommitted composition. |
+| [`public static event Action<IReadOnlyList<string>>? FilesDropped`](#event-filesdropped) | Occurs once for a completed ordered group of dropped files. |
 
 ### Enumerations
 
@@ -199,19 +206,10 @@ display.FileDialogShow("Open image", "", "", false,
 
 ### Property Descriptions
 
-<a id="property-instance"></a>
-#### `public static DisplayServer? Instance { get; }`
-
-Gets the active display server, if one has been opened.
-
-**Value:** The active instance or `null` after disposal.
-
-**Source:** `src/Servers/Display/DisplayServer.cs`.
-
 ### Method Descriptions
 
 <a id="method-dialogshow"></a>
-#### `public void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`
+#### `public static void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`
 
 Shows an operating-system message box with the requested title, body text, and ordered button labels. The native call blocks the opening thread until a user chooses a button or closes the dialog. The callback runs on that thread before the method returns and receives the native zero-based button index. Dismissal without a button is reported according to the native toolkit; the verified Wayland host reported `0` when a one-button dialog was closed with its title-bar button, so callers cannot distinguish that action from choosing button zero. A callback exception propagates after native dialog resources are released.
 
@@ -220,7 +218,7 @@ Shows an operating-system message box with the requested title, body text, and o
 **Source:** `src/Servers/Display/DisplayServer.Dialogs.cs`.
 
 <a id="method-filedialogshow"></a>
-#### `public void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`
+#### `public static void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`
 
 Opens an OS file or folder chooser. `OpenFile`, `OpenFiles`, `OpenDirectory`, and `SaveFile` select the corresponding native picker; `OpenAny` is explicitly unsupported. `currentDirectory` requests the initial location. On Linux, `filename` is used only for `SaveFile`, and `showHidden` is accepted but ignored by the native chooser. On other platforms SDL can combine `currentDirectory` and `filename` for file modes. The platform may ignore the title or initial location. `filters` use entries such as `*.png,*.jpg;Images;image/png,image/jpeg`; extension patterns are applied, the optional MIME section is ignored, and an all-files entry may be `*` or `*.*`. A valid MIME-only entry such as `;Images;image/png` throws `NotSupportedException` before native UI opens. Folder selection ignores filters and `filename`. The native OS may ignore filters or the selected-filter index.
 
@@ -231,7 +229,7 @@ The native result may arrive on another thread. File names are copied from SDL-o
 **Source:** `src/Servers/Display/DisplayServer.Dialogs.cs`.
 
 <a id="method-hashardwarekeyboard"></a>
-#### `public bool HasHardwareKeyboard()`
+#### `public static bool HasHardwareKeyboard()`
 
 On Android and iOS, reports the native probe for a connected keyboard; on other targets reports `true`, matching the desktop input contract. The mobile result may change as devices are attached or removed. Call on the opening thread.
 
@@ -240,7 +238,7 @@ On Android and iOS, reports the native probe for a connected keyboard; on other 
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-isdarkmode"></a>
-#### `public bool IsDarkMode()`
+#### `public static bool IsDarkMode()`
 
 Reads the current native system theme on the opening thread; it does not cache the last event. A dark result returns `true`; light and unknown results return `false`. On Linux Wayland and X11, an available Settings portal is also required. Query again after `SystemThemeChanged` to observe the current theme.
 
@@ -251,7 +249,7 @@ Reads the current native system theme on the opening thread; it does not cache t
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-isdarkmodesupported"></a>
-#### `public bool IsDarkModeSupported()`
+#### `public static bool IsDarkModeSupported()`
 
 On Linux Wayland and X11, returns whether the desktop Settings portal supports appearance queries, independently of whether the user has chosen dark, light, or no preference. This capability is queried once when the server opens through the session D-Bus and requires Settings interface version one or newer. An unavailable portal, session bus, or native D-Bus library yields `false`; reopen the server to refresh that capability. On other drivers, reports whether SDL currently identifies the theme as light or dark, so an unknown theme yields `false`. Call on the opening thread.
 
@@ -262,7 +260,7 @@ On Linux Wayland and X11, returns whether the desktop Settings portal supports a
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screeniskepton"></a>
-#### `public bool ScreenIsKeptOn()`
+#### `public static bool ScreenIsKeptOn()`
 
 Reports whether this process has disabled native screen blanking. This is a process-wide setting and does not guarantee that an operating-system power policy will keep a display on. Call on the opening thread.
 
@@ -273,7 +271,7 @@ On the verified Linux Wayland host, the returned request state corresponded to `
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screensetkeepon"></a>
-#### `public void ScreenSetKeepOn(bool enable)`
+#### `public static void ScreenSetKeepOn(bool enable)`
 
 Requests a process-wide screen-blanking policy. `enable: true` inhibits blanking; `false` permits normal power saving. The native subsystem releases the inhibition on shutdown. Call on the opening thread.
 
@@ -284,7 +282,7 @@ The Linux Wayland native test observed corresponding `UnInhibit`, `Inhibit`, and
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-hasfeature"></a>
-#### `public bool HasFeature(Feature feature)`
+#### `public static bool HasFeature(Feature feature)`
 
 Reports whether the current backend advertises an integrated display capability.
 
@@ -297,7 +295,7 @@ Reports whether the current backend advertises an integrated display capability.
 **Source:** `src/Servers/Display/DisplayServer.Capabilities.cs`.
 
 <a id="method-processevents"></a>
-#### `public void ProcessEvents()`
+#### `public static void ProcessEvents()`
 
 Drains native events and commits typed keyboard, mouse, touch and controller state before game callbacks.
 
@@ -310,7 +308,7 @@ SDL joystick/gamepad additions and removals update [Input](Input.md) metadata be
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="method-forceprocessanddropevents"></a>
-#### `public void ForceProcessAndDropEvents()`
+#### `public static void ForceProcessAndDropEvents()`
 
 Processes native window events while discarding pending keyboard, pointer, touch, and text input.
 
@@ -321,7 +319,7 @@ Processes native window events while discarding pending keyboard, pointer, touch
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="method-keyboardgetkeycodefromphysical"></a>
-#### `public Key KeyboardGetKeycodeFromPhysical(Key physical)`
+#### `public static Key KeyboardGetKeycodeFromPhysical(Key physical)`
 
 Maps a physical key to the logical key reported for the current keyboard layout.
 
@@ -336,7 +334,7 @@ Maps a physical key to the logical key reported for the current keyboard layout.
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="method-keyboardgetlabelfromphysical"></a>
-#### `public Key KeyboardGetLabelFromPhysical(Key physical)`
+#### `public static Key KeyboardGetLabelFromPhysical(Key physical)`
 
 Maps a physical key to its localized label in the current keyboard layout.
 
@@ -351,7 +349,7 @@ Maps a physical key to its localized label in the current keyboard layout.
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="method-windowseticon"></a>
-#### `public void WindowSetIcon(Image image, int windowId = MainWindowId)`
+#### `public static void WindowSetIcon(Image image, int windowId = MainWindowId)`
 
 Sets an icon specifically for the main window.
 
@@ -365,7 +363,7 @@ Sets an icon specifically for the main window.
 **Source:** `src/Servers/Display/DisplayServer.Icons.cs`.
 
 <a id="method-seticon"></a>
-#### `public void SetIcon(Image image)`
+#### `public static void SetIcon(Image image)`
 
 Sets the application-default icon for the main window while it has no explicit window icon.
 
@@ -378,7 +376,7 @@ Sets the application-default icon for the main window while it has no explicit w
 **Source:** `src/Servers/Display/DisplayServer.Icons.cs`.
 
 <a id="method-mousegetmode"></a>
-#### `public MouseMode MouseGetMode()`
+#### `public static MouseMode MouseGetMode()`
 
 Gets the last successfully requested mouse mode.
 
@@ -387,7 +385,7 @@ Gets the last successfully requested mouse mode.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-mousesetmode"></a>
-#### `public void MouseSetMode(MouseMode mode)`
+#### `public static void MouseSetMode(MouseMode mode)`
 
 Requests cursor visibility, capture, and confinement as one mode.
 
@@ -400,7 +398,7 @@ Requests cursor visibility, capture, and confinement as one mode.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-mousegetposition"></a>
-#### `public Vector2i MouseGetPosition()`
+#### `public static Vector2i MouseGetPosition()`
 
 Gets the current global desktop mouse position where the driver exposes it. On Wayland, where the compositor does not provide reliable global coordinates, reads the last position relative to the main window from SDL's pointer state and converts it to client pixels.
 
@@ -409,7 +407,7 @@ Gets the current global desktop mouse position where the driver exposes it. On W
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-mousegetbuttonstate"></a>
-#### `public MouseButtonMask MouseGetButtonState()`
+#### `public static MouseButtonMask MouseGetButtonState()`
 
 Gets the mouse buttons currently reported as held by SDL.
 
@@ -418,7 +416,7 @@ Gets the mouse buttons currently reported as held by SDL.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-warpmouse"></a>
-#### `public void WarpMouse(Vector2i position)`
+#### `public static void WarpMouse(Vector2i position)`
 
 Requests a pointer move to a position in the main window's client area when pointer warping is available.
 
@@ -431,7 +429,7 @@ Requests a pointer move to a position in the main window's client area when poin
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-cursorgetshape"></a>
-#### `public CursorShape CursorGetShape()`
+#### `public static CursorShape CursorGetShape()`
 
 Gets the last successfully selected standard pointer shape.
 
@@ -440,7 +438,7 @@ Gets the last successfully selected standard pointer shape.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-cursorsetshape"></a>
-#### `public void CursorSetShape(CursorShape shape)`
+#### `public static void CursorSetShape(CursorShape shape)`
 
 Selects a standard pointer shape from the native cursor theme.
 
@@ -451,7 +449,7 @@ Selects a standard pointer shape from the native cursor theme.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-cursorsetcustomimage"></a>
-#### `public void CursorSetCustomImage(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`
+#### `public static void CursorSetCustomImage(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`
 
 Sets or clears the image used for one pointer shape.
 
@@ -466,7 +464,7 @@ Sets or clears the image used for one pointer shape.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-imegettext"></a>
-#### `public string IMEGetText()`
+#### `public static string IMEGetText()`
 
 Gets the most recently received native IME composition text.
 
@@ -475,7 +473,7 @@ Gets the most recently received native IME composition text.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-imegetselection"></a>
-#### `public Vector2i IMEGetSelection()`
+#### `public static Vector2i IMEGetSelection()`
 
 Gets the current composition selection.
 
@@ -484,7 +482,7 @@ Gets the current composition selection.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-windowsetimeactive"></a>
-#### `public void WindowSetIMEActive(bool active, int windowId = MainWindowId)`
+#### `public static void WindowSetIMEActive(bool active, int windowId = MainWindowId)`
 
 Enables or disables native text input for the main window.
 
@@ -496,7 +494,7 @@ Enables or disables native text input for the main window.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-windowsetimeposition"></a>
-#### `public void WindowSetIMEPosition(Vector2i position, int windowId = MainWindowId)`
+#### `public static void WindowSetIMEPosition(Vector2i position, int windowId = MainWindowId)`
 
 Moves the native IME candidate area to a window-local text caret.
 
@@ -510,9 +508,9 @@ Moves the native IME candidate area to a window-local text caret.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-istouchscreenavailable"></a>
-#### `public bool IsTouchscreenAvailable()`
+#### `public static bool IsTouchscreenAvailable()`
 
-Gets whether SDL currently reports a touch device or `Input.Instance.EmulateTouchFromMouse` is enabled. The emulation setting makes this query true even without touch hardware. Read it on the opening thread.
+Gets whether SDL currently reports a touch device or `Input.EmulateTouchFromMouse` is enabled. The emulation setting makes this query true even without touch hardware. Read it on the opening thread.
 
 **Returns:** `true` when native or emulated touch is available.
 
@@ -521,7 +519,7 @@ Gets whether SDL currently reports a touch device or `Input.Instance.EmulateTouc
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-windowgetcurrentscreen"></a>
-#### `public int WindowGetCurrentScreen(int windowId = MainWindowId)`
+#### `public static int WindowGetCurrentScreen(int windowId = MainWindowId)`
 
 Gets the current screen index containing the main window.
 
@@ -532,7 +530,7 @@ Gets the current screen index containing the main window.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-getkeyboardfocusscreen"></a>
-#### `public int GetKeyboardFocusScreen()`
+#### `public static int GetKeyboardFocusScreen()`
 
 Gets the index of the display with keyboard focus.
 
@@ -541,18 +539,18 @@ Gets the index of the display with keyboard focus.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-getscreenfromrect"></a>
-#### `public int GetScreenFromRect(Rect2 rectangle)`
+#### `public static int GetScreenFromRect(Rect2 rectangle)`
 
 Gets the display containing the largest portion of a desktop rectangle.
 
 **Returns:** The zero-based index of the screen with the greatest overlap after its area is truncated to whole pixels, or `InvalidScreen` when no overlap reaches one pixel. Ties keep the first display.
 
-- `rectangle`: Desktop rectangle in the public screen-position coordinates. On Wayland, logical output origins and physical screen widths can make adjacent screen rectangles overlap; the first screen wins an equal-area tie.
+- `rectangle`: Desktop rectangle in the public static screen-position coordinates. On Wayland, logical output origins and physical screen widths can make adjacent screen rectangles overlap; the first screen wins an equal-area tie.
 
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-getwindowlist"></a>
-#### `public int[] GetWindowList()`
+#### `public static int[] GetWindowList()`
 
 Gets a snapshot of the engine-owned native window IDs.
 
@@ -561,7 +559,7 @@ Gets a snapshot of the engine-owned native window IDs.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetnativehandle"></a>
-#### `public nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)`
+#### `public static nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)`
 
 Gets a borrowed operating-system identity through SDL window properties. `DisplayHandle` is an X11 `Display*` or Wayland `wl_display*`; `WindowHandle` is an X11 window ID, Wayland `wl_surface*`, Win32 `HWND`, or Cocoa `NSWindow*`. The result is pointer-sized and nonzero. It is neither the SDL window pointer nor an owned handle.
 
@@ -577,7 +575,7 @@ Gets a borrowed operating-system identity through SDL window properties. `Displa
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-getwindowatscreenposition"></a>
-#### `public int GetWindowAtScreenPosition(Vector2i position)`
+#### `public static int GetWindowAtScreenPosition(Vector2i position)`
 
 Finds the engine-owned window at a desktop position.
 
@@ -592,7 +590,7 @@ Finds the engine-owned window at a desktop position.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsetcurrentscreen"></a>
-#### `public void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)`
+#### `public static void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)`
 
 Requests that the main window move to another connected display. Choosing its current display does nothing.
 
@@ -606,7 +604,7 @@ Requests that the main window move to another connected display. Choosing its cu
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-screengetrefreshrate"></a>
-#### `public float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)`
+#### `public static float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)`
 
 Gets the current screen refresh rate. Uses the precise display-mode numerator and denominator when SDL provides them; otherwise uses its floating-point rate.
 
@@ -617,7 +615,7 @@ Gets the current screen refresh rate. Uses the precise display-mode numerator an
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-screengetmaxscale"></a>
-#### `public float ScreenGetMaxScale()`
+#### `public static float ScreenGetMaxScale()`
 
 Gets the largest reported content scale among connected displays.
 
@@ -626,7 +624,7 @@ Gets the largest reported content scale among connected displays.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetminsize"></a>
-#### `public Vector2i WindowGetMinSize(int windowId = MainWindowId)`
+#### `public static Vector2i WindowGetMinSize(int windowId = MainWindowId)`
 
 Gets the requested minimum size of the main window, initially 64×64 client pixels on Wayland or native window units elsewhere.
 
@@ -637,7 +635,7 @@ Gets the requested minimum size of the main window, initially 64×64 client pixe
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsetminsize"></a>
-#### `public void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`
+#### `public static void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`
 
 Requests minimum client dimensions for the main window. Wayland converts each pixel bound to native logical units using window pixel density, rounding minimums upward and maximums downward, then reapplies them after a display-scale change.
 
@@ -649,7 +647,7 @@ Requests minimum client dimensions for the main window. Wayland converts each pi
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetmaxsize"></a>
-#### `public Vector2i WindowGetMaxSize(int windowId = MainWindowId)`
+#### `public static Vector2i WindowGetMaxSize(int windowId = MainWindowId)`
 
 Gets the requested maximum size of the main window.
 
@@ -660,7 +658,7 @@ Gets the requested maximum size of the main window.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsetmaxsize"></a>
-#### `public void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`
+#### `public static void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`
 
 Requests maximum client dimensions for the main window. Wayland converts each pixel bound to native logical units using window pixel density, rounding minimums upward and maximums downward, then reapplies them after a display-scale change.
 
@@ -672,7 +670,7 @@ Requests maximum client dimensions for the main window. Wayland converts each pi
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetmode"></a>
-#### `public WindowMode WindowGetMode(int windowId = MainWindowId)`
+#### `public static WindowMode WindowGetMode(int windowId = MainWindowId)`
 
 Gets the main window's current native mode.
 
@@ -683,7 +681,7 @@ Gets the main window's current native mode.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsetmode"></a>
-#### `public void WindowSetMode(WindowMode mode, int windowId = MainWindowId)`
+#### `public static void WindowSetMode(WindowMode mode, int windowId = MainWindowId)`
 
 Requests a native main-window mode.
 
@@ -697,7 +695,7 @@ Requests a native main-window mode.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowisfocused"></a>
-#### `public bool WindowIsFocused(int windowId = MainWindowId)`
+#### `public static bool WindowIsFocused(int windowId = MainWindowId)`
 
 Gets whether the main window currently has focus. Wayland uses pointer focus; other drivers use the native keyboard-focus flag.
 
@@ -708,7 +706,7 @@ Gets whether the main window currently has focus. Wayland uses pointer focus; ot
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetflag"></a>
-#### `public bool WindowGetFlag(WindowFlag flag, int windowId = MainWindowId)`
+#### `public static bool WindowGetFlag(WindowFlag flag, int windowId = MainWindowId)`
 
 Reads a supported native window flag.
 
@@ -724,7 +722,7 @@ Reads a supported native window flag.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsetflag"></a>
-#### `public void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId)`
+#### `public static void WindowSetFlag(WindowFlag flag, bool enabled, int windowId = MainWindowId)`
 
 Requests a supported native window policy.
 
@@ -739,7 +737,7 @@ Requests a supported native window policy.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowismaximizeallowed"></a>
-#### `public bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`
+#### `public static bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`
 
 Gets whether the current SDL resize policy permits a maximize request.
 
@@ -752,7 +750,7 @@ The native window manager can independently disable maximization. This method do
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowmovetoforeground"></a>
-#### `public void WindowMoveToForeground(int windowId = MainWindowId)`
+#### `public static void WindowMoveToForeground(int windowId = MainWindowId)`
 
 Requests that the window manager bring the main window to the foreground.
 
@@ -765,7 +763,7 @@ Requests that the window manager bring the main window to the foreground.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowrequestattention"></a>
-#### `public void WindowRequestAttention(int windowId = MainWindowId)`
+#### `public static void WindowRequestAttention(int windowId = MainWindowId)`
 
 Requests user attention until the main window receives focus.
 
@@ -778,7 +776,7 @@ Requests user attention until the main window receives focus.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetpositionwithdecorations"></a>
-#### `public Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)`
+#### `public static Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)`
 
 Gets the main-window position including its left and top decorations.
 
@@ -791,7 +789,7 @@ Gets the main-window position including its left and top decorations.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetsizewithdecorations"></a>
-#### `public Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId)`
+#### `public static Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId)`
 
 Gets the main-window size including native decorations.
 
@@ -802,7 +800,7 @@ Gets the main-window size including native decorations.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsettaskbarprogressstate"></a>
-#### `public void WindowSetTaskbarProgressState(ProgressState state, int windowId = MainWindowId)`
+#### `public static void WindowSetTaskbarProgressState(ProgressState state, int windowId = MainWindowId)`
 
 Requests the taskbar progress state for the main window. On Wayland this call rejects the request because desktop entry and taskbar notification integration are not yet verified. On other native drivers it delegates to SDL, whose success means the request was accepted by SDL and does not prove that a desktop taskbar displayed it.
 
@@ -814,7 +812,7 @@ Requests the taskbar progress state for the main window. On Wayland this call re
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsettaskbarprogressvalue"></a>
-#### `public void WindowSetTaskbarProgressValue(float value, int windowId = MainWindowId)`
+#### `public static void WindowSetTaskbarProgressValue(float value, int windowId = MainWindowId)`
 
 Requests the taskbar progress fraction for the main window. On Wayland this call rejects the request because desktop entry and taskbar notification integration are not yet verified. On other native drivers it delegates to SDL, whose success does not prove that a desktop taskbar displayed the value.
 
@@ -843,18 +841,18 @@ Opens the native video subsystem and creates the main window.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-getname"></a>
-#### `public string GetName()`
+#### `public static string GetName()`
 
 Gets the current display backend name.
 
-**Returns:** The active backend's public name. The SDL `wayland`, `x11`, and `dummy` drivers are reported as `Wayland`, `X11`, and `headless`, respectively.
+**Returns:** The active backend's public static name. The SDL `wayland`, `x11`, and `dummy` drivers are reported as `Wayland`, `X11`, and `headless`, respectively.
 
 **Errors:** `ObjectDisposedException` — The server is disposing or disposed.; `InvalidOperationException` — The caller is not the owner thread..
 
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-getscreencount"></a>
-#### `public int GetScreenCount()`
+#### `public static int GetScreenCount()`
 
 Gets the current number of connected displays.
 
@@ -863,7 +861,7 @@ Gets the current number of connected displays.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-getprimaryscreen"></a>
-#### `public int GetPrimaryScreen()`
+#### `public static int GetPrimaryScreen()`
 
 Gets the index of the current primary display.
 
@@ -872,7 +870,7 @@ Gets the index of the current primary display.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screengetposition"></a>
-#### `public Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`
+#### `public static Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`
 
 Gets the global desktop position of a display.
 
@@ -883,7 +881,7 @@ Gets the global desktop position of a display.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screengetsize"></a>
-#### `public Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`
+#### `public static Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`
 
 Gets the full size of a display.
 
@@ -894,7 +892,7 @@ Gets the full size of a display.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screengetusablerect"></a>
-#### `public Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)`
+#### `public static Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)`
 
 Gets the usable desktop rectangle of a display.
 
@@ -905,7 +903,7 @@ Gets the usable desktop rectangle of a display.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screengetscale"></a>
-#### `public float ScreenGetScale(int screen = ScreenOfMainWindow)`
+#### `public static float ScreenGetScale(int screen = ScreenOfMainWindow)`
 
 Gets the display content scale reported by the native video system. On Wayland, the default main-window selector reads the window's current scale; a direct display index rounds the current display mode's pixel density upward to the integer output scale. A 1.25-scale output therefore reports two by index, while its window can report 1.25. A newly created or hidden window can temporarily report another scale before the compositor assigns its preferred fractional scale. Its value can change after the first buffer is presented or the window moves. X11 returns one.
 
@@ -916,7 +914,7 @@ Gets the display content scale reported by the native video system. On Wayland, 
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowsettitle"></a>
-#### `public void WindowSetTitle(string title, int windowId = MainWindowId)`
+#### `public static void WindowSetTitle(string title, int windowId = MainWindowId)`
 
 Requests a new main-window title.
 
@@ -928,7 +926,7 @@ Requests a new main-window title.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowgetsize"></a>
-#### `public Vector2i WindowGetSize(int windowId = MainWindowId)`
+#### `public static Vector2i WindowGetSize(int windowId = MainWindowId)`
 
 Gets the main window's client size.
 
@@ -939,7 +937,7 @@ Gets the main window's client size.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowsetsize"></a>
-#### `public void WindowSetSize(Vector2i size, int windowId = MainWindowId)`
+#### `public static void WindowSetSize(Vector2i size, int windowId = MainWindowId)`
 
 Requests a new main-window client size.
 
@@ -951,7 +949,7 @@ Requests a new main-window client size.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowgetposition"></a>
-#### `public Vector2i WindowGetPosition(int windowId = MainWindowId)`
+#### `public static Vector2i WindowGetPosition(int windowId = MainWindowId)`
 
 Gets the main window's global desktop position.
 
@@ -964,7 +962,7 @@ Gets the main window's global desktop position.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowsetposition"></a>
-#### `public void WindowSetPosition(Vector2i position, int windowId = MainWindowId)`
+#### `public static void WindowSetPosition(Vector2i position, int windowId = MainWindowId)`
 
 Requests a global desktop position for the main window.
 
@@ -976,7 +974,7 @@ Requests a global desktop position for the main window.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-clipboardhas"></a>
-#### `public bool ClipboardHas()`
+#### `public static bool ClipboardHas()`
 
 Gets whether the ordinary system clipboard currently returns a nonempty text string. The primary selection is a separate source.
 
@@ -985,7 +983,7 @@ Gets whether the ordinary system clipboard currently returns a nonempty text str
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-clipboardget"></a>
-#### `public string ClipboardGet()`
+#### `public static string ClipboardGet()`
 
 Gets text from the system clipboard.
 
@@ -996,7 +994,7 @@ Gets text from the system clipboard.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-clipboardset"></a>
-#### `public void ClipboardSet(string text)`
+#### `public static void ClipboardSet(string text)`
 
 Replaces system clipboard text.
 
@@ -1007,7 +1005,7 @@ Replaces system clipboard text.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-clipboardgetprimary"></a>
-#### `public string ClipboardGetPrimary()`
+#### `public static string ClipboardGetPrimary()`
 
 Gets text from the platform's primary selection.
 
@@ -1018,7 +1016,7 @@ Gets text from the platform's primary selection.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-clipboardsetprimary"></a>
-#### `public void ClipboardSetPrimary(string text)`
+#### `public static void ClipboardSetPrimary(string text)`
 
 Replaces text in the platform's primary selection.
 
@@ -1033,7 +1031,7 @@ Replaces text in the platform's primary selection.
 ### Event Descriptions
 
 <a id="event-quitrequested"></a>
-#### `public event Action? QuitRequested`
+#### `public static event Action? QuitRequested`
 
 Occurs when the operating system requests that the application quit.
 
@@ -1042,7 +1040,7 @@ Occurs when the operating system requests that the application quit.
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-systemthemechanged"></a>
-#### `public event Action? SystemThemeChanged`
+#### `public static event Action? SystemThemeChanged`
 
 Occurs when SDL reports a native system-theme change. The event carries no theme value; query `IsDarkMode` or `IsDarkModeSupported` for the currently reported value.
 
@@ -1051,7 +1049,7 @@ Occurs when SDL reports a native system-theme change. The event carries no theme
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-closerequested"></a>
-#### `public event Action? CloseRequested`
+#### `public static event Action? CloseRequested`
 
 Occurs when the main window receives a close request.
 
@@ -1060,7 +1058,7 @@ Occurs when the main window receives a close request.
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-windowmouseentered"></a>
-#### `public event Action? WindowMouseEntered`
+#### `public static event Action? WindowMouseEntered`
 
 Occurs when the pointer enters the main window.
 
@@ -1069,7 +1067,7 @@ Occurs when the pointer enters the main window.
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-windowmouseexited"></a>
-#### `public event Action? WindowMouseExited`
+#### `public static event Action? WindowMouseExited`
 
 Occurs when the pointer leaves the main window.
 
@@ -1078,7 +1076,7 @@ Occurs when the pointer leaves the main window.
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-windowdpichanged"></a>
-#### `public event Action? WindowDpiChanged`
+#### `public static event Action? WindowDpiChanged`
 
 Occurs when SDL reports a display-content-scale change for the main window. The event carries no scale value. Query `ScreenGetScale()` with its default main-window selector to read the window's reported scale, including fractional Wayland values.
 
@@ -1087,7 +1085,7 @@ Occurs when SDL reports a display-content-scale change for the main window. The 
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-windowrectchanged"></a>
-#### `public event Action<Rect2i>? WindowRectChanged`
+#### `public static event Action<Rect2i>? WindowRectChanged`
 
 Occurs when a native move or resize changes the observed client rectangle of the main window. The `Rect2i` argument contains the complete position and size after that individual event: position is in the driver's desktop coordinates and size is in client pixels on Wayland or native window units elsewhere. On Wayland, the position is conventionally `(0, 0)` because the compositor does not disclose a reliable global top-level position.
 
@@ -1096,7 +1094,7 @@ Occurs when a native move or resize changes the observed client rectangle of the
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-windowfocuschanged"></a>
-#### `public event Action<bool>? WindowFocusChanged`
+#### `public static event Action<bool>? WindowFocusChanged`
 
 Occurs when the main window gains or loses keyboard focus.
 
@@ -1105,7 +1103,7 @@ Occurs when the main window gains or loses keyboard focus.
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-textinput"></a>
-#### `public event Action<string>? TextInput`
+#### `public static event Action<string>? TextInput`
 
 Occurs when the platform commits text input, including text composed through an IME.
 
@@ -1114,7 +1112,7 @@ Occurs when the platform commits text input, including text composed through an 
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-textediting"></a>
-#### `public event Action<string, Vector2i>? TextEditing`
+#### `public static event Action<string, Vector2i>? TextEditing`
 
 Occurs after the native input method updates its uncommitted composition.
 
@@ -1123,7 +1121,7 @@ Occurs after the native input method updates its uncommitted composition.
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-filesdropped"></a>
-#### `public event Action<IReadOnlyList<string>>? FilesDropped`
+#### `public static event Action<IReadOnlyList<string>>? FilesDropped`
 
 Occurs once when the operating system completes a group of dropped files on the main window. Paths preserve native order. A single unbracketed file event is delivered as a one-item list; an empty group delivers nothing.
 
@@ -1153,7 +1151,7 @@ Selects a borrowed OS display, window or graphics-context identity for `WindowGe
 <a id="enum-filedialogmode"></a>
 #### `public enum FileDialogMode`
 
-Selects the native chooser operation. The stable numeric values match the public display contract.
+Selects the native chooser operation. The stable numeric values match the public static display contract.
 
 | Value | Meaning |
 | --- | --- |
@@ -1303,7 +1301,7 @@ When `disposing` is true, restores the default pointer, releases cursors and the
 - Main-window ID is zero. Invalid window IDs, dimensions, modes, flags, and cursor hotspots are rejected before their corresponding native operation. Invalid screen queries return their documented fallback values; a setter that requires a real screen rejects an invalid selector.
 - SDL screen and window getters report observed state; setters are requests to the window manager.
 - `Input` owns committed input state. Focus loss clears tracked touch contacts, delivers window and application notifications, then releases pressed inputs even when a callback fails.
-- SDL-owned window and resource handles stay private. Borrowed operating-system display/window and supported graphics-context identities may cross the public API through `WindowGetNativeHandle`; the server still owns their lifetime and requires deterministic owner-thread disposal.
+- SDL-owned window and resource handles stay private. Borrowed operating-system display/window and supported graphics-context identities may cross the public static API through `WindowGetNativeHandle`; the server still owns their lifetime and requires deterministic owner-thread disposal.
 
 ## Dependencies and interactions
 
@@ -1333,13 +1331,13 @@ The full native Wayland smoke passed with `DisplayServerTaskbarProgressNativeTes
 
 `env -u LD_LIBRARY_PATH ELECTRON2D_TEST_DISPLAY=1 SDL_VIDEODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` exercises open/reopen, owner-thread rejection, screen selector/default/fallback behavior including the unavailable refresh-rate result, theme-query mapping to SDL light/dark/unknown state, theme-event queue order and callback-failure continuation, capability IDs and clipboard round trip, window queries and mutations, cursor/mouse-mode IDs and terminal-marker rejection, supported and unsupported window-policy handling, pointer enter/exit and content-scale event order, foreign-window filtering and callback-failure continuation, re-entry rejection, key and pointer modifier ordering, mouse/touch emulation, both wheel axes after one callback fails, file-drop batching, dialog argument and callback lifetime, image conversion, and unsupported icon failure. The separate `ELECTRON2D_TEST_DISPLAY_NATIVE=1` path in the published Linux x64 test executable opened a visible window, queried the screen and borrowed handles, changed title and minimum size, and pumped events on this machine's Wayland and XWayland backends with its packaged SDL and no `LD_LIBRARY_PATH`. The native Wayland smoke checks all five mouse modes against SDL state, synthetic pointer coordinates at pixel density 1.25, a held-button mask at rest, rejection of an unsupported warp without synthetic movement, and a read-only cross-process clipboard and primary-selection comparison with a visible keyboard-focused child while both selections held stable nonempty text. A separate user-assisted visible-window test confirmed real focused pointer motion, left-button press/release, and relative motion under `Captured`; all five modes matched native SDL cursor and grab state. An earlier focused warp assertion failed: SDL briefly reported the target while the physical pointer remained elsewhere. The Wayland path now rejects the unavailable capability before SDL is called. A separate 25-second `Confined` run reached all four edges of a 600×450 client area (`x=0…599`, `y=0…449`) without losing mouse focus while the user pushed outward. It also checks the primary-screen keyboard-focus fallback and SDL text-input activation/deactivation. A prior temporary X11 consumer exercised the mouse-focus screen query. A private headless Mutter compositor did not focus the SDL publisher or deliver an input serial, so no clipboard setter publication was exercised. Its missing input-capable virtual seat is the trigger for a focused cross-process publication check that keeps the user's clipboard untouched. These checks do not validate real operating-system theme, physical DPI behavior, full compositor behavior, platform focus policy, icon display, successful real pointer warping, cross-process clipboard publication after a valid recent-input serial, native file chooser selection, real IME composition, touch hardware, high-DPI positioning, other-target packaging, or other operating systems. The published user example starts on Wayland with its packaged native SDL and no development library path. Dummy host checks cover loop ordering, callback failures, and teardown; user-assisted physical arrow-key input, scene movement, Escape exit, and window-close exit passed in the example; remaining dialog/compositor checks still need native acceptance.
 
-The current Wayland native smoke checked three monitors, including one with 1.25 compositor scaling: SDL's logical 1536×864 bounds and 1.25 pixel density produce the physical 1920×1080 screen size. The indexed scale is two there, and `ScreenGetMaxScale()` is two; a Wayland protocol trace independently observed `wl_output.scale` values two, one, and one. SDL display content scale was one on all three displays and cannot supply the indexed value. A Wayland protocol trace also confirmed that all three SDL `xdg-output logical_position` values equal their `wl_output.geometry` positions on this host. The latest test window ran at pixel density 1.25 with a 320×240 logical / 400×300 pixel buffer. Native size requests, constraints, client-rectangle callbacks, and synthetic pointer-event pixel conversion passed at that density. A separate visible SDL software-renderer test then moved between density 1.25 and 1 and back. Two native scale events arrived, and observed pixel size plus native minimum/maximum limits matched the public values after both moves. A newly created or hidden window can expose a provisional scale before its preferred fractional scale arrives; first-buffer scale-event ordering remains for the first renderer integration. Synthetic IME checks cover the 1×10 candidate area, composition and commit state before callbacks, negative selection offsets, and cleanup; a real IME popup was not exercised. Native window checks exercised Wayland focus, minimum/maximum constraints, size clamping, borderless and resize-disabled toggles, maximized-to-windowed and fullscreen-to-windowed restoration, and ordinary fullscreen mapping for an exclusive request. A targeted Wayland run passed checks that reject unsupported topmost/focus flags without SDL state mutation and treat fullscreen as compatible with a later maximize request; the full Wayland native smoke passed twice after the initial-scale expectation was corrected. A minimize-and-restore attempt exposed the protocol limitation: programmatic restoration is unreliable, so minimization runs last in the smoke test.
+The current Wayland native smoke checked three monitors, including one with 1.25 compositor scaling: SDL's logical 1536×864 bounds and 1.25 pixel density produce the physical 1920×1080 screen size. The indexed scale is two there, and `ScreenGetMaxScale()` is two; a Wayland protocol trace independently observed `wl_output.scale` values two, one, and one. SDL display content scale was one on all three displays and cannot supply the indexed value. A Wayland protocol trace also confirmed that all three SDL `xdg-output logical_position` values equal their `wl_output.geometry` positions on this host. The latest test window ran at pixel density 1.25 with a 320×240 logical / 400×300 pixel buffer. Native size requests, constraints, client-rectangle callbacks, and synthetic pointer-event pixel conversion passed at that density. A separate visible SDL software-renderer test then moved between density 1.25 and 1 and back. Two native scale events arrived, and observed pixel size plus native minimum/maximum limits matched the public static values after both moves. A newly created or hidden window can expose a provisional scale before its preferred fractional scale arrives; first-buffer scale-event ordering remains for the first renderer integration. Synthetic IME checks cover the 1×10 candidate area, composition and commit state before callbacks, negative selection offsets, and cleanup; a real IME popup was not exercised. Native window checks exercised Wayland focus, minimum/maximum constraints, size clamping, borderless and resize-disabled toggles, maximized-to-windowed and fullscreen-to-windowed restoration, and ordinary fullscreen mapping for an exclusive request. A targeted Wayland run passed checks that reject unsupported topmost/focus flags without SDL state mutation and treat fullscreen as compatible with a later maximize request; the full Wayland native smoke passed twice after the initial-scale expectation was corrected. A minimize-and-restore attempt exposed the protocol limitation: programmatic restoration is unreliable, so minimization runs last in the smoke test.
 
-`env -u LD_LIBRARY_PATH ELECTRON2D_TEST_DISPLAY_IME_MOVE=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release --no-restore` passed after a user moved the visible test window onto the 1.25-scale monitor. SDL then reported density 1.25, and the native candidate area was `(100, 60, 1, 10)` with cursor offset zero for the public client-pixel position `(125, 75)`. This checked native coordinate conversion, not a visible input-method popup.
+`env -u LD_LIBRARY_PATH ELECTRON2D_TEST_DISPLAY_IME_MOVE=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release --no-restore` passed after a user moved the visible test window onto the 1.25-scale monitor. SDL then reported density 1.25, and the native candidate area was `(100, 60, 1, 10)` with cursor offset zero for the public static client-pixel position `(125, 75)`. This checked native coordinate conversion, not a visible input-method popup.
 
 The same Wayland screen probe returned precise refresh rates of 143.98, 143.997, and 143.997 Hz, matching the observed `wl_output.mode` values. SDL's rounded float had reported 144 for the latter two outputs.
 
-The native Wayland handle probe compared the two public borrowed values with SDL's exact `wl_display` and `wl_surface` window properties; both matched and were nonzero.
+The native Wayland handle probe compared the two public static borrowed values with SDL's exact `wl_display` and `wl_surface` window properties; both matched and were nonzero.
 
 The dummy run also verifies successive full `Rect2i` snapshots for move and resize, order relative to quit, duplicate and foreign-window filtering, rejection of an off-thread pump without consuming its queue, and delivery after a failing rectangle handler with the failure aggregated. A native Wayland size request produced a real client-rectangle callback and pixel-size readback at density 1.25. A user-driven move/resize sequence and Wayland's zero-position convention remain unverified.
 
@@ -1347,7 +1345,7 @@ The X11 native smoke in `tests/Electron2D.Tests/DisplayServerNativeSmokeTests.cs
 
 ## Known limitations
 
-The complete coverage and exact implementation triggers for absent services are tracked in [the coverage inventory](../coverage/classes/DisplayServer.md). The retired `accessibility_*` and `global_menu_*` entry points and their obsolete enum vocabulary are permanently excluded from this class under [ADR 0041](../decisions/display.md#adr-0041); accessibility and menu behavior belongs to separately accepted services. Borrowed OS display/window identities are available on the listed desktop drivers; five Linux compatibility GL/EGL/GLX identities now execute with native ownership checks; native views, mobile identities and other-platform graphics integration remain incomplete under [ADR 0042](../decisions/display.md#adr-0042). Four current accessibility preference queries remain in this class's blocked coverage. The typed main-window events cover close, focus, pointer enter/exit, complete client-rectangle changes, and native content-scale changes; `WindowDpiChanged` is a content-scale event; its ordering with a simultaneous rectangle update and the first rendered buffer remains unverified. Other `WindowEvent` identities require the native-host or renderer integrations named in the coverage register. The current theme API reports SDL's light/dark/unknown preference and change events, plus Linux Wayland/X11 Settings portal capability at server creation. A portal becoming available after creation requires reopening to refresh support. Other drivers use SDL's known-theme result; Windows' native theme API availability is not yet proven equivalent to that result. Accent colors, high contrast, and other appearance settings are absent; an unset portal preference, physical appearance transitions, and native change delivery remain unverified. Window/Engine.Run has executable initial rendering/presentation. Advanced text/option dialogs, speech, mobile hosts, multiwindow scene composition, tablet integration, keyboard layout switching, image clipboard codecs and additional platform-specific controls remain absent without public compatibility stubs. Native file dialogs cannot combine file and folder selection or control hidden-file visibility; on Linux the `showHidden` parameter is accepted and ignored. MIME-only filters reject before native UI opens. The first native Linux portal FileChooser bridge must implement MIME terms and verify the selected-filter result on Wayland; combined file-or-folder selection requires a separately approved chooser capability. Wayland has no reliable global pointer or top-level window-position query; `WindowRectChanged` uses a conventional zero position there, and the mouse-focus screen selector returns `InvalidScreen` when this server's window does not own mouse focus. Linux x64 native library packaging is implemented for the user example. Windows, macOS, Android, iOS, and a Web host and browser-compatible display backend remain unresolved.
+The complete coverage and exact implementation triggers for absent services are tracked in [the coverage inventory](../coverage/classes/DisplayServer.md). The retired `accessibility_*` and `global_menu_*` entry points and their obsolete enum vocabulary are permanently excluded from this class under [ADR 0041](../decisions/display.md#adr-0041); accessibility and menu behavior belongs to separately accepted services. Borrowed OS display/window identities are available on the listed desktop drivers; five Linux compatibility GL/EGL/GLX identities now execute with native ownership checks; native views, mobile identities and other-platform graphics integration remain incomplete under [ADR 0042](../decisions/display.md#adr-0042). Four current accessibility preference queries remain in this class's blocked coverage. The typed main-window events cover close, focus, pointer enter/exit, complete client-rectangle changes, and native content-scale changes; `WindowDpiChanged` is a content-scale event; its ordering with a simultaneous rectangle update and the first rendered buffer remains unverified. Other `WindowEvent` identities require the native-host or renderer integrations named in the coverage register. The current theme API reports SDL's light/dark/unknown preference and change events, plus Linux Wayland/X11 Settings portal capability at server creation. A portal becoming available after creation requires reopening to refresh support. Other drivers use SDL's known-theme result; Windows' native theme API availability is not yet proven equivalent to that result. Accent colors, high contrast, and other appearance settings are absent; an unset portal preference, physical appearance transitions, and native change delivery remain unverified. Window/Engine.Run has executable initial rendering/presentation. Advanced text/option dialogs, speech, mobile hosts, multiwindow scene composition, tablet integration, keyboard layout switching, image clipboard codecs and additional platform-specific controls remain absent without public static compatibility stubs. Native file dialogs cannot combine file and folder selection or control hidden-file visibility; on Linux the `showHidden` parameter is accepted and ignored. MIME-only filters reject before native UI opens. The first native Linux portal FileChooser bridge must implement MIME terms and verify the selected-filter result on Wayland; combined file-or-folder selection requires a separately approved chooser capability. Wayland has no reliable global pointer or top-level window-position query; `WindowRectChanged` uses a conventional zero position there, and the mouse-focus screen selector returns `InvalidScreen` when this server's window does not own mouse focus. Linux x64 native library packaging is implemented for the user example. Windows, macOS, Android, iOS, and a Web host and browser-compatible display backend remain unresolved.
 
 ## Relevant decisions
 

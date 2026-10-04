@@ -14,7 +14,7 @@ public partial class LineEdit
         {
             case LineEditMenuAction.Cut: if (_editable && !_secret && _selecting) { CopySelection(); DeleteRange(_selectionFrom, _selectionTo); ChangedByUser(); } return;
             case LineEditMenuAction.Copy: CopySelection(); return;
-            case LineEditMenuAction.Paste: if (_editable) UserInsert(DisplayServer.Instance?.ClipboardGet() ?? ""); return;
+            case LineEditMenuAction.Paste: if (_editable) UserInsert(DisplayServer.Service?.ClipboardGetCore() ?? ""); return;
             case LineEditMenuAction.Clear: if (_editable) Clear(); return;
             case LineEditMenuAction.SelectAll: SelectAll(); return;
             case LineEditMenuAction.Undo: RestoreHistory(-1); return;

@@ -33,7 +33,7 @@ var input = new LineEdit
 };
 input.TextSubmitted += value => Console.WriteLine(value);
 window.AddChild(input);
-Engine.Instance.Run(window);
+Engine.Run(window);
 ```
 
 ## Constructor summary

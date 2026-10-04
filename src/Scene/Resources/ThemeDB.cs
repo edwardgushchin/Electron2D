@@ -3,7 +3,8 @@ using System.Collections.Concurrent;
 namespace Electron2D;
 
 /// <summary>Owns the built-in theme for implemented controls and the universal typed fallback values.</summary>
-/// <remarks>The singleton and its built-in resources are borrowed. Project theme-file loading
+/// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
+/// The singleton and its built-in resources are borrowed. Project theme-file loading
 /// and skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
 /// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.
 /// Initial service construction decodes the built-in slider, button, text-field and scroll-hint icons through the SVG image codec at scale one.</remarks>
@@ -99,15 +100,9 @@ public sealed partial class ThemeDB : ElectronObject
         using var image = new Image(); image.LoadSVGFromBuffer(svg);
         var texture = ImageTexture.CreateFromImage(image); _owned.Add(texture); return texture;
     }
-    /// <summary>Gets the process-wide theme service.</summary>
-    /// <value>The shared service; consumers do not own it.</value>
-    public static ThemeDB Instance => Singleton.Value;
-    /// <summary>Gets the built-in theme resource for the currently implemented control families.</summary>
-    /// <returns>The borrowed mutable theme, with the embedded font, Label/panel/tooltip styles, button, slider and scroll skins/hints, box/grid/flow constants and split-bar/touch skins.</returns>
-    /// <exception cref="ObjectDisposedException">The service or its theme is disposed.</exception>
-    public Theme GetDefaultTheme() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
-    /// <summary>Occurs after a universal fallback assignment changes its value.</summary>
-    public event Action? FallbackChanged;
+    internal static ThemeDB Service => Singleton.Value;
+    internal Theme GetDefaultThemeCore() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
+    internal event Action? FallbackChangedCore;
     internal event Action? ContextChanged;
     private void DefaultChanged(Resource _) => ContextChanged?.Invoke();
     private void DefaultDisposed(ElectronObject _) => ContextChanged?.Invoke();
@@ -115,39 +110,25 @@ public sealed partial class ThemeDB : ElectronObject
     {
         Exception? contextError = null, fallbackError = null;
         try { ContextChanged?.Invoke(); } catch (Exception error) { contextError = error; }
-        try { FallbackChanged?.Invoke(); } catch (Exception error) { fallbackError = error; }
+        try { FallbackChangedCore?.Invoke(); } catch (Exception error) { fallbackError = error; }
         Resource.ThrowCombined(contextError, fallbackError);
     }
-    /// <summary>Gets or sets the final base-scale fallback when no theme defines a positive default.</summary>
-    /// <value>One initially; finite signed values are preserved.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite.</exception>
-    /// <exception cref="ObjectDisposedException">The service is disposed.</exception>
-    public float FallbackBaseScale
+    internal float FallbackBaseScaleCore
     {
         get { lock (_gate) { ThrowIfDisposed(); return _baseScale; } }
         set { lock (_gate) { ThrowIfDisposed(); if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_baseScale == value) return; _baseScale = value; } NotifyFallback(); }
     }
-    /// <summary>Gets or sets the borrowed font used when no theme provides a font.</summary>
-    /// <value>The embedded Open Sans SemiBold resource initially. Null is an explicit empty fallback.</value>
-    /// <remarks>The embedded font initializes its native face on the first text query.</remarks>
-    /// <exception cref="ObjectDisposedException">The service or assigned font is disposed.</exception>
-    public Font? FallbackFont
+    internal Font? FallbackFontCore
     {
         get { lock (_gate) { ThrowIfDisposed(); return _font; } }
         set { lock (_gate) { ThrowIfDisposed(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_font, value)) return; _font = value; } NotifyFallback(); }
     }
-    /// <summary>Gets or sets the final integer font-size fallback for typed size lookups.</summary>
-    /// <value>Sixteen initially; signed values are preserved.</value>
-    /// <exception cref="ObjectDisposedException">The service is disposed.</exception>
-    public int FallbackFontSize
+    internal int FallbackFontSizeCore
     {
         get { lock (_gate) { ThrowIfDisposed(); return _fontSize; } }
         set { lock (_gate) { ThrowIfDisposed(); if (_fontSize == value) return; _fontSize = value; } NotifyFallback(); }
     }
-    /// <summary>Gets or sets the borrowed fallback icon used for missing or null icon entries.</summary>
-    /// <value>A lazily decoded sixteen-pixel error icon initially; null is an explicit empty fallback.</value>
-    /// <exception cref="ObjectDisposedException">The service or assigned icon is disposed.</exception>
-    public Texture? FallbackIcon
+    internal Texture? FallbackIconCore
     {
         get
         {
@@ -165,10 +146,7 @@ public sealed partial class ThemeDB : ElectronObject
         }
         set { lock (_gate) { ThrowIfDisposed(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (_iconInitialized && ReferenceEquals(_icon, value)) return; _iconInitialized = true; _icon = value; } NotifyFallback(); }
     }
-    /// <summary>Gets or sets the borrowed fallback style used for missing or null style entries.</summary>
-    /// <value>A hollow two-unit border with four-unit content margins initially. Null is allowed.</value>
-    /// <exception cref="ObjectDisposedException">The service or assigned style is disposed.</exception>
-    public StyleBox? FallbackStyleBox
+    internal StyleBox? FallbackStyleBoxCore
     {
         get { lock (_gate) { ThrowIfDisposed(); return _style; } }
         set { lock (_gate) { ThrowIfDisposed(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_style, value)) return; _style = value; } NotifyFallback(); }
@@ -186,7 +164,7 @@ public sealed partial class ThemeDB : ElectronObject
     {
         if (disposing)
         {
-            ContextChanged = null; FallbackChanged = null;
+            ContextChanged = null; FallbackChangedCore = null;
             _defaultTheme.Changed -= DefaultChanged; _defaultTheme.Disposed -= DefaultDisposed;
             _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
         }

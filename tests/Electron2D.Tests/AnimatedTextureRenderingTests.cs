@@ -15,7 +15,7 @@ internal static partial class RenderingRuntimeTests
         var reentered = false;
         animation.Changed += _ =>
         {
-            if (reentered || RenderingServer.Instance is null) return;
+            if (reentered || RenderingServer.Service is null) return;
             using var transient = new AnimatedTexture();
             transient.SetFrameTexture(0, red);
             reentered = true;
@@ -25,8 +25,8 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; var stage = 0; var pausedFrames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback();
                 Check(++frames <= 120, "Animated texture must advance during the native run.");
@@ -47,7 +47,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(stage == 3 && frames >= 5 && reentered && !red.IsDisposed && !green.IsDisposed && !animation.IsDisposed,
             "Renderer changed frames, paused, reversed and retained borrowed resources.");
         Console.WriteLine($"AnimatedTexture timed native pixels passed: {backend}.");
@@ -64,7 +64,7 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(new Sprite { Texture = animation });
         var threw = false;
         animation.Changed += _ => { threw = true; throw new ApplicationException("animated texture callback"); };
-        Reject<ApplicationException>(() => Engine.Instance.Run(window));
+        Reject<ApplicationException>(() => Engine.Run(window));
         Check(threw && !source.IsDisposed && !animation.IsDisposed, "Animated texture callback failure cleans up the host and retains borrowed resources.");
         Released(window);
     }

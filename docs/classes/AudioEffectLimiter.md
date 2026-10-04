@@ -1,6 +1,6 @@
 # AudioEffectLimiter
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectLimiter` · **Source:** [AudioEffectLimiter.cs](../../src/Scene/Resources/AudioEffectLimiter.cs) · **Component:** [Audio playback](../components/audio-playback.md#legacy-soft-limiting).
 
@@ -16,9 +16,9 @@ Buses borrow this resource and own independent [internal instances](AudioEffectL
 
 ```csharp
 using var limiter = new AudioEffectLimiter { ThresholdDB = -18, CeilingDB = -12 };
-AudioServer.Instance.AddBusEffect(0, limiter);
+AudioServer.AddBusEffect(0, limiter);
 // Run players routed to bus zero before removing the borrowed effect.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 This partial owner-thread host snippet requires a player and native mixing. Its complete public Window counterpart executes in `AudioLimiterTests.RunHost`.

@@ -206,7 +206,7 @@ public partial class ItemList
     private void Search(int scalar)
     {
         var now = Environment.TickCount64;
-        var interval = ProjectSettings.Instance.GetWithOverride(ProjectSettings.IncrementalSearchMaxIntervalMsec);
+        var interval = ProjectSettings.GetWithOverride(ProjectSettings.IncrementalSearchMaxIntervalMsec);
         if (now - _lastSearchMsec > interval) _searchString = string.Empty;
         _lastSearchMsec = now;
         var next = char.ConvertFromUtf32(scalar);

@@ -2,8 +2,8 @@ using Electron2D;
 
 var window = new Window { Title = "Electron2D: window and input", Size = new Vector2i(640, 360) };
 window.AddChild(new ExampleRoot());
-Engine.Instance.MaxFPS = 60;
-return Engine.Instance.Run(window);
+Engine.MaxFPS = 60;
+return Engine.Run(window);
 
 sealed class ExampleRoot : Entity
 {
@@ -29,10 +29,9 @@ sealed class ExampleRoot : Entity
 
     protected override void OnProcess(double delta)
     {
-        var input = Input.Instance;
         var direction = new Vector2(
-            (input.IsKeyPressed(Key.Right) ? 1 : 0) - (input.IsKeyPressed(Key.Left) ? 1 : 0),
-            (input.IsKeyPressed(Key.Down) ? 1 : 0) - (input.IsKeyPressed(Key.Up) ? 1 : 0));
+            (Input.IsKeyPressed(Key.Right) ? 1 : 0) - (Input.IsKeyPressed(Key.Left) ? 1 : 0),
+            (Input.IsKeyPressed(Key.Down) ? 1 : 0) - (Input.IsKeyPressed(Key.Up) ? 1 : 0));
         Position += direction * (float)(100d * delta);
         _reportTime += delta;
         if (_reportTime < 1d)

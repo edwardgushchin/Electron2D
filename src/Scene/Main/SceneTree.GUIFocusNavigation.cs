@@ -12,10 +12,10 @@ public sealed partial class SceneTree
                 { from = control; break; }
         if (from is null) return;
 
-        var map = InputMap.Instance;
+        var map = InputMap.Service;
         var analog = inputEvent is InputEventJoypadMotion;
-        bool Pressed(string action) => map.HasAction(action) && inputEvent.IsActionPressed(action, allowEcho: true, exactMatch: !analog) &&
-            (!analog || Input.Instance.IsActionJustPressedByEvent(action, inputEvent));
+        bool Pressed(string action) => map.HasActionCore(action) && inputEvent.IsActionPressed(action, allowEcho: true, exactMatch: !analog) &&
+            (!analog || Input.IsActionJustPressedByEvent(action, inputEvent));
 
         Control? next = null;
         var requested = false;

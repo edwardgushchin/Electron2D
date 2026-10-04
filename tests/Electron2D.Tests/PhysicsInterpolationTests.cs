@@ -5,24 +5,24 @@ internal static class PhysicsInterpolationTests
 {
     internal static void Run()
     {
-        var settings = ProjectSettings.Instance;
+        var settings = ProjectSettings.Service;
         Check(ProjectSettings.PhysicsInterpolation.Name == "physics/common/physics_interpolation" &&
               !ProjectSettings.PhysicsInterpolation.DefaultValue &&
-              settings.HasSetting(ProjectSettings.PhysicsInterpolation) &&
+              ProjectSettings.HasSetting(ProjectSettings.PhysicsInterpolation) &&
               (int)PhysicsInterpolationMode.Inherit == 0 &&
               (int)PhysicsInterpolationMode.On == 1 && (int)PhysicsInterpolationMode.Off == 2,
             "The typed setting and mode identities retain their pinned defaults and values.");
         ProjectSettingRoundTrip();
-        var previous = settings.Get(ProjectSettings.PhysicsInterpolation);
+        var previous = ProjectSettings.Get(ProjectSettings.PhysicsInterpolation);
         try
         {
-            settings.Set(ProjectSettings.PhysicsInterpolation, true);
+            ProjectSettings.Set(ProjectSettings.PhysicsInterpolation, true);
             NodePolicyAndCanvas();
             ControlDefaultAndOptIn();
             CameraCanvas();
             FailureAndPacking();
         }
-        finally { settings.Set(ProjectSettings.PhysicsInterpolation, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.PhysicsInterpolation, previous); }
         Console.WriteLine("Physics interpolation policy, canvas, camera and reset checks passed.");
     }
 
@@ -94,13 +94,13 @@ internal static class PhysicsInterpolationTests
         Directory.CreateDirectory(project); Directory.CreateDirectory(user);
         try
         {
-            using (var saved = new ProjectSettings(project, user))
+            using (var saved = new ProjectSettingsRegistry(project, user))
             {
                 Check(!saved.Get(ProjectSettings.PhysicsInterpolation), "An isolated project defaults interpolation to false.");
                 saved.Set(ProjectSettings.PhysicsInterpolation, true);
                 saved.Save();
             }
-            using var loaded = new ProjectSettings(project, user);
+            using var loaded = new ProjectSettingsRegistry(project, user);
             loaded.Load();
             Check(loaded.Get(ProjectSettings.PhysicsInterpolation),
                 "The typed interpolation setting survives a project-file round trip.");

@@ -29,7 +29,7 @@ public class StreamPeerTCP : StreamPeerSocket
             try { socket.Bind(new IPEndPoint(address.AddressFamily == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any, 0)); _localPort = ((IPEndPoint)socket.LocalEndPoint!).Port; SetSocket(socket, StreamSocketStatus.None); } catch { socket.Dispose(); throw; }
         }
         _host = NetworkSockets.Host(address); _port = port;
-        Connect(NetworkSockets.Endpoint(NativeSocket!, address, port), ProjectSettings.Instance.Get(ProjectSettings.TCPConnectTimeoutSeconds));
+        Connect(NetworkSockets.Endpoint(NativeSocket!, address, port), ProjectSettings.Get(ProjectSettings.TCPConnectTimeoutSeconds));
     }
     /// <summary>Returns the selected remote IP, or empty after disconnection.</summary><returns>A normalized IP literal.</returns>
     public string GetConnectedHost() { CheckStream(); return NativeSocket is null ? "" : _host; }

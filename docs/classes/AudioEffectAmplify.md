@@ -1,6 +1,6 @@
 # AudioEffectAmplify
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectAmplify` · **Source:** [AudioEffectLevel.cs](../../src/Scene/Resources/AudioEffectLevel.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,9 +16,9 @@ Partial snippet in an audio-owner host, with cleanup after playback:
 
 ```csharp
 using var gain = new AudioEffectAmplify { VolumeDB = -6 };
-AudioServer.Instance.AddBusEffect(0, gain);
+AudioServer.AddBusEffect(0, gain);
 gain.VolumeLinear = .5f;
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 ## API summary

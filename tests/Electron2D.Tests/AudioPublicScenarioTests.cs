@@ -6,8 +6,8 @@ internal static class AudioPublicScenarioTests
     internal static void Run()
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu";
-        var settings = ProjectSettings.Instance; var method = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
-        var previous = Engine.Instance.MaxFPS; Engine.Instance.MaxFPS = 60;
+        var settings = ProjectSettings.Service; var method = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        var previous = Engine.MaxFPS; Engine.MaxFPS = 60;
         try
         {
             for (var run = 0; run < 2; run++)
@@ -16,13 +16,13 @@ internal static class AudioPublicScenarioTests
                 var window = new Window { Title = "Electron2D audio scenario", Size = new Vector2i(240, 120) };
                 var player = new AudioStreamPlayer { Stream = stream, Autoplay = true, VolumeDB = -24 };
                 var scenario = new Scenario(player); window.AddChild(player); window.AddChild(scenario);
-                var result = Engine.Instance.Run(window);
+                var result = Engine.Run(window);
                 if (result != 0 || !window.IsDisposed || !player.IsDisposed || stream.IsDisposed || !scenario.Advanced)
                     throw new InvalidOperationException("Public audio host lifecycle failed.");
                 Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "audio-host", renderer = backend, run, driver = scenario.Driver, position = scenario.Position, cleaned = window.IsDisposed }));
             }
         }
-        finally { Engine.Instance.MaxFPS = previous; settings.Set(ProjectSettings.RenderingMethod, method); }
+        finally { Engine.MaxFPS = previous; ProjectSettings.Set(ProjectSettings.RenderingMethod, method); }
     }
     private sealed class Scenario(AudioStreamPlayer player) : Node
     {
@@ -30,7 +30,7 @@ internal static class AudioPublicScenarioTests
         internal bool Advanced;
         internal string Driver = "";
         internal double Position;
-        protected override void OnReady() { ProcessEnabled = true; Driver = AudioServer.Instance.GetDriverName(); }
+        protected override void OnReady() { ProcessEnabled = true; Driver = AudioServer.GetDriverName(); }
         protected override void OnProcess(double delta)
         {
             _elapsed += delta;

@@ -9,8 +9,8 @@ internal static class ControlHoverNativeTests
         var control = new Control { Size = new(80, 50), MouseDefaultCursorShape = CursorShape.Help };
         window.AddChild(control);
         window.AddChild(new Probe(control));
-        Check(Engine.Instance.Run(window) == 0, "The native cursor scene exits normally.");
-        Check(DisplayServer.Instance is null, "The native cursor scene releases its display.");
+        Check(Engine.Run(window) == 0, "The native cursor scene exits normally.");
+        Check(DisplayServer.Service is null, "The native cursor scene releases its display.");
         Console.WriteLine("Native Control hover and cursor precedence passed.");
     }
 
@@ -36,21 +36,21 @@ internal static class ControlHoverNativeTests
 
         protected override void OnProcess(double delta)
         {
-            Check(Input.Instance.GetCurrentCursorShape() == CursorShape.Help,
+            Check(Input.GetCurrentCursorShape() == CursorShape.Help,
                 "The hovered control selects its native cursor.");
-            Input.Instance.SetDefaultCursorShape(CursorShape.IBeam);
-            Check(Input.Instance.GetCurrentCursorShape() == CursorShape.Help,
+            Input.SetDefaultCursorShape(CursorShape.IBeam);
+            Check(Input.GetCurrentCursorShape() == CursorShape.Help,
                 "A hovered control overrides the changed viewport default.");
             control.MouseFilter = MouseFilter.Ignore;
-            Check(Input.Instance.GetCurrentCursorShape() == CursorShape.IBeam,
+            Check(Input.GetCurrentCursorShape() == CursorShape.IBeam,
                 "Ignoring the control exposes the retained viewport default.");
             control.MouseFilter = MouseFilter.Stop;
-            Check(Input.Instance.GetCurrentCursorShape() == CursorShape.Help,
+            Check(Input.GetCurrentCursorShape() == CursorShape.Help,
                 "Restoring hit testing refreshes the native cursor without pointer motion.");
             control.MouseDefaultCursorShape = CursorShape.PointingHand;
-            Check(Input.Instance.GetCurrentCursorShape() == CursorShape.PointingHand,
+            Check(Input.GetCurrentCursorShape() == CursorShape.PointingHand,
                 "Changing a hovered control's cursor refreshes the native shape.");
-            Input.Instance.SetDefaultCursorShape();
+            Input.SetDefaultCursorShape();
             Tree!.Quit();
         }
     }

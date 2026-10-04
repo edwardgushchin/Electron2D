@@ -24,8 +24,8 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 try
@@ -50,7 +50,7 @@ internal static partial class RenderingRuntimeTests
                 catch (Exception e) { throw new InvalidOperationException($"Canvas coordinates {backend}/{fixture}, frame {frames}.", e); }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 4, "Four canvas coordinate stages.");
+        Engine.Run(window); Released(window); Check(frames == 4, "Four canvas coordinate stages.");
         Console.WriteLine($"Canvas transforms native pixels passed: {backend}/{fixture ?? "default"}.");
     }
 
@@ -74,7 +74,7 @@ internal static partial class RenderingRuntimeTests
             var scale = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland" ? SDL.GetWindowPixelDensity(native![0]) : 1;
             var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(native![0]), Which = 987, X = 37 / scale, Y = 146 / scale, XRel = 8 / scale, YRel = 12 / scale } };
             Check(SDL.PushEvent(ref motion), "Inject native pointer coordinates.");
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 Check(inputs == 1 && received!.IsDisposed, "Host dispatch disposes its positional projection after callbacks.");
                 var raw = window.GetClientMousePosition(); var expected = window.GetFinalTransform().AffineInverse() * raw;
@@ -82,13 +82,13 @@ internal static partial class RenderingRuntimeTests
                 Check(probe.GetGlobalMousePosition().IsEqualApprox(window.CanvasTransform.AffineInverse() * expected), "Canvas pointer query removes the canvas transform.");
                 Check(probe.GetLocalMousePosition().IsEqualApprox(probe.GetGlobalTransform().AffineInverse() * probe.GetGlobalMousePosition()), "Local pointer query removes the node transform.");
                 if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland") Reject<NotSupportedException>(() => probe.GetScreenTransform());
-                if (!DisplayServer.Instance!.HasFeature(DisplayServer.Feature.MouseWarp)) Reject<NotSupportedException>(() => window.WarpMouse(Vector2.Zero));
+                if (!DisplayServer.HasFeature(DisplayServer.Feature.MouseWarp)) Reject<NotSupportedException>(() => window.WarpMouse(Vector2.Zero));
                 window.GlobalCanvasTransform = new(Vector2.Zero, Vector2.Zero, Vector2.Zero);
                 Check(window.GetMousePosition() == Vector2.Zero, "Singular final transform reports zero pointer position.");
                 window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Console.WriteLine($"Viewport native input and pointer coordinates passed: {backend}.");
     }
 

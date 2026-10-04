@@ -89,7 +89,7 @@ public partial class RigidBody : PhysicsBody
     public float GravityScale
     {
         get { ThrowIfDisposed(); return _gravityScale; }
-        set { EnsureMutable(); Finite(value); EnsurePhysicsParticipationChange(); if (Mathf.IsZeroApprox(_gravityScale)) PhysicsServer.Instance.BodyRuntime(PhysicsRID).Wake(); _gravityScale = value; if (HasBackend) b2Body_SetGravityScale(BackendID, _customIntegrator ? 0 : value); }
+        set { EnsureMutable(); Finite(value); EnsurePhysicsParticipationChange(); if (Mathf.IsZeroApprox(_gravityScale)) PhysicsServer.Service.BodyRuntime(PhysicsRID).Wake(); _gravityScale = value; if (HasBackend) b2Body_SetGravityScale(BackendID, _customIntegrator ? 0 : value); }
     }
 
     /// <summary>Gets or sets linear velocity in scene units per second.</summary>
@@ -205,7 +205,7 @@ public partial class RigidBody : PhysicsBody
         EnsureMutable();
         if (!force.IsFinite()) throw new ArgumentOutOfRangeException(nameof(force));
         if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
-        PhysicsServer.Instance.BodyApplyCentralForce(GetRID(), force);
+        PhysicsServer.BodyApplyCentralForce(GetRID(), force);
     }
 
     /// <summary>Applies a finite instantaneous impulse at the center of mass.</summary>
@@ -217,7 +217,7 @@ public partial class RigidBody : PhysicsBody
         EnsureMutable();
         if (!impulse.IsFinite()) throw new ArgumentOutOfRangeException(nameof(impulse));
         if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
-        PhysicsServer.Instance.BodyApplyCentralImpulse(GetRID(), impulse);
+        PhysicsServer.BodyApplyCentralImpulse(GetRID(), impulse);
     }
 
     internal override void OnMadeStatic()

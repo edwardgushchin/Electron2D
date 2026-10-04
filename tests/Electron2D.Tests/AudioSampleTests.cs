@@ -33,19 +33,19 @@ internal static class AudioSampleTests
         Check(playback.GetSamplePlayback() is null, "Ordinary playback has no sample request."); playback.SetSamplePlayback(request); Check(ReferenceEquals(playback.GetSamplePlayback(), request), "Typed association.");
         Reject<InvalidOperationException>(() => second.SetSamplePlayback(request)); Reject<InvalidOperationException>(() => request.Dispose());
         playback.SetSamplePlayback(null); Check(request.IsDisposed, "Replacing association consumes old ownership.");
-        var server = AudioServer.Instance; Check(!server.IsStreamRegisteredAsSample(stream), "No implicit registration from construction."); server.RegisterStreamAsSample(stream); Check(server.IsStreamRegisteredAsSample(stream), "Prepared registration.");
-        using var invalid = new SampleFactory(_ => null!); Reject<InvalidOperationException>(() => server.RegisterStreamAsSample(invalid)); Check(!server.IsStreamRegisteredAsSample(invalid), "Failed generation publishes no cache entry.");
-        using var reentrant = new SampleFactory(_ => { server.AddBus(); return stream.GenerateSample(); }); Reject<InvalidOperationException>(() => server.RegisterStreamAsSample(reentrant)); Check(server.BusCount == 1, "Sample factory cannot mutate the audio graph.");
-        var fail = false; using var mutable = new SampleFactory(source => fail ? throw new FormatException("Injected sample failure.") : new AudioSample(source, [0, 1], 1, 44100)); server.RegisterStreamAsSample(mutable); fail = true; Reject<FormatException>(() => server.RegisterStreamAsSample(mutable)); Check(server.IsStreamRegisteredAsSample(mutable), "Failed re-registration preserves the previous prepared snapshot.");
-        using var generator = new AudioStreamGenerator(); Reject<NotSupportedException>(() => server.RegisterStreamAsSample(generator));
-        Task.Run(() => Reject<InvalidOperationException>(() => server.RegisterStreamAsSample(stream))).GetAwaiter().GetResult();
+        var server = AudioServer.Service; Check(!AudioServer.IsStreamRegisteredAsSample(stream), "No implicit registration from construction."); AudioServer.RegisterStreamAsSample(stream); Check(AudioServer.IsStreamRegisteredAsSample(stream), "Prepared registration.");
+        using var invalid = new SampleFactory(_ => null!); Reject<InvalidOperationException>(() => AudioServer.RegisterStreamAsSample(invalid)); Check(!AudioServer.IsStreamRegisteredAsSample(invalid), "Failed generation publishes no cache entry.");
+        using var reentrant = new SampleFactory(_ => { AudioServer.AddBus(); return stream.GenerateSample(); }); Reject<InvalidOperationException>(() => AudioServer.RegisterStreamAsSample(reentrant)); Check(AudioServer.BusCount == 1, "Sample factory cannot mutate the audio graph.");
+        var fail = false; using var mutable = new SampleFactory(source => fail ? throw new FormatException("Injected sample failure.") : new AudioSample(source, [0, 1], 1, 44100)); AudioServer.RegisterStreamAsSample(mutable); fail = true; Reject<FormatException>(() => AudioServer.RegisterStreamAsSample(mutable)); Check(AudioServer.IsStreamRegisteredAsSample(mutable), "Failed re-registration preserves the previous prepared snapshot.");
+        using var generator = new AudioStreamGenerator(); Reject<NotSupportedException>(() => AudioServer.RegisterStreamAsSample(generator));
+        Task.Run(() => Reject<InvalidOperationException>(() => AudioServer.RegisterStreamAsSample(stream))).GetAwaiter().GetResult();
         using var p = new AudioSamplePlayback(stream); Reject<ArgumentOutOfRangeException>(() => p.Offset = double.NaN); Reject<ArgumentOutOfRangeException>(() => p.PitchScale = 0); Reject<ArgumentException>(() => p.VolumeVector = []); Reject<ArgumentOutOfRangeException>(() => p.VolumeVector = [Vector2.One, new(-1, 0), Vector2.One, Vector2.One]);
         var gains = p.VolumeVector; gains[0] = Vector2.Zero; Check(p.VolumeVector[0] == Vector2.One, "Request gains copy out.");
     }
     private static void Native()
     {
         using var stream = Tone(22050, 1); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream, PlaybackType = AudioServer.PlaybackType.Sample, MaxPolyphony = 2 }; root.AddChild(player); using var tree = new SceneTree(root);
-        player.Play(.1); var native = AudioServer.Instance.Native; var handle = player.GetStreamPlayback(); Check(handle.GetSamplePlayback() is not null, "Sample player creates typed native association."); Reject<InvalidOperationException>(() => handle.Dispose());
+        player.Play(.1); var native = AudioServer.Service.Native; var handle = player.GetStreamPlayback(); Check(handle.GetSamplePlayback() is not null, "Sample player creates typed native association."); Reject<InvalidOperationException>(() => handle.Dispose());
         Wait(native, 12); native.PrepareCapture(native.QuantumFrames * native.Channels * 8); Wait(native, 10); Check(native.CapturedPCM().Any(v => Math.Abs(v) > .1), "Complete sample buffer reaches actual FAudio.");
         var position = player.GetPlaybackPosition(); Check(position > .1 && position < .9, "Native sample cursor advances from offset.");
         player.StreamPaused = true; position = player.GetPlaybackPosition(); Wait(native, 8); Check(player.GetPlaybackPosition() == position, "Native sample pause freezes cursor."); player.StreamPaused = false;
@@ -68,44 +68,44 @@ internal static class AudioSampleTests
     }
     private static void Edges()
     {
-        var server = AudioServer.Instance; using var stream = Tone(44100, .1); stream.Loop = AudioLoopMode.Forward; stream.LoopBegin = 10; stream.LoopEnd = 4000;
+        var server = AudioServer.Service; using var stream = Tone(44100, .1); stream.Loop = AudioLoopMode.Forward; stream.LoopBegin = 10; stream.LoopEnd = 4000;
         var root = new Node(); var player = new AudioStreamPlayer { Stream = stream, PlaybackType = AudioServer.PlaybackType.Sample }; root.AddChild(player); using var tree = new SceneTree(root); player.Play(); var native = server.Native;
         var request = player.GetStreamPlayback().GetSamplePlayback()!; request.Offset = double.MaxValue; native.PrepareCapture(native.QuantumFrames * native.Channels * 8); Wait(native, 10); Check(player.GetStreamPlayback().IsPlaying() && native.CapturedPCM().Any(v => Math.Abs(v) > .1), "Looped offset beyond the loop wraps before native submit.");
-        server.AddBus(); server.SetBusName(1, "sample-route"); player.Bus = "sample-route"; Wait(native, 5); server.SetBusMute(1, true); native.PrepareCapture(native.QuantumFrames * native.Channels * 8); Wait(native, 10); Check(native.CapturedPCM().All(v => Math.Abs(v) < 1e-6), "Sample bus mute."); server.SetBusMute(1, false);
-        using var standalone = stream.InstantiatePlayback(); standalone.SetSamplePlayback(new AudioSamplePlayback(stream) { Bus = "sample-route" }); standalone.Start(); server.AddBus(); Wait(native, 5); Check(standalone.IsPlaying(), "Standalone sample reroutes across real bus graph reconstruction.");
+        AudioServer.AddBus(); AudioServer.SetBusName(1, "sample-route"); player.Bus = "sample-route"; Wait(native, 5); AudioServer.SetBusMute(1, true); native.PrepareCapture(native.QuantumFrames * native.Channels * 8); Wait(native, 10); Check(native.CapturedPCM().All(v => Math.Abs(v) < 1e-6), "Sample bus mute."); AudioServer.SetBusMute(1, false);
+        using var standalone = stream.InstantiatePlayback(); standalone.SetSamplePlayback(new AudioSamplePlayback(stream) { Bus = "sample-route" }); standalone.Start(); AudioServer.AddBus(); Wait(native, 5); Check(standalone.IsPlaying(), "Standalone sample reroutes across real bus graph reconstruction.");
         standalone.Stop(); standalone.Start(.03); Wait(native, 2); Check(standalone.GetPlaybackPosition() >= 0 && standalone.GetPlaybackPosition() < .11, "Repeated native starts keep bounded loop positions.");
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.AudioGeneralDefaultPlaybackType); settings.Set(ProjectSettings.AudioGeneralDefaultPlaybackType, AudioDefaultPlaybackType.Sample);
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.AudioGeneralDefaultPlaybackType); ProjectSettings.Set(ProjectSettings.AudioGeneralDefaultPlaybackType, AudioDefaultPlaybackType.Sample);
         try { player.PlaybackType = AudioServer.PlaybackType.Default; player.Play(); Check(player.GetStreamPlayback().GetSamplePlayback() is not null, "Typed project default selects samples."); }
-        finally { settings.Set(ProjectSettings.AudioGeneralDefaultPlaybackType, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.AudioGeneralDefaultPlaybackType, previous); }
         player.Play(); Check(player.GetStreamPlayback().GetSamplePlayback() is null, "Changing the project default recreates pooled native transport.");
-        var previousInput = settings.Get(ProjectSettings.AudioDriverEnableInput); player.Stream = new AudioStreamMicrophone(); settings.Set(ProjectSettings.AudioDriverEnableInput, true); try { player.PlaybackType = AudioServer.PlaybackType.Sample; player.Play(); Check(player.GetStreamPlayback().GetSamplePlayback() is null, "A sample request falls back for a nonsampleable recording stream."); player.Stop(); } finally { settings.Set(ProjectSettings.AudioDriverEnableInput, previousInput); player.Stream!.Dispose(); player.Stream = null; }
+        var previousInput = ProjectSettings.Get(ProjectSettings.AudioDriverEnableInput); player.Stream = new AudioStreamMicrophone(); ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, true); try { player.PlaybackType = AudioServer.PlaybackType.Sample; player.Play(); Check(player.GetStreamPlayback().GetSamplePlayback() is null, "A sample request falls back for a nonsampleable recording stream."); player.Stop(); } finally { ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, previousInput); player.Stream!.Dispose(); player.Stream = null; }
         standalone.Stop();
-        var speed = server.PlaybackSpeedScale; server.PlaybackSpeedScale = 2; try { player.Stream = stream; player.Play(); Wait(native, 3); Reject<NotSupportedException>(() => server.PlaybackSpeedScale = 2048); Check(server.PlaybackSpeedScale == 2, "Unsupported global native ratio preserves global configuration."); } finally { server.PlaybackSpeedScale = speed; }
+        var speed = AudioServer.PlaybackSpeedScale; AudioServer.PlaybackSpeedScale = 2; try { player.Stream = stream; player.Play(); Wait(native, 3); Reject<NotSupportedException>(() => AudioServer.PlaybackSpeedScale = 2048); Check(AudioServer.PlaybackSpeedScale == 2, "Unsupported global native ratio preserves global configuration."); } finally { AudioServer.PlaybackSpeedScale = speed; }
         foreach (var mode in new[] { AudioLoopMode.PingPong, AudioLoopMode.Backward })
         {
-            stream.Loop = mode; server.RegisterStreamAsSample(stream); player.Stream = stream; player.PlaybackType = AudioServer.PlaybackType.Sample; player.Play(); Wait(native, 15);
+            stream.Loop = mode; AudioServer.RegisterStreamAsSample(stream); player.Stream = stream; player.PlaybackType = AudioServer.PlaybackType.Sample; player.Play(); Wait(native, 15);
             var playback = player.GetStreamPlayback(); Check(playback.IsPlaying() && playback.GetPlaybackPosition() < .1, "Native reflected/reversed loops retain source-time positions.");
             playback.LoopingOverride = false; Wait(native, 15); tree.ProcessFrame(.01); Check(!player.IsPlaying(), "Disabling a transformed loop plays the original finite PCM through completion.");
         }
         player.Play(); player.StreamPaused = true; player.GetStreamPlayback().LoopingOverride = false; var paused = player.GetPlaybackPosition(); Wait(native, 5); Check(player.StreamPaused && player.GetPlaybackPosition() == paused, "Live looping updates preserve pause."); player.Stop();
         using var empty = new AudioStreamWAV(); player.Stream = empty; var completions = 0; player.Finished += () => completions++; player.Play(); tree.ProcessFrame(.01); Check(!player.IsPlaying() && completions == 1, "Empty finite native samples complete once without submitting zero bytes.");
         using var unsupportedRate = Tone(999, .1); player.Stream = unsupportedRate; Reject<NotSupportedException>(() => player.Play()); Check(!player.IsPlaying(), "Unsupported native source rates reject before active publication.");
-        server.BusCount = 1;
+        AudioServer.BusCount = 1;
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod); var fps = Engine.Instance.MaxFPS;
-        settings.Set(ProjectSettings.RenderingMethod, backend); Engine.Instance.MaxFPS = 60;
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); var fps = Engine.MaxFPS;
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); Engine.MaxFPS = 60;
         try
         {
             for (var i = 0; i < 2; i++)
             {
                 using var stream = Tone(22050, 1); var window = new Window { Title = "Electron2D native samples", Size = new(240, 120) }; var player = new AudioStreamPlayer { Stream = stream, Autoplay = true, PlaybackType = AudioServer.PlaybackType.Sample, VolumeDB = -24 }; var emitter = new AudioStreamEmitter { Stream = stream, Position = new(120, 60), Autoplay = true, PlaybackType = AudioServer.PlaybackType.Sample, VolumeDB = -24 }; var scenario = new Host(player, emitter); window.AddChild(player); window.AddChild(emitter); window.AddChild(scenario);
-                if (Engine.Instance.Run(window) != 0 || !scenario.Completed || !window.IsDisposed || stream.IsDisposed) throw new InvalidOperationException("Sample host lifecycle failed.");
+                if (Engine.Run(window) != 0 || !scenario.Completed || !window.IsDisposed || stream.IsDisposed) throw new InvalidOperationException("Sample host lifecycle failed.");
                 Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "audio-sample-host", backend, run = i, scenario.Frozen, completed = scenario.Completed, cleaned = window.IsDisposed }));
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); Engine.Instance.MaxFPS = fps; }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); Engine.MaxFPS = fps; }
     }
     private sealed class Host(AudioStreamPlayer player, AudioStreamEmitter emitter) : Node
     {

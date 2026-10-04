@@ -11,7 +11,7 @@ Last updated: 2026-10-04
 The process-wide service for the current built-in theme and universal typed fallbacks. Consumers borrow the singleton and its built-in resources; they do not own their lifetime. It supplies real data for implemented controls while the complete GUI default catalog and project Theme-file loading remain separate dependencies.
 
 ```csharp
-Theme builtIn = ThemeDB.Instance.GetDefaultTheme();
+Theme builtIn = ThemeDB.GetDefaultTheme();
 StyleBox? panelStyle = builtIn.GetStyleBox("panel", "Panel");
 int gap = builtIn.GetConstant("separation", "BoxContainer"); // 4 initially
 ```
@@ -22,21 +22,20 @@ The returned Theme is mutable and shared. Its changes reach scene theme owners t
 
 | Signature | Contract/default |
 | --- | --- |
-| `public static ThemeDB Instance { get; }` | Lazy process singleton; borrowed by callers. |
-| `public Theme GetDefaultTheme()` | Borrowed current built-in Theme. |
-| `public float FallbackBaseScale { get; set; }` | Finite signed final fallback, initially 1. |
-| `public Font? FallbackFont { get; set; }` | Embedded Open Sans SemiBold initially; explicit null allowed. |
-| `public int FallbackFontSize { get; set; }` | Signed integer final fallback, initially 16. |
-| `public Texture? FallbackIcon { get; set; }` | Lazy built-in 16×16 error icon; explicit null allowed. |
-| `public StyleBox? FallbackStyleBox { get; set; }` | Built-in hollow error style; explicit null allowed. |
-| `public event Action? FallbackChanged` | Emitted after a committed fallback replacement. |
+| `public static Theme GetDefaultTheme()` | Borrowed current built-in Theme. |
+| `public static float FallbackBaseScale { get; set; }` | Finite signed final fallback, initially 1. |
+| `public static Font? FallbackFont { get; set; }` | Embedded Open Sans SemiBold initially; explicit null allowed. |
+| `public static int FallbackFontSize { get; set; }` | Signed integer final fallback, initially 16. |
+| `public static Texture? FallbackIcon { get; set; }` | Lazy built-in 16×16 error icon; explicit null allowed. |
+| `public static StyleBox? FallbackStyleBox { get; set; }` | Built-in hollow error style; explicit null allowed. |
+| `public static event Action? FallbackChanged` | Emitted after a committed fallback replacement. |
 | `protected override void Dispose(bool disposing)` | Releases service-owned defaults and event subscriptions. |
 
-There is no public constructor or GetProjectTheme null stub.
+There is no public static constructor or GetProjectTheme null stub.
 
 ## Property and method descriptions
 
-<a id="instance"></a><a id="getdefaulttheme"></a>
+<a id="getdefaulttheme"></a>
 **Singleton/default Theme:** creation is lazy and serialized; construction decodes the five slider, sixteen button and two scroll-hint SVG icons once through the existing image codec. Failure releases partial owned defaults and propagates. The fallback error icon remains separately lazy. Construction owns the embedded Open Sans SemiBold resource; its native face is loaded only by the first text query. GetDefaultTheme returns the same mutable Theme, rejecting a disposed service or default Theme. Its current built-in data is:
 
 | Entry | Initial value |
@@ -84,7 +83,7 @@ The default slider, button and scroll-hint icons currently use scale one; nonuni
 **Style:** initially a hollow StyleBoxFlat with two-pixel borders, four-pixel content margins, detail one, DrawCenter=false and error-color background configuration. Setting another live style borrows it; null is an explicit empty fallback. Assigned disposed styles throw ObjectDisposedException. Consumers that require a concrete style, such as Panel drawing, fail explicitly if final lookup returns null.
 
 <a id="fallbackchanged"></a>
-**FallbackChanged:** equal initialized value/reference assignments are silent. A changed value commits before internal owner invalidation and then the public event; both required notification phases are attempted, and failures are combined after commitment. Event delivery is synchronous on the setter's thread. Scene theme owners enqueue their work instead of mutating nodes from a resource thread. Mutating the built-in Theme publishes its own change path rather than pretending a fallback value was replaced.
+**FallbackChanged:** equal initialized value/reference assignments are silent. A changed value commits before internal owner invalidation and then the public static event; both required notification phases are attempted, and failures are combined after commitment. Event delivery is synchronous on the setter's thread. Scene theme owners enqueue their work instead of mutating nodes from a resource thread. Mutating the built-in Theme publishes its own change path rather than pretending a fallback value was replaced.
 
 <a id="dispose"></a>
 **Cleanup:** the service owns its built-in Theme, styles, icons and original embedded default font. It unsubscribes default-theme notifications, clears events and releases those owned resources during disposal. Caller-assigned fallback resources are never disposed by replacement or cleanup. Callers normally borrow the service for the process lifetime and must not dispose its shared defaults.

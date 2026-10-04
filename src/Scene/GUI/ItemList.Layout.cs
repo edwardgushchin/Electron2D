@@ -98,7 +98,7 @@ public partial class ItemList
         _layoutDirty = false;
         _lastWidth = width;
         var panel = GetThemeStyleBox("panel") ?? throw new InvalidOperationException("ItemList requires its panel style.");
-        var font = GetThemeFont("font") ?? ThemeDB.Instance.FallbackFont ?? throw new InvalidOperationException("ItemList requires a font.");
+        var font = GetThemeFont("font") ?? ThemeDB.FallbackFont ?? throw new InvalidOperationException("ItemList requires a font.");
         var fontSize = GetThemeFontSize("font_size");
         var margin = panel.GetMinimumSize();
         var offset = panel.GetOffset();

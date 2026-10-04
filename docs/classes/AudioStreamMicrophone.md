@@ -1,6 +1,6 @@
 # AudioStreamMicrophone
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Source:** [AudioStreamMicrophone.cs](../../src/Scene/Resources/AudioStreamMicrophone.cs). **Declaration:** `public sealed class AudioStreamMicrophone : AudioStream`. **Inherits:** [AudioStream](AudioStream.md). **Inherited By:** —.
 
@@ -19,7 +19,7 @@ Dispose the caller-owned playback before disposing a standalone resource. A play
 Partial scene snippet; the existing `window` is an owned Window root. Native input/OS permission is required. A muted player still consumes live microphone data without speaker monitoring.
 
 ```csharp
-ProjectSettings.Instance.Set(ProjectSettings.AudioDriverEnableInput, true);
+ProjectSettings.Set(ProjectSettings.AudioDriverEnableInput, true);
 using var microphone = new AudioStreamMicrophone();
 window.AddChild(new AudioStreamPlayer
 {
@@ -27,7 +27,7 @@ window.AddChild(new AudioStreamPlayer
     Autoplay = true,
     VolumeLinear = 0
 });
-Engine.Instance.Run(window);
+Engine.Run(window);
 ```
 
 ## API summary

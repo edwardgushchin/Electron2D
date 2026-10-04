@@ -41,7 +41,7 @@ internal static partial class RenderingRuntimeTests
 
     private static void VerifyShaderTimeFrame(string backend, string fixture)
     {
-        var settings = ProjectSettings.Instance; var oldPeriod = settings.Get(ProjectSettings.RenderingTimeRolloverSeconds); var oldScale = Engine.Instance.TimeScale;
+        var settings = ProjectSettings.Service; var oldPeriod = ProjectSettings.Get(ProjectSettings.RenderingTimeRolloverSeconds); var oldScale = Engine.TimeScale;
         using var shader = LoadShader(fixture); using var reordered = LoadShader("TimeReordered"); using var only = LoadShader("TimeOnly");
         using var material = new ShaderMaterial { Shader = shader };
         material.SetShaderParameter("tint", Colors.White); material.SetShaderParameter("gain", .25f); material.SetShaderParameter("time", .5f);
@@ -51,13 +51,13 @@ internal static partial class RenderingRuntimeTests
         var frames = 0; var previous = 0d; var before = 0L; var allocated = 0L; var changed = 0;
         try
         {
-            Engine.Instance.TimeScale = 1; settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d);
+            Engine.TimeScale = 1; ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d);
             window.Ready += _ =>
             {
-                var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
+                var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
                 Check(server.CanvasTime == 0, "A restarted renderer has a fresh shader clock.");
-                server.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
-                server.FramePostDraw += () =>
+                RenderingServer.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+                RenderingServer.FramePostDraw += () =>
                 {
                     var bytes = GC.GetAllocatedBytesForCurrentThread() - before; if (++frames > 20) allocated += bytes;
                     var time = server.CanvasTime; var phase = (float)time * 4 % 1;
@@ -70,42 +70,42 @@ internal static partial class RenderingRuntimeTests
                     if (frames == 4) Check(time < .05, "Live base rollover reaches shader TIME.");
                     if (frames == 5) Check(time < .09, "Live feature rollover reaches shader TIME.");
                     previous = time;
-                    if (frames == 1) Engine.Instance.TimeScale = 0;
-                    if (frames == 2) { Engine.Instance.TimeScale = 2; window.Tree!.Paused = true; }
-                    if (frames == 3) { Engine.Instance.TimeScale = 1; window.Tree!.Paused = false; settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, .05); }
-                    if (frames == 4) { settings.AddCustomFeature("shader-time-test"); settings.SetFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "shader-time-test", .09); }
+                    if (frames == 1) Engine.TimeScale = 0;
+                    if (frames == 2) { Engine.TimeScale = 2; window.Tree!.Paused = true; }
+                    if (frames == 3) { Engine.TimeScale = 1; window.Tree!.Paused = false; ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, .05); }
+                    if (frames == 4) { ProjectSettings.AddCustomFeature("shader-time-test"); ProjectSettings.SetFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "shader-time-test", .09); }
                     if (frames == 5) shader.SetSPIRV(reordered.GetSPIRV());
-                    if (frames == 6) { settings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "shader-time-test"); settings.RemoveCustomFeature("shader-time-test"); settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d); }
+                    if (frames == 6) { ProjectSettings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "shader-time-test"); ProjectSettings.RemoveCustomFeature("shader-time-test"); ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 3600d); }
                     if (frames == 7) material.Shader = only;
                     if (frames == 8) { material.Shader = shader; material.SetShaderParameter("tint", Colors.White); material.SetShaderParameter("gain", .25f); material.SetShaderParameter("time", .5f); }
                     if (frames == 40) { Check(changed > 30 && allocated == 0 && nodes.All(n => n.Draws == 1), "TIME updates without rerecording or warm allocations."); window.Tree!.Quit(); }
                 };
             };
-            if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
-            else Engine.Instance.Run(window);
+            if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Run(window));
+            else Engine.Run(window);
             Released(window);
             Console.WriteLine(backend == "compatibility" ? $"Shader TIME fallback rejection and cleanup passed: {fixture}." :
                 $"Shader TIME pixels and lifetime passed: {backend}/{fixture}, {frames} frames, {allocated} warm bytes.");
         }
         finally
         {
-            settings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "shader-time-test"); settings.RemoveCustomFeature("shader-time-test");
-            settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, oldPeriod); Engine.Instance.TimeScale = oldScale;
+            ProjectSettings.ClearFeatureOverride(ProjectSettings.RenderingTimeRolloverSeconds, "shader-time-test"); ProjectSettings.RemoveCustomFeature("shader-time-test");
+            ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, oldPeriod); Engine.TimeScale = oldScale;
         }
     }
 
     private static void VerifyShaderTimeOverflow()
     {
-        var settings = ProjectSettings.Instance; var oldPeriod = settings.Get(ProjectSettings.RenderingTimeRolloverSeconds); var oldScale = Engine.Instance.TimeScale;
+        var settings = ProjectSettings.Service; var oldPeriod = ProjectSettings.Get(ProjectSettings.RenderingTimeRolloverSeconds); var oldScale = Engine.TimeScale;
         using var shader = LoadShader("TimeOnly"); using var material = new ShaderMaterial { Shader = shader };
         var window = new Window(); var node = new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new(0, 0, 12, 12), Colors.White) }; window.AddChild(node);
         try
         {
-            Engine.Instance.TimeScale = 1e100; settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, double.MaxValue);
-            try { Engine.Instance.Run(window); throw new Exception("Shader TIME overflow must fail before submission."); }
+            Engine.TimeScale = 1e100; ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, double.MaxValue);
+            try { Engine.Run(window); throw new Exception("Shader TIME overflow must fail before submission."); }
             catch (InvalidOperationException error) { Check(error.Message.Contains("float32", StringComparison.Ordinal), "Overflow reaches shader TIME validation."); }
             Released(window);
         }
-        finally { settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, oldPeriod); Engine.Instance.TimeScale = oldScale; }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, oldPeriod); Engine.TimeScale = oldScale; }
     }
 }

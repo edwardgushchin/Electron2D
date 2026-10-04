@@ -5,8 +5,8 @@ internal static class AudioRandomizerHostTests
     internal static void Run()
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu";
-        var settings = ProjectSettings.Instance; var original = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
-        var fps = Engine.Instance.MaxFPS; Engine.Instance.MaxFPS = 60;
+        var settings = ProjectSettings.Service; var original = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        var fps = Engine.MaxFPS; Engine.MaxFPS = 60;
         try
         {
             for (var run = 0; run < 2; run++)
@@ -16,12 +16,12 @@ internal static class AudioRandomizerHostTests
                 var window = new Window { Title = "Electron2D random audio", Size = new Vector2i(240, 120) };
                 var player = new AudioStreamPlayer { Stream = pool, Autoplay = true, VolumeDB = -24 }; var scenario = new Scenario(player, pool);
                 window.AddChild(player); window.AddChild(scenario);
-                if (Engine.Instance.Run(window) != 0 || !scenario.Completed || !window.IsDisposed || pool.IsDisposed || a.IsDisposed || b.IsDisposed)
+                if (Engine.Run(window) != 0 || !scenario.Completed || !window.IsDisposed || pool.IsDisposed || a.IsDisposed || b.IsDisposed)
                     throw new InvalidOperationException("Public randomizer host lifecycle failed.");
                 Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "audio-randomizer-host", backend, run, firstLength = .5, secondLength = 1, scenario.Position, cleaned = window.IsDisposed }));
             }
         }
-        finally { Engine.Instance.MaxFPS = fps; settings.Set(ProjectSettings.RenderingMethod, original); }
+        finally { Engine.MaxFPS = fps; ProjectSettings.Set(ProjectSettings.RenderingMethod, original); }
     }
     private static AudioStreamWAV Tone(int frames)
     {

@@ -31,8 +31,8 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 try
@@ -51,7 +51,7 @@ internal static partial class RenderingRuntimeTests
                 catch (Exception error) { throw new InvalidOperationException($"Canvas layer ordering {backend}, frame {frames}.", error); }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 6, "Six layer ordering and visibility stages.");
+        Engine.Run(window); Released(window); Check(frames == 6, "Six layer ordering and visibility stages.");
     }
 
     private static void VerifyLayerCoordinates(string backend, Material? material)
@@ -76,8 +76,8 @@ internal static partial class RenderingRuntimeTests
             var density = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland" ? SDL.GetWindowPixelDensity(native![0]) : 1;
             var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(native![0]), Which = 987, X = 16 / density, Y = 9 / density } };
             Check(SDL.PushEvent(ref motion), "Inject layer pointer.");
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 try
@@ -107,6 +107,6 @@ internal static partial class RenderingRuntimeTests
                 catch (Exception error) { throw new InvalidOperationException($"Canvas layer coordinates {backend}, frame {frames}.", error); }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 8, "Eight layer transform and snapping stages.");
+        Engine.Run(window); Released(window); Check(frames == 8, "Eight layer transform and snapping stages.");
     }
 }

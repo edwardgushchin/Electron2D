@@ -66,7 +66,7 @@ public sealed class AudioEffectCapture : AudioEffect
         {
             ThrowIfDisposed(); if (_ring is null)
             {
-                var requested = AudioServer.Instance.GetMixRate() * _length;
+                var requested = AudioServer.GetMixRate() * _length;
                 if (!float.IsFinite(requested) || requested >= 1 << 27) throw new ArgumentOutOfRangeException(nameof(BufferLength), "Capture storage exceeds 2^27 frames.");
                 var count = (uint)requested; _ring = new Vector2[count == 0 ? 1 : 1 << (BitOperations.Log2(count) + 1)];
             }

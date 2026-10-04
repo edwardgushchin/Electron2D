@@ -178,8 +178,8 @@ public sealed partial class SceneTree
 
     private void ApplyGUICursor(ref List<Exception>? errors)
     {
-        if (_gui.GuiHoverViewport is not Window || DisplayServer.Instance is not { } display) return;
-        var shape = Input.Instance.DefaultCursorShape;
+        if (_gui.GuiHoverViewport is not Window || DisplayServer.Service is not { } display) return;
+        var shape = Input.Service.DefaultCursorShape;
         if (_gui.Section.GuiDragPayload is not null)
             shape = _gui.Section.GuiDragPossible ? CursorShape.CanDrop : CursorShape.Forbidden;
         else if (_gui.GuiHoverKnown && _gui.GuiHoverChain.Count != 0)
@@ -189,7 +189,7 @@ public sealed partial class SceneTree
             {
                 try { shape = nested.GetCursorShape(nested.MakeCanvasPositionLocal(PointInViewport(viewport, nested.GetViewport()!, _gui.GuiHoverPosition))); }
                 catch (Exception error) { CollectException(ref errors, error); }
-                try { if (display.CursorGetShape() != shape) display.CursorSetShape(shape); } catch (Exception error) { CollectException(ref errors, error); }
+                try { if (display.CursorGetShapeCore() != shape) display.CursorSetShapeCore(shape); } catch (Exception error) { CollectException(ref errors, error); }
                 return;
             }
             for (var index = _gui.GuiHoverChain.Count - 1; index >= 0; index--)
@@ -207,8 +207,8 @@ public sealed partial class SceneTree
         }
         try
         {
-            if (display.CursorGetShape() != shape)
-                display.CursorSetShape(shape);
+            if (display.CursorGetShapeCore() != shape)
+                display.CursorSetShapeCore(shape);
         }
         catch (Exception error) { CollectException(ref errors, error); }
     }

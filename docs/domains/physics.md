@@ -1,8 +1,10 @@
 # Physics domain
 
-Last updated: 2026-09-30
+Last updated: 2026-10-04
 
 ## Responsibility
+
+Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 Physics owns the executable 2D rigid-body, collision-shape, surface-material and area-monitoring profiles. A SceneTree lazily owns one internal Box2D.NET world, advances it during its fixed physics lane, synchronizes dynamic body transforms and updates area overlap snapshots before timers and tweens. The selected managed backend is vendored and internal to `Electron2D.dll` under [ADR 0012](../decisions/product.md#adr-0012).
 

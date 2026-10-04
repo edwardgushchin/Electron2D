@@ -1,6 +1,6 @@
 # AudioStreamSynchronized
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.AudioStreamSynchronized` · **Source:** [AudioStreamSynchronized.cs](../../src/Scene/Resources/AudioStreamSynchronized.cs).
 
@@ -28,7 +28,7 @@ synchronized.SetSyncStream(0, music); // Existing live AudioStream resources.
 synchronized.SetSyncStream(1, percussion);
 synchronized.SetSyncStreamVolume(1, -6);
 var player = new AudioStreamPlayer { Stream = synchronized, Autoplay = true };
-// Add player to a Window and run Engine.Instance.Run(window).
+// Add player to a Window and run Engine.Run(window).
 ```
 
 ## Constructors

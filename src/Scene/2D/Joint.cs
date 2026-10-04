@@ -28,7 +28,7 @@ public abstract class Joint : Entity
 
     /// <summary>Creates a detached, unconnected joint.</summary>
     /// <param name="type">The immutable concrete scene role.</param>
-    private protected Joint(PhysicsServer.JointType type) => Runtime = PhysicsServer.Instance.RegisterSceneJoint(this, type);
+    private protected Joint(PhysicsServer.JointType type) => Runtime = PhysicsServer.Service.RegisterSceneJoint(this, type);
 
     internal PhysicsJointRuntime Runtime { get; }
     internal PhysicsSpace? AttachmentSpace => _space;
@@ -248,7 +248,7 @@ public abstract class Joint : Entity
     protected override void Dispose(bool disposing)
     {
         if (disposing) _space?.Remove(this);
-        if (disposing) PhysicsServer.Instance.UnregisterSceneJoint(Runtime.RID);
+        if (disposing) PhysicsServer.Service.UnregisterSceneJoint(Runtime.RID);
         base.Dispose(disposing);
     }
 }

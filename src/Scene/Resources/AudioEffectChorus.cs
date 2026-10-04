@@ -154,7 +154,7 @@ internal sealed class AudioEffectChorusInstance : AudioEffectInstance
     internal AudioEffectChorusInstance(AudioEffectChorus source)
     {
         _source = source;
-        _rate = AudioServer.Instance.GetMixRate();
+        _rate = AudioServer.GetMixRate();
         if (!float.IsFinite(_rate) || _rate <= 0 || _rate > 1_000_000) throw new ArgumentOutOfRangeException(nameof(source), "Output rate exceeds chorus storage.");
         var required = (int)Math.Ceiling(.24 * _rate);
         var size = 1; while (size <= required) size <<= 1;

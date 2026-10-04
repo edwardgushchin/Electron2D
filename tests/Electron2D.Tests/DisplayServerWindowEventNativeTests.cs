@@ -6,7 +6,7 @@ internal static class DisplayServerWindowEventNativeTests
     public static void Run()
     {
         using var display = DisplayServer.Open("Electron2D close event test", new Vector2i(480, 360));
-        Check(display.GetName() == "Wayland", "The native close test requires Wayland.");
+        Check(DisplayServer.GetName() == "Wayland", "The native close test requires Wayland.");
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The native close test needs one window.");
         var window = windows![0];
@@ -28,10 +28,10 @@ internal static class DisplayServerWindowEventNativeTests
         }
         void OnEnter() => mouseEnter++;
         void OnExit() => mouseExit++;
-        display.CloseRequested += OnClose;
-        display.WindowFocusChanged += OnFocus;
-        display.WindowMouseEntered += OnEnter;
-        display.WindowMouseExited += OnExit;
+        DisplayServer.CloseRequested += OnClose;
+        DisplayServer.WindowFocusChanged += OnFocus;
+        DisplayServer.WindowMouseEntered += OnEnter;
+        DisplayServer.WindowMouseExited += OnExit;
         try
         {
             Check(SDL.SetRenderDrawColor(renderer, 25, 115, 165, 255), SDL.GetError());
@@ -39,22 +39,22 @@ internal static class DisplayServerWindowEventNativeTests
             var deadline = DateTime.UtcNow.AddSeconds(60);
             while (DateTime.UtcNow < deadline && closeRequests == 0)
             {
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Check(SDL.RenderClear(renderer) && SDL.RenderPresent(renderer), SDL.GetError());
                 Thread.Sleep(20);
             }
             Check(closeRequests == 1, $"Expected one real compositor close request, observed {closeRequests}.");
-            Check(ReferenceEquals(DisplayServer.Instance, display) && SDL.GetWindowID(window) == windowId &&
+            Check(ReferenceEquals(DisplayServer.Service, display) && SDL.GetWindowID(window) == windowId &&
                   (SDL.GetWindowFlags(window) & SDL.WindowFlags.Hidden) == 0,
                 "A compositor close request must leave the native window and display server alive.");
             Console.WriteLine($"Wayland close callback passed; focus in/out={focusIn}/{focusOut}, pointer enter/exit={mouseEnter}/{mouseExit}.");
         }
         finally
         {
-            display.CloseRequested -= OnClose;
-            display.WindowFocusChanged -= OnFocus;
-            display.WindowMouseEntered -= OnEnter;
-            display.WindowMouseExited -= OnExit;
+            DisplayServer.CloseRequested -= OnClose;
+            DisplayServer.WindowFocusChanged -= OnFocus;
+            DisplayServer.WindowMouseEntered -= OnEnter;
+            DisplayServer.WindowMouseExited -= OnExit;
             SDL.DestroyRenderer(renderer);
         }
     }

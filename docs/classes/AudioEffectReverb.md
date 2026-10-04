@@ -1,6 +1,6 @@
 # AudioEffectReverb
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectReverb` · **Source:** [AudioEffectReverb.cs](../../src/Scene/Resources/AudioEffectReverb.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,9 +16,9 @@ Partial audio-owner host snippet; remove the effect before disposing the borrowe
 
 ```csharp
 using var room = new AudioEffectReverb { RoomSize = 0.9f, Wet = 0.35f };
-AudioServer.Instance.AddBusEffect(0, room);
+AudioServer.AddBusEffect(0, room);
 // Sources routed to Master now use the room tail.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 ## API summary

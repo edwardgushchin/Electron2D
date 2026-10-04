@@ -53,22 +53,22 @@ internal static class PhysicsAreaFieldTests
               ProjectSettings.Physics2DDefaultLinearDamp.DefaultValue == 0.1f &&
               ProjectSettings.Physics2DDefaultAngularDamp.DefaultValue == 1,
             "Typed world settings expose the pinned gravity and damping defaults.");
-        var settings = ProjectSettings.Instance;
-        var previousGravity = settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity);
-        var previousDirection = settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector);
-        var previousLinear = settings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp);
-        var previousAngular = settings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp);
-        Reject<ArgumentException>(() => settings.Set(ProjectSettings.Physics2DDefaultGravity, float.NaN));
-        Reject<JsonException>(() => settings.Set(ProjectSettings.Physics2DDefaultGravityVector,
+        var settings = ProjectSettings.Service;
+        var previousGravity = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity);
+        var previousDirection = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector);
+        var previousLinear = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp);
+        var previousAngular = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp);
+        Reject<ArgumentException>(() => ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravity, float.NaN));
+        Reject<JsonException>(() => ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravityVector,
             new Vector2(float.PositiveInfinity, 0)));
-        Reject<ArgumentException>(() => settings.Set(ProjectSettings.Physics2DDefaultLinearDamp,
+        Reject<ArgumentException>(() => ProjectSettings.Set(ProjectSettings.Physics2DDefaultLinearDamp,
             float.NegativeInfinity));
-        Reject<ArgumentException>(() => settings.Set(ProjectSettings.Physics2DDefaultAngularDamp,
+        Reject<ArgumentException>(() => ProjectSettings.Set(ProjectSettings.Physics2DDefaultAngularDamp,
             float.NaN));
-        Check(settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity) == previousGravity &&
-              settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector) == previousDirection &&
-              settings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp) == previousLinear &&
-              settings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp) == previousAngular,
+        Check(ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity) == previousGravity &&
+              ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector) == previousDirection &&
+              ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp) == previousLinear &&
+              ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp) == previousAngular,
             "Invalid project physics defaults reject before changing registry state.");
     }
 
@@ -210,17 +210,17 @@ internal static class PhysicsAreaFieldTests
 
     private static void VerifyDampingAndWorldSettings()
     {
-        var settings = ProjectSettings.Instance;
-        var oldGravity = settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity);
-        var oldDirection = settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector);
-        var oldLinear = settings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp);
-        var oldAngular = settings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp);
+        var settings = ProjectSettings.Service;
+        var oldGravity = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity);
+        var oldDirection = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector);
+        var oldLinear = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp);
+        var oldAngular = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp);
         try
         {
-            settings.Set(ProjectSettings.Physics2DDefaultGravity, 0f);
-            settings.Set(ProjectSettings.Physics2DDefaultGravityVector, new Vector2(0, 1));
-            settings.Set(ProjectSettings.Physics2DDefaultLinearDamp, 0.1f);
-            settings.Set(ProjectSettings.Physics2DDefaultAngularDamp, 1f);
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravity, 0f);
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravityVector, new Vector2(0, 1));
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultLinearDamp, 0.1f);
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultAngularDamp, 1f);
             using var region = new RectangleShape { Size = new(1000, 1000) };
             using var circle = new CircleShape();
             var root = new Node();
@@ -320,8 +320,8 @@ internal static class PhysicsAreaFieldTests
             Check(MathF.Abs(body.LinearVelocity.X - 90) < 1 && MathF.Abs(body.AngularVelocity - 1.6f) < 0.05f,
                 "Damping Replace stops lower-priority areas and world defaults.");
 
-            settings.Set(ProjectSettings.Physics2DDefaultGravity, 400f);
-            settings.Set(ProjectSettings.Physics2DDefaultGravityVector, new Vector2(1, 0));
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravity, 400f);
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravityVector, new Vector2(1, 0));
             using var anotherShape = new CircleShape();
             var anotherRoot = new Node();
             var anotherBody = new RigidBody { CanSleep = false };
@@ -343,10 +343,10 @@ internal static class PhysicsAreaFieldTests
         }
         finally
         {
-            settings.Set(ProjectSettings.Physics2DDefaultGravity, oldGravity);
-            settings.Set(ProjectSettings.Physics2DDefaultGravityVector, oldDirection);
-            settings.Set(ProjectSettings.Physics2DDefaultLinearDamp, oldLinear);
-            settings.Set(ProjectSettings.Physics2DDefaultAngularDamp, oldAngular);
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravity, oldGravity);
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultGravityVector, oldDirection);
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultLinearDamp, oldLinear);
+            ProjectSettings.Set(ProjectSettings.Physics2DDefaultAngularDamp, oldAngular);
         }
     }
 

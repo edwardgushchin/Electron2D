@@ -5,18 +5,18 @@ internal static class DisplayServerTouchNativeTests
 {
     public static void Run(DisplayServer display)
     {
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "Touch checks require the main native window.");
-        var size = display.WindowGetSize();
-        var previousEmulation = Input.Instance.EmulateMouseFromTouch;
+        var size = DisplayServer.WindowGetSize();
+        var previousEmulation = Input.EmulateMouseFromTouch;
         var probe = new TouchProbe();
         using var tree = new SceneTree(probe);
-        Engine.Instance.Start(tree);
+        Engine.Start(tree);
         try
         {
-            Input.Instance.EmulateMouseFromTouch = false;
-            Input.Instance.ReleasePressedEvents();
+            Input.EmulateMouseFromTouch = false;
+            Input.ReleasePressedEvents();
             var down = new SDL.Event
             {
                 TFinger = new SDL.TouchFingerEvent
@@ -60,7 +60,7 @@ internal static class DisplayServerTouchNativeTests
                 "SDL accepts malformed and valid touch events in one queue.");
             try
             {
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 throw new InvalidOperationException("Malformed native touch input must fail.");
             }
             catch (AggregateException errors)
@@ -86,9 +86,9 @@ internal static class DisplayServerTouchNativeTests
         finally
         {
             probe.Clear();
-            Input.Instance.ReleasePressedEvents();
-            Input.Instance.EmulateMouseFromTouch = previousEmulation;
-            Engine.Instance.Stop();
+            Input.ReleasePressedEvents();
+            Input.EmulateMouseFromTouch = previousEmulation;
+            Engine.Stop();
         }
     }
 

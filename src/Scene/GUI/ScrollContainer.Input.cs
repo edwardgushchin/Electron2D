@@ -43,7 +43,7 @@ public partial class ScrollContainer
             }
 
             if (button.ButtonIndex == MouseButton.Left &&
-                (!button.Pressed && _dragTouching || DisplayServer.Instance?.IsTouchscreenAvailable() == true || Input.Instance.EmulateTouchFromMouse))
+                (!button.Pressed && _dragTouching || DisplayServer.Service?.IsTouchscreenAvailableCore() == true || Input.EmulateTouchFromMouse))
             {
                 if (button.Pressed)
                 {

@@ -20,8 +20,8 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(node);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback();
                 Pixel(pixels, 11, 12, new(.5f, 0, 0)); Pixel(pixels, 19, 12, new(0, 0, .5f));
@@ -30,7 +30,7 @@ internal static partial class RenderingRuntimeTests
                 window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(!font.IsDisposed, "Color glyph drawing borrows the font.");
         Console.WriteLine($"Native COLR glyphs preserve palette RGB, always modulate alpha and honor explicit RGB modulation: {backend}.");
     }

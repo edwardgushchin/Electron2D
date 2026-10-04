@@ -66,8 +66,8 @@ internal static partial class RenderingRuntimeTests
             wrap.Size = new(25, 80); clip.Size = new(10, 30);
             var nativeWindows = SDL.GetWindows(out var windowCount); var nativeWindow = nativeWindows![0];
             var windowID = SDL.GetWindowID(nativeWindow); var scale = SDL.GetCurrentVideoDriver() == "wayland" ? SDL.GetWindowPixelDensity(nativeWindow) : 1f;
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback(); frames++;
                 try
@@ -132,7 +132,7 @@ internal static partial class RenderingRuntimeTests
                 catch (Exception error) { throw new InvalidOperationException($"Button native {backend}, phase {frames}.", error); }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 10, "All native button phases must execute.");
+        Engine.Run(window); Released(window); Check(frames == 10, "All native button phases must execute.");
         VerifyButtonWarm(backend, skin);
         Console.WriteLine($"Buttons native state/focus/click/keyboard, wrapped/clipped text, RTL check/radio/switch and 64 active zero-allocation frames passed: {backend}.");
     }
@@ -157,13 +157,13 @@ internal static partial class RenderingRuntimeTests
                 button.Text = on ? "A" : "V"; button.ButtonPressed = on; box.ButtonPressed = on; toggle.ButtonPressed = on;
                 afterMutation = GC.GetAllocatedBytesForCurrentThread();
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) { allocated += GC.GetAllocatedBytesForCurrentThread() - before; mutationAllocated += afterMutation - before; }
                 if (++frames == 128) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && draws == 384 && allocated == 0, $"Native {backend} button/check/switch updates, text, recording and rendering allocated {allocated} bytes in 64 measured active frames (mutation={mutationAllocated}, button={throughButton}, box={throughBox}, toggle={throughToggle}, remaining={allocated - mutationAllocated - throughButton - throughBox - throughToggle}).");
     }
     private static void ButtonGlyphPixels(Image image, Vector2i origin, Color foreground, Color background)

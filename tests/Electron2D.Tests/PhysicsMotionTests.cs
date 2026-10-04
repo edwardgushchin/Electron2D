@@ -15,21 +15,21 @@ internal static class PhysicsMotionTests
 
     private static void VerifyServerMotion()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var mover = server.BodyCreate();
-        var obstacle = server.BodyCreate();
-        var circleRID = server.CircleShapeCreate();
-        var floorRID = server.RectangleShapeCreate();
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var mover = PhysicsServer.BodyCreate();
+        var obstacle = PhysicsServer.BodyCreate();
+        var circleRID = PhysicsServer.CircleShapeCreate();
+        var floorRID = PhysicsServer.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 20) };
-        server.ShapeSetData(floorRID, floor);
-        server.BodySetMode(mover, PhysicsServer.BodyMode.Static);
-        server.BodySetMode(obstacle, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(mover, circleRID);
-        server.BodyAddShape(obstacle, floorRID);
-        server.BodySetTransform(obstacle, new(0, Vector2.One, 0, new(0, 100)));
-        server.BodySetSpace(mover, space);
-        server.BodySetSpace(obstacle, space);
+        PhysicsServer.ShapeSetData(floorRID, floor);
+        PhysicsServer.BodySetMode(mover, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodySetMode(obstacle, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(mover, circleRID);
+        PhysicsServer.BodyAddShape(obstacle, floorRID);
+        PhysicsServer.BodySetTransform(obstacle, new(0, Vector2.One, 0, new(0, 100)));
+        PhysicsServer.BodySetSpace(mover, space);
+        PhysicsServer.BodySetSpace(obstacle, space);
         using var query = new PhysicsTestMotionParameters2D { Motion = new(0, 120) };
         using var result = new PhysicsTestMotionResult2D();
         Check(query.From == Transform.Identity && query.Margin == 0.08f &&
@@ -44,7 +44,7 @@ internal static class PhysicsMotionTests
         Check(query.Motion == new Vector2(0, 120) && query.Margin == 0.08f &&
               query.From == Transform.Identity,
             "Invalid parameter writes leave prior query state intact.");
-        Check(server.BodyTestMotion(mover, query, result) && result.GetColliderRID() == obstacle &&
+        Check(PhysicsServer.BodyTestMotion(mover, query, result) && result.GetColliderRID() == obstacle &&
               result.GetCollider() is null && result.GetCollisionLocalShape() == 0 &&
               result.GetColliderShape() == 0 && result.GetCollisionNormal().Y < -0.9f &&
               result.GetCollisionPoint().Y is > 88 and < 92 &&
@@ -57,13 +57,13 @@ internal static class PhysicsMotionTests
         copied[0] = default;
         Check(query.ExcludeBodies[0] == obstacle,
             "RID exclusions are copied on read and assignment.");
-        var excludedHit = server.BodyTestMotion(mover, query, result);
+        var excludedHit = PhysicsServer.BodyTestMotion(mover, query, result);
         Check(!excludedHit && result.GetColliderRID() == default &&
               MathF.Abs(result.GetTravel().Y - query.Motion.Y) < 0.001f &&
               result.GetRemainder() == Vector2.Zero,
             $"Excluding the obstacle permits full motion and clears the result: {excludedHit}, {result.GetColliderRID()}, {result.GetTravel()}, {result.GetRemainder()}.");
-        server.FreeRID(mover); server.FreeRID(obstacle); server.FreeRID(circleRID);
-        server.FreeRID(floorRID); server.FreeRID(space);
+        PhysicsServer.FreeRID(mover); PhysicsServer.FreeRID(obstacle); PhysicsServer.FreeRID(circleRID);
+        PhysicsServer.FreeRID(floorRID); PhysicsServer.FreeRID(space);
     }
 
     private static void VerifySceneMotion()
@@ -117,7 +117,7 @@ internal static class PhysicsMotionTests
             Motion = new(0, 120)
         };
         using var serverResult = new PhysicsTestMotionResult2D();
-        Check(PhysicsServer.Instance.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
+        Check(PhysicsServer.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
               ReferenceEquals(serverResult.GetCollider(), floor) &&
               serverResult.GetColliderID() == floor.InstanceID &&
               serverResult.GetColliderRID() == floor.GetRID(),
@@ -127,7 +127,7 @@ internal static class PhysicsMotionTests
         objectCopy[0] = 0;
         Check(serverQuery.ExcludeObjects[0] == floor.InstanceID,
             "Instance-ID exclusions are copied on read and assignment.");
-        Check(!PhysicsServer.Instance.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
+        Check(!PhysicsServer.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
               !serverResult.GetColliderRID().IsValid(),
             "Server motion excludes a scene collider by its managed instance ID.");
         for (var frame = 0; frame < 64; frame++) mover.TestMove(Transform.Identity, new(0, 120), tested);

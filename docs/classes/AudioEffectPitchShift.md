@@ -1,6 +1,6 @@
 # AudioEffectPitchShift
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectPitchShift` · **Source:** [AudioEffectPitchShift.cs](../../src/Scene/Resources/AudioEffectPitchShift.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -21,9 +21,9 @@ using var pitch = new AudioEffectPitchShift
     FFTSize = AudioFFTSize.Size512,
     Oversampling = 8
 };
-AudioServer.Instance.AddBusEffect(0, pitch);
+AudioServer.AddBusEffect(0, pitch);
 // Run a player routed to bus zero, then remove the borrowed effect.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 This partial owner-thread host snippet requires real audio mixing. `AudioPitchShiftTests.RunHost` exercises the full public Window/player/effect/capture path.

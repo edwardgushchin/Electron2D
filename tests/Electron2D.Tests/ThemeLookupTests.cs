@@ -160,28 +160,28 @@ internal static class ThemeLookupTests
 
     private static void VerifyFallbacksAndDefaults()
     {
-        var database = ThemeDB.Instance; var defaults = database.GetDefaultTheme();
-        var baseScale = database.FallbackBaseScale; var fontSize = database.FallbackFontSize; var icon = database.FallbackIcon; var style = database.FallbackStyleBox;
+        var database = ThemeDB.Service; var defaults = ThemeDB.GetDefaultTheme();
+        var baseScale = ThemeDB.FallbackBaseScale; var fontSize = ThemeDB.FallbackFontSize; var icon = ThemeDB.FallbackIcon; var style = ThemeDB.FallbackStyleBox;
         var defaultScale = defaults.DefaultBaseScale; var defaultSize = defaults.DefaultFontSize;
         using var replacement = new StyleBoxEmpty(); using var image = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8); using var replacementIcon = ImageTexture.CreateFromImage(image);
         try
         {
-            defaults.DefaultBaseScale = 0; defaults.DefaultFontSize = -1; database.FallbackBaseScale = 2.5f; database.FallbackFontSize = 31;
-            database.FallbackIcon = replacementIcon; database.FallbackStyleBox = replacement;
+            defaults.DefaultBaseScale = 0; defaults.DefaultFontSize = -1; ThemeDB.FallbackBaseScale = 2.5f; ThemeDB.FallbackFontSize = 31;
+            ThemeDB.FallbackIcon = replacementIcon; ThemeDB.FallbackStyleBox = replacement;
             var control = new Control(); using var tree = new SceneTree(control); tree.ProcessFrame(0);
             Check(control.GetThemeDefaultBaseScale() == 2.5f && control.GetThemeDefaultFontSize() == 31 && control.GetThemeFontSize("theme_lookup_missing") == 31 &&
                 ReferenceEquals(control.GetThemeIcon("theme_lookup_missing"), replacementIcon) && ReferenceEquals(control.GetThemeStyleBox("theme_lookup_missing"), replacement) && !control.HasThemeStyleBox("theme_lookup_missing"),
                 "Universal fallbacks participate after missing local and built-in defaults without making Has report an item.");
             var oldSeen = false; control.ThemeChanged += () => oldSeen |= ReferenceEquals(control.GetThemeStyleBox("theme_lookup_missing"), replacement);
-            database.FallbackStyleBox = null; Check(ReferenceEquals(control.GetThemeStyleBox("theme_lookup_missing"), replacement), "Changing a universal fallback preserves attached cached getters until deferred delivery.");
+            ThemeDB.FallbackStyleBox = null; Check(ReferenceEquals(control.GetThemeStyleBox("theme_lookup_missing"), replacement), "Changing a universal fallback preserves attached cached getters until deferred delivery.");
             tree.FlushDeferred(); Check(oldSeen && control.GetThemeStyleBox("theme_lookup_missing") is null, "Fallback notification preserves old-cache event ordering and then refreshes the result.");
             using var theme = new Theme { DefaultBaseScale = 1.25f, DefaultFontSize = 19 }; control.Theme = theme;
             Check(control.GetThemeDefaultBaseScale() == 1.25f && control.GetThemeDefaultFontSize() == 19 && control.GetThemeFontSize("missing") == 19, "Positive branch defaults override universal fallbacks.");
         }
         finally
         {
-            defaults.DefaultBaseScale = defaultScale; defaults.DefaultFontSize = defaultSize; database.FallbackBaseScale = baseScale; database.FallbackFontSize = fontSize;
-            database.FallbackIcon = icon; database.FallbackStyleBox = style;
+            defaults.DefaultBaseScale = defaultScale; defaults.DefaultFontSize = defaultSize; ThemeDB.FallbackBaseScale = baseScale; ThemeDB.FallbackFontSize = fontSize;
+            ThemeDB.FallbackIcon = icon; ThemeDB.FallbackStyleBox = style;
         }
     }
 

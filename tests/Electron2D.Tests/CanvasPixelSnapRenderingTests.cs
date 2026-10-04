@@ -37,9 +37,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            var software = server.GetCurrentRenderingDriverName() == "software";
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            var software = RenderingServer.GetCurrentRenderingDriverName() == "software";
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = server.Readback();
                 try
@@ -72,7 +72,7 @@ internal static partial class RenderingRuntimeTests
                 catch (Exception error) { throw new InvalidOperationException($"Pixel snapping {backend}/{fixture ?? "default"}, frame {frames}: {error.Message}", error); }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 4, "Both snapping modes execute independently and together.");
         Console.WriteLine($"Canvas pixel snapping native checks passed: {backend}/{fixture ?? "default"}.");
     }

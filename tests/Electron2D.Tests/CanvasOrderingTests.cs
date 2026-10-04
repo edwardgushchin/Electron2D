@@ -46,9 +46,9 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(current);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback();
                 try { Pixel(image, 8, 8, cases[index].Expected); }
@@ -58,7 +58,7 @@ internal static partial class RenderingRuntimeTests
                 current = cases[index].Create(); window.AddChild(current);
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Check(index == cases.Length && current.IsDisposed, "Ordering scene lifetime.");
         Released(window);
         Console.WriteLine($"Canvas ordering pixel checks passed: {backend}, {cases.Length} cases.");

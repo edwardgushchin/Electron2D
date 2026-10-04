@@ -168,9 +168,9 @@ internal static partial class RenderingRuntimeTests
         node.Drawing = () => { draws++; node.DrawRect(new Rect2(16, 0, 8, 8), Colors.Blue); node.QueueRedraw(); };
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!;
-            renderer.SetDefaultClearColor(Colors.Black);
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback();
                 Pixel(image, 4, 4, Colors.Red); Pixel(image, 12, 4, Colors.Green); Pixel(image, 20, 4, Colors.Blue);
@@ -187,7 +187,7 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 6) { Check(draws == 5, "Visibility, reattachment and TopLevel trigger redraw; in-draw requests do not."); window.Tree!.Quit(); }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Console.WriteLine($"Canvas lifecycle pixel checks passed: {backend}.");
     }
 }

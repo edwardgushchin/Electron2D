@@ -36,7 +36,7 @@ internal static class CollisionDisableModeTests
         using var point = new PhysicsPointQueryParameters2D { Position = Vector2.Zero };
         var direct = observer.GetWorld2D()!.DirectSpaceState;
         Check(direct.IntersectPoint(point).Any(hit => hit.ColliderRID == rid), "Enabling restores query membership immediately.");
-        var view = PhysicsServer.Instance.BodyGetDirectState(rid)!;
+        var view = PhysicsServer.BodyGetDirectState(rid)!;
         tree.Paused = true;
         Check(body.HasBackend, "Pausing alone does not invoke a disable policy.");
         tree.Paused = false;
@@ -51,7 +51,7 @@ internal static class CollisionDisableModeTests
         Check(body.GetRID() == rid && body.GetShapeOwners()[0] == owner && body.ShapeOwnerGetShapeCount(owner) == 1,
             "RID, owners and borrowed geometry survive removal.");
         body.DisableMode = CollisionDisableMode.KeepActive;
-        Check(body.HasBackend && !ReferenceEquals(view, PhysicsServer.Instance.BodyGetDirectState(rid)),
+        Check(body.HasBackend && !ReferenceEquals(view, PhysicsServer.BodyGetDirectState(rid)),
             "Changing a disabled policy reattaches with a new live view.");
         body.LinearVelocity = new(30, 0); tree.PhysicsFrame(1d / 60);
         Check(body.Position.X > 0.4f, "KeepActive continues dynamics with disabled node callbacks.");
@@ -84,7 +84,7 @@ internal static class CollisionDisableModeTests
         var falling = new RigidBody { Name = "falling", CanSleep = false };
         Add(support, box); Add(falling, circle); root.AddChild(support); root.AddChild(falling);
         using var tree = new SceneTree(root);
-        var view = PhysicsServer.Instance.BodyGetDirectState(support.GetRID())!;
+        var view = PhysicsServer.BodyGetDirectState(support.GetRID())!;
         support.ProcessMode = ProcessMode.Disabled;
         Check(!support.Freeze && support.LinearVelocity == Vector2.Zero && support.AngularVelocity == 0 && view.InverseMass == 0,
             "MakeStatic clears prior dynamic velocities without setting Freeze or invalidating the view.");
@@ -110,7 +110,7 @@ internal static class CollisionDisableModeTests
         tree.PhysicsFrame(1d / 60);
         Check(support.Position.X > 0.3f, "Removal from temporary static mode cannot turn retained dynamic sleep into static inactivity.");
         support.DisableMode = CollisionDisableMode.MakeStatic;
-        Check(view != PhysicsServer.Instance.BodyGetDirectState(support.GetRID()) &&
+        Check(view != PhysicsServer.BodyGetDirectState(support.GetRID()) &&
             b2Body_GetType(support.BackendID) == B2BodyType.b2_staticBody, "Disabled reattachment creates a static native body.");
     }
 

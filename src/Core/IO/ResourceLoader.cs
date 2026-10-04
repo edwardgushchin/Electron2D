@@ -188,7 +188,7 @@ public static class ResourceLoader
     private static void CheckFilePath(string path)
     {
         CheckPath(path);
-        ProjectSettings.Instance.GlobalizePath(path);
+        ProjectSettings.GlobalizePath(path);
     }
 
     private static bool IsExtension(string path, string[] extensions)

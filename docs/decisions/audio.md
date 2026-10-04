@@ -2,6 +2,9 @@
 
 Last updated: 2026-10-04
 
+
+Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
+
 This bounded log owns the architectural decisions for audio. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
 Decisions in this log: [0047](#adr-0047).

@@ -7,9 +7,17 @@ Last updated: 2026-10-04
 - Inherits: [ElectronObject](ElectronObject.md)
 - Component: [Canvas rendering](../components/canvas-rendering.md)
 
+Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
+
 ## Description
 
-Renders the active root Window's retained CanvasItem commands. Engine.Run creates the service after acquiring the native window, drives it on the scene owner thread and closes it during cleanup. There is no public constructor or independent lifetime. Consumers draw through CanvasItem and Texture, including live texture RIDs; owned SDL handles remain internal. DisplayServer exposes supported borrowed native context identities under ADR 0042.
+`public static bool IsAvailable { get; }` reports whether an active object is published. It is an observation, not a lifetime reservation; false means ordinary service calls and event subscription changes throw `InvalidOperationException`.
+
+Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
+
+Public static operations use the active native service. `IsAvailable` reports whether it is published; operations and event subscription changes throw `InvalidOperationException` when absent. Event subscriptions belong to that session and do not transfer to later sessions.
+
+Renders the active root Window's retained CanvasItem commands. Engine.Run creates the service after acquiring the native window, drives it on the scene owner thread and closes it during cleanup. There is no public static constructor or independent lifetime. Consumers draw through CanvasItem and Texture, including live texture RIDs; owned SDL handles remain internal. DisplayServer exposes supported borrowed native context identities under ADR 0042.
 
 The service supports rectangles, lines, polygons, short primitives and textures using source-alpha blending into an RGBA8 framebuffer. Shader materials require GPU rendering. Startup settings select `gpu` or `compatibility` and whether GPU initialization may fall back. This does not implement live device migration or recovery.
 
@@ -24,7 +32,7 @@ Control descendant clipping adds a framebuffer scissor to each affected batch af
 Inside a node's OnReady callback during Engine.Run:
 
 ```csharp
-RenderingServer.Instance!.SetDefaultClearColor(new Color(0.1f, 0.1f, 0.15f));
+RenderingServer.SetDefaultClearColor(new Color(0.1f, 0.1f, 0.15f));
 ```
 
 ## Constants
@@ -50,32 +58,27 @@ Largest accepted CanvasLayer.Layer value. It draws after every smaller layer ind
 
 | Declaration | Contract |
 | --- | --- |
-| `static RenderingServer? Instance { get; }` | Active service, or null outside its Engine.Run lifetime. |
-| `bool RenderLoopEnabled { get; set; }` | Enables frame submission; initially true. |
+| `static bool RenderLoopEnabled { get; set; }` | Enables frame submission; initially true. |
 | `string GetCurrentRenderingMethod()` | Actual `gpu` or `compatibility` method after fallback. |
 | `string GetCurrentRenderingDriverName()` | Actual native driver name. |
 | `Color GetDefaultClearColor()` | Current clear color. |
 | `void SetDefaultClearColor(Color color)` | Sets a finite clear color for later frames. |
-| [`public RID Texture2DCreate(Image image)`](#texture2dcreate) | Copies a live nonempty image, validates axes 1..16384 and supported sampling formats, and returns a renderer-owned identity. |
-| [`public RID Texture2DPlaceholderCreate()`](#texture2dplaceholdercreate) | Creates a drawable 4×4 RGBA8 magenta/black checkerboard. |
-| [`public Image? Texture2DGet(RID texture)`](#texture2dget) | Returns a caller-owned copy of original backing pixels and mipmaps, or null for a live proxy whose source has been released. |
-| [`public void Texture2DUpdate(RID texture, Image image, int layer = 0)`](#texture2dupdate) | Copies and validates matching source width, height, format and mipmap state before publication. |
-| [`public RID TextureProxyCreate(RID baseTexture)`](#textureproxycreate) | Owned alias of a borrowed source, including nested proxies. |
-| [`public void TextureProxyUpdate(RID texture, RID proxyTo)`](#textureproxyupdate) | Retargets an owned proxy to a non-proxy source. |
-| [`public void TextureReplace(RID texture, RID byTexture)`](#texturereplace) | Both identities must be live and owned by this renderer. |
-| [`public Image.Format TextureGetFormat(RID texture)`](#texturegetformat) | Reports original backing format, including the full atlas source format. |
-| [`public void TextureSetSizeOverride(RID texture, int width, int height)`](#texturesetsizeoverride) | Sets both logical drawing axes in 1..16384 without reallocating or resampling pixels. |
-| [`public void TextureSetPath(RID texture, string path)`](#texturesetpath) | Sets diagnostic metadata for a server-owned texture. |
-| [`public string TextureGetPath(RID texture)`](#texturegetpath) | Returns owned diagnostic metadata or a borrowed resource’s ResourcePath. |
-| [`public void FreeRID(RID rid)`](#freerid) | Removes a live server-owned texture RID, releases its managed payload and disposes the internal resource. |
-| `event Action? FramePreDraw` | Before capture and command preparation. |
-| `event Action? FramePostDraw` | After submitting the canvas frame. |
+| [`public static RID Texture2DCreate(Image image)`](#texture2dcreate) | Copies a live nonempty image, validates axes 1..16384 and supported sampling formats, and returns a renderer-owned identity. |
+| [`public static RID Texture2DPlaceholderCreate()`](#texture2dplaceholdercreate) | Creates a drawable 4×4 RGBA8 magenta/black checkerboard. |
+| [`public static Image? Texture2DGet(RID texture)`](#texture2dget) | Returns a caller-owned copy of original backing pixels and mipmaps, or null for a live proxy whose source has been released. |
+| [`public static void Texture2DUpdate(RID texture, Image image, int layer = 0)`](#texture2dupdate) | Copies and validates matching source width, height, format and mipmap state before publication. |
+| [`public static RID TextureProxyCreate(RID baseTexture)`](#textureproxycreate) | Owned alias of a borrowed source, including nested proxies. |
+| [`public static void TextureProxyUpdate(RID texture, RID proxyTo)`](#textureproxyupdate) | Retargets an owned proxy to a non-proxy source. |
+| [`public static void TextureReplace(RID texture, RID byTexture)`](#texturereplace) | Both identities must be live and owned by this renderer. |
+| [`public static Image.Format TextureGetFormat(RID texture)`](#texturegetformat) | Reports original backing format, including the full atlas source format. |
+| [`public static void TextureSetSizeOverride(RID texture, int width, int height)`](#texturesetsizeoverride) | Sets both logical drawing axes in 1..16384 without reallocating or resampling pixels. |
+| [`public static void TextureSetPath(RID texture, string path)`](#texturesetpath) | Sets diagnostic metadata for a server-owned texture. |
+| [`public static string TextureGetPath(RID texture)`](#texturegetpath) | Returns owned diagnostic metadata or a borrowed resource’s ResourcePath. |
+| [`public static void FreeRID(RID rid)`](#freerid) | Removes a live server-owned texture RID, releases its managed payload and disposes the internal resource. |
+| `static event Action? FramePreDraw` | Before capture and command preparation. |
+| `static event Action? FramePostDraw` | After submitting the canvas frame. |
 
 ## Property descriptions
-
-### Instance
-
-An atomic reference, null before startup and after shutdown. Keeping the reference does not prolong its Engine.Run lifetime. Calls on a disposed service throw ObjectDisposedException.
 
 ### RenderLoopEnabled
 
@@ -101,90 +104,89 @@ Validates all channels before changing state. Nonfinite values throw ArgumentExc
 
 ### Texture2DCreate
 
-`public RID Texture2DCreate(Image image)`
+`public static RID Texture2DCreate(Image image)`
 
 Copies a live nonempty image, validates axes 1..16384 and supported sampling formats, and returns a renderer-owned identity. Input disposal or later image edits do not affect the new texture. Compressed/integer formats fail explicitly. Creation/upload allocation is outside the warmed replay guarantee.
 
 ### Texture2DPlaceholderCreate
 
-`public RID Texture2DPlaceholderCreate()`
+`public static RID Texture2DPlaceholderCreate()`
 
 Creates a drawable 4×4 RGBA8 magenta/black checkerboard. It supports the same update, size/path, replacement and free operations as an ordinary server texture.
 
 ### Texture2DGet
 
-`public Image? Texture2DGet(RID texture)`
+`public static Image? Texture2DGet(RID texture)`
 
 Returns a caller-owned copy of original backing pixels and mipmaps, or null for a live proxy whose source has been released. Atlas RIDs expose their full backing image, while object-based atlas drawing retains the view. Empty resource RIDs return the 4×4 rendering placeholder without initializing the resource or changing its own GetImage result. Readback uses the authoritative managed snapshot, not a GPU stall.
 
 ### Texture2DUpdate
 
-`public void Texture2DUpdate(RID texture, Image image, int layer = 0)`
+`public static void Texture2DUpdate(RID texture, Image image, int layer = 0)`
 
 Copies and validates matching source width, height, format and mipmap state before publication. A failure preserves prior pixels. Logical size overrides do not change required source dimensions. Compatible updates retain the allocation token for backend reuse; retained commands sample new pixels without QueueRedraw. Only layer zero is integrated; nonzero layers throw ArgumentOutOfRangeException until the 2D array resource/renderer slice.
 
 ### TextureProxyCreate
 
-`public RID TextureProxyCreate(RID baseTexture)`
+`public static RID TextureProxyCreate(RID baseTexture)`
 
 Creates a distinct owned RID aliasing a live borrowed or owned texture, including another proxy. No pixel copy or native texture allocation is created for the alias: canvas replay resolves the current source into ordinary backend batches. Nested resolution is iterative. The proxy itself remains alive if its source or an intermediate proxy is freed, disposed or collected; it then returns null image data and draws nothing. Its last format/size/path metadata remains available. Freeing an alias never frees its source. Empty ordinary resources supply their rendering checkerboard when sampled through a proxy. Wrong-kind/stale inputs reject before registration. The alias retains RID links, not ownership of borrowed source resources.
 
 A partial snippet inside an active node’s OnReady callback (retain both RIDs in the node and draw the alias in OnDraw):
 
 ```csharp
-var server = RenderingServer.Instance!;
 using var image = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8);
 image.Fill(Colors.Red);
-RID source = server.Texture2DCreate(image);
-RID alias = server.TextureProxyCreate(source);
-// Later, on the owner thread: server.TextureProxyUpdate(alias, anotherSource);
+RID source = RenderingServer.Texture2DCreate(image);
+RID alias = RenderingServer.TextureProxyCreate(source);
+// Later, on the owner thread: RenderingServer.TextureProxyUpdate(alias, anotherSource);
 // OnDraw: DrawTexture(alias, Vector2.Zero);
-// Explicit cleanup before shutdown: server.FreeRID(alias); server.FreeRID(source);
+// Explicit cleanup before shutdown: RenderingServer.FreeRID(alias); RenderingServer.FreeRID(source);
 ```
 
 ### TextureProxyUpdate
 
-`public void TextureProxyUpdate(RID texture, RID proxyTo)`
+`public static void TextureProxyUpdate(RID texture, RID proxyTo)`
 
 Requires a renderer-owned proxy and a live non-proxy source. Rejects ordinary destinations, borrowed destinations, self/proxy targets and wrong-kind/stale identities before mutation. Source callbacks during metadata acquisition may throw; the old target remains unchanged. Retargeting keeps the proxy RID, updates its source, resets a proxy-local size override and copies the new diagnostic path. Future retained replay samples the current root image/format/size without OnDraw; recorded destination geometry and normalized source regions remain fixed. Source replacement redirects aliases before consuming the replacement RID. A disconnected proxy can be retargeted and resume drawing. Owner/submission/shutdown boundaries match texture mutations.
 
 ### TextureReplace
 
-`public void TextureReplace(RID texture, RID byTexture)`
+`public static void TextureReplace(RID texture, RID byTexture)`
 
 Both identities must be live and owned by this renderer. Transfers replacement pixels, logical dimensions and path to the destination object, preserving its RID and retained references. Proxies of the consumed source redirect to the destination before source disposal; destination proxies continue sampling its replacement pixels. Proxy RIDs cannot be replacement operands. Different pixel configurations are allowed. Consumes byTexture; any commands referring to that consumed object stop drawing. Equal validated RIDs do nothing. Disposal callback errors propagate after publication and removal of the consumed identity; destination state remains committed.
 
 ### TextureGetFormat
 
-`public Image.Format TextureGetFormat(RID texture)`
+`public static Image.Format TextureGetFormat(RID texture)`
 
 Reports original backing format, including the full atlas source format. Empty resource RIDs report RGBA8 for the rendering placeholder; the resource itself retains its empty metadata.
 
 ### TextureSetSizeOverride
 
-`public void TextureSetSizeOverride(RID texture, int width, int height)`
+`public static void TextureSetSizeOverride(RID texture, int width, int height)`
 
 Sets both logical drawing axes in 1..16384 without reallocating or resampling pixels. Unlike ImageTexture.SetSizeOverride, zero is invalid. Existing recorded geometry/normalized source coordinates remain fixed; QueueRedraw records the new logical size. Invalid dimensions leave state unchanged.
 
 ### TextureSetPath
 
-`public void TextureSetPath(RID texture, string path)`
+`public static void TextureSetPath(RID texture, string path)`
 
 Sets diagnostic metadata for a server-owned texture. Null is rejected; empty and ordinary strings are accepted. It performs no file loading and does not register a ResourcePath cache entry.
 
 ### TextureGetPath
 
-`public string TextureGetPath(RID texture)`
+`public static string TextureGetPath(RID texture)`
 
 Returns owned diagnostic metadata or a borrowed resource’s ResourcePath. An empty path is valid.
 
 ### FreeRID
 
-`public void FreeRID(RID rid)`
+`public static void FreeRID(RID rid)`
 
 Removes a live server-owned texture RID, releases its managed payload and disposes the internal resource. Later retained commands referencing it draw nothing; a second free or lookup throws ArgumentException. Borrowed resource RIDs require resource disposal and throw InvalidOperationException here. Identity removal commits before disposal callbacks run. This method currently handles textures; canvas, material and shader RID ownership are separate incomplete families.
 
-All texture instance methods require the active scene owner thread and a live renderer. Empty, stale and wrong-kind RIDs throw ArgumentException; mutation/free/replace of borrowed or foreign identities throw InvalidOperationException. Writes are allowed during scene callbacks, canvas recording and FramePreDraw/FramePostDraw, but rejected during geometry replay/native submission and shutdown. Getter calls remain available at frame events. Renderer shutdown drains every owned texture even if disposal callbacks fail, attempts backend cleanup independently, detaches Instance and then propagates collected errors. Borrowed resource identities survive renderer shutdown.
+All texture operations require the active scene owner thread and a live renderer. Empty, stale and wrong-kind RIDs throw ArgumentException; mutation/free/replace of borrowed or foreign identities throw InvalidOperationException. Writes are allowed during scene callbacks, canvas recording and FramePreDraw/FramePostDraw, but rejected during geometry replay/native submission and shutdown. Getter calls remain available at frame events. Renderer shutdown drains every owned texture even if disposal callbacks fail, attempts backend cleanup independently, unpublishes the active service and then propagates collected errors. Borrowed resource identities survive renderer shutdown.
 
 ## Event descriptions
 
@@ -208,7 +210,7 @@ Public instance methods and RenderLoopEnabled reject calls off the owner thread 
 
 RenderingRuntimeTests measures zero managed allocation from FramePreDraw through FramePostDraw over twenty warmed frames with mixed geometry, textures and GPU HLSL/GLSL materials on native Wayland and dummy/software. The check includes both captures, stable Z sorting and nested Y groups; it excludes the host event loop, resource construction, readback and arbitrary user callbacks. It is not a frame-time bound.
 
-Depends on Window, SceneTree, Node, CanvasItem, typed material/texture resources and the internal SDL3-CS backends. [Canvas rendering](../components/canvas-rendering.md) records native verification and current limits. Lights, general canvas masks, public offscreen targets, multiwindow rendering, device recovery and the full rendering API remain unfinished.
+Depends on Window, SceneTree, Node, CanvasItem, typed material/texture resources and the internal SDL3-CS backends. [Canvas rendering](../components/canvas-rendering.md) records native verification and current limits. Lights, general canvas masks, public static offscreen targets, multiwindow rendering, device recovery and the full rendering API remain unfinished.
 
 Root canvas replay starts with `framebufferScale * window.GetFinalTransform() * window.CanvasTransform`, then composes the existing canvas hierarchy/drawing transforms. Both compatibility and GPU paths, including custom materials, consume that same transform. Live viewport changes do not rerecord retained commands. See [canvas coordinates](../components/canvas-rendering.md#viewport-coordinates) for input/query semantics and verification.
 
@@ -240,28 +242,28 @@ All methods require a live object; RenderingServer operations require the render
 
 | Complete signature | Contract |
 | --- | --- |
-| `public System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)` | Adds copied typed surface channels to an owned mesh. |
-| `public System.Void MeshClear(Electron2D.RID mesh)` | Removes every surface from an owned mesh. |
-| `public Electron2D.RID MeshCreate()` | Creates an owned empty two-dimensional mesh. |
-| `public System.Int32 MeshGetSurfaceCount(Electron2D.RID mesh)` | Gets a live mesh's surface count. |
-| `public System.Int32 MeshSurfaceGetArrayIndexLen(Electron2D.RID mesh, System.Int32 surface)` | Gets the explicit surface index count. |
-| `public System.Int32 MeshSurfaceGetArrayLen(Electron2D.RID mesh, System.Int32 surface)` | Gets the surface vertex count. |
-| `public Electron2D.MeshSurfaceData MeshSurfaceGetArrays(Electron2D.RID mesh, System.Int32 surface)` | Gets copied typed channels from one mesh surface. |
-| `public Electron2D.Mesh.ArrayFormat MeshSurfaceGetFormat(Electron2D.RID mesh, System.Int32 surface)` | Gets a live surface's channel and policy mask. |
-| `public System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the packed color/UV stride for a supported format. |
-| `public System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the primary two-dimensional vertex stride for a supported surface format. |
-| `public Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)` | Gets a borrowed material from a live surface. |
-| `public Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)` | Gets one surface's primitive topology. |
-| `public System.Void MeshSurfaceRemove(Electron2D.RID mesh, System.Int32 surface)` | Removes one surface from an owned mesh. |
-| `public System.Void MeshSurfaceSetMaterial(Electron2D.RID mesh, System.Int32 surface, Electron2D.Material material)` | Assigns a borrowed surface material on an owned mesh. |
-| `public System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates packed attribute bytes, including partial records, in an owned mesh. |
-| `public System.Void MeshSurfaceUpdateVertexRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates packed position bytes, including partial records, in an owned mesh. |
+| `public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)` | Adds copied typed surface channels to an owned mesh. |
+| `public static System.Void MeshClear(Electron2D.RID mesh)` | Removes every surface from an owned mesh. |
+| `public static Electron2D.RID MeshCreate()` | Creates an owned empty two-dimensional mesh. |
+| `public static System.Int32 MeshGetSurfaceCount(Electron2D.RID mesh)` | Gets a live mesh's surface count. |
+| `public static System.Int32 MeshSurfaceGetArrayIndexLen(Electron2D.RID mesh, System.Int32 surface)` | Gets the explicit surface index count. |
+| `public static System.Int32 MeshSurfaceGetArrayLen(Electron2D.RID mesh, System.Int32 surface)` | Gets the surface vertex count. |
+| `public static Electron2D.MeshSurfaceData MeshSurfaceGetArrays(Electron2D.RID mesh, System.Int32 surface)` | Gets copied typed channels from one mesh surface. |
+| `public static Electron2D.Mesh.ArrayFormat MeshSurfaceGetFormat(Electron2D.RID mesh, System.Int32 surface)` | Gets a live surface's channel and policy mask. |
+| `public static System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the packed color/UV stride for a supported format. |
+| `public static System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the primary two-dimensional vertex stride for a supported surface format. |
+| `public static Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)` | Gets a borrowed material from a live surface. |
+| `public static Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)` | Gets one surface's primitive topology. |
+| `public static System.Void MeshSurfaceRemove(Electron2D.RID mesh, System.Int32 surface)` | Removes one surface from an owned mesh. |
+| `public static System.Void MeshSurfaceSetMaterial(Electron2D.RID mesh, System.Int32 surface, Electron2D.Material material)` | Assigns a borrowed surface material on an owned mesh. |
+| `public static System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates packed attribute bytes, including partial records, in an owned mesh. |
+| `public static System.Void MeshSurfaceUpdateVertexRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates packed position bytes, including partial records, in an owned mesh. |
 
 ## Mesh method descriptions
 
 ### MeshAddSurfaceFromArrays
 
-`public System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)`
+`public static System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)`
 
 Summary: Adds copied typed surface channels to an owned mesh.
 
@@ -280,7 +282,7 @@ System.InvalidOperationException: The mesh is borrowed or owned by another rende
 
 ### MeshClear
 
-`public System.Void MeshClear(Electron2D.RID mesh)`
+`public static System.Void MeshClear(Electron2D.RID mesh)`
 
 Summary: Removes every surface from an owned mesh.
 
@@ -289,7 +291,7 @@ mesh: Owned mesh identity.
 
 ### MeshCreate
 
-`public Electron2D.RID MeshCreate()`
+`public static Electron2D.RID MeshCreate()`
 
 Summary: Creates an owned empty two-dimensional mesh.
 
@@ -300,7 +302,7 @@ System.InvalidOperationException: The renderer is off-owner or submitting.
 
 ### MeshGetSurfaceCount
 
-`public System.Int32 MeshGetSurfaceCount(Electron2D.RID mesh)`
+`public static System.Int32 MeshGetSurfaceCount(Electron2D.RID mesh)`
 
 Summary: Gets a live mesh's surface count.
 
@@ -311,7 +313,7 @@ Returns: The current surface count.
 
 ### MeshSurfaceGetArrayIndexLen
 
-`public System.Int32 MeshSurfaceGetArrayIndexLen(Electron2D.RID mesh, System.Int32 surface)`
+`public static System.Int32 MeshSurfaceGetArrayIndexLen(Electron2D.RID mesh, System.Int32 surface)`
 
 Summary: Gets the explicit surface index count.
 
@@ -324,7 +326,7 @@ Returns: Zero for sequential vertices.
 
 ### MeshSurfaceGetArrayLen
 
-`public System.Int32 MeshSurfaceGetArrayLen(Electron2D.RID mesh, System.Int32 surface)`
+`public static System.Int32 MeshSurfaceGetArrayLen(Electron2D.RID mesh, System.Int32 surface)`
 
 Summary: Gets the surface vertex count.
 
@@ -337,7 +339,7 @@ Returns: The vertex count.
 
 ### MeshSurfaceGetArrays
 
-`public Electron2D.MeshSurfaceData MeshSurfaceGetArrays(Electron2D.RID mesh, System.Int32 surface)`
+`public static Electron2D.MeshSurfaceData MeshSurfaceGetArrays(Electron2D.RID mesh, System.Int32 surface)`
 
 Summary: Gets copied typed channels from one mesh surface.
 
@@ -350,7 +352,7 @@ Returns: Independent caller-owned channels.
 
 ### MeshSurfaceGetFormat
 
-`public Electron2D.Mesh.ArrayFormat MeshSurfaceGetFormat(Electron2D.RID mesh, System.Int32 surface)`
+`public static Electron2D.Mesh.ArrayFormat MeshSurfaceGetFormat(Electron2D.RID mesh, System.Int32 surface)`
 
 Summary: Gets a live surface's channel and policy mask.
 
@@ -363,7 +365,7 @@ Returns: The supported surface format.
 
 ### MeshSurfaceGetFormatAttributeStride
 
-`public System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)`
+`public static System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)`
 
 Summary: Gets the packed color/UV stride for a supported format.
 
@@ -378,7 +380,7 @@ System.NotSupportedException: The format requires unsupported channels or non-2D
 
 ### MeshSurfaceGetFormatVertexStride
 
-`public System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)`
+`public static System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)`
 
 Summary: Gets the primary two-dimensional vertex stride for a supported surface format.
 
@@ -393,7 +395,7 @@ System.NotSupportedException: The format requires unsupported channels or non-2D
 
 ### MeshSurfaceGetMaterial
 
-`public Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)`
+`public static Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)`
 
 Summary: Gets a borrowed material from a live surface.
 
@@ -406,7 +408,7 @@ Returns: The borrowed material or null.
 
 ### MeshSurfaceGetPrimitiveType
 
-`public Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)`
+`public static Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)`
 
 Summary: Gets one surface's primitive topology.
 
@@ -419,7 +421,7 @@ Returns: The topology.
 
 ### MeshSurfaceRemove
 
-`public System.Void MeshSurfaceRemove(Electron2D.RID mesh, System.Int32 surface)`
+`public static System.Void MeshSurfaceRemove(Electron2D.RID mesh, System.Int32 surface)`
 
 Summary: Removes one surface from an owned mesh.
 
@@ -430,7 +432,7 @@ surface: Existing zero-based index.
 
 ### MeshSurfaceSetMaterial
 
-`public System.Void MeshSurfaceSetMaterial(Electron2D.RID mesh, System.Int32 surface, Electron2D.Material material)`
+`public static System.Void MeshSurfaceSetMaterial(Electron2D.RID mesh, System.Int32 surface, Electron2D.Material material)`
 
 Summary: Assigns a borrowed surface material on an owned mesh.
 
@@ -443,7 +445,7 @@ material: Borrowed live material or null.
 
 ### MeshSurfaceUpdateAttributeRegion
 
-`public System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+`public static System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
 
 Summary: Updates packed attribute bytes, including partial records, in an owned mesh.
 
@@ -458,7 +460,7 @@ data: Present RGBA8 UNORM bytes followed by present little-endian UV floats.
 
 ### MeshSurfaceUpdateVertexRegion
 
-`public System.Void MeshSurfaceUpdateVertexRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+`public static System.Void MeshSurfaceUpdateVertexRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
 
 Summary: Updates packed position bytes, including partial records, in an owned mesh.
 
@@ -478,36 +480,36 @@ Created MultiMesh identities own instance storage until FreeRID or renderer shut
 
 | Complete signature | Contract |
 | --- | --- |
-| `public System.Void MultiMeshAllocateData(Electron2D.RID multiMesh, System.Int32 instances, System.Boolean useColors = false, System.Boolean useCustomData = false, System.Boolean useIndirect = false)` | Allocates copied packed instance records for an owned resource. |
-| `public Electron2D.RID MultiMeshCreate()` | Creates owned empty two-dimensional instance storage. |
-| `public Electron2D.Rect2 MultiMeshGetAABB(Electron2D.RID multiMesh)` | Gets the two-dimensional local visibility rectangle of a live instance resource. |
-| `public System.Single[] MultiMeshGetBuffer(Electron2D.RID multiMesh)` | Returns copied packed instance records. |
-| `public Electron2D.Rect2 MultiMeshGetCustomAABB(Electron2D.RID multiMesh)` | Gets the authored manual local visibility rectangle. |
-| `public System.Int32 MultiMeshGetInstanceCount(Electron2D.RID multiMesh)` | Returns the allocated instance count. |
-| `public Electron2D.RID MultiMeshGetMesh(Electron2D.RID multiMesh)` | Gets the borrowed mesh identity used by an instance resource. |
-| `public System.Int32 MultiMeshGetVisibleInstances(Electron2D.RID multiMesh)` | Gets the stored visible-prefix policy. |
-| `public Electron2D.Color MultiMeshInstanceGetColor(Electron2D.RID multiMesh, System.Int32 index)` | Gets one stored instance color multiplier. |
-| `public Electron2D.Color MultiMeshInstanceGetCustomData(Electron2D.RID multiMesh, System.Int32 index)` | Gets one stored four-component shader value. |
-| `public Electron2D.Transform MultiMeshInstanceGetTransform2D(Electron2D.RID multiMesh, System.Int32 index)` | Gets one instance's current local transform. |
-| `public System.Void MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID multiMesh, System.Int32 index)` | Resets one owned instance's previous presentation record. |
-| `public System.Void MultiMeshInstanceSetColor(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color color)` | Sets one owned instance color multiplier. |
-| `public System.Void MultiMeshInstanceSetCustomData(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color customData)` | Sets one owned instance's raw shader components. |
-| `public System.Void MultiMeshInstanceSetTransform2D(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Transform transform)` | Sets one owned instance's finite local transform. |
-| `public System.Void MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID multiMesh)` | Resets all previous presentation records in owned storage. |
-| `public System.Void MultiMeshSetBuffer(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> buffer)` | Copies whole finite packed records into owned storage. |
-| `public System.Void MultiMeshSetBufferInterpolated(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> bufferCurrent, System.ReadOnlySpan<System.Single> bufferPrevious)` | Copies explicit current and previous packed presentation records. |
-| `public System.Void MultiMeshSetCustomAABB(Electron2D.RID multiMesh, Electron2D.Rect2 aabb)` | Sets the manual visibility rectangle of owned instance storage. |
-| `public System.Void MultiMeshSetMesh(Electron2D.RID multiMesh, Electron2D.RID mesh)` | Assigns a borrowed mesh to owned instance storage. |
-| `public System.Void MultiMeshSetPhysicsInterpolated(Electron2D.RID multiMesh, System.Boolean interpolated)` | Enables or disables presentation interpolation of owned packed records. |
-| `public System.Void MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID multiMesh, Electron2D.MultiMesh.PhysicsInterpolationQuality quality)` | Changes the basis interpolation quality of owned storage. |
-| `public System.Void MultiMeshSetVisibleInstances(Electron2D.RID multiMesh, System.Int32 visible)` | Changes the visible prefix of an owned resource without reallocating. |
+| `public static System.Void MultiMeshAllocateData(Electron2D.RID multiMesh, System.Int32 instances, System.Boolean useColors = false, System.Boolean useCustomData = false, System.Boolean useIndirect = false)` | Allocates copied packed instance records for an owned resource. |
+| `public static Electron2D.RID MultiMeshCreate()` | Creates owned empty two-dimensional instance storage. |
+| `public static Electron2D.Rect2 MultiMeshGetAABB(Electron2D.RID multiMesh)` | Gets the two-dimensional local visibility rectangle of a live instance resource. |
+| `public static System.Single[] MultiMeshGetBuffer(Electron2D.RID multiMesh)` | Returns copied packed instance records. |
+| `public static Electron2D.Rect2 MultiMeshGetCustomAABB(Electron2D.RID multiMesh)` | Gets the authored manual local visibility rectangle. |
+| `public static System.Int32 MultiMeshGetInstanceCount(Electron2D.RID multiMesh)` | Returns the allocated instance count. |
+| `public static Electron2D.RID MultiMeshGetMesh(Electron2D.RID multiMesh)` | Gets the borrowed mesh identity used by an instance resource. |
+| `public static System.Int32 MultiMeshGetVisibleInstances(Electron2D.RID multiMesh)` | Gets the stored visible-prefix policy. |
+| `public static Electron2D.Color MultiMeshInstanceGetColor(Electron2D.RID multiMesh, System.Int32 index)` | Gets one stored instance color multiplier. |
+| `public static Electron2D.Color MultiMeshInstanceGetCustomData(Electron2D.RID multiMesh, System.Int32 index)` | Gets one stored four-component shader value. |
+| `public static Electron2D.Transform MultiMeshInstanceGetTransform2D(Electron2D.RID multiMesh, System.Int32 index)` | Gets one instance's current local transform. |
+| `public static System.Void MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID multiMesh, System.Int32 index)` | Resets one owned instance's previous presentation record. |
+| `public static System.Void MultiMeshInstanceSetColor(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color color)` | Sets one owned instance color multiplier. |
+| `public static System.Void MultiMeshInstanceSetCustomData(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color customData)` | Sets one owned instance's raw shader components. |
+| `public static System.Void MultiMeshInstanceSetTransform2D(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Transform transform)` | Sets one owned instance's finite local transform. |
+| `public static System.Void MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID multiMesh)` | Resets all previous presentation records in owned storage. |
+| `public static System.Void MultiMeshSetBuffer(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> buffer)` | Copies whole finite packed records into owned storage. |
+| `public static System.Void MultiMeshSetBufferInterpolated(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> bufferCurrent, System.ReadOnlySpan<System.Single> bufferPrevious)` | Copies explicit current and previous packed presentation records. |
+| `public static System.Void MultiMeshSetCustomAABB(Electron2D.RID multiMesh, Electron2D.Rect2 aabb)` | Sets the manual visibility rectangle of owned instance storage. |
+| `public static System.Void MultiMeshSetMesh(Electron2D.RID multiMesh, Electron2D.RID mesh)` | Assigns a borrowed mesh to owned instance storage. |
+| `public static System.Void MultiMeshSetPhysicsInterpolated(Electron2D.RID multiMesh, System.Boolean interpolated)` | Enables or disables presentation interpolation of owned packed records. |
+| `public static System.Void MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID multiMesh, Electron2D.MultiMesh.PhysicsInterpolationQuality quality)` | Changes the basis interpolation quality of owned storage. |
+| `public static System.Void MultiMeshSetVisibleInstances(Electron2D.RID multiMesh, System.Int32 visible)` | Changes the visible prefix of an owned resource without reallocating. |
 
 ## Methods and protected extension points descriptions
 
 <a id="member-488a40ea3b4c"></a>
 ### MultiMeshAllocateData
 
-`public System.Void MultiMeshAllocateData(Electron2D.RID multiMesh, System.Int32 instances, System.Boolean useColors = false, System.Boolean useCustomData = false, System.Boolean useIndirect = false)`
+`public static System.Void MultiMeshAllocateData(Electron2D.RID multiMesh, System.Int32 instances, System.Boolean useColors = false, System.Boolean useCustomData = false, System.Boolean useIndirect = false)`
 
 Allocates copied packed instance records for an owned resource.
 
@@ -528,7 +530,7 @@ Remarks: Transforms are always two-dimensional. Equal capacity and flags preserv
 <a id="member-a3d75d5b55ec"></a>
 ### MultiMeshCreate
 
-`public Electron2D.RID MultiMeshCreate()`
+`public static Electron2D.RID MultiMeshCreate()`
 
 Creates owned empty two-dimensional instance storage.
 
@@ -537,7 +539,7 @@ Returns: A logical identity valid until FreeRID or renderer teardown.
 <a id="member-0182b5f42f6c"></a>
 ### MultiMeshGetAABB
 
-`public Electron2D.Rect2 MultiMeshGetAABB(Electron2D.RID multiMesh)`
+`public static Electron2D.Rect2 MultiMeshGetAABB(Electron2D.RID multiMesh)`
 
 Gets the two-dimensional local visibility rectangle of a live instance resource.
 
@@ -548,7 +550,7 @@ Returns: The manual or computed rectangle of its visible prefix.
 <a id="member-764c29b14aac"></a>
 ### MultiMeshGetBuffer
 
-`public System.Single[] MultiMeshGetBuffer(Electron2D.RID multiMesh)`
+`public static System.Single[] MultiMeshGetBuffer(Electron2D.RID multiMesh)`
 
 Returns copied packed instance records.
 
@@ -559,7 +561,7 @@ Returns: Caller-owned eight-float transforms and optional channels.
 <a id="member-2a82a59532cf"></a>
 ### MultiMeshGetCustomAABB
 
-`public Electron2D.Rect2 MultiMeshGetCustomAABB(Electron2D.RID multiMesh)`
+`public static Electron2D.Rect2 MultiMeshGetCustomAABB(Electron2D.RID multiMesh)`
 
 Gets the authored manual local visibility rectangle.
 
@@ -570,7 +572,7 @@ Returns: The stored rectangle; zero selects computed bounds.
 <a id="member-15d670887101"></a>
 ### MultiMeshGetInstanceCount
 
-`public System.Int32 MultiMeshGetInstanceCount(Electron2D.RID multiMesh)`
+`public static System.Int32 MultiMeshGetInstanceCount(Electron2D.RID multiMesh)`
 
 Returns the allocated instance count.
 
@@ -581,7 +583,7 @@ Returns: The allocated capacity.
 <a id="member-704bbb24d3c7"></a>
 ### MultiMeshGetMesh
 
-`public Electron2D.RID MultiMeshGetMesh(Electron2D.RID multiMesh)`
+`public static Electron2D.RID MultiMeshGetMesh(Electron2D.RID multiMesh)`
 
 Gets the borrowed mesh identity used by an instance resource.
 
@@ -592,7 +594,7 @@ Returns: The live mesh RID or an empty identity.
 <a id="member-065d2ac29e72"></a>
 ### MultiMeshGetVisibleInstances
 
-`public System.Int32 MultiMeshGetVisibleInstances(Electron2D.RID multiMesh)`
+`public static System.Int32 MultiMeshGetVisibleInstances(Electron2D.RID multiMesh)`
 
 Gets the stored visible-prefix policy.
 
@@ -603,7 +605,7 @@ Returns: Minus one for all instances, or the visible prefix count.
 <a id="member-ed902624b78c"></a>
 ### MultiMeshInstanceGetColor
 
-`public Electron2D.Color MultiMeshInstanceGetColor(Electron2D.RID multiMesh, System.Int32 index)`
+`public static Electron2D.Color MultiMeshInstanceGetColor(Electron2D.RID multiMesh, System.Int32 index)`
 
 Gets one stored instance color multiplier.
 
@@ -616,7 +618,7 @@ Returns: The raw current color.
 <a id="member-13c66376fd4e"></a>
 ### MultiMeshInstanceGetCustomData
 
-`public Electron2D.Color MultiMeshInstanceGetCustomData(Electron2D.RID multiMesh, System.Int32 index)`
+`public static Electron2D.Color MultiMeshInstanceGetCustomData(Electron2D.RID multiMesh, System.Int32 index)`
 
 Gets one stored four-component shader value.
 
@@ -629,7 +631,7 @@ Returns: The raw current shader data.
 <a id="member-97a26c8d2530"></a>
 ### MultiMeshInstanceGetTransform2D
 
-`public Electron2D.Transform MultiMeshInstanceGetTransform2D(Electron2D.RID multiMesh, System.Int32 index)`
+`public static Electron2D.Transform MultiMeshInstanceGetTransform2D(Electron2D.RID multiMesh, System.Int32 index)`
 
 Gets one instance's current local transform.
 
@@ -642,7 +644,7 @@ Returns: The logical current transform.
 <a id="member-9d81d734d1a4"></a>
 ### MultiMeshInstanceResetPhysicsInterpolation
 
-`public System.Void MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID multiMesh, System.Int32 index)`
+`public static System.Void MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID multiMesh, System.Int32 index)`
 
 Resets one owned instance's previous presentation record.
 
@@ -653,7 +655,7 @@ index: Existing zero-based index.
 <a id="member-6bbb88d48f1a"></a>
 ### MultiMeshInstanceSetColor
 
-`public System.Void MultiMeshInstanceSetColor(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color color)`
+`public static System.Void MultiMeshInstanceSetColor(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color color)`
 
 Sets one owned instance color multiplier.
 
@@ -666,7 +668,7 @@ color: Finite four-component multiplier.
 <a id="member-ef077dbe19b6"></a>
 ### MultiMeshInstanceSetCustomData
 
-`public System.Void MultiMeshInstanceSetCustomData(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color customData)`
+`public static System.Void MultiMeshInstanceSetCustomData(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color customData)`
 
 Sets one owned instance's raw shader components.
 
@@ -679,7 +681,7 @@ customData: Finite four-component value.
 <a id="member-f26f760fe681"></a>
 ### MultiMeshInstanceSetTransform2D
 
-`public System.Void MultiMeshInstanceSetTransform2D(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Transform transform)`
+`public static System.Void MultiMeshInstanceSetTransform2D(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Transform transform)`
 
 Sets one owned instance's finite local transform.
 
@@ -692,7 +694,7 @@ transform: Finite two-dimensional transform.
 <a id="member-24bfe046419d"></a>
 ### MultiMeshInstancesResetPhysicsInterpolation
 
-`public System.Void MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID multiMesh)`
+`public static System.Void MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID multiMesh)`
 
 Resets all previous presentation records in owned storage.
 
@@ -701,7 +703,7 @@ multiMesh: Owned instance identity.
 <a id="member-d26ab6fef659"></a>
 ### MultiMeshSetBuffer
 
-`public System.Void MultiMeshSetBuffer(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> buffer)`
+`public static System.Void MultiMeshSetBuffer(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> buffer)`
 
 Copies whole finite packed records into owned storage.
 
@@ -712,7 +714,7 @@ buffer: Whole packed buffer matching capacity and flags.
 <a id="member-664d1773c69f"></a>
 ### MultiMeshSetBufferInterpolated
 
-`public System.Void MultiMeshSetBufferInterpolated(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> bufferCurrent, System.ReadOnlySpan<System.Single> bufferPrevious)`
+`public static System.Void MultiMeshSetBufferInterpolated(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> bufferCurrent, System.ReadOnlySpan<System.Single> bufferPrevious)`
 
 Copies explicit current and previous packed presentation records.
 
@@ -725,7 +727,7 @@ bufferPrevious: Whole previous buffer.
 <a id="member-7e35d1bb9fb4"></a>
 ### MultiMeshSetCustomAABB
 
-`public System.Void MultiMeshSetCustomAABB(Electron2D.RID multiMesh, Electron2D.Rect2 aabb)`
+`public static System.Void MultiMeshSetCustomAABB(Electron2D.RID multiMesh, Electron2D.Rect2 aabb)`
 
 Sets the manual visibility rectangle of owned instance storage.
 
@@ -736,7 +738,7 @@ aabb: Finite nonnegative two-dimensional local rectangle.
 <a id="member-2446e561e02e"></a>
 ### MultiMeshSetMesh
 
-`public System.Void MultiMeshSetMesh(Electron2D.RID multiMesh, Electron2D.RID mesh)`
+`public static System.Void MultiMeshSetMesh(Electron2D.RID multiMesh, Electron2D.RID mesh)`
 
 Assigns a borrowed mesh to owned instance storage.
 
@@ -747,7 +749,7 @@ mesh: Live mesh RID or an empty identity to clear it.
 <a id="member-c697869bba9d"></a>
 ### MultiMeshSetPhysicsInterpolated
 
-`public System.Void MultiMeshSetPhysicsInterpolated(Electron2D.RID multiMesh, System.Boolean interpolated)`
+`public static System.Void MultiMeshSetPhysicsInterpolated(Electron2D.RID multiMesh, System.Boolean interpolated)`
 
 Enables or disables presentation interpolation of owned packed records.
 
@@ -760,7 +762,7 @@ Remarks: Changing the policy resets previous records to current values without c
 <a id="member-0dcf1b00d68c"></a>
 ### MultiMeshSetPhysicsInterpolationQuality
 
-`public System.Void MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID multiMesh, Electron2D.MultiMesh.PhysicsInterpolationQuality quality)`
+`public static System.Void MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID multiMesh, Electron2D.MultiMesh.PhysicsInterpolationQuality quality)`
 
 Changes the basis interpolation quality of owned storage.
 
@@ -771,7 +773,7 @@ quality: Fast component or High angular interpolation.
 <a id="member-29017b0529ec"></a>
 ### MultiMeshSetVisibleInstances
 
-`public System.Void MultiMeshSetVisibleInstances(Electron2D.RID multiMesh, System.Int32 visible)`
+`public static System.Void MultiMeshSetVisibleInstances(Electron2D.RID multiMesh, System.Int32 visible)`
 
 Changes the visible prefix of an owned resource without reallocating.
 
@@ -787,14 +789,14 @@ visible: Minus one or a count through capacity.
 
 | Complete C# signature | Contract |
 | --- | --- |
-| `public Electron2D.RID ViewportGetTexture(Electron2D.RID viewport)` | Returns the borrowed live texture identity associated with a scene viewport. |
+| `public static Electron2D.RID ViewportGetTexture(Electron2D.RID viewport)` | Returns the borrowed live texture identity associated with a scene viewport. |
 
 ## Method Descriptions
 
 <a id="member-f6270f86144d"></a>
 ### ViewportGetTexture
 
-`public Electron2D.RID ViewportGetTexture(Electron2D.RID viewport)`
+`public static Electron2D.RID ViewportGetTexture(Electron2D.RID viewport)`
 
 Returns the borrowed live texture identity associated with a scene viewport.
 

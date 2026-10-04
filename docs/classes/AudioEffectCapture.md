@@ -1,6 +1,6 @@
 # AudioEffectCapture
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectCapture` · **Source:** [AudioEffectCapture.cs](../../src/Scene/Resources/AudioEffectCapture.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -18,11 +18,11 @@ Partial owner-thread host snippet; call before the player starts, consume in a N
 
 ```csharp
 using var capture = new AudioEffectCapture { BufferLength = .2f };
-AudioServer.Instance.AddBusEffect(0, capture);
+AudioServer.AddBusEffect(0, capture);
 // After real native mixing:
 int frames = capture.GetFramesAvailable();
 Vector2[] pcm = capture.GetBuffer(frames);
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 AudioEffectTests.RunHost exercises this public workflow through a real Window and Engine.Run.

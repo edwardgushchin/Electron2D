@@ -63,28 +63,28 @@ internal static class ShapePairEventTests
         tree.PhysicsFrame(1d / 60); Check(sequence.SequenceEqual(new[] { "object+", "shape+" }), "Area object entry precedes pair entry.");
         sequence.Clear(); other.Monitorable = false; tree.PhysicsFrame(1d / 60);
         Check(sequence.SequenceEqual(new[] { "object-", "shape-" }), "Monitorable policy generates pair/object departures.");
-        var server = PhysicsServer.Instance; var body = server.BodyCreate(); var shape = server.RectangleShapeCreate();
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static); server.BodyAddShape(body, shape); server.BodySetSpace(body, area.GetWorld2D()!.Space);
+        var server = PhysicsServer.Service; var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.RectangleShapeCreate();
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodyAddShape(body, shape); PhysicsServer.BodySetSpace(body, area.GetWorld2D()!.Space);
         area.BodyShapeEntered += (rid, node, remote, local) =>
         { Check(rid == body && node is null && remote == 0 && local == 0, "Server body payload uses RID and null scene object."); entered++; };
         area.BodyShapeExited += (rid, node, _, _) => { Check(rid == body && node is null, "Server body departure payload."); exited++; };
         tree.PhysicsFrame(1d / 60); Check(entered == 1 && !area.HasOverlappingBodies(), "Server shape events do not fabricate scene object snapshots.");
         Action<RID, Entity?, int, int> failedExit = (_, _, _, _) => throw new InvalidOperationException("User departure handler failed.");
         area.BodyShapeExited += failedExit;
-        Check(Capture(() => server.FreeRID(body)) is AggregateException && exited == 1,
+        Check(Capture(() => PhysicsServer.FreeRID(body)) is AggregateException && exited == 1,
             "Server free emits retained exit values despite a failed departure handler.");
         area.BodyShapeExited -= failedExit;
-        Reject<ArgumentException>(() => server.BodyGetDirectState(body));
-        var serverArea = server.AreaCreate(); server.AreaAddShape(serverArea, shape); server.AreaSetSpace(serverArea, area.GetWorld2D()!.Space);
+        Reject<ArgumentException>(() => PhysicsServer.BodyGetDirectState(body));
+        var serverArea = PhysicsServer.AreaCreate(); PhysicsServer.AreaAddShape(serverArea, shape); PhysicsServer.AreaSetSpace(serverArea, area.GetWorld2D()!.Space);
         var serverAreaEntries = 0;
         area.AreaShapeEntered += (rid, node, _, _) => { if (rid == serverArea) { Check(node is null, "Server Area payload is nullable."); serverAreaEntries++; } };
         tree.PhysicsFrame(1d / 60); Check(serverAreaEntries == 0, "Server-created Areas default non-monitorable.");
         area.AreaShapeEntered -= sceneVerifier;
         root.RemoveChild(other); other.Dispose();
-        server.AreaSetMonitorable(serverArea, true);
+        PhysicsServer.AreaSetMonitorable(serverArea, true);
         tree.PhysicsFrame(1d / 60);
         Check(serverAreaEntries == 1, "A monitorable server Area emits its nullable RID pair payload.");
-        server.FreeRID(serverArea); server.FreeRID(shape);
+        PhysicsServer.FreeRID(serverArea); PhysicsServer.FreeRID(shape);
     }
 
     private static void VerifyRigidPairs()

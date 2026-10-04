@@ -1,6 +1,9 @@
 # Window runtime component
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
+
+
+Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
 ## Scope and types
 
@@ -27,7 +30,7 @@ Viewport shares SceneTree's current handled-input flag. PushInput accepts client
 - Engine.Run depends on SceneTree and Window; Window depends on DisplayServer and RenderingServer. SDL bindings stay internal to those backend implementations. All types remain in Electron2D.dll.
 - One active native root is supported. Child Viewports are rejected before hierarchy mutation; direct SceneTree(Window) activation is rejected unless Engine.Run has opened that root.
 - Attached mutation and native calls use the owner/main thread. Quit and MaxFPS configuration accept cross-thread calls.
-- Native services opened directly through DisplayServer must finish before shutdown. Pending asynchronous file dialogs can reject native disposal under the existing DisplayServer contract; Run reports the cleanup failure and DisplayServer.Instance remains available for completion/release. Window exposes no asynchronous dialog API yet.
+- Native services opened directly through DisplayServer must finish before shutdown. Pending asynchronous file dialogs can reject native disposal under the existing DisplayServer contract; Run reports the cleanup failure and DisplayServer remains available for completion/release. Window exposes no asynchronous dialog API yet.
 - Engine remains reserved throughout scene exit, disposal and native cleanup. Manual frame/stop/tree-disposal interference is rejected. All owned cleanup stages are attempted and failures remain observable.
 - Validation/busy-engine rejection preserves caller ownership. After reservation, failed startup also disposes the transferred root. A later run uses a new Window.
 - PackedScene stores the title and size/limit configuration plus inherited stored Node properties. Position is an optional platform startup request, not stored scene data. CurrentScreen follows the same optional-request rule. Mode and the four supported policies are stored; unset/default policies do not issue unsupported startup requests.

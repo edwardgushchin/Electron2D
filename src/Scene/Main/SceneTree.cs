@@ -62,7 +62,7 @@ public sealed partial class SceneTree : MainLoop
     private bool _paused;
     private Node? _editedSceneRoot;
     private bool _debugPathsHint;
-    internal readonly Color DebugPathsColor = ProjectSettings.Instance.GetWithOverride(ProjectSettings.DebugPathsColor);
+    internal readonly Color DebugPathsColor = ProjectSettings.GetWithOverride(ProjectSettings.DebugPathsColor);
     private bool _autoAcceptQuit = true;
     private int _quitRequested;
     private int _exitCode;
@@ -116,11 +116,11 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
-            root.InitializeRootAutoTranslateMode(ProjectSettings.Instance.GetWithOverride(ProjectSettings.RootNodeAutoTranslate));
+            root.InitializeRootAutoTranslateMode(ProjectSettings.GetWithOverride(ProjectSettings.RootNodeAutoTranslate));
             if (root is Viewport audioRoot) audioRoot.AudioListenerEnable2D = true;
-            _physicsInterpolation = ProjectSettings.Instance.GetWithOverride(ProjectSettings.PhysicsInterpolation);
+            _physicsInterpolation = ProjectSettings.GetWithOverride(ProjectSettings.PhysicsInterpolation);
             if (attachToEngine)
-                Engine.Instance.AttachConstructingTree(this);
+                Engine.Service.AttachConstructingTree(this);
             InitializeMultiplayer();
             Initialize();
             root.EnterTree(this);
@@ -969,7 +969,7 @@ public sealed partial class SceneTree : MainLoop
     /// <exception cref="InvalidOperationException">Construction is incomplete or execution is active.</exception>
     protected override void ValidateFinalization()
     {
-        if (ReferenceEquals(Engine.Instance.MainLoop, this) && Engine.Instance.OwnsWindowRun)
+        if (ReferenceEquals(Engine.MainLoop, this) && Engine.Service.OwnsWindowRun)
             throw new InvalidOperationException("Request Quit while Engine.Run owns the scene lifecycle.");
         if (!_constructionComplete)
             throw new InvalidOperationException("A SceneTree cannot be finalized before construction completes.");
@@ -985,7 +985,7 @@ public sealed partial class SceneTree : MainLoop
     /// <exception cref="InvalidOperationException">The caller is not the owner thread or execution is active.</exception>
     protected override void ValidateDisposal()
     {
-        if (ReferenceEquals(Engine.Instance.MainLoop, this) && Engine.Instance.OwnsWindowRun)
+        if (ReferenceEquals(Engine.MainLoop, this) && Engine.Service.OwnsWindowRun)
             throw new InvalidOperationException("Request Quit while Engine.Run owns the scene lifecycle.");
         EnsureOwnerThread();
 
@@ -1045,7 +1045,7 @@ public sealed partial class SceneTree : MainLoop
 
         try { _physicsSpace?.Dispose(); }
         catch (Exception error) { CollectException(ref errors, error); }
-        finally { PhysicsServer.Instance.UnregisterSceneSpace(_physicsSpaceRID); _physicsSpaceRID = default; }
+        finally { PhysicsServer.Service.UnregisterSceneSpace(_physicsSpaceRID); _physicsSpaceRID = default; }
         _physicsSpace = null;
         try { _physicsWorld2D?.Dispose(); }
         catch (Exception error) { CollectException(ref errors, error); }
@@ -1612,7 +1612,7 @@ public sealed partial class SceneTree : MainLoop
     {
         if (target.IsDisposed || !ReferenceEquals(target.Tree, this) || !target.CanProcess()) return;
         var touchScroll = input is InputEventMouseButton { ButtonIndex: MouseButton.Left } or InputEventMouseMotion &&
-            (Input.Instance.EmulateTouchFromMouse || DisplayServer.Instance?.IsTouchscreenAvailable() == true);
+            (Input.EmulateTouchFromMouse || DisplayServer.Service?.IsTouchscreenAvailableCore() == true);
         var scrollOnly = false;
         for (CanvasItem? item = target; item is not null && !_inputHandled;)
         {

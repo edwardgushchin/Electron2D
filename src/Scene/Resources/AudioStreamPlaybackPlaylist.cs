@@ -18,13 +18,13 @@ public sealed class AudioStreamPlaybackPlaylist : AudioStreamPlayback
     internal AudioStreamPlaybackPlaylist(AudioStreamPlaylist source, AudioStreamPlayback?[] children, AudioStream?[] streams, int count) { _source = source; _children = children; _streams = streams; _count = count; foreach (var child in children) if (child is not null) child.CompositeOwner = this; }
     private void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(_source.IsDisposed, _source); }
     internal void EnsureIdle() { if (_busy || _querying) throw new InvalidOperationException("Playlist child callbacks cannot reenter control, mixing or disposal."); }
-    internal void CheckControlOwner() { if (RequiresAudioOwner) AudioServer.Instance.Check(); }
+    internal void CheckControlOwner() { if (RequiresAudioOwner) AudioServer.Service.Check(); }
     internal override bool RequiresAudioOwner { get { if (base.RequiresAudioOwner) return true; foreach (var child in _children) if (child?.RequiresAudioOwner == true) return true; return false; } }
     internal override void UpdateNativeOwner(FAudioStreamVoice? owner, bool enabled = true) { _nativeOwner = owner; for (var i = 0; i < _count; i++) _children[i]?.UpdateNativeOwner(owner, enabled && _active && (i == Current || i == _fade)); }
     private int Current => _current < 0 ? -1 : _order[_current];
     internal AudioStreamPlayback?[] ReplaceChildren(AudioStreamPlayback?[] children, AudioStream?[] streams, int count) { EnsureIdle(); var previous = _children; _children = children; _streams = streams; _count = count; _active = false; _current = _fade = -1; foreach (var child in children) if (child is not null) child.CompositeOwner = this; UpdateNativeOwner(_nativeOwner); return previous; }
     internal static Exception? ReleaseChildren(AudioStreamPlayback?[] children) { foreach (var child in children) if (child is not null) { child.CompositeOwner = null; child.UpdateNativeOwner(null); } return AudioStreamPlaybackSynchronized.ReleaseChildren(children); }
-    internal override void PrepareQueuedControls() { var server = AudioServer.Instance; server.Lock(); try { Check(); EnsureIdle(); CheckControlOwner(); foreach (var child in _children) child?.PrepareQueuedControls(); } finally { server.Unlock(); } }
+    internal override void PrepareQueuedControls() { var server = AudioServer.Service; server.LockCore(); try { Check(); EnsureIdle(); CheckControlOwner(); foreach (var child in _children) child?.PrepareQueuedControls(); } finally { server.UnlockCore(); } }
     private double Length(int index)
     {
         _querying = true; try { var stream = _streams[index]!; var length = AudioStreamPlaylist.Duration(stream); Check(); return length; } finally { _querying = false; }
@@ -60,16 +60,16 @@ public sealed class AudioStreamPlaybackPlaylist : AudioStreamPlayback
         catch (Exception error) { Resource.ThrowCombined(error, StopCore(queued)); throw; }
         finally { _busy = false; }
     }
-    internal override void StartQueued(double time) { lock (AudioServer.Instance.StreamGate) StartCore(time, true); }
-    internal override void StopQueued() { lock (AudioServer.Instance.StreamGate) { EnsureIdle(); _busy = true; try { var error = StopCore(true); if (error is not null) throw error; } finally { _busy = false; } } }
+    internal override void StartQueued(double time) { lock (AudioServer.Service.StreamGate) StartCore(time, true); }
+    internal override void StopQueued() { lock (AudioServer.Service.StreamGate) { EnsureIdle(); _busy = true; try { var error = StopCore(true); if (error is not null) throw error; } finally { _busy = false; } } }
     /// <inheritdoc />
-    protected override void OnStart(double fromPosition) { var server = AudioServer.Instance; server.Lock(); try { StartCore(fromPosition, false); } finally { server.Unlock(); } }
+    protected override void OnStart(double fromPosition) { var server = AudioServer.Service; server.LockCore(); try { StartCore(fromPosition, false); } finally { server.UnlockCore(); } }
     /// <inheritdoc />
-    protected override void OnStop() { var server = AudioServer.Instance; server.Lock(); try { ThrowIfDisposed(); EnsureIdle(); CheckControlOwner(); _busy = true; try { var error = StopCore(false); if (error is not null) throw error; } finally { _busy = false; } } finally { server.Unlock(); } }
+    protected override void OnStop() { var server = AudioServer.Service; server.LockCore(); try { ThrowIfDisposed(); EnsureIdle(); CheckControlOwner(); _busy = true; try { var error = StopCore(false); if (error is not null) throw error; } finally { _busy = false; } } finally { server.UnlockCore(); } }
     /// <inheritdoc />
     protected override void OnSeek(double time) => OnStart(time);
     /// <inheritdoc />
-    protected override bool OnIsPlaying() { lock (AudioServer.Instance.StreamGate) { Check(); return _active; } }
+    protected override bool OnIsPlaying() { lock (AudioServer.Service.StreamGate) { Check(); return _active; } }
     /// <inheritdoc />
     protected override int OnGetLoopCount() { Check(); return _loops; }
     /// <inheritdoc />
@@ -103,12 +103,12 @@ public sealed class AudioStreamPlaybackPlaylist : AudioStreamPlayback
     /// <inheritdoc />
     protected override int OnMix(Span<Vector2> buffer, float rateScale)
     {
-        lock (AudioServer.Instance.StreamGate)
+        lock (AudioServer.Service.StreamGate)
         {
             Check(); EnsureIdle(); buffer.Clear(); if (!_active || buffer.IsEmpty) return 0; _source.EnterCall(4); _busy = true;
             try
             {
-                var rate = AudioServer.Instance.GetMixRate(); var offset = 0;
+                var rate = AudioServer.GetMixRate(); var offset = 0;
                 while (offset < buffer.Length && _active)
                 {
                     if (_remaining <= 1e-12) { if (!Next()) break; }
@@ -134,7 +134,7 @@ public sealed class AudioStreamPlaybackPlaylist : AudioStreamPlayback
         }
     }
     /// <inheritdoc />
-    protected override void ValidateDisposal() { var server = AudioServer.Instance; server.Lock(); try { EnsureIdle(); CheckControlOwner(); if (_source.Editing) throw new InvalidOperationException("Playlist factories cannot dispose playback."); } finally { server.Unlock(); } base.ValidateDisposal(); }
+    protected override void ValidateDisposal() { var server = AudioServer.Service; server.LockCore(); try { EnsureIdle(); CheckControlOwner(); if (_source.Editing) throw new InvalidOperationException("Playlist factories cannot dispose playback."); } finally { server.UnlockCore(); } base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { lock (AudioServer.Instance.StreamGate) { _busy = true; _active = false; try { _source.Unregister(this); var children = _children; _children = []; _streams = []; _count = 0; var error = ReleaseChildren(children); if (error is not null) throw error; } finally { _busy = false; _nativeOwner = null; base.Dispose(disposing); } } } else base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { lock (AudioServer.Service.StreamGate) { _busy = true; _active = false; try { _source.Unregister(this); var children = _children; _children = []; _streams = []; _count = 0; var error = ReleaseChildren(children); if (error is not null) throw error; } finally { _busy = false; _nativeOwner = null; base.Dispose(disposing); } } } else base.Dispose(disposing); }
 }

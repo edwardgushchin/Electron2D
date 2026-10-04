@@ -1,6 +1,6 @@
 # Input
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -12,7 +12,11 @@ Last updated: 2026-10-02
 
 > Owns process-wide input state and translates typed events into named actions.
 
+Public static declarations are in [`Input.API.cs`](../../src/Core/Input/Input.API.cs).
+
 ## Description
+
+Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
 Owns process-wide input state and translates typed events into named actions.
 
@@ -31,11 +35,10 @@ The SDL controller host discovers mapped gamepads and raw joysticks, assigns sta
 
 ## Examples
 
-The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+The following focused snippet uses the current public static API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-Input input = Input.Instance;
-if (input.IsActionPressed("jump"))
+if (Input.IsActionPressed("jump"))
     Jump();
 ```
 
@@ -43,56 +46,55 @@ if (input.IsActionPressed("jump"))
 
 | Member | Description |
 | --- | --- |
-| [`public static Input Instance { get; }`](#p-electron2d-input-instance) | Gets the process-wide input service. |
-| [`public bool UseAccumulatedInput { get; set; }`](#p-electron2d-input-useaccumulatedinput) | Controls native pointer-motion accumulation; defaults to `true`. |
-| [`public bool EmulateMouseFromTouch { get; set; }`](#p-electron2d-input-emulatemousefromtouch) | Makes the first active touch contact generate left-button mouse input; defaults to `true`. |
-| [`public bool EmulateTouchFromMouse { get; set; }`](#p-electron2d-input-emulatetouchfrommouse) | Makes left-button mouse input generate touch input; defaults to `false`. |
-| [`public MouseButtonMask MouseButtonMask { get; }`](#p-electron2d-input-mousebuttonmask) | Gets the non-wheel mouse buttons currently held. |
-| [`public Vector2 LastMouseVelocity { get; }`](#p-electron2d-input-lastmousevelocity) | Gets the most recently submitted local mouse velocity. |
-| [`public Vector2 LastMouseScreenVelocity { get; }`](#p-electron2d-input-lastmousescreenvelocity) | Gets the most recently submitted screen-space mouse velocity. |
-| [`public MouseMode MouseMode { get; set; }`](#p-electron2d-input-mousemode) | Gets or applies native pointer visibility, capture and confinement. |
-| [`public bool IgnoreJoypadOnUnfocusedApplication { get; set; }`](#p-electron2d-input-ignorejoypadonunfocusedapplication) | Suppresses controller input and effects while unfocused; defaults to false. |
+| [`public static bool UseAccumulatedInput { get; set; }`](#p-electron2d-input-useaccumulatedinput) | Controls native pointer-motion accumulation; defaults to `true`. |
+| [`public static bool EmulateMouseFromTouch { get; set; }`](#p-electron2d-input-emulatemousefromtouch) | Makes the first active touch contact generate left-button mouse input; defaults to `true`. |
+| [`public static bool EmulateTouchFromMouse { get; set; }`](#p-electron2d-input-emulatetouchfrommouse) | Makes left-button mouse input generate touch input; defaults to `false`. |
+| [`public static MouseButtonMask MouseButtonMask { get; }`](#p-electron2d-input-mousebuttonmask) | Gets the non-wheel mouse buttons currently held. |
+| [`public static Vector2 LastMouseVelocity { get; }`](#p-electron2d-input-lastmousevelocity) | Gets the most recently submitted local mouse velocity. |
+| [`public static Vector2 LastMouseScreenVelocity { get; }`](#p-electron2d-input-lastmousescreenvelocity) | Gets the most recently submitted screen-space mouse velocity. |
+| [`public static MouseMode MouseMode { get; set; }`](#p-electron2d-input-mousemode) | Gets or applies native pointer visibility, capture and confinement. |
+| [`public static bool IgnoreJoypadOnUnfocusedApplication { get; set; }`](#p-electron2d-input-ignorejoypadonunfocusedapplication) | Suppresses controller input and effects while unfocused; defaults to false. |
 
 ## Methods
 
 | Member | Description |
 | --- | --- |
-| [`public bool IsKeyPressed(Key keycode)`](#m-electron2d-input-iskeypressed-electron2d-key) | Gets whether a logical key is currently held. |
-| [`public bool IsPhysicalKeyPressed(Key keycode)`](#m-electron2d-input-isphysicalkeypressed-electron2d-key) | Gets whether a physical key position is currently held. |
-| [`public bool IsKeyLabelPressed(Key keycode)`](#m-electron2d-input-iskeylabelpressed-electron2d-key) | Gets whether a localized key label is currently held. |
-| [`public bool IsMouseButtonPressed(MouseButton button)`](#m-electron2d-input-ismousebuttonpressed-electron2d-mousebutton) | Gets whether a non-wheel mouse button is currently held. |
-| [`public bool IsJoyButtonPressed(JoyButton button, int device = 0)`](#m-electron2d-input-isjoybuttonpressed-electron2d-joybutton-system-int32) | Gets whether a controller button is currently held. |
-| [`public float GetJoyAxis(JoyAxis axis, int device = 0)`](#m-electron2d-input-getjoyaxis-electron2d-joyaxis-system-int32) | Gets the latest controller-axis value. |
-| [`public int[] GetConnectedJoypads()`](#gamepad-getconnectedjoypads) | Snapshots connected logical controller IDs. |
-| [`public string GetJoyName(int device)`](#gamepad-getjoyname) / [`GetJoyGUID(int device)`](#gamepad-getjoyguid) | Queries mapped name or SDL-compatible GUID. |
-| [`public JoypadInfo? GetJoyInfo(int device)`](#gamepad-getjoyinfo) | Queries typed native controller information. |
-| [`public bool IsJoyKnown(int device)`](#gamepad-isjoyknown) | Distinguishes mapped gamepads from raw joysticks. |
-| [`public bool HasJoyVibration(int device)`](#gamepad-hasjoyvibration) / [`HasJoyLight(int device)`](#gamepad-hasjoylight) | Queries native effect capabilities. |
-| [`public bool ShouldIgnoreDevice(int vendorID, int productID)`](#gamepad-shouldignoredevice) | Checks the startup ignore list. |
-| [`public void AddJoyMapping(string mapping, bool updateExisting = false)`](#gamepad-addjoymapping) / [`RemoveJoyMapping(string guid)`](#gamepad-removejoymapping) | Manages process-wide SDL mapping overrides. |
-| [`public void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration = 0)`](#gamepad-startjoyvibration) / [`StopJoyVibration(int device)`](#gamepad-stopjoyvibration) | Starts or stops native rumble. |
-| [`public Vector2 GetJoyVibrationStrength(int device)`](#gamepad-getjoyvibrationstrength) / [`float GetJoyVibrationDuration(int device)`](#gamepad-getjoyvibrationduration) | Reads the retained rumble request. |
-| [`public float GetJoyVibrationRemainingDuration(int device)`](#gamepad-getjoyvibrationremainingduration) / [`bool IsJoyVibrating(int device)`](#gamepad-isjoyvibrating) | Estimates active rumble time. |
-| [`public void SetJoyLight(int device, Color color)`](#gamepad-setjoylight) | Sets a supported controller LED. |
-| [`public bool IsAnythingPressed()`](#m-electron2d-input-isanythingpressed) | Gets whether any key, mouse button, controller button, or action is currently pressed. |
-| [`public bool IsActionPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionpressed-system-string-system-boolean) | Gets whether an action is currently pressed. |
-| [`public bool IsActionJustPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressed-system-string-system-boolean) | Gets whether an action transitioned from released to pressed since the current callback lane last completed. |
-| [`public bool IsActionJustReleased(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleased-system-string-system-boolean) | Gets whether an action transitioned from pressed to released since the current callback lane last completed. |
-| [`public bool IsActionJustPressedByEvent(string action, InputEvent event, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressedbyevent-system-string-electron2d-inputevent-system-boolean) | Gets whether a specific event caused the action's current just-pressed transition. |
-| [`public bool IsActionJustReleasedByEvent(string action, InputEvent event, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleasedbyevent-system-string-electron2d-inputevent-system-boolean) | Gets whether a specific event caused the action's current just-released transition. |
-| [`public float GetActionStrength(string action, bool exactMatch = false)`](#m-electron2d-input-getactionstrength-system-string-system-boolean) | Gets an action's deadzone-adjusted strength. |
-| [`public float GetActionRawStrength(string action, bool exactMatch = false)`](#m-electron2d-input-getactionrawstrength-system-string-system-boolean) | Gets an action's strength before deadzone remapping. |
-| [`public float GetAxis(string negativeAction, string positiveAction)`](#m-electron2d-input-getaxis-system-string-system-string) | Combines a negative and positive action into one signed axis. |
-| [`public Vector2 GetVector(string negativeX, string positiveX, string negativeY, string positiveY, float deadzone = -1f)`](#m-electron2d-input-getvector-system-string-system-string-system-string-system-string-system-single) | Combines four actions into a circularly deadzoned two-dimensional input vector. |
-| [`public void ActionPress(string action, float strength = 1f)`](#m-electron2d-input-actionpress-system-string-system-single) | Presses a registered action without producing an input event. |
-| [`public void ActionRelease(string action)`](#m-electron2d-input-actionrelease-system-string) | Releases the synthetic source of a registered action without producing an input event. |
-| [`public void FlushBufferedEvents()`](#m-electron2d-input-flushbufferedevents) | Delivers native pointer motion buffered by the display adapter. |
-| [`public void ParseInputEvent(InputEvent event)`](#m-electron2d-input-parseinputevent-electron2d-inputevent) | Submits one typed input event, updates state, and synchronously routes it to the active main loop. |
-| [`public void ReleasePressedEvents()`](#m-electron2d-input-releasepressedevents) | Releases every tracked key, mouse button, controller button, axis, and action source. |
-| [`public CursorShape GetCurrentCursorShape()`](#m-electron2d-input-getcurrentcursorshape) | Gets the shape selected on the active display. |
-| [`public void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`](#m-electron2d-input-setdefaultcursorshape) | Stores the viewport default and refreshes the current native cursor. |
-| [`public void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#m-electron2d-input-setcustommousecursor) | Installs copied image pixels in a cursor slot or restores the system shape. |
-| [`public void WarpMouse(Vector2 position)`](#m-electron2d-input-warpmouse) | Requests a native pointer warp on supporting backends. |
+| [`public static bool IsKeyPressed(Key keycode)`](#m-electron2d-input-iskeypressed-electron2d-key) | Gets whether a logical key is currently held. |
+| [`public static bool IsPhysicalKeyPressed(Key keycode)`](#m-electron2d-input-isphysicalkeypressed-electron2d-key) | Gets whether a physical key position is currently held. |
+| [`public static bool IsKeyLabelPressed(Key keycode)`](#m-electron2d-input-iskeylabelpressed-electron2d-key) | Gets whether a localized key label is currently held. |
+| [`public static bool IsMouseButtonPressed(MouseButton button)`](#m-electron2d-input-ismousebuttonpressed-electron2d-mousebutton) | Gets whether a non-wheel mouse button is currently held. |
+| [`public static bool IsJoyButtonPressed(JoyButton button, int device = 0)`](#m-electron2d-input-isjoybuttonpressed-electron2d-joybutton-system-int32) | Gets whether a controller button is currently held. |
+| [`public static float GetJoyAxis(JoyAxis axis, int device = 0)`](#m-electron2d-input-getjoyaxis-electron2d-joyaxis-system-int32) | Gets the latest controller-axis value. |
+| [`public static int[] GetConnectedJoypads()`](#gamepad-getconnectedjoypads) | Snapshots connected logical controller IDs. |
+| [`public static string GetJoyName(int device)`](#gamepad-getjoyname) / [`GetJoyGUID(int device)`](#gamepad-getjoyguid) | Queries mapped name or SDL-compatible GUID. |
+| [`public static JoypadInfo? GetJoyInfo(int device)`](#gamepad-getjoyinfo) | Queries typed native controller information. |
+| [`public static bool IsJoyKnown(int device)`](#gamepad-isjoyknown) | Distinguishes mapped gamepads from raw joysticks. |
+| [`public static bool HasJoyVibration(int device)`](#gamepad-hasjoyvibration) / [`HasJoyLight(int device)`](#gamepad-hasjoylight) | Queries native effect capabilities. |
+| [`public static bool ShouldIgnoreDevice(int vendorID, int productID)`](#gamepad-shouldignoredevice) | Checks the startup ignore list. |
+| [`public static void AddJoyMapping(string mapping, bool updateExisting = false)`](#gamepad-addjoymapping) / [`RemoveJoyMapping(string guid)`](#gamepad-removejoymapping) | Manages process-wide SDL mapping overrides. |
+| [`public static void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration = 0)`](#gamepad-startjoyvibration) / [`StopJoyVibration(int device)`](#gamepad-stopjoyvibration) | Starts or stops native rumble. |
+| [`public static Vector2 GetJoyVibrationStrength(int device)`](#gamepad-getjoyvibrationstrength) / [`float GetJoyVibrationDuration(int device)`](#gamepad-getjoyvibrationduration) | Reads the retained rumble request. |
+| [`public static float GetJoyVibrationRemainingDuration(int device)`](#gamepad-getjoyvibrationremainingduration) / [`bool IsJoyVibrating(int device)`](#gamepad-isjoyvibrating) | Estimates active rumble time. |
+| [`public static void SetJoyLight(int device, Color color)`](#gamepad-setjoylight) | Sets a supported controller LED. |
+| [`public static bool IsAnythingPressed()`](#m-electron2d-input-isanythingpressed) | Gets whether any key, mouse button, controller button, or action is currently pressed. |
+| [`public static bool IsActionPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionpressed-system-string-system-boolean) | Gets whether an action is currently pressed. |
+| [`public static bool IsActionJustPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressed-system-string-system-boolean) | Gets whether an action transitioned from released to pressed since the current callback lane last completed. |
+| [`public static bool IsActionJustReleased(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleased-system-string-system-boolean) | Gets whether an action transitioned from pressed to released since the current callback lane last completed. |
+| [`public static bool IsActionJustPressedByEvent(string action, InputEvent event, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressedbyevent-system-string-electron2d-inputevent-system-boolean) | Gets whether a specific event caused the action's current just-pressed transition. |
+| [`public static bool IsActionJustReleasedByEvent(string action, InputEvent event, bool exactMatch = false)`](#m-electron2d-input-isactionjustreleasedbyevent-system-string-electron2d-inputevent-system-boolean) | Gets whether a specific event caused the action's current just-released transition. |
+| [`public static float GetActionStrength(string action, bool exactMatch = false)`](#m-electron2d-input-getactionstrength-system-string-system-boolean) | Gets an action's deadzone-adjusted strength. |
+| [`public static float GetActionRawStrength(string action, bool exactMatch = false)`](#m-electron2d-input-getactionrawstrength-system-string-system-boolean) | Gets an action's strength before deadzone remapping. |
+| [`public static float GetAxis(string negativeAction, string positiveAction)`](#m-electron2d-input-getaxis-system-string-system-string) | Combines a negative and positive action into one signed axis. |
+| [`public static Vector2 GetVector(string negativeX, string positiveX, string negativeY, string positiveY, float deadzone = -1f)`](#m-electron2d-input-getvector-system-string-system-string-system-string-system-string-system-single) | Combines four actions into a circularly deadzoned two-dimensional input vector. |
+| [`public static void ActionPress(string action, float strength = 1f)`](#m-electron2d-input-actionpress-system-string-system-single) | Presses a registered action without producing an input event. |
+| [`public static void ActionRelease(string action)`](#m-electron2d-input-actionrelease-system-string) | Releases the synthetic source of a registered action without producing an input event. |
+| [`public static void FlushBufferedEvents()`](#m-electron2d-input-flushbufferedevents) | Delivers native pointer motion buffered by the display adapter. |
+| [`public static void ParseInputEvent(InputEvent event)`](#m-electron2d-input-parseinputevent-electron2d-inputevent) | Submits one typed input event, updates state, and synchronously routes it to the active main loop. |
+| [`public static void ReleasePressedEvents()`](#m-electron2d-input-releasepressedevents) | Releases every tracked key, mouse button, controller button, axis, and action source. |
+| [`public static CursorShape GetCurrentCursorShape()`](#m-electron2d-input-getcurrentcursorshape) | Gets the shape selected on the active display. |
+| [`public static void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`](#m-electron2d-input-setdefaultcursorshape) | Stores the viewport default and refreshes the current native cursor. |
+| [`public static void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#m-electron2d-input-setcustommousecursor) | Installs copied image pixels in a cursor slot or restores the system shape. |
+| [`public static void WarpMouse(Vector2 position)`](#m-electron2d-input-warpmouse) | Requests a native pointer warp on supporting backends. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-input-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-input-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 
@@ -100,7 +102,7 @@ if (input.IsActionPressed("jump"))
 
 | Member | Description |
 | --- | --- |
-| [`public event Action<int, bool>? JoyConnectionChanged`](#gamepad-joyconnectionchanged) | Announces native connect/disconnect after metadata and pressed-state changes commit. |
+| [`public static event Action<int, bool>? JoyConnectionChanged`](#gamepad-joyconnectionchanged) | Announces native connect/disconnect after metadata and pressed-state changes commit. |
 
 ## Constants
 
@@ -117,59 +119,52 @@ if (input.IsActionPressed("jump"))
 ## Property Descriptions
 
 <a id="p-electron2d-input-mousemode"></a>
-### `public MouseMode MouseMode { get; set; }`
+### `public static MouseMode MouseMode { get; set; }`
 
 Reads or applies the active display's pointer mode. The five selectable modes control native cursor visibility, relative capture and window confinement. `Max` is invalid. Native failures preserve the previous mode on a best-effort basis. Reading or writing without a display throws `InvalidOperationException`; the display owner thread is required.
 
 <a id="p-electron2d-input-ignorejoypadonunfocusedapplication"></a>
-### `public bool IgnoreJoypadOnUnfocusedApplication { get; set; }`
+### `public static bool IgnoreJoypadOnUnfocusedApplication { get; set; }`
 
 False by default. `Engine.Run` samples [ProjectSettings.IgnoreJoypadOnUnfocusedApplication](ProjectSettings.md) before opening SDL. When true and the application is unfocused, native controller input and new rumble/LED requests are ignored; existing pressed state is released and rumble is stopped. A live display requires its owner thread for writes. This value can also be changed at runtime.
 
-<a id="p-electron2d-input-instance"></a>
-### `public static Input Instance { get; }`
-
-Gets the process-wide input service.
-
-**Value:** The same non-disposable instance for the lifetime of the process.
-
 <a id="p-electron2d-input-useaccumulatedinput"></a>
-### `public bool UseAccumulatedInput { get; set; }`
+### `public static bool UseAccumulatedInput { get; set; }`
 
 Controls whether the native display adapter combines consecutive pointer-motion events in its pending batch.
 
 **Value:** `true` by default. A change applies to the next native event; without a native host this setting has no effect. Keyboard, button, and touch event order is preserved.
 
 <a id="p-electron2d-input-emulatemousefromtouch"></a>
-### `public bool EmulateMouseFromTouch { get; set; }`
+### `public static bool EmulateMouseFromTouch { get; set; }`
 
 Controls whether the first active touch contact generates left-button mouse press, motion, and release events.
 
 **Value:** `true` by default. Generated mouse events use device ID `-1` and update mouse-button and action state. Other contacts remain touch-only. Turning this off during an emulated press suppresses further motion, but that contact still sends the release needed to clear state.
 
 <a id="p-electron2d-input-emulatetouchfrommouse"></a>
-### `public bool EmulateTouchFromMouse { get; set; }`
+### `public static bool EmulateTouchFromMouse { get; set; }`
 
 Controls whether left-button mouse input also generates touch press, drag, and release events at index zero.
 
 **Value:** `false` by default. Generated touch events use device ID `-1` and are delivered to the active scene without changing raw input or mapped action state. One mouse device owns an active emulated contact; another device cannot move or end it. Turning this off during an emulated press suppresses further drags, but the release still ends the generated contact. Without an active scene there is no generated touch delivery.
 
 <a id="p-electron2d-input-mousebuttonmask"></a>
-### `public MouseButtonMask MouseButtonMask { get; }`
+### `public static MouseButtonMask MouseButtonMask { get; }`
 
 Gets the non-wheel mouse buttons currently held.
 
 **Value:** A thread-safe snapshot of the current button mask.
 
 <a id="p-electron2d-input-lastmousevelocity"></a>
-### `public Vector2 LastMouseVelocity { get; }`
+### `public static Vector2 LastMouseVelocity { get; }`
 
 Gets the most recently submitted local mouse velocity.
 
 **Value:** A thread-safe snapshot in content-scaled pixels per second.
 
 <a id="p-electron2d-input-lastmousescreenvelocity"></a>
-### `public Vector2 LastMouseScreenVelocity { get; }`
+### `public static Vector2 LastMouseScreenVelocity { get; }`
 
 Gets the most recently submitted screen-space mouse velocity.
 
@@ -178,7 +173,7 @@ Gets the most recently submitted screen-space mouse velocity.
 ## Method Descriptions
 
 <a id="m-electron2d-input-iskeypressed-electron2d-key"></a>
-### `public bool IsKeyPressed(Key keycode)`
+### `public static bool IsKeyPressed(Key keycode)`
 
 Gets whether a logical key is currently held.
 
@@ -189,7 +184,7 @@ Gets whether a logical key is currently held.
 **Returns:** `true` when held.
 
 <a id="m-electron2d-input-isphysicalkeypressed-electron2d-key"></a>
-### `public bool IsPhysicalKeyPressed(Key keycode)`
+### `public static bool IsPhysicalKeyPressed(Key keycode)`
 
 Gets whether a physical key position is currently held.
 
@@ -200,7 +195,7 @@ Gets whether a physical key position is currently held.
 **Returns:** `true` when held.
 
 <a id="m-electron2d-input-iskeylabelpressed-electron2d-key"></a>
-### `public bool IsKeyLabelPressed(Key keycode)`
+### `public static bool IsKeyLabelPressed(Key keycode)`
 
 Gets whether a localized key label is currently held.
 
@@ -211,7 +206,7 @@ Gets whether a localized key label is currently held.
 **Returns:** `true` when held.
 
 <a id="m-electron2d-input-ismousebuttonpressed-electron2d-mousebutton"></a>
-### `public bool IsMouseButtonPressed(MouseButton button)`
+### `public static bool IsMouseButtonPressed(MouseButton button)`
 
 Gets whether a non-wheel mouse button is currently held.
 
@@ -228,7 +223,7 @@ Gets whether a non-wheel mouse button is currently held.
 **Remarks:** Wheel directions are transient events and always return `false`.
 
 <a id="m-electron2d-input-isjoybuttonpressed-electron2d-joybutton-system-int32"></a>
-### `public bool IsJoyButtonPressed(JoyButton button, int device = 0)`
+### `public static bool IsJoyButtonPressed(JoyButton button, int device = 0)`
 
 Gets whether a controller button is currently held.
 
@@ -244,7 +239,7 @@ Gets whether a controller button is currently held.
 - `ArgumentOutOfRangeException`: `device` is negative.
 
 <a id="m-electron2d-input-getjoyaxis-electron2d-joyaxis-system-int32"></a>
-### `public float GetJoyAxis(JoyAxis axis, int device = 0)`
+### `public static float GetJoyAxis(JoyAxis axis, int device = 0)`
 
 Gets the latest controller-axis value.
 
@@ -260,14 +255,14 @@ Gets the latest controller-axis value.
 - `ArgumentOutOfRangeException`: `device` is negative.
 
 <a id="m-electron2d-input-isanythingpressed"></a>
-### `public bool IsAnythingPressed()`
+### `public static bool IsAnythingPressed()`
 
 Gets whether any key, mouse button, controller button, or action is currently pressed.
 
 **Returns:** `true` when at least one tracked input is pressed.
 
 <a id="m-electron2d-input-isactionpressed-system-string-system-boolean"></a>
-### `public bool IsActionPressed(string action, bool exactMatch = false)`
+### `public static bool IsActionPressed(string action, bool exactMatch = false)`
 
 Gets whether an action is currently pressed.
 
@@ -285,7 +280,7 @@ Gets whether an action is currently pressed.
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
 <a id="m-electron2d-input-isactionjustpressed-system-string-system-boolean"></a>
-### `public bool IsActionJustPressed(string action, bool exactMatch = false)`
+### `public static bool IsActionJustPressed(string action, bool exactMatch = false)`
 
 Gets whether an action transitioned from released to pressed since the current callback lane last completed.
 
@@ -303,7 +298,7 @@ Gets whether an action transitioned from released to pressed since the current c
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
 <a id="m-electron2d-input-isactionjustreleased-system-string-system-boolean"></a>
-### `public bool IsActionJustReleased(string action, bool exactMatch = false)`
+### `public static bool IsActionJustReleased(string action, bool exactMatch = false)`
 
 Gets whether an action transitioned from pressed to released since the current callback lane last completed.
 
@@ -321,7 +316,7 @@ Gets whether an action transitioned from pressed to released since the current c
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
 <a id="m-electron2d-input-isactionjustpressedbyevent-system-string-electron2d-inputevent-system-boolean"></a>
-### `public bool IsActionJustPressedByEvent(string action, InputEvent event, bool exactMatch = false)`
+### `public static bool IsActionJustPressedByEvent(string action, InputEvent event, bool exactMatch = false)`
 
 Gets whether a specific event caused the action's current just-pressed transition.
 
@@ -341,7 +336,7 @@ Gets whether a specific event caused the action's current just-pressed transitio
 - `ObjectDisposedException`: `event` is disposing or disposed.
 
 <a id="m-electron2d-input-isactionjustreleasedbyevent-system-string-electron2d-inputevent-system-boolean"></a>
-### `public bool IsActionJustReleasedByEvent(string action, InputEvent event, bool exactMatch = false)`
+### `public static bool IsActionJustReleasedByEvent(string action, InputEvent event, bool exactMatch = false)`
 
 Gets whether a specific event caused the action's current just-released transition.
 
@@ -361,7 +356,7 @@ Gets whether a specific event caused the action's current just-released transiti
 - `ObjectDisposedException`: `event` is disposing or disposed.
 
 <a id="m-electron2d-input-getactionstrength-system-string-system-boolean"></a>
-### `public float GetActionStrength(string action, bool exactMatch = false)`
+### `public static float GetActionStrength(string action, bool exactMatch = false)`
 
 Gets an action's deadzone-adjusted strength.
 
@@ -379,7 +374,7 @@ Gets an action's deadzone-adjusted strength.
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
 <a id="m-electron2d-input-getactionrawstrength-system-string-system-boolean"></a>
-### `public float GetActionRawStrength(string action, bool exactMatch = false)`
+### `public static float GetActionRawStrength(string action, bool exactMatch = false)`
 
 Gets an action's strength before deadzone remapping.
 
@@ -397,7 +392,7 @@ Gets an action's strength before deadzone remapping.
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
 <a id="m-electron2d-input-getaxis-system-string-system-string"></a>
-### `public float GetAxis(string negativeAction, string positiveAction)`
+### `public static float GetAxis(string negativeAction, string positiveAction)`
 
 Combines a negative and positive action into one signed axis.
 
@@ -415,7 +410,7 @@ Combines a negative and positive action into one signed axis.
 - `Collections.Generic.KeyNotFoundException`: An action is not registered.
 
 <a id="m-electron2d-input-getvector-system-string-system-string-system-string-system-string-system-single"></a>
-### `public Vector2 GetVector(string negativeX, string positiveX, string negativeY, string positiveY, float deadzone = -1f)`
+### `public static Vector2 GetVector(string negativeX, string positiveX, string negativeY, string positiveY, float deadzone = -1f)`
 
 Combines four actions into a circularly deadzoned two-dimensional input vector.
 
@@ -437,7 +432,7 @@ Combines four actions into a circularly deadzoned two-dimensional input vector.
 - `Collections.Generic.KeyNotFoundException`: An action is not registered.
 
 <a id="m-electron2d-input-actionpress-system-string-system-single"></a>
-### `public void ActionPress(string action, float strength = 1f)`
+### `public static void ActionPress(string action, float strength = 1f)`
 
 Presses a registered action without producing an input event.
 
@@ -456,7 +451,7 @@ Presses a registered action without producing an input event.
 **Remarks:** A zero-strength source is still pressed but contributes zero analog strength. Call [`Input.ActionRelease(String)`](Input.md#m-electron2d-input-actionrelease-system-string) to remove it.
 
 <a id="m-electron2d-input-actionrelease-system-string"></a>
-### `public void ActionRelease(string action)`
+### `public static void ActionRelease(string action)`
 
 Releases the synthetic source of a registered action without producing an input event.
 
@@ -471,14 +466,14 @@ Releases the synthetic source of a registered action without producing an input 
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 
 <a id="m-electron2d-input-flushbufferedevents"></a>
-### `public void FlushBufferedEvents()`
+### `public static void FlushBufferedEvents()`
 
 Delivers pointer motion currently accumulated by the native display adapter, in event order, on the caller thread.
 This is a no-op if no native host is active or its pending batch contains no motion. A native host can reject calls
 outside its owner thread or while pumping events.
 
 <a id="m-electron2d-input-parseinputevent-electron2d-inputevent"></a>
-### `public void ParseInputEvent(InputEvent event)`
+### `public static void ParseInputEvent(InputEvent event)`
 
 Submits one typed input event, updates state, and synchronously routes it to the active main loop.
 
@@ -503,7 +498,7 @@ owner-thread and lifecycle eligibility before any state changes. Events may be s
 mouse emulation still updates state, while touch emulation requires an active scene.
 
 <a id="m-electron2d-input-releasepressedevents"></a>
-### `public void ReleasePressedEvents()`
+### `public static void ReleasePressedEvents()`
 
 Releases every tracked key, mouse button, controller button, axis, and action source.
 
@@ -537,22 +532,22 @@ Overrides must therefore be side-effect-free and tolerate repeated execution.
 The process-wide input service cannot be disposed.
 
 <a id="m-electron2d-input-getcurrentcursorshape"></a>
-### `public CursorShape GetCurrentCursorShape()`
+### `public static CursorShape GetCurrentCursorShape()`
 
 Returns the current display cursor shape, including a change made directly through `DisplayServer`. Requires an active display on its owner thread.
 
 <a id="m-electron2d-input-setdefaultcursorshape"></a>
-### `public void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`
+### `public static void SetDefaultCursorShape(CursorShape shape = CursorShape.Arrow)`
 
 Stores one of the 17 native cursor shapes separately from the current display shape. It selects the native shape immediately, then reapplies an active root-viewport Control override if present. It does not synthesize mouse motion; the pinned event side effect and nested viewport routing remain gaps.
 
 <a id="m-electron2d-input-setcustommousecursor"></a>
-### `public void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`
+### `public static void SetCustomMouseCursor(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`
 
 Copies pixels from a readable `Image` or `Texture` into the selected cursor slot; `null` restores its system cursor. The source stays caller-owned and may be disposed after the call. Size is limited to 256 × 256 pixels, and the hotspot must fall inside the image. Invalid resources, shapes, image sizes and hotspots fail through `DisplayServer`. Animated-texture first-frame semantics and native behavior beyond the tested Linux backend are not fully audited.
 
 <a id="m-electron2d-input-warpmouse"></a>
-### `public void WarpMouse(Vector2 position)`
+### `public static void WarpMouse(Vector2 position)`
 
 Requests movement to finite client-area coordinates, truncating fractions to native integer pixels. Out-of-range coordinates fail before reaching the display. Wayland rejects the warp with `NotSupportedException`; movement and clipping on supported backends have not been natively verified.
 
@@ -561,94 +556,94 @@ Requests movement to finite client-area coordinates, truncating fractions to nat
 All methods taking `device` reject a negative ID. Queries are lock-serialized; native effect and mapping changes require the active display's owner thread. A missing device returns an empty name/GUID, null info, false capability or zero active vibration. Strength and duration can retain a request for an absent ID; disconnect and the next connection clear that request.
 
 <a id="gamepad-getconnectedjoypads"></a>
-### `public int[] GetConnectedJoypads()`
+### `public static int[] GetConnectedJoypads()`
 
 Returns a caller-owned sorted snapshot of logical IDs for connected SDL gamepads and raw joysticks. IDs remain stable while connected and may be reused after removal. Already connected controllers are available before the first native event pump.
 
 <a id="gamepad-getjoyname"></a>
-### `public string GetJoyName(int device)`
+### `public static string GetJoyName(int device)`
 
 Returns the mapped gamepad name, or the raw joystick name when no mapping is active. An absent device returns an empty string.
 
 <a id="gamepad-getjoyguid"></a>
-### `public string GetJoyGUID(int device)`
+### `public static string GetJoyGUID(int device)`
 
 Returns the 32-character SDL-compatible hexadecimal GUID, or an empty string for an absent device.
 
 <a id="gamepad-getjoyinfo"></a>
-### `public JoypadInfo? GetJoyInfo(int device)`
+### `public static JoypadInfo? GetJoyInfo(int device)`
 
 Returns [typed native information](JoypadInfo.md) or null. Raw name, USB IDs and optional serial are available; Steam Input and XInput indices remain an audited gap.
 
 <a id="gamepad-isjoyknown"></a>
-### `public bool IsJoyKnown(int device)`
+### `public static bool IsJoyKnown(int device)`
 
 True when the device currently has a standardized gamepad mapping. Raw joysticks remain connected and can deliver signed axis and button events while this is false.
 
 <a id="gamepad-hasjoyvibration"></a>
-### `public bool HasJoyVibration(int device)`
+### `public static bool HasJoyVibration(int device)`
 
 Returns the native rumble capability for a connected device. False when absent or unsupported.
 
 <a id="gamepad-hasjoylight"></a>
-### `public bool HasJoyLight(int device)`
+### `public static bool HasJoyLight(int device)`
 
 Returns the native mono/RGB LED capability for a connected device. False when absent or unsupported.
 
 <a id="gamepad-shouldignoredevice"></a>
-### `public bool ShouldIgnoreDevice(int vendorID, int productID)`
+### `public static bool ShouldIgnoreDevice(int vendorID, int productID)`
 
 Checks vendor/product pairs parsed from `SDL_GAMECONTROLLER_IGNORE_DEVICES` when the process-wide Input instance initializes. Matching devices are omitted from native discovery. Entries use the pinned slash-separated hexadecimal byte order.
 
 <a id="gamepad-addjoymapping"></a>
-### `public void AddJoyMapping(string mapping, bool updateExisting = false)`
+### `public static void AddJoyMapping(string mapping, bool updateExisting = false)`
 
 Stores an SDL-style `GUID,name,bindings` mapping for later devices. `updateExisting: true` applies it to connected matching devices immediately without changing their logical IDs; false leaves them as they are until reconnect. The required GUID and name sections are checked by Electron2D; SDL validates binding syntax when the mapping is applied. Full parser diagnostics and platform database precedence remain Partial.
 
 <a id="gamepad-removejoymapping"></a>
-### `public void RemoveJoyMapping(string guid)`
+### `public static void RemoveJoyMapping(string guid)`
 
 Removes a custom mapping and makes matching connected devices use raw joystick delivery without disconnecting them. The GUID is retained as a process-local removal override so future matching devices stay raw until another mapping is added. Global SDL mapping precedence remains Partial.
 
 <a id="gamepad-startjoyvibration"></a>
-### `public void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration = 0)`
+### `public static void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration = 0)`
 
 Requests weak and strong motor strengths in `[0, 1]` for a nonnegative finite duration in seconds. Zero requests SDL's maximum interval, about 65.535 seconds. Invalid values throw before the request changes; an absent or unsupported device retains the requested values but has no native effect. The display owner thread is required while active.
 
 <a id="gamepad-stopjoyvibration"></a>
-### `public void StopJoyVibration(int device)`
+### `public static void StopJoyVibration(int device)`
 
 Stops native rumble and records zero strengths and duration. The display owner thread is required while active.
 
 <a id="gamepad-getjoyvibrationstrength"></a>
-### `public Vector2 GetJoyVibrationStrength(int device)`
+### `public static Vector2 GetJoyVibrationStrength(int device)`
 
 Returns the last requested weak and strong magnitudes. The values remain after a timed effect expires until `StopJoyVibration` is called.
 
 <a id="gamepad-getjoyvibrationduration"></a>
-### `public float GetJoyVibrationDuration(int device)`
+### `public static float GetJoyVibrationDuration(int device)`
 
 Returns the last requested duration, including zero for the maximum native interval. It remains after expiration until stopped.
 
 <a id="gamepad-getjoyvibrationremainingduration"></a>
-### `public float GetJoyVibrationRemainingDuration(int device)`
+### `public static float GetJoyVibrationRemainingDuration(int device)`
 
 Returns the nonnegative time remaining on a supported connected device, capped to SDL's maximum 65.535-second interval. Zero means absent, unsupported, stopped or expired.
 
 <a id="gamepad-isjoyvibrating"></a>
-### `public bool IsJoyVibrating(int device)`
+### `public static bool IsJoyVibrating(int device)`
 
 True while the estimated native interval remains positive.
 
 <a id="gamepad-setjoylight"></a>
-### `public void SetJoyLight(int device, Color color)`
+### `public static void SetJoyLight(int device, Color color)`
 
 Clamps finite RGB channels to `[0, 1]` and requests the corresponding native LED bytes. Unsupported, absent or unfocused-ignored devices receive no effect. The backend does not retain a readable LED color.
 
 ## Event descriptions
 
 <a id="gamepad-joyconnectionchanged"></a>
-### `public event Action<int, bool>? JoyConnectionChanged`
+### `public static event Action<int, bool>? JoyConnectionChanged`
 
 The logical ID and connected flag are delivered after metadata and pressed-state changes commit. Initial devices notify on the first event pump; hotplug changes notify during their native event. A throwing subscriber does not roll the connection back; `DisplayServer.ProcessEvents` aggregates the failure after later queued events. Delivery is synchronous on the display owner thread, while the pinned signal defers main-thread delivery; exact cross-platform timing remains Partial.
 

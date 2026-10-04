@@ -102,10 +102,10 @@ internal static class CanvasTimingTests
         using var tree = new SceneTree(node);
         Check(Task.Run(() => { try { node.DrawAnimationSlice(1, 0, 1); return false; } catch (InvalidOperationException) { return true; } }).Result, "Interval owner-thread guard.");
         tree.Dispose(); Reject<ObjectDisposedException>(node.DrawEndAnimation);
-        var settings = ProjectSettings.Instance;
-        Check(settings.Get(ProjectSettings.RenderingTimeRolloverSeconds) == 3600, "Render-clock wrap default.");
-        Reject<ArgumentOutOfRangeException>(() => settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 0));
-        Reject<ArgumentException>(() => settings.Set(ProjectSettings.RenderingTimeRolloverSeconds, double.NaN));
+        var settings = ProjectSettings.Service;
+        Check(ProjectSettings.Get(ProjectSettings.RenderingTimeRolloverSeconds) == 3600, "Render-clock wrap default.");
+        Reject<ArgumentOutOfRangeException>(() => ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, 0));
+        Reject<ArgumentException>(() => ProjectSettings.Set(ProjectSettings.RenderingTimeRolloverSeconds, double.NaN));
         Console.WriteLine("Canvas interval, ordered transform, rectangle, validation and zero-allocation checks passed.");
     }
     private sealed class Painter : Entity { internal Action<Painter>? Paint; internal int Draws; protected override void OnDraw() { Draws++; Paint?.Invoke(this); } }

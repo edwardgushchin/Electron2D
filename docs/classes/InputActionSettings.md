@@ -1,6 +1,6 @@
 # InputActionSettings
 
-Last updated: 2026-09-24
+Last updated: 2026-10-04
 
 **Inherits:** `object`
 
@@ -20,12 +20,12 @@ This typed, versioned value is stored by a `ProjectSetting<InputActionSettings>`
 
 ```csharp
 var jump = new ProjectSetting<InputActionSettings>("input/jump", new InputActionSettings());
-ProjectSettings.Instance.Register(jump);
-ProjectSettings.Instance.Set(jump, new InputActionSettings
+ProjectSettings.Register(jump);
+ProjectSettings.Set(jump, new InputActionSettings
 {
     Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Space }],
 });
-InputMap.Instance.LoadFromProjectSettings();
+InputMap.LoadFromProjectSettings();
 ```
 
 Call this during project setup outside input dispatch. Register before loading project values if the project file contains the key.

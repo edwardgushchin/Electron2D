@@ -28,7 +28,7 @@ public sealed class AudioStreamPlaylist : AudioStream
         set
         {
             if ((uint)value > MaxStreams) throw new ArgumentOutOfRangeException(nameof(value));
-            var server = AudioServer.Instance; server.Lock();
+            var server = AudioServer.Service; server.LockCore();
             try
             {
                 AudioStream?[] streams; int count; lock (GraphGate) { CheckEdit(); streams = _streams; count = _count; }
@@ -36,7 +36,7 @@ public sealed class AudioStreamPlaylist : AudioStream
                 Exception? notification = null; if (!IsDisposed) try { NotifyPropertyListChanged(); } catch (Exception error) { notification = error; }
                 ThrowCombined(cleanup, notification);
             }
-            finally { server.Unlock(); }
+            finally { server.UnlockCore(); }
         }
     }
     /// <summary>Gets the borrowed resource configured at a slot, including hidden slots.</summary>
@@ -55,14 +55,14 @@ public sealed class AudioStreamPlaylist : AudioStream
     /// <exception cref="ObjectDisposedException">This resource or an assigned child is disposed.</exception>
     public void SetListStream(int streamIndex, AudioStream? audioStream)
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try
         {
             AudioStream?[] streams; int count;
             lock (GraphGate) { CheckEdit(); Index(streamIndex); ValidateChild(audioStream); streams = (AudioStream?[])_streams.Clone(); streams[streamIndex] = audioStream; count = _count; }
             var cleanup = Configure(streams, count); if (cleanup is not null) throw cleanup;
         }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     private double _fade = .3;
     private bool _shuffle, _loop = true;
@@ -136,7 +136,7 @@ public sealed class AudioStreamPlaylist : AudioStream
     /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback()
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try
         {
             EnterCall(0);
@@ -154,7 +154,7 @@ public sealed class AudioStreamPlaylist : AudioStream
             }
             finally { ExitCall(); }
         }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     internal static double Duration(AudioStream stream)
     {
@@ -196,9 +196,9 @@ public sealed class AudioStreamPlaylist : AudioStream
         var streams = new AudioStream?[MaxStreams]; int count;
         lock (GraphGate) { ThrowIfDisposed(); count = _count; Array.Copy(_streams, streams, count); }
         for (var i = 0; i < count; i++) streams[i] = (AudioStream?)duplicateSubresource(streams[i]);
-        var other = (AudioStreamPlaylist)target; var server = AudioServer.Instance; server.Lock();
+        var other = (AudioStreamPlaylist)target; var server = AudioServer.Service; server.LockCore();
         try { var cleanup = other.Configure(streams, count); other.FadeTime = FadeTime; other.Shuffle = Shuffle; other.Loop = Loop; if (cleanup is not null) throw cleanup; }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
@@ -216,9 +216,9 @@ public sealed class AudioStreamPlaylist : AudioStream
     /// <inheritdoc />
     protected override void ValidateDisposal()
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try { lock (GraphGate) { if (_editing || IsCalling(1) || IsCalling(2) || IsCalling(4)) throw new InvalidOperationException("Playlist callbacks cannot dispose the resource."); foreach (var weak in _playbacks) if (weak.TryGetTarget(out var playback) && !playback.IsDisposed) playback.EnsureIdle(); } }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
         base.ValidateDisposal();
     }
     /// <inheritdoc />

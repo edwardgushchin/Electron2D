@@ -14,8 +14,8 @@ internal static partial class RenderingRuntimeTests
         flow.AddChild(a); flow.AddChild(b); flow.AddChild(c); var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback();
                 if (frames == 0)
@@ -57,7 +57,7 @@ internal static partial class RenderingRuntimeTests
                 pixels.SavePNG($"/tmp/e2d-flow-{profile}-{frames++}.png");
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 6, "Native flow completed all visual states.");
+        Engine.Run(window); Released(window); Check(frames == 6, "Native flow completed all visual states.");
         VerifyFlowWarm(backend, texture);
         Console.WriteLine($"Flow native wrap/alignment/last-wrap/RTL/reverse/orientation and warm layout/render passed ({backend}).");
     }
@@ -73,7 +73,7 @@ internal static partial class RenderingRuntimeTests
                 before = GC.GetAllocatedBytesForCurrentThread();
                 if (frames < 84) flow.Size = new(frames % 2 == 0 ? 40 : 80, 40);
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
                 if (frames is >= 20 and < 84) active += bytes;
@@ -81,7 +81,7 @@ internal static partial class RenderingRuntimeTests
                 if (++frames == 148) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(active == 0 && idle == 0, $"Flow warmed layout/record/render allocated {active}/{idle} managed bytes ({backend}).");
     }
 }

@@ -80,7 +80,7 @@ internal sealed class AudioEffectPhaserInstance : AudioEffectInstance
 
     internal AudioEffectPhaserInstance(AudioEffectPhaser source)
     {
-        _source = source; _rate = AudioServer.Instance.GetMixRate();
+        _source = source; _rate = AudioServer.GetMixRate();
         if (!float.IsFinite(_rate) || _rate <= 0) throw new ArgumentOutOfRangeException(nameof(source), "Output mix rate must be finite and positive.");
     }
 

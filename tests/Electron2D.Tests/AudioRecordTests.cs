@@ -25,7 +25,7 @@ internal static class AudioRecordTests
         {
             record.Format = format; record.SetRecordingActive(true);
             instance.Process(frames, output); Check(output.SequenceEqual(frames), "Record passes PCM through unchanged.");
-            using (var live = record.GetRecording()) Check(live is not null && live.Stereo && live.SampleFormat == format && live.MixRate == (int)AudioServer.Instance.GetMixRate() && live.Loop == AudioLoopMode.Disabled,
+            using (var live = record.GetRecording()) Check(live is not null && live.Stereo && live.SampleFormat == format && live.MixRate == (int)AudioServer.GetMixRate() && live.Loop == AudioLoopMode.Disabled,
                 $"Active {format} snapshot owns correct metadata.");
             record.SetRecordingActive(false);
             using var result = record.GetRecording();
@@ -73,19 +73,19 @@ internal static class AudioRecordTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var record = new AudioEffectRecord(); using var stream = AudioEffectTests.Constant();
         var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, record); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 8);
-            var borrowed = server.GetBusEffectInstance(0, 0);
+            AudioServer.AddBusEffect(0, record); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 8);
+            var borrowed = AudioServer.GetBusEffectInstance(0, 0);
             record.SetRecordingActive(true); AudioEffectTests.Wait(native, 30);
             Check(record.IsRecordingActive(), "Native bus record is active.");
             using (var failed = new FailingEffect())
             {
-                Reject<ApplicationException>(() => server.AddBusEffect(0, failed));
-                Check(record.IsRecordingActive() && ReferenceEquals(server.GetBusEffectInstance(0, 0), borrowed),
+                Reject<ApplicationException>(() => AudioServer.AddBusEffect(0, failed));
+                Check(record.IsRecordingActive() && ReferenceEquals(AudioServer.GetBusEffectInstance(0, 0), borrowed),
                     "Failed chain preparation preserves the active front-pair recorder.");
             }
             using (var live = record.GetRecording()) Check(live is not null && live.GetLength() > 0, "Active native snapshot contains PCM.");
@@ -99,7 +99,7 @@ internal static class AudioRecordTests
             }
             if (native.Channels > 2)
                 for (var pair = 1; pair < native.Channels / 2; pair++)
-                    Check(!ReferenceEquals(server.GetBusEffectInstance(0, 0, pair), borrowed), "Each pair keeps an independent borrowed instance.");
+                    Check(!ReferenceEquals(AudioServer.GetBusEffectInstance(0, 0, pair), borrowed), "Each pair keeps an independent borrowed instance.");
             record.SetRecordingActive(true); AudioEffectTests.Wait(native, 8);
             var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native recording passes allocate no measured callback bytes/calls.");
@@ -107,24 +107,24 @@ internal static class AudioRecordTests
             AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed silent recording passes allocate no measured callback bytes/calls.");
             record.SetRecordingActive(false);
-            server.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && record.GetRecording() is null, "Removing bus instance invalidates current sample.");
+            AudioServer.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && record.GetRecording() is null, "Removing bus instance invalidates current sample.");
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod);
-        settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
         try
         {
             using var record = new AudioEffectRecord(); using var stream = AudioEffectTests.Constant();
             var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Stream = stream, Autoplay = true });
-            var scenario = new HostScenario(record); window.AddChild(scenario); var server = AudioServer.Instance; server.AddBusEffect(0, record);
-            try { Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public record host queried and cleaned up."); }
-            finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+            var scenario = new HostScenario(record); window.AddChild(scenario); var server = AudioServer.Service; AudioServer.AddBusEffect(0, record);
+            try { Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public record host queried and cleaned up."); }
+            finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class HostScenario(AudioEffectRecord record) : Node
     {

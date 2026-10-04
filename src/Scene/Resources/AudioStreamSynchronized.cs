@@ -29,7 +29,7 @@ public sealed class AudioStreamSynchronized : AudioStream
         set
         {
             if ((uint)value > MaxStreams) throw new ArgumentOutOfRangeException(nameof(value));
-            var server = AudioServer.Instance; server.Lock();
+            var server = AudioServer.Service; server.LockCore();
             try
             {
                 AudioStream?[] streams; int count; lock (GraphGate) { CheckEdit(); streams = _streams; count = _count; }
@@ -37,7 +37,7 @@ public sealed class AudioStreamSynchronized : AudioStream
                 Exception? notification = null; if (!IsDisposed) try { NotifyPropertyListChanged(); } catch (Exception error) { notification = error; }
                 ThrowCombined(cleanup, notification);
             }
-            finally { server.Unlock(); }
+            finally { server.UnlockCore(); }
         }
     }
     /// <summary>Gets the borrowed resource configured at a slot, including hidden slots.</summary>
@@ -56,14 +56,14 @@ public sealed class AudioStreamSynchronized : AudioStream
     /// <exception cref="ObjectDisposedException">This resource or an assigned child is disposed.</exception>
     public void SetSyncStream(int streamIndex, AudioStream? audioStream)
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try
         {
             AudioStream?[] streams; int count;
             lock (GraphGate) { CheckEdit(); Index(streamIndex); ValidateChild(audioStream); streams = (AudioStream?[])_streams.Clone(); streams[streamIndex] = audioStream; count = _count; }
             var cleanup = Configure(streams, count); if (cleanup is not null) throw cleanup;
         }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     /// <summary>Gets a slot's stored volume in decibels.</summary>
     /// <param name="streamIndex">Zero through MaxStreams minus one.</param>
@@ -137,7 +137,7 @@ public sealed class AudioStreamSynchronized : AudioStream
     /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback()
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try
         {
             EnterCall(0);
@@ -154,7 +154,7 @@ public sealed class AudioStreamSynchronized : AudioStream
             }
             finally { ExitCall(); }
         }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     private double NumericMetadata(int kind)
     {
@@ -200,9 +200,9 @@ public sealed class AudioStreamSynchronized : AudioStream
         var streams = new AudioStream?[MaxStreams]; var volumes = new float[MaxStreams]; int count;
         lock (GraphGate) { ThrowIfDisposed(); count = _count; Array.Copy(_streams, streams, count); Array.Copy(_volumes, volumes, count); }
         for (var i = 0; i < count; i++) streams[i] = (AudioStream?)duplicateSubresource(streams[i]);
-        var other = (AudioStreamSynchronized)target; var server = AudioServer.Instance; server.Lock();
+        var other = (AudioStreamSynchronized)target; var server = AudioServer.Service; server.LockCore();
         try { var cleanup = other.Configure(streams, count); for (var i = 0; i < MaxStreams; i++) other.SetSyncStreamVolume(i, volumes[i]); if (cleanup is not null) throw cleanup; }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()

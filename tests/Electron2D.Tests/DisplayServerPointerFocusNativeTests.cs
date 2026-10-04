@@ -6,7 +6,7 @@ internal static class DisplayServerPointerFocusNativeTests
     public static void RunConfinement()
     {
         using var display = DisplayServer.Open("Electron2D pointer confinement test", new Vector2i(480, 360));
-        Check(display.GetName() == "Wayland", "The confinement test requires Wayland.");
+        Check(DisplayServer.GetName() == "Wayland", "The confinement test requires Wayland.");
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The confinement test needs one native window.");
         var window = windows![0];
@@ -21,10 +21,10 @@ internal static class DisplayServerPointerFocusNativeTests
                 PumpAndDraw(display, renderer);
             Check(SDL.GetMouseFocus() == window, "The visible Wayland window never received pointer focus.");
 
-            display.MouseSetMode(MouseMode.Confined);
-            Check(display.MouseGetMode() == MouseMode.Confined, "The public mode did not enter Confined.");
+            DisplayServer.MouseSetMode(MouseMode.Confined);
+            Check(DisplayServer.MouseGetMode() == MouseMode.Confined, "The public mode did not enter Confined.");
             Console.WriteLine("Confined active for 25 seconds. Push the pointer beyond EACH of the four blue-window edges; do not click another window.");
-            var size = display.WindowGetSize();
+            var size = DisplayServer.WindowGetSize();
             var minX = int.MaxValue;
             var maxX = int.MinValue;
             var minY = int.MaxValue;
@@ -35,7 +35,7 @@ internal static class DisplayServerPointerFocusNativeTests
             {
                 PumpAndDraw(display, renderer);
                 lostFocus |= SDL.GetMouseFocus() != window;
-                var position = display.MouseGetPosition();
+                var position = DisplayServer.MouseGetPosition();
                 minX = Math.Min(minX, position.X);
                 maxX = Math.Max(maxX, position.X);
                 minY = Math.Min(minY, position.Y);
@@ -52,7 +52,7 @@ internal static class DisplayServerPointerFocusNativeTests
         }
         finally
         {
-            display.MouseSetMode(MouseMode.Visible);
+            DisplayServer.MouseSetMode(MouseMode.Visible);
             SDL.DestroyRenderer(renderer);
         }
     }
@@ -60,7 +60,7 @@ internal static class DisplayServerPointerFocusNativeTests
     public static void Run()
     {
         using var display = DisplayServer.Open("Electron2D pointer focus test", new Vector2i(480, 360));
-        Check(display.GetName() == "Wayland", "The focused pointer test requires Wayland.");
+        Check(DisplayServer.GetName() == "Wayland", "The focused pointer test requires Wayland.");
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The focused pointer test needs one native window.");
         var window = windows![0];
@@ -76,7 +76,7 @@ internal static class DisplayServerPointerFocusNativeTests
             var moved = false;
             var pressed = false;
             var released = false;
-            var lastPosition = display.MouseGetPosition();
+            var lastPosition = DisplayServer.MouseGetPosition();
             var deadline = DateTime.UtcNow.AddSeconds(60);
             while (DateTime.UtcNow < deadline && !(moved && released))
             {
@@ -86,39 +86,39 @@ internal static class DisplayServerPointerFocusNativeTests
                 var nativeButtons = SDL.GetMouseState(out var x, out var y);
                 var density = SDL.GetWindowPixelDensity(window);
                 Check(float.IsFinite(density) && density > 0f, "The focused window has valid pixel density.");
-                var position = display.MouseGetPosition();
+                var position = DisplayServer.MouseGetPosition();
                 Check(position == new Vector2i((int)(x * density), (int)(y * density)),
                     "The focused pointer position matches native SDL state in client pixels.");
                 if (position != lastPosition)
                     moved = true;
                 lastPosition = position;
                 var leftDown = (nativeButtons & SDL.MouseButtonFlags.Left) != 0;
-                Check(((display.MouseGetButtonState() & MouseButtonMask.Left) != 0) == leftDown,
+                Check(((DisplayServer.MouseGetButtonState() & MouseButtonMask.Left) != 0) == leftDown,
                     "The public left-button mask matches a real focused pointer press.");
                 pressed |= leftDown;
                 released = pressed && !leftDown;
             }
             Check(moved && pressed && released, "No complete real pointer motion and left-button press/release was observed.");
 
-            var beforeWarp = display.MouseGetPosition();
+            var beforeWarp = DisplayServer.MouseGetPosition();
             var focusBeforeWarp = SDL.GetMouseFocus() == window;
-            Check(!display.HasFeature(DisplayServer.Feature.MouseWarp),
+            Check(!DisplayServer.HasFeature(DisplayServer.Feature.MouseWarp),
                 "The Wayland backend does not advertise pointer warping.");
             var warpRejected = false;
             try
             {
-                display.WarpMouse(new Vector2i(beforeWarp.X + 40, beforeWarp.Y + 40));
+                DisplayServer.WarpMouse(new Vector2i(beforeWarp.X + 40, beforeWarp.Y + 40));
             }
             catch (NotSupportedException)
             {
                 warpRejected = true;
             }
-            Check(warpRejected && display.MouseGetPosition() == beforeWarp &&
+            Check(warpRejected && DisplayServer.MouseGetPosition() == beforeWarp &&
                   SDL.GetMouseFocus() == window && focusBeforeWarp,
                 "Unavailable focused Wayland warp must reject without changing synthetic pointer state or focus.");
 
             Console.WriteLine("Pointer capture active. Keep moving the mouse inside the blue window for a moment.");
-            display.MouseSetMode(MouseMode.Captured);
+            DisplayServer.MouseSetMode(MouseMode.Captured);
             SDL.GetRelativeMouseState(out _, out _);
             var relativeMotion = false;
             deadline = DateTime.UtcNow.AddSeconds(10);
@@ -139,11 +139,11 @@ internal static class DisplayServerPointerFocusNativeTests
                          MouseMode.Visible,
                      })
             {
-                display.MouseSetMode(mode);
+                DisplayServer.MouseSetMode(mode);
                 for (var i = 0; i < 10; i++)
                     PumpAndDraw(display, renderer);
                 var flags = SDL.GetWindowFlags(window);
-                Check(display.MouseGetMode() == mode &&
+                Check(DisplayServer.MouseGetMode() == mode &&
                       SDL.GetWindowRelativeMouseMode(window) == (mode == MouseMode.Captured) &&
                       ((flags & SDL.WindowFlags.MouseGrabbed) != 0) ==
                       (mode is MouseMode.Confined or MouseMode.ConfinedHidden) &&
@@ -154,14 +154,14 @@ internal static class DisplayServerPointerFocusNativeTests
         }
         finally
         {
-            display.MouseSetMode(MouseMode.Visible);
+            DisplayServer.MouseSetMode(MouseMode.Visible);
             SDL.DestroyRenderer(renderer);
         }
     }
 
     private static void PumpAndDraw(DisplayServer display, nint renderer)
     {
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         Check(SDL.RenderClear(renderer) && SDL.RenderPresent(renderer), $"Cannot present pointer test window: {SDL.GetError()}");
         Thread.Sleep(20);
     }

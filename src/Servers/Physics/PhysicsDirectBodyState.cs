@@ -128,7 +128,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
 
     /// <summary>Gets the live direct-query view of this body space.</summary>
     /// <returns>Gets the live direct-query view of this body space.</returns>
-    public PhysicsDirectSpaceState GetSpaceState() { Access(); return PhysicsServer.Instance.SpaceGetDirectState(_space.RID); }
+    public PhysicsDirectSpaceState GetSpaceState() { Access(); return PhysicsServer.SpaceGetDirectState(_space.RID); }
 
     /// <summary>Gets point velocity at a global-axis offset from the body origin, in scene units per second.</summary>
     /// <param name="localPosition">Finite global-axis offset from the body origin in scene units.</param>
@@ -206,7 +206,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// <param name="contactIndex">Zero-based retained contact index.</param>
     /// <returns>Gets a live scene collider, or null for a server-only or released object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the retained snapshot.</exception>
-    public CollisionObject? GetContactColliderObject(int contactIndex) { return PhysicsServer.Instance.ResolveSceneObject(At(contactIndex).Collider); }
+    public CollisionObject? GetContactColliderObject(int contactIndex) { return PhysicsServer.Service.ResolveSceneObject(At(contactIndex).Collider); }
 
     /// <summary>Sets the persistent global force, replacing the previous value.</summary>
     /// <param name="force">Finite force in scene units times kilograms per squared second.</param>
@@ -238,25 +238,25 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     public void AddConstantForce(Vector2 force, Vector2 position = default)
     {
         Access();
-        PhysicsServer.Instance.BodyAddConstantForce(_runtime.RID, force, position);
+        PhysicsServer.BodyAddConstantForce(_runtime.RID, force, position);
     }
     /// <summary>Applies a force accumulator for the next solver step without adding torque.</summary>
     /// <param name="force">Finite global force in scene units times kilograms per squared second, zero by default.</param>
     public void ApplyCentralForce(Vector2 force = default)
     {
         Access();
-        PhysicsServer.Instance.BodyApplyCentralForce(_runtime.RID, force);
+        PhysicsServer.BodyApplyCentralForce(_runtime.RID, force);
     }
     /// <summary>Applies an instantaneous central impulse.</summary>
     /// <param name="impulse">Finite global impulse in scene units times kilograms per second.</param>
-    public void ApplyCentralImpulse(Vector2 impulse) { Access(); PhysicsServer.Instance.BodyApplyCentralImpulse(_runtime.RID, impulse); }
+    public void ApplyCentralImpulse(Vector2 impulse) { Access(); PhysicsServer.BodyApplyCentralImpulse(_runtime.RID, impulse); }
     /// <summary>Applies a positioned force accumulator for the next solver step.</summary>
     /// <param name="force">Finite global force in scene units times kilograms per squared second.</param>
     /// <param name="position">Finite global-axis offset from the body origin, zero by default.</param>
     public void ApplyForce(Vector2 force, Vector2 position = default)
     {
         Access();
-        PhysicsServer.Instance.BodyApplyForce(_runtime.RID, force, position);
+        PhysicsServer.BodyApplyForce(_runtime.RID, force, position);
     }
     /// <summary>Applies an instantaneous positioned impulse.</summary>
     /// <param name="impulse">Finite global impulse in scene units times kilograms per second.</param>
@@ -265,17 +265,17 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     public void ApplyImpulse(Vector2 impulse, Vector2 position = default)
     {
         Access();
-        PhysicsServer.Instance.BodyApplyImpulse(_runtime.RID, impulse, position);
+        PhysicsServer.BodyApplyImpulse(_runtime.RID, impulse, position);
     }
     /// <summary>Applies torque accumulated for the next solver step.</summary>
     /// <param name="torque">Finite torque in kilograms times squared scene units per squared second.</param>
-    public void ApplyTorque(float torque) { Access(); PhysicsServer.Instance.BodyApplyTorque(_runtime.RID, torque); }
+    public void ApplyTorque(float torque) { Access(); PhysicsServer.BodyApplyTorque(_runtime.RID, torque); }
     /// <summary>Applies an instantaneous torque impulse.</summary>
     /// <param name="impulse">Finite angular impulse in kilograms times squared scene units per second.</param>
     public void ApplyTorqueImpulse(float impulse)
     {
         Access();
-        PhysicsServer.Instance.BodyApplyTorqueImpulse(_runtime.RID, impulse);
+        PhysicsServer.BodyApplyTorqueImpulse(_runtime.RID, impulse);
     }
     /// <summary>Applies one tick of resolved gravity followed by linear and angular damping to velocity.</summary>
     /// <remarks>Each call applies another tick. Accumulated and constant forces are not included.
@@ -327,7 +327,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
                 var remote = first ? b : a;
                 var impulse = normal * point.totalNormalImpulse + b2RightPerp(normal) * point.tangentImpulse;
                 _contacts[_contactCount++] = new(other.ColliderRID,
-                    PhysicsServer.Instance.ResolveSceneObject(other.ColliderRID)?.InstanceID ?? 0,
+                    PhysicsServer.Service.ResolveSceneObject(other.ColliderRID)?.InstanceID ?? 0,
                     own.ShapeIndex, other.ShapeIndex, ToScene(local), ToScene(remote),
                     new(first ? -normal.X : normal.X, first ? -normal.Y : normal.Y),
                     ToScene(b2Body_GetWorldPointVelocity(_id, local)), ToScene(b2Body_GetWorldPointVelocity(collider, remote)),

@@ -1421,11 +1421,7 @@
       "reason": "Typed projection of the ray-result stable shape-owner index.",
       "adr": "ADRs 0001, 0063"
     },
-    {
-      "electron2d": "property:Electron2D.PhysicsServer.Instance()",
-      "reason": "C# singleton accessor for the shared PhysicsServer resource registry.",
-      "adr": "ADRs 0004, 0063"
-    },
+
     {
       "electron2d": "constructor:Electron2D.CollisionPolygon..ctor()",
       "reason": "Managed construction projects an empty direct scene collision polygon with a solid default.",

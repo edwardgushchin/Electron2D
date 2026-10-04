@@ -4,16 +4,16 @@ internal static class ScrollContainerTests
 {
     internal static void Run()
     {
-        var settings = ProjectSettings.Instance;
-        var previousDeadzone = settings.Get(ProjectSettings.DefaultScrollDeadzone);
+        var settings = ProjectSettings.Service;
+        var previousDeadzone = ProjectSettings.Get(ProjectSettings.DefaultScrollDeadzone);
         try
         {
-            settings.Set(ProjectSettings.DefaultScrollDeadzone, 7);
+            ProjectSettings.Set(ProjectSettings.DefaultScrollDeadzone, 7);
             using var configured = new ScrollContainer();
             Check(configured.ScrollDeadzone == 7,
                 "A new container samples the typed project deadzone.");
         }
-        finally { settings.Set(ProjectSettings.DefaultScrollDeadzone, previousDeadzone); }
+        finally { ProjectSettings.Set(ProjectSettings.DefaultScrollDeadzone, previousDeadzone); }
         VerifyModes();
         VerifyFailedBegin();
         VerifyInertia();
@@ -84,7 +84,7 @@ internal static class ScrollContainerTests
             scroll.ScrollStarted += () => starts++;
             scroll.ScrollEnded += () => ends++;
             scroll.ScrollDeadzone = 12;
-            Input.Instance.EmulateTouchFromMouse = true;
+            Input.EmulateTouchFromMouse = true;
             try
             {
                 using var press = new InputEventMouseButton { Position = new(30, 50), ButtonIndex = MouseButton.Left, Pressed = true };
@@ -104,7 +104,7 @@ internal static class ScrollContainerTests
                 viewport.PushInput(release, inLocalCoordinates: true);
                 Check(ends == 1, "Releasing an undriven touch drag ends the begun scroll exactly once.");
             }
-            finally { Input.Instance.EmulateTouchFromMouse = false; scroll.ScrollDeadzone = 0; }
+            finally { Input.EmulateTouchFromMouse = false; scroll.ScrollDeadzone = 0; }
 
             scroll.HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled;
             scroll.HintMode = ScrollContainer.ScrollHintMode.All;
@@ -184,7 +184,7 @@ internal static class ScrollContainerTests
         var started = 0; var ended = 0;
         scroll.ScrollStarted += () => { started++; throw new InvalidOperationException("observer"); };
         scroll.ScrollEnded += () => ended++;
-        Input.Instance.EmulateTouchFromMouse = true;
+        Input.EmulateTouchFromMouse = true;
         try
         {
             using var press = new InputEventMouseButton { Position = new(20, 30), ButtonIndex = MouseButton.Left, Pressed = true };
@@ -201,7 +201,7 @@ internal static class ScrollContainerTests
             viewport.PushInput(release, inLocalCoordinates: true);
             Check(ended == 1, "A failed begin still receives exactly one end phase.");
         }
-        finally { Input.Instance.EmulateTouchFromMouse = false; }
+        finally { Input.EmulateTouchFromMouse = false; }
     }
 
     private static void VerifyInertia()
@@ -214,7 +214,7 @@ internal static class ScrollContainerTests
         tree.FlushDeferred();
         var ended = 0;
         scroll.ScrollEnded += () => ended++;
-        Input.Instance.EmulateTouchFromMouse = true;
+        Input.EmulateTouchFromMouse = true;
         try
         {
             using var press = new InputEventMouseButton { Position = new(50, 50), ButtonIndex = MouseButton.Left, Pressed = true };
@@ -242,7 +242,7 @@ internal static class ScrollContainerTests
             Check(reachedHorizontalEdge && scroll.GetVScrollBar().Value > verticalAtEdge && ended == 1,
                 "The remaining axis continues after its peer hits an edge, then inertia ends once.");
         }
-        finally { Input.Instance.EmulateTouchFromMouse = false; }
+        finally { Input.EmulateTouchFromMouse = false; }
     }
 
     private sealed class TestViewport : Viewport

@@ -1,6 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Owns typed two-dimensional physics resource identities and spaces.</summary>
+/// <remarks>Public static operations delegate to the retained service object; its state, identity and ownership remain object-scoped.</remarks>
 public sealed partial class PhysicsServer : ElectronObject
 {
     private static readonly PhysicsServer SharedInstance = new();
@@ -29,9 +30,7 @@ public sealed partial class PhysicsServer : ElectronObject
 
     private PhysicsServer() { }
 
-    /// <summary>Gets the process-wide server for physics resources and scene spaces.</summary>
-    /// <value>The shared server; consumer disposal is rejected.</value>
-    public static PhysicsServer Instance => SharedInstance;
+    internal static PhysicsServer Service => SharedInstance;
 
     internal RID RegisterSceneObject(CollisionObject node)
     {
@@ -102,11 +101,7 @@ public sealed partial class PhysicsServer : ElectronObject
                 throw new ArgumentException("The RID does not identify a live physics space.", nameof(rid));
     }
 
-    /// <summary>Returns a live direct-query view of a physics space.</summary>
-    /// <param name="space">A live space RID.</param>
-    /// <returns>The cached query view, or a fresh view if a caller disposed the previous one.</returns>
-    /// <exception cref="ArgumentException">The RID does not identify a live physics space.</exception>
-    public PhysicsDirectSpaceState SpaceGetDirectState(RID space)
+    internal PhysicsDirectSpaceState SpaceGetDirectStateCore(RID space)
     {
         ThrowIfDisposed();
         lock (_registryGate)

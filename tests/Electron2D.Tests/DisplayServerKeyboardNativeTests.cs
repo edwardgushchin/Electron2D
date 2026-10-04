@@ -9,14 +9,14 @@ internal static class DisplayServerKeyboardNativeTests
         try
         {
             SDL.SetModState(SDL.Keymod.None);
-            Check(display.KeyboardGetKeycodeFromPhysical(Key.None) == Key.None &&
-                  display.KeyboardGetLabelFromPhysical(Key.None) == Key.None,
+            Check(DisplayServer.KeyboardGetKeycodeFromPhysical(Key.None) == Key.None &&
+                  DisplayServer.KeyboardGetLabelFromPhysical(Key.None) == Key.None,
                 "No physical key maps to no logical key or label.");
 
             var unmapped = (Key)0x123456;
             var modifiedUnmapped = (Key)((int)unmapped | (int)KeyModifierMask.Control);
-            Check(display.KeyboardGetKeycodeFromPhysical(unmapped) == unmapped &&
-                  display.KeyboardGetLabelFromPhysical(modifiedUnmapped) == modifiedUnmapped,
+            Check(DisplayServer.KeyboardGetKeycodeFromPhysical(unmapped) == unmapped &&
+                  DisplayServer.KeyboardGetLabelFromPhysical(modifiedUnmapped) == modifiedUnmapped,
                 "An unmapped physical identity and its modifier bits survive both lookups.");
 
             var physical = Key.Key1;
@@ -25,15 +25,15 @@ internal static class DisplayServerKeyboardNativeTests
             CheckMapping(display, Key.BraceRight, SDL.Scancode.Rightbracket, SDL.Keymod.None);
             CheckMapping(display, Key.Section, SDL.Scancode.Grave, SDL.Keymod.None);
             CheckMapping(display, Key.QuoteLeft, SDL.Scancode.NonUsBackSlash, SDL.Keymod.None);
-            Check(display.KeyboardGetKeycodeFromPhysical(Key.Shift) == Key.Shift &&
-                  display.KeyboardGetLabelFromPhysical(Key.Shift) == Key.Shift,
+            Check(DisplayServer.KeyboardGetKeycodeFromPhysical(Key.Shift) == Key.Shift &&
+                  DisplayServer.KeyboardGetLabelFromPhysical(Key.Shift) == Key.Shift,
                 "A physical Shift identity survives the native layout lookup.");
             SDL.SetModState(SDL.Keymod.LShift);
             CheckMapping(display, physical, SDL.Scancode.Alpha1, SDL.Keymod.LShift);
 
             var shiftPhysical = (Key)((int)physical | (int)KeyModifierMask.Shift);
-            Check(((int)display.KeyboardGetKeycodeFromPhysical(shiftPhysical) & (int)KeyModifierMask.Shift) != 0 &&
-                  ((int)display.KeyboardGetLabelFromPhysical(shiftPhysical) & (int)KeyModifierMask.Shift) != 0,
+            Check(((int)DisplayServer.KeyboardGetKeycodeFromPhysical(shiftPhysical) & (int)KeyModifierMask.Shift) != 0 &&
+                  ((int)DisplayServer.KeyboardGetLabelFromPhysical(shiftPhysical) & (int)KeyModifierMask.Shift) != 0,
                 "Both layout lookups preserve the supplied modifier bits.");
 
             var expectedEventLabel = PrintableKey(SDL.GetKeyFromScancode(SDL.Scancode.Alpha1,
@@ -44,7 +44,7 @@ internal static class DisplayServerKeyboardNativeTests
                 Check(windowCount == 1 && windows is [var window] && window != 0,
                     "Keyboard event check needs the main native window.");
                 var nativeWindowId = SDL.GetWindowID(windows![0]);
-                Input.Instance.ReleasePressedEvents();
+                Input.ReleasePressedEvents();
                 try
                 {
                     var key = new SDL.Event
@@ -60,14 +60,14 @@ internal static class DisplayServerKeyboardNativeTests
                         },
                     };
                     Check(SDL.PushEvent(ref key), "Native queue accepts a shifted number-row key press.");
-                    display.ProcessEvents();
-                    Check(Input.Instance.IsKeyLabelPressed(expectedEventLabel),
+                    DisplayServer.ProcessEvents();
+                    Check(Input.IsKeyLabelPressed(expectedEventLabel),
                         "A key event derives its label using its own modifier state.");
                     key.Key.Type = SDL.EventType.KeyUp;
                     key.Key.Down = false;
                     Check(SDL.PushEvent(ref key), "Native queue accepts the shifted key release.");
-                    display.ProcessEvents();
-                    Check(!Input.Instance.IsKeyLabelPressed(expectedEventLabel),
+                    DisplayServer.ProcessEvents();
+                    Check(!Input.IsKeyLabelPressed(expectedEventLabel),
                         "The shifted key label is released.");
 
                     key.Key.Scancode = SDL.Scancode.Leftbracket;
@@ -76,19 +76,19 @@ internal static class DisplayServerKeyboardNativeTests
                     key.Key.Type = SDL.EventType.KeyDown;
                     key.Key.Down = true;
                     Check(SDL.PushEvent(ref key), "Native queue accepts a physical brace-position press.");
-                    display.ProcessEvents();
-                    Check(Input.Instance.IsPhysicalKeyPressed(Key.BraceLeft),
+                    DisplayServer.ProcessEvents();
+                    Check(Input.IsPhysicalKeyPressed(Key.BraceLeft),
                         "The bracket-position SDL scancode uses its physical brace identity.");
                     key.Key.Type = SDL.EventType.KeyUp;
                     key.Key.Down = false;
                     Check(SDL.PushEvent(ref key), "Native queue accepts the brace-position release.");
-                    display.ProcessEvents();
-                    Check(!Input.Instance.IsPhysicalKeyPressed(Key.BraceLeft),
+                    DisplayServer.ProcessEvents();
+                    Check(!Input.IsPhysicalKeyPressed(Key.BraceLeft),
                         "The physical brace identity is released.");
                 }
                 finally
                 {
-                    Input.Instance.ReleasePressedEvents();
+                    Input.ReleasePressedEvents();
                 }
             }
         }
@@ -104,9 +104,9 @@ internal static class DisplayServerKeyboardNativeTests
         var label = SDL.GetKeyFromScancode(scancode, modifiers, false);
         var expectedKeycode = PrintableKey(keycode, true);
         var expectedLabel = PrintableKey(label, false);
-        Check(display.KeyboardGetKeycodeFromPhysical(physical) == (expectedKeycode == Key.None ? physical : expectedKeycode) &&
-              display.KeyboardGetLabelFromPhysical(physical) == (expectedLabel == Key.None ? physical : expectedLabel),
-            $"Physical {physical} follows native scancode {scancode} and modifier state {modifiers}: native {keycode}, expected {expectedKeycode}, actual {display.KeyboardGetKeycodeFromPhysical(physical)}.");
+        Check(DisplayServer.KeyboardGetKeycodeFromPhysical(physical) == (expectedKeycode == Key.None ? physical : expectedKeycode) &&
+              DisplayServer.KeyboardGetLabelFromPhysical(physical) == (expectedLabel == Key.None ? physical : expectedLabel),
+            $"Physical {physical} follows native scancode {scancode} and modifier state {modifiers}: native {keycode}, expected {expectedKeycode}, actual {DisplayServer.KeyboardGetKeycodeFromPhysical(physical)}.");
     }
 
     private static Key PrintableKey(SDL.Keycode code, bool logicalKeycode)

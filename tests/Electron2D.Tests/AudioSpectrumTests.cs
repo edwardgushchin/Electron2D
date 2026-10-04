@@ -42,7 +42,7 @@ internal static class AudioSpectrumTests
 
     private static void FrequencyProfiles()
     {
-        var rate = AudioServer.Instance.GetMixRate();
+        var rate = AudioServer.GetMixRate();
         for (var preset = 0; preset < 5; preset++)
         {
             using var effect = new AudioEffectSpectrumAnalyzer { FFTSize = (AudioFFTSize)preset, BufferLength = .1f };
@@ -102,13 +102,13 @@ internal static class AudioSpectrumTests
 
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1;
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
         using var effect = new AudioEffectSpectrumAnalyzer { FFTSize = AudioFFTSize.Size256, BufferLength = .1f };
         using var stream = AudioEffectTests.Constant(); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, effect); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 30);
-            var borrowed = (AudioEffectSpectrumAnalyzerInstance)server.GetBusEffectInstance(0, 0);
+            AudioServer.AddBusEffect(0, effect); player.Play(); var native = server.Native; AudioEffectTests.Wait(native, 30);
+            var borrowed = (AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(0, 0);
             var dc = borrowed.GetMagnitudeForFrequencyRange(0, 0);
             Check(dc.X is > .19f and < .21f && dc.Y is > .29f and < .31f, $"Borrowed native bus instance exposes stereo DC spectrum: {dc}.");
             AudioEffectTests.CheckOutput(native, new(.2f, -.3f));
@@ -119,7 +119,7 @@ internal static class AudioSpectrumTests
                     for (var channel = 2; channel < native.Channels; channel++)
                         Check(Math.Abs(pcm[frame + channel]) < .0001f, "Analyzer does not leak front-pair PCM into unrelated pairs.");
                 for (var pair = 1; pair < native.Channels / 2; pair++)
-                    Check(((AudioEffectSpectrumAnalyzerInstance)server.GetBusEffectInstance(0, 0, pair)).GetMagnitudeForFrequencyRange(0, 0) == Vector2.Zero,
+                    Check(((AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(0, 0, pair)).GetMagnitudeForFrequencyRange(0, 0) == Vector2.Zero,
                         "Each output stereo pair owns an independent zero spectrum when no source feeds it.");
             }
             var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
@@ -128,27 +128,27 @@ internal static class AudioSpectrumTests
             Check(borrowed.GetMagnitudeForFrequencyRange(0, 0) == Vector2.Zero, "Silent native windows replace the prior live spectrum.");
             bytes = native.MixManagedBytes; calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64);
             Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native paused FFT passes allocate no measured bytes/calls.");
-            server.RemoveBusEffect(0, 0);
+            AudioServer.RemoveBusEffect(0, 0);
             Reject<ObjectDisposedException>(() => borrowed.GetMagnitudeForFrequencyRange(0, 0));
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
 
     internal static void RunHost()
     {
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod);
-        settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu");
         try
         {
             using var effect = new AudioEffectSpectrumAnalyzer { FFTSize = AudioFFTSize.Size256, BufferLength = .1f };
             using var stream = AudioEffectTests.Constant(); using var capture = new AudioEffectCapture { BufferLength = .1f };
             var window = new Window { Size = new(160, 96) }; window.AddChild(new AudioStreamPlayer { Stream = stream, Autoplay = true });
             var scenario = new HostScenario(capture); window.AddChild(scenario);
-            var server = AudioServer.Instance; server.AddBusEffect(0, effect); server.AddBusEffect(0, capture);
-            try { Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public analyzer host queried and cleaned up."); }
-            finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+            var server = AudioServer.Service; AudioServer.AddBusEffect(0, effect); AudioServer.AddBusEffect(0, capture);
+            try { Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public analyzer host queried and cleaned up."); }
+            finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class HostScenario(AudioEffectCapture capture) : Node
     {
@@ -158,10 +158,10 @@ internal static class AudioSpectrumTests
         protected override void OnProcess(double delta)
         {
             _elapsed += delta;
-            var server = AudioServer.Instance;
+            var server = AudioServer.Service;
             var available = capture.GetFramesAvailable();
             var pcm = available > 0 ? capture.GetBuffer(available) : [];
-            var magnitude = ((AudioEffectSpectrumAnalyzerInstance)server.GetBusEffectInstance(0, 0)).GetMagnitudeForFrequencyRange(0, 0);
+            var magnitude = ((AudioEffectSpectrumAnalyzerInstance)AudioServer.GetBusEffectInstance(0, 0)).GetMagnitudeForFrequencyRange(0, 0);
             Completed |= pcm.Any(f => f.DistanceTo(new(.2f, -.3f)) < .0001f) && magnitude.X is > .19f and < .21f && magnitude.Y is > .29f and < .31f;
             if (_elapsed < .3) return;
             Check(Completed, "Public Window host captured pass-through PCM and queried stereo magnitude."); Tree!.Quit();

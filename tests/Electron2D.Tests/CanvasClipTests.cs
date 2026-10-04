@@ -51,8 +51,8 @@ internal static class CanvasClipTests
         using var alpha = Image.CreateEmpty(2, 1, false, Image.Format.Rgba8); alpha.SetPixel(0, 0, Colors.White); alpha.SetPixel(1, 0, new(1, 1, 1, .25f)); using var texture = ImageTexture.CreateFromImage(alpha);
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Blue);
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Blue);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback();
                 Pixel(image, 52, 12, Colors.Blue); Pixel(image, 84, 12, Colors.Lime); if (phase < 5) Pixel(image, 12, 40, Colors.Lime);
@@ -66,7 +66,7 @@ internal static class CanvasClipTests
                 phase++;
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && phase == 7 && window.IsDisposed, "Mask host lifecycle."); Console.WriteLine($"Canvas alpha masks, texture alpha, overlap, Only/AndDraw, no commands, no geometry, Z and transforms passed ({backend}).");
+        Check(Engine.Run(window) == 0 && phase == 7 && window.IsDisposed, "Mask host lifecycle."); Console.WriteLine($"Canvas alpha masks, texture alpha, overlap, Only/AndDraw, no commands, no geometry, Z and transforms passed ({backend}).");
     }
     private static void Boundaries(string backend)
     {
@@ -78,37 +78,37 @@ internal static class CanvasClipTests
         parent.AddChild(mask); var outside = new Paint { Name = "outside", Position = new(0, 4), Fill = Colors.Blue }; parent.AddChild(outside); window.AddChild(parent); var phase = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback(); Pixel(image, 4, 12, phase == 0 ? Colors.Blue : new(.5f, 0, 0)); Pixel(image, 52, 12, Colors.Lime); Pixel(image, 84, 12, Colors.Lime);
                 if (phase++ == 0) outside.Position = new(0, -4); else window.Tree!.Quit();
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && phase == 2, "Mask ancestry/Y-sort lifecycle."); Console.WriteLine($"Canvas mask parent/internal Y-sort, TopLevel and neutral boundaries passed ({backend}).");
+        Check(Engine.Run(window) == 0 && phase == 2, "Mask ancestry/Y-sort lifecycle."); Console.WriteLine($"Canvas mask parent/internal Y-sort, TopLevel and neutral boundaries passed ({backend}).");
     }
     private static void Offscreen(string backend)
     {
         var window = new Window { Size = new(96, 64) }; var viewport = new SubViewport { Size = new(32, 32), TransparentBG = true, RenderTargetUpdateMode = ViewportUpdateMode.Always }; var mask = new Paint { Name = "mask", Fill = new(1, 1, 1, .5f), ClipChildren = ClipChildrenMode.Only }; mask.AddChild(new Paint { Name = "child", Fill = Colors.Red }); viewport.AddChild(mask); window.AddChild(viewport); var phase = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.FramePostDraw += () =>
             {
                 using var image = viewport.GetTexture().GetImage()!; Pixel(image, 4, 4, new(.5f, 0, 0, .5f)); Pixel(image, 20, 20, default);
                 if (phase++ == 0) viewport.Size = new(48, 48); else window.Tree!.Quit();
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && phase == 2, "Offscreen mask lifecycle."); Console.WriteLine($"Transparent SubViewport mask and resize passed ({backend}).");
+        Check(Engine.Run(window) == 0 && phase == 2, "Offscreen mask lifecycle."); Console.WriteLine($"Transparent SubViewport mask and resize passed ({backend}).");
     }
     private static void Warm(string backend)
     {
         var window = new Window { Size = new(64, 64) }; var mask = new Paint { Name = "mask", ClipChildren = ClipChildrenMode.AndDraw }; mask.AddChild(new Paint { Name = "child" }); window.AddChild(mask); var frames = 0; long allocated = 0; var prior = GC.GetAllocatedBytesForCurrentThread();
-        window.Ready += _ => RenderingServer.Instance!.FramePostDraw += () =>
+        window.Ready += _ => RenderingServer.FramePostDraw += () =>
         {
             var now = GC.GetAllocatedBytesForCurrentThread(); if (frames >= 32) allocated += now - prior; prior = now;
             if (frames < 96) { mask.Position = new((frames & 1) * 2, 0); mask.ClipChildren = (frames & 1) == 0 ? ClipChildrenMode.AndDraw : ClipChildrenMode.Only; mask.SelfModulate = new(1, 1, 1, (frames & 1) == 0 ? .5f : .75f); }
             if (++frames == 160) window.Tree!.Quit();
         };
-        Check(Engine.Instance.Run(window) == 0 && frames == 160 && allocated == 0, $"Warmed mask frames allocated {allocated} bytes."); Console.WriteLine($"64 active + 64 idle warmed mask frames: {allocated} managed bytes ({backend}).");
+        Check(Engine.Run(window) == 0 && frames == 160 && allocated == 0, $"Warmed mask frames allocated {allocated} bytes."); Console.WriteLine($"64 active + 64 idle warmed mask frames: {allocated} managed bytes ({backend}).");
     }
     internal static void Materials(ShaderMaterial material, string language)
     {
@@ -116,30 +116,30 @@ internal static class CanvasClipTests
         material.SetShaderParameter("tint", Colors.Blue);
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback(); Pixel(image, 4, 4, phase == 0 ? Colors.Black : Colors.Red);
                 if (phase++ == 0) { mask.ClipChildren = ClipChildrenMode.AndDraw; mask.Material = null; } else window.Tree!.Quit();
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && phase == 2, "Custom Only shader lifecycle."); material.SetShaderParameter("tint", Colors.White); Console.WriteLine($"Mask custom Only material overrides built-in screen shading ({language}).");
+        Check(Engine.Run(window) == 0 && phase == 2, "Custom Only shader lifecycle."); material.SetShaderParameter("tint", Colors.White); Console.WriteLine($"Mask custom Only material overrides built-in screen shading ({language}).");
         using var plain = new CanvasItemMaterial(); var baseline = new Window { Size = new(64, 64) }; var owner = new Paint { Name = "owner", Fill = Colors.Lime, Material = plain, ClipChildren = ClipChildrenMode.AndDraw }; owner.AddChild(new Paint { Name = "child", Fill = Colors.Red }); baseline.AddChild(owner); var checkedFrame = false;
-        baseline.Ready += _ => RenderingServer.Instance!.FramePostDraw += () => { using var image = RenderingServer.Instance.Readback(); Pixel(image, 4, 4, Colors.Red); checkedFrame = true; baseline.Tree!.Quit(); };
-        Check(Engine.Instance.Run(baseline) == 0 && checkedFrame, "AndDraw retains built-in final mask with assigned material.");
+        baseline.Ready += _ => RenderingServer.FramePostDraw += () => { using var image = RenderingServer.Service!.Readback(); Pixel(image, 4, 4, Colors.Red); checkedFrame = true; baseline.Tree!.Quit(); };
+        Check(Engine.Run(baseline) == 0 && checkedFrame, "AndDraw retains built-in final mask with assigned material.");
         foreach (var earlyOwner in new[] { false, true })
         {
             var rejected = new Window(); var clip = new Paint { Name = "clip", ClipChildren = earlyOwner ? ClipChildrenMode.AndDraw : ClipChildrenMode.Only, Material = earlyOwner ? material : null }; clip.AddChild(new Paint { Name = "child", Material = earlyOwner ? null : material }); rejected.AddChild(clip);
-            Reject<NotSupportedException>(() => Engine.Instance.Run(rejected)); Check(rejected.IsDisposed, "Writable-screen read rejects and cleans up.");
+            Reject<NotSupportedException>(() => Engine.Run(rejected)); Check(rejected.IsDisposed, "Writable-screen read rejects and cleans up.");
         }
     }
     internal static void RejectSoftware()
     {
-        var window = new Window(); var owner = new Paint { Name = "mask", ClipChildren = ClipChildrenMode.Only }; owner.AddChild(new Paint { Name = "child" }); window.AddChild(owner); Reject<NotSupportedException>(() => Engine.Instance.Run(window)); Check(window.IsDisposed, "Software mask capability cleanup.");
+        var window = new Window(); var owner = new Paint { Name = "mask", ClipChildren = ClipChildrenMode.Only }; owner.AddChild(new Paint { Name = "child" }); window.AddChild(owner); Reject<NotSupportedException>(() => Engine.Run(window)); Check(window.IsDisposed, "Software mask capability cleanup.");
     }
     private static void Nested()
     {
         var window = new Window(); var outer = new Paint { Name = "outer", ClipChildren = ClipChildrenMode.Only }; var inner = new Paint { Name = "inner", ClipChildren = ClipChildrenMode.AndDraw }; inner.AddChild(new Paint { Name = "child" }); outer.AddChild(inner); window.AddChild(outer);
-        Reject<NotSupportedException>(() => Engine.Instance.Run(window)); Check(window.IsDisposed, "Nested mask rejects and cleans up.");
+        Reject<NotSupportedException>(() => Engine.Run(window)); Check(window.IsDisposed, "Nested mask rejects and cleans up.");
     }
     private static void Pixel(Image image, int x, int y, Color expected)
     {

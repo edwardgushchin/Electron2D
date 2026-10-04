@@ -105,7 +105,7 @@ dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 -
 
 Перемещайте узел стрелками. Для выхода нажмите Escape или закройте окно.
 
-В [Program.cs](examples/HostExample/Program.cs) показано создание `Window`, добавление сцены и вызов `Engine.Instance.Run`. Подробнее о запуске и устройстве примера читайте в [его README](examples/HostExample/README.md).
+В [Program.cs](examples/HostExample/Program.cs) показано создание `Window`, добавление сцены и вызов `Engine.Run`. Подробнее о запуске и устройстве примера читайте в [его README](examples/HostExample/README.md).
 
 <a id="documentation"></a>
 

@@ -147,7 +147,7 @@ internal sealed class AudioEffectRecordInstance : AudioEffectInstance
     internal AudioEffectRecordInstance(AudioEffectRecord source)
     {
         _source = source;
-        Rate = checked((int)AudioServer.Instance.GetMixRate());
+        Rate = checked((int)AudioServer.GetMixRate());
         if (Rate <= 0 || Rate > 1_000_000) throw new ArgumentOutOfRangeException(nameof(source), "Output rate exceeds prepared recording storage.");
         _capture = new AudioEffectCapture { BufferLength = 1.5f };
         try { using var prepared = _capture.Instantiate(); }

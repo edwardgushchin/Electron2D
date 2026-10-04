@@ -5,9 +5,9 @@ internal static class AudioLifetimeTests
     internal static void VerifyWorkerInitialization()
     {
         Task.Run(() => { using var stream = AudioRuntimeTests.Tone(44100); using var playback = stream.InstantiatePlayback(); playback.Start(); Check(playback.MixAudio(1, 32).Length == 32, "Worker-first resource mixing executes."); }).GetAwaiter().GetResult();
-        AudioServer.Instance.BusCount = 1;
-        var rejected = Task.Run(() => { try { AudioServer.Instance.AddBus(); return false; } catch (InvalidOperationException) { return true; } }).GetAwaiter().GetResult();
-        Check(rejected && AudioServer.Instance.BusCount == 1, "Passive worker mixing does not claim configuration ownership; later foreign mutation rejects.");
+        AudioServer.BusCount = 1;
+        var rejected = Task.Run(() => { try { AudioServer.AddBus(); return false; } catch (InvalidOperationException) { return true; } }).GetAwaiter().GetResult();
+        Check(rejected && AudioServer.BusCount == 1, "Passive worker mixing does not claim configuration ownership; later foreign mutation rejects.");
     }
     internal static void Run()
     {
@@ -46,7 +46,7 @@ internal static class AudioLifetimeTests
             {
                 if (stream.FailMix) throw new InvalidOperationException("Injected mix failure.");
                 if (!_active) return 0;
-                buffer.Fill(new Vector2(.1f, -.1f)); _position += buffer.Length * rateScale / AudioServer.Instance.GetMixRate(); return buffer.Length;
+                buffer.Fill(new Vector2(.1f, -.1f)); _position += buffer.Length * rateScale / AudioServer.GetMixRate(); return buffer.Length;
             }
         }
     }

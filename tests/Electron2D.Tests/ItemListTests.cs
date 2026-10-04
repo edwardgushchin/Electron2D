@@ -114,7 +114,7 @@ internal static class ItemListTests
 
     private static void VerifyPointerAndKeyboard()
     {
-        InputMap.Instance.LoadFromProjectSettings();
+        InputMap.LoadFromProjectSettings();
         var viewport = new TestViewport();
         var list = new ItemList { Position = new(10, 10), Size = new(120, 70) };
         for (var i = 0; i < 8; i++) list.AddItem($"Entry {i}");
@@ -214,7 +214,7 @@ internal static class ItemListTests
         list.Current = 0;
         using (var key = new InputEventKey { Unicode = 'B', Pressed = true })
             viewport.PushInput(key, inLocalCoordinates: true);
-        Check(list.Current == 1 && ProjectSettings.Instance.Get(ProjectSettings.IncrementalSearchMaxIntervalMsec) == 2000,
+        Check(list.Current == 1 && ProjectSettings.Get(ProjectSettings.IncrementalSearchMaxIntervalMsec) == 2000,
             "Typed Unicode search selects the next matching item with the pinned interval default.");
         list.AllowSearch = false;
         using (var key = new InputEventKey { Unicode = 'A', Pressed = true })
@@ -259,7 +259,7 @@ internal static class ItemListTests
 
     private static void VerifyTheme()
     {
-        var theme = ThemeDB.Instance.GetDefaultTheme();
+        var theme = ThemeDB.GetDefaultTheme();
         Check(((StyleBoxFlat)theme.GetStyleBox("panel", "ItemList")!).BGColor == new Color(.1f, .1f, .1f, .6f) &&
               ReferenceEquals(theme.GetStyleBox("focus", "ItemList"), theme.GetStyleBox("focus", "Button")) &&
               ReferenceEquals(theme.GetStyleBox("cursor", "ItemList"), theme.GetStyleBox("focus", "ItemList")) &&

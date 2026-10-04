@@ -35,7 +35,7 @@ public partial class AudioStreamPlayer : Node
     private long _sequence;
     /// <summary>Creates an empty player with one voice capacity, Master bus and unity gain/rate.</summary>
     public AudioStreamPlayer() { }
-    private void Check() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); if (_registered) AudioServer.Instance.Check(); }
+    private void Check() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); if (_registered) AudioServer.Service.Check(); }
     /// <summary>Gets or sets the borrowed stream.</summary>
     /// <value>Null initially. Replacement stops current voices before preparing the new resource.</value>
     /// <exception cref="ObjectDisposedException">The player or assigned stream is disposed.</exception>
@@ -76,8 +76,8 @@ public partial class AudioStreamPlayer : Node
     /// <exception cref="ObjectDisposedException">The player is disposed.</exception>
     public string Bus
     {
-        get { Check(); return AudioServer.Instance.GetBusIndex(_bus) >= 0 ? _bus : "Master"; }
-        set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); if (_bus == value) return; _bus = value; foreach (var voice in _voices) { voice.SetSend(AudioServer.Instance.ResolveBus(value)); voice.SetMixTarget(_mixTarget); } RefreshVolume(); }
+        get { Check(); return AudioServer.GetBusIndex(_bus) >= 0 ? _bus : "Master"; }
+        set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); if (_bus == value) return; _bus = value; foreach (var voice in _voices) { voice.SetSend(AudioServer.Service.ResolveBus(value)); voice.SetMixTarget(_mixTarget); } RefreshVolume(); }
     }
     /// <summary>Gets or sets VolumeDB configuration.</summary>
     /// <value>Zero dB initially; negative infinity silences volume-scaled channels. The center/surround low-frequency route retains unity player gain.</value>
@@ -154,12 +154,12 @@ public partial class AudioStreamPlayer : Node
     private AudioStreamPlayback PreparePlayback()
     {
         var playback = _stream!.InstantiatePlayback();
-        try { foreach (var parameter in _parameters) parameter.Key.RestoreStoredValue(playback, parameter.Value, static resource => resource); if ((_type == AudioServer.PlaybackType.Sample || _type == AudioServer.PlaybackType.Default && ProjectSettings.Instance.GetWithOverride(ProjectSettings.AudioGeneralDefaultPlaybackType) == AudioDefaultPlaybackType.Sample) && _stream.CanBeSampled()) playback.SetSamplePlayback(new AudioSamplePlayback(_stream) { Bus = _bus }); return playback; }
+        try { foreach (var parameter in _parameters) parameter.Key.RestoreStoredValue(playback, parameter.Value, static resource => resource); if ((_type == AudioServer.PlaybackType.Sample || _type == AudioServer.PlaybackType.Default && ProjectSettings.GetWithOverride(ProjectSettings.AudioGeneralDefaultPlaybackType) == AudioDefaultPlaybackType.Sample) && _stream.CanBeSampled()) playback.SetSamplePlayback(new AudioSamplePlayback(_stream) { Bus = _bus }); return playback; }
         catch { playback.Dispose(); throw; }
     }
     private FAudioStreamVoice CreateVoice(AudioStreamPlayback playback)
     {
-        var server = AudioServer.Instance; var voice = server.Native.CreateStream(playback, server.ResolveBus(_bus));
+        var server = AudioServer.Service; var voice = server.Native.CreateStream(playback, server.ResolveBus(_bus));
         try { voice.SetPitch(_pitch); voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), server.ResolveSourceGain(_bus, 1)); voice.SetMixTarget(_mixTarget); if (_spatial) voice.SetSpatial(_spatialLeft, _spatialRight); return voice; }
         catch { voice.Dispose(); throw; }
     }
@@ -262,7 +262,7 @@ public partial class AudioStreamPlayer : Node
         }
         else
         {
-            lock (AudioServer.Instance.Native.Gate)
+            lock (AudioServer.Service.Native.Gate)
             {
                 foreach (var voice in _voices) if (voice.Playback is not TPlayback) throw new InvalidOperationException("Parameter playback type differs from the stream.");
                 foreach (var voice in _voices) parameter.SetValue((TPlayback)voice.Playback, value);
@@ -290,7 +290,7 @@ public partial class AudioStreamPlayer : Node
         ArgumentNullException.ThrowIfNull(parameter);
         if (_stream is null || !_stream.GetParameterList().Contains(parameter) || parameter.IsReadOnly) throw new InvalidOperationException("The stream does not declare this writable parameter.");
     }
-    internal void RefreshVolume() { var gate = AudioServer.Instance.ResolveSourceGain(_bus, 1); foreach (var voice in _voices) voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), gate); }
+    internal void RefreshVolume() { var gate = AudioServer.Service.ResolveSourceGain(_bus, 1); foreach (var voice in _voices) voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), gate); }
     internal void ConfigureSpatial(float left, float right)
     {
         if (!float.IsFinite(left) || !float.IsFinite(right) || left < 0 || right < 0)
@@ -301,7 +301,7 @@ public partial class AudioStreamPlayer : Node
     internal void RefreshPitch() { foreach (var voice in _voices) voice.SetPitch(_pitch); }
     internal void RefreshRouting()
     {
-        foreach (var voice in _voices) { voice.SetSend(AudioServer.Instance.ResolveBus(_bus)); voice.SetMixTarget(_mixTarget); }
+        foreach (var voice in _voices) { voice.SetSend(AudioServer.Service.ResolveBus(_bus)); voice.SetMixTarget(_mixTarget); }
     }
     private void TrimVoices()
     {
@@ -342,7 +342,7 @@ public partial class AudioStreamPlayer : Node
             {
                 if (what == NotificationEnterTree)
                 {
-                    if (!_registered) { AudioServer.Instance.Attach(this); _registered = true; }
+                    if (!_registered) { AudioServer.Service.Attach(this); _registered = true; }
                     SetInternalProcessing(true, false);
                     PauseVoices(!CanProcess());
                     if (_autoplay) Play();
@@ -392,10 +392,10 @@ public partial class AudioStreamPlayer : Node
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(AudioStreamPlayer) ? CreatePlayer : base.CreateSceneInstanceFactory();
     private static Node CreatePlayer() => new AudioStreamPlayer();
     /// <inheritdoc />
-    protected override void ValidateMutation() { base.ValidateMutation(); if (_audioOperation) throw new InvalidOperationException("Audio playback operations do not allow reentrant player mutation."); if (_registered) AudioServer.Instance.Check(); }
+    protected override void ValidateMutation() { base.ValidateMutation(); if (_audioOperation) throw new InvalidOperationException("Audio playback operations do not allow reentrant player mutation."); if (_registered) AudioServer.Service.Check(); }
     /// <inheritdoc />
     /// <remarks>A detached player retaining audio registration still requires its configuration owner.</remarks>
-    protected override void ValidateDisposal() { base.ValidateDisposal(); if (_audioOperation) throw new InvalidOperationException("Audio playback operations do not allow reentrant player disposal."); if (_registered) AudioServer.Instance.Check(); }
+    protected override void ValidateDisposal() { base.ValidateDisposal(); if (_audioOperation) throw new InvalidOperationException("Audio playback operations do not allow reentrant player disposal."); if (_registered) AudioServer.Service.Check(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
@@ -403,7 +403,7 @@ public partial class AudioStreamPlayer : Node
         if (disposing)
         {
             try { ReleaseVoices(); } catch (Exception error) { CollectException(ref errors, error); }
-            if (_registered) { _registered = false; try { AudioServer.Instance.Detach(this); } catch (Exception error) { CollectException(ref errors, error); } }
+            if (_registered) { _registered = false; try { AudioServer.Service.Detach(this); } catch (Exception error) { CollectException(ref errors, error); } }
             _parameters.Clear(); _stream = null; Finished = null;
         }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }

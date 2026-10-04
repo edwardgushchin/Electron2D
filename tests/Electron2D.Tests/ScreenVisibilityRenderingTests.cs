@@ -16,19 +16,19 @@ internal static partial class RenderingRuntimeTests
         notifier.ScreenExited += () => { exits++; Check(!notifier.IsOnScreen(), "Native exit commits state."); };
         window.Ready += _ =>
         {
-            Check(PhysicsServer.Instance.BodyGetDirectState(target.GetRID()) is null && !notifier.IsOnScreen() && target.ProcessMode == ProcessMode.Disabled, "No on-screen state before first render.");
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            Check(PhysicsServer.BodyGetDirectState(target.GetRID()) is null && !notifier.IsOnScreen() && target.ProcessMode == ProcessMode.Disabled, "No on-screen state before first render.");
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 frames++;
                 switch (frames)
                 {
                     case 1:
-                        Check(PhysicsServer.Instance.BodyGetDirectState(target.GetRID()) is not null && notifier.IsOnScreen() && layered.IsOnScreen() && target.ProcessMode == ProcessMode.Inherit, "Initial region, CanvasLayer transform and automatic enable.");
+                        Check(PhysicsServer.BodyGetDirectState(target.GetRID()) is not null && notifier.IsOnScreen() && layered.IsOnScreen() && target.ProcessMode == ProcessMode.Inherit, "Initial region, CanvasLayer transform and automatic enable.");
                         using (var pixels = server.Readback()) Pixel(pixels, 11, 11, Colors.Black);
                         notifier.Position = new(101, 10); enabler.Position = new(101, 10); break;
                     case 2:
-                        Check(PhysicsServer.Instance.BodyGetDirectState(target.GetRID()) is null && !notifier.IsOnScreen() && target.ProcessMode == ProcessMode.Disabled, "Region beyond the viewport exits and disables its target.");
+                        Check(PhysicsServer.BodyGetDirectState(target.GetRID()) is null && !notifier.IsOnScreen() && target.ProcessMode == ProcessMode.Disabled, "Region beyond the viewport exits and disables its target.");
                         notifier.Position = new(99, 10); enabler.Position = new(99, 10); break;
                     case 3:
                         Check(notifier.IsOnScreen() && target.ProcessMode == ProcessMode.Inherit, "Any positive intersection enters."); notifier.Hide(); break;
@@ -56,7 +56,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(frames == 12, "Twelve native visibility stages.");
+        Engine.Run(window); Released(window); Check(frames == 12, "Twelve native visibility stages.");
         VerifyScreenClipAndRepeatedDrawing();
         VerifyScreenCallbackMutation();
         VerifyScreenAllocations(backend);
@@ -70,13 +70,13 @@ internal static partial class RenderingRuntimeTests
         var repeated = new Parallax { RepeatSize = new(100, 0), RepeatTimes = 2 }; window.AddChild(repeated);
         var repeatSensor = new VisibleOnScreenNotifier { Position = new(150, 10), Rect = new(0, 0, 5, 5) }; repeated.AddChild(repeatSensor);
         var drawn = new DrawingScreenNotifier { Position = new(200, 10), Rect = new(0, 0, 1, 1) }; window.AddChild(drawn);
-        window.Ready += _ => RenderingServer.Instance!.FramePostDraw += () =>
+        window.Ready += _ => RenderingServer.FramePostDraw += () =>
         {
             Check(!clipped.IsOnScreen() && repeatSensor.IsOnScreen() && drawn.IsOnScreen(),
                 "Control clipping, visible repeated copies and inherited draw geometry contribute to conservative culling.");
             window.Tree!.Quit();
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
     }
     private sealed class DrawingScreenNotifier : VisibleOnScreenNotifier
     {
@@ -94,18 +94,18 @@ internal static partial class RenderingRuntimeTests
             window.RemoveChild(second); window.AddChild(second);
         };
         second.ScreenEntered += () => calls++;
-        window.Ready += _ => RenderingServer.Instance!.FramePostDraw += () =>
+        window.Ready += _ => RenderingServer.FramePostDraw += () =>
         {
             if (++frames == 1) Check(!second.IsOnScreen() && calls == 0, "Reentry invalidates queued stale delivery.");
             else { Check(second.IsOnScreen() && calls == 1, "Reentry enters on the following frame."); window.Tree!.Quit(); }
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         var failing = new Window { Size = new(100, 80) }; var early = new VisibleOnScreenNotifier { Name = "Early" }; var late = new VisibleOnScreenNotifier { Name = "Late" };
         failing.AddChild(early); failing.AddChild(late); var laterDelivered = false;
         early.ScreenEntered += () => throw new ApplicationException("expected screen handler failure");
         late.ScreenEntered += () => laterDelivered = true;
         Exception? failure = null;
-        try { Engine.Instance.Run(failing); } catch (Exception error) { failure = error; }
+        try { Engine.Run(failing); } catch (Exception error) { failure = error; }
         Released(failing);
         Check(failure is AggregateException && laterDelivered, "A failed transition still delivers later queued notifiers and releases native ownership.");
     }
@@ -118,16 +118,16 @@ internal static partial class RenderingRuntimeTests
         notifier.ScreenEntered += () => entries++; notifier.ScreenExited += () => exits++;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); notifier.Position = frames % 2 == 0 ? new(10, 10) : new(200, 10); };
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); notifier.Position = frames % 2 == 0 ? new(10, 10) : new(200, 10); };
+            RenderingServer.FramePostDraw += () =>
             {
                 var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames > 64) allocated += bytes;
                 if (frames == 128) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && entries == 64 && exits == 64 && allocated == 0, $"Warmed active {backend} render visibility transitions allocated {allocated} bytes.");
     }
 }

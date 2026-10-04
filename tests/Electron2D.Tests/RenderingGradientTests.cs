@@ -10,9 +10,9 @@ internal static partial class RenderingRuntimeTests
         var window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var stage = 0; var changes = 0; ramp.Changed += _ => changes++; fill.Changed += _ => changes++;
         var node = new CanvasNode { DrawAction = n => { n.DrawTextureRect(ramp, new Rect2(0, 0, 16, 16), false); n.DrawTextureRect(fill, new Rect2(24, 0, 16, 16), false); } };
-        node.ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
+        node.ReadyAction = n => RenderingServer.FramePostDraw += () =>
         {
-            stage++; using var image = RenderingServer.Instance.Readback();
+            stage++; using var image = RenderingServer.Service!.Readback();
             if (stage == 1)
             {
                 Pixel(image, 1, 8, Colors.Black); Pixel(image, 8, 8, new Color(.5f, .5f, .5f)); Pixel(image, 14, 8, Colors.White);
@@ -28,7 +28,7 @@ internal static partial class RenderingRuntimeTests
             }
             Check(node.Draws == 1, "Lazy gradient updates keep retained geometry.");
         };
-        window.AddChild(node); Engine.Instance.Run(window); Released(window); Check(stage == 3, "Three gradient canvas stages.");
+        window.AddChild(node); Engine.Run(window); Released(window); Check(stage == 3, "Three gradient canvas stages.");
         Console.WriteLine($"Gradient canvas pattern and live updates passed: {backend}.");
 
         using var hdr = new Gradient { Colors = [new Color(2, 0, 0)] };
@@ -37,9 +37,9 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(new CanvasNode
         {
             DrawAction = n => n.DrawTextureRect(texture, new Rect2(0, 0, 16, 16), false, new Color(.25f, .25f, .25f)),
-            ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () => { using var image = RenderingServer.Instance.Readback(); Pixel(image, 8, 8, new Color(.5f, 0, 0)); n.Tree!.Quit(); },
+            ReadyAction = n => RenderingServer.FramePostDraw += () => { using var image = RenderingServer.Service!.Readback(); Pixel(image, 8, 8, new Color(.5f, 0, 0)); n.Tree!.Quit(); },
         });
-        try { Engine.Instance.Run(window); Console.WriteLine($"Gradient HDR canvas precision passed: {backend}."); }
+        try { Engine.Run(window); Console.WriteLine($"Gradient HDR canvas precision passed: {backend}."); }
         catch (NotSupportedException e) when (backend == "compatibility" && e.Message.Contains("HDR texture precision"))
         { Console.WriteLine("Gradient HDR explicitly rejected by this compatibility driver."); }
         Released(window);
@@ -48,7 +48,7 @@ internal static partial class RenderingRuntimeTests
             using (empty)
             {
                 window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; window.AddChild(new CanvasNode { DrawAction = n => n.DrawTexture(empty, Vector2.Zero) });
-                Reject<InvalidOperationException>(() => Engine.Instance.Run(window)); Released(window);
+                Reject<InvalidOperationException>(() => Engine.Run(window)); Released(window);
             }
         }
     }
@@ -65,9 +65,9 @@ internal static partial class RenderingRuntimeTests
         material.SetShaderParameter("tint", new Color(.25f, .25f, .25f));
         var window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var stage = 0;
         var node = new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect2(0, 0, 64, 64), Colors.White) };
-        node.ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
+        node.ReadyAction = n => RenderingServer.FramePostDraw += () =>
         {
-            stage++; using var frame = RenderingServer.Instance.Readback();
+            stage++; using var frame = RenderingServer.Service!.Readback();
             var expected = stage switch { 1 or 2 => new Color(.5f, .5f, .5f), 3 => new Color(.5f, 0, .5f), _ => new Color(0, .5f, 0) };
             try { Pixel(frame, 16, 16, expected); Pixel(frame, 48, 48, expected); }
             catch (Exception e) { throw new InvalidOperationException($"Gradient material {fixture}, stage {stage}.", e); }
@@ -82,7 +82,7 @@ internal static partial class RenderingRuntimeTests
                 default: n.Tree!.Quit(); break;
             }
         };
-        window.AddChild(node); Engine.Instance.Run(window); Released(window);
+        window.AddChild(node); Engine.Run(window); Released(window);
         Check(stage == 6 && !g.IsDisposed && !ramp.IsDisposed && !fill.IsDisposed, "Six stages and borrowed ownership.");
         Console.WriteLine($"Gradient HDR material and worker updates passed: {fixture}, {stage} stages.");
     }

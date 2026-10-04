@@ -100,14 +100,14 @@ internal static class SubViewportContainerTests
     }
     internal static void RunHost()
     {
-        Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_CONTAINER_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_CONTAINER_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         try { Pixels(backend, null); NativeInput(backend); Warm(backend); if (backend == "gpu") foreach (var artifact in new[] { "CanvasHLSL", "CanvasGLSL" }) { using var shader = ShaderFixture(artifact); using var material = new ShaderMaterial { Shader = shader }; Pixels(backend, material); } }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private static void NativeInput(string backend)
     {
         var window = new Window { Size = new(96, 64) }; var container = new SubViewportContainer { Name = "container", Stretch = true, StretchShrink = 2, Position = new(8, 8), Size = new(64, 48), TextureFilter = TextureFilter.Nearest }; var view = new SubViewport { Name = "view" }; var probe = new Probe { Name = "probe", Size = new(24, 20), MouseDefaultCursorShape = CursorShape.PointingHand }; view.AddChild(probe); container.AddChild(view); window.AddChild(container); var driver = new NativeDriver(container, view, probe); window.AddChild(driver);
-        Check(Engine.Instance.Run(window) == 0 && driver.Frames == 2, "Native embedded input lifecycle."); Console.WriteLine($"Native embedded cursor, MouseTarget, click/shrink and keyboard focus pixels passed ({backend}).");
+        Check(Engine.Run(window) == 0 && driver.Frames == 2, "Native embedded input lifecycle."); Console.WriteLine($"Native embedded cursor, MouseTarget, click/shrink and keyboard focus pixels passed ({backend}).");
     }
     private sealed class NativeDriver(SubViewportContainer container, SubViewport view, Probe probe) : Node
     {
@@ -118,16 +118,16 @@ internal static class SubViewportContainerTests
             ProcessEnabled = true; var windows = SDL.GetWindows(out var count); Check(count == 1, "One native host."); _windowID = SDL.GetWindowID(windows![0]);
             var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = _windowID, X = 16, Y = 16 } }; Check(SDL.PushEvent(ref motion), "Queue native motion.");
             var button = new SDL.Event { Button = new SDL.MouseButtonEvent { Type = SDL.EventType.MouseButtonDown, WindowID = _windowID, Button = SDL.ButtonLeft, Down = true, X = 16, Y = 16 } }; Check(SDL.PushEvent(ref button), "Queue native click."); button.Button.Type = SDL.EventType.MouseButtonUp; button.Button.Down = false; Check(SDL.PushEvent(ref button), "Queue native release.");
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
-                using var image = RenderingServer.Instance.Readback(); Pixel(image, 12, 12, Frames == 0 ? Colors.Red : Colors.Lime);
+                using var image = RenderingServer.Service!.Readback(); Pixel(image, 12, 12, Frames == 0 ? Colors.Red : Colors.Lime);
                 if (++Frames == 2) Tree!.Quit();
             };
         }
         protected override void OnProcess(double delta)
         {
             Check(probe.Presses == 1 && probe.Last.IsEqualApprox(new(4, 4)) && ReferenceEquals(view.GetGUIFocusOwner(), probe), "Native click reaches child-local coordinates and focus.");
-            Check(Electron2D.Input.Instance.GetCurrentCursorShape() == CursorShape.PointingHand, "Embedded cursor delegates to child."); container.MouseTarget = true; Check(Electron2D.Input.Instance.GetCurrentCursorShape() == CursorShape.Arrow, "MouseTarget selects container cursor."); container.MouseTarget = false;
+            Check(Electron2D.Input.GetCurrentCursorShape() == CursorShape.PointingHand, "Embedded cursor delegates to child."); container.MouseTarget = true; Check(Electron2D.Input.GetCurrentCursorShape() == CursorShape.Arrow, "MouseTarget selects container cursor."); container.MouseTarget = false;
             if (Frames == 0)
             {
                 var key = new SDL.Event { Key = new SDL.KeyboardEvent { Type = SDL.EventType.KeyDown, WindowID = _windowID, Key = SDL.Keycode.Tab, Scancode = SDL.Scancode.Tab, Down = true } }; Check(SDL.PushEvent(ref key), "Queue native Tab.");
@@ -144,7 +144,7 @@ internal static class SubViewportContainerTests
         var window = new Window { Size = new(128, 96) }; var container = new SubViewportContainer { Name = "container", Position = new(8, 8), Size = new(64, 48), Stretch = true, StretchShrink = 2, TextureFilter = TextureFilter.Nearest, Material = material }; var view = new SubViewport { Name = "view" }; var paint = new Paint { Name = "paint" }; view.AddChild(paint); container.AddChild(view); window.AddChild(container); var phase = 0;
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>
             {
                 using var image = renderer.Readback();
                 if (phase == 0) { Pixel(image, 12, 12, Colors.Red); Pixel(image, 44, 12, Colors.Black); Check(view.Size == new Vector2i(32, 24), "Native shrink dimensions."); container.StretchShrink = 1; }
@@ -158,17 +158,17 @@ internal static class SubViewportContainerTests
                 phase++;
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && phase == 8 && window.IsDisposed, "Container native lifecycle."); Console.WriteLine($"Embedded viewport composition/shrink/resize/modulation/visibility/rotation/sibling lifetime passed ({backend}, shader={material is not null}).");
+        Check(Engine.Run(window) == 0 && phase == 8 && window.IsDisposed, "Container native lifecycle."); Console.WriteLine($"Embedded viewport composition/shrink/resize/modulation/visibility/rotation/sibling lifetime passed ({backend}, shader={material is not null}).");
     }
     private static void Warm(string backend)
     {
         var window = new Window { Size = new(128, 96) }; var container = new SubViewportContainer { Name = "container", Size = new(64, 48), Stretch = true }; var view = new SubViewport { Name = "view" }; var paint = new Paint(); view.AddChild(paint); container.AddChild(view); window.AddChild(container); var frame = 0; long active = 0, idle = 0; long before = 0; var dimensions = Vector2i.Zero;
         window.Ready += _ =>
         {
-            RenderingServer.Instance!.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
-            RenderingServer.Instance.FramePostDraw += () =>
+            RenderingServer.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+            RenderingServer.FramePostDraw += () =>
             {
-                var size = RenderingServer.Instance.ViewportDimensions(window); var now = GC.GetAllocatedBytesForCurrentThread();
+                var size = RenderingServer.Service!.ViewportDimensions(window); var now = GC.GetAllocatedBytesForCurrentThread();
                 if (dimensions != size) { dimensions = size; frame = 0; active = idle = 0; }
                 if (frame is >= 32 and < 96) active += now - before; else if (frame >= 96) idle += now - before;
                 if (frame < 96) { container.Position = new((frame & 1) * 4, 0); container.MouseTarget = (frame & 1) == 0; container.Modulate = new(1, 1, 1, (frame & 1) == 0 ? .5f : 1); }
@@ -176,7 +176,7 @@ internal static class SubViewportContainerTests
                 if (++frame == 160) window.Tree!.Quit();
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && active == 0 && idle == 0, $"Container warm allocation {active}/{idle}."); Console.WriteLine($"64 active + 64 idle embedded render/mutation intervals: {active}/{idle} managed bytes ({backend}).");
+        Check(Engine.Run(window) == 0 && active == 0 && idle == 0, $"Container warm allocation {active}/{idle}."); Console.WriteLine($"64 active + 64 idle embedded render/mutation intervals: {active}/{idle} managed bytes ({backend}).");
     }
     private static void Pixel(Image image, int x, int y, Color expected)
     {

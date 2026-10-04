@@ -10,11 +10,11 @@ internal static class DisplayServerClipboardNativeTests
 
     public static void Run(DisplayServer display)
     {
-        if (display.GetName() != "Wayland")
+        if (DisplayServer.GetName() != "Wayland")
             return;
 
-        var clipboardBefore = display.ClipboardGet();
-        var primaryBefore = display.ClipboardGetPrimary();
+        var clipboardBefore = DisplayServer.ClipboardGet();
+        var primaryBefore = DisplayServer.ClipboardGetPrimary();
         var start = new ProcessStartInfo(Environment.ProcessPath!)
         {
             UseShellExecute = false,
@@ -38,7 +38,7 @@ internal static class DisplayServerClipboardNativeTests
         {
             while (!child.HasExited && deadline.Elapsed < TimeSpan.FromSeconds(10))
             {
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Thread.Sleep(5);
             }
 
@@ -57,8 +57,8 @@ internal static class DisplayServerClipboardNativeTests
             if (fields[0].Trim() == "FOCUS:0")
                 throw new InvalidOperationException("The Wayland clipboard reader never received keyboard focus.");
 
-            var clipboardAfter = display.ClipboardGet();
-            var primaryAfter = display.ClipboardGetPrimary();
+            var clipboardAfter = DisplayServer.ClipboardGet();
+            var primaryAfter = DisplayServer.ClipboardGetPrimary();
             if (!clipboardMatch || !primaryMatch)
                 throw new InvalidOperationException($"A separate Wayland process observed different clipboard text: " +
                     $"clipboard match={clipboardMatch}, lengths={clipboardBefore.Length}/{clipboardLength}/{clipboardAfter.Length}; " +
@@ -93,13 +93,13 @@ internal static class DisplayServerClipboardNativeTests
             var deadline = Stopwatch.StartNew();
             while (SDL.GetKeyboardFocus() != window && deadline.Elapsed < TimeSpan.FromSeconds(2))
             {
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Thread.Sleep(10);
             }
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             var focused = SDL.GetKeyboardFocus() == window;
-            var clipboard = display.ClipboardGet();
-            var primary = display.ClipboardGetPrimary();
+            var clipboard = DisplayServer.ClipboardGet();
+            var primary = DisplayServer.ClipboardGetPrimary();
             Console.WriteLine($"FOCUS:{(focused ? 1 : 0)}");
             Console.WriteLine($"CLIPBOARD:{(Digest(clipboard) == expectedClipboard ? 1 : 0)}:{clipboard.Length}");
             Console.WriteLine($"PRIMARY:{(Digest(primary) == expectedPrimary ? 1 : 0)}:{primary.Length}");

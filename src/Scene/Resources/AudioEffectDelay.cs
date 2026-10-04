@@ -134,7 +134,7 @@ internal sealed class AudioEffectDelayInstance : AudioEffectInstance
     internal AudioEffectDelayInstance(AudioEffectDelay source)
     {
         _source = source;
-        _rate = AudioServer.Instance.GetMixRate();
+        _rate = AudioServer.GetMixRate();
         var frames = 3.1 * _rate;
         if (!double.IsFinite(frames) || frames <= 0 || frames >= 1 << 22)
             throw new ArgumentOutOfRangeException(nameof(source), "Output rate exceeds prepared delay storage.");

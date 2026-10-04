@@ -9,16 +9,7 @@ public sealed partial class DisplayServer
     private bool _windowIconOverridden;
     private bool _nativeWaylandIconAvailable;
 
-    /// <summary>Sets an icon specifically for the main window.</summary>
-    /// <param name="image">A live nonempty source image.</param>
-    /// <param name="windowId">The main-window ID, zero.</param>
-    /// <remarks>The image is copied and converted to eight-bit RGBA before native submission; the caller retains it. A successful call overrides subsequent <see cref="SetIcon"/> changes for this window. Wayland requires a square image and a compositor that supports window icons.</remarks>
-    /// <exception cref="ArgumentNullException"><paramref name="image"/> is null.</exception>
-    /// <exception cref="ArgumentException"><paramref name="image"/> is empty or is not square on Wayland.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="windowId"/> is not the main-window ID.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread or the native icon request fails.</exception>
-    /// <exception cref="ObjectDisposedException">The display server or image has been disposed.</exception>
-    public void WindowSetIcon(Image image, int windowId = MainWindowId)
+    internal void WindowSetIconCore(Image image, int windowId = MainWindowId)
     {
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(image);
@@ -33,14 +24,7 @@ public sealed partial class DisplayServer
         _windowIconOverridden = true;
     }
 
-    /// <summary>Sets the default icon for the engine-owned main window unless it has an explicit icon.</summary>
-    /// <param name="image">A live nonempty source image.</param>
-    /// <remarks>The image is copied before native submission. A prior successful <see cref="WindowSetIcon"/> call keeps its window-specific icon. The current host owns only one window and does not install a desktop-launcher icon. Wayland requires a square image and a compositor that supports window icons.</remarks>
-    /// <exception cref="ArgumentNullException"><paramref name="image"/> is null.</exception>
-    /// <exception cref="ArgumentException"><paramref name="image"/> is empty or is not square on Wayland.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the owner thread or the native icon request fails.</exception>
-    /// <exception cref="ObjectDisposedException">The display server or image has been disposed.</exception>
-    public void SetIcon(Image image)
+    internal void SetIconCore(Image image)
     {
         EnsureOwner();
         ValidateIcon(image);

@@ -25,8 +25,8 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
             source.ForceDrag(new DragPayload<int>(42), preview);
             var windows = SDL.GetWindows(out var count);
             Check(count == 1 && windows is { Length: 1 }, "The drag preview test uses one native root window.");
@@ -38,14 +38,14 @@ internal static partial class RenderingRuntimeTests
                 { Type = SDL.EventType.MouseMotion, WindowID = windowID, Which = 987, X = 90 / scale, Y = 20 / scale }
             };
             Check(SDL.PushEvent(ref motion), "Queue drag motion for the next native event pump.");
-            server.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback();
                 var pixel = image.GetPixel(95, 25);
                 if (++frames == 1)
                 {
                     Check(pixel.R > .8f && pixel.B < .2f && window.IsGUIDragging() &&
-                          DisplayServer.Instance!.CursorGetShape() == CursorShape.CanDrop,
+                          DisplayServer.CursorGetShape() == CursorShape.CanDrop,
                         $"The {backend} drag preview overlays the accepting target and exposes the drop cursor; pixel={pixel}.");
                     var release = new SDL.Event
                     {
@@ -71,7 +71,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 2, $"The {backend} GUI drag rendered both phases.");
         Console.WriteLine($"Typed GUI drag preview and accepted drop rendered on {backend}.");

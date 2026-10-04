@@ -24,8 +24,8 @@ internal static partial class RenderingRuntimeTests
         }; window.AddChild(node);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 if (frames == 1) File.WriteAllBytes($"/tmp/electron2d-flat-styles-{backend}.png", pixels.SavePNGToBuffer());
@@ -58,7 +58,7 @@ internal static partial class RenderingRuntimeTests
                 else window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window); Check(node.Draws == 3, "Flat style mutations rerecord the three visible states.");
+        Engine.Run(window); Released(window); Check(node.Draws == 3, "Flat style mutations rerecord the three visible states.");
         VerifyFlatStyleWarm(backend);
         Console.WriteLine($"Flat-style native rounded corners, borders, center suppression, border blend, offset shadow, skew, AA, expansion and warmed mutation/render passed: {backend}.");
     }
@@ -88,13 +88,13 @@ internal static partial class RenderingRuntimeTests
                 style.SetExpandMarginAll(frames % 2 == 0 ? 1.25f : 2.25f);
                 style.ShadowSize = frames % 2 == 0 ? 4 : 5; node.QueueRedraw();
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && node.Draws == 128 && allocated == 0, $"Warmed {backend} flat style mutation/recording/render allocated {allocated} bytes over 64 ProcessFrameStarted-to-FramePostDraw frames; recordings={node.Draws}.");
     }
 }

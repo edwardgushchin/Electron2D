@@ -86,22 +86,22 @@ internal static class CanvasPixelSnapTests
 
     private static void VerifySettings()
     {
-        var settings = ProjectSettings.Instance;
+        var settings = ProjectSettings.Service;
         using var original = new Window();
-        settings.AddCustomFeature("pixel-snap-test");
+        ProjectSettings.AddCustomFeature("pixel-snap-test");
         try
         {
-            settings.SetFeatureOverride(ProjectSettings.SnapTransformsToPixel, "pixel-snap-test", true);
-            settings.SetFeatureOverride(ProjectSettings.SnapVerticesToPixel, "pixel-snap-test", true);
+            ProjectSettings.SetFeatureOverride(ProjectSettings.SnapTransformsToPixel, "pixel-snap-test", true);
+            ProjectSettings.SetFeatureOverride(ProjectSettings.SnapVerticesToPixel, "pixel-snap-test", true);
             using var configured = new Window();
             Check(configured.SnapTransformsToPixel && configured.SnapVerticesToPixel && !original.SnapTransformsToPixel && !original.SnapVerticesToPixel,
                 "Window construction samples active project overrides without mutating existing windows.");
         }
         finally
         {
-            settings.ClearFeatureOverride(ProjectSettings.SnapTransformsToPixel, "pixel-snap-test");
-            settings.ClearFeatureOverride(ProjectSettings.SnapVerticesToPixel, "pixel-snap-test");
-            settings.RemoveCustomFeature("pixel-snap-test");
+            ProjectSettings.ClearFeatureOverride(ProjectSettings.SnapTransformsToPixel, "pixel-snap-test");
+            ProjectSettings.ClearFeatureOverride(ProjectSettings.SnapVerticesToPixel, "pixel-snap-test");
+            ProjectSettings.RemoveCustomFeature("pixel-snap-test");
         }
     }
 

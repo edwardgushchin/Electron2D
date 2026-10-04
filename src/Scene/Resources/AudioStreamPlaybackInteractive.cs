@@ -31,7 +31,7 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
     public static PropertyDescriptor<AudioStreamPlaybackInteractive, string> SwitchToClipParameter { get; } = new("switch_to_clip", p => p.ParameterName, (p, v) => p.SwitchToClipByName(v), _ => string.Empty, stored: true);
     private string ParameterName
     {
-        get { lock (AudioServer.Instance.StreamGate) { Check(); Idle(); var c = _source.Capture(); var index = _request >= 0 ? _request : _current; return index >= 0 && index < c.Count ? c.Clips[index].Name : string.Empty; } }
+        get { lock (AudioServer.Service.StreamGate) { Check(); Idle(); var c = _source.Capture(); var index = _request >= 0 ? _request : _current; return index >= 0 && index < c.Count ? c.Clips[index].Name : string.Empty; } }
     }
     private void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(_source.IsDisposed, _source); }
     private void Idle() { if (_busy) throw new InvalidOperationException("Interactive child callbacks cannot reenter controls, queries or mixing."); }
@@ -42,9 +42,9 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
     /// <exception cref="InvalidOperationException">A child callback reenters controls.</exception>
     public void SwitchToClip(int clipIndex)
     {
-        var server = AudioServer.Instance; server.Lock();
+        var server = AudioServer.Service; server.LockCore();
         try { Check(); Idle(); var c = _source.Capture(); if (clipIndex < -1 || clipIndex >= c.Count) throw new ArgumentOutOfRangeException(nameof(clipIndex)); _request = clipIndex; }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     /// <summary>Queues the first active clip with a matching literal name.</summary>
     /// <param name="clipName">Non-null name; an empty string cancels a pending request.</param>
@@ -52,13 +52,13 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
     /// <exception cref="ArgumentException">No active clip has that name.</exception>
     public void SwitchToClipByName(string clipName)
     {
-        ArgumentNullException.ThrowIfNull(clipName); var server = AudioServer.Instance; server.Lock();
+        ArgumentNullException.ThrowIfNull(clipName); var server = AudioServer.Service; server.LockCore();
         try { Check(); Idle(); if (clipName.Length == 0) { _request = -1; return; } var c = _source.Capture(); for (var i = 0; i < c.Count; i++) if (c.Clips[i].Name == clipName) { _request = i; return; } throw new ArgumentException("The clip name is absent.", nameof(clipName)); }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
     /// <summary>Gets the last clip whose scheduled first frame became current.</summary>
     /// <returns>Minus one before a successful start, otherwise the last current index, also after Stop.</returns>
-    public int GetCurrentClipIndex() { lock (AudioServer.Instance.StreamGate) { Check(); Idle(); return _current; } }
+    public int GetCurrentClipIndex() { lock (AudioServer.Service.StreamGate) { Check(); Idle(); return _current; } }
     private void Prepare()
     {
         Check(); Idle(); _source.EnsurePlaybackOwner();
@@ -103,14 +103,14 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
     }
     internal override void PrepareQueuedControls()
     {
-        var server = AudioServer.Instance; server.Lock(); try { Prepare(); } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { Prepare(); } finally { server.UnlockCore(); }
     }
     /// <inheritdoc />
     protected override void OnStart(double fromPosition)
     {
-        var server = AudioServer.Instance; server.Lock(); try { Prepare(); StartCore(); } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { Prepare(); StartCore(); } finally { server.UnlockCore(); }
     }
-    internal override void StartQueued(double time) { lock (AudioServer.Instance.StreamGate) { Check(); Idle(); if (_source.Capture().Version != _version) { var error = StopStates(true); if (error is not null) throw error; return; } StartCore(); } }
+    internal override void StartQueued(double time) { lock (AudioServer.Service.StreamGate) { Check(); Idle(); if (_source.Capture().Version != _version) { var error = StopStates(true); if (error is not null) throw error; return; } StartCore(); } }
     private void StartCore()
     {
         Check(); Idle(); _source.EnterCall(1); _busy = true;
@@ -136,11 +136,11 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
     /// <inheritdoc />
     protected override void OnStop()
     {
-        var server = AudioServer.Instance; server.Lock(); try { Idle(); if (RequiresAudioOwner) server.Check(); _source.EnterCall(1); _busy = true; try { _request = -1; var error = StopStates(false); if (error is not null) throw error; } finally { _busy = false; AudioStream.ExitCall(); } } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { Idle(); if (RequiresAudioOwner) server.Check(); _source.EnterCall(1); _busy = true; try { _request = -1; var error = StopStates(false); if (error is not null) throw error; } finally { _busy = false; AudioStream.ExitCall(); } } finally { server.UnlockCore(); }
     }
-    internal override void StopQueued() { lock (AudioServer.Instance.StreamGate) { ThrowIfDisposed(); Idle(); _source.EnterCall(1); _busy = true; try { _request = -1; var error = StopStates(true); if (error is not null) throw error; } finally { _busy = false; AudioStream.ExitCall(); } } }
+    internal override void StopQueued() { lock (AudioServer.Service.StreamGate) { ThrowIfDisposed(); Idle(); _source.EnterCall(1); _busy = true; try { _request = -1; var error = StopStates(true); if (error is not null) throw error; } finally { _busy = false; AudioStream.ExitCall(); } } }
     /// <inheritdoc />
-    protected override bool OnIsPlaying() { lock (AudioServer.Instance.StreamGate) { Check(); return _active; } }
+    protected override bool OnIsPlaying() { lock (AudioServer.Service.StreamGate) { Check(); return _active; } }
     /// <inheritdoc />
     protected override double OnGetPlaybackPosition() { Check(); return 0; }
     /// <inheritdoc />
@@ -247,14 +247,14 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
     /// <inheritdoc />
     protected override int OnMix(Span<Vector2> buffer, float rateScale)
     {
-        lock (AudioServer.Instance.StreamGate)
+        lock (AudioServer.Service.StreamGate)
         {
             Check(); Idle(); buffer.Clear(); if (!_active || buffer.Length == 0) return 0; _source.EnterCall(1); _busy = true;
             try
             {
                 var c = _source.Capture(); if (c.Version != _version) { var error = StopStates(true); if (error is not null) throw error; return 0; }
                 if (_request >= 0) { var target = _request; _request = -1; Queue(target, false, c); }
-                var rate = AudioServer.Instance.GetMixRate();
+                var rate = AudioServer.GetMixRate();
                 for (var offset = 0; offset < buffer.Length;)
                 {
                     Ready(c); var length = BlockLength(buffer.Length - offset, rate);
@@ -273,13 +273,13 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
     /// <inheritdoc />
     protected override void ValidateDisposal()
     {
-        var server = AudioServer.Instance; server.Lock(); try { Idle(); if (RequiresAudioOwner) server.Check(); } finally { server.Unlock(); }
+        var server = AudioServer.Service; server.LockCore(); try { Idle(); if (RequiresAudioOwner) server.Check(); } finally { server.UnlockCore(); }
         base.ValidateDisposal();
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         if (!disposing) { base.Dispose(disposing); return; }
-        lock (AudioServer.Instance.StreamGate) { _active = false; _busy = true; try { var states = _states; _states = []; var error = Release(states); if (error is not null) throw error; } finally { _busy = false; base.Dispose(disposing); } }
+        lock (AudioServer.Service.StreamGate) { _active = false; _busy = true; try { var states = _states; _states = []; var error = Release(states); if (error is not null) throw error; } finally { _busy = false; base.Dispose(disposing); } }
     }
 }

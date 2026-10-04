@@ -105,19 +105,19 @@ internal static class NodeLocalizationTests
                 copy.GetChild(1).TranslationDomain == string.Empty,
                 "Instantiated inherited domains remain live after parent changes.");
 
-            var settings = ProjectSettings.Instance;
-            var previousRootMode = settings.Get(ProjectSettings.RootNodeAutoTranslate);
+            var settings = ProjectSettings.Service;
+            var previousRootMode = ProjectSettings.Get(ProjectSettings.RootNodeAutoTranslate);
             try
             {
-                settings.Set(ProjectSettings.RootNodeAutoTranslate, false);
+                ProjectSettings.Set(ProjectSettings.RootNodeAutoTranslate, false);
                 using var disabledRoot = new Node();
                 using var disabledTree = new SceneTree(disabledRoot);
                 Check(disabledRoot.AutoTranslateMode == NodeAutoTranslateMode.Disabled &&
                     !disabledRoot.CanAutoTranslate(), "The project setting disables automatic root translation at tree construction.");
-                settings.Set(ProjectSettings.RootNodeAutoTranslate, true);
+                ProjectSettings.Set(ProjectSettings.RootNodeAutoTranslate, true);
                 Check(!disabledRoot.CanAutoTranslate(), "An existing tree retains its sampled root mode.");
             }
-            finally { settings.Set(ProjectSettings.RootNodeAutoTranslate, previousRootMode); }
+            finally { ProjectSettings.Set(ProjectSettings.RootNodeAutoTranslate, previousRootMode); }
             Console.WriteLine("Node localization checks passed.");
         }
         finally

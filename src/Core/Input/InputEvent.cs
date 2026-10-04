@@ -73,7 +73,7 @@ public abstract class InputEvent : Resource
     public virtual bool IsAction(string action, bool exactMatch = false)
     {
         ThrowIfDisposed();
-        return InputMap.Instance.EventIsAction(this, action, exactMatch);
+        return InputMap.EventIsAction(this, action, exactMatch);
     }
 
     /// <summary>Gets whether this event presses a registered action.</summary>
@@ -88,7 +88,7 @@ public abstract class InputEvent : Resource
     public bool IsActionPressed(string action, bool allowEcho = false, bool exactMatch = false)
     {
         ThrowIfDisposed();
-        return InputMap.Instance.TryGetActionStatus(this, action, exactMatch, out var status) &&
+        return InputMap.Service.TryGetActionStatus(this, action, exactMatch, out var status) &&
             status.Pressed && (allowEcho || !IsEcho());
     }
 
@@ -103,7 +103,7 @@ public abstract class InputEvent : Resource
     public bool IsActionReleased(string action, bool exactMatch = false)
     {
         ThrowIfDisposed();
-        return InputMap.Instance.TryGetActionStatus(this, action, exactMatch, out var status) &&
+        return InputMap.Service.TryGetActionStatus(this, action, exactMatch, out var status) &&
             !status.Pressed;
     }
 
@@ -118,7 +118,7 @@ public abstract class InputEvent : Resource
     public float GetActionStrength(string action, bool exactMatch = false)
     {
         ThrowIfDisposed();
-        return InputMap.Instance.TryGetActionStatus(this, action, exactMatch, out var status) ? status.Strength : 0f;
+        return InputMap.Service.TryGetActionStatus(this, action, exactMatch, out var status) ? status.Strength : 0f;
     }
 
     /// <summary>Gets the strength contributed by this event before action deadzone remapping.</summary>
@@ -132,7 +132,7 @@ public abstract class InputEvent : Resource
     internal float GetActionRawStrength(string action, bool exactMatch = false)
     {
         ThrowIfDisposed();
-        return InputMap.Instance.TryGetActionStatus(this, action, exactMatch, out var status) ? status.RawStrength : 0f;
+        return InputMap.Service.TryGetActionStatus(this, action, exactMatch, out var status) ? status.RawStrength : 0f;
     }
 
     /// <summary>Gets whether the event was canceled by its source.</summary>

@@ -15,7 +15,7 @@ internal static class PhysicsShapeQueryTests
 
     private static void VerifyParametersAndBorrowedShapeRID()
     {
-        var server = PhysicsServer.Instance;
+        var server = PhysicsServer.Service;
         using var query = new PhysicsShapeQueryParameters2D();
         Check(query.Shape is null && !query.ShapeRID.IsValid() && query.Transform == Transform.Identity &&
               query.Motion == Vector2.Zero && query.Margin == 0 && query.CollisionMask == uint.MaxValue &&
@@ -36,15 +36,15 @@ internal static class PhysicsShapeQueryTests
             "Assigning a resource retains its identity and a live server RID.");
         query.ShapeRID = borrowedRID;
         Check(ReferenceEquals(query.Shape, circle), "An equal RID assignment retains the borrowed resource.");
-        Reject<InvalidOperationException>(() => server.FreeRID(borrowedRID));
-        Reject<InvalidOperationException>(() => server.ShapeSetData(borrowedRID, circle));
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var body = server.BodyCreate();
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(body, borrowedRID);
-        server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 50)));
-        server.BodySetSpace(body, space);
-        var direct = server.SpaceGetDirectState(space);
+        Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(borrowedRID));
+        Reject<InvalidOperationException>(() => PhysicsServer.ShapeSetData(borrowedRID, circle));
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var body = PhysicsServer.BodyCreate();
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(body, borrowedRID);
+        PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 50)));
+        PhysicsServer.BodySetSpace(body, space);
+        var direct = PhysicsServer.SpaceGetDirectState(space);
         using var ray = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 100));
         Check(direct.IntersectRay(ray)?.Position.Y is > 39 and < 41,
             "A server collider can borrow a managed Shape RID for live geometry.");
@@ -56,7 +56,7 @@ internal static class PhysicsShapeQueryTests
         Check(direct.IntersectRay(ray)?.Position.Y is > 34 and < 36,
             "A failed user Changed listener cannot prevent a committed geometry edit reaching the server world.");
 
-        var explicitRID = server.CircleShapeCreate();
+        var explicitRID = PhysicsServer.CircleShapeCreate();
         query.ShapeRID = explicitRID;
         Check(query.Shape is null && query.ShapeRID == explicitRID,
             "Assigning a different server RID clears the borrowed Shape reference.");
@@ -64,30 +64,30 @@ internal static class PhysicsShapeQueryTests
         var copied = query.Exclude;
         copied[0] = default;
         Check(query.Exclude[0] == body, "Exclusion arrays are copied on read and assignment.");
-        server.FreeRID(explicitRID);
+        PhysicsServer.FreeRID(explicitRID);
         circle.Dispose();
         Check(borrowedRID.IsValid(), "A held RID remains nonzero after its Shape resource is disposed.");
-        Reject<ArgumentException>(() => server.ShapeGetData(borrowedRID));
+        Reject<ArgumentException>(() => PhysicsServer.ShapeGetData(borrowedRID));
         Check(direct.IntersectRay(ray) is null,
             "Disposing a borrowed Shape removes its fixture before a subsequent query.");
-        server.FreeRID(body);
-        server.FreeRID(space);
+        PhysicsServer.FreeRID(body);
+        PhysicsServer.FreeRID(space);
     }
 
     private static void VerifyOverlapAndMotion()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var body = server.BodyCreate();
-        var floorRID = server.RectangleShapeCreate();
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var body = PhysicsServer.BodyCreate();
+        var floorRID = PhysicsServer.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 10) };
         using var probe = new RectangleShape { Size = new(20, 20) };
-        server.ShapeSetData(floorRID, floor);
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(body, floorRID);
-        server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 100)));
-        server.BodySetSpace(body, space);
-        var direct = server.SpaceGetDirectState(space);
+        PhysicsServer.ShapeSetData(floorRID, floor);
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(body, floorRID);
+        PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 100)));
+        PhysicsServer.BodySetSpace(body, space);
+        var direct = PhysicsServer.SpaceGetDirectState(space);
         using var query = new PhysicsShapeQueryParameters2D
         {
             Shape = probe,
@@ -116,21 +116,21 @@ internal static class PhysicsShapeQueryTests
             "A deep filled-shape overlap returns one typed server collider result.");
         cast = direct.CastMotion(query);
         Check(cast == (1f, 1f), "CastMotion ignores a shape already colliding at its origin.");
-        var secondBody = server.BodyCreate();
-        server.BodySetMode(secondBody, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(secondBody, floorRID);
-        server.BodySetTransform(secondBody, new(0, Vector2.One, 0, new(0, 140)));
-        server.BodySetSpace(secondBody, space);
+        var secondBody = PhysicsServer.BodyCreate();
+        PhysicsServer.BodySetMode(secondBody, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(secondBody, floorRID);
+        PhysicsServer.BodySetTransform(secondBody, new(0, Vector2.One, 0, new(0, 140)));
+        PhysicsServer.BodySetSpace(secondBody, space);
         Check(direct.IntersectShape(query).Length == 2 &&
               direct.IntersectShape(query, 1) is [var firstHit] && firstHit.ColliderRID == body &&
               direct.CastMotion(query).SafeFraction is > 0.55f and < 0.7f,
             "An initial overlap is skipped by the cast while a later collider remains hittable; shape caps follow RID order.");
-        server.FreeRID(secondBody);
+        PhysicsServer.FreeRID(secondBody);
         query.Exclude = [body];
         Check(direct.IntersectShape(query).Length == 0 && direct.CastMotion(query) == (1f, 1f),
             "RID exclusions apply to both overlap and motion queries.");
         query.Exclude = [];
-        server.BodySetCollisionLayer(body, 2);
+        PhysicsServer.BodySetCollisionLayer(body, 2);
         query.CollisionMask = 1;
         Check(direct.IntersectShape(query).Length == 0,
             "Shape queries test the collider's layer rather than its mask.");
@@ -140,11 +140,11 @@ internal static class PhysicsShapeQueryTests
         Check(direct.IntersectShape(query, 0).Length == 0, "A zero cap returns an empty overlap array.");
         Reject<ArgumentOutOfRangeException>(() => direct.IntersectShape(query, -1));
 
-        var area = server.AreaCreate();
-        var areaRID = server.CircleShapeCreate();
-        server.AreaAddShape(area, areaRID);
-        server.AreaSetTransform(area, new(0, Vector2.One, 0, new(0, 40)));
-        server.AreaSetSpace(area, space);
+        var area = PhysicsServer.AreaCreate();
+        var areaRID = PhysicsServer.CircleShapeCreate();
+        PhysicsServer.AreaAddShape(area, areaRID);
+        PhysicsServer.AreaSetTransform(area, new(0, Vector2.One, 0, new(0, 40)));
+        PhysicsServer.AreaSetSpace(area, space);
         query.Transform = new(0, Vector2.One, 0, new(0, 40));
         Check(direct.IntersectShape(query).Length == 0,
             "Area sensors are omitted by default from shape overlap queries.");
@@ -156,8 +156,8 @@ internal static class PhysicsShapeQueryTests
             "Area contacts report zero collider velocity and paired contact points.");
         query.CollideWithAreas = false;
 
-        var shapeRID = server.RectangleShapeCreate();
-        server.ShapeSetData(shapeRID, probe);
+        var shapeRID = PhysicsServer.RectangleShapeCreate();
+        PhysicsServer.ShapeSetData(shapeRID, probe);
         query.ShapeRID = shapeRID;
         query.Transform = new(0, Vector2.One, 0, new(0, 100));
         Check(query.Shape is null && direct.IntersectShape(query) is [var ridHit] && ridHit.ColliderRID == body,
@@ -168,29 +168,29 @@ internal static class PhysicsShapeQueryTests
         for (var frame = 0; frame < 64; frame++) direct.CastMotion(query);
         Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
             "Warmed unchanged shape casts allocate no managed memory on the owner thread.");
-        server.FreeRID(shapeRID);
+        PhysicsServer.FreeRID(shapeRID);
         Reject<ArgumentException>(() => direct.IntersectShape(query));
-        server.FreeRID(area);
-        server.FreeRID(areaRID);
-        server.FreeRID(body);
-        server.FreeRID(floorRID);
-        server.FreeRID(space);
+        PhysicsServer.FreeRID(area);
+        PhysicsServer.FreeRID(areaRID);
+        PhysicsServer.FreeRID(body);
+        PhysicsServer.FreeRID(floorRID);
+        PhysicsServer.FreeRID(space);
     }
 
     private static void VerifyContactsAndRestInfo()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var body = server.BodyCreate();
-        var floorRID = server.RectangleShapeCreate();
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var body = PhysicsServer.BodyCreate();
+        var floorRID = PhysicsServer.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 10) };
         using var circle = new CircleShape();
-        server.ShapeSetData(floorRID, floor);
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(body, floorRID);
-        server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 100)));
-        server.BodySetSpace(body, space);
-        var direct = server.SpaceGetDirectState(space);
+        PhysicsServer.ShapeSetData(floorRID, floor);
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(body, floorRID);
+        PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 100)));
+        PhysicsServer.BodySetSpace(body, space);
+        var direct = PhysicsServer.SpaceGetDirectState(space);
         using var query = new PhysicsShapeQueryParameters2D
         {
             Shape = circle,
@@ -222,21 +222,21 @@ internal static class PhysicsShapeQueryTests
             "A polygon manifold can report two point pairs and a one-pair cap truncates it.");
         query.Shape = circle;
 
-        server.BodySetMode(body, PhysicsServer.BodyMode.Kinematic);
-        server.BodySetLinearVelocity(body, new(0, 40));
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Kinematic);
+        PhysicsServer.BodySetLinearVelocity(body, new(0, 40));
         rest = direct.GetRestInfo(query);
         Check(rest is { } moving && moving.LinearVelocity.Y is > 39 and < 41,
             "Rest info samples a moving collider's velocity at the contact point.");
-        server.FreeRID(body);
-        server.FreeRID(floorRID);
-        server.FreeRID(space);
+        PhysicsServer.FreeRID(body);
+        PhysicsServer.FreeRID(floorRID);
+        PhysicsServer.FreeRID(space);
     }
 
     private static void VerifyContactPairFamilies()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var direct = server.SpaceGetDirectState(space);
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var direct = PhysicsServer.SpaceGetDirectState(space);
         using var circle = new CircleShape();
         using var capsule = new CapsuleShape();
         using var rectangle = new RectangleShape { Size = new(20, 20) };
@@ -247,17 +247,17 @@ internal static class PhysicsShapeQueryTests
         };
         foreach (var candidateShape in families)
         {
-            var body = server.BodyCreate();
+            var body = PhysicsServer.BodyCreate();
             var shapeRID = candidateShape switch
             {
-                CircleShape => server.CircleShapeCreate(),
-                CapsuleShape => server.CapsuleShapeCreate(),
-                _ => server.RectangleShapeCreate()
+                CircleShape => PhysicsServer.CircleShapeCreate(),
+                CapsuleShape => PhysicsServer.CapsuleShapeCreate(),
+                _ => PhysicsServer.RectangleShapeCreate()
             };
-            server.ShapeSetData(shapeRID, candidateShape);
-            server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-            server.BodyAddShape(body, shapeRID);
-            server.BodySetSpace(body, space);
+            PhysicsServer.ShapeSetData(shapeRID, candidateShape);
+            PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+            PhysicsServer.BodyAddShape(body, shapeRID);
+            PhysicsServer.BodySetSpace(body, space);
             foreach (var probeShape in families)
             {
                 query.Shape = probeShape;
@@ -269,24 +269,24 @@ internal static class PhysicsShapeQueryTests
                       info.Normal.IsFinite() && info.Normal.Length() > 0.5f,
                     "Circle, capsule and rectangle combinations retain overlap, contact pair and finite normal.");
             }
-            server.FreeRID(body);
-            server.FreeRID(shapeRID);
+            PhysicsServer.FreeRID(body);
+            PhysicsServer.FreeRID(shapeRID);
         }
-        server.FreeRID(space);
+        PhysicsServer.FreeRID(space);
     }
 
     private static void VerifyCompoundAndHollowQueries()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
-        var body = server.BodyCreate();
-        var circleRID = server.CircleShapeCreate();
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var body = PhysicsServer.BodyCreate();
+        var circleRID = PhysicsServer.CircleShapeCreate();
         using var circle = new CircleShape { Radius = 5 };
-        server.ShapeSetData(circleRID, circle);
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        server.BodyAddShape(body, circleRID);
-        server.BodySetSpace(body, space);
-        var direct = server.SpaceGetDirectState(space);
+        PhysicsServer.ShapeSetData(circleRID, circle);
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodyAddShape(body, circleRID);
+        PhysicsServer.BodySetSpace(body, space);
+        var direct = PhysicsServer.SpaceGetDirectState(space);
         var vertices = new Vector2[12];
         for (var index = 0; index < vertices.Length; index++)
         {
@@ -307,7 +307,7 @@ internal static class PhysicsShapeQueryTests
         query.Shape = hollow;
         Check(direct.IntersectShape(query).Length == 0,
             "A circle wholly inside paired hollow edges does not overlap them.");
-        server.BodySetTransform(body, new(0, Vector2.One, 0, new(20, 0)));
+        PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(20, 0)));
         Check(direct.IntersectShape(query) is [var edge] && edge.ColliderRID == body &&
               direct.CollideShape(query).Length >= 2 && direct.GetRestInfo(query) is { },
             "A circle touching one hollow edge produces overlap and contact information.");
@@ -316,14 +316,14 @@ internal static class PhysicsShapeQueryTests
         query.Shape = segment;
         Check(direct.CollideShape(query).Length >= 2 && direct.GetRestInfo(query) is { },
             "A two-sided segment query can contact a circle without a solid interior.");
-        server.BodySetTransform(body, Transform.Identity);
+        PhysicsServer.BodySetTransform(body, Transform.Identity);
         segment.A = Vector2.Zero;
         segment.B = Vector2.Zero;
         Check(direct.IntersectShape(query) is [var point] && point.ColliderRID == body,
             "A sub-slop segment uses the same zero-radius point-query fallback as a body fixture.");
-        server.FreeRID(body);
-        server.FreeRID(circleRID);
-        server.FreeRID(space);
+        PhysicsServer.FreeRID(body);
+        PhysicsServer.FreeRID(circleRID);
+        PhysicsServer.FreeRID(space);
     }
 
     private static void VerifySceneShapeQueries()

@@ -1,6 +1,6 @@
 # AudioEffectChorus
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectChorus` · **Source:** [AudioEffectChorus.cs](../../src/Scene/Resources/AudioEffectChorus.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -15,9 +15,9 @@ Reusable four-voice stereo chorus for an audio bus. Each [instance](AudioEffectC
 ```csharp
 using var chorus = new AudioEffectChorus { VoiceCount = 2, Wet = 0.4f };
 chorus.SetVoiceRateHZ(0, 0.7f);
-AudioServer.Instance.AddBusEffect(0, chorus);
+AudioServer.AddBusEffect(0, chorus);
 // Play a source routed through Master.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 Remove the effect before disposing the borrowed resource.

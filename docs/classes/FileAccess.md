@@ -1,6 +1,6 @@
 # FileAccess
 
-Last updated: 2026-09-22
+Last updated: 2026-10-04
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1263,7 +1263,7 @@ All instance state/stream operations are serialized by one private lock. One cal
 ## Dependencies and interactions
 
 - Inherits `ElectronObject` for deterministic lifetime and disposed-state ordering.
-- Uses `ProjectSettings.Instance.GlobalizePath` for directory-backed virtual paths.
+- Uses `ProjectSettings.GlobalizePath` for directory-backed virtual paths.
 - Uses .NET file, UTF-8, hash, compression, PBKDF2, random, and AES-GCM primitives.
 - Reuses the same internal atomic-replacement helper as `ConfigFile`.
 - Uses Linux libc xattrs, macOS libSystem xattrs, and Windows alternate data streams for the extended-attribute surface.

@@ -45,8 +45,8 @@ internal static partial class RenderingRuntimeTests
         {
             // Apply the intended rectangles after text policy and parent-direction resolution.
             rtl.Position = new(100, 10); wrapped.Size = new(30, 80); ellipsis.Size = new(11, 30); clipped.Size = new(7, 23);
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 if (frames == 1) File.WriteAllBytes($"/tmp/electron2d-labels-{backend}.png", pixels.SavePNGToBuffer());
@@ -84,7 +84,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(!font.IsDisposed && !normal.IsDisposed && !effects.IsDisposed && !theme.IsDisposed, "Labels release consumers without disposing borrowed settings, fonts or themes.");
         effects.Changed -= missedSettings; missedFont.Changed -= missedFontChange;
         VerifyLabelWarm(backend, font);
@@ -140,13 +140,13 @@ internal static partial class RenderingRuntimeTests
                 label.HorizontalAlignment = even ? HorizontalAlignment.Left : HorizontalAlignment.Center;
                 label.VisibleCharacters = even ? -1 : 9; settings.FontColor = even ? Colors.White : Colors.Cyan;
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && allocated == 0, $"Warmed {backend} active Label text/width/alignment/visibility/settings, layout/record/render allocated {allocated} bytes over64 ProcessFrameStarted-to-FramePostDraw frames.");
     }
 }

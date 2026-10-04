@@ -60,7 +60,7 @@ internal static class AudioCompressedTests
         borrowed.SamplingRate = 0; Check(double.IsPositiveInfinity(borrowed.GetLength()), "Sequence preserves literal zero-rate metadata.");
         using var zeroRatePlayback = holder.InstantiatePlayback(); Reject<InvalidOperationException>(() => zeroRatePlayback.Start()); holder.Dispose(); Check(!borrowed.IsDisposed, "Caller-owned sequences remain borrowed.");
         using var shortOgg = AudioStreamOggVorbis.LoadFromBuffer(Fixture("short.ogg")); using var shortPlayback = shortOgg.InstantiatePlayback(); shortPlayback.Start();
-        Check(shortPlayback.MixAudio(1, 32).Length == (int)Math.Ceiling(shortOgg.GetLength() * AudioServer.Instance.GetMixRate()), "Initial short resample block reports its end.");
+        Check(shortPlayback.MixAudio(1, 32).Length == (int)Math.Ceiling(shortOgg.GetLength() * AudioServer.GetMixRate()), "Initial short resample block reports its end.");
         using var mono = AudioStreamMP3.LoadFromBuffer(Fixture("mono.mp3")); var monoPCM = AudioFileDecoder.DecodeMP3(mono.Data); Compare(monoPCM.Samples, "mono-mp3.f32", .0001f);
         using var monoPlayback = mono.InstantiatePlayback(); monoPlayback.Start(); Check(monoPlayback.MixAudio(1, 128).All(frame => frame.X == frame.Y), "Mono expands into both channels.");
         Reject<FormatException>(() => AudioStreamOggVorbis.LoadFromBuffer(Fixture("surround.ogg")));
@@ -87,7 +87,7 @@ internal static class AudioCompressedTests
         var root = new Node(); var player = new AudioStreamPlayer { Stream = mp3 }; root.AddChild(player); using var tree = new SceneTree(root);
         Check(player.GetParameter(AudioStreamPlayback.LoopingParameter) is null, "Typed looping default."); player.SetParameter(AudioStreamPlayback.LoopingParameter, (bool?)true); player.Play();
         Check(player.GetStreamPlayback().LoopingOverride == true, "Typed parameter reaches actual playback.");
-        var native = AudioServer.Instance.Native; native.PrepareCapture(24000); Thread.Sleep(80); Check(native.CapturedPCM().Any(v => Math.Abs(v) > .03), "Native MP3 produces actual PCM.");
+        var native = AudioServer.Service.Native; native.PrepareCapture(24000); Thread.Sleep(80); Check(native.CapturedPCM().Any(v => Math.Abs(v) > .03), "Native MP3 produces actual PCM.");
         VerifyNativeWarm(native, player);
         player.Stream = ogg; player.SetParameter(AudioStreamPlayback.LoopingParameter, (bool?)true); player.Play(); native.PrepareCapture(24000); Thread.Sleep(80); Check(native.CapturedPCM().Any(v => Math.Abs(v) > .03), "Native Ogg produces actual PCM.");
         VerifyNativeWarm(native, player);

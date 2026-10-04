@@ -1,6 +1,6 @@
 # AudioEffectStereoEnhance
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectStereoEnhance` · **Source:** [AudioEffectStereoEnhance.cs](../../src/Scene/Resources/AudioEffectStereoEnhance.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,9 +16,9 @@ A bus borrows this resource and owns an [independent instance](AudioEffectStereo
 
 ```csharp
 using var stereo = new AudioEffectStereoEnhance { PanPullout = 1.5f, TimePulloutMS = 12 };
-AudioServer.Instance.AddBusEffect(0, stereo);
+AudioServer.AddBusEffect(0, stereo);
 // Play sources on bus zero, then remove the borrowed effect.
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 This owner-thread snippet requires native mixing. `AudioStereoEnhanceTests.RunHost` exercises the public Window/player/effect/capture path.

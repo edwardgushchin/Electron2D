@@ -5,9 +5,9 @@ internal static class ImmediateMeshRenderingTests
     internal static void Run()
     {
         var method = Environment.GetEnvironmentVariable("ELECTRON2D_MESH_RENDERER") == "compatibility" ? "compatibility" : "gpu";
-        var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, method);
+        var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, method);
         try { VerifyPixels(method); VerifyTopologies(method); VerifyWarm(method); }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private static void VerifyPixels(string method)
     {
@@ -21,9 +21,9 @@ internal static class ImmediateMeshRenderingTests
         mesh.SurfaceAddVertex2D(Vector2.Zero); mesh.SurfaceAddVertex2D(new(20, 0)); mesh.SurfaceAddVertex2D(new(0, 20));
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black);
-            Check(renderer.MeshGetSurfaceCount(mesh.GetRID()) == 0, "Server reads see no draft.");
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            Check(RenderingServer.MeshGetSurfaceCount(mesh.GetRID()) == 0, "Server reads see no draft.");
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = renderer.Readback();
                 Pixel(frame, 8, 8, frames is 0 or 2 or 4 or 6 ? Colors.Black : Colors.Red);
@@ -32,7 +32,7 @@ internal static class ImmediateMeshRenderingTests
                 frame.SavePNG($"/tmp/e2d-immediate-{method}-{frames}.png");
                 switch (++frames)
                 {
-                    case 1: mesh.SurfaceEnd(); Check(renderer.MeshGetSurfaceCount(mesh.GetRID()) == 1, "Server sees the commit."); break;
+                    case 1: mesh.SurfaceEnd(); Check(RenderingServer.MeshGetSurfaceCount(mesh.GetRID()) == 1, "Server sees the commit."); break;
                     case 2: mesh.ClearSurfaces(); break;
                     case 3:
                         mesh.SurfaceBegin(Mesh.PrimitiveType.Triangles); mesh.SurfaceSetUV(Vector2.Zero); mesh.SurfaceAddVertex2D(Vector2.Zero);
@@ -45,7 +45,7 @@ internal static class ImmediateMeshRenderingTests
                 }
             };
         };
-        Engine.Instance.Run(window); Check(window.IsDisposed && frames == 7, "Seven native draft/commit/clear/UV/material phases.");
+        Engine.Run(window); Check(window.IsDisposed && frames == 7, "Seven native draft/commit/clear/UV/material phases.");
         Console.WriteLine($"ImmediateMesh native pixel and RID phases passed ({method}).");
     }
     private static void VerifyTopologies(string method)
@@ -60,8 +60,8 @@ internal static class ImmediateMeshRenderingTests
         }
         window.Ready += _ =>
         {
-            var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black);
-            renderer.FramePostDraw += () =>
+            var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var frame = renderer.Readback();
                 for (var i = 0; i < 5; i++)
@@ -72,7 +72,7 @@ internal static class ImmediateMeshRenderingTests
                 frame.SavePNG($"/tmp/e2d-immediate-topologies-{method}.png"); window.Tree!.Quit();
             };
         };
-        try { Engine.Instance.Run(window); }
+        try { Engine.Run(window); }
         finally { foreach (var mesh in meshes) mesh.Dispose(); }
     }
     private static void VerifyWarm(string method)
@@ -90,8 +90,8 @@ internal static class ImmediateMeshRenderingTests
                 if (frames < 84) { material.BlendMode = (BlendMode)(frames % 5); mesh.SurfaceSetMaterial(0, frames % 2 == 0 ? material : null); node.Position = new(frames % 2, 0); }
                 mutations[frames] = GC.GetAllocatedBytesForCurrentThread() - start;
             };
-            RenderingServer.Instance!.FramePreDraw += () => { preDraw = GC.GetAllocatedBytesForCurrentThread(); sceneBytes[frames] = preDraw - start; };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePreDraw += () => { preDraw = GC.GetAllocatedBytesForCurrentThread(); sceneBytes[frames] = preDraw - start; };
+            RenderingServer.FramePostDraw += () =>
             {
                 var used = GC.GetAllocatedBytesForCurrentThread() - start;
                 renderBytes[frames] = GC.GetAllocatedBytesForCurrentThread() - preDraw;
@@ -99,7 +99,7 @@ internal static class ImmediateMeshRenderingTests
                 if (++frames == 148) window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         for (var i = 20; i < 148; i++) if (sceneBytes[i] != 0 || renderBytes[i] != 0) Console.WriteLine($"ImmediateMesh frame {i}: mutation={mutations[i]}, scene={sceneBytes[i]}, renderer={renderBytes[i]} bytes.");
         Check(active == 0 && idle == 0, $"ImmediateMesh warm managed bytes: active={active}, idle={idle}.");
         Console.WriteLine($"ImmediateMesh 64 active/64 idle warmed native frames passed ({method}).");

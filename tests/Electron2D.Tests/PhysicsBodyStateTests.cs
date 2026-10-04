@@ -21,8 +21,8 @@ internal static class PhysicsBodyStateTests
         var body = new RigidBody { Mass = 2, GravityScale = 0, Rotation = Mathf.Pi / 2, CanSleep = false };
         body.AddChild(new CollisionShape { Shape = circle, Position = new(20, 0) }); root.AddChild(body);
         using var tree = new SceneTree(root);
-        var state = PhysicsServer.Instance.BodyGetDirectState(body.GetRID())!;
-        Check(ReferenceEquals(state, PhysicsServer.Instance.BodyGetDirectState(body.GetRID())) && state.Step == 0,
+        var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
+        Check(ReferenceEquals(state, PhysicsServer.BodyGetDirectState(body.GetRID())) && state.Step == 0,
             "The server caches an attached view before the first physics tick.");
         Check(MathF.Abs(state.InverseMass - 0.5f) < 0.001f && MathF.Abs(state.InverseInertia - 0.01f) < 0.001f &&
             state.CenterOfMassLocal.IsEqualApprox(new(20, 0)) && state.CenterOfMass.IsEqualApprox(new(0, 20)),
@@ -60,7 +60,7 @@ internal static class PhysicsBodyStateTests
             "Live state access rejects the wrong thread.");
         state.Dispose();
         Reject<ObjectDisposedException>(() => _ = state.Sleeping);
-        Check(!ReferenceEquals(state, PhysicsServer.Instance.BodyGetDirectState(body.GetRID())),
+        Check(!ReferenceEquals(state, PhysicsServer.BodyGetDirectState(body.GetRID())),
             "Caller disposal invalidates only the view; the server can recreate it.");
     }
 
@@ -84,7 +84,7 @@ internal static class PhysicsBodyStateTests
         Check(body.GlobalPosition.Y > 0.2f, "The next custom tick moves under the manually integrated velocity.");
         body.Update = null; body.CustomIntegrator = false;
         tree.PhysicsFrame(1d / 60);
-        Check(body.LinearVelocity.Y > 40 && !PhysicsServer.Instance.BodyIsOmittingForceIntegration(body.GetRID()),
+        Check(body.LinearVelocity.Y > 40 && !PhysicsServer.BodyIsOmittingForceIntegration(body.GetRID()),
             "Disabling custom integration restores automatic gravity.");
         using var packed = new PackedScene();
         using var saved = new RigidBody { CustomIntegrator = true };
@@ -131,36 +131,36 @@ internal static class PhysicsBodyStateTests
 
     private static void VerifyServerCallbacksAndLifetime()
     {
-        var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); server.SpaceSetActive(space, true); var body = server.BodyCreate();
-        Check(server.BodyGetDirectState(body) is null, "A detached server body has no direct view.");
-        server.BodySetSpace(body, space); server.BodySetOmitForceIntegration(body, true);
+        var server = PhysicsServer.Service;
+        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true); var body = PhysicsServer.BodyCreate();
+        Check(PhysicsServer.BodyGetDirectState(body) is null, "A detached server body has no direct view.");
+        PhysicsServer.BodySetSpace(body, space); PhysicsServer.BodySetOmitForceIntegration(body, true);
         var sequence = new List<int>();
-        server.BodySetForceIntegrationCallback(body, (state, data) =>
+        PhysicsServer.BodySetForceIntegrationCallback(body, (state, data) =>
         {
             sequence.Add(data); state.LinearVelocity = new(10, 0);
-            Reject<InvalidOperationException>(() => server.SpaceStep(space, 0.01));
-            Reject<InvalidOperationException>(() => server.FreeRID(space));
+            Reject<InvalidOperationException>(() => PhysicsServer.SpaceStep(space, 0.01));
+            Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(space));
             Reject<InvalidOperationException>(state.Dispose);
         }, 1);
-        server.BodySetStateSyncCallback(body, state => { sequence.Add(2); Check(MathF.Abs(state.LinearVelocity.X - 10) < 0.001f, "Sync sees force-callback writes."); });
-        server.BodySetMaxContactsReported(body, 3);
-        Check(server.BodyGetMaxContactsReported(body) == 3, "Server contact caps have an executable getter.");
-        server.SpaceStep(space, 1d / 60);
-        Check(sequence.SequenceEqual(new[] { 1, 2 }) && server.BodyIsOmittingForceIntegration(body), "Typed force data precedes sync without changing omission policy.");
-        var state = server.BodyGetDirectState(body)!;
+        PhysicsServer.BodySetStateSyncCallback(body, state => { sequence.Add(2); Check(MathF.Abs(state.LinearVelocity.X - 10) < 0.001f, "Sync sees force-callback writes."); });
+        PhysicsServer.BodySetMaxContactsReported(body, 3);
+        Check(PhysicsServer.BodyGetMaxContactsReported(body) == 3, "Server contact caps have an executable getter.");
+        PhysicsServer.SpaceStep(space, 1d / 60);
+        Check(sequence.SequenceEqual(new[] { 1, 2 }) && PhysicsServer.BodyIsOmittingForceIntegration(body), "Typed force data precedes sync without changing omission policy.");
+        var state = PhysicsServer.BodyGetDirectState(body)!;
         state.AngularVelocity = 2; state.SetConstantForce(new(1, 0)); state.SetConstantTorque(3);
-        server.BodySetForceIntegrationCallback(body, null); server.BodySetStateSyncCallback(body, null);
-        server.BodySetSpace(body, default);
+        PhysicsServer.BodySetForceIntegrationCallback(body, null); PhysicsServer.BodySetStateSyncCallback(body, null);
+        PhysicsServer.BodySetSpace(body, default);
         Reject<ObjectDisposedException>(() => _ = state.LinearVelocity);
-        server.BodySetSpace(body, space);
-        var fresh = server.BodyGetDirectState(body)!;
+        PhysicsServer.BodySetSpace(body, space);
+        var fresh = PhysicsServer.BodyGetDirectState(body)!;
         Check(!ReferenceEquals(state, fresh) && fresh.AngularVelocity == 2 && fresh.GetConstantForce() == new Vector2(1, 0),
             "Reattachment invalidates old views and preserves body force/motion state.");
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        server.BodySetSpace(body, default); server.BodySetMode(body, PhysicsServer.BodyMode.Rigid); server.BodySetSpace(body, space);
-        Check(server.BodyGetDirectState(body)!.AngularVelocity == 0, "A static-mode transition clears the retained angular velocity across attachments.");
-        server.FreeRID(body); Reject<ObjectDisposedException>(() => _ = fresh.Step); server.FreeRID(space);
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodySetSpace(body, default); PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid); PhysicsServer.BodySetSpace(body, space);
+        Check(PhysicsServer.BodyGetDirectState(body)!.AngularVelocity == 0, "A static-mode transition clears the retained angular velocity across attachments.");
+        PhysicsServer.FreeRID(body); Reject<ObjectDisposedException>(() => _ = fresh.Step); PhysicsServer.FreeRID(space);
     }
 
     private static void VerifyCallbackFailureAndMutations()
@@ -193,10 +193,10 @@ internal static class PhysicsBodyStateTests
         };
         area.AddChild(new CollisionShape { Shape = areaShape }); root.AddChild(area);
         using var tree = new SceneTree(root);
-        var server = PhysicsServer.Instance;
-        var body = server.BodyCreate(); var circle = server.CircleShapeCreate();
-        server.BodyAddShape(body, circle); server.BodySetSpace(body, area.GetWorld2D()!.Space);
-        var state = server.BodyGetDirectState(body)!;
+        var server = PhysicsServer.Service;
+        var body = PhysicsServer.BodyCreate(); var circle = PhysicsServer.CircleShapeCreate();
+        PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetSpace(body, area.GetWorld2D()!.Space);
+        var state = PhysicsServer.BodyGetDirectState(body)!;
         state.LinearVelocity = new(100, 0);
         var inverseMass = state.InverseMass;
         state.ApplyCentralForce(new(60, 0)); state.ApplyTorque(10); state.ApplyForce(new(0, 4), new(20, 0));
@@ -204,21 +204,21 @@ internal static class PhysicsBodyStateTests
         Check(state.TotalGravity == new Vector2(120, 0) && state.TotalLinearDamp == 3 && state.TotalAngularDamp == 2 &&
             MathF.Abs(state.LinearVelocity.X - (95 + (120 + 60 * inverseMass) / 60)) < 0.1f && state.AngularVelocity > 0,
             "Server bodies share Area field reduction and positioned/central force accumulators.");
-        server.BodySetOmitForceIntegration(body, true);
+        PhysicsServer.BodySetOmitForceIntegration(body, true);
         state.LinearVelocity = Vector2.Zero; state.AngularVelocity = 0;
         state.ApplyCentralForce(new(0, 100)); state.SetConstantForce(new(100, 0));
         tree.PhysicsFrame(1d / 60);
         Check(state.LinearVelocity == Vector2.Zero, "Server omission clears force accumulators and skips gravity/damping.");
         state.IntegrateForces();
         Check(state.LinearVelocity.X is > 1.89f and < 1.91f, "Manual state integration uses gravity before selected damping.");
-        server.BodySetOmitForceIntegration(body, false); state.SetConstantForce(Vector2.Zero);
+        PhysicsServer.BodySetOmitForceIntegration(body, false); state.SetConstantForce(Vector2.Zero);
         tree.PhysicsFrame(1d / 60);
         Check(state.LinearVelocity.X > 3.7f, "Disabling server omission restores automatic gravity.");
         state.Sleeping = true;
         area.Gravity = 240;
         tree.PhysicsFrame(1d / 60);
         Check(!state.Sleeping && state.TotalGravity.X == 240, "A changed Area field wakes a server body.");
-        server.FreeRID(body); server.FreeRID(circle);
+        PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(circle);
     }
 
     private static void VerifyWarmAllocation()

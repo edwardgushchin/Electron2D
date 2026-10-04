@@ -60,7 +60,7 @@ internal static class AnimationBlendSpaceTests
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         var descriptor = new PropertyDescriptor<Entity, Vector2>(nameof(Entity.Position), n => n.Position, (n, v) => n.Position = v);
         Vector2[] expected = [new(16, 16), new(40, 16), new(28, 32), new(40, 32), new(64, 16), new(16, 48), new(40, 16)];
         try
@@ -72,17 +72,17 @@ internal static class AnimationBlendSpaceTests
                 var window = new Window { Size = new(96, 64), Title = "Electron2D animation blend spaces" }; var box = new Box { Name = "box" }; var tree = new AnimationTree { TreeRoot = plane, CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Manual }; tree.AddAnimationLibrary("", library); window.AddChild(box); window.AddChild(tree); var stage = 0;
                 box.Start = () =>
                 {
-                    var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); tree.Advance(0); renderer.FramePostDraw += () =>
+                    var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); tree.Advance(0); RenderingServer.FramePostDraw += () =>
                     {
                         using var pixels = renderer.Readback(); var at = expected[stage]; Check(pixels.GetPixel((int)at.X, (int)at.Y).R > .9f && pixels.GetPixel((int)at.X, (int)at.Y).G < .1f, "Blend-space output reaches rendered pixels."); if (stage > 0 && expected[stage - 1] != at) { var old = expected[stage - 1]; Check(pixels.GetPixel((int)old.X, (int)old.Y).R < .1f, "Old blend-space pose clears."); }
                         switch (stage++) { case 0: tree.SetParameter("", AnimationNodeBlendSpace2D.BlendPosition, new Vector2(.5f, 0)); break; case 1: tree.SetParameter("", AnimationNodeBlendSpace2D.BlendPosition, new Vector2(.25f, .5f)); break; case 2: tree.SetParameter("", AnimationNodeBlendSpace2D.BlendPosition, Vector2.One); break; case 3: plane.BlendMode = AnimationBlendMode.Discrete; break; case 4: plane.BlendMode = AnimationBlendMode.DiscreteCarry; tree.SetParameter("", AnimationNodeBlendSpace2D.BlendPosition, new Vector2(0, 1)); break; case 5: tree.TreeRoot = axis; tree.SetParameter("", AnimationNodeBlendSpace1D.BlendPosition, .5f); break; case 6: window.Tree!.Quit(); return; }
                         tree.Advance(.1);
                     };
                 };
-                try { Check(Engine.Instance.Run(window) == 0 && stage == 7 && window.IsDisposed && !plane.IsDisposed && !axis.IsDisposed && !library.IsDisposed, "Blend-space host cleanup borrows definitions and clips."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "animation-blend-spaces-host", backend, run, stages = stage, cleaned = window.IsDisposed })); } finally { foreach (var clip in clips) clip.Dispose(); }
+                try { Check(Engine.Run(window) == 0 && stage == 7 && window.IsDisposed && !plane.IsDisposed && !axis.IsDisposed && !library.IsDisposed, "Blend-space host cleanup borrows definitions and clips."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "animation-blend-spaces-host", backend, run, stages = stage, cleaned = window.IsDisposed })); } finally { foreach (var clip in clips) clip.Dispose(); }
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class Box : Entity { internal Action? Start; protected override void OnReady() => Start?.Invoke(); protected override void OnDraw() => DrawRect(new(-3, -3, 6, 6), Colors.Red); }
     private static AnimationNodeAnimation Leaf(string name) => new() { Animation = name };

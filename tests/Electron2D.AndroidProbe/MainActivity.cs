@@ -34,9 +34,9 @@ public sealed class MainActivity : SDLActivity
     {
         if (scenario is not ("compatibility" or "gpu" or "shader" or "auto"))
             throw new ArgumentOutOfRangeException(nameof(scenario));
-        ProjectSettings.Instance.Set(ProjectSettings.RenderingMethod,
+        ProjectSettings.Set(ProjectSettings.RenderingMethod,
             scenario == "compatibility" ? "compatibility" : "gpu");
-        ProjectSettings.Instance.Set(ProjectSettings.RenderingFallback, scenario == "auto");
+        ProjectSettings.Set(ProjectSettings.RenderingFallback, scenario == "auto");
         if (scenario != "compatibility")
         {
             var drivers = SDL3.SDL.GetNumGPUDrivers();
@@ -53,9 +53,9 @@ public sealed class MainActivity : SDLActivity
         window.AddChild(node);
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            Log.Info("Electron2DProbe", $"DRIVER {scenario} {server.GetCurrentRenderingDriverName()}");
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            Log.Info("Electron2DProbe", $"DRIVER {scenario} {RenderingServer.GetCurrentRenderingDriverName()}");
+            RenderingServer.FramePostDraw += () =>
             {
                 if (node.Sampled) return;
                 using var frame = server.Readback();
@@ -66,8 +66,8 @@ public sealed class MainActivity : SDLActivity
                 node.Sampled = true;
             };
         };
-        Engine.Instance.MaxFPS = 60;
-        var code = Engine.Instance.Run(window);
+        Engine.MaxFPS = 60;
+        var code = Engine.Run(window);
         if (code != 0 || !node.Sampled) throw new InvalidOperationException("Canvas frame or clean exit was missing.");
     }
 

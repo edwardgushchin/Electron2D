@@ -29,26 +29,26 @@ internal sealed class AudioStreamPlaybackMicrophone(AudioStreamMicrophone source
     private int _generation = -1;
     private bool _active;
     private bool _prepared;
-    internal override void PrepareQueuedControls() { lock (AudioServer.Instance.StreamGate) { Check(); AudioServer.Instance.PrepareQueuedInput(reserve: !_prepared); _prepared = true; } }
-    internal override void StartQueued(double time) { lock (AudioServer.Instance.StreamGate) { if (!_prepared) throw new InvalidOperationException("Prepare microphone controls on the audio owner."); StartCore(queued: true); } }
-    internal override void StopQueued() { lock (AudioServer.Instance.StreamGate) StopCore(queued: true); }
+    internal override void PrepareQueuedControls() { lock (AudioServer.Service.StreamGate) { Check(); AudioServer.Service.PrepareQueuedInput(reserve: !_prepared); _prepared = true; } }
+    internal override void StartQueued(double time) { lock (AudioServer.Service.StreamGate) { if (!_prepared) throw new InvalidOperationException("Prepare microphone controls on the audio owner."); StartCore(queued: true); } }
+    internal override void StopQueued() { lock (AudioServer.Service.StreamGate) StopCore(queued: true); }
     private void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(source.IsDisposed, source); }
     protected override void OnStart(double fromPosition)
     {
-        AudioServer.Instance.Check();
-        lock (AudioServer.Instance.StreamGate) StartCore(queued: false);
+        AudioServer.Service.Check();
+        lock (AudioServer.Service.StreamGate) StartCore(queued: false);
     }
     private void StartCore(bool queued)
     {
         lock (ResampleGate)
         {
             Check(); if (_active) return;
-            _device = queued ? AudioServer.Instance.AcquireQueuedInput(this) : AudioServer.Instance.AcquireInput(this); _cursor = 0; _generation = -1; _active = true;
+            _device = queued ? AudioServer.Service.AcquireQueuedInput(this) : AudioServer.Service.AcquireInput(this); _cursor = 0; _generation = -1; _active = true;
             try { BeginResample(); }
             catch (Exception error)
             {
                 _active = false;
-                try { if (queued) AudioServer.Instance.ReleaseQueuedInput(this); else AudioServer.Instance.ReleaseInput(this); }
+                try { if (queued) AudioServer.Service.ReleaseQueuedInput(this); else AudioServer.Service.ReleaseInput(this); }
                 catch (Exception cleanup) { throw new AggregateException("Microphone start and cleanup failed.", error, cleanup); }
                 throw;
             }
@@ -56,9 +56,9 @@ internal sealed class AudioStreamPlaybackMicrophone(AudioStreamMicrophone source
     }
     protected override void OnStop()
     {
-        AudioServer.Instance.Check(); lock (AudioServer.Instance.StreamGate) StopCore(queued: false);
+        AudioServer.Service.Check(); lock (AudioServer.Service.StreamGate) StopCore(queued: false);
     }
-    private void StopCore(bool queued) { lock (ResampleGate) { if (!_active) return; try { if (queued) AudioServer.Instance.ReleaseQueuedInput(this); else AudioServer.Instance.ReleaseInput(this); } finally { _active = false; } } }
+    private void StopCore(bool queued) { lock (ResampleGate) { if (!_active) return; try { if (queued) AudioServer.Service.ReleaseQueuedInput(this); else AudioServer.Service.ReleaseInput(this); } finally { _active = false; } } }
     protected override bool OnIsPlaying() { lock (ResampleGate) { Check(); return _active; } }
     protected override double OnGetPlaybackPosition() { Check(); return 0; }
     protected override void OnSeek(double time) => Check();
@@ -68,7 +68,7 @@ internal sealed class AudioStreamPlaybackMicrophone(AudioStreamMicrophone source
         lock (ResampleGate)
         {
             Check(); if (!_active) { buffer.Clear(); return 0; }
-            var current = AudioServer.Instance.CurrentInput;
+            var current = AudioServer.Service.CurrentInput;
             if (!ReferenceEquals(current, _device)) { _device = current; _generation = -1; _cursor = 0; BeginResample(); }
             return base.OnMix(buffer, rateScale);
         }
@@ -78,6 +78,6 @@ internal sealed class AudioStreamPlaybackMicrophone(AudioStreamMicrophone source
         lock (ResampleGate) { Check(); if (_active && _device is not null) _device.Mix(buffer, ref _cursor, ref _generation); else buffer.Clear(); return buffer.Length; }
     }
     internal void CloseInput() { lock (ResampleGate) { _active = false; _device = null; } }
-    protected override void ValidateDisposal() { AudioServer.Instance.Check(); base.ValidateDisposal(); }
-    protected override void Dispose(bool disposing) { try { OnStop(); } finally { try { if (_prepared) { AudioServer.Instance.ReleaseQueuedInputReservation(); _prepared = false; } } finally { _device = null; base.Dispose(disposing); } } }
+    protected override void ValidateDisposal() { AudioServer.Service.Check(); base.ValidateDisposal(); }
+    protected override void Dispose(bool disposing) { try { OnStop(); } finally { try { if (_prepared) { AudioServer.Service.ReleaseQueuedInputReservation(); _prepared = false; } } finally { _device = null; base.Dispose(disposing); } } }
 }

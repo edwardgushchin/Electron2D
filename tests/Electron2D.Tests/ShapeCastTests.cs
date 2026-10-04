@@ -257,19 +257,19 @@ internal static class ShapeCastTests
         Check(cast.GetColliderRID(0) == target.GetRID() && cast.GetCollisionNormal(0).X > 0.9f,
             "The target follows the node rotation into global space.");
 
-        var server = PhysicsServer.Instance;
-        var body = server.BodyCreate();
-        var shapeRID = server.CircleShapeCreate();
-        server.BodyAddShape(body, shapeRID);
-        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        server.BodySetTransform(body, new(0, Vector2.One, 0, new(-40, 0)));
-        server.BodySetSpace(body, cast.GetWorld2D()!.Space);
+        var server = PhysicsServer.Service;
+        var body = PhysicsServer.BodyCreate();
+        var shapeRID = PhysicsServer.CircleShapeCreate();
+        PhysicsServer.BodyAddShape(body, shapeRID);
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+        PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(-40, 0)));
+        PhysicsServer.BodySetSpace(body, cast.GetWorld2D()!.Space);
         target.Position = new(0, 200);
         cast.ForceShapecastUpdate();
         Check(cast.GetColliderRID(0) == body && cast.GetCollider(0) is null &&
               cast.CollisionResult[0].ColliderID == 0,
             "A server-only body retains RID and contact data without a scene object.");
-        server.FreeRID(body); server.FreeRID(shapeRID);
+        PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(shapeRID);
         Check(cast.GetCollider(0) is null && cast.GetColliderRID(0).IsValid(),
             "A cached RID remains readable after the server collider is freed.");
         cast.ForceShapecastUpdate();

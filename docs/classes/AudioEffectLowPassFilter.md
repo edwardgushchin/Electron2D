@@ -1,6 +1,6 @@
 # AudioEffectLowPassFilter
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed class Electron2D.AudioEffectLowPassFilter` · **Source:** [AudioEffectFilter.cs](../../src/Scene/Resources/AudioEffectFilter.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -16,8 +16,8 @@ Partial host snippet; add on the audio owner and remove before disposing the cal
 
 ```csharp
 using var filter = new AudioEffectLowPassFilter { CutoffHZ = 2000 };
-AudioServer.Instance.AddBusEffect(0, filter);
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.AddBusEffect(0, filter);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 ## API summary

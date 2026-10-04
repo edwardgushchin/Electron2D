@@ -17,7 +17,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
     private readonly HashSet<MaterialState> _usedMaterials = [];
     private readonly Texture?[] _textureScratch = new Texture?[16];
     private readonly Dictionary<(TextureFilter, TextureRepeat, int, bool), RenderHandle> _samplers = [];
-    private readonly bool _nearestMipmaps = ProjectSettings.Instance.GetWithOverride(ProjectSettings.UseNearestMipmapFilter);
+    private readonly bool _nearestMipmaps = ProjectSettings.GetWithOverride(ProjectSettings.UseNearestMipmapFilter);
     private ImageTexture? _whiteTexture;
     private RenderHandle? _clearPipeline;
     private RenderHandle? _vertexBuffer;

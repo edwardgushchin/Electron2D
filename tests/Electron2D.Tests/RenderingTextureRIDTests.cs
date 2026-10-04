@@ -64,7 +64,7 @@ internal static partial class RenderingRuntimeTests
         var submissionChecked = false;
         using var submissionTexture = new RIDSubmissionTexture(red, () =>
         {
-            Reject<InvalidOperationException>(() => RenderingServer.Instance!.Texture2DCreate(red));
+            Reject<InvalidOperationException>(() => RenderingServer.Texture2DCreate(red));
             submissionChecked = true;
         });
         var resourceRID = resource.GetRID(); var atlasRID = atlas.GetRID();
@@ -90,82 +90,82 @@ internal static partial class RenderingRuntimeTests
             },
             ReadyAction = n =>
             {
-                var tree = n.Tree!; var server = captured = RenderingServer.Instance!;
-                server.SetDefaultClearColor(Colors.Black);
-                server.FramePreDraw += () =>
+                var tree = n.Tree!; var server = captured = RenderingServer.Service!;
+                RenderingServer.SetDefaultClearColor(Colors.Black);
+                RenderingServer.FramePreDraw += () =>
                 {
                     before = GC.GetAllocatedBytesForCurrentThread();
                     if (phase >= 4)
                     {
-                        Check(server.TextureGetFormat(resourceRID) == Image.Format.Rgba8, "Owner-thread texture reads work during frame preparation.");
+                        Check(RenderingServer.TextureGetFormat(resourceRID) == Image.Format.Rgba8, "Owner-thread texture reads work during frame preparation.");
                         if (warmedFrames < 84) n.QueueRedraw();
                         return;
                     }
                     if (phase == 0)
                     {
-                        owned = server.Texture2DCreate(red); shutdown = server.Texture2DCreate(red); placeholder = server.Texture2DPlaceholderCreate();
-                        Reject<ArgumentNullException>(() => server.Texture2DCreate(null!));
-                        Reject<ArgumentException>(() => server.Texture2DCreate(emptyImage));
+                        owned = RenderingServer.Texture2DCreate(red); shutdown = RenderingServer.Texture2DCreate(red); placeholder = RenderingServer.Texture2DPlaceholderCreate();
+                        Reject<ArgumentNullException>(() => RenderingServer.Texture2DCreate(null!));
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DCreate(emptyImage));
                         using var integerImage = Image.CreateEmpty(2, 2, false, Image.Format.R16I);
                         using var compressedImage = Image.CreateFromData(4, 4, false, Image.Format.Dxt1, new byte[8]);
-                        Reject<NotSupportedException>(() => server.Texture2DCreate(integerImage));
-                        Reject<NotSupportedException>(() => server.Texture2DCreate(compressedImage));
+                        Reject<NotSupportedException>(() => RenderingServer.Texture2DCreate(integerImage));
+                        Reject<NotSupportedException>(() => RenderingServer.Texture2DCreate(compressedImage));
                         using var disposedImage = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8); disposedImage.Dispose();
-                        Reject<ObjectDisposedException>(() => server.Texture2DCreate(disposedImage));
-                        Reject<ArgumentException>(() => server.Texture2DGet(default));
+                        Reject<ObjectDisposedException>(() => RenderingServer.Texture2DCreate(disposedImage));
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DGet(default));
                         using var shape = new CircleShape();
-                        Reject<ArgumentException>(() => server.TextureGetFormat(shape.GetRID()));
-                        server.TextureSetPath(owned, "diagnostic://pixels");
-                        Check(server.TextureGetPath(owned) == "diagnostic://pixels", "Diagnostic path round-trips without loading data.");
-                        Reject<ArgumentNullException>(() => server.TextureSetPath(owned, null!));
-                        Reject<ArgumentOutOfRangeException>(() => server.TextureSetSizeOverride(owned, 0, 2));
-                        Reject<ArgumentOutOfRangeException>(() => server.TextureSetSizeOverride(owned, 2, 16385));
-                        server.TextureSetSizeOverride(owned, 16384, 1); server.TextureSetSizeOverride(owned, 2, 2);
-                        using var copy = server.Texture2DGet(owned)!; copy.Fill(Colors.Green);
-                        using var unchanged = server.Texture2DGet(owned)!;
+                        Reject<ArgumentException>(() => RenderingServer.TextureGetFormat(shape.GetRID()));
+                        RenderingServer.TextureSetPath(owned, "diagnostic://pixels");
+                        Check(RenderingServer.TextureGetPath(owned) == "diagnostic://pixels", "Diagnostic path round-trips without loading data.");
+                        Reject<ArgumentNullException>(() => RenderingServer.TextureSetPath(owned, null!));
+                        Reject<ArgumentOutOfRangeException>(() => RenderingServer.TextureSetSizeOverride(owned, 0, 2));
+                        Reject<ArgumentOutOfRangeException>(() => RenderingServer.TextureSetSizeOverride(owned, 2, 16385));
+                        RenderingServer.TextureSetSizeOverride(owned, 16384, 1); RenderingServer.TextureSetSizeOverride(owned, 2, 2);
+                        using var copy = RenderingServer.Texture2DGet(owned)!; copy.Fill(Colors.Green);
+                        using var unchanged = RenderingServer.Texture2DGet(owned)!;
                         Check(unchanged.GetPixel(0, 0).IsEqualApprox(Colors.Red), "Texture output is an independent copy.");
-                        using var atlasPixels = server.Texture2DGet(atlasRID)!;
-                        Check(atlasPixels.Size == new Vector2i(2, 2) && server.TextureGetFormat(atlasRID) == Image.Format.Rgba8, "Server queries use atlas backing pixels and format.");
-                        using var emptyPixels = server.Texture2DGet(emptyResource.GetRID())!;
-                        Check(emptyPixels.Size == new Vector2i(4, 4) && emptyPixels.GetPixel(0, 0) == Colors.Magenta && server.TextureGetFormat(emptyResource.GetRID()) == Image.Format.Rgba8 && emptyResource.GetImage() is null, "An empty resource RID exposes rendering placeholder data without initializing the resource.");
-                        Reject<ArgumentException>(() => server.Texture2DUpdate(owned, green));
-                        Reject<ArgumentException>(() => server.Texture2DUpdate(owned, mipmaps));
-                        Reject<ArgumentException>(() => server.Texture2DUpdate(owned, otherFormat));
-                        Reject<ArgumentOutOfRangeException>(() => server.Texture2DUpdate(owned, blue, 1));
-                        Reject<InvalidOperationException>(() => server.Texture2DUpdate(resourceRID, blue));
-                        Reject<InvalidOperationException>(() => server.FreeRID(resourceRID));
-                        Reject<InvalidOperationException>(() => server.TextureReplace(owned, resourceRID));
-                        Reject<InvalidOperationException>(() => Task.Run(() => server.TextureGetFormat(owned)).GetAwaiter().GetResult());
-                        server.TextureReplace(owned, owned);
-                        var failureTarget = server.Texture2DCreate(red); var failureSource = server.Texture2DCreate(green);
+                        using var atlasPixels = RenderingServer.Texture2DGet(atlasRID)!;
+                        Check(atlasPixels.Size == new Vector2i(2, 2) && RenderingServer.TextureGetFormat(atlasRID) == Image.Format.Rgba8, "Server queries use atlas backing pixels and format.");
+                        using var emptyPixels = RenderingServer.Texture2DGet(emptyResource.GetRID())!;
+                        Check(emptyPixels.Size == new Vector2i(4, 4) && emptyPixels.GetPixel(0, 0) == Colors.Magenta && RenderingServer.TextureGetFormat(emptyResource.GetRID()) == Image.Format.Rgba8 && emptyResource.GetImage() is null, "An empty resource RID exposes rendering placeholder data without initializing the resource.");
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DUpdate(owned, green));
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DUpdate(owned, mipmaps));
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DUpdate(owned, otherFormat));
+                        Reject<ArgumentOutOfRangeException>(() => RenderingServer.Texture2DUpdate(owned, blue, 1));
+                        Reject<InvalidOperationException>(() => RenderingServer.Texture2DUpdate(resourceRID, blue));
+                        Reject<InvalidOperationException>(() => RenderingServer.FreeRID(resourceRID));
+                        Reject<InvalidOperationException>(() => RenderingServer.TextureReplace(owned, resourceRID));
+                        Reject<InvalidOperationException>(() => Task.Run(() => RenderingServer.TextureGetFormat(owned)).GetAwaiter().GetResult());
+                        RenderingServer.TextureReplace(owned, owned);
+                        var failureTarget = RenderingServer.Texture2DCreate(red); var failureSource = RenderingServer.Texture2DCreate(green);
                         RenderingTextureRegistry.Resolve(failureSource).Disposed += _ => throw new InvalidOperationException("Injected free failure.");
-                        Reject<InvalidOperationException>(() => server.TextureReplace(failureTarget, failureSource));
-                        Reject<ArgumentException>(() => server.Texture2DGet(failureSource));
-                        using var committed = server.Texture2DGet(failureTarget)!;
+                        Reject<InvalidOperationException>(() => RenderingServer.TextureReplace(failureTarget, failureSource));
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DGet(failureSource));
+                        using var committed = RenderingServer.Texture2DGet(failureTarget)!;
                         Check(committed.GetPixel(0, 0).IsEqualApprox(Colors.Green), "Replacement commits before disposal callbacks and leaves no consumed RID after failure.");
-                        server.FreeRID(failureTarget);
+                        RenderingServer.FreeRID(failureTarget);
                     }
                     else if (phase == 1)
                     {
-                        server.Texture2DUpdate(owned, blue); server.TextureSetSizeOverride(owned, 8, 4);
+                        RenderingServer.Texture2DUpdate(owned, blue); RenderingServer.TextureSetSizeOverride(owned, 8, 4);
                         Check(RenderingTextureRegistry.Resolve(owned).GetSize() == new Vector2(8, 4), "Logical size override executes independently of source allocation.");
-                        using var pixels = server.Texture2DGet(owned)!; Check(pixels.Size == new Vector2i(2, 2), "Size override does not resample pixels.");
+                        using var pixels = RenderingServer.Texture2DGet(owned)!; Check(pixels.Size == new Vector2i(2, 2), "Size override does not resample pixels.");
                     }
                     else if (phase == 2)
                     {
-                        var replacement = server.Texture2DCreate(green); server.TextureSetPath(replacement, "replacement");
-                        server.TextureReplace(owned, replacement);
-                        Reject<ArgumentException>(() => server.Texture2DGet(replacement));
-                        Check(server.TextureGetPath(owned) == "replacement" && RenderingTextureRegistry.Resolve(owned).GetSize() == new Vector2(3, 2), "Replacement transfers dimensions and metadata, retaining the destination identity.");
+                        var replacement = RenderingServer.Texture2DCreate(green); RenderingServer.TextureSetPath(replacement, "replacement");
+                        RenderingServer.TextureReplace(owned, replacement);
+                        Reject<ArgumentException>(() => RenderingServer.Texture2DGet(replacement));
+                        Check(RenderingServer.TextureGetPath(owned) == "replacement" && RenderingTextureRegistry.Resolve(owned).GetSize() == new Vector2(3, 2), "Replacement transfers dimensions and metadata, retaining the destination identity.");
                     }
                     else
                     {
-                        server.FreeRID(owned);
-                        Reject<ArgumentException>(() => server.FreeRID(owned));
+                        RenderingServer.FreeRID(owned);
+                        Reject<ArgumentException>(() => RenderingServer.FreeRID(owned));
                         n.DrawAction = _ => { }; // Keep previously recorded commands to exercise stale-texture replay.
                     }
                 };
-                server.FramePostDraw += () =>
+                RenderingServer.FramePostDraw += () =>
                 {
                     frames++;
                     if (phase >= 4)
@@ -181,7 +181,7 @@ internal static partial class RenderingRuntimeTests
                     Pixel(frame, 8, 8, color); Pixel(frame, 28, 8, color); Pixel(frame, 44, 4, Colors.Red); Pixel(frame, 45, 4, Colors.Blue);
                     Pixel(frame, 50, 6, Colors.Red); Pixel(frame, 54, 6, Colors.Blue);
                     Pixel(frame, 61, 5, Colors.Magenta); Pixel(frame, 65, 5, Colors.Black);
-                    using var query = server.Texture2DGet(resourceRID); Check(query is not null, "Post-draw reads remain available.");
+                    using var query = RenderingServer.Texture2DGet(resourceRID); Check(query is not null, "Post-draw reads remain available.");
                     var profile = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? $"{backend}-dummy" : backend;
                     frame.SavePNG($"/tmp/e2d-texture-rid-{profile}-{phase}.png");
                     if (phase < 3) Check(drawn == 1, "Update and replacement affect retained commands without redraw.");
@@ -193,11 +193,12 @@ internal static partial class RenderingRuntimeTests
             }
         };
         window.AddChild(node);
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Check(frames == 152 && activeBytes == 0 && idleBytes == 0, $"Texture RID active/idle rendering allocated {activeBytes}/{idleBytes} bytes over 64/64 warmed frames ({backend}).");
         Check(submissionChecked, "Texture mutation during geometry submission is rejected before state changes.");
         Reject<ArgumentException>(() => RenderingTextureRegistry.Resolve(shutdown));
-        Reject<ObjectDisposedException>(() => captured!.TextureGetFormat(resourceRID));
+        Reject<InvalidOperationException>(() => RenderingServer.TextureGetFormat(resourceRID));
+        Reject<ObjectDisposedException>(() => captured!.TextureGetFormatCore(resourceRID));
         Check(resource.GetRID() == resourceRID, "Borrowed texture RID survives renderer shutdown.");
         resource.Dispose(); Reject<ArgumentException>(() => RenderingTextureRegistry.Resolve(resourceRID));
         VerifyTextureRIDCleanup(backend);
@@ -213,18 +214,18 @@ internal static partial class RenderingRuntimeTests
         {
             ReadyAction = n =>
             {
-                server = RenderingServer.Instance!;
-                first = server.Texture2DCreate(image); failing = server.Texture2DCreate(image);
+                server = RenderingServer.Service!;
+                first = RenderingServer.Texture2DCreate(image); failing = RenderingServer.Texture2DCreate(image);
                 RenderingTextureRegistry.Resolve(failing).Disposed += _ =>
                 {
-                    Reject<InvalidOperationException>(() => server.Texture2DCreate(image));
+                    Reject<InvalidOperationException>(() => RenderingServer.Texture2DCreate(image));
                     throw new InvalidOperationException("Injected texture disposal failure.");
                 };
-                server.FramePostDraw += () => n.Tree!.Quit();
+                RenderingServer.FramePostDraw += () => n.Tree!.Quit();
             }
         });
-        Reject<AggregateException>(() => Engine.Instance.Run(window));
-        Check(RenderingServer.Instance is null && DisplayServer.Instance is null, $"Texture disposal failure still detaches both native services ({backend}).");
+        Reject<AggregateException>(() => Engine.Run(window));
+        Check(RenderingServer.Service is null && DisplayServer.Service is null, $"Texture disposal failure still detaches both native services ({backend}).");
         Reject<ArgumentException>(() => RenderingTextureRegistry.Resolve(first));
         Reject<ArgumentException>(() => RenderingTextureRegistry.Resolve(failing));
     }

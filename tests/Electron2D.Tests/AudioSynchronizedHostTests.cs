@@ -6,19 +6,19 @@ internal static class AudioSynchronizedHostTests
     internal static void Run()
     {
         var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu";
-        var settings = ProjectSettings.Instance; var old = settings.Get(ProjectSettings.RenderingMethod); var fps = Engine.Instance.MaxFPS;
-        settings.Set(ProjectSettings.RenderingMethod, backend); Engine.Instance.MaxFPS = 60;
+        var settings = ProjectSettings.Service; var old = ProjectSettings.Get(ProjectSettings.RenderingMethod); var fps = Engine.MaxFPS;
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); Engine.MaxFPS = 60;
         try
         {
             using var shortStream = Tone(24000); using var longStream = Tone(48000); using var synchronized = new AudioStreamSynchronized { StreamCount = 2 };
             synchronized.SetSyncStream(0, shortStream); synchronized.SetSyncStream(1, longStream);
             var window = new Window { Title = "Electron2D synchronized audio", Size = new(240, 120) }; var player = new AudioStreamPlayer { Stream = synchronized, Autoplay = true, VolumeDB = -24 }; var scenario = new Scenario(player, synchronized);
             window.AddChild(player); window.AddChild(scenario);
-            if (Engine.Instance.Run(window) != 0 || !scenario.Completed || !window.IsDisposed || shortStream.IsDisposed || longStream.IsDisposed || synchronized.IsDisposed)
+            if (Engine.Run(window) != 0 || !scenario.Completed || !window.IsDisposed || shortStream.IsDisposed || longStream.IsDisposed || synchronized.IsDisposed)
                 throw new InvalidOperationException("Public synchronized WAV host lifecycle failed.");
             Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "audio-synchronized-host", backend, shortest = .5, longest = 1, scenario.Frozen, scenario.LongestOnly, cleaned = window.IsDisposed }));
         }
-        finally { Engine.Instance.MaxFPS = fps; settings.Set(ProjectSettings.RenderingMethod, old); }
+        finally { Engine.MaxFPS = fps; ProjectSettings.Set(ProjectSettings.RenderingMethod, old); }
     }
     private static AudioStreamWAV Tone(int frames)
     {

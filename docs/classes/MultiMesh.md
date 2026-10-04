@@ -1,6 +1,6 @@
 # MultiMesh
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.MultiMesh` · **Source:** [MultiMesh.cs](../../src/Scene/Resources/MultiMesh.cs).
 
@@ -27,7 +27,7 @@ for (int i = 0; i < 2; i++)
     instances.SetInstanceColor(i, Colors.White);
 }
 var node = new MultiMeshInstance { MultiMesh = instances };
-// Add node to a Window and run Engine.Instance.Run(window).
+// Add node to a Window and run Engine.Run(window).
 ```
 
 ## Constructors

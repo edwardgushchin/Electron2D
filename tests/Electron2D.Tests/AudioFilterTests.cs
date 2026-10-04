@@ -87,22 +87,22 @@ internal static class AudioFilterTests
     }
     private static void Native()
     {
-        var server = AudioServer.Instance; server.CloseNative(); server.BusCount = 1; using var filter = new AudioEffectLowPassFilter(); using var capture = new AudioEffectCapture { BufferLength = .2f }; using var source = Tone(48000); var root = new Node(); var player = new AudioStreamPlayer { Stream = source }; root.AddChild(player); using var tree = new SceneTree(root);
+        var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1; using var filter = new AudioEffectLowPassFilter(); using var capture = new AudioEffectCapture { BufferLength = .2f }; using var source = Tone(48000); var root = new Node(); var player = new AudioStreamPlayer { Stream = source }; root.AddChild(player); using var tree = new SceneTree(root);
         try
         {
-            server.AddBusEffect(0, filter); server.AddBusEffect(0, capture); player.Play(); var native = server.Native; Wait(native, 20); var filtered = Measure(native); Check(filtered.X > .2f && filtered.Y < .02f, "Actual native filter preserves low tone and attenuates high tone.");
-            filter.CutoffHZ = 16000; var open = Measure(native); Check(open.Y > .15f, "Live cutoff updates audible native PCM."); server.SetBusEffectEnabled(0, 0, false); var bypass = Measure(native); Check(bypass.X > .2f && bypass.Y > .2f, "Disabling passes distinct stereo tones."); server.SetBusEffectEnabled(0, 0, true); filter.CutoffHZ = 2000;
+            AudioServer.AddBusEffect(0, filter); AudioServer.AddBusEffect(0, capture); player.Play(); var native = server.Native; Wait(native, 20); var filtered = Measure(native); Check(filtered.X > .2f && filtered.Y < .02f, "Actual native filter preserves low tone and attenuates high tone.");
+            filter.CutoffHZ = 16000; var open = Measure(native); Check(open.Y > .15f, "Live cutoff updates audible native PCM."); AudioServer.SetBusEffectEnabled(0, 0, false); var bypass = Measure(native); Check(bypass.X > .2f && bypass.Y > .2f, "Disabling passes distinct stereo tones."); AudioServer.SetBusEffectEnabled(0, 0, true); filter.CutoffHZ = 2000;
             Wait(native, 20); var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; Wait(native, 64, () => filter.CutoffHZ = native.MixPasses % 2 == 0 ? 1000 : 3000); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed native live-filter passes allocate zero managed bytes/custom allocator calls.");
             player.StreamPaused = true; Wait(native, 20); bytes = native.MixManagedBytes; calls = FAudioContext.AllocationCalls; Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 paused native filter passes allocate zero measured bytes/calls.");
-            var borrowed = server.GetBusEffectInstance(0, 0); server.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !filter.IsDisposed, "Filter instance teardown borrows resource."); server.RemoveBusEffect(0, 0);
+            var borrowed = AudioServer.GetBusEffectInstance(0, 0); AudioServer.RemoveBusEffect(0, 0); Check(borrowed.IsDisposed && !filter.IsDisposed, "Filter instance teardown borrows resource."); AudioServer.RemoveBusEffect(0, 0);
             player.StreamPaused = false; var reference = Measure(native);
             foreach (var concrete in Family()) using (concrete)
                 {
-                    concrete.Gain = 1.5f; concrete.DB = Slope.Filter12DB; server.AddBusEffect(0, concrete); var actual = Measure(native);
-                    Check(Math.Abs(actual.X / reference.X - Response(concrete, 20, native.MixRate)) < .03 && Math.Abs(actual.Y / reference.Y - Response(concrete, 8000, native.MixRate)) < .03, $"Native {concrete.GetType().Name}: RMS ratios {actual.X / reference.X}/{actual.Y / reference.Y}, expected {Response(concrete, 20, native.MixRate)}/{Response(concrete, 8000, native.MixRate)} at {native.MixRate} Hz."); server.RemoveBusEffect(0, 0);
+                    concrete.Gain = 1.5f; concrete.DB = Slope.Filter12DB; AudioServer.AddBusEffect(0, concrete); var actual = Measure(native);
+                    Check(Math.Abs(actual.X / reference.X - Response(concrete, 20, native.MixRate)) < .03 && Math.Abs(actual.Y / reference.Y - Response(concrete, 8000, native.MixRate)) < .03, $"Native {concrete.GetType().Name}: RMS ratios {actual.X / reference.X}/{actual.Y / reference.Y}, expected {Response(concrete, 20, native.MixRate)}/{Response(concrete, 8000, native.MixRate)} at {native.MixRate} Hz."); AudioServer.RemoveBusEffect(0, 0);
                 }
         }
-        finally { tree.Dispose(); server.CloseNative(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+        finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
     }
     private static Vector2 Measure(FAudioContext native)
     {
@@ -121,28 +121,28 @@ internal static class AudioFilterTests
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend); var fps = Engine.Instance.MaxFPS; Engine.Instance.MaxFPS = 60;
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"; var settings = ProjectSettings.Service; var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); var fps = Engine.MaxFPS; Engine.MaxFPS = 60;
         try
         {
             for (var run = 0; run < 3; run++)
             {
                 using var source = Tone(); using var filter = new AudioEffectLowPassFilter(); using var capture = new AudioEffectCapture { BufferLength = .1f }; var window = new Window { Size = new(160, 96), Title = "Electron2D stereo filter" }; var player = new AudioStreamPlayer { Stream = source, Autoplay = true }; var scenario = new HostScenario(player, filter, capture, run == 2); window.AddChild(player); window.AddChild(scenario);
-                var server = AudioServer.Instance; server.AddBusEffect(0, filter); server.AddBusEffect(0, capture);
+                var server = AudioServer.Service; AudioServer.AddBusEffect(0, filter); AudioServer.AddBusEffect(0, capture);
                 try
                 {
-                    if (run == 2) { var failed = false; try { Engine.Instance.Run(window); } catch (AggregateException error) { failed = error.Flatten().InnerExceptions.Any(e => e.Message == "Filter host failure fixture."); } Check(failed && window.IsDisposed, "Failed filter host cleanup."); }
-                    else Check(Engine.Instance.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public filter host lifecycle.");
+                    if (run == 2) { var failed = false; try { Engine.Run(window); } catch (AggregateException error) { failed = error.Flatten().InnerExceptions.Any(e => e.Message == "Filter host failure fixture."); } Check(failed && window.IsDisposed, "Failed filter host cleanup."); }
+                    else Check(Engine.Run(window) == 0 && scenario.Completed && window.IsDisposed, "Public filter host lifecycle.");
                     Check(scenario.Instance!.IsDisposed && !filter.IsDisposed && !source.IsDisposed, "Host closes instances and borrows resources."); Console.WriteLine(JsonSerializer.Serialize(new { scenario = "audio-filter-host", backend, run, scenario.Frames, leftRMS = scenario.RMS.X, rightRMS = scenario.RMS.Y, cleaned = window.IsDisposed }));
                 }
-                finally { if (!window.IsDisposed) window.Dispose(); while (server.GetBusEffectCount(0) > 0) server.RemoveBusEffect(0, 0); server.CloseNative(); }
+                finally { if (!window.IsDisposed) window.Dispose(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
             }
         }
-        finally { Engine.Instance.MaxFPS = fps; settings.Set(ProjectSettings.RenderingMethod, previous); }
+        finally { Engine.MaxFPS = fps; ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); }
     }
     private sealed class HostScenario(AudioStreamPlayer player, AudioEffectFilter filter, AudioEffectCapture capture, bool fail) : Node
     {
         internal int Frames; internal bool Completed; internal Vector2 RMS; internal AudioEffectInstance? Instance; private double _elapsed, _left, _right;
-        protected override void OnReady() { Instance = AudioServer.Instance.GetBusEffectInstance(0, 0); capture.ClearBuffer(); ProcessEnabled = true; }
+        protected override void OnReady() { Instance = AudioServer.GetBusEffectInstance(0, 0); capture.ClearBuffer(); ProcessEnabled = true; }
         protected override void OnProcess(double delta)
         {
             _elapsed += delta; var available = capture.GetFramesAvailable(); if (available > 0) foreach (var frame in capture.GetBuffer(available)) { Frames++; _left += frame.X * frame.X; _right += frame.Y * frame.Y; }

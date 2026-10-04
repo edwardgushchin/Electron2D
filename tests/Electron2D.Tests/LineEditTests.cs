@@ -92,17 +92,17 @@ internal static class LineEditTests
     private static void KeyEvent(Viewport root, Key key, bool command = false, bool shift = false) { using var input = new InputEventKey { Keycode = key, Pressed = true, ControlPressed = command, ShiftPressed = shift }; root.PushInput(input, true); }
     internal static void RunHost()
     {
-        Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_LINE_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
-        try { Pixels(); NativeInput(); Warm(); } finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_LINE_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+        try { Pixels(); NativeInput(); Warm(); } finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
         Console.WriteLine("LineEdit native render and committed/preedit input passed (" + backend + ").");
     }
     private static void Pixels()
     {
         var window = new Window { Size = new(200, 120) }; var field = new LineEdit { Name = "field", Position = new(8, 8), Size = new(120, 32), Text = "Aאב e\u0301", CaretForceDisplayed = true }; window.AddChild(field);
         field.AddThemeColorOverride("selection_color", Colors.Red); field.Select(0, 1); var phase = 0;
-        window.Ready += _ => RenderingServer.Instance!.FramePostDraw += () =>
+        window.Ready += _ => RenderingServer.FramePostDraw += () =>
         {
-            using var image = RenderingServer.Instance!.Readback(); var red = 0; var ink = 0;
+            using var image = RenderingServer.Service!.Readback(); var red = 0; var ink = 0;
             for (var y = 12; y < 36; y++) for (var x = 12; x < 124; x++) { var pixel = image.GetPixel(x, y); if (pixel.R > .8 && pixel.G < .15) red++; if (pixel.R > .7 && pixel.G > .7) ink++; }
             if (phase == 0) { if (Environment.GetEnvironmentVariable("ELECTRON2D_LINE_CAPTURE") is { } capture) image.SavePNG(capture); Check(red > 10 && ink > 0, "Rendered selection and glyphs."); field.Select(3, 5); field.CaretColumn = 5; field.ClearButtonEnabled = true; }
             else if (phase == 1) { Check(ink > 0, "BiDi field and clear icon render."); field.Secret = true; field.Text = "abcdefghijklmnopqrstuvwxyz"; field.CaretColumn = 26; }
@@ -110,7 +110,7 @@ internal static class LineEditTests
             else { Check(ink > 0, "Placeholder renders."); window.Tree!.Quit(); }
             phase++;
         };
-        Check(Engine.Instance.Run(window) == 0 && phase == 4, "Native render lifecycle.");
+        Check(Engine.Run(window) == 0 && phase == 4, "Native render lifecycle.");
     }
     private static void Warm()
     {
@@ -118,8 +118,8 @@ internal static class LineEditTests
         window.Ready += _ =>
         {
             field.GrabFocus();
-            RenderingServer.Instance!.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
-            RenderingServer.Instance.FramePostDraw += () =>
+            RenderingServer.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+            RenderingServer.FramePostDraw += () =>
             {
                 var now = GC.GetAllocatedBytesForCurrentThread(); if (frame >= 32) total += now - before;
                 field.CaretColumn = frame % 2 == 0 ? 3 : 7; field.Select(2, frame % 2 == 0 ? 4 : 8);
@@ -127,14 +127,14 @@ internal static class LineEditTests
                 if (++frame == 96) window.Tree!.Quit();
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && total == 0, "Warm caret/selection render bytes: " + total); Console.WriteLine("64 warm LineEdit caret/selection render intervals: " + total + " managed bytes.");
+        Check(Engine.Run(window) == 0 && total == 0, "Warm caret/selection render bytes: " + total); Console.WriteLine("64 warm LineEdit caret/selection render intervals: " + total + " managed bytes.");
     }
     private sealed class Driver(LineEdit field) : Node
     {
         private uint _id; internal int Frames; private readonly List<nint> _pointers = []; private string? _priorClipboard;
         protected override void OnReady()
         {
-            ProcessEnabled = true; _priorClipboard = DisplayServer.Instance!.ClipboardGet(); field.GrabFocus(); _id = SDL.GetWindowID(SDL.GetWindows(out var count)![0]); PushText("native😀");
+            ProcessEnabled = true; _priorClipboard = DisplayServer.ClipboardGet(); field.GrabFocus(); _id = SDL.GetWindowID(SDL.GetWindows(out var count)![0]); PushText("native😀");
         }
         private void PushText(string text)
         {
@@ -143,7 +143,7 @@ internal static class LineEditTests
             { var input = new SDL.Event { Text = new SDL.TextInputEvent { Type = SDL.EventType.TextInput, WindowID = _id, Text = pointer } }; Check(SDL.PushEvent(ref input), "Queue native commit."); }
 
         }
-        protected override void Dispose(bool disposing) { if (disposing) { foreach (var pointer in _pointers) System.Runtime.InteropServices.Marshal.FreeCoTaskMem(pointer); if (_priorClipboard is not null && DisplayServer.Instance is { } display) display.ClipboardSet(_priorClipboard); } base.Dispose(disposing); }
+        protected override void Dispose(bool disposing) { if (disposing) { foreach (var pointer in _pointers) System.Runtime.InteropServices.Marshal.FreeCoTaskMem(pointer); if (_priorClipboard is not null && DisplayServer.Service is { } display) DisplayServer.ClipboardSet(_priorClipboard); } base.Dispose(disposing); }
         protected override void OnProcess(double delta)
         {
             if (Frames++ == 0)
@@ -158,11 +158,11 @@ internal static class LineEditTests
 
             }
             else if (Frames == 2) { Check(field.HasIMEText() && field.Text == "native😀", "Native preedit."); PushText("中"); }
-            else if (Frames == 3) { Check(field.Text == "native😀中" && !field.HasIMEText(), "Native preedit commit."); field.SelectAll(); field.MenuOption(LineEditMenuAction.Copy); Check(DisplayServer.Instance!.ClipboardGet() == "native😀中", "Native copy command."); field.Clear(); field.MenuOption(LineEditMenuAction.Paste); Check(field.Text == "native😀中", "Native paste command."); }
-            else { field.Secret = true; field.SelectAll(); DisplayServer.Instance!.ClipboardSet("marker"); field.MenuOption(LineEditMenuAction.Copy); field.MenuOption(LineEditMenuAction.Cut); Check(DisplayServer.Instance.ClipboardGet() == "marker" && field.Text == "native😀中", "Secret copy/cut suppression."); Tree!.Quit(); }
+            else if (Frames == 3) { Check(field.Text == "native😀中" && !field.HasIMEText(), "Native preedit commit."); field.SelectAll(); field.MenuOption(LineEditMenuAction.Copy); Check(DisplayServer.ClipboardGet() == "native😀中", "Native copy command."); field.Clear(); field.MenuOption(LineEditMenuAction.Paste); Check(field.Text == "native😀中", "Native paste command."); }
+            else { field.Secret = true; field.SelectAll(); DisplayServer.ClipboardSet("marker"); field.MenuOption(LineEditMenuAction.Copy); field.MenuOption(LineEditMenuAction.Cut); Check(DisplayServer.ClipboardGet() == "marker" && field.Text == "native😀中", "Secret copy/cut suppression."); Tree!.Quit(); }
         }
     }
-    private static void NativeInput() { var window = new Window { Size = new(160, 80) }; var field = new LineEdit { Name = "field", Size = new(70, 28) }; var container = new SubViewportContainer { Name = "container", Position = new(8, 8), Size = new(144, 64), Stretch = true, StretchShrink = 2 }; var view = new SubViewport { Name = "view" }; view.AddChild(field); container.AddChild(view); var driver = new Driver(field); window.AddChild(container); window.AddChild(driver); Check(Engine.Instance.Run(window) == 0 && driver.Frames == 4, "Native input lifecycle."); }
+    private static void NativeInput() { var window = new Window { Size = new(160, 80) }; var field = new LineEdit { Name = "field", Size = new(70, 28) }; var container = new SubViewportContainer { Name = "container", Position = new(8, 8), Size = new(144, 64), Stretch = true, StretchShrink = 2 }; var view = new SubViewport { Name = "view" }; view.AddChild(field); container.AddChild(view); var driver = new Driver(field); window.AddChild(container); window.AddChild(driver); Check(Engine.Run(window) == 0 && driver.Frames == 4, "Native input lifecycle."); }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
 }

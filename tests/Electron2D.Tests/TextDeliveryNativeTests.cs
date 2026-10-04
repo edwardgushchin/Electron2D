@@ -20,7 +20,7 @@ internal static partial class RenderingRuntimeTests
 
         protected override void OnTextInput(string text)
         {
-            Check(DisplayServer.Instance!.IMEGetText() == string.Empty && DisplayServer.Instance.IMEGetSelection() == Vector2i.Zero,
+            Check(DisplayServer.IMEGetText() == string.Empty && DisplayServer.IMEGetSelection() == Vector2i.Zero,
                 "The native commit clears preedit before scene delivery.");
             Commit = text; Order.Add("commit:" + text);
         }
@@ -34,7 +34,7 @@ internal static partial class RenderingRuntimeTests
         {
             base.OnNotification(what);
             if (what != NotificationOsImeUpdate) return;
-            Check(DisplayServer.Instance!.IMEGetText() == "a🙂" && DisplayServer.Instance.IMEGetSelection() == new Vector2i(1, 1),
+            Check(DisplayServer.IMEGetText() == "a🙂" && DisplayServer.IMEGetSelection() == new Vector2i(1, 1),
                 "Native composition state is committed before the scene-wide notification.");
             Order.Add("notify");
         }
@@ -83,7 +83,7 @@ internal static partial class RenderingRuntimeTests
                 };
                 Check(SDL.PushEvent(ref editing) && SDL.PushEvent(ref commit),
                     "The native queue accepts composition and a multi-scalar commit in order.");
-                RenderingServer.Instance!.FramePostDraw += () =>
+                RenderingServer.FramePostDraw += () =>
                 {
                     frames++;
                     if (frames == 1)
@@ -111,7 +111,7 @@ internal static partial class RenderingRuntimeTests
                     }
                 };
             };
-            Engine.Instance.Run(window);
+            Engine.Run(window);
         }
         finally
         {

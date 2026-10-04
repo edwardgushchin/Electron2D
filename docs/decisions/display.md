@@ -1,6 +1,9 @@
 # Display decisions
 
-Last updated: 2026-09-30
+Last updated: 2026-10-04
+
+
+Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
 
 This bounded log owns native display connection, window, and event-pump decisions. See [the decision index](index.md) for routing.
 

@@ -9,28 +9,32 @@ internal static class RenderingNativeHandleTests
 
     internal static void Run()
     {
-        var settings = ProjectSettings.Instance;
-        var previous = settings.Get(ProjectSettings.RenderingMethod);
-        var fallback = settings.Get(ProjectSettings.RenderingFallback);
+        var settings = ProjectSettings.Service;
+        var previous = ProjectSettings.Get(ProjectSettings.RenderingMethod);
+        var fallback = ProjectSettings.Get(ProjectSettings.RenderingFallback);
         try
         {
             for (var i = 0; i < Types.Length; i++) Check((int)Types[i] == i + 3, "Native handle numeric identity.");
             using (var display = DisplayServer.Open("No renderer", new Vector2i(64, 64), hidden: true))
-                foreach (var type in Types) Reject<NotSupportedException>(() => display.WindowGetNativeHandle(type));
-            settings.Set(ProjectSettings.RenderingFallback, false);
-            settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_HANDLE_METHOD") ?? "compatibility");
+                foreach (var type in Types) Reject<NotSupportedException>(() => DisplayServer.WindowGetNativeHandle(type));
+            ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+            ProjectSettings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_HANDLE_METHOD") ?? "compatibility");
             for (var run = 0; run < 2; run++)
             {
                 using var window = new Window { Title = "Electron2D native handles", Size = new Vector2i(96, 64) };
                 var probe = new Probe();
                 window.AddChild(probe);
-                Check(Engine.Instance.Run(window) == 0 && probe.Frames == 2, "Two rendered frames and clean shutdown.");
-                foreach (var type in Types) Reject<ObjectDisposedException>(() => probe.Display!.WindowGetNativeHandle(type));
-                Check(DisplayServer.Instance is null && RenderingServer.Instance is null, "Native ownership released for reopen.");
+                Check(Engine.Run(window) == 0 && probe.Frames == 2, "Two rendered frames and clean shutdown.");
+                foreach (var type in Types)
+                {
+                    Reject<InvalidOperationException>(() => DisplayServer.WindowGetNativeHandle(type));
+                    Reject<ObjectDisposedException>(() => probe.Display!.WindowGetNativeHandleCore(type));
+                }
+                Check(DisplayServer.Service is null && RenderingServer.Service is null, "Native ownership released for reopen.");
             }
             Console.WriteLine("Native graphics handle checks passed.");
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, previous); settings.Set(ProjectSettings.RenderingFallback, fallback); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); ProjectSettings.Set(ProjectSettings.RenderingFallback, fallback); }
     }
 
     private sealed class Probe : Entity
@@ -42,20 +46,20 @@ internal static class RenderingNativeHandleTests
 
         protected override void OnReady()
         {
-            var display = Display = DisplayServer.Instance!;
-            var server = RenderingServer.Instance!;
-            var driver = server.GetCurrentRenderingDriverName();
-            Console.WriteLine($"Handle check: {display.GetName()}/{server.GetCurrentRenderingMethod()}/{driver}");
-            var gl = server.GetCurrentRenderingMethod() == "compatibility" && driver is "opengl" or "opengles2";
-            Reject<ArgumentOutOfRangeException>(() => display.WindowGetNativeHandle((DisplayServer.HandleType)2));
-            Reject<ArgumentOutOfRangeException>(() => display.WindowGetNativeHandle(Types[0], 1));
-            Reject<InvalidOperationException>(() => Task.Run(() => display.WindowGetNativeHandle(Types[0])).GetAwaiter().GetResult());
+            var display = Display = DisplayServer.Service!;
+            var server = RenderingServer.Service!;
+            var driver = RenderingServer.GetCurrentRenderingDriverName();
+            Console.WriteLine($"Handle check: {DisplayServer.GetName()}/{RenderingServer.GetCurrentRenderingMethod()}/{driver}");
+            var gl = RenderingServer.GetCurrentRenderingMethod() == "compatibility" && driver is "opengl" or "opengles2";
+            Reject<ArgumentOutOfRangeException>(() => DisplayServer.WindowGetNativeHandle((DisplayServer.HandleType)2));
+            Reject<ArgumentOutOfRangeException>(() => DisplayServer.WindowGetNativeHandle(Types[0], 1));
+            Reject<InvalidOperationException>(() => Task.Run(() => DisplayServer.WindowGetNativeHandle(Types[0])).GetAwaiter().GetResult());
             if (gl)
             {
                 _window = SDL.GLGetCurrentWindow();
                 _handles = Types.Select(type =>
                 {
-                    try { return display.WindowGetNativeHandle(type); }
+                    try { return DisplayServer.WindowGetNativeHandle(type); }
                     catch (NotSupportedException) { return 0; }
                 }).ToArray();
                 Check(_window != 0 && _handles[0] == SDL.GLGetCurrentContext() && _handles[0] != 0, "Window-associated owned context.");
@@ -65,9 +69,9 @@ internal static class RenderingNativeHandleTests
                     Check((_handles[i] != 0) == (egl ? i <= 2 : i >= 3), "Each handle follows the actual EGL/GLX driver.");
                 VerifyForeignContext();
             }
-            else foreach (var type in Types) Reject<NotSupportedException>(() => display.WindowGetNativeHandle(type));
-            server.SetDefaultClearColor(Colors.Red);
-            server.FramePostDraw += () =>
+            else foreach (var type in Types) Reject<NotSupportedException>(() => DisplayServer.WindowGetNativeHandle(type));
+            RenderingServer.SetDefaultClearColor(Colors.Red);
+            RenderingServer.FramePostDraw += () =>
             {
                 Frames++;
                 using var pixels = server.Readback();
@@ -76,7 +80,7 @@ internal static class RenderingNativeHandleTests
                 {
                     Check(SDL.GLGetCurrentWindow() == _window && SDL.GLGetCurrentContext() == _handles[0], "Renderer restored its context.");
                     for (var i = 0; i < Types.Length; i++)
-                        if (_handles[i] != 0) Check(display.WindowGetNativeHandle(Types[i]) == _handles[i], "Borrowed identity stable across frames.");
+                        if (_handles[i] != 0) Check(DisplayServer.WindowGetNativeHandle(Types[i]) == _handles[i], "Borrowed identity stable across frames.");
                 }
                 if (Frames == 2) Tree!.Quit();
             };
@@ -96,7 +100,7 @@ internal static class RenderingNativeHandleTests
                 Check(context != 0 && SDL.GLGetCurrentWindow() == foreign, "A different native window is current.");
                 if (_handles[2] != 0) Check(SDL.EGLGetCurrentConfig() != _handles[2], "Foreign window selected a different EGL config.");
                 for (var i = 0; i < Types.Length; i++)
-                    if (_handles[i] != 0) Check(Display!.WindowGetNativeHandle(Types[i]) == _handles[i], "Query must not leak a foreign current context.");
+                    if (_handles[i] != 0) Check(DisplayServer.WindowGetNativeHandle(Types[i]) == _handles[i], "Query must not leak a foreign current context.");
                 Check(SDL.GLGetCurrentContext() == context && SDL.GLGetCurrentWindow() == foreign, "Query does not change context selection.");
             }
             finally
@@ -105,7 +109,7 @@ internal static class RenderingNativeHandleTests
                 SDL.DestroyWindow(foreign);
                 Check(SDL.GLSetAttribute(SDL.GLAttr.DepthSize, depth) && SDL.GLSetAttribute(SDL.GLAttr.StencilSize, stencil), SDL.GetError());
             }
-            Check(Display!.WindowGetNativeHandle(Types[0]) == _handles[0], "Owned context remains queryable while none is current.");
+            Check(DisplayServer.WindowGetNativeHandle(Types[0]) == _handles[0], "Owned context remains queryable while none is current.");
         }
     }
 
@@ -122,7 +126,7 @@ internal static class RenderingNativeHandleTests
         }
         else
         {
-            var nativeDisplay = display.WindowGetNativeHandle(DisplayServer.HandleType.DisplayHandle);
+            var nativeDisplay = DisplayServer.WindowGetNativeHandle(DisplayServer.HandleType.DisplayHandle);
             var query = (delegate* unmanaged[Cdecl]<nint, nint, int, int*, int>)SDL.GLGetProcAddress("glXQueryContext");
             var attribute = (delegate* unmanaged[Cdecl]<nint, nint, int, int*, int>)SDL.GLGetProcAddress("glXGetFBConfigAttrib");
             int a = 0, b = 0, visual = 0;

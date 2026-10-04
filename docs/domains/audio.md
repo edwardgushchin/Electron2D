@@ -2,6 +2,9 @@
 
 Last updated: 2026-10-04
 
+
+Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
+
 Owns audio resource decoding, independent playback state, non-spatial and spatial 2D scene playback, listener selection and output bus routing. The [audio playback component](../components/audio-playback.md) implements the first output path under [ADR 0047](../decisions/audio.md#adr-0047). AudioStream, AudioStreamPlayback, AudioStreamPlaybackResampled, AudioStreamWAV, AudioWAVImportOptions, AudioStreamGenerator, AudioStreamGeneratorPlayback, AudioStreamRandomizer, AudioStreamMP3, AudioStreamOggVorbis, AudioStreamPlaybackOggVorbis, OggPacketSequence, OggPacketSequencePlayback, AudioStreamPlayer, AudioStreamEmitter, AudioListener and AudioServer expose engine-owned types only.
 
 Concrete sources provide immutable prepared PCM; random pools provide borrowed-child selection/configuration and own independent child playback wrappers; playback holds cursors/history; scene nodes borrow streams and own playback/voices; AudioServer owns native output and bus configuration. The runtime embeds internal FAudio#, qoa-fu, NLayer and NVorbis source in Electron2D.dll and ships the pinned native FAudio library sharing SDL3. Private native build/package assets use `runtimes/<RID>/native`, preserved through project references and resolved by the engine under [ADR 0012](../decisions/product.md#adr-0012). Engine teardown closes output without disposing borrowed stream resources or the process singleton.

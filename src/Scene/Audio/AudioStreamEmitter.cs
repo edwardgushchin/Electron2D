@@ -18,7 +18,7 @@ public sealed class AudioStreamEmitter : Entity
     /// <summary>Creates a detached spatial player with Master routing and one voice.</summary>
     public AudioStreamEmitter()
     {
-        _globalPanningStrength = ProjectSettings.Instance.GetWithOverride(ProjectSettings.AudioGeneral2DPanningStrength);
+        _globalPanningStrength = ProjectSettings.GetWithOverride(ProjectSettings.AudioGeneral2DPanningStrength);
         _player.Name = "SpatialPlayback";
         _player.Finished += () => Finished?.Invoke();
         AddChild(_player, InternalMode.Back);
@@ -37,7 +37,7 @@ public sealed class AudioStreamEmitter : Entity
     /// <value>Master initially; missing names resolve to Master.</value>
     public string Bus
     {
-        get { Check(); return AudioServer.Instance.GetBusIndex(_bus) >= 0 ? _bus : "Master"; }
+        get { Check(); return AudioServer.GetBusIndex(_bus) >= 0 ? _bus : "Master"; }
         set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); _bus = value; if (_areaMask == 0) _player.Bus = value; }
     }
     /// <summary>Gets or sets decibel source gain; negative infinity silences output.</summary>

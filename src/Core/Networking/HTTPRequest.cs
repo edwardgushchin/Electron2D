@@ -57,7 +57,7 @@ public class HTTPRequest : Node
         Idle(); if (!IsInsideTree) throw new InvalidOperationException("HTTP requests require a SceneTree.");
         var uri = HTTPTransfer.ParseURL(url); HTTPClient.ValidateRequest(method, method == HTTPMethod.Connect ? uri.Authority : uri.PathAndQuery, customHeaders ?? [], out var headers);
         if (_gzip && !headers.Any(h => h.AsSpan(0, h.IndexOf(':')).Equals("Accept-Encoding", StringComparison.OrdinalIgnoreCase))) headers = [.. headers, "Accept-Encoding: gzip, deflate"];
-        var path = _downloadFile.Length == 0 ? "" : ProjectSettings.Instance.GlobalizePath(_downloadFile);
+        var path = _downloadFile.Length == 0 ? "" : ProjectSettings.GlobalizePath(_downloadFile);
         _operation = new HTTPTransfer(uri, method, headers, requestData.ToArray(), _chunkSize, _bodyLimit, path) { AcceptGZIP = _gzip ? 1 : 0, MaxRedirects = _redirects, TLSOptions = _tls, Proxies = _proxies };
         _lastDownloaded = 0; _lastBodySize = -1; _activeTimeout = _timeout; _elapsed = 0; SetInternalProcessing(true, false);
         if (_threads) { var operation = _operation; _worker = new Thread(() => RunWorker(operation)) { IsBackground = true, Name = "Electron2D HTTP" }; _worker.Start(); }

@@ -1,6 +1,6 @@
 # MultiMeshInstance
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Namespace:** `Electron2D` · **Declaration:** `public class Electron2D.MultiMeshInstance` · **Source:** [MultiMeshInstance.cs](../../src/Scene/2D/MultiMeshInstance.cs).
 
@@ -18,7 +18,7 @@ OnDraw records DrawMultiMesh with inherited transform/modulate/material/clip/ord
 using var instances = new MultiMesh { Mesh = mesh, InstanceCount = 1 }; // Existing live Mesh.
 instances.SetInstanceTransform2D(0, Transform.Identity);
 var node = new MultiMeshInstance { MultiMesh = instances, Position = new(30, 20) };
-// Add node to a Window and run Engine.Instance.Run(window).
+// Add node to a Window and run Engine.Run(window).
 ```
 
 ## Constructors

@@ -98,7 +98,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
             MixRate = checked((int)device.OutputFormat.Format.nSamplesPerSec); Channels = Math.Max(2, checked((int)device.OutputFormat.Format.nChannels)); if (Channels is not (2 or 4 or 6 or 8)) throw new NotSupportedException("The output layout has no supported stereo-pair profile."); QuantumFrames = MixRate / 100;
             Check(F.FAudio_CreateMasteringVoice(_engine, out _master, (uint)Channels, (uint)MixRate, 0, deviceIndex, 0), "create output voice");
             F.FAudio_GetProcessingQuantum(_engine, out var frames, out _); QuantumFrames = checked((int)frames); if (QuantumFrames == 0) throw new InvalidOperationException("The native output has an empty processing quantum.");
-            var settings = ProjectSettings.Instance; var time = settings.GetWithOverride(ProjectSettings.AudioBusesChannelDisableTime); var threshold = settings.GetWithOverride(ProjectSettings.AudioBusesChannelDisableThresholdDB);
+            var settings = ProjectSettings.Service; var time = settings.GetWithOverrideCore(ProjectSettings.AudioBusesChannelDisableTime); var threshold = settings.GetWithOverrideCore(ProjectSettings.AudioBusesChannelDisableThresholdDB);
             if (!float.IsFinite(time) || time < 0 || time * (double)MixRate > long.MaxValue || !float.IsFinite(threshold)) throw new ArgumentOutOfRangeException(nameof(settings), "Bus activity settings require a finite threshold and nonnegative representable timeout.");
             _disableFrames = (long)(time * MixRate); _disableThreshold = (float)Mathf.DBToLinear(threshold);
             UpdateOutputSnapshot();

@@ -28,7 +28,7 @@ public abstract class AudioStream : Resource
             var pending = new Stack<AudioStream>(); var visited = new HashSet<AudioStream>(ReferenceEqualityComparer.Instance); pending.Push(this);
             while (pending.TryPop(out var current))
             {
-                if (current is AudioStreamMicrophone) { AudioServer.Instance.Check(); return; }
+                if (current is AudioStreamMicrophone) { AudioServer.Service.Check(); return; }
                 if (visited.Add(current)) current.AppendPlaybackChildren(pending);
             }
         }
@@ -146,7 +146,7 @@ public abstract class AudioStreamPlayback : ElectronObject
     /// <exception cref="InvalidOperationException">The request belongs to another playback or a scene voice is attached.</exception>
     public void SetSamplePlayback(AudioSamplePlayback? playbackSample)
     {
-        var server = AudioServer.Instance; server.Check(); server.Lock();
+        var server = AudioServer.Service; server.Check(); server.LockCore();
         try
         {
             ThrowIfDisposed(); if (ReferenceEquals(_samplePlayback, playbackSample)) return;
@@ -154,9 +154,9 @@ public abstract class AudioStreamPlayback : ElectronObject
             playbackSample?.Check(); var previous = _samplePlayback; previous?.Native?.Dispose(); _samplePlayback = playbackSample; if (playbackSample is not null) playbackSample.Owner = this;
             if (previous is not null) { previous.Owner = null; previous.Dispose(); }
         }
-        finally { server.Unlock(); }
+        finally { server.UnlockCore(); }
     }
-    private void StartSample(double time) { var server = AudioServer.Instance; server.Check(); lock (server.StreamGate) { var sample = _samplePlayback!; sample.Native ??= server.PrepareSample(sample); sample.Native.Play(time); } }
+    private void StartSample(double time) { var server = AudioServer.Service; server.Check(); lock (server.StreamGate) { var sample = _samplePlayback!; sample.Native ??= server.PrepareSample(sample); sample.Native.Play(time); } }
     /// <summary>Initializes the independent playback extension state.</summary>
     protected AudioStreamPlayback() { }
     private int _loopingOverride = -1;
@@ -169,7 +169,7 @@ public abstract class AudioStreamPlayback : ElectronObject
     public bool? LoopingOverride
     {
         get { ThrowIfDisposed(); var value = Volatile.Read(ref _loopingOverride); return value < 0 ? null : value != 0; }
-        set { ThrowIfDisposed(); if (_samplePlayback?.Native is { } sample) { var server = AudioServer.Instance; server.Check(); lock (server.StreamGate) { var old = _loopingOverride; Volatile.Write(ref _loopingOverride, value is null ? -1 : value.Value ? 1 : 0); try { sample.RefreshLooping(); } catch { Volatile.Write(ref _loopingOverride, old); throw; } } } else Volatile.Write(ref _loopingOverride, value is null ? -1 : value.Value ? 1 : 0); }
+        set { ThrowIfDisposed(); if (_samplePlayback?.Native is { } sample) { var server = AudioServer.Service; server.Check(); lock (server.StreamGate) { var old = _loopingOverride; Volatile.Write(ref _loopingOverride, value is null ? -1 : value.Value ? 1 : 0); try { sample.RefreshLooping(); } catch { Volatile.Write(ref _loopingOverride, old); throw; } } } else Volatile.Write(ref _loopingOverride, value is null ? -1 : value.Value ? 1 : 0); }
     }
     /// <summary>Starts playback from a position in seconds.</summary>
     /// <param name="fromPosition">Requested time, zero by default.</param>
@@ -236,7 +236,7 @@ public abstract class AudioStreamPlayback : ElectronObject
     /// <returns>Mixed frame count, between zero and buffer.Length.</returns>
     protected abstract int OnMix(Span<Vector2> buffer, float rateScale);
     /// <inheritdoc />
-    protected override void ValidateDisposal() { if (SceneOwner is not null || CompositeOwner is not null) throw new InvalidOperationException("Owned audio playback is borrowed and must be released by its owner."); if (_samplePlayback is not null) { AudioServer.Instance.Check(); if (_samplePlayback.Native?.Wrapped == true) throw new InvalidOperationException("A scene-owned native sample must be released by its player."); } base.ValidateDisposal(); }
+    protected override void ValidateDisposal() { if (SceneOwner is not null || CompositeOwner is not null) throw new InvalidOperationException("Owned audio playback is borrowed and must be released by its owner."); if (_samplePlayback is not null) { AudioServer.Service.Check(); if (_samplePlayback.Native?.Wrapped == true) throw new InvalidOperationException("A scene-owned native sample must be released by its player."); } base.ValidateDisposal(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { try { if (disposing && _samplePlayback is { } sample) { sample.Native?.Dispose(); sample.Owner = null; _samplePlayback = null; sample.Dispose(); } } finally { base.Dispose(disposing); } }
 

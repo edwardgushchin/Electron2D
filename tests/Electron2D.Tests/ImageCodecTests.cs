@@ -115,14 +115,14 @@ internal static class ImageCodecTests
 
     private static void VerifyFiles(Image source, byte[] png, byte[] jpg)
     {
-        var settings = ProjectSettings.Instance;
-        var roots = (settings.ProjectRoot, settings.UserDataRoot);
+        var settings = ProjectSettings.Service;
+        var roots = (ProjectSettings.ProjectRoot, ProjectSettings.UserDataRoot);
         var root = IOPath.Combine(IOPath.GetTempPath(), "Electron2D-codecs-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         Directory.CreateDirectory(IOPath.Combine(root, "user"));
         try
         {
-            settings.ConfigurePaths(root, IOPath.Combine(root, "user"));
+            ProjectSettings.ConfigurePaths(root, IOPath.Combine(root, "user"));
             source.SavePNG("res://texture.PNG");
             source.SavePNG("user://texture.png");
             source.SaveJPG("user://texture.jpeg");
@@ -160,7 +160,7 @@ internal static class ImageCodecTests
             Reject<InvalidDataException>(() => Image.LoadFromFile(large));
             Check(!Directory.EnumerateFiles(root).Any(path => path.EndsWith(".tmp", StringComparison.Ordinal)), "Failed atomic writes clean their temporary files.");
         }
-        finally { settings.ConfigurePaths(roots.ProjectRoot, roots.UserDataRoot); Directory.Delete(root, true); }
+        finally { ProjectSettings.ConfigurePaths(roots.ProjectRoot, roots.UserDataRoot); Directory.Delete(root, true); }
     }
 
     private static byte[] BMP(bool topDown)

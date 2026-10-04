@@ -1,6 +1,6 @@
 # PhysicsServer.JointType
 
-Last updated: 2026-09-30
+Last updated: 2026-10-04
 
 **Inherits:** System.Enum · **Source:** [PhysicsServer.Joints.cs](../../src/Servers/Physics/PhysicsServer.Joints.cs)
 
@@ -11,10 +11,9 @@ Last updated: 2026-09-30
 Configured role returned by [PhysicsServer.JointGetType](PhysicsServer.md#jointgettype). Pending detached connections retain their concrete role; allocation, clear or endpoint free reports Empty. Values describe the shared scene/server connection and do not expose backend IDs.
 
 ```csharp
-var physics = PhysicsServer.Instance;
-var joint = physics.JointCreate();
-PhysicsServer.JointType type = physics.JointGetType(joint); // Empty
-physics.FreeRID(joint);
+var joint = PhysicsServer.JointCreate();
+PhysicsServer.JointType type = PhysicsServer.JointGetType(joint); // Empty
+PhysicsServer.FreeRID(joint);
 ```
 
 ## Values

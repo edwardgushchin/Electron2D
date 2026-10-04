@@ -13,7 +13,7 @@ public partial class LineEdit
     {
         EnsureMutable(); if (!IsInsideTree || !_editable || _editing) return;
         if (!HasFocus()) { GrabFocus(hideFocus); return; }
-        _editing = true; _selectAllOnRelease = _selectAllOnFocus && Input.Instance.IsMouseButtonPressed(MouseButton.Left); if (_selectAllOnFocus && !_selectAllOnRelease) SelectAll(); ResetBlink(); ActivateIME(true);
+        _editing = true; _selectAllOnRelease = _selectAllOnFocus && Input.IsMouseButtonPressed(MouseButton.Left); if (_selectAllOnFocus && !_selectAllOnRelease) SelectAll(); ResetBlink(); ActivateIME(true);
     }
     /// <summary>Ends editing, commits composition and applies the focus-loss selection policy.</summary>
     public void Unedit()
@@ -122,7 +122,7 @@ public partial class LineEdit
     private void ActivateIME(bool active)
     {
         var window = IsInsideTree ? GetWindow() : null;
-        if (window is not null && window.GetWindowID() != DisplayServer.InvalidWindowId && DisplayServer.Instance is { } display && display.HasFeature(DisplayServer.Feature.Ime))
-            display.WindowSetIMEActive(active, window.GetWindowID());
+        if (window is not null && window.GetWindowID() != DisplayServer.InvalidWindowId && DisplayServer.Service is { } display && display.HasFeatureCore(DisplayServer.Feature.Ime))
+            display.WindowSetIMEActiveCore(active, window.GetWindowID());
     }
 }

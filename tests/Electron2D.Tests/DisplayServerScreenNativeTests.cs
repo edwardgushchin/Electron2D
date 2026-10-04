@@ -9,14 +9,14 @@ internal static class DisplayServerScreenNativeTests
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is [var window] && window != 0,
             "The hidden scale check has one SDL window.");
-        var hiddenScale = display.ScreenGetScale();
+        var hiddenScale = DisplayServer.ScreenGetScale();
         Check(hiddenScale == SDL.GetWindowDisplayScale(windows![0]),
             "The hidden window reports its current native scale before mapping.");
         Check(SDL.SyncWindow(windows![0]), "SDL synchronized the hidden window.");
-        var synchronizedHiddenScale = display.ScreenGetScale();
+        var synchronizedHiddenScale = DisplayServer.ScreenGetScale();
         Check(SDL.ShowWindow(windows[0]) && SDL.SyncWindow(windows[0]),
             "SDL mapped and synchronized the formerly hidden Wayland window.");
-        var shownScale = display.ScreenGetScale();
+        var shownScale = DisplayServer.ScreenGetScale();
         Check(shownScale == SDL.GetWindowDisplayScale(windows[0]),
             "The shown window reports its current native scale before its first buffer.");
         var renderer = SDL.CreateRenderer(windows[0], "software");
@@ -26,10 +26,10 @@ internal static class DisplayServerScreenNativeTests
             Check(SDL.RenderClear(renderer) && SDL.RenderPresent(renderer),
                 "The formerly hidden window presented its first buffer.");
             var deadline = DateTime.UtcNow.AddSeconds(2);
-            while (DateTime.UtcNow < deadline && display.ScreenGetScale() !=
+            while (DateTime.UtcNow < deadline && DisplayServer.ScreenGetScale() !=
                    (SDL.GetCurrentDisplayMode(SDL.GetDisplayForWindow(windows[0]))?.PixelDensity ?? 0f))
             {
-                display.ProcessEvents();
+                DisplayServer.ProcessEvents();
                 Thread.Sleep(10);
             }
         }
@@ -37,7 +37,7 @@ internal static class DisplayServerScreenNativeTests
         {
             SDL.DestroyRenderer(renderer);
         }
-        var presentedScale = display.ScreenGetScale();
+        var presentedScale = DisplayServer.ScreenGetScale();
         var outputId = SDL.GetDisplayForWindow(windows[0]);
         var outputScale = SDL.GetCurrentDisplayMode(outputId)?.PixelDensity ?? 0f;
         Check(outputScale > 0f && presentedScale == outputScale,
@@ -47,7 +47,7 @@ internal static class DisplayServerScreenNativeTests
 
     public static void Run(DisplayServer display)
     {
-        if (display.GetName() != "Wayland")
+        if (DisplayServer.GetName() != "Wayland")
             return;
 
         var windows = SDL.GetWindows(out var windowCount);
@@ -63,7 +63,7 @@ internal static class DisplayServerScreenNativeTests
         var hasPixelSize = SDL.GetWindowSizeInPixels(windows[0], out var pixelWindowWidth, out var pixelWindowHeight);
         Check(hasLogicalSize && hasPixelSize, "The native window exposes logical and pixel dimensions.");
         Check(float.IsFinite(windowScale) && windowScale > 0f &&
-              display.ScreenGetScale() == windowScale,
+              DisplayServer.ScreenGetScale() == windowScale,
             "The main-window selector reports the Wayland window's fractional content scale.");
         Check(float.IsFinite(windowPixelDensity) && windowPixelDensity > 0f &&
               Math.Abs(pixelWindowWidth - logicalWindowWidth * windowPixelDensity) <= 1f &&
@@ -71,7 +71,7 @@ internal static class DisplayServerScreenNativeTests
             "Window pixel dimensions agree with the reported window pixel density.");
 
         var nativeDisplays = SDL.GetDisplays(out var displayCount);
-        Check(nativeDisplays is not null && displayCount == display.GetScreenCount() && displayCount > 0,
+        Check(nativeDisplays is not null && displayCount == DisplayServer.GetScreenCount() && displayCount > 0,
             "The screen list matches the native display snapshot.");
         Console.WriteLine($"Wayland display probe: {displayCount} SDL display(s), window content scale {windowScale}, pixel density {windowPixelDensity}, window {logicalWindowWidth}x{logicalWindowHeight} logical / {pixelWindowWidth}x{pixelWindowHeight} pixels.");
         var maximumScale = 1f;
@@ -86,21 +86,21 @@ internal static class DisplayServerScreenNativeTests
                 "A Wayland display mode reports its logical-to-physical pixel density.");
             var physicalSize = new Vector2i((int)Math.Round(bounds.W * (double)pixelDensity),
                 (int)Math.Round(bounds.H * (double)pixelDensity));
-            Check(display.ScreenGetPosition(index) == new Vector2i(bounds.X, bounds.Y) &&
-                  display.ScreenGetSize(index) == physicalSize &&
-                  display.ScreenGetUsableRect(index) ==
+            Check(DisplayServer.ScreenGetPosition(index) == new Vector2i(bounds.X, bounds.Y) &&
+                  DisplayServer.ScreenGetSize(index) == physicalSize &&
+                  DisplayServer.ScreenGetUsableRect(index) ==
                   new Rect2i(new Vector2i(bounds.X, bounds.Y), physicalSize),
                 "Wayland screen position and physical size match the native output snapshot.");
             if (index == 0 && physicalSize.X > bounds.W)
-                Check(display.GetScreenFromRect(new Rect2(bounds.X + bounds.W, bounds.Y, 1, 1)) == 0,
+                Check(DisplayServer.GetScreenFromRect(new Rect2(bounds.X + bounds.W, bounds.Y, 1, 1)) == 0,
                     "Screen overlap uses the physical width of the fractionally scaled first display.");
 
             var nativeScale = SDL.GetDisplayContentScale(displayId);
             Console.WriteLine($"Wayland display {index}: {bounds.W}x{bounds.H} logical / {physicalSize.X}x{physicalSize.Y} physical at ({bounds.X}, {bounds.Y}), SDL scale {nativeScale}, pixel density {pixelDensity}.");
             var expectedScale = System.MathF.Ceiling(pixelDensity);
-            Check(display.ScreenGetScale(index) == expectedScale,
+            Check(DisplayServer.ScreenGetScale(index) == expectedScale,
                 "An indexed Wayland screen rounds its fractional pixel density up to the integer output scale.");
-            Console.WriteLine($"Wayland display {index}: indexed scale {display.ScreenGetScale(index)}, refresh {display.ScreenGetRefreshRate(index)} Hz (SDL precise {nativeMode?.RefreshRateNumerator}/{nativeMode?.RefreshRateDenominator}).");
+            Console.WriteLine($"Wayland display {index}: indexed scale {DisplayServer.ScreenGetScale(index)}, refresh {DisplayServer.ScreenGetRefreshRate(index)} Hz (SDL precise {nativeMode?.RefreshRateNumerator}/{nativeMode?.RefreshRateDenominator}).");
             maximumScale = Math.Max(maximumScale, expectedScale);
 
             var nativeRefreshRate = nativeMode is { RefreshRateNumerator: > 0, RefreshRateDenominator: > 0 } precise
@@ -108,15 +108,15 @@ internal static class DisplayServerScreenNativeTests
                 : nativeMode?.RefreshRate ?? 0f;
             var expectedRefreshRate = float.IsFinite(nativeRefreshRate) && nativeRefreshRate > 0f
                 ? nativeRefreshRate : -1f;
-            Check(display.ScreenGetRefreshRate(index) == expectedRefreshRate,
+            Check(DisplayServer.ScreenGetRefreshRate(index) == expectedRefreshRate,
                 "The current mode refresh rate agrees with SDL's native snapshot.");
         }
 
-        Check(display.ScreenGetMaxScale() == maximumScale,
+        Check(DisplayServer.ScreenGetMaxScale() == maximumScale,
             "The maximum scale is the greatest indexed Wayland screen scale.");
-        Check(display.ScreenGetSize(DisplayServer.ScreenWithMouseFocus) == display.ScreenGetSize(0),
+        Check(DisplayServer.ScreenGetSize(DisplayServer.ScreenWithMouseFocus) == DisplayServer.ScreenGetSize(0),
             "Wayland's mouse-focus screen selector uses screen zero even without SDL mouse focus.");
-        Check(display.ScreenGetUsableRect(int.MaxValue) == default,
+        Check(DisplayServer.ScreenGetUsableRect(int.MaxValue) == default,
             "An invalid screen has an empty usable rectangle.");
     }
 

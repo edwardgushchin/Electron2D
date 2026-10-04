@@ -5,8 +5,8 @@ internal static partial class RenderingRuntimeTests
 {
     private static void VerifyTooltips(string backend)
     {
-        var settings = ProjectSettings.Instance; var delay = settings.Get(ProjectSettings.TooltipDelaySeconds);
-        settings.Set(ProjectSettings.TooltipDelaySeconds, 0);
+        var settings = ProjectSettings.Service; var delay = ProjectSettings.Get(ProjectSettings.TooltipDelaySeconds);
+        ProjectSettings.Set(ProjectSettings.TooltipDelaySeconds, 0);
         try
         {
             var window = new Window { Size = new(180, 110), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
@@ -24,8 +24,8 @@ internal static partial class RenderingRuntimeTests
             {
                 var nativeWindow = SDL.GetWindows(out var windowCount)![0]; var windowID = SDL.GetWindowID(nativeWindow);
                 var scale = SDL.GetCurrentVideoDriver() == "wayland" ? SDL.GetWindowPixelDensity(nativeWindow) : 1f;
-                var tree = window.Tree!; var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-                server.FramePostDraw += () =>
+                var tree = window.Tree!; var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+                RenderingServer.FramePostDraw += () =>
                 {
                     frame++; using var pixels = server.Readback();
                     if (frame == 1) { SliderMotion(windowID, scale, position); return; }
@@ -61,11 +61,11 @@ internal static partial class RenderingRuntimeTests
                     tree.Quit();
                 };
             };
-            Engine.Instance.Run(window); Released(window);
+            Engine.Run(window); Released(window);
             VerifyTooltipWarm(backend);
             Console.WriteLine($"Native tooltip glyphs, overlay ordering, custom content, edge placement, pointer transparency and warmed frames passed: {backend}.");
         }
-        finally { settings.Set(ProjectSettings.TooltipDelaySeconds, delay); }
+        finally { ProjectSettings.Set(ProjectSettings.TooltipDelaySeconds, delay); }
     }
 
     private static void VerifyTooltipWarm(string backend)
@@ -79,20 +79,20 @@ internal static partial class RenderingRuntimeTests
         {
             var nativeWindow = SDL.GetWindows(out var windowCount)![0]; var windowID = SDL.GetWindowID(nativeWindow);
             var scale = SDL.GetCurrentVideoDriver() == "wayland" ? SDL.GetWindowPixelDensity(nativeWindow) : 1f;
-            var tree = window.Tree!; var server = RenderingServer.Instance!;
+            var tree = window.Tree!; var server = RenderingServer.Service!;
             tree.ProcessFrameStarted += _ =>
             {
                 before = GC.GetAllocatedBytesForCurrentThread();
                 if (tree.TooltipPanel is { } panel) panel.SelfModulate = (frame & 1) == 0 ? Colors.White : new Color(.5f, .5f, .5f);
             };
-            server.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frame >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (frame == 0) SliderMotion(windowID, scale, position);
                 if (++frame == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(allocated == 0, $"Tooltip {backend} 64 warmed active modulation frames allocate {allocated} bytes from ProcessFrameStarted through FramePostDraw.");
     }
 

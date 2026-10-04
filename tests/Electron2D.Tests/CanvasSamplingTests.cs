@@ -120,16 +120,16 @@ internal static class CanvasSamplingTests
         Check(copy.CanvasItemDefaultTextureFilter == window.CanvasItemDefaultTextureFilter && copy.CanvasItemDefaultTextureRepeat == window.CanvasItemDefaultTextureRepeat &&
             copy.AnisotropicFilteringLevel == window.AnisotropicFilteringLevel && copy.GetNode<Sprite>("sprite").TextureFilter == Filter.LinearWithMipmapsAnisotropic &&
             copy.GetNode<Sprite>("sprite").TextureRepeat == Repeat.Enabled, "Stored sampling state reconstructs across each declaring layer.");
-        var settings = ProjectSettings.Instance;
-        var original = settings.Get(ProjectSettings.AnisotropicFilteringLevel);
+        var settings = ProjectSettings.Service;
+        var original = ProjectSettings.Get(ProjectSettings.AnisotropicFilteringLevel);
         try
         {
-            settings.Set(ProjectSettings.AnisotropicFilteringLevel, 4);
+            ProjectSettings.Set(ProjectSettings.AnisotropicFilteringLevel, 4);
             using var configured = new Window();
             Check(configured.AnisotropicFilteringLevel == Viewport.AnisotropicFiltering.Anisotropy16X && window.AnisotropicFilteringLevel == Viewport.AnisotropicFiltering.Anisotropy8X, "Construction samples project anisotropy without mutating live viewports.");
-            Reject<ArgumentOutOfRangeException>(() => settings.Set(ProjectSettings.AnisotropicFilteringLevel, 5));
+            Reject<ArgumentOutOfRangeException>(() => ProjectSettings.Set(ProjectSettings.AnisotropicFilteringLevel, 5));
         }
-        finally { settings.Set(ProjectSettings.AnisotropicFilteringLevel, original); }
+        finally { ProjectSettings.Set(ProjectSettings.AnisotropicFilteringLevel, original); }
     }
 
     private sealed class TestViewport : Viewport

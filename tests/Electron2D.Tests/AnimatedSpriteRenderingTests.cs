@@ -20,8 +20,8 @@ internal static partial class RenderingRuntimeTests
         sprite.AnimationFinished += () => finished++;
         observer.ReadyAction = n =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 Check(++draws <= 120, "Timed animation must finish in the native host.");
                 using var pixels = server.Readback();
@@ -60,7 +60,7 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Check(Engine.Instance.Run(window) == 0 && finished == 1 && stage == 9, "Animated canvas run completed.");
+        Check(Engine.Run(window) == 0 && finished == 1 && stage == 9, "Animated canvas run completed.");
         Released(window); Check(!frames.IsDisposed && !texture.IsDisposed && !atlas.IsDisposed, "Runtime borrows animation resources.");
         Console.WriteLine($"AnimatedSprite {backend}/{fixture ?? "builtin"} readback and timed playback passed.");
     }
@@ -71,7 +71,7 @@ internal static partial class RenderingRuntimeTests
         var sprite = new AnimatedSprite { SpriteFrames = frames, Autoplay = "default" };
         var window = new Window { Size = new(96, 96) }; window.AddChild(sprite);
         var threw = false; sprite.AnimationLooped += () => { threw = true; throw new ApplicationException("animation callback"); };
-        Reject<AggregateException>(() => Engine.Instance.Run(window));
+        Reject<AggregateException>(() => Engine.Run(window));
         Check(threw && !frames.IsDisposed, "Animation callback failure exits the host while retaining borrowed resources."); Released(window);
     }
 }

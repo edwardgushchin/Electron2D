@@ -86,7 +86,7 @@ internal sealed class AudioEffectStereoEnhanceInstance : AudioEffectInstance
     internal AudioEffectStereoEnhanceInstance(AudioEffectStereoEnhance source)
     {
         _source = source;
-        _rate = AudioServer.Instance.GetMixRate();
+        _rate = AudioServer.GetMixRate();
         var required = .052 * _rate;
         if (!double.IsFinite(required) || required <= 0 || required >= 1 << 22)
             throw new ArgumentOutOfRangeException(nameof(source), "Output rate exceeds prepared stereo delay storage.");

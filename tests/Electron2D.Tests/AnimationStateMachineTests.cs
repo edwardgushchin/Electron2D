@@ -86,7 +86,7 @@ internal static class AnimationStateMachineTests
     }
     internal static void RunNative()
     {
-        using var setup = new Setup(); var data = new byte[8820]; for (var i = 0; i < data.Length / 2; i++) System.Buffers.Binary.BinaryPrimitives.WriteInt16LittleEndian(data.AsSpan(i * 2), (short)(Math.Sin(i * Math.PI * 2 * 440 / 44100) * 8000)); using var wave = new AudioStreamWAV { Data = data, SampleFormat = AudioStreamWAV.Format.PCM16, Loop = AudioLoopMode.Forward, LoopBegin = 0, LoopEnd = 4409 }; var speaker = new AudioStreamPlayer { Name = "speaker" }; setup.Tree.Parent!.AddChild(speaker); var audio = setup.Clips[0].AddAudioTrack(); setup.Clips[0].TrackSetPath(audio, "speaker"); setup.Clips[0].AudioTrackSetUseBlend(audio, false); setup.Clips[0].AudioTrackInsertKey(audio, 0, wave); setup.Tree.Advance(0); var native = AudioServer.Instance.Native; Check(Capture(native).Any(v => Math.Abs(v) > .03), "State audio cue reaches native PCM."); setup.Playback.Stop(); setup.Tree.Advance(0); Check(Capture(native).All(v => Math.Abs(v) < 1e-6), "State stop retires nonblended cues."); setup.Playback.Start("a"); setup.Tree.Advance(0); Check(Capture(native).Any(v => Math.Abs(v) > .03), "State restart retriggers prepared audio."); setup.Playback.Start("b"); setup.Tree.Advance(0); Check(Capture(native).All(v => Math.Abs(v) < 1e-6), "Departed clip retires nonblended cue."); Console.WriteLine("State-machine native audio integration passed.");
+        using var setup = new Setup(); var data = new byte[8820]; for (var i = 0; i < data.Length / 2; i++) System.Buffers.Binary.BinaryPrimitives.WriteInt16LittleEndian(data.AsSpan(i * 2), (short)(Math.Sin(i * Math.PI * 2 * 440 / 44100) * 8000)); using var wave = new AudioStreamWAV { Data = data, SampleFormat = AudioStreamWAV.Format.PCM16, Loop = AudioLoopMode.Forward, LoopBegin = 0, LoopEnd = 4409 }; var speaker = new AudioStreamPlayer { Name = "speaker" }; setup.Tree.Parent!.AddChild(speaker); var audio = setup.Clips[0].AddAudioTrack(); setup.Clips[0].TrackSetPath(audio, "speaker"); setup.Clips[0].AudioTrackSetUseBlend(audio, false); setup.Clips[0].AudioTrackInsertKey(audio, 0, wave); setup.Tree.Advance(0); var native = AudioServer.Service.Native; Check(Capture(native).Any(v => Math.Abs(v) > .03), "State audio cue reaches native PCM."); setup.Playback.Stop(); setup.Tree.Advance(0); Check(Capture(native).All(v => Math.Abs(v) < 1e-6), "State stop retires nonblended cues."); setup.Playback.Start("a"); setup.Tree.Advance(0); Check(Capture(native).Any(v => Math.Abs(v) > .03), "State restart retriggers prepared audio."); setup.Playback.Start("b"); setup.Tree.Advance(0); Check(Capture(native).All(v => Math.Abs(v) < 1e-6), "Departed clip retires nonblended cue."); Console.WriteLine("State-machine native audio integration passed.");
     }
     private static float[] Capture(FAudioContext context)
     {
@@ -101,7 +101,7 @@ internal static class AnimationStateMachineTests
     }
     internal static void RunHost()
     {
-        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Instance; var prior = settings.Get(ProjectSettings.RenderingMethod); settings.Set(ProjectSettings.RenderingMethod, backend);
+        var backend = Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
         try
         {
             for (var run = 0; run < 2; run++)
@@ -111,17 +111,17 @@ internal static class AnimationStateMachineTests
                 var window = new Window { Size = new(128, 64), Title = "Electron2D state machine" }; var box = new Box { Name = "box" }; var tree = new AnimationTree { TreeRoot = machine, CallbackModeProcess = AnimationMixer.AnimationCallbackModeProcess.Manual }; tree.AddAnimationLibrary("", library); window.AddChild(box); window.AddChild(tree); var stage = 0; int[] expected = [16, 16, 48, 80, 16, 80]; var started = 0;
                 box.ReadyAction = () =>
                 {
-                    var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); var playback = tree.GetParameter("", AnimationNodeStateMachine.Playback); playback.StateStarted += _ => started++; tree.Advance(0);
-                    renderer.FramePostDraw += () =>
+                    var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); var playback = tree.GetParameter("", AnimationNodeStateMachine.Playback); playback.StateStarted += _ => started++; tree.Advance(0);
+                    RenderingServer.FramePostDraw += () =>
                     {
                         using var pixels = renderer.Readback(); var x = expected[stage]; Check(pixels.GetPixel(x, 16).R > .9f && pixels.GetPixel(x, 16).G < .1f, "State-machine pose reaches actual pixels."); if (stage > 0 && x != expected[stage - 1]) Check(pixels.GetPixel(expected[stage - 1], 16).R < .1f, "Previous pose clears.");
                         switch (stage++) { case 0: playback.Travel("b"); tree.Advance(0); break; case 1: tree.Advance(.5); break; case 2: tree.Advance(.5); break; case 3: playback.Start("a"); tree.Advance(0); break; case 4: fade.XFadeTime = 0; playback.Travel("b"); tree.Advance(0); tree.Advance(0); break; case 5: playback.Stop(); tree.Advance(0); Check(!playback.IsPlaying(), "Rendered stop executes."); window.Tree!.Quit(); break; }
                     };
                 };
-                Check(Engine.Instance.Run(window) == 0 && stage == 6 && window.IsDisposed && started >= 4 && !machine.IsDisposed && !library.IsDisposed, "Public host lifecycle borrows authored resources."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "state-machine-host", backend, run, stages = stage, started, cleaned = window.IsDisposed }));
+                Check(Engine.Run(window) == 0 && stage == 6 && window.IsDisposed && started >= 4 && !machine.IsDisposed && !library.IsDisposed, "Public host lifecycle borrows authored resources."); Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { scenario = "state-machine-host", backend, run, stages = stage, started, cleaned = window.IsDisposed }));
             }
         }
-        finally { settings.Set(ProjectSettings.RenderingMethod, prior); }
+        finally { ProjectSettings.Set(ProjectSettings.RenderingMethod, prior); }
     }
     private sealed class Box : Entity { internal Action? ReadyAction; protected override void OnReady() => ReadyAction?.Invoke(); protected override void OnDraw() => DrawRect(new(-3, -3, 6, 6), Colors.Red); }
     private sealed class BorrowedControllerNode(AnimationParameter<AnimationNodeStateMachinePlayback> key) : AnimationRootNode

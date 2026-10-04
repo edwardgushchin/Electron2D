@@ -87,7 +87,7 @@ internal sealed class AudioEffectDistortionInstance : AudioEffectInstance
 
     internal AudioEffectDistortionInstance(AudioEffectDistortion source)
     {
-        _source = source; _rate = AudioServer.Instance.GetMixRate();
+        _source = source; _rate = AudioServer.GetMixRate();
         if (!float.IsFinite(_rate) || _rate <= 0) throw new ArgumentOutOfRangeException(nameof(source), "Output mix rate must be finite and positive.");
     }
 

@@ -5,7 +5,7 @@ internal static class DisplayServerCloseEventsTests
 {
     public static void Run(DisplayServer display)
     {
-        display.ProcessEvents();
+        DisplayServer.ProcessEvents();
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The close probe needs one native window.");
         var window = windows![0];
@@ -13,31 +13,31 @@ internal static class DisplayServerCloseEventsTests
         var order = new List<string>();
         Action onClose = () => order.Add("close");
         Action onQuit = () => order.Add("quit");
-        display.CloseRequested += onClose;
-        display.QuitRequested += onQuit;
+        DisplayServer.CloseRequested += onClose;
+        DisplayServer.QuitRequested += onQuit;
         try
         {
             PushClose(windowId + 1);
             PushClose(windowId);
             PushQuit();
             PushClose(windowId);
-            display.ProcessEvents();
+            DisplayServer.ProcessEvents();
             Check(order.SequenceEqual(["close", "quit", "close"]),
                 "Only main-window close requests are delivered, in native queue order.");
-            Check(ReferenceEquals(DisplayServer.Instance, display) && SDL.GetWindowID(window) == windowId,
+            Check(ReferenceEquals(DisplayServer.Service, display) && SDL.GetWindowID(window) == windowId,
                 "A close request does not destroy the main window or server.");
 
             order.Clear();
             var failure = new InvalidOperationException("injected close failure");
             Action failClose = () => throw failure;
-            display.CloseRequested += failClose;
+            DisplayServer.CloseRequested += failClose;
             try
             {
                 PushClose(windowId);
                 PushQuit();
                 try
                 {
-                    display.ProcessEvents();
+                    DisplayServer.ProcessEvents();
                     throw new InvalidOperationException("The failing close callback must be reported.");
                 }
                 catch (AggregateException errors)
@@ -49,20 +49,20 @@ internal static class DisplayServerCloseEventsTests
             }
             finally
             {
-                display.CloseRequested -= failClose;
+                DisplayServer.CloseRequested -= failClose;
             }
 
             order.Clear();
             PushClose(windowId);
             PushQuit();
-            display.ForceProcessAndDropEvents();
+            DisplayServer.ForceProcessAndDropEvents();
             Check(order.SequenceEqual(["close", "quit"]) && SDL.GetWindowID(window) == windowId,
                 "Dropping pending input retains ordered window-close and quit notifications.");
         }
         finally
         {
-            display.CloseRequested -= onClose;
-            display.QuitRequested -= onQuit;
+            DisplayServer.CloseRequested -= onClose;
+            DisplayServer.QuitRequested -= onQuit;
         }
     }
 

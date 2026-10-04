@@ -1,6 +1,6 @@
 # AudioEffectFilter
 
-Last updated: 2026-10-02
+Last updated: 2026-10-04
 
 **Declaration:** `public class Electron2D.AudioEffectFilter` · **Source:** [AudioEffectFilter.cs](../../src/Scene/Resources/AudioEffectFilter.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -25,10 +25,10 @@ using var filter = new AudioEffectLowPassFilter
     Resonance = .5f,
     DB = AudioEffectFilter.FilterDB.Filter12DB
 };
-AudioServer.Instance.AddBusEffect(0, filter);
+AudioServer.AddBusEffect(0, filter);
 // Live edits affect the next actual output-rate processing block:
 filter.CutoffHZ = 4000;
-AudioServer.Instance.RemoveBusEffect(0, 0);
+AudioServer.RemoveBusEffect(0, 0);
 ```
 
 AudioFilterTests.RunHost executes public Window/Autoplay/filter/capture and teardown on both current renderers.

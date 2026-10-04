@@ -4,8 +4,8 @@ internal static class TooltipLifetimeTests
 {
     internal static void Run()
     {
-        var previous = ProjectSettings.Instance.Get(ProjectSettings.TooltipDelaySeconds);
-        ProjectSettings.Instance.Set(ProjectSettings.TooltipDelaySeconds, .01);
+        var previous = ProjectSettings.Get(ProjectSettings.TooltipDelaySeconds);
+        ProjectSettings.Set(ProjectSettings.TooltipDelaySeconds, .01);
         try
         {
             for (var mode = 0; mode < 3; mode++)
@@ -24,7 +24,7 @@ internal static class TooltipLifetimeTests
                 Check(owner.Content!.IsDisposed, "Tree teardown disposes owned tooltip content without attempting child disposal while its parent exits.");
             }
         }
-        finally { ProjectSettings.Instance.Set(ProjectSettings.TooltipDelaySeconds, previous); }
+        finally { ProjectSettings.Set(ProjectSettings.TooltipDelaySeconds, previous); }
         Console.WriteLine("Tooltip callback cancellation, child-name coexistence and live presentation teardown passed.");
     }
     private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 320, 240); }

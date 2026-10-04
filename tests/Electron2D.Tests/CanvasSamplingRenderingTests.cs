@@ -22,11 +22,11 @@ internal static partial class RenderingRuntimeTests
         {
             ReadyAction = n =>
             {
-                var server = RenderingServer.Instance!;
-                server.SetDefaultClearColor(Colors.Black);
-                software = server.GetCurrentRenderingDriverName() == "software";
+                var server = RenderingServer.Service!;
+                RenderingServer.SetDefaultClearColor(Colors.Black);
+                software = RenderingServer.GetCurrentRenderingDriverName() == "software";
                 if (software) window.CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest;
-                server.FramePostDraw += () =>
+                RenderingServer.FramePostDraw += () =>
                 {
                     using var frame = server.Readback();
                     try
@@ -69,7 +69,7 @@ internal static partial class RenderingRuntimeTests
                 };
             }
         });
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 6, "Sampling state changes reach successive native frames.");
         Console.WriteLine($"Canvas sampling pixel checks passed: {backend}/{fixture ?? "default"}.");
 
@@ -105,21 +105,21 @@ internal static partial class RenderingRuntimeTests
                     TextureFilter = filter,
                     TextureRepeat = filter == Filter.Nearest ? Repeat.Mirror : Repeat.Disabled,
                     DrawAction = n => n.DrawTexture(texture, Vector2.Zero),
-                    ReadyAction = _ => RenderingServer.Instance!.FramePostDraw += () => completed = true,
+                    ReadyAction = _ => RenderingServer.FramePostDraw += () => completed = true,
                 });
-                Reject<NotSupportedException>(() => Engine.Instance.Run(rejected)); Released(rejected);
+                Reject<NotSupportedException>(() => Engine.Run(rejected)); Released(rejected);
                 Check(!completed, "Unsupported sampling fails before a frame is reported complete.");
             }
             Console.WriteLine("Compatibility sampling limits explicitly rejected.");
             return;
         }
-        var settings = ProjectSettings.Instance;
-        var original = settings.Get(ProjectSettings.UseNearestMipmapFilter);
+        var settings = ProjectSettings.Service;
+        var original = ProjectSettings.Get(ProjectSettings.UseNearestMipmapFilter);
         try
         {
             foreach (var nearestMip in new[] { false, true })
             {
-                settings.Set(ProjectSettings.UseNearestMipmapFilter, nearestMip);
+                ProjectSettings.Set(ProjectSettings.UseNearestMipmapFilter, nearestMip);
                 var window = new Window { Size = new(80, 64) };
                 var node = new CanvasNode
                 {
@@ -131,9 +131,9 @@ internal static partial class RenderingRuntimeTests
                     },
                 };
                 var frames = 0;
-                node.ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
+                node.ReadyAction = n => RenderingServer.FramePostDraw += () =>
                 {
-                    using var frame = RenderingServer.Instance.Readback();
+                    using var frame = RenderingServer.Service!.Readback();
                     var filter = node.TextureFilter;
                     if (filter is Filter.Nearest or Filter.Linear)
                     {
@@ -151,11 +151,11 @@ internal static partial class RenderingRuntimeTests
                     }
                     if (++frames == 6) n.Tree!.Quit(); else node.TextureFilter = (Filter)(frames + 1);
                 };
-                window.AddChild(node); Engine.Instance.Run(window); Released(window);
+                window.AddChild(node); Engine.Run(window); Released(window);
                 Check(frames == 6, "All six concrete GPU filter modes execute with both mip interpolation settings.");
             }
         }
-        finally { settings.Set(ProjectSettings.UseNearestMipmapFilter, original); }
+        finally { ProjectSettings.Set(ProjectSettings.UseNearestMipmapFilter, original); }
         VerifyCanvasAnisotropy();
         Console.WriteLine("GPU mipmap and anisotropy checks passed.");
     }
@@ -173,9 +173,9 @@ internal static partial class RenderingRuntimeTests
         {
             TextureFilter = Filter.LinearWithMipmapsAnisotropic,
             DrawAction = n => n.DrawTextureRect(texture, new Rect2(4, 4, 64, 4), false),
-            ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
+            ReadyAction = n => RenderingServer.FramePostDraw += () =>
             {
-                using var frame = RenderingServer.Instance.Readback();
+                using var frame = RenderingServer.Service!.Readback();
                 var contrast = 0f;
                 for (var x = 8; x < 60; x++) contrast += System.MathF.Abs(frame.GetPixel(x, 5).R - frame.GetPixel(x, 5).B);
                 if (frames == 0) initial = contrast;
@@ -183,7 +183,7 @@ internal static partial class RenderingRuntimeTests
                 else window.AnisotropicFilteringLevel = (Viewport.AnisotropicFiltering)frames;
             }
         });
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 5 && final > initial + 5, $"Anisotropy must preserve stretched stripe contrast: {initial} -> {final}.");
     }
 }

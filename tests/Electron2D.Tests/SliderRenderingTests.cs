@@ -15,11 +15,11 @@ internal static partial class RenderingRuntimeTests
         h.DragStarted += () => { starts++; startSawOldValue = h.Value == 50; }; h.DragEnded += changed => ended = changed;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
+            var server = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black);
             var nativeWindows = SDL.GetWindows(out var count); Check(count == 1 && nativeWindows is { Length: 1 }, "Slider input needs one native window.");
             var nativeWindow = nativeWindows![0]; var windowID = SDL.GetWindowID(nativeWindow);
             var mouseScale = SDL.GetCurrentVideoDriver() == "wayland" ? SDL.GetWindowPixelDensity(nativeWindow) : 1f;
-            server.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
                 try
@@ -65,7 +65,7 @@ internal static partial class RenderingRuntimeTests
                 catch (Exception error) { throw new InvalidOperationException($"Slider native {backend}, frame {frames}.", error); }
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         VerifySliderWarm(backend, skin);
         Console.WriteLine($"Sliders native default/themed artwork, GUI drag/keyboard/wheel, RTL, tick flips, disabled and vertical states plus warmed frames passed: {backend}.");
     }
@@ -107,13 +107,13 @@ internal static partial class RenderingRuntimeTests
                 h.Editable = frames % 2 == 0; v.Editable = frames % 2 != 0;
                 h.Size = frames % 2 == 0 ? new(100, 20) : new(102, 22);
             };
-            RenderingServer.Instance!.FramePostDraw += () =>
+            RenderingServer.FramePostDraw += () =>
             {
                 if (frames >= 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;
                 if (++frames == 128) tree.Quit();
             };
         };
-        Engine.Instance.Run(window); Released(window);
+        Engine.Run(window); Released(window);
         Check(frames == 128 && hDraws == 128 && vDraws == 128 && allocated == 0, $"Warmed {backend} slider value/state/size mutation, recording and render allocated {allocated} bytes over 64 ProcessFrameStarted-to-FramePostDraw frames.");
     }
 }

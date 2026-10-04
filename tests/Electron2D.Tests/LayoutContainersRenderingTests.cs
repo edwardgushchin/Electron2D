@@ -20,9 +20,9 @@ internal static partial class RenderingRuntimeTests
         var frames = 0;
         window.Ready += _ =>
         {
-            var server = RenderingServer.Instance!;
-            server.SetDefaultClearColor(Colors.Black);
-            server.FramePostDraw += () =>
+            var server = RenderingServer.Service!;
+            RenderingServer.SetDefaultClearColor(Colors.Black);
+            RenderingServer.FramePostDraw += () =>
             {
                 using var image = server.Readback();
                 frames++;
@@ -37,7 +37,7 @@ internal static partial class RenderingRuntimeTests
                 window.Tree!.Quit();
             };
         };
-        Engine.Instance.Run(window);
+        Engine.Run(window);
         Released(window);
         Check(frames == 1, $"The {backend} layout frame completed.");
         Console.WriteLine($"Margin, center and aspect panels rendered on {backend}.");
