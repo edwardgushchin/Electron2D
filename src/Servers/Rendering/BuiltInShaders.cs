@@ -5,6 +5,8 @@ internal static class BuiltInShaders
     internal static readonly byte[] Vertex = Read("Canvas.vert.spv");
     internal static readonly byte[] Fragment = Read("Canvas.frag.spv");
 
+    internal static readonly byte[] Clip = Read("Clip.frag.spv");
+
     private static byte[] Read(string name)
     {
         using var input = typeof(BuiltInShaders).Assembly.GetManifestResourceStream("Electron2D.Shaders." + name)

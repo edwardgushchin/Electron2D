@@ -10,7 +10,7 @@ Last updated: 2026-10-04
 
 ## Description
 
-Fits submitted same-Z children into a native transparent backbuffer, then draws the owner as one object. Default SelfModulate opacity is applied once to the completed image, so overlapping children do not accumulate that opacity. Modulate retains ordinary inherited child/owner participation. FitMargin and ClearMargin are finite nonnegative screen pixels, initially ten; UseMipmaps starts false and generates GPU backbuffer levels for custom material LOD. A material replaces the built-in group shader. Recorded owner commands supply the drawable shape and bypass fit expansion; otherwise automatic fitting maps screen bounds through the owner inverse/forward transform and needs an invertible transform. Empty groups without submitted child content draw no invented rectangle. Other effective Z values, TopLevel and independent canvas branches retain separate drawing. GetConfigurationWarnings reports an attached ancestor group; nested same-Z rendering and writable backbuffer reads by group children reject explicitly. Compatibility executes baseline composition but rejects shaders/mipmaps, and software rejects its unsupported premultiplied group blend. Derived types can provide OnDraw owner geometry and must supply their own factory for scene reconstruction.
+Fits submitted same-Z children into a native transparent backbuffer, then draws the owner as one object. Default SelfModulate opacity is applied once to the completed image, so overlapping children do not accumulate that opacity. Modulate retains ordinary inherited child/owner participation. FitMargin and ClearMargin are finite nonnegative screen pixels, initially ten; UseMipmaps starts false and generates GPU backbuffer levels for custom material LOD. A material replaces the built-in group shader. Inherited ClipChildren is stored but keeps the group compositor. Recorded owner commands supply the drawable shape and bypass fit expansion; otherwise automatic fitting maps screen bounds through the owner inverse/forward transform and needs an invertible transform. Empty groups without submitted child content draw no invented rectangle. Other effective Z values, TopLevel and independent canvas branches retain separate drawing. Inherited GetConfigurationWarnings reports attached clipping/group ancestors; nested same-Z rendering and writable backbuffer reads by group children reject explicitly. Compatibility executes baseline composition but rejects shaders/mipmaps, and software rejects its unsupported premultiplied group blend. Derived types can provide OnDraw owner geometry and must supply their own factory for scene reconstruction.
 
 Attached reads and mutations use the scene owner; mutation also rejects scene capture. Disposed access rejects. In-memory PackedScene reconstruction has executable checks; file/editor authoring and owner visual acceptance are separate. [The composition component](../components/canvas-rendering.md#group-composition-and-screen-snapshots) records native lifetime, backend and allocation limits.
 
@@ -109,8 +109,7 @@ System.ObjectDisposedException: This node is disposed.
 | Complete C# signature | Contract |
 | --- | --- |
 | `protected override System.Func<Electron2D.Node> CreateSceneInstanceFactory()` | Creates a reusable factory for packed-scene instances of this exact runtime node type. |
-| `public override System.String[] GetConfigurationWarnings()` | Returns this node's current configuration warnings for tooling. |
-| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Returns the typed properties exposed to tooling before validation. |
+| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Implements the inherited resource lifecycle for this concrete type. |
 
 ## Method Descriptions
 
@@ -127,31 +126,14 @@ Remarks: The base implementation supports only an exact Electron2D.Node. Derived
 
 System.NotSupportedException: A derived node has not explicitly supplied an instancing factory.
 
-<a id="member-1557e5789f0f"></a>
-### GetConfigurationWarnings
-
-`public override System.String[] GetConfigurationWarnings()`
-
-Returns this node's current configuration warnings for tooling.
-
-Returns: An empty array by default. Overrides return ordered warning messages and should include base warnings.
-
-Remarks: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner thread. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
-
-System.InvalidOperationException: An attached query runs off the scene owner thread.
-
-System.ObjectDisposedException: This node is disposed.
-
 <a id="member-5225450789af"></a>
 ### GetPropertyDescriptors
 
 `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
 
-Returns the typed properties exposed to tooling before validation.
+Implements the inherited resource lifecycle for this concrete type.
 
-Returns: The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.
-
-Remarks: Overrides append or replace descriptors; they must not yield null entries.
+Remarks: Appends this class's typed hierarchy, ownership, processing, and automatic translation descriptors to the inherited descriptors.
 
 
 ## Verification and limits

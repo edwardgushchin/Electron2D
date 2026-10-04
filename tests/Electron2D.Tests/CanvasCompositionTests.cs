@@ -4,6 +4,7 @@ internal static class CanvasCompositionTests
 {
     internal static void Run()
     {
+        CanvasClipTests.Run();
         using var group = new CanvasGroup(); using var copy = new BackBufferCopy();
         Check(group.FitMargin == 10 && group.ClearMargin == 10 && !group.UseMipmaps && copy.CopyMode == BackBufferCopyMode.Rect && copy.Rect == new Rect2(-100, -100, 200, 200), "Defaults.");
         Reject<ArgumentOutOfRangeException>(() => group.FitMargin = -1); Reject<ArgumentOutOfRangeException>(() => group.ClearMargin = float.NaN);
@@ -47,12 +48,14 @@ internal static class CanvasCompositionTests
         {
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy")
             {
+                CanvasClipTests.RejectSoftware();
                 Copy(backend, null);
                 var rejected = new Window(); var softwareGroup = new CanvasGroup(); softwareGroup.AddChild(new Box()); rejected.AddChild(softwareGroup);
                 Reject<NotSupportedException>(() => Engine.Instance.Run(rejected)); Check(rejected.IsDisposed, "Software group capability cleanup."); return;
             }
+            CanvasClipTests.RunHost(backend);
             Group(backend); ParentYSort(backend); Copy(backend, null); Offscreen(backend); Warm(backend);
-            if (backend == "gpu") foreach (var language in new[] { "Hlsl", "Glsl" }) { using var shader = Load(language); using var material = Screen(shader); Copy(backend, material); Effects(material, language); }
+            if (backend == "gpu") foreach (var language in new[] { "Hlsl", "Glsl" }) { using var shader = Load(language); using var material = Screen(shader); CanvasClipTests.Materials(material, language); Copy(backend, material); Effects(material, language); }
             else RejectMipmaps();
             RejectNested();
         }
@@ -60,7 +63,7 @@ internal static class CanvasCompositionTests
     }
     private static void Group(string backend)
     {
-        var window = new Window { Size = new(128, 96) }; var group = new CanvasGroup { Position = new(8, 8), FitMargin = 0, ClearMargin = 0, SelfModulate = new(1, 1, 1, .5f) }; var a = new Box(); var b = new Box { Position = new(8, 0) }; var escaped = new Box { Position = new(0, 24), Fill = Colors.Lime, ZIndex = 1 }; group.AddChild(a); group.AddChild(new BackBufferCopy { CopyMode = BackBufferCopyMode.Viewport }); group.AddChild(b); group.AddChild(escaped); window.AddChild(group); window.AddChild(new Box { Position = new(80, 8), Fill = Colors.Blue }); var mask = new MaskedGroup { Name = "mask", Position = new(48, 48), FitMargin = 500, SelfModulate = new(1, 1, 1, .5f) }; mask.AddChild(new Box()); window.AddChild(mask); window.AddChild(new MaskedGroup { Name = "empty", Position = new(80, 48) }); var stage = 0;
+        var window = new Window { Size = new(128, 96) }; var group = new CanvasGroup { ClipChildren = ClipChildrenMode.Only, Position = new(8, 8), FitMargin = 0, ClearMargin = 0, SelfModulate = new(1, 1, 1, .5f) }; var a = new Box(); var b = new Box { Position = new(8, 0) }; var escaped = new Box { Position = new(0, 24), Fill = Colors.Lime, ZIndex = 1 }; group.AddChild(a); group.AddChild(new BackBufferCopy { CopyMode = BackBufferCopyMode.Viewport }); group.AddChild(b); group.AddChild(escaped); window.AddChild(group); window.AddChild(new Box { Position = new(80, 8), Fill = Colors.Blue }); var mask = new MaskedGroup { Name = "mask", Position = new(48, 48), FitMargin = 500, SelfModulate = new(1, 1, 1, .5f) }; mask.AddChild(new Box()); window.AddChild(mask); window.AddChild(new MaskedGroup { Name = "empty", Position = new(80, 48) }); var stage = 0;
         window.Ready += _ =>
         {
             var renderer = RenderingServer.Instance!; renderer.SetDefaultClearColor(Colors.Black); renderer.FramePostDraw += () =>

@@ -95,3 +95,5 @@ The pinned SDL software triangle input truncates source UVs to integer texels as
 Offscreen canvases now use independently owned completed/write target pairs. Native caches span every selected target in one frame. Viewport textures use their native image and dimensions directly; GetImage readback remains an explicit cold operation. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets).
 
 Baseline copies and group composition use native SDL targets and preserve operation/clip boundaries. Arbitrary shaders and mipmapped groups reject before drawing; software also rejects unsupported premultiplied group blending. Internal screen readback verifies the actual copied pixels. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
+
+ClipChildren uses a lazy native alpha MaskBuffer: ordinary owner primitives accumulate alpha, screen RGB uses destination-alpha blending, then premultiplied composition restores the main target. Draw target/clip restoration is deterministic. Software rejects advanced mask blending before drawing. See [alpha masks](../components/canvas-rendering.md#canvas-alpha-masks).

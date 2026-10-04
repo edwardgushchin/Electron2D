@@ -814,3 +814,5 @@ Native canvas texture/program/material caches now span the complete multi-target
 Its private CanvasFrame owns reusable per-target node/order/geometry/batch buffers, transform maps and sampler scratch. Dependency recursion therefore preserves consumer buffers; frame completion clears borrowed references while retaining capacity.
 
 RenderingServer.Composition.cs collects same-Z group ranges, fits or retains owner geometry, inserts copy/clear/composite boundaries and guards unsupported nested/writable-buffer reads. Its internal screen readback is an explicit native probe, separate from ordinary frame submission. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
+
+ClipChildren extends the existing composition stream. Command-bearing mask owners end their captured same-Z range, AndDraw inserts an early ordinary owner draw using already uploaded geometry, and final owner geometry supplies alpha. Parent/internal Y-sort and canvas boundaries follow the same compositor traversal. See [alpha masks](../components/canvas-rendering.md#canvas-alpha-masks).

@@ -128,3 +128,5 @@ Remarks: Overrides append or replace descriptors; they must not yield null entri
 ## Verification and limits
 
 [CanvasCompositionTests](../../tests/Electron2D.Tests/CanvasCompositionTests.cs) checks authoring, callbacks, typed packing/owner boundaries and actual native pixels. Linux Wayland GPU and hardware compatibility execute the baseline; GPU HLSL/GLSL additionally check custom screen reading and generated LOD. Stable-size warm active/idle intervals measure managed allocation; native allocator totals, other platforms, large scenes, editor inspector integration and human acceptance remain separate.
+
+Inherited ClipChildren uses the shared canvas mask contract; nongeometry owners can capture a range without visible final mask geometry. Editor inspector hiding remains dependent on the first editor inspector slice.

@@ -4,12 +4,12 @@ using SDL3;
 
 namespace Electron2D;
 
-internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd }
+internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, MaskEnd, MaskFinish }
 
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,
     TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1,
-    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false)
+    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false)
 {
     internal byte[]? ShaderCode => Material?.Program.Code;
 }

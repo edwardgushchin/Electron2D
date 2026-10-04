@@ -68,7 +68,7 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
     external.write_bytes(b'not SPIR-V')
     invoke(external, output, success=False)
     assert output.read_bytes() == previous, 'Invalid bytecode replaced the usable artifact'
-    for stage, stem in [('vertex', 'Canvas.vert'), ('fragment', 'Canvas.frag')]:
+    for stage, stem in [('vertex', 'Canvas.vert'), ('fragment', 'Canvas.frag'), ('fragment', 'Clip.frag')]:
         source = root / f'src/Servers/Rendering/Shaders/{stem}.hlsl'
         invoke(source, output, stage)
         assert output.read_bytes() == (root / f'src/Servers/Rendering/Shaders/{stem}.spv').read_bytes()

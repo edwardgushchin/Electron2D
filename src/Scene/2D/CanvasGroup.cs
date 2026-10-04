@@ -34,15 +34,6 @@ public class CanvasGroup : Entity
     public bool UseMipmaps { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _useMipmaps; } set { EnsureMutable(); _useMipmaps = value; } }
     private static void Margin(float value) { if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value)); }
     /// <inheritdoc />
-    /// <remarks>Includes an attached ancestor-group warning. Queries allocate a caller-owned snapshot.</remarks>
-    public override string[] GetConfigurationWarnings()
-    {
-        var warnings = new List<string>(base.GetConfigurationWarnings());
-        if (IsInsideTree) for (var node = Parent; node is not null; node = node.Parent)
-                if (node is CanvasGroup) { warnings.Add($"Ancestor '{node.Name}' is a CanvasGroup; nested groups share a backbuffer and cannot compose independently."); break; }
-        return warnings.ToArray();
-    }
-    /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GroupProperties);
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(CanvasGroup) ? CreateGroup : base.CreateSceneInstanceFactory();

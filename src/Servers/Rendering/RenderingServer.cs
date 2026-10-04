@@ -323,7 +323,7 @@ public sealed partial class RenderingServer : ElectronObject
         }
         if (item.YSortEnabled)
         {
-            if (alreadyYSorted && item is not CanvasGroup)
+            if (alreadyYSorted && !IsCompositor(item))
             {
                 AddRenderEntry(item, transform);
                 return;
@@ -335,13 +335,13 @@ public sealed partial class RenderingServer : ElectronObject
             CollectionsMarshal.AsSpan(_ySort).Slice(first, count).Sort(static (left, right) =>
                 Mathf.IsEqualApprox(left.Transform.Origin.Y, right.Transform.Origin.Y) ? left.Order.CompareTo(right.Order) : left.Transform.Origin.Y.CompareTo(right.Transform.Origin.Y));
             for (var index = first; index < first + count; index++)
-                if (item is not CanvasGroup || !ReferenceEquals(_ySort[index].Node, item)) OrderCanvas(_ySort[index].Node, transform * _ySort[index].Transform, alreadyYSorted: true);
-            if (item is CanvasGroup) AddRenderEntry(item, transform);
+                if (!IsCompositor(item) || !ReferenceEquals(_ySort[index].Node, item)) OrderCanvas(_ySort[index].Node, transform * _ySort[index].Transform, alreadyYSorted: true);
+            if (IsCompositor(item)) AddRenderEntry(item, transform);
             _ySort.RemoveRange(first, count);
             return;
         }
         OrderChildren(item, transform, behind: true);
-        if (item is CanvasGroup) { OrderChildren(item, transform, behind: false); AddRenderEntry(item, transform); }
+        if (IsCompositor(item)) { OrderChildren(item, transform, behind: false); AddRenderEntry(item, transform); }
         else { AddRenderEntry(item, transform); OrderChildren(item, transform, behind: false); }
     }
 
@@ -413,7 +413,7 @@ public sealed partial class RenderingServer : ElectronObject
             if (_viewport.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
             var transform = parentTransform * local;
             _ySort.Add(new(child, transform, _ySort.Count));
-            if (child.YSortEnabled && child is not CanvasGroup) CollectYSort(child, transform);
+            if (child.YSortEnabled && !IsCompositor(child)) CollectYSort(child, transform);
         }
     }
 
@@ -458,6 +458,6 @@ public sealed partial class RenderingServer : ElectronObject
         if (_ownerThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Rendering requires the scene owner thread.");
     }
 
-    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform, CanvasGroup? Group);
+    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform, CanvasItem? Group);
     private readonly record struct YSortEntry(CanvasItem Node, Transform Transform, int Order);
 }

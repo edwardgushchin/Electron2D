@@ -7,6 +7,40 @@ public abstract partial class CanvasItem : Node
     /// <summary>Initializes a detached canvas item with visibility enabled, white modulation and no material.</summary>
     protected CanvasItem() => TransformQueueEntry = new(this);
 
+    private ClipChildrenMode _clipChildren;
+    /// <summary>Gets or sets how drawn alpha masks same-Z canvas descendants.</summary>
+    /// <value>Disabled initially. Max is a sentinel and cannot be assigned.</value>
+    /// <remarks>Only takes color from the children and alpha from this item's geometry, texture and tint.
+    /// AndDraw additionally draws this item before children. Without recorded commands, children draw normally;
+    /// without a captured same-Z child range, this item draws normally.
+    /// CanvasGroup stores the policy but keeps its group compositor. Equal assignments are silent; changed
+    /// assignments commit before warning refresh. Nested masks and groups share storage and cannot render together.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The mode is not an assignable enum value.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner or mutation occurs during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    /// <exception cref="Exception">A warning-refresh observer throws after the value commits.</exception>
+    public ClipChildrenMode ClipChildren
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _clipChildren; }
+        set { EnsureMutable(); if (value is < ClipChildrenMode.Disabled or >= ClipChildrenMode.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_clipChildren == value) return; _clipChildren = value; UpdateConfigurationWarnings(); }
+    }
+    /// <inheritdoc />
+    /// <remarks>Reports attached clipping and group ancestors through physical node ancestry.</remarks>
+    public override string[] GetConfigurationWarnings()
+    {
+        var warnings = new List<string>(base.GetConfigurationWarnings());
+        if (IsInsideTree && (ClipChildren != ClipChildrenMode.Disabled || this is CanvasGroup))
+        {
+            var clipping = false; var group = false;
+            for (var node = Parent; node is not null && (!clipping || !group); node = node.Parent)
+            {
+                if (!clipping && node is CanvasItem { ClipChildren: not ClipChildrenMode.Disabled }) { warnings.Add($"Ancestor '{node.Name}' clips children; nested masks share a backbuffer and cannot compose independently."); clipping = true; }
+                if (!group && node is CanvasGroup) { warnings.Add($"Ancestor '{node.Name}' is a CanvasGroup; nested groups and masks share a backbuffer and cannot compose independently."); group = true; }
+            }
+        }
+        return warnings.ToArray();
+    }
+
     internal readonly LinkedListNode<CanvasItem> TransformQueueEntry;
     private bool _globalTransformInvalid = true;
     private Transform _globalTransform;
@@ -185,6 +219,7 @@ public abstract partial class CanvasItem : Node
 
     private static readonly PropertyDescriptor[] CanvasItemProperties =
     [
+        new PropertyDescriptor<CanvasItem, ClipChildrenMode>(nameof(ClipChildren), n => n.ClipChildren, (n, v) => n.ClipChildren = v, _ => ClipChildrenMode.Disabled, (_, v) => v is >= ClipChildrenMode.Disabled and < ClipChildrenMode.Max, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(ShowBehindParent), node => node.ShowBehindParent, (node, value) => node.ShowBehindParent = value, _ => false, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(YSortEnabled), node => node.YSortEnabled, (node, value) => node.YSortEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(Visible), node => node.Visible, (node, value) => node.Visible = value, _ => true, stored: true),

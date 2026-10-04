@@ -1222,3 +1222,59 @@ System.ArgumentException: An identity is missing or disposed.
 Offscreen canvas selection and external CanvasLayer targets now choose their actual rendering viewport for default sampling and vertex snapping. Submitted masks/camera/final transforms and notifier bounds are per target. Native root visibility does not hide an independent offscreen canvas. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.
 
 Retained drawing and mesh batching coalesce only ordinary Draw operations. Group/copy boundaries preserve order, and CanvasGroup consumes the same canvas transform/clip/mask/material path. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
+
+## Alpha masks
+
+`ClipChildren` uses [ClipChildrenMode](ClipChildrenMode.md) to select Disabled, Only or AndDraw. Only takes child/background color and this item's drawn alpha; AndDraw additionally draws the item before its children. Alpha includes command color, inherited modulation, SelfModulate and texture samples. Each overlapping owner primitive repeats alpha blending. Same-Z direct canvas ancestry participates; TopLevel, neutral nodes and independent canvases end capture. Parent Y-sort treats the mask as an atomic boundary and its internal Y-sort still executes. A mask without recorded commands leaves children ordinary; no captured same-Z child range leaves the owner ordinary. State-only recorded commands can capture children while supplying no drawable mask.
+
+Only with a material uses that material's ordinary final owner shader, including SCREEN_TEXTURE over captured children. AndDraw keeps its built-in final mask; the material affects the early owner draw. Children and early owner draws cannot sample their writable screen buffer. CanvasGroup stores this policy without changing group behavior. BackBufferCopy inherits it; editor inspector hiding remains dependent on the first editor inspector slice. See [native composition](../components/canvas-rendering.md#canvas-alpha-masks) for exact capability and verification limits.
+
+## Property summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public Electron2D.ClipChildrenMode ClipChildren { get; set; }` | Gets or sets how drawn alpha masks same-Z canvas descendants. |
+
+## Property Descriptions
+
+<a id="member-476e9b667db3"></a>
+### ClipChildren
+
+`public Electron2D.ClipChildrenMode ClipChildren { get; set; }`
+
+Gets or sets how drawn alpha masks same-Z canvas descendants.
+
+Value: Disabled initially. Max is a sentinel and cannot be assigned.
+
+Remarks: Only takes color from the children and alpha from this item's geometry, texture and tint. AndDraw additionally draws this item before children. Without recorded commands, children draw normally; without a captured same-Z child range, this item draws normally. CanvasGroup stores the policy but keeps its group compositor. Equal assignments are silent; changed assignments commit before warning refresh. Nested masks and groups share storage and cannot render together.
+
+System.ArgumentOutOfRangeException: The mode is not an assignable enum value.
+
+System.InvalidOperationException: Access is off-owner or mutation occurs during scene capture.
+
+System.ObjectDisposedException: This node is disposed.
+
+System.Exception: A warning-refresh observer throws after the value commits.
+
+## Method summary
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public override System.String[] GetConfigurationWarnings()` | Returns this node's current configuration warnings for tooling. |
+
+## Method Descriptions
+
+<a id="member-5ac3254f10f8"></a>
+### GetConfigurationWarnings
+
+`public override System.String[] GetConfigurationWarnings()`
+
+Returns this node's current configuration warnings for tooling.
+
+Returns: A caller-owned snapshot including base warnings and, while attached and clipping (or a CanvasGroup), the first clipping ancestor and the first group ancestor. Physical Node ancestry is inspected even across neutral/TopLevel canvas boundaries. Disabled ordinary canvas items add no warnings.
+
+Remarks: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner thread. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
+
+System.InvalidOperationException: An attached query runs off the scene owner thread.
+
+System.ObjectDisposedException: This node is disposed.

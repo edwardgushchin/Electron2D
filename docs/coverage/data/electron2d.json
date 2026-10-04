@@ -2593,6 +2593,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ClipChildrenMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ClipChildrenMode",
+    "name": "ClipChildrenMode",
+    "signature": "public enum Electron2D.ClipChildrenMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ClockDirection",
     "kind": "type",
     "declaringType": "Electron2D.ClockDirection",
@@ -15672,6 +15690,58 @@
     "parameters": [],
     "returnType": "Electron2D.CharacterPlatformOnLeave",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ClipChildrenMode.AndDraw()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ClipChildrenMode",
+    "name": "AndDraw",
+    "signature": "public const Electron2D.ClipChildrenMode AndDraw = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ClipChildrenMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ClipChildrenMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ClipChildrenMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ClipChildrenMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ClipChildrenMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ClipChildrenMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ClipChildrenMode",
+    "name": "Max",
+    "signature": "public const Electron2D.ClipChildrenMode Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ClipChildrenMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ClipChildrenMode.Only()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ClipChildrenMode",
+    "name": "Only",
+    "signature": "public const Electron2D.ClipChildrenMode Only = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ClipChildrenMode",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.ClockDirection.Clockwise()",
@@ -48378,19 +48448,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.CanvasGroup.GetConfigurationWarnings()",
-    "kind": "method",
-    "declaringType": "Electron2D.CanvasGroup",
-    "name": "GetConfigurationWarnings",
-    "signature": "public override System.String[] GetConfigurationWarnings()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.String[]",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.CanvasGroup.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasGroup",
@@ -49888,6 +49945,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {
@@ -108902,6 +108972,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.ClipChildren()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "ClipChildren",
+    "signature": "public Electron2D.ClipChildrenMode ClipChildren { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ClipChildrenMode",
     "value": null
   },
   {

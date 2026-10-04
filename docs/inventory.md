@@ -676,4 +676,6 @@ The existing AnimationMixer/AnimationPlayer also use [AnimationBlendValue.cs](..
 | [Rendering](domains/rendering.md) | [Composition](components/canvas-rendering.md#group-composition-and-screen-snapshots) | [BackBufferCopyMode](classes/BackBufferCopyMode.md) | [BackBufferCopy.cs](../src/Scene/2D/BackBufferCopy.cs) | Current | Exact copy policy domain. |
 | [Rendering](domains/rendering.md) | [Composition](components/canvas-rendering.md#group-composition-and-screen-snapshots) | [CanvasOperation](classes/CanvasOperation.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | Internal | Retained render-pass/copy boundaries. |
 
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`ClipChildrenMode`](classes/ClipChildrenMode.md) | [`ClipChildrenMode.cs`](../src/Scene/Main/ClipChildrenMode.cs) | Current | Typed Disabled/Only/AndDraw alpha-mask composition, shared native storage and explicit nested/software gates. |
+
 CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [CanvasMesh.cs](../src/Servers/Rendering/CanvasMesh.cs) preserves draw-only coalescing across the shared mesh/canvas stream.

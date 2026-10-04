@@ -141,12 +141,13 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         foreach (var batch in batches)
         {
             screen |= batch.Operation != CanvasOperation.Draw || batch.Material?.Program.UsesScreenTexture == true;
-            screenMipmaps |= batch.Mipmaps || batch.Operation != CanvasOperation.GroupEnd && batch.Material?.Program.UsesScreenTexture == true;
+            screenMipmaps |= batch.Mipmaps || batch.Operation is not (CanvasOperation.GroupEnd or CanvasOperation.MaskEnd) && batch.Material?.Program.UsesScreenTexture == true;
             if (batch.Material?.Program.TimeUniform is not null && !float.IsFinite((float)time))
                 throw new InvalidOperationException("The render clock exceeds the finite float32 range required by shader TIME.");
-            var code = batch.ShaderCode ?? _defaultFragment; var key = (code, batch.Blend);
+            var code = batch.MaskShader ? BuiltInShaders.Clip : batch.ShaderCode ?? _defaultFragment; var key = (code, batch.Blend);
             _usedPrograms.Add(key);
             if (!_pipelines.ContainsKey(key)) _pipelines.Add(key, CreatePipeline(code, batch.Blend));
+            if (batch.MaskShader) _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
             if (batch.GroupShader)
             {
                 _usedPrograms.Add((_defaultFragment, BlendMode.PremultAlpha));
@@ -181,6 +182,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
             if (!clearEnabled) Blit(command, output.Current.DangerousGetHandle(), output.Next.DangerousGetHandle(), new(0, 0, size.X, size.Y));
             pass = BeginPass(command, output.Next.DangerousGetHandle(), clearEnabled ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load, clear);
             var inGroup = false; var copied = false;
+            var maskSamplers = stackalloc SDL.GPUTextureSamplerBinding[2];
             foreach (var batch in batches)
             {
                 if (batch.Operation == CanvasOperation.Copy)
@@ -191,18 +193,26 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
                     copied = true; pass = BeginPass(command, output.Next.DangerousGetHandle(), SDL.GPULoadOp.Load, default);
                     continue;
                 }
+                if (batch.Operation == CanvasOperation.MaskFinish) continue;
+                if (batch.Operation == CanvasOperation.MaskBegin)
+                {
+                    SDL.EndGPURenderPass(pass); pass = 0; inGroup = true;
+                    if (batch.Region.HasArea()) Blit(command, output.Next.DangerousGetHandle(), output.BackBuffer!.DangerousGetHandle(), batch.Region);
+                    pass = BeginPass(command, output.BackBuffer!.DangerousGetHandle(), SDL.GPULoadOp.Load, default);
+                    continue;
+                }
                 if (batch.Operation == CanvasOperation.GroupBegin)
                 {
                     SDL.EndGPURenderPass(pass); pass = 0; inGroup = true;
                     pass = BeginPass(command, output.BackBuffer!.DangerousGetHandle(), SDL.GPULoadOp.Load, default);
                 }
-                if (batch.Operation == CanvasOperation.GroupEnd && inGroup)
+                if (batch.Operation is CanvasOperation.GroupEnd or CanvasOperation.MaskEnd && inGroup)
                 {
                     SDL.EndGPURenderPass(pass); pass = 0; inGroup = false;
                     if (batch.Mipmaps) SDL.GenerateMipmapsForGPUTexture(command, output.BackBuffer!.DangerousGetHandle());
                     pass = BeginPass(command, output.Next.DangerousGetHandle(), SDL.GPULoadOp.Load, default);
                 }
-                if (batch.Material?.Program.UsesScreenTexture == true && batch.Operation != CanvasOperation.GroupEnd && !copied)
+                if (batch.Material?.Program.UsesScreenTexture == true && batch.Operation is not (CanvasOperation.GroupEnd or CanvasOperation.MaskEnd) && !copied)
                 {
                     SDL.EndGPURenderPass(pass); pass = 0;
                     Blit(command, output.Next.DangerousGetHandle(), output.BackBuffer!.DangerousGetHandle(), new(0, 0, size.X, size.Y));
@@ -215,10 +225,19 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
                 var scissor = new SDL.Rect { X = clip.Position.X, Y = clip.Position.Y, W = clip.Size.X, H = clip.Size.Y }; SDL.SetGPUScissor(pass, in scissor);
                 var dimensions = new Vector2(size.X, size.Y); SDL.PushGPUVertexUniformData(command, 0, (nint)(&dimensions), (uint)sizeof(Vector2));
                 var binding = new SDL.GPUBufferBinding { Buffer = _vertexBuffer!.DangerousGetHandle() }; SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(&binding, 1), 1);
-                var pipeline = batch.Operation == CanvasOperation.GroupBegin ? _clearPipeline! : _pipelines[(batch.ShaderCode ?? _defaultFragment, batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend)];
+                var pipeline = batch.Operation == CanvasOperation.GroupBegin ? _clearPipeline! : _pipelines[(batch.MaskShader ? BuiltInShaders.Clip : batch.ShaderCode ?? _defaultFragment, batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend)];
                 SDL.BindGPUGraphicsPipeline(pass, pipeline.DangerousGetHandle());
                 batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y));
-                if (batch.Material is { Textures.Length: > 0 } textured)
+                if (batch.MaskShader)
+                {
+                    var inverse = new Vector4(1f / size.X, 1f / size.Y, 0, 0);
+                    SDL.PushGPUFragmentUniformData(command, 0, (nint)(&inverse), (uint)sizeof(Vector4));
+                    var samplers = maskSamplers;
+                    samplers[0] = CanvasBinding(batch);
+                    samplers[1] = new() { Texture = output.BackBuffer!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled) };
+                    SDL.BindGPUFragmentSamplers(pass, 0, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(samplers, 2), 2);
+                }
+                else if (batch.Material is { Textures.Length: > 0 } textured)
                 {
                     var samplers = _textureBindings[textured];
                     for (var i = 0; i < samplers.Length; i++)
