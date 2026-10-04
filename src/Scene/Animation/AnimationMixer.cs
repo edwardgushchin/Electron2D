@@ -28,7 +28,6 @@ public partial class AnimationMixer : Node
     private readonly Dictionary<string, (Animation Animation, AnimationLibrary Library)> _animationIndex = new(StringComparer.Ordinal);
     private bool _animationIndexDirty = true;
     private Animation? _cachedAnimation;
-    private long _cachedRevision;
     private AnimationBinding?[] _bindings = [];
     private bool _active = true;
     private string _rootNode = "..";
@@ -101,27 +100,42 @@ public partial class AnimationMixer : Node
     /// <summary>Advances the controller by finite signed seconds when active.</summary>
     /// <param name="delta">Finite signed elapsed seconds; automatic updates use the inherited scaled delta.</param>
     public void Advance(double delta) { EnsureAnimationMutable(); Animation.Finite(delta); if (_advancing) throw new InvalidOperationException("Animation advancement cannot reenter."); if (!_active) return; _advancing = true; try { AdvanceAnimation(delta); } finally { _advancing = false; } }
-    /// <summary>Clears all cached typed target bindings.</summary>
+    /// <summary>Clears cached typed bindings and stops still-controlled child players while preserving their values.</summary>
     public void ClearCaches() { EnsureAnimationMutable(); InvalidateBindings(); CachesCleared?.Invoke(); }
     /// <summary>Evaluates a controller update. The base mixer has no playback source.</summary>
     internal virtual void AdvanceAnimation(double delta) { if (NeedsBlending) ApplyBlend([], delta); }
+    private int _evaluationDepth;
+    internal bool IsEvaluating => _advancing || _evaluationDepth != 0;
+    private readonly List<AnimationBinding> _nestedBindings = [];
+    private readonly Dictionary<Animation, AnimationBlendCache> _legacyCaches = new(ReferenceEqualityComparer.Instance);
+    internal void RegisterNested(AnimationBinding binding) => _nestedBindings.Add(binding);
+    internal void StopNestedPlayback()
+    {
+        List<Exception>? errors = null;
+        foreach (var binding in _nestedBindings) try { binding.StopPlayback(); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Nested playback cleanup failed.", errors);
+    }
     internal void ApplyAnimation(Animation animation, double time, bool backward, double? previous = null, bool externalSeek = false, bool updateOnly = false)
+    { _evaluationDepth++; try { ApplyAnimationCore(animation, time, backward, previous, externalSeek, updateOnly); } finally { _evaluationDepth--; } }
+    private void ApplyAnimationCore(Animation animation, double time, bool backward, double? previous = null, bool externalSeek = false, bool updateOnly = false)
     {
         if (animation.IsDisposed) return;
-        if (!ReferenceEquals(_cachedAnimation, animation) || _cachedRevision != animation.ChangeRevision)
+        if (_blendCaches.TryGetValue(animation, out var blended) && blended.Revision != animation.ChangeRevision) InvalidateBindings();
+        if (!_legacyCaches.TryGetValue(animation, out var cache) || cache.Revision != animation.ChangeRevision)
         {
-            var root = _rootNode.Length == 0 ? this : GetNodeOrNull(_rootNode);
-            _bindings = new AnimationBinding?[animation.GetTrackCount()];
-            if (root is not null) for (var i = 0; i < _bindings.Length; i++) _bindings[i] = animation.Get(i).Bind(root);
-            foreach (var binding in _bindings) binding?.PrepareMethodCalls(MethodCallbackCapacity);
-            _cachedAnimation = animation; _cachedRevision = animation.ChangeRevision;
+            if (cache is not null) foreach (var binding in cache.Bindings) { binding?.StopPlayback(); if (binding is not null) _nestedBindings.Remove(binding); }
+            var root = _rootNode.Length == 0 ? this : GetNodeOrNull(_rootNode); var prepared = new AnimationBinding?[animation.GetTrackCount()];
+            if (root is not null) for (var i = 0; i < prepared.Length; i++) { prepared[i] = animation.Get(i).Bind(root); prepared[i]?.PrepareMethodCalls(MethodCallbackCapacity); if (animation.Get(i).Kind == Animation.TrackType.Animation) prepared[i]?.AttachBlend(this); }
+            cache = new(animation.ChangeRevision, prepared); _legacyCaches[animation] = cache;
         }
+        if (!ReferenceEquals(_cachedAnimation, animation)) foreach (var binding in cache.Bindings) binding?.ResetPlayback();
+        _bindings = cache.Bindings; _cachedAnimation = animation;
         MethodExternalSeeking = externalSeek; MethodUpdateOnly = updateOnly; var bindings = _bindings; var revision = animation.ChangeRevision; var generation = _bindingGeneration;
         for (var i = 0; i < bindings.Length; i++) { if (IsDisposed || animation.IsDisposed || animation.ChangeRevision != revision || !ReferenceEquals(_cachedAnimation, animation)) break; bindings[i]?.Apply(animation, i, time, backward, previous, this, generation); }
     }
     internal bool IsBindingCurrent(Animation animation, long generation) => !IsDisposed && _active && _bindingGeneration == generation && (ReferenceEquals(_cachedAnimation, animation) || (!_blendDirty && _blendCaches.ContainsKey(animation)));
     internal void EnsureAnimationMutable() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
-    internal void InvalidateBindings() { InvalidateEvaluation(); _blendDirty = true; ClearCapture(); }
+    internal void InvalidateBindings(bool rebuild = true) { InvalidateEvaluation(); if (rebuild) _blendDirty = true; ClearCapture(); StopNestedPlayback(); if (rebuild) { _legacyCaches.Clear(); _nestedBindings.Clear(); } }
     internal void Started(string name) => AnimationStarted?.Invoke(name);
     internal void Finished(string name) => AnimationFinished?.Invoke(name);
     private void TreeMutated(SceneTree tree) => InvalidateBindings();
@@ -145,6 +159,8 @@ public partial class AnimationMixer : Node
         {
             if (_observedTree is not null) _observedTree.TreeChanged -= TreeMutated; _observedTree = null;
             foreach (var item in _libraries.Values) item.Library.Changed -= item.Changed;
+            try { StopNestedPlayback(); } catch (Exception error) { CollectException(ref errors, error); }
+            _nestedBindings.Clear(); _legacyCaches.Clear();
             _libraries.Clear(); _animationIndex.Clear(); _blendCaches.Clear(); _blendProperties.Clear(); _blendOrder.Clear(); _blendPropertySnapshot = [];
             try { InvalidateBindings(); } catch (Exception error) { CollectException(ref errors, error); }
             AnimationLibrariesUpdated = null; AnimationListChanged = null; AnimationStarted = null; AnimationFinished = null; CachesCleared = null;

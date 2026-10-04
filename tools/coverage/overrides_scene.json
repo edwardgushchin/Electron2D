@@ -2329,7 +2329,7 @@
       "godot": "Animation::enum:TrackType",
       "electron2d": "T:Electron2D.Animation.TrackType",
       "state": "Partial",
-      "reason": "ADR 0093 typed method/B\u00e9zier execution. AnimationSpecialTrackTests verifies scalar cubic time/value handles, typed mixed-signature callback keys/copies, forward/reverse/sections/seeks/loops, graph path filters and weighted curves, deferred/immediate mutation/failure/disposal, prepared capacity exhaustion/reuse and 256 warmed scalar and deferred frames with zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify five actual curve/color pixel poses with borrowed-resource cleanup. Native/driver allocations, other platforms, disk/editor round trips and human acceptance remain unverified. Value, Method and Bezier are declared. Audio/nested-animation remain unimplemented; 3D track roles remain excluded."
+      "reason": "ADR 0093 typed method/B\u00e9zier execution. AnimationSpecialTrackTests verifies scalar cubic time/value handles, typed mixed-signature callback keys/copies, forward/reverse/sections/seeks/loops, graph path filters and weighted curves, deferred/immediate mutation/failure/disposal, prepared capacity exhaustion/reuse and 256 warmed scalar and deferred frames with zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify five actual curve/color pixel poses with borrowed-resource cleanup. Native/driver allocations, other platforms, disk/editor round trips and human acceptance remain unverified. Value, Method, Bezier and Animation are declared. Audio remains unimplemented; 3D track roles remain excluded."
     },
     {
       "godot": "Animation::enum:UpdateMode",
@@ -2437,7 +2437,7 @@
       "godot": "Animation::method:add_track(int:Animation.TrackType,int:)",
       "electron2d": "method:Electron2D.Animation.AddTrack`2(PropertyDescriptor<TOwner, TValue>,System.Int32,Func<TValue, TValue, System.Double, TValue>)",
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio/nested-animation track storage and evaluation remain unimplemented; typed method/B\u00e9zier tracks now execute through players/graphs with complete generic key/container authoring."
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:clear()",
@@ -2449,13 +2449,13 @@
       "godot": "Animation::method:copy_track(int:,Animation:)",
       "electron2d": "method:Electron2D.Animation.CopyTrack(System.Int32,Electron2D.Animation)",
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio/nested-animation track storage and evaluation remain unimplemented; typed method/B\u00e9zier tracks now execute through players/graphs with complete generic key/container authoring."
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:find_track(NodePath:,int:Animation.TrackType)",
       "electron2d": "method:Electron2D.Animation.FindTrack(System.String,Electron2D.Animation.TrackType)",
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio/nested-animation track storage and evaluation remain unimplemented; typed method/B\u00e9zier tracks now execute through players/graphs with complete generic key/container authoring."
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:get_marker_at_time(float:)",
@@ -2563,7 +2563,7 @@
       "godot": "Animation::method:track_get_key_value(int:,int:)",
       "electron2d": "method:Electron2D.Animation.TrackGetKeyValue`1(System.Int32,System.Int32)",
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio/nested-animation track storage and evaluation remain unimplemented; typed method/B\u00e9zier tracks now execute through players/graphs with complete generic key/container authoring."
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:track_get_path(int:)",
@@ -2575,13 +2575,13 @@
       "godot": "Animation::method:track_get_type(int:)",
       "electron2d": "method:Electron2D.Animation.TrackGetType(System.Int32)",
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio/nested-animation track storage and evaluation remain unimplemented; typed method/B\u00e9zier tracks now execute through players/graphs with complete generic key/container authoring."
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:track_insert_key(int:,float:,Variant:,float:)",
       "electron2d": "method:Electron2D.Animation.TrackInsertKey`1(System.Int32,System.Double,TValue,System.Double)",
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio/nested-animation track storage and evaluation remain unimplemented; typed method/B\u00e9zier tracks now execute through players/graphs with complete generic key/container authoring."
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:track_is_compressed(int:)",
@@ -2671,7 +2671,7 @@
       "godot": "Animation::method:track_set_key_value(int:,int:,Variant:)",
       "electron2d": "method:Electron2D.Animation.TrackSetKeyValue`1(System.Int32,System.Int32,TValue)",
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio/nested-animation track storage and evaluation remain unimplemented; typed method/B\u00e9zier tracks now execute through players/graphs with complete generic key/container authoring."
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start."
     },
     {
       "godot": "Animation::method:track_set_path(int:,NodePath:)",
@@ -4514,6 +4514,30 @@
       "electron2d": "property:Electron2D.AnimationMixer.CallbackModeMethod()",
       "state": "Implemented",
       "reason": "ADR 0093 typed method/B\u00e9zier execution. AnimationSpecialTrackTests verifies scalar cubic time/value handles, typed mixed-signature callback keys/copies, forward/reverse/sections/seeks/loops, graph path filters and weighted curves, deferred/immediate mutation/failure/disposal, prepared capacity exhaustion/reuse and 256 warmed scalar and deferred frames with zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify five actual curve/color pixel poses with borrowed-resource cleanup. Native/driver allocations, other platforms, disk/editor round trips and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::enum_value:TrackType.TYPE_ANIMATION",
+      "electron2d": "enumValue:Electron2D.Animation.TrackType.Animation()",
+      "state": "Implemented",
+      "reason": "ADR 0093 nested player execution. AnimationNestedTrackTests verifies typed string authoring/copies, latest crossed key/reverse/sections/loops, child-length seek/loop rules, stop/update-only, graph node filters/silent clocks, source/cache cleanup, self/mutual synchronous recursion and observer failure/reentry/takeover. 256 warmed nested start/stop plus child property passes allocate zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify six actual child poses, state and borrowed-resource shutdown. Native/driver allocation, other platforms, disk/editor round trips and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:animation_track_get_key_animation(int:,int:)",
+      "electron2d": "method:Electron2D.Animation.AnimationTrackGetKeyAnimation(System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 nested player execution. AnimationNestedTrackTests verifies typed string authoring/copies, latest crossed key/reverse/sections/loops, child-length seek/loop rules, stop/update-only, graph node filters/silent clocks, source/cache cleanup, self/mutual synchronous recursion and observer failure/reentry/takeover. 256 warmed nested start/stop plus child property passes allocate zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify six actual child poses, state and borrowed-resource shutdown. Native/driver allocation, other platforms, disk/editor round trips and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:animation_track_insert_key(int:,float:,StringName:)",
+      "electron2d": "method:Electron2D.Animation.AnimationTrackInsertKey(System.Int32,System.Double,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 nested player execution. AnimationNestedTrackTests verifies typed string authoring/copies, latest crossed key/reverse/sections/loops, child-length seek/loop rules, stop/update-only, graph node filters/silent clocks, source/cache cleanup, self/mutual synchronous recursion and observer failure/reentry/takeover. 256 warmed nested start/stop plus child property passes allocate zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify six actual child poses, state and borrowed-resource shutdown. Native/driver allocation, other platforms, disk/editor round trips and human acceptance remain unverified."
+    },
+    {
+      "godot": "Animation::method:animation_track_set_key_animation(int:,int:,StringName:)",
+      "electron2d": "method:Electron2D.Animation.AnimationTrackSetKeyAnimation(System.Int32,System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 nested player execution. AnimationNestedTrackTests verifies typed string authoring/copies, latest crossed key/reverse/sections/loops, child-length seek/loop rules, stop/update-only, graph node filters/silent clocks, source/cache cleanup, self/mutual synchronous recursion and observer failure/reentry/takeover. 256 warmed nested start/stop plus child property passes allocate zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify six actual child poses, state and borrowed-resource shutdown. Native/driver allocation, other platforms, disk/editor round trips and human acceptance remain unverified."
     }
   ],
   "extras": [
@@ -6591,6 +6615,11 @@
       "electron2d": "property:Electron2D.AnimationMethodKey<TOwner>.Name()",
       "state": "Implemented",
       "reason": "ADR 0093 exact typed projection of method key/argument identity, scalar B\u00e9zier key geometry, typed track insertion/key replacement or explicit callback cache preparation. No universal payload/property container or reflection invocation. ADR 0093 typed method/B\u00e9zier execution. AnimationSpecialTrackTests verifies scalar cubic time/value handles, typed mixed-signature callback keys/copies, forward/reverse/sections/seeks/loops, graph path filters and weighted curves, deferred/immediate mutation/failure/disposal, prepared capacity exhaustion/reuse and 256 warmed scalar and deferred frames with zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify five actual curve/color pixel poses with borrowed-resource cleanup. Native/driver allocations, other platforms, disk/editor round trips and human acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.Animation.AddAnimationTrack(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 exact factory projection of add_track(TYPE_ANIMATION) to a node-only AnimationPlayer role with typed string keys. ADR 0093 nested player execution. AnimationNestedTrackTests verifies typed string authoring/copies, latest crossed key/reverse/sections/loops, child-length seek/loop rules, stop/update-only, graph node filters/silent clocks, source/cache cleanup, self/mutual synchronous recursion and observer failure/reentry/takeover. 256 warmed nested start/stop plus child property passes allocate zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify six actual child poses, state and borrowed-resource shutdown. Native/driver allocation, other platforms, disk/editor round trips and human acceptance remain unverified."
     }
   ],
   "statusGroups": [
@@ -9236,11 +9265,7 @@
       "state": "Unimplemented",
       "reason": "ADR 0093: value-property authoring/playback now executes. This applicable member remains unimplemented; it is not blocked on the first scene animation slice.",
       "godot": [
-        "Animation::enum_value:TrackType.TYPE_ANIMATION",
         "Animation::enum_value:TrackType.TYPE_AUDIO",
-        "Animation::method:animation_track_get_key_animation(int:,int:)",
-        "Animation::method:animation_track_insert_key(int:,float:,StringName:)",
-        "Animation::method:animation_track_set_key_animation(int:,int:,StringName:)",
         "Animation::method:audio_track_get_key_end_offset(int:,int:)",
         "Animation::method:audio_track_get_key_start_offset(int:,int:)",
         "Animation::method:audio_track_get_key_stream(int:,int:)",
@@ -9279,7 +9304,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio/nested-animation track storage and evaluation remain unimplemented; typed method/B\u00e9zier tracks now execute through players/graphs with complete generic key/container authoring.",
+      "reason": "ADR 0093 typed value-track execution. SceneAnimationTests and SceneAnimationBlendTests verify key authoring, libraries/copies, weighted interrupted transitions, RESET/sparse properties, capture snapshots/timing, discrete precedence, typed postprocessing, failure/reentry/cleanup and zero warmed scalar/vector passes. Two Linux Wayland GPU and two compatibility hosts verify actual transition/capture pixels. Other track kinds, full key-interpolation edge profiles, persistence and other platforms remain separate. Generic property-value tracks execute through typed descriptors; Audio track storage/evaluation remains unimplemented. Value, method, B\u00e9zier and nested-animation tracks execute through players/graphs with generic key/container authoring. Audio scheduling requires receiver/emitter bindings and prepared repeated key-start pooling; current PlayStream allocates child playback at each cold factory start.",
       "godot": [
         "Animation::method:add_track(int:Animation.TrackType,int:)",
         "Animation::method:copy_track(int:,Animation:)",
@@ -9590,6 +9615,16 @@
         "AnimationMixer::enum_value:AnimationCallbackModeMethod.ANIMATION_CALLBACK_MODE_METHOD_DEFERRED",
         "AnimationMixer::enum_value:AnimationCallbackModeMethod.ANIMATION_CALLBACK_MODE_METHOD_IMMEDIATE",
         "AnimationMixer::property:callback_mode_method"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0093 nested player execution. AnimationNestedTrackTests verifies typed string authoring/copies, latest crossed key/reverse/sections/loops, child-length seek/loop rules, stop/update-only, graph node filters/silent clocks, source/cache cleanup, self/mutual synchronous recursion and observer failure/reentry/takeover. 256 warmed nested start/stop plus child property passes allocate zero managed bytes. Two Linux Wayland GPU and two compatibility hosts verify six actual child poses, state and borrowed-resource shutdown. Native/driver allocation, other platforms, disk/editor round trips and human acceptance remain unverified.",
+      "godot": [
+        "Animation::enum_value:TrackType.TYPE_ANIMATION",
+        "Animation::method:animation_track_get_key_animation(int:,int:)",
+        "Animation::method:animation_track_insert_key(int:,float:,StringName:)",
+        "Animation::method:animation_track_set_key_animation(int:,int:,StringName:)"
       ]
     }
   ]

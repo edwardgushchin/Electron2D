@@ -73,6 +73,7 @@ public partial class AnimationMixer
             foreach (var (animation, cache) in _blendCaches) if (!animation.IsDisposed && animation.ChangeRevision != cache.Revision) { _blendDirty = true; break; }
         }
         if (!_blendDirty) return;
+        StopNestedPlayback(); _nestedBindings.Clear(); _legacyCaches.Clear();
         _blendCaches.Clear(); _blendProperties.Clear(); _blendOrder.Clear(); ClearCapture();
         var root = RootNode.Length == 0 ? this : GetNodeOrNull(RootNode);
         foreach (var name in GetAnimationList())
@@ -92,6 +93,8 @@ public partial class AnimationMixer
     }
     internal bool NeedsBlending => _captureValues.Length != 0 || Deterministic || CallbackModeDiscrete == AnimationCallbackModeDiscrete.ForceContinuous;
     internal void ApplyBlend(ReadOnlySpan<AnimationMixFrame> frames, double captureDelta)
+    { _evaluationDepth++; try { ApplyBlendCore(frames, captureDelta); } finally { _evaluationDepth--; } }
+    private void ApplyBlendCore(ReadOnlySpan<AnimationMixFrame> frames, double captureDelta)
     {
         EnsureBlendCaches(); var generation = _bindingGeneration;
         var remaining = _captureRemaining - captureDelta / (_captureDuration > 0 ? _captureDuration : 1); Animation.Finite(remaining); _captureRemaining = remaining;

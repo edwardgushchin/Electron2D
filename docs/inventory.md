@@ -577,7 +577,7 @@ The existing AudioServer/FAudioContext also own live output selection and cached
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
-| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation`](classes/Animation.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Reusable typed property-key timelines, timing, interpolation and markers. |
+| [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`Animation`](classes/Animation.md) | [`Animation.cs`](../src/Scene/Resources/Animation.cs) | Current | Reusable typed property, Bézier, callback and nested-player timelines, timing, interpolation and markers. |
 | [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationLibrary`](classes/AnimationLibrary.md) | [`AnimationLibrary.cs`](../src/Scene/Resources/AnimationLibrary.cs) | Current | Named borrowed animation resources with replacement, rename and forwarded changes. |
 | [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationMixer`](classes/AnimationMixer.md) | [`AnimationMixer.cs`](../src/Scene/Animation/AnimationMixer.cs) | Current | Scene animation namespaces, typed target caches and idle/physics/manual scheduling. |
 | [Scene](domains/scene.md) | [Scene animation](components/scene-animation.md) | [`AnimationPlayer`](classes/AnimationPlayer.md) | [`AnimationPlayer.cs`](../src/Scene/Animation/AnimationPlayer.cs) | Current | Named clip playback, reverse, seek, queues, marker sections and endpoint loops. |

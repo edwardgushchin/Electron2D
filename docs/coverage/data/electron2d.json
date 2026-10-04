@@ -13417,6 +13417,19 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.Animation.TrackType.Animation()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Animation.TrackType",
+    "name": "Animation",
+    "signature": "public const Electron2D.Animation.TrackType Animation = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Animation.TrackType",
+    "value": "8"
+  },
+  {
     "id": "enumValue:Electron2D.Animation.TrackType.Bezier()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Animation.TrackType",
@@ -30284,6 +30297,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Animation.AddAnimationTrack(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AddAnimationTrack",
+    "signature": "public System.Int32 AddAnimationTrack(System.Int32 atPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Animation.AddBezierTrack\u00602(PropertyDescriptor\u003CTOwner, TValue\u003E,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Animation",
@@ -30377,6 +30409,88 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AnimationTrackGetKeyAnimation(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AnimationTrackGetKeyAnimation",
+    "signature": "public System.String AnimationTrackGetKeyAnimation(System.Int32 track, System.Int32 key)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AnimationTrackInsertKey(System.Int32,System.Double,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AnimationTrackInsertKey",
+    "signature": "public System.Int32 AnimationTrackInsertKey(System.Int32 track, System.Double time, System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Animation.AnimationTrackSetKeyAnimation(System.Int32,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Animation",
+    "name": "AnimationTrackSetKeyAnimation",
+    "signature": "public System.Void AnimationTrackSetKeyAnimation(System.Int32 track, System.Int32 key, System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

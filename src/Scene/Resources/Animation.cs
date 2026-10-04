@@ -2,11 +2,11 @@ using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
-/// <summary>A reusable timeline of typed property, scalar Bézier and method keys plus named markers.</summary>
+/// <summary>A reusable timeline of typed property, scalar Bézier, method and child-animation keys plus named markers.</summary>
 /// <remarks>Author on the scene owner thread. Tracks carry immutable typed descriptors and relative node paths;
 /// they never own target nodes. Keys are sorted, equal times replace, and copies have independent containers.
 /// Continuous tracks interpolate; discrete tracks hold the last key. Method keys invoke typed callbacks;
-/// scalar Bézier keys use time/value handle geometry. Capture is evaluated by AnimationMixer. Edits raise Changed except imported metadata. Length defaults to one second.</remarks>
+/// scalar Bézier keys use time/value handle geometry; child-animation keys control relative players. Capture is evaluated by AnimationMixer. Edits raise Changed except imported metadata. Length defaults to one second.</remarks>
 public sealed partial class Animation : Resource
 {
     /// <summary>Creates an empty one-second nonlooping typed timeline.</summary>
@@ -37,6 +37,8 @@ public sealed partial class Animation : Resource
         Method = 5,
         /// <summary>Keys describe scalar time/value cubic control handles.</summary>
         Bezier = 6,
+        /// <summary>Keys control named clips on relative AnimationPlayer targets.</summary>
+        Animation = 8,
     }
     /// <summary>Selects how neighboring value keys are sampled.</summary>
     public enum InterpolationType
@@ -123,14 +125,14 @@ public sealed partial class Animation : Resource
     /// <summary>Returns a track's relative node path, including an optional property suffix.</summary>
     /// <param name="track">The zero-based existing track index.</param>
     public string TrackGetPath(int track) => Get(track).Path;
-    /// <summary>Sets a relative node path; property tracks allow their exact descriptor suffix, and method tracks require a node-only path.</summary>
+    /// <summary>Sets a relative node path; property tracks allow their exact descriptor suffix, and method/child-animation tracks require a node-only path.</summary>
     /// <param name="track">The zero-based existing track index.</param>
     /// <param name="path">The relative node/property path.</param>
     public void TrackSetPath(int track, string path)
     {
         var item = Get(track); ArgumentNullException.ThrowIfNull(path);
         var colon = path.IndexOf(':');
-        if (colon >= 0 && (item.Kind == TrackType.Method || path[(colon + 1)..] != item.PropertyName)) throw new ArgumentException("Property suffix differs from the typed descriptor.", nameof(path));
+        if (colon >= 0 && (item.PropertyName.Length == 0 || path[(colon + 1)..] != item.PropertyName)) throw new ArgumentException("Property suffix differs from the typed descriptor.", nameof(path));
         item.Path = path; item.NodePath = colon < 0 ? path : path[..colon]; EmitChanged();
     }
     /// <summary>Returns whether a track participates in property or callback evaluation.</summary>
@@ -299,7 +301,7 @@ public sealed partial class Animation : Resource
         foreach (var (name, marker) in _markers) { var delta = marker.Time - time; if (direction == 0 ? Math.Abs(delta) > 1e-5 : (direction > 0 ? delta <= 0 : delta > 0)) continue; var distance = Math.Abs(delta); if (distance < best || (distance == best && string.CompareOrdinal(name, result) < 0)) { best = distance; result = name; } }
         return result;
     }
-    internal bool HasMethodTracks() { foreach (var track in _tracks) if (track.Enabled && track.Kind == TrackType.Method) return true; return false; }
+    internal bool HasEventTracks() { foreach (var track in _tracks) if (track.Enabled && (track.Kind == TrackType.Method || track.Kind == TrackType.Animation)) return true; return false; }
     internal bool HasDiscreteTracks() { foreach (var track in _tracks) if (track.Enabled && track.Update == UpdateMode.Discrete) return true; return false; }
     private void RefreshCaptureIncluded() { _captureIncluded = false; foreach (var track in _tracks) if (track.Update == UpdateMode.Capture) { _captureIncluded = true; break; } }
     internal void AddCapturedTrack(AnimationTrack track) => _tracks.Add(track);
@@ -426,6 +428,7 @@ internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, 
         private void Write(Animation animation, int index, T value, AnimationMixer mixer, long generation, long revision)
         { value = mixer.ProcessKey(animation, index, value, owner.InstanceID); if (!mixer.IsBindingCurrent(animation, generation) || animation.IsDisposed || animation.ChangeRevision != revision || owner.IsDisposed || owner.IsQueuedForDeletion) return; descriptor.SetValue(owner, value); if (track.Update == Animation.UpdateMode.Discrete) mixer.DiscreteWritten(owner.InstanceID, descriptor.Name); }
         private int _lastDiscreteKey = -1;
+        internal override void ResetPlayback() => _lastDiscreteKey = -1;
         internal override void Apply(Animation animation, int trackIndex, double time, bool backward, double? previous, AnimationMixer mixer, long generation)
         {
             if (owner.IsDisposed || owner.IsQueuedForDeletion || !ReferenceEquals(owner.Tree, mixer.Tree) || !track.Enabled || track.Times.Count == 0) return;
@@ -474,6 +477,8 @@ internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, 
 }
 internal abstract class AnimationBinding
 {
+    internal virtual void StopPlayback() { }
+    internal virtual void ResetPlayback() { }
     internal virtual void PrepareMethodCalls(int capacity) { }
     internal abstract void AttachBlend(AnimationMixer mixer);
     internal abstract void AddWeight(double weight, int pass);

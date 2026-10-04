@@ -25,6 +25,7 @@ public partial class AnimationPlayer : AnimationMixer
     private double _position, _speedScale = 1, _customSpeed = 1, _start = -1, _end = -1;
     private int _pingDirection = 1;
     private long _playRevision;
+    internal long PlaybackRevision => _playRevision;
     private readonly Queue<string> _queue = new();
     private readonly Dictionary<string, string> _next = new(StringComparer.Ordinal);
     /// <summary>Gets or sets the selected animation; stopped assignment rewinds without playing, while an active assignment switches clips.</summary>
@@ -95,7 +96,7 @@ public partial class AnimationPlayer : AnimationMixer
         if (name.Length == 0) name = _assigned; var animation = RequireAnimation(name); ObjectDisposedException.ThrowIf(animation.IsDisposed, animation); ValidateSection(animation, startTime, endTime);
         BeginTransition(BlendDuration(name, customBlend));
         _hasPlayback = true;
-        var changed = name != _assigned; var wasPlaying = _playing; var start = BoundStart(startTime); var end = BoundEnd(animation, endTime);
+        var changed = name != _assigned; if (changed) StopNestedPlayback(); var wasPlaying = _playing; var start = BoundStart(startTime); var end = BoundEnd(animation, endTime);
         if (changed || _position < start || _position > end || (fromEnd && customSpeed < 0 && _position <= start) || (!fromEnd && customSpeed > 0 && _position >= end)) _position = fromEnd ? end : start;
         _methodSeekPending = changed || !wasPlaying || _position == (fromEnd ? end : start); _methodSeekExternal = false;
         _assigned = name; _customSpeed = customSpeed; _pingDirection = 1; _start = startTime; _end = endTime; _playing = true; _queue.Clear(); _playRevision++; InvalidateEvaluation();
@@ -123,16 +124,16 @@ public partial class AnimationPlayer : AnimationMixer
     /// <param name="endMarker">The typed argument for this operation, using the defaults described above.</param>
     /// <param name="customBlend">The typed argument for this operation, using the defaults described above.</param>
     public void PlaySectionWithMarkersBackwards(string name = "", string startMarker = "", string endMarker = "", double customBlend = -1) => PlaySectionWithMarkers(name, startMarker, endMarker, customBlend, -1, true);
-    /// <summary>Pauses while retaining the selected animation and position; clears the queue and capture caches.</summary>
-    public void Pause() { EnsureAnimationMutable(); _playing = false; _queue.Clear(); _playRevision++; InvalidateBindings(); }
-    /// <summary>Stops, resets the position and speed, and clears queued names; keepState preserves target values.</summary>
+    /// <summary>Pauses while retaining selection/position; clears queued/captured work and stops still-controlled child players while keeping their values.</summary>
+    public void Pause() { EnsureAnimationMutable(); _playing = false; _queue.Clear(); _playRevision++; InvalidateBindings(false); }
+    /// <summary>Stops, resets position/speed and queued work, and stops still-controlled child players; keepState preserves target values.</summary>
     /// <param name="keepState">Whether to leave target property values unchanged while resetting playback.</param>
     public void Stop(bool keepState = false)
     {
         EnsureAnimationMutable(); if (_stopping) return; _stopping = true;
         try
         {
-            _blendClips.Clear(); _hasPlayback = false; _playing = false; _position = 0; _customSpeed = 1; _pingDirection = 1; _start = _end = -1; _queue.Clear(); _playRevision++; InvalidateBindings();
+            _blendClips.Clear(); _hasPlayback = false; _playing = false; _position = 0; _customSpeed = 1; _pingDirection = 1; _start = _end = -1; _queue.Clear(); _playRevision++; InvalidateBindings(false);
             if (!keepState && HasAnimation(_assigned)) ApplyAnimation(GetAnimation(_assigned), 0, false, updateOnly: true);
         }
         finally { _stopping = false; }
@@ -140,7 +141,7 @@ public partial class AnimationPlayer : AnimationMixer
     /// <summary>Seeks within the current section; update applies values immediately without completion events.</summary>
     /// <param name="seconds">The finite requested seek time, clamped to the current section.</param>
     /// <param name="update">Whether to apply values synchronously.</param>
-    /// <param name="updateOnly">Whether to suppress method-key callbacks while still updating continuous/discrete properties and Bézier curves.</param>
+    /// <param name="updateOnly">Whether to suppress method callbacks while updating properties/curves and sampling nested players without starting stopped targets.</param>
     public void Seek(double seconds, bool update = false, bool updateOnly = false)
     { EnsureAnimationMutable(); Animation.Finite(seconds); if (!Active || !HasAnimation(_assigned)) return; var animation = GetAnimation(_assigned); var previous = _position; _position = Math.Clamp(seconds, GetSectionStartTime(), GetSectionEndTime()); _playRevision++; InvalidateEvaluation(); _methodSeekPending = !update; _methodSeekExternal = true; if (update) { if (_blendClips.Count != 0 || NeedsBlending) MixPlayback(animation, _position, _position < previous, null, 0, false, externalSeek: true, updateOnly: updateOnly); else ApplyAnimation(animation, _position, _position < previous, externalSeek: true, updateOnly: updateOnly); } }
     /// <summary>Queues an existing animation; starts immediately when no animation is playing.</summary>
@@ -195,7 +196,7 @@ public partial class AnimationPlayer : AnimationMixer
         try
         {
             var initial = _methodSeekPending; var external = _methodSeekExternal; _methodSeekPending = false;
-            if (_blendClips.Count != 0 || NeedsBlending || animation.HasMethodTracks()) { _position = position; MixPlayback(animation, position, backward, previousPosition, delta, done, initial, external, primaryMovement: movement); }
+            if (_blendClips.Count != 0 || NeedsBlending || animation.HasEventTracks()) { _position = position; MixPlayback(animation, position, backward, previousPosition, delta, done, initial, external, primaryMovement: movement); }
             else if (animation.HasDiscreteTracks() && movement != 0 && span > 0)
             {
                 var remaining = movement; var cursor = previousPosition;

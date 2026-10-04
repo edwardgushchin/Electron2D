@@ -10,11 +10,22 @@ Last updated: 2026-10-04
 
 ## Description
 
-Reusable typed value/Bézier/method timelines, key/container authoring and named markers.
+Reusable typed value/Bézier/method/nested-player timelines, key/container authoring and named markers.
 
 The complete timing, copy/borrowing, validation, callback error/reentry and verification contract is on [Scene animation](../components/scene-animation.md), including [special tracks](../components/scene-animation.md#bézier-and-method-tracks). Author/edit on the scene owner thread; target nodes and authored resources remain borrowed. [ADR 0093](../decisions/scene-animation.md#adr-0093) owns the current implementation.
 
 ## Examples
+
+Partial snippet; ChildPlayer already exists under the controller's root:
+
+```csharp
+var sequence = new Animation { Length = 2 };
+var childTrack = sequence.AddAnimationTrack();
+sequence.TrackSetPath(childTrack, "ChildPlayer");
+sequence.AnimationTrackInsertKey(childTrack, 0, "walk");
+sequence.AnimationTrackInsertKey(childTrack, 1, "[stop]");
+```
+
 
 Partial authoring snippet; existing scene/library variables are indicated where required.
 
@@ -96,10 +107,14 @@ Gets or sets the authoring time-step hint, initially approximately one thirtieth
 
 | Complete C# signature | Contract |
 | --- | --- |
+| `public System.Int32 AddAnimationTrack(System.Int32 atPosition = -1)` | Adds a timeline controlling a relative AnimationPlayer by named clip keys. |
 | `public System.Int32 AddBezierTrack<TOwner, TValue>(PropertyDescriptor<TOwner, TValue> property, System.Int32 atPosition = -1)` | Adds a scalar Bézier property track with an immutable float/double descriptor. |
 | `public System.Void AddMarker(System.String name, System.Double time)` | Adds or moves a named marker, replacing any marker at approximately the same time and resetting its color. |
 | `public System.Int32 AddMethodTrack<TOwner>(System.Int32 atPosition = -1)` | Adds an event track whose keys use exact typed callback and argument payloads. |
 | `public System.Int32 AddTrack<TOwner, TValue>(PropertyDescriptor<TOwner, TValue> property, System.Int32 atPosition = -1, Func<TValue, TValue, System.Double, TValue> interpolate = null)` | Adds a property track with an immutable typed descriptor and optional interpolation override. |
+| `public System.String AnimationTrackGetKeyAnimation(System.Int32 track, System.Int32 key)` | Returns the exact child-animation name at a key. |
+| `public System.Int32 AnimationTrackInsertKey(System.Int32 track, System.Double time, System.String animation)` | Inserts or replaces a named child-animation key; [stop] stops controlled playback. |
+| `public System.Void AnimationTrackSetKeyAnimation(System.Int32 track, System.Int32 key, System.String animation)` | Replaces the exact child-animation name at a key. |
 | `public Electron2D.Vector2 BezierTrackGetKeyInHandle(System.Int32 track, System.Int32 key)` | Returns the incoming key control offset. |
 | `public Electron2D.Vector2 BezierTrackGetKeyOutHandle(System.Int32 track, System.Int32 key)` | Returns the outgoing key control offset. |
 | `public System.Double BezierTrackGetKeyValue(System.Int32 track, System.Int32 key)` | Returns a scalar Bézier key value. |
@@ -155,13 +170,28 @@ Gets or sets the authoring time-step hint, initially approximately one thirtieth
 | `public System.Void TrackSetKeyTransition(System.Int32 track, System.Int32 key, System.Double transition)` | Sets finite easing; zero holds the source key until the destination time. |
 | `public System.Void TrackSetKeyValue<TValue>(System.Int32 track, System.Int32 key, TValue value)` | Replaces a typed key value. |
 | `public System.Void TrackSetKeyValue<TOwner, TArguments>(System.Int32 track, System.Int32 key, AnimationMethodKey<TOwner, TArguments> value)` | Replaces a callback key while retaining exact receiver/payload typing. |
-| `public System.Void TrackSetPath(System.Int32 track, System.String path)` | Sets a relative node path; property tracks allow their exact descriptor suffix, and method tracks require a node-only path. |
+| `public System.Void TrackSetPath(System.Int32 track, System.String path)` | Sets a relative node path; property tracks allow their exact descriptor suffix, and method/child-animation tracks require a node-only path. |
 | `public System.Void TrackSwap(System.Int32 track, System.Int32 withTrack)` | Swaps two track positions. |
 | `public Electron2D.Animation.UpdateMode ValueTrackGetUpdateMode(System.Int32 track)` | Returns the value update mode. |
 | `public TValue ValueTrackInterpolate<TValue>(System.Int32 track, System.Double time, System.Boolean backward = false)` | Samples the typed value at a finite time; throws if no keys exist. |
 | `public System.Void ValueTrackSetUpdateMode(System.Int32 track, Electron2D.Animation.UpdateMode mode)` | Sets continuous interpolation or discrete key holding. |
 
 ## Method Descriptions
+
+<a id="member-b068fc233902"></a>
+### AddAnimationTrack
+
+`public System.Int32 AddAnimationTrack(System.Int32 atPosition = -1)`
+
+Adds a timeline controlling a relative AnimationPlayer by named clip keys.
+
+atPosition: Insertion index, or minus one to append.
+
+Returns: The inserted track index.
+
+System.ObjectDisposedException: The animation is disposed.
+
+System.ArgumentOutOfRangeException: The insertion index is invalid.
 
 <a id="member-a3735a66a664"></a>
 ### AddBezierTrack
@@ -236,6 +266,69 @@ atPosition: Insertion index, or minus one to append.
 interpolate: Optional typed linear interpolator; otherwise the engine math profile is used.
 
 Returns: The inserted track index. Unsupported value types initially use nearest interpolation.
+
+<a id="member-787ce33dc1c7"></a>
+### AnimationTrackGetKeyAnimation
+
+`public System.String AnimationTrackGetKeyAnimation(System.Int32 track, System.Int32 key)`
+
+Returns the exact child-animation name at a key.
+
+track: An existing animation track.
+
+key: An existing key index.
+
+Returns: The clip name or stop sentinel.
+
+System.ObjectDisposedException: The animation is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-aa3eb087b748"></a>
+### AnimationTrackInsertKey
+
+`public System.Int32 AnimationTrackInsertKey(System.Int32 track, System.Double time, System.String animation)`
+
+Inserts or replaces a named child-animation key; [stop] stops controlled playback.
+
+track: An existing animation track.
+
+time: Finite seconds.
+
+animation: The exact nonnull clip name or stop sentinel.
+
+Returns: The sorted key index.
+
+System.ObjectDisposedException: The animation is disposed.
+
+System.ArgumentOutOfRangeException: An index or time is invalid.
+
+System.ArgumentNullException: The name is null.
+
+System.InvalidOperationException: The track kind differs.
+
+<a id="member-86fc7c5fd831"></a>
+### AnimationTrackSetKeyAnimation
+
+`public System.Void AnimationTrackSetKeyAnimation(System.Int32 track, System.Int32 key, System.String animation)`
+
+Replaces the exact child-animation name at a key.
+
+track: An existing animation track.
+
+key: An existing key index.
+
+animation: The nonnull clip name or stop sentinel.
+
+System.ObjectDisposedException: The animation is disposed.
+
+System.ArgumentOutOfRangeException: An index is invalid.
+
+System.ArgumentNullException: The name is null.
+
+System.InvalidOperationException: The track kind differs.
 
 <a id="member-7f9ddfbe1935"></a>
 ### BezierTrackGetKeyInHandle
@@ -957,7 +1050,7 @@ System.InvalidCastException: The track receiver or key payload type differs.
 
 `public System.Void TrackSetPath(System.Int32 track, System.String path)`
 
-Sets a relative node path; property tracks allow their exact descriptor suffix, and method tracks require a node-only path.
+Sets a relative node path; property tracks allow their exact descriptor suffix, and method/child-animation tracks require a node-only path.
 
 track: The zero-based existing track index.
 
@@ -1014,4 +1107,6 @@ track: The zero-based existing track index.
 
 Resource keys do not own targets or callbacks. Animation containers copy independently; directly held arrays clone and direct Resource payloads use the graph deep-copy session, while custom nested mutable references remain borrowed. Player/mixer mutation obeys attached SceneTree owner affinity; failures/reentry abandon stale passes. Deferred accepted calls retain their typed payload until a safe point and skip disposed/deleting or moved targets. Prepared callback pool exhaustion throws; use PrepareMethodCallbacks between frames for the required burst.
 
-[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. Audio/nested schedulers, state machines and disk/editor persistence retain their coverage triggers.
+[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. Audio schedulers, state machines and disk/editor persistence retain their coverage triggers.
+
+Nested animation tracks execute clip-name keys against borrowed child players, with latest-crossed-key ordering, child-length seek/loop rules, normal independent child clocks, update-only sampling and control-revision cleanup. [The complete contract and snippet](../components/scene-animation.md#nested-animation-tracks) explains callback/reentry/cycle rules, prepared direct/weighted caches and current native/headless evidence. AnimationNestedTrackTests covers 256 warmed recurring start/stop plus child property passes with zero managed bytes; two GPU and two compatibility Wayland hosts verify six actual poses and cleanup.

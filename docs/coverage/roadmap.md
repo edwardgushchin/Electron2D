@@ -5,7 +5,7 @@ Last updated: 2026-10-03
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Close 1342 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 917 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
+2. Complete 913 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -21,11 +21,11 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Window](classes/Window.md) | 42 | 34 |
 | [Object](classes/Object.md) | 32 | 22 |
 | [Engine](classes/Engine.md) | 16 | 18 |
-| [Animation](classes/Animation.md) | 15 | 10 |
 | [Input](classes/Input.md) | 12 | 31 |
 | [TranslationServer](classes/TranslationServer.md) | 12 | 21 |
 | [SceneState](classes/SceneState.md) | 12 | 16 |
 | [Image](classes/Image.md) | 11 | 71 |
+| [Animation](classes/Animation.md) | 11 | 10 |
 | [Control](classes/Control.md) | 9 | 60 |
 | [ProjectSettings](classes/ProjectSettings.md) | 9 | 44 |
 | [Font](classes/Font.md) | 9 | 0 |

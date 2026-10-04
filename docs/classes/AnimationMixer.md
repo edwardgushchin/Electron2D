@@ -125,7 +125,7 @@ Gets or sets the relative root used for all track paths; defaults to the parent.
 | `public System.Void AddAnimationLibrary(System.String name, Electron2D.AnimationLibrary library)` | Adds a borrowed library; empty names form the default namespace. |
 | `public System.Void Advance(System.Double delta)` | Advances the controller by finite signed seconds when active. |
 | `public System.Void Capture(System.String name, System.Double duration, Electron2D.Tween.TransitionType transitionType = Linear, Electron2D.Tween.EaseType easeType = In)` | Captures current property values from enabled Capture tracks, replacing the prior capture. |
-| `public System.Void ClearCaches()` | Clears all cached typed target bindings. |
+| `public System.Void ClearCaches()` | Clears cached typed bindings and stops still-controlled child players while preserving their values. |
 | `protected override System.Void Dispose(System.Boolean disposing)` | Deterministically releases resources owned by this object. |
 | `public System.String FindAnimation(Electron2D.Animation animation)` | Finds the first qualified name of a borrowed animation, or empty. |
 | `public System.String FindAnimationLibrary(Electron2D.Animation animation)` | Finds an animation's first library namespace, or empty for the default or absent library. |
@@ -184,7 +184,7 @@ easeType: The fade easing, initially In.
 
 `public System.Void ClearCaches()`
 
-Clears all cached typed target bindings.
+Clears cached typed bindings and stops still-controlled child players while preserving their values.
 
 <a id="member-620db35b5c1d"></a>
 ### Dispose
@@ -399,4 +399,6 @@ Occurs after explicit cache clearing.
 
 Resource keys do not own targets or callbacks. Animation containers copy independently; directly held arrays clone and direct Resource payloads use the graph deep-copy session, while custom nested mutable references remain borrowed. Player/mixer mutation obeys attached SceneTree owner affinity; failures/reentry abandon stale passes. Deferred accepted calls retain their typed payload until a safe point and skip disposed/deleting or moved targets. Prepared callback pool exhaustion throws; use PrepareMethodCallbacks between frames for the required burst.
 
-[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. Audio/nested schedulers, state machines and disk/editor persistence retain their coverage triggers.
+[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. Audio schedulers, state machines and disk/editor persistence retain their coverage triggers.
+
+Nested animation tracks execute clip-name keys against borrowed child players, with latest-crossed-key ordering, child-length seek/loop rules, normal independent child clocks, update-only sampling and control-revision cleanup. [The complete contract and snippet](../components/scene-animation.md#nested-animation-tracks) explains callback/reentry/cycle rules, prepared direct/weighted caches and current native/headless evidence. AnimationNestedTrackTests covers 256 warmed recurring start/stop plus child property passes with zero managed bytes; two GPU and two compatibility Wayland hosts verify six actual poses and cleanup.

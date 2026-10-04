@@ -157,7 +157,7 @@ Gets or sets the finite signed playback multiplier; zero keeps playback enabled.
 | `public System.Boolean IsAnimationActive()` | Returns whether animation evaluation is active. |
 | `public System.Boolean IsPlaying()` | Returns whether playback is enabled, including with zero speed. |
 | `protected override System.Void OnNotification(System.Int32 what)` | Handles an engine notification delivered to this object. |
-| `public System.Void Pause()` | Pauses while retaining the selected animation and position; clears the queue and capture caches. |
+| `public System.Void Pause()` | Pauses while retaining selection/position; clears queued/captured work and stops still-controlled child players while keeping their values. |
 | `public System.Void Play(System.String name = "", System.Double customBlend = -1, System.Double customSpeed = 1, System.Boolean fromEnd = false)` | Starts or resumes a selected timeline. Negative customBlend selects configured/default crossfade timing; zero switches immediately. |
 | `public System.Void PlayBackwards(System.String name = "", System.Double customBlend = -1)` | Starts or resumes reverse playback from the end. |
 | `public System.Void PlaySection(System.String name = "", System.Double startTime = -1, System.Double endTime = -1, System.Double customBlend = -1, System.Double customSpeed = 1, System.Boolean fromEnd = false)` | Plays a bounded timeline section; negative boundaries select the resource endpoints. |
@@ -173,7 +173,7 @@ Gets or sets the finite signed playback multiplier; zero keeps playback enabled.
 | `public System.Void SetRoot(System.String path)` | Sets the animation root path. |
 | `public System.Void SetSection(System.Double startTime = -1, System.Double endTime = -1)` | Sets the current playback section, clamping position into it. |
 | `public System.Void SetSectionWithMarkers(System.String startMarker = "", System.String endMarker = "")` | Sets the current section using markers. |
-| `public System.Void Stop(System.Boolean keepState = false)` | Stops, resets the position and speed, and clears queued names; keepState preserves target values. |
+| `public System.Void Stop(System.Boolean keepState = false)` | Stops, resets position/speed and queued work, and stops still-controlled child players; keepState preserves target values. |
 
 ## Method Descriptions
 
@@ -320,7 +320,7 @@ Remarks: Derived overrides should call the base implementation unless they inten
 
 `public System.Void Pause()`
 
-Pauses while retaining the selected animation and position; clears the queue and capture caches.
+Pauses while retaining selection/position; clears queued/captured work and stops still-controlled child players while keeping their values.
 
 <a id="member-d88ad0972c25"></a>
 ### Play
@@ -464,7 +464,7 @@ seconds: The finite requested seek time, clamped to the current section.
 
 update: Whether to apply values synchronously.
 
-updateOnly: Whether to suppress method-key callbacks while still updating continuous/discrete properties and Bézier curves.
+updateOnly: Whether to suppress method callbacks while updating properties/curves and sampling nested players without starting stopped targets.
 
 <a id="member-7b77f96534e9"></a>
 ### SetBlendTime
@@ -524,7 +524,7 @@ endMarker: The end marker, or empty/missing to use the end endpoint.
 
 `public System.Void Stop(System.Boolean keepState = false)`
 
-Stops, resets the position and speed, and clears queued names; keepState preserves target values.
+Stops, resets position/speed and queued work, and stops still-controlled child players; keepState preserves target values.
 
 keepState: Whether to leave target property values unchanged while resetting playback.
 
@@ -556,4 +556,6 @@ Occurs when the current animation selection changes.
 
 Resource keys do not own targets or callbacks. Animation containers copy independently; directly held arrays clone and direct Resource payloads use the graph deep-copy session, while custom nested mutable references remain borrowed. Player/mixer mutation obeys attached SceneTree owner affinity; failures/reentry abandon stale passes. Deferred accepted calls retain their typed payload until a safe point and skip disposed/deleting or moved targets. Prepared callback pool exhaustion throws; use PrepareMethodCallbacks between frames for the required burst.
 
-[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. Audio/nested schedulers, state machines and disk/editor persistence retain their coverage triggers.
+[AnimationSpecialTrackTests](../../tests/Electron2D.Tests/AnimationSpecialTrackTests.cs) and the existing scene animation/blend/graph/action suites exercise the connected runtime. Special-track tests cover cubic geometry, mixed signatures/copies, filters/weights, loop/seek/section order, callback mutation/failure/disposal and capacity reuse, with zero managed bytes across 256 warmed scalar and 256 prepared deferred passes. Two Linux Wayland GPU and two compatibility hosts check five curve/color pixel poses and borrowed-resource cleanup. Cold preparation and callbacks may allocate; native/driver allocations, other platforms and human acceptance are unmeasured. Audio schedulers, state machines and disk/editor persistence retain their coverage triggers.
+
+Nested animation tracks execute clip-name keys against borrowed child players, with latest-crossed-key ordering, child-length seek/loop rules, normal independent child clocks, update-only sampling and control-revision cleanup. [The complete contract and snippet](../components/scene-animation.md#nested-animation-tracks) explains callback/reentry/cycle rules, prepared direct/weighted caches and current native/headless evidence. AnimationNestedTrackTests covers 256 warmed recurring start/stop plus child property passes with zero managed bytes; two GPU and two compatibility Wayland hosts verify six actual poses and cleanup.
