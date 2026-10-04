@@ -365,7 +365,7 @@ def reason_for_type(item, lookup):
         ("Physics2D", r"Physics|Collision|RigidBody2D|StaticBody2D|CharacterBody2D|Area2D|Joint2D|RayCast2D|ShapeCast2D|Shape2D|SpringArm2D", "next type-specific 2D physics operation beyond the implemented Box2D-backed scene-body slice (ADR 0012)"),
         ("Audio", r"Audio|Sound|Microphone", "first audio mixing and playback slice"),
         ("Navigation2D", r"Navigation", "first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052)"),
-        ("Animation", r"Animation", "executable typed state-machine/transition and OneShot resources on the implemented AnimationTree/BlendSpace graph and property mixer; track event schedulers and persistence remain separate"),
+        ("Animation", r"Animation", "executable typed state-machine/playback/transition resources, including grouped ancestry and expression evaluation, on the implemented AnimationTree/BlendSpace/action graph; track event schedulers and persistence remain separate"),
         ("Skeleton", r"Skeleton2D|Bone2D", "typed 2D bone hierarchy, rest/pose transforms and skinning integration"),
         ("Tiles", r"Tile|Atlas", "first tile and atlas resource slice after 2D rendering"),
         ("Networking", r"Multiplayer|PacketPeer|ENet|WebRTC|WebSocket|HTTP|TLS|DTLS|TCP|UDP|IP$|SocketServer|StreamPeer|UDSServer|UPNP", "first networking and multiplayer slice"),

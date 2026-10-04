@@ -153,15 +153,15 @@ public class AnimationTree : AnimationMixer
     private AnimationGraphTime Evaluate(AnimationGraphInstance instance, double time, bool seek, bool external, bool test, double? inheritedDelta = null)
     {
         if (instance.Evaluating) throw new InvalidOperationException("Animation graph contains an input connection cycle.");
-        instance.Evaluating = true; var definition = instance.Definition; var previous = definition.Context; var context = instance.Context;
-        context.Time = time; context.Delta = inheritedDelta ?? time; context.Seek = seek; context.External = external; context.TestOnly = test; context.Result = default; context.Position = seek ? time : instance.Get(AnimationNode.CurrentPosition) + time;
+        var generation = _graphGeneration; instance.Evaluating = true; var definition = instance.Definition; var previous = definition.Context; var context = instance.Context;
+        context.Time = time; context.Delta = seek && external ? instance.Get(AnimationNode.CurrentPosition) - time : inheritedDelta ?? time; context.Seek = seek; context.External = external; context.TestOnly = test; context.Result = default; context.Position = seek ? time : instance.Get(AnimationNode.CurrentPosition) + time;
         definition.Context = context;
         try
         {
             var remaining = definition.Process(time, seek, external, test); Animation.Finite(remaining);
             var result = context.Result;
             if (!context.HasTime) result = new(Math.Max(0, remaining), 0, 0, SpriteFrames.LoopMode.None);
-            if (!test) { instance.Set(AnimationNode.CurrentLength, result.Length, true); instance.Set(AnimationNode.CurrentPosition, result.Position, true); instance.Set(AnimationNode.CurrentDelta, result.Delta, true); }
+            if (!test && generation == _graphGeneration && !definition.IsDisposed && !IsDisposed) { instance.Set(AnimationNode.CurrentLength, result.Length, true); instance.Set(AnimationNode.CurrentPosition, result.Position, true); instance.Set(AnimationNode.CurrentDelta, result.Delta, true); }
             return result;
         }
         finally { definition.Context = previous; instance.Evaluating = false; context.HasTime = false; }
@@ -174,8 +174,21 @@ public class AnimationTree : AnimationMixer
         var weights = _frameWeights[index]; for (var i = 0; i < weights.Length; i++) weights[i] = instance.Weights[map[i]];
         _frames.Add(new(clip, time, delta < 0, seeked ? null : time - delta, blend, start, end, delta, weights));
     }
-    internal void GraphStarted(string name) { if (Tree is not null) Tree.Defer(() => { if (!IsDisposed) Started(name); }); else Started(name); }
-    internal void GraphFinished(string name) { if (Tree is not null) Tree.Defer(() => { if (!IsDisposed) Finished(name); }); else Finished(name); }
+    private readonly Stack<GraphNotice> _notices = new();
+    private sealed class GraphNotice
+    {
+        private readonly AnimationTree _owner; internal readonly Action Dispatch; internal string Name = ""; internal bool IsStart;
+        internal GraphNotice(AnimationTree owner) { _owner = owner; Dispatch = Deliver; }
+        private void Deliver() { try { if (!_owner.IsDisposed) { if (IsStart) _owner.Started(Name); else _owner.Finished(Name); } } finally { Name = ""; if (!_owner.IsDisposed) _owner._notices.Push(this); } }
+    }
+    private void QueueNotice(string name, bool start)
+    {
+        if (Tree is null) { if (start) Started(name); else Finished(name); return; }
+        var notice = _notices.TryPop(out var ready) ? ready : new GraphNotice(this); notice.Name = name; notice.IsStart = start;
+        try { Tree.Defer(notice.Dispatch); } catch { notice.Name = ""; _notices.Push(notice); throw; }
+    }
+    internal void GraphStarted(string name) => QueueNotice(name, true);
+    internal void GraphFinished(string name) => QueueNotice(name, false);
     /// <inheritdoc />
     internal override void AdvanceAnimation(double delta)
     {
@@ -188,15 +201,16 @@ public class AnimationTree : AnimationMixer
     { if (what == NotificationEnterTree) { _graphTree = Tree; if (_graphTree is not null) _graphTree.TreeChanged += SceneChanged; } else if (what == NotificationExitTree) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; } if (what is NotificationEnterTree or NotificationReady) { _playerDirty = true; ReconcilePlayer(); } base.OnNotification(what); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; DetachPlayer(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); AnimationPlayerChanged = null; } base.Dispose(disposing); }
+    { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; DetachPlayer(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); _notices.Clear(); AnimationPlayerChanged = null; } base.Dispose(disposing); }
 }
-internal readonly record struct AnimationGraphTime(double Length, double Position, double Delta, SpriteFrames.LoopMode Loop)
-{ internal double Remaining => Loop == SpriteFrames.LoopMode.None ? Math.Max(0, Length - Position) : 1e20; }
+internal readonly record struct AnimationGraphTime(double Length, double Position, double Delta, SpriteFrames.LoopMode Loop, bool WillEnd = false)
+{ internal double Remaining => GetRemaining(false); internal double GetRemaining(bool breakLoop) => Loop != SpriteFrames.LoopMode.None && !breakLoop ? 1e20 : Loop != SpriteFrames.LoopMode.None && WillEnd ? 0 : Math.Max(0, Length - Position); }
 internal sealed class AnimationGraphContext(AnimationTree tree, AnimationGraphInstance instance)
 {
     internal readonly AnimationTree Tree = tree; internal readonly AnimationGraphInstance Instance = instance;
     internal double Time, Position, Delta; internal bool Seek, External, TestOnly, HasTime;
     internal AnimationGraphTime Result;
+    internal bool IsCurrent(long generation) => !Instance.Definition.IsDisposed && !Tree.IsDisposed && generation == Tree.GraphGeneration;
 }
 internal sealed class AnimationGraphInstance
 {

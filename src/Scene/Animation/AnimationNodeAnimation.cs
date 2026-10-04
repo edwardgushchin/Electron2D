@@ -79,6 +79,7 @@ public sealed class AnimationNodeAnimation : AnimationRootNode
         var clipLength = clip.Length; var length = _customTimeline ? _length : clipLength; var loop = _customTimeline ? _loop : clip.LoopMode;
         var prior = GetParameter(CurrentPosition); var backward = GetParameter(Backward); var delta = c.Delta;
         var position = seek ? time : prior + (backward ? -delta : delta); var started = seek && !isExternalSeeking && time == 0;
+        var willEnd = position + delta >= length - 1e-5;
         if (started) position = _advanceOnStart ? delta : 0;
         if (loop == SpriteFrames.LoopMode.Linear) { position = Mathf.PosMod(position, length); backward = false; }
         else if (loop == SpriteFrames.LoopMode.PingPong)
@@ -97,7 +98,7 @@ public sealed class AnimationNodeAnimation : AnimationRootNode
         else playback = Math.Clamp(playback, 0, clipLength);
         if (_playMode == AnimationPlayMode.Backward) { playback = clipLength - playback; previousPlayback = clipLength - previousPlayback; delta = -delta; }
         if (backward) delta = -delta;
-        c.Result = new(length, position, timelineDelta, loop); c.HasTime = true;
+        c.Result = new(length, position, timelineDelta, loop, willEnd); c.HasTime = true;
         if (!testOnly)
         {
             c.Tree.AddClip(c.Instance, _animation, playback, delta, seek, 1, start, end);

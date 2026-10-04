@@ -82,7 +82,7 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 
 | Complete C# signature | Contract |
 | --- | --- |
-| `public System.Boolean AddInput(System.String name)` | Adds an input; root resources and names with slash/dot are rejected. |
+| `public virtual System.Boolean AddInput(System.String name)` | Adds an input; root resources and names with slash/dot are rejected. |
 | `public System.Void BlendAnimation(System.String animation, System.Double time, System.Double delta, System.Boolean seeked, System.Boolean isExternalSeeking, System.Double blend, Electron2D.Animation.LoopedFlag loopedFlag = None)` | Adds a named clip to the active tree's typed property mixer. |
 | `public System.Double BlendInput(System.Int32 inputIndex, System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Double blend, Electron2D.AnimationNode.FilterAction filter = Ignore, System.Boolean sync = true, System.Boolean testOnly = false)` | Processes an input of the current blend-tree instance. |
 | `public System.Double BlendNode(System.String name, Electron2D.AnimationNode node, System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Double blend, Electron2D.AnimationNode.FilterAction filter = Ignore, System.Boolean sync = true, System.Boolean testOnly = false)` | Processes a named child resource of the active graph instance. |
@@ -106,9 +106,9 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 | `protected virtual System.Boolean OnHasFilter()` | Reports whether child blend helpers apply track filters. |
 | `protected virtual System.Boolean OnIsParameterReadOnly(Electron2D.AnimationParameter parameter)` | Reports external write protection for a parameter. |
 | `protected virtual System.Double OnProcess(System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Boolean testOnly)` | Evaluates custom graph behavior; helpers can blend inputs, children and clips. |
-| `public System.Void RemoveInput(System.Int32 index)` | Removes an existing input. |
+| `public virtual System.Void RemoveInput(System.Int32 index)` | Removes an existing input. |
 | `public System.Void SetFilterPath(System.String path, System.Boolean enable)` | Enables or removes a path from the filter. |
-| `public System.Boolean SetInputName(System.Int32 input, System.String name)` | Renames an input, rejecting slash/dot captions. |
+| `public virtual System.Boolean SetInputName(System.Int32 input, System.String name)` | Renames an input, rejecting slash/dot captions. |
 | `public System.Void SetParameter<TValue>(AnimationParameter<TValue> parameter, TValue value)` | Implements the inherited resource copy, metadata or cleanup contract for this concrete type. |
 
 ## Method Descriptions
@@ -116,7 +116,7 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 <a id="member-4bc4c80504e6"></a>
 ### AddInput
 
-`public System.Boolean AddInput(System.String name)`
+`public virtual System.Boolean AddInput(System.String name)`
 
 Adds an input; root resources and names with slash/dot are rejected.
 
@@ -452,7 +452,7 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 <a id="member-c5a37f90835a"></a>
 ### RemoveInput
 
-`public System.Void RemoveInput(System.Int32 index)`
+`public virtual System.Void RemoveInput(System.Int32 index)`
 
 Removes an existing input.
 
@@ -476,7 +476,7 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 <a id="member-0b7a6b056e5e"></a>
 ### SetInputName
 
-`public System.Boolean SetInputName(System.Int32 input, System.String name)`
+`public virtual System.Boolean SetInputName(System.Int32 input, System.String name)`
 
 Renames an input, rejecting slash/dot captions.
 
@@ -573,8 +573,12 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 
 ## Lifecycle, verification and dependencies
 
-[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines, transitions, OneShot, Expression evaluation, non-property track schedulers and graph/disk/editor round trips remain applicable separate slices in coverage.
+[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines/grouped controllers, Expression evaluation, non-property track schedulers and graph/disk/editor round trips remain applicable separate slices in coverage.
 
 ## Blend-space integration
 
 [Blend spaces](../components/scene-animation.md#blend-spaces) now execute linear/triangle mixing, discrete/carry and synchronized clocks through these existing graph hooks. Their definitions stay borrowed and their clocks/selection remain per tree/path.
+
+## Action-controller integration
+
+[Action controllers](../components/scene-animation.md#action-controllers) now use this graph contract. Virtual input mutation keeps policy/connection storage aligned; external seek delta is previous position minus requested time, predictive end flags support loop breaks, and prepared deferred lifecycle notices preserve delivery through repeated starts/finishes. Reentrant graph edits skip stale diagnostics.

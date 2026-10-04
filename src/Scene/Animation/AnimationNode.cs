@@ -55,17 +55,19 @@ public class AnimationNode : Resource
     /// <param name="name">The non-null input caption; duplicates and empty captions are accepted.</param>
     /// <returns>Whether the input was added.</returns>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
-    public bool AddInput(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); if (this is AnimationRootNode || name.Contains('/') || name.Contains('.')) return false; _inputs.Add(name); EmitGraphChanged(); Updated(InstanceID); return true; }
+    /// <remarks>Overrides preserve associated input policy storage before delivering committed edit notifications.</remarks>
+    public virtual bool AddInput(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); if (this is AnimationRootNode || name.Contains('/') || name.Contains('.')) return false; _inputs.Add(name); EmitGraphChanged(); Updated(InstanceID); return true; }
     /// <summary>Removes an existing input.</summary>
     /// <param name="index">The zero-based input index.</param>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
-    public void RemoveInput(int index) { ThrowIfDisposed(); _inputs.RemoveAt(index); InputRemoved?.Invoke(index); EmitGraphChanged(); Updated(InstanceID); }
+    /// <remarks>Overrides remove associated policy storage before invoking this committed input removal.</remarks>
+    public virtual void RemoveInput(int index) { ThrowIfDisposed(); _inputs.RemoveAt(index); InputRemoved?.Invoke(index); EmitGraphChanged(); Updated(InstanceID); }
     /// <summary>Renames an input, rejecting slash/dot captions.</summary>
     /// <param name="input">The existing zero-based input index.</param>
     /// <param name="name">The non-null caption.</param>
     /// <returns>Whether the caption was accepted.</returns>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
-    public bool SetInputName(int input, string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); if (name.Contains('/') || name.Contains('.')) return false; _inputs[input] = name; EmitGraphChanged(); Updated(InstanceID); return true; }
+    public virtual bool SetInputName(int input, string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); if (name.Contains('/') || name.Contains('.')) return false; _inputs[input] = name; EmitGraphChanged(); Updated(InstanceID); return true; }
     /// <summary>Returns an input caption.</summary>
     /// <param name="input">The zero-based index.</param>
     /// <returns>The exact caption.</returns>

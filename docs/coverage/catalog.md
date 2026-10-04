@@ -34,7 +34,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationNodeBlendSpace2D](classes/AnimationNodeBlendSpace2D.md) | AnimationRootNode | Implemented | 35 |
 | [AnimationNodeBlendTree](classes/AnimationNodeBlendTree.md) | AnimationRootNode | Implemented | 18 |
 | [AnimationNodeExtension](classes/AnimationNodeExtension.md) | AnimationNode | Blocked | 3 |
-| [AnimationNodeOneShot](classes/AnimationNodeOneShot.md) | AnimationNodeSync | Blocked | 18 |
+| [AnimationNodeOneShot](classes/AnimationNodeOneShot.md) | AnimationNodeSync | Implemented | 18 |
 | [AnimationNodeOutput](classes/AnimationNodeOutput.md) | AnimationNode | Implemented | 0 |
 | [AnimationNodeStateMachine](classes/AnimationNodeStateMachine.md) | AnimationRootNode | Blocked | 27 |
 | [AnimationNodeStateMachinePlayback](classes/AnimationNodeStateMachinePlayback.md) | Resource | Blocked | 17 |
@@ -43,7 +43,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationNodeSync](classes/AnimationNodeSync.md) | AnimationNode | Implemented | 1 |
 | [AnimationNodeTimeScale](classes/AnimationNodeTimeScale.md) | AnimationNode | Implemented | 0 |
 | [AnimationNodeTimeSeek](classes/AnimationNodeTimeSeek.md) | AnimationNode | Implemented | 1 |
-| [AnimationNodeTransition](classes/AnimationNodeTransition.md) | AnimationNodeSync | Blocked | 10 |
+| [AnimationNodeTransition](classes/AnimationNodeTransition.md) | AnimationNodeSync | Implemented | 10 |
 | [AnimationPlayer](classes/AnimationPlayer.md) | AnimationMixer | Partial | 53 |
 | [AnimationRootNode](classes/AnimationRootNode.md) | AnimationNode | Implemented | 0 |
 | [AnimationTree](classes/AnimationTree.md) | AnimationMixer | Partial | 12 |

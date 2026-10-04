@@ -142,6 +142,8 @@
     "AnimationNodeBlendSpace1D.BlendMode": "AnimationBlendMode",
     "AnimationNodeBlendSpace1D.SyncMode": "AnimationSyncMode",
     "AnimationNodeBlendSpace2D.BlendMode": "AnimationBlendMode",
-    "AnimationNodeBlendSpace2D.SyncMode": "AnimationSyncMode"
+    "AnimationNodeBlendSpace2D.SyncMode": "AnimationSyncMode",
+    "AnimationNodeOneShot.MixMode": "AnimationMixMode",
+    "AnimationNodeOneShot.OneShotRequest": "AnimationOneShotRequest"
   }
 }

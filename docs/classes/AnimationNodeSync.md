@@ -6,7 +6,7 @@ Last updated: 2026-10-04
 
 **Inherits:** [AnimationNode](AnimationNode.md).
 
-**Inherited By:** [AnimationNodeBlend2](AnimationNodeBlend2.md), [AnimationNodeBlend3](AnimationNodeBlend3.md), [AnimationNodeAdd2](AnimationNodeAdd2.md), [AnimationNodeAdd3](AnimationNodeAdd3.md), [AnimationNodeSub2](AnimationNodeSub2.md).
+**Inherited By:** [AnimationNodeBlend2](AnimationNodeBlend2.md), [AnimationNodeBlend3](AnimationNodeBlend3.md), [AnimationNodeAdd2](AnimationNodeAdd2.md), [AnimationNodeAdd3](AnimationNodeAdd3.md), [AnimationNodeSub2](AnimationNodeSub2.md), [AnimationNodeOneShot](AnimationNodeOneShot.md), [AnimationNodeTransition](AnimationNodeTransition.md).
 
 ## Description
 
@@ -135,4 +135,8 @@ Remarks: Appends resource identity and scene-instancing configuration descriptor
 
 ## Lifecycle, verification and dependencies
 
-[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines, transitions, OneShot, Expression evaluation, non-property track schedulers and graph/disk/editor round trips remain applicable separate slices in coverage.
+[ADR 0093](../decisions/scene-animation.md#adr-0093) owns this typed contract. [Scene animation](../components/scene-animation.md#animation-graphs) records formulas, topology, lifetime, tests and limitations. [AnimationGraphTests](../../tests/Electron2D.Tests/AnimationGraphTests.cs) verifies public managed execution and two real Wayland GPU/two compatibility host cycles with five rendered positions. Warmed scalar graph/property passes allocate zero managed bytes on the owner thread; cold preparation/result arrays, native/driver allocations and other platforms are separate. State machines/grouped controllers, Expression evaluation, non-property track schedulers and graph/disk/editor round trips remain applicable separate slices in coverage.
+
+## Action-controller integration
+
+[Action controllers](../components/scene-animation.md#action-controllers) now use this graph contract. Virtual input mutation keeps policy/connection storage aligned; external seek delta is previous position minus requested time, predictive end flags support loop breaks, and prepared deferred lifecycle notices preserve delivery through repeated starts/finishes. Reentrant graph edits skip stale diagnostics.

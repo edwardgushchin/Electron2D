@@ -4238,6 +4238,186 @@
       "electron2d": "event:Electron2D.AnimationNodeBlendSpace2D.TrianglesUpdated()",
       "state": "Implemented",
       "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "class:AnimationNodeOneShot",
+      "electron2d": "T:Electron2D.AnimationNodeOneShot",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::enum:MixMode",
+      "electron2d": "T:Electron2D.AnimationMixMode",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::enum:OneShotRequest",
+      "electron2d": "T:Electron2D.AnimationOneShotRequest",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::enum_value:MixMode.MIX_MODE_ADD",
+      "electron2d": "enumValue:Electron2D.AnimationMixMode.Add()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::enum_value:MixMode.MIX_MODE_BLEND",
+      "electron2d": "enumValue:Electron2D.AnimationMixMode.Blend()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::enum_value:OneShotRequest.ONE_SHOT_REQUEST_ABORT",
+      "electron2d": "enumValue:Electron2D.AnimationOneShotRequest.Abort()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::enum_value:OneShotRequest.ONE_SHOT_REQUEST_FADE_OUT",
+      "electron2d": "enumValue:Electron2D.AnimationOneShotRequest.FadeOut()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::enum_value:OneShotRequest.ONE_SHOT_REQUEST_FIRE",
+      "electron2d": "enumValue:Electron2D.AnimationOneShotRequest.Fire()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::enum_value:OneShotRequest.ONE_SHOT_REQUEST_NONE",
+      "electron2d": "enumValue:Electron2D.AnimationOneShotRequest.None()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:abort_on_reset",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.AbortOnReset()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:autorestart",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.Autorestart()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:autorestart_delay",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.AutorestartDelay()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:autorestart_random_delay",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.AutorestartRandomDelay()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:break_loop_at_end",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.BreakLoopAtEnd()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:fadein_curve",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.FadeInCurve()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:fadein_time",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.FadeInTime()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:fadeout_curve",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.FadeOutCurve()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:fadeout_time",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.FadeOutTime()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeOneShot::property:mix_mode",
+      "electron2d": "property:Electron2D.AnimationNodeOneShot.MixMode()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "class:AnimationNodeTransition",
+      "electron2d": "T:Electron2D.AnimationNodeTransition",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::method:is_input_loop_broken_at_end(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeTransition.IsInputLoopBrokenAtEnd(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::method:is_input_reset(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeTransition.IsInputReset(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::method:is_input_set_as_auto_advance(int:)",
+      "electron2d": "method:Electron2D.AnimationNodeTransition.IsInputSetAsAutoAdvance(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::method:set_input_as_auto_advance(int:,bool:)",
+      "electron2d": "method:Electron2D.AnimationNodeTransition.SetInputAsAutoAdvance(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::method:set_input_break_loop_at_end(int:,bool:)",
+      "electron2d": "method:Electron2D.AnimationNodeTransition.SetInputBreakLoopAtEnd(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::method:set_input_reset(int:,bool:)",
+      "electron2d": "method:Electron2D.AnimationNodeTransition.SetInputReset(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::property:allow_transition_to_self",
+      "electron2d": "property:Electron2D.AnimationNodeTransition.AllowTransitionToSelf()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::property:input_count",
+      "electron2d": "property:Electron2D.AnimationNodeTransition.InputCount()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::property:xfade_curve",
+      "electron2d": "property:Electron2D.AnimationNodeTransition.XFadeCurve()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": "AnimationNodeTransition::property:xfade_time",
+      "electron2d": "property:Electron2D.AnimationNodeTransition.XFadeTime()",
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
     }
   ],
   "extras": [
@@ -6075,6 +6255,161 @@
       "electron2d": "method:Electron2D.AnimationNodeBlendSpace2D.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0093: typed blend-position parameter definitions and existing Resource constructors, ordered child discovery, parameter/property metadata, concrete processing/copy/disposal hooks project the implemented blend-space contract."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeOneShot..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimationNodeTransition..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeOneShot.Active()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeOneShot.FadeInRemaining()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeOneShot.FadeOutRemaining()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeOneShot.InternalActive()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeOneShot.Request()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeOneShot.TimeToRestart()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeTransition.CurrentIndex()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeTransition.CurrentState()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeTransition.PreviousIndex()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeTransition.PreviousXFading()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "field:Electron2D.AnimationNodeTransition.TransitionRequest()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeOneShot.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeOneShot.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeOneShot.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeOneShot.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeOneShot.OnGetCaption()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeOneShot.OnGetParameterList()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeOneShot.OnHasFilter()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeOneShot.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.AddInput(System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.OnGetCaption()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.OnGetParameterList()",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.OnProcess(System.Double,System.Boolean,System.Boolean,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.RemoveInput(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimationNodeTransition.SetInputName(System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0093 typed animation-node parameter keys project the request/timing/state schema; concrete Resource construction/metadata/copy/disposal, Node processing hooks and virtual input-policy edits project the implemented graph controllers."
     }
   ],
   "statusGroups": [
@@ -9027,6 +9362,48 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0093 executable typed blend spaces: named borrowed points, linear/barycentric interpolation and nearest-edge projection, discrete/carry, independent/cyclic clocks, per-tree state, manual/automatic triangles, stable selection across rename/reorder, exact-type resource copies and prepared zero-allocation evaluation. AnimationBlendSpaceTests verifies authoring/indices/names/cycles/capacity, extreme/degenerate geometry, timing/shared libraries/edits, callbacks/reentry/ownership and warmed passes. Two Wayland GPU and two compatibility public hosts verify seven real pixel poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": [
+        "class:AnimationNodeOneShot",
+        "AnimationNodeOneShot::enum:MixMode",
+        "AnimationNodeOneShot::enum:OneShotRequest",
+        "AnimationNodeOneShot::enum_value:MixMode.MIX_MODE_ADD",
+        "AnimationNodeOneShot::enum_value:MixMode.MIX_MODE_BLEND",
+        "AnimationNodeOneShot::enum_value:OneShotRequest.ONE_SHOT_REQUEST_ABORT",
+        "AnimationNodeOneShot::enum_value:OneShotRequest.ONE_SHOT_REQUEST_FADE_OUT",
+        "AnimationNodeOneShot::enum_value:OneShotRequest.ONE_SHOT_REQUEST_FIRE",
+        "AnimationNodeOneShot::enum_value:OneShotRequest.ONE_SHOT_REQUEST_NONE",
+        "AnimationNodeOneShot::property:abort_on_reset",
+        "AnimationNodeOneShot::property:autorestart",
+        "AnimationNodeOneShot::property:autorestart_delay",
+        "AnimationNodeOneShot::property:autorestart_random_delay",
+        "AnimationNodeOneShot::property:break_loop_at_end",
+        "AnimationNodeOneShot::property:fadein_curve",
+        "AnimationNodeOneShot::property:fadein_time",
+        "AnimationNodeOneShot::property:fadeout_curve",
+        "AnimationNodeOneShot::property:fadeout_time",
+        "AnimationNodeOneShot::property:mix_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
+    },
+    {
+      "godot": [
+        "class:AnimationNodeTransition",
+        "AnimationNodeTransition::method:is_input_loop_broken_at_end(int:)",
+        "AnimationNodeTransition::method:is_input_reset(int:)",
+        "AnimationNodeTransition::method:is_input_set_as_auto_advance(int:)",
+        "AnimationNodeTransition::method:set_input_as_auto_advance(int:,bool:)",
+        "AnimationNodeTransition::method:set_input_break_loop_at_end(int:,bool:)",
+        "AnimationNodeTransition::method:set_input_reset(int:,bool:)",
+        "AnimationNodeTransition::property:allow_transition_to_self",
+        "AnimationNodeTransition::property:input_count",
+        "AnimationNodeTransition::property:xfade_curve",
+        "AnimationNodeTransition::property:xfade_time"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0093 executable graph action controllers: typed consumed requests/readonly diagnostics, before-decay fades and unit curves, blend/add filtering, reset/abort/autorestart and predictive loop breaks, named/interrupted/self/automatic transitions, synchronized inactive clocks and consistent virtual input editing. AnimationActionTests verifies numeric timing, shared instances, copies/curves, indices/policies/edits, test-only/failure/reentry and zero warmed frames with pooled deferred start/finish delivery. Two Wayland GPU and two compatibility hosts verify thirteen composed action poses each. Native allocations, other platforms and disk/editor round trips remain separate."
     }
   ]
 }

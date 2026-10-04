@@ -625,3 +625,12 @@ The existing AnimationMixer/AnimationPlayer also use [AnimationBlendValue.cs](..
 | [Scene](domains/scene.md) | [Blend spaces](components/scene-animation.md#blend-spaces) | [AnimationNodeBlendSpace2D](classes/AnimationNodeBlendSpace2D.md) | [AnimationNodeBlendSpace2D.cs](../src/Scene/Animation/AnimationNodeBlendSpace2D.cs) | Current | Typed point mixing or shared mode domain with executable per-tree clocks. |
 | [Scene](domains/scene.md) | [Blend spaces](components/scene-animation.md#blend-spaces) | [AnimationBlendMode](classes/AnimationBlendMode.md) | [AnimationBlendSpace.cs](../src/Scene/Animation/AnimationBlendSpace.cs) | Current | Typed point mixing or shared mode domain with executable per-tree clocks. |
 | [Scene](domains/scene.md) | [Blend spaces](components/scene-animation.md#blend-spaces) | [AnimationSyncMode](classes/AnimationSyncMode.md) | [AnimationBlendSpace.cs](../src/Scene/Animation/AnimationBlendSpace.cs) | Current | Typed point mixing or shared mode domain with executable per-tree clocks. |
+
+## Animation action controllers
+
+| Domain | Component | Type | Source | State | Role |
+| --- | --- | --- | --- | --- | --- |
+| [Scene](domains/scene.md) | [Action controllers](components/scene-animation.md#action-controllers) | [AnimationNodeOneShot](classes/AnimationNodeOneShot.md) | [AnimationNodeOneShot.cs](../src/Scene/Animation/AnimationNodeOneShot.cs) | Current | Typed action/name control or exact request/contribution domain. |
+| [Scene](domains/scene.md) | [Action controllers](components/scene-animation.md#action-controllers) | [AnimationNodeTransition](classes/AnimationNodeTransition.md) | [AnimationNodeTransition.cs](../src/Scene/Animation/AnimationNodeTransition.cs) | Current | Typed action/name control or exact request/contribution domain. |
+| [Scene](domains/scene.md) | [Action controllers](components/scene-animation.md#action-controllers) | [AnimationMixMode](classes/AnimationMixMode.md) | [AnimationNodeOneShot.cs](../src/Scene/Animation/AnimationNodeOneShot.cs) | Current | Typed action/name control or exact request/contribution domain. |
+| [Scene](domains/scene.md) | [Action controllers](components/scene-animation.md#action-controllers) | [AnimationOneShotRequest](classes/AnimationOneShotRequest.md) | [AnimationNodeOneShot.cs](../src/Scene/Animation/AnimationNodeOneShot.cs) | Current | Typed action/name control or exact request/contribution domain. |
