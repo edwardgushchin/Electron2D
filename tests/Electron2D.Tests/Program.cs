@@ -11,6 +11,8 @@ using EngineTimer = Electron2D.Timer;
 
 NativeLibraryTests.Run();
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UPNP") == "1") { UPNPTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_REPLICATION") == "1") { SceneReplicationTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_MULTIPLAYER") == "1") { SceneMultiplayerTests.Run(); return; }
@@ -495,6 +497,7 @@ CanvasCompositionTests.Run();
 SubViewportContainerTests.Run();
 LineEditTests.Run();
 NetworkingTests.Run();
+UPNPTests.Run();
 TLSTests.Run();
 HTTPTests.Run();
 WebSocketTests.Run();

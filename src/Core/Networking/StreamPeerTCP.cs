@@ -31,6 +31,7 @@ public class StreamPeerTCP : StreamPeerSocket
         _host = NetworkSockets.Host(address); _port = port;
         Connect(NetworkSockets.Endpoint(NativeSocket!, address, port), ProjectSettings.Get(ProjectSettings.TCPConnectTimeoutSeconds));
     }
+    internal string LocalAddress => NativeSocket?.LocalEndPoint is IPEndPoint endpoint ? NetworkSockets.Host(endpoint.Address) : "";
     /// <summary>Returns the selected remote IP, or empty after disconnection.</summary><returns>A normalized IP literal.</returns>
     public string GetConnectedHost() { CheckStream(); return NativeSocket is null ? "" : _host; }
     /// <summary>Returns the selected remote port, or zero after disconnection.</summary><returns>The port.</returns>

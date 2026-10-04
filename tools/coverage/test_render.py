@@ -364,6 +364,10 @@ def main():
                          ("StaticBody2D", "StaticBody"), ("RigidBody2D", "RigidBody")):
         assert f"../../classes/{target}.md" in class_rows[name]
         assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D"} else " | Partial | ") in class_rows[name]
+    for name, count in (("UPNP", 45), ("UPNPDevice", 22)):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows), name
+        assert "UPNPTests" in rows[0] and "read-only" in rows[0], name
     crypto_rows = 0
     for name in ("Crypto", "HashingContext", "HMACContext", "AESContext"):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()

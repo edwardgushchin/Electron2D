@@ -161,6 +161,8 @@
     "AESContext.Mode": "AESMode",
     "MultiplayerAPI.RPCMode": "RPCMode",
     "MultiplayerSynchronizer.VisibilityUpdateMode": "VisibilityUpdateMode",
-    "SceneReplicationConfig.ReplicationMode": "ReplicationMode"
+    "SceneReplicationConfig.ReplicationMode": "ReplicationMode",
+    "UPNP.UPNPResult": "UPNPResult",
+    "UPNPDevice.IGDStatus": "IGDStatus"
   }
 }

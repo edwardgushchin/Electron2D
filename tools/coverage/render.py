@@ -617,7 +617,7 @@ def render():
             updated = "2026-10-03"
         if name in {"Animation", "AnimationLibrary", "AnimationMixer", "AnimationPlayer"}:
             updated = "2026-10-04"
-        if name in {"Crypto", "CryptoKey", "X509Certificate", "HashingContext", "HMACContext", "AESContext", "HTTPClient", "HTTPRequest", "StreamPeerGZIP", "StreamPeerTCP", "WebSocketPeer", "WebSocketMultiplayerPeer", "MultiplayerPeer", "MultiplayerPeerExtension", "OfflineMultiplayerPeer", "MultiplayerAPI", "MultiplayerAPIExtension", "SceneMultiplayer", "MultiplayerSpawner", "MultiplayerSynchronizer", "SceneReplicationConfig", "ENetConnection", "ENetPacketPeer", "ENetMultiplayerPeer", "WebRTCMultiplayerPeer"}:
+        if name in {"UPNP", "UPNPDevice", "Crypto", "CryptoKey", "X509Certificate", "HashingContext", "HMACContext", "AESContext", "HTTPClient", "HTTPRequest", "StreamPeerGZIP", "StreamPeerTCP", "WebSocketPeer", "WebSocketMultiplayerPeer", "MultiplayerPeer", "MultiplayerPeerExtension", "OfflineMultiplayerPeer", "MultiplayerAPI", "MultiplayerAPIExtension", "SceneMultiplayer", "MultiplayerSpawner", "MultiplayerSynchronizer", "SceneReplicationConfig", "ENetConnection", "ENetPacketPeer", "ENetMultiplayerPeer", "WebRTCMultiplayerPeer"}:
             updated = "2026-10-04"
         if name in {"Engine", "ProjectSettings", "Input", "InputMap", "ThemeDB", "AudioServer", "PhysicsServer2D", "DisplayServer", "RenderingServer"}:
             updated = "2026-10-04"

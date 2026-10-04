@@ -3969,6 +3969,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.IGDStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "IGDStatus",
+    "signature": "public enum Electron2D.IGDStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Image",
     "kind": "type",
     "declaringType": "Electron2D.Image",
@@ -7908,6 +7926,54 @@
     "baseType": "Electron2D.SocketServer",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.UPNP",
+    "kind": "type",
+    "declaringType": "Electron2D.UPNP",
+    "name": "UPNP",
+    "signature": "public class Electron2D.UPNP",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.UPNPDevice",
+    "kind": "type",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "UPNPDevice",
+    "signature": "public class Electron2D.UPNPDevice",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.UPNPResult",
+    "kind": "type",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "UPNPResult",
+    "signature": "public enum Electron2D.UPNPResult",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -14700,6 +14766,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.UPNP..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.UPNP",
+    "name": ".ctor",
+    "signature": "public UPNP()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.UPNPDevice..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": ".ctor",
+    "signature": "public UPNPDevice()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VBoxContainer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VBoxContainer",
@@ -20985,6 +21077,136 @@
     "parameters": [],
     "returnType": "Electron2D.HorizontalAlignment",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.AllocationError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "AllocationError",
+    "signature": "public const Electron2D.IGDStatus AllocationError = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.Disconnected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "Disconnected",
+    "signature": "public const Electron2D.IGDStatus Disconnected = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.HTTPEmpty()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "HTTPEmpty",
+    "signature": "public const Electron2D.IGDStatus HTTPEmpty = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.HTTPError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "HTTPError",
+    "signature": "public const Electron2D.IGDStatus HTTPError = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.InvalidControl()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "InvalidControl",
+    "signature": "public const Electron2D.IGDStatus InvalidControl = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.NoIGD()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "NoIGD",
+    "signature": "public const Electron2D.IGDStatus NoIGD = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.NoUrls()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "NoUrls",
+    "signature": "public const Electron2D.IGDStatus NoUrls = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.OK()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "OK",
+    "signature": "public const Electron2D.IGDStatus OK = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.UnknownDevice()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "UnknownDevice",
+    "signature": "public const Electron2D.IGDStatus UnknownDevice = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.IGDStatus.UnknownError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.IGDStatus",
+    "name": "UnknownError",
+    "signature": "public const Electron2D.IGDStatus UnknownError = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": "9"
   },
   {
     "id": "enumValue:Electron2D.Image.ASTCFormat.Format4X4()",
@@ -29552,6 +29774,383 @@
     "parameters": [],
     "returnType": "Electron2D.Tween.TweenPauseMode",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.ActionFailed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "ActionFailed",
+    "signature": "public const Electron2D.UPNPResult ActionFailed = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.ConflictWithOtherMapping()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "ConflictWithOtherMapping",
+    "signature": "public const Electron2D.UPNPResult ConflictWithOtherMapping = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.ConflictWithOtherMechanism()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "ConflictWithOtherMechanism",
+    "signature": "public const Electron2D.UPNPResult ConflictWithOtherMechanism = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.ExternalPortMustBeWildcard()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "ExternalPortMustBeWildcard",
+    "signature": "public const Electron2D.UPNPResult ExternalPortMustBeWildcard = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.ExternalPortWildcardNotPermitted()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "ExternalPortWildcardNotPermitted",
+    "signature": "public const Electron2D.UPNPResult ExternalPortWildcardNotPermitted = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.HTTPError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "HTTPError",
+    "signature": "public const Electron2D.UPNPResult HTTPError = 23",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "23"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InconsistentParameters()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InconsistentParameters",
+    "signature": "public const Electron2D.UPNPResult InconsistentParameters = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InternalPortWildcardNotPermitted()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InternalPortWildcardNotPermitted",
+    "signature": "public const Electron2D.UPNPResult InternalPortWildcardNotPermitted = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InvalidArguments()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InvalidArguments",
+    "signature": "public const Electron2D.UPNPResult InvalidArguments = 20",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "20"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InvalidDuration()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InvalidDuration",
+    "signature": "public const Electron2D.UPNPResult InvalidDuration = 19",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "19"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InvalidGateway()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InvalidGateway",
+    "signature": "public const Electron2D.UPNPResult InvalidGateway = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InvalidParameter()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InvalidParameter",
+    "signature": "public const Electron2D.UPNPResult InvalidParameter = 22",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "22"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InvalidPort()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InvalidPort",
+    "signature": "public const Electron2D.UPNPResult InvalidPort = 17",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "17"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InvalidProtocol()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InvalidProtocol",
+    "signature": "public const Electron2D.UPNPResult InvalidProtocol = 18",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "18"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.InvalidResponse()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "InvalidResponse",
+    "signature": "public const Electron2D.UPNPResult InvalidResponse = 21",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "21"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.MemoryAllocationError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "MemoryAllocationError",
+    "signature": "public const Electron2D.UPNPResult MemoryAllocationError = 25",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "25"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.NoDevices()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "NoDevices",
+    "signature": "public const Electron2D.UPNPResult NoDevices = 27",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "27"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.NoGateway()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "NoGateway",
+    "signature": "public const Electron2D.UPNPResult NoGateway = 26",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "26"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.NoPortMapsAvailable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "NoPortMapsAvailable",
+    "signature": "public const Electron2D.UPNPResult NoPortMapsAvailable = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.NoSuchEntryInArray()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "NoSuchEntryInArray",
+    "signature": "public const Electron2D.UPNPResult NoSuchEntryInArray = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.NotAuthorized()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "NotAuthorized",
+    "signature": "public const Electron2D.UPNPResult NotAuthorized = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.OnlyPermanentLeaseSupported()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "OnlyPermanentLeaseSupported",
+    "signature": "public const Electron2D.UPNPResult OnlyPermanentLeaseSupported = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "15"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.PortMappingNotFound()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "PortMappingNotFound",
+    "signature": "public const Electron2D.UPNPResult PortMappingNotFound = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.RemoteHostMustBeWildcard()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "RemoteHostMustBeWildcard",
+    "signature": "public const Electron2D.UPNPResult RemoteHostMustBeWildcard = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.SamePortValuesRequired()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "SamePortValuesRequired",
+    "signature": "public const Electron2D.UPNPResult SamePortValuesRequired = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.SocketError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "SocketError",
+    "signature": "public const Electron2D.UPNPResult SocketError = 24",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "24"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.SourceIPWildcardNotPermitted()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "SourceIPWildcardNotPermitted",
+    "signature": "public const Electron2D.UPNPResult SourceIPWildcardNotPermitted = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.Success()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "Success",
+    "signature": "public const Electron2D.UPNPResult Success = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.UPNPResult.UnknownError()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.UPNPResult",
+    "name": "UnknownError",
+    "signature": "public const Electron2D.UPNPResult UnknownError = 28",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPResult",
+    "value": "28"
   },
   {
     "id": "enumValue:Electron2D.UnixPermissionFlags.ExecuteGroup()",
@@ -106956,6 +107555,365 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.UPNP.AddDevice(Electron2D.UPNPDevice)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "AddDevice",
+    "signature": "public System.Void AddDevice(Electron2D.UPNPDevice device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "Electron2D.UPNPDevice",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.AddPortMapping(System.Int32,System.Int32,System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "AddPortMapping",
+    "signature": "public Electron2D.UPNPResult AddPortMapping(System.Int32 port, System.Int32 portInternal = 0, System.String description = \u0022\u0022, System.String protocol = \u0022UDP\u0022, System.Int32 duration = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "portInternal",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "protocol",
+        "type": "System.String",
+        "default": "\u0022UDP\u0022"
+      },
+      {
+        "name": "duration",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.UPNPResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.ClearDevices()",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "ClearDevices",
+    "signature": "public System.Void ClearDevices()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.DeletePortMapping(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "DeletePortMapping",
+    "signature": "public Electron2D.UPNPResult DeletePortMapping(System.Int32 port, System.String protocol = \u0022UDP\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "protocol",
+        "type": "System.String",
+        "default": "\u0022UDP\u0022"
+      }
+    ],
+    "returnType": "Electron2D.UPNPResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.Discover(System.Int32,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "Discover",
+    "signature": "public Electron2D.UPNPResult Discover(System.Int32 timeout = 2000, System.Int32 ttl = 2, System.String deviceFilter = \u0022InternetGatewayDevice\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "timeout",
+        "type": "System.Int32",
+        "default": "2000"
+      },
+      {
+        "name": "ttl",
+        "type": "System.Int32",
+        "default": "2"
+      },
+      {
+        "name": "deviceFilter",
+        "type": "System.String",
+        "default": "\u0022InternetGatewayDevice\u0022"
+      }
+    ],
+    "returnType": "Electron2D.UPNPResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.GetDevice(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "GetDevice",
+    "signature": "public Electron2D.UPNPDevice GetDevice(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.UPNPDevice",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.GetDeviceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "GetDeviceCount",
+    "signature": "public System.Int32 GetDeviceCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.GetGateway()",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "GetGateway",
+    "signature": "public Electron2D.UPNPDevice GetGateway()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.UPNPDevice",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.QueryExternalAddress()",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "QueryExternalAddress",
+    "signature": "public System.String QueryExternalAddress()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.RemoveDevice(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "RemoveDevice",
+    "signature": "public System.Void RemoveDevice(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.SetDevice(System.Int32,Electron2D.UPNPDevice)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "SetDevice",
+    "signature": "public System.Void SetDevice(System.Int32 index, Electron2D.UPNPDevice device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "device",
+        "type": "Electron2D.UPNPDevice",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNP.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNP",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNPDevice.AddPortMapping(System.Int32,System.Int32,System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "AddPortMapping",
+    "signature": "public Electron2D.UPNPResult AddPortMapping(System.Int32 port, System.Int32 portInternal = 0, System.String description = \u0022\u0022, System.String protocol = \u0022UDP\u0022, System.Int32 duration = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "portInternal",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "protocol",
+        "type": "System.String",
+        "default": "\u0022UDP\u0022"
+      },
+      {
+        "name": "duration",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.UPNPResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNPDevice.DeletePortMapping(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "DeletePortMapping",
+    "signature": "public Electron2D.UPNPResult DeletePortMapping(System.Int32 port, System.String protocol = \u0022UDP\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "protocol",
+        "type": "System.String",
+        "default": "\u0022UDP\u0022"
+      }
+    ],
+    "returnType": "Electron2D.UPNPResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNPDevice.IsValidGateway()",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "IsValidGateway",
+    "signature": "public System.Boolean IsValidGateway()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNPDevice.QueryExternalAddress()",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "QueryExternalAddress",
+    "signature": "public System.String QueryExternalAddress()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.UPNPDevice.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VBoxContainer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.VBoxContainer",
@@ -138077,6 +139035,123 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNP.DiscoverIPV6()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNP",
+    "name": "DiscoverIPV6",
+    "signature": "public System.Boolean DiscoverIPV6 { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNP.DiscoverLocalPort()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNP",
+    "name": "DiscoverLocalPort",
+    "signature": "public System.Int32 DiscoverLocalPort { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNP.DiscoverMulticastIF()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNP",
+    "name": "DiscoverMulticastIF",
+    "signature": "public System.String DiscoverMulticastIF { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNPDevice.DescriptionURL()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "DescriptionURL",
+    "signature": "public System.String DescriptionURL { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNPDevice.IGDControlURL()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "IGDControlURL",
+    "signature": "public System.String IGDControlURL { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNPDevice.IGDOurAddress()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "IGDOurAddress",
+    "signature": "public System.String IGDOurAddress { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNPDevice.IGDServiceType()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "IGDServiceType",
+    "signature": "public System.String IGDServiceType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNPDevice.IGDStatus()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "IGDStatus",
+    "signature": "public Electron2D.IGDStatus IGDStatus { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.IGDStatus",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.UPNPDevice.ServiceType()",
+    "kind": "property",
+    "declaringType": "Electron2D.UPNPDevice",
+    "name": "ServiceType",
+    "signature": "public System.String ServiceType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
