@@ -20,14 +20,17 @@ internal static class NativeTextBreakTests
         for (var i = 0; i < 64; i++) NativeTextBreak.Fill(text, "en", offsets, lines, words, ends);
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 64; i++) NativeTextBreak.Fill(text, "en", offsets, lines, words, ends);
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed native boundary calls reuse managed buffers and locale iterators without allocation.");
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        Check(allocated == 0, $"Warmed native boundary calls allocate {allocated} managed bytes.");
         for (var i = 0; i < 70; i++) NativeTextBreak.Fill("ab", "en@x=" + i, new[] { 0, 1, 2 }, new bool[3], new bool[3], new bool[3]);
         CheckBoundaries("ภาษาไทยภาษาไทย", "th", [4, 7, 11, 14]);
-        Parallel.For(0, 8, _ => CheckBoundaries("中华人民共和国", "zh", [1, 2, 3, 4, 5, 6, 7], [2, 4, 7]));
+        if (!OperatingSystem.IsBrowser())
+            Parallel.For(0, 8, _ => CheckBoundaries("中华人民共和国", "zh", [1, 2, 3, 4, 5, 6, 7], [2, 4, 7]));
         Check(NativeTextBreak.IsLocaleRTL("ar") && NativeTextBreak.IsLocaleRTL("ar-SA") && NativeTextBreak.IsLocaleRTL("ff_Latn") &&
             NativeTextBreak.IsLocaleRTL("ku") && !NativeTextBreak.IsLocaleRTL("az-Arab") && !NativeTextBreak.IsLocaleRTL("en"),
             "Neutral paragraph fallback preserves the specified language policy and adapts the managed culture-tag separator.");
-        Console.WriteLine("Private ICU boundaries verify dictionary scripts, CJK words, locale tailoring, scalar positions, cache eviction, concurrent use and warmed zero managed allocations.");
+        Console.WriteLine("Private ICU boundaries verify dictionary scripts, CJK words, locale tailoring, scalar positions, cache eviction and warmed zero managed allocations; " +
+            (OperatingSystem.IsBrowser() ? "nonthreaded browser profile." : "concurrent use passed."));
     }
     private static void CheckBoundaries(string text, string locale, int[] expectedLines, int[]? expectedWords = null)
     {

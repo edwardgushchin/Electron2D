@@ -22,6 +22,34 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_browser_static_references_do_not_leak_into_other_rids(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            targets = root / "buildTransitive/Electron2D.Web.targets"
+            targets.parent.mkdir()
+            shutil.copyfile(rids.ROOT / "tools/native/Electron2D.targets", targets)
+            native = root / "runtimes/browser-wasm/native"
+            native.mkdir(parents=True)
+            for name in check_rid.native_package.LIBRARIES["Web"]:
+                (native / name).write_bytes(b"!<arch>\n")
+            (root / "licence").mkdir()
+            (root / "licence/fixture.txt").write_text("fixture")
+            project = ET.Element("Project")
+            ET.SubElement(project, "Import", Project=str(targets))
+            fixture = root / "fixture.proj"
+            ET.ElementTree(project).write(fixture, encoding="unicode")
+            for rid in ("browser-wasm", "linux-x64", "ios-arm64"):
+                with self.subTest(rid=rid):
+                    result = subprocess.run(["dotnet", "msbuild", str(fixture), "-nologo",
+                                             "-p:RuntimeIdentifier=" + rid, "-getItem:NativeFileReference,Content"],
+                                            check=True, capture_output=True, text=True)
+                    references = json.loads(result.stdout)["Items"]["NativeFileReference"]
+                    expected = {native / name for name in check_rid.native_package.LIBRARIES["Web"]} if rid == "browser-wasm" else set()
+                    self.assertEqual({Path(item["FullPath"]) for item in references}, expected)
+                    self.assertEqual(len(references), len(expected))
+                    content = json.loads(result.stdout)["Items"]["Content"]
+                    self.assertEqual([item["Link"] for item in content], ["wwwroot/licence/fixture.txt"] if rid == "browser-wasm" else [])
+
     def test_apple_static_references_select_only_the_requested_rid(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -151,6 +179,26 @@ class Checks(unittest.TestCase):
                 run_browser.validate_result(value, "current")
         self.assertEqual(run_browser.validate_result({"run": "current", "status": "passed"}, "current")["status"], "passed")
         self.assertEqual(run_browser.validate_result({"run": "current", "status": "failed", "error": "fixture"}, "current")["status"], "failed")
+
+    def test_browser_rejects_missing_changed_and_source_only_notices_before_launch(self):
+        notices = rids.ROOT / "licence"
+        with tempfile.TemporaryDirectory() as directory, patch.object(run_browser.subprocess, "Popen") as launch:
+            root = Path(directory)
+            (root / "index.html").write_text("fixture")
+            (root / "licence").mkdir()
+            with self.assertRaisesRegex(RuntimeError, "Missing bundle notice"):
+                run_browser.run(root, "fixture")
+            for source in notices.iterdir():
+                if source.is_file() and source.name != "ReferenceData-LICENSE.txt":
+                    shutil.copyfile(source, root / "licence" / source.name)
+            (root / "licence/Electron2D-LICENSE.txt").write_text("changed")
+            with self.assertRaisesRegex(RuntimeError, "Changed bundle notice"):
+                run_browser.run(root, "fixture")
+            shutil.copyfile(notices / "Electron2D-LICENSE.txt", root / "licence/Electron2D-LICENSE.txt")
+            shutil.copyfile(notices / "ReferenceData-LICENSE.txt", root / "licence/ReferenceData-LICENSE.txt")
+            with self.assertRaisesRegex(RuntimeError, "Source-only"):
+                run_browser.run(root, "fixture")
+            launch.assert_not_called()
 
     def test_mobile_driver_rejects_missing_stale_and_failed_results(self):
         self.assertFalse(run_android.result("RESULT old PASS", "current"))

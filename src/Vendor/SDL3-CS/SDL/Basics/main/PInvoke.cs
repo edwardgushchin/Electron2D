@@ -33,7 +33,7 @@ internal partial class SDL
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_AppInit"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial AppResult SDL_AppInit(ref IntPtr appstate, int argc, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPUTF8Str)] string[]? argv);
     private delegate AppResult AppInitNative(ref IntPtr appstate, int argc, string[]? argv);
-    private static AppInitNative AppInitNativeFunction = SDL_AppInit;
+    private static AppInitNative AppInitNativeFunction => SDL_AppInit;
 
     /// <code>extern SDLMAIN_DECLSPEC SDL_AppResult SDLCALL SDL_AppInit(void **appstate, int argc, char *argv[]);</code>
     /// <summary>
@@ -81,7 +81,7 @@ internal partial class SDL
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_AppIterate"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial AppResult SDL_AppIterate(IntPtr appstate);
     private delegate AppResult AppIterateNative(IntPtr appstate);
-    private static AppIterateNative AppIterateNativeFunction = SDL_AppIterate;
+    private static AppIterateNative AppIterateNativeFunction => SDL_AppIterate;
 
     /// <code>extern SDLMAIN_DECLSPEC SDL_AppResult SDLCALL SDL_AppIterate(void *appstate);</code>
     /// <summary>
@@ -131,7 +131,7 @@ internal partial class SDL
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_AppEvent"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial AppResult SDL_AppEvent(IntPtr appstate, Event* @event);
     private unsafe delegate AppResult AppEventNative(IntPtr appstate, Event* @event);
-    private static unsafe AppEventNative AppEventNativeFunction = SDL_AppEvent;
+    private static unsafe AppEventNative AppEventNativeFunction => SDL_AppEvent;
 
     /// <code>extern SDLMAIN_DECLSPEC SDL_AppResult SDLCALL SDL_AppEvent(void *appstate, SDL_Event *event);</code>
     /// <summary>
@@ -186,7 +186,7 @@ internal partial class SDL
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_AppQuit"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void SDL_AppQuit(IntPtr appstate, AppResult result);
     private delegate void AppQuitNative(IntPtr appstate, AppResult result);
-    private static AppQuitNative AppQuitNativeFunction = SDL_AppQuit;
+    private static AppQuitNative AppQuitNativeFunction => SDL_AppQuit;
 
     /// <code>extern SDLMAIN_DECLSPEC void SDLCALL SDL_AppQuit(void *appstate, SDL_AppResult result);</code>
     /// <summary>
@@ -224,7 +224,7 @@ internal partial class SDL
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_main"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int SDL_main(int argc, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPUTF8Str)] string[]? argv);
     private delegate int MainNative(int argc, string[]? argv);
-    private static MainNative MainNativeFunction = SDL_main;
+    private static MainNative MainNativeFunction => SDL_main;
 
     /// <code>extern SDLMAIN_DECLSPEC int SDLCALL SDL_main(int argc, char *argv[]);</code>
     /// <summary>

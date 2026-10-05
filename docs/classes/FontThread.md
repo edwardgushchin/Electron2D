@@ -1,12 +1,12 @@
 # FontThread
 
-Last updated: 2026-09-27
+Last updated: 2026-10-05
 
 **Visibility:** internal · **Source:** [FontThread.cs](../../src/Servers/Text/FontThread.cs) · **Component:** [Text](../components/text.md)
 
 ## Responsibilities and invariants
 
-Serial synchronous worker for native font operations. One reusable request slot avoids per-call jobs; exceptions return to the caller with their captured stack. Native ownership never crosses the worker thread. Completed work clears captured delegates before waiting, so the worker does not intentionally retain a font. This process service is not a public scheduler.
+Serial synchronous owner for native font operations. Threaded runtimes use one worker and reusable request slot; exceptions return with their captured stack and completed work releases captured delegates before waiting. The nonthreaded browser profile captures its execution thread and invokes directly without creating a worker or blocking the event loop. A different owner rejects. Native ownership never crosses that selected thread. This process service is not a public scheduler.
 
 ## Integration and verification
 

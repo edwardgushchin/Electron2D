@@ -11,6 +11,7 @@ internal static class ImageCodecTests
 
     internal static void Run()
     {
+        VerifyNativeIOCounts();
         using var source = Image.CreateFromData(3, 2, false, Image.Format.Rgba8, Pixels);
         source.GenerateMipmaps();
         var before = source.GetData();
@@ -109,8 +110,33 @@ internal static class ImageCodecTests
         Reject<ObjectDisposedException>(() => image.LoadPNGFromBuffer(png));
         Reject<ObjectDisposedException>(() => image.LoadSVGFromString(SVG));
         Reject<ObjectDisposedException>(() => image.SavePNGToBuffer());
-        Parallel.For(0, 12, _ => { using var copy = new Image(); copy.LoadPNGFromBuffer(png); copy.LoadPNGFromBuffer(copy.SavePNGToBuffer()); CheckPixels(copy, Pixels); });
+        if (!OperatingSystem.IsBrowser())
+            Parallel.For(0, 12, _ => { using var copy = new Image(); copy.LoadPNGFromBuffer(png); copy.LoadPNGFromBuffer(copy.SavePNGToBuffer()); CheckPixels(copy, Pixels); });
         Console.WriteLine("Image codec checks passed (PNG/JPEG/WebP/BMP/TGA/SVG; buffers, files, failures, ownership).");
+    }
+
+    private static unsafe void VerifyNativeIOCounts()
+    {
+        byte[] bytes = [11, 22, 33];
+        fixed (byte* data = bytes)
+        {
+            var stream = SDL3.SDL.IOFromConstMem((nint)data, (nuint)bytes.Length);
+            if (stream == 0) throw new InvalidOperationException(SDL3.SDL.GetError());
+            try
+            {
+                var output = stackalloc byte[4];
+                Check(SDL3.SDL.ReadIO(stream, (nint)output, 4) == 3 && new ReadOnlySpan<byte>(output, 3).SequenceEqual(bytes), "Native size_t read counts and copied bytes are exact.");
+                Check(SDL3.SDL.ReadIO(stream, (nint)output, 4) == 0, "Native size_t EOF count is zero.");
+            }
+            finally { SDL3.SDL.CloseIO(stream); }
+            stream = SDL3.SDL.IOFromDynamicMem();
+            if (stream == 0) throw new InvalidOperationException(SDL3.SDL.GetError());
+            try
+            {
+                Check(SDL3.SDL.WriteIO(stream, (nint)data, (nuint)bytes.Length) == 3 && SDL3.SDL.GetIOSize(stream) == 3, "Native size_t write counts and output length are exact.");
+            }
+            finally { SDL3.SDL.CloseIO(stream); }
+        }
     }
 
     private static void VerifyFiles(Image source, byte[] png, byte[] jpg)

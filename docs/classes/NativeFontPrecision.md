@@ -9,7 +9,7 @@ Last updated: 2026-10-05
 
 ## Description
 
-Owns a copied native font source, a public FreeType face, and HarfBuzz face/font/buffer handles on one text-worker thread. FontData serializes access from public Font resources. SFNT tables are obtained through FT_Load_Sfnt_Table, allowing the same path to shape compressed WOFF2 and ordinary TTF/OTF/TTC data without reading private library structures. HarfBuzz OT functions supply shaping, while explicit FreeType callbacks preserve unhinted advances, glyph extents and vertical origins.
+Owns a copied native font source, a public FreeType face, and HarfBuzz face/font/buffer handles on one serialized text owner: the native worker or nonthreaded browser execution thread. FontData serializes access from public Font resources. SFNT tables are obtained through FT_Load_Sfnt_Table, allowing the same path to shape compressed WOFF2 and ordinary TTF/OTF/TTC data without reading private library structures. HarfBuzz OT functions supply shaping, while explicit FreeType callbacks preserve unhinted advances, glyph extents and vertical origins.
 
 C-long fields and arguments retain `CLong`/`CULong` widths. Native returns use integer registers (`nint`/`nuint`), with Windows results narrowed to its 32-bit C long. Returning the managed wrapper struct selected the wrong struct-return ABI on Android x86 and corrupted underline metrics; the shared regression retains exact metrics, character-map, shaping and raster assertions on the Android host.
 
@@ -55,6 +55,8 @@ macOS resolves private FreeType 2.14.3 with statically linked Brotli/PNG/zlib an
 OpenTypeFeatureTags maps 127 fixed readable aliases plus 99 character-variant and 20 stylistic-set aliases. Matching is ordinal and case-sensitive. Unknown keys remove all custom_ segments, replace non-ASCII scalars with spaces, stop at NUL, truncate to four bytes and space-pad shorter tags; the empty key maps to zero. FontFile retains original keys and signed values, compiling only nonnegative values into NativeFontFeature records.
 
 ## Verification and limits
+
+Browser static imports use archive module names in Mono's generated P/Invoke tables. Callback addresses cross that boundary as pointer-sized integers, with typed Cdecl address casts; the interpreter cannot encode function-pointer parameter types directly. Chromium executes the precision/raster/lifetime fixture and 64 warmed zero-managed-allocation cycles. Foreign-thread rejection checks remain on threaded profiles; this browser profile creates no foreign worker.
 
 iOS/tvOS select static FreeType/HarfBuzz executable imports rather than desktop dynamic names. The Apple test app now includes the same complete precision/raster fixture used by Android, including fractional C-long metrics and WOFF2/Arabic/cluster/lifetime/allocation checks. Local preprocessing-branch compilation is not Apple SDK or native execution evidence; four simulator results remain required.
 

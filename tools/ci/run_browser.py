@@ -15,6 +15,8 @@ from threading import Event, Thread
 import time
 import uuid
 
+from check_rid import check_notices
+
 
 def validate_result(value, token):
     if not isinstance(value, dict) or value.get("run") != token or value.get("status") not in ("passed", "failed"):
@@ -63,6 +65,7 @@ class Handler(SimpleHTTPRequestHandler):
 def run(directory, browser):
     if not (directory / "index.html").exists():
         raise ValueError("The published browser test index is missing.")
+    check_notices(lambda name: (directory / "licence" / name).read_bytes())
     with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=str(directory))) as server:
         server.token = uuid.uuid4().hex
         server.result = None
@@ -83,8 +86,9 @@ def run(directory, browser):
                             log.seek(0)
                             raise RuntimeError("Browser exited or timed out without a test result:\n" + log.read()[-4000:])
                     if server.result["status"] != "passed":
-                        raise RuntimeError("Browser contract checks failed: " + server.result.get("error", ""))
-                    print("Browser WebAssembly contract checks passed in Chromium.")
+                        log.seek(0)
+                        raise RuntimeError("Browser contract checks failed: " + server.result.get("error", "") + "\n" + log.read()[-4000:])
+                    print("Browser WebAssembly managed/native text, image, FAudio PCM/output and repeated lifecycle checks passed in Chromium.")
                 finally:
                     stop(process)
         finally:

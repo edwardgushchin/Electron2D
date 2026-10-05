@@ -51,7 +51,7 @@ internal sealed unsafe partial class FAudioBusEffect : SafeHandle
     public override bool IsInvalid => handle == 0;
     [LibraryImport(NativeLibraries.AudioLibrary, EntryPoint = "CreateFAPOBaseWithCustomAllocatorEXT")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    private static partial void CreateBase(NativeEffect* value, F.FAPORegistrationProperties* properties, nint blocks, uint bytes, byte producer, delegate* unmanaged[Cdecl]<nuint, void*> malloc, delegate* unmanaged[Cdecl]<void*, void> free, delegate* unmanaged[Cdecl]<void*, nuint, void*> realloc);
+    private static partial void CreateBase(NativeEffect* value, F.FAPORegistrationProperties* properties, nint blocks, uint bytes, byte producer, nint malloc, nint free, nint realloc);
     internal FAudioBusEffect(int channels, int frames, AudioEffect? source = null) : base(0, true)
     {
         _state = new(channels, frames, source);
@@ -61,7 +61,7 @@ internal sealed unsafe partial class FAudioBusEffect : SafeHandle
             var value = (NativeEffect*)FAudioContext.AllocateStorage((nuint)sizeof(NativeEffect)); if (value is null) throw new OutOfMemoryException(); *value = default;
             SetHandle((nint)value);
             value->Properties = new F.FAPORegistrationProperties { clsid = new Guid("f478ec82-d6db-487c-80cf-b225b21a46ed"), MajorVersion = 1, Flags = 0x1F, MinInputBufferCount = 1, MaxInputBufferCount = 1, MinOutputBufferCount = 1, MaxOutputBufferCount = 1 };
-            CreateBase(value, &value->Properties, 0, 0, 0, &FAudioContext.Allocate, &FAudioContext.Free, &FAudioContext.Reallocate);
+            CreateBase(value, &value->Properties, 0, 0, 0, FAudioContext.AllocateAddress, FAudioContext.FreeAddress, FAudioContext.ReallocateAddress);
             value->Base.Destructor = (nint)(delegate* unmanaged[Cdecl]<NativeEffect*, void>)&Destroy;
             value->Base.FAPO.Process = (nint)(delegate* unmanaged[Cdecl]<NativeEffect*, uint, F.FAPOProcessBufferParameters*, uint, F.FAPOProcessBufferParameters*, int, void>)&Process;
             value->User = GCHandle.ToIntPtr(GCHandle.Alloc(_state));

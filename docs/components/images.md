@@ -1,6 +1,6 @@
 # Images component
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 ## Scope
 
@@ -38,6 +38,8 @@ This Resources component owns portable managed 2D pixel buffers, binary masks, r
 Color-space conversions use `SRGBToLinear`, `LinearToSRGB` and `RGBEToSRGB`, following the same acronym spelling as the underlying Color API. Their pixel conversion and format contracts are unchanged.
 
 The component depends on `Resource`, typed property descriptors, `Color`, `Vector2i`, `Rect2i`, and BCL binary/numeric primitives. BitMap consumes copied Image alpha data and uses Vector2 contours; it needs no native library. ImageTexture consumes its copied raw buffer and format metadata for GPU upload. `FileAccess` supplies encoded bytes through existing virtual paths. SDL3-CS provides internal native decoding/encoding; temporary surfaces are copied and released before Image commits. PNG decoding uses the already delivered SDL core decoder because SDL_image 3.4.6 corrupts grayscale and RGB16 colors; JPEG/WebP/BMP/TGA decoding and PNG/JPEG encoding use SDL_image. CPU processing retains its managed-only path.
+
+Web statically links pinned SDL_image 3.4.6 and its libwebp/sharpyuv closure, retaining the same public codec API and shared SDL core. Internal SDL ReadIO/WriteIO imports return native pointer-sized `size_t`, preserving byte counts on wasm32 and 64-bit hosts while the binding convenience API still returns `ulong`. The browser app executes all six file/buffer decoders, PNG/JPEG saving, SVG validation and atomic failure checks; its nonthreaded profile excludes the parallel-call check. The shared fixture additionally checks exact read/write counts and EOF through actual SDL IO streams. This is CPU codec evidence, not browser texture presentation.
 
 ## Invariants and error behavior
 

@@ -11,6 +11,8 @@ Native binaries come from the explicitly selected `Electron2D.{Platform}` packag
 
 ## Description
 
+Web uses matching archive module names in Mono's generated P/Invoke tables, not `__Internal` or a dynamic resolver. Its runtime-specific managed DLL is selected from `runtimes/browser-wasm/lib/net10.0/`; the generic compile asset keeps the same public API. `Electron2D.Web` supplies nineteen static archives through NativeFileReference and serves notices under `wwwroot/licence`. Local ProjectReference Chromium checks pass native font precision, ICU dictionaries/cache/allocation checks, images and FAudio PCM/lifecycle. A fresh package-only restore selects the exact runtime asset; CI also links and runs that independent consumer. Browser rendering and a production application host remain separate gates.
+
 iOS/tvOS compile the ten owned backend import names as `__Internal`, referring to symbols linked into the application executable. Module initialization does not register a dynamic resolver there. `Electron2D.iOS`/`Electron2D.tvOS` supplies the selected RID's twelve static archives through transitive NativeReference metadata and CoreBluetooth; FreeType/SDL_image use one audited PNG/zlib copy. Apple SDK linking and simulator execution remain target gates, not outcomes of a Linux build.
 
 Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, Android `libSDL3.so`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API.

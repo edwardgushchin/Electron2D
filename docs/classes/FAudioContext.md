@@ -16,6 +16,8 @@ Bus input voices execute before descending public-effect voices, initializing [p
 
 ## Verification and limits
 
+Web uses the same static FAudio/SDL3 graph through named archive modules in Mono's generated P/Invoke tables. Allocator/procedure imports pass pointer-sized callback addresses; typed Cdecl casts remain at their call sites. The browser host yields between owner-thread frames, captures finite nonzero PCM and verifies progress/latency over two balanced lifecycles. This check covers the headless browser output bridge, not physical speakers or the full desktop DSP suite.
+
 iOS/tvOS use the transitive static FAudio archive and SDL core with executable-symbol imports, including the existing engine-owned output bridge and custom allocator/procedure callbacks. Apple native tests require captured finite nonzero PCM, progress/latency and two balanced engine lifecycles with SDL dummy output. Actual simulator execution remains pending; physical device audio is not inferred from compilation or capture.
 
 Generic audio resource/runtime/bus/effect/sample checks verify owned voice and routing behavior. [AudioCompressorTests](../../tests/Electron2D.Tests/AudioCompressorTests.cs) verifies ordered sidechain PCM and repeated active/paused callback allocations. Current native output is verified on Linux x64 with logical 2/4/6/8 channel profiles; physical multichannel devices, listening, SDL/OS allocations and other platforms remain separate gates. See [ADR 0047](../decisions/audio.md#adr-0047).

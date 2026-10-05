@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -19,6 +19,8 @@ Last updated: 2026-09-24
 All 47 raw [`Image.Format`](Image.Format.md) identities are accepted for storage. Twenty-five uncompressed formats support pixel access and processing. The 22 block-compressed formats support exact buffer ownership, sizing, copying, mip offsets, duplication, and metadata-only alpha inspection, but not CPU pixel decoding or encoding.
 
 Pixel coordinates use a top-left origin: X increases rightward and Y increases downward. Rectangles are half-open. Stored multi-byte components use little-endian order. `GetData` and data-taking APIs copy their arrays, so callers never share mutable buffer ownership with an image.
+
+The browser platform package statically links the existing SDL core/image codecs. Its contract app executes PNG/JPEG/WebP/BMP/TGA/SVG loading and PNG/JPEG saving through this same API, including decoder rejection and state preservation. Canvas presentation and additional codec formats remain outside that check.
 
 Every state read and mutation is synchronized per instance. Bulk mutations prepare and commit a complete replacement state; `SetPixel` updates only the addressed pixel under serialization. Both raise inherited [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) after releasing locks. A throwing subscriber observes committed state and propagates its exception. Calls involving multiple images snapshot sources before changing the destination; no cross-image lock is held during callbacks.
 

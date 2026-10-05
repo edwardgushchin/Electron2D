@@ -624,7 +624,7 @@ The initial shader/material path is executable for the documented interface. Bro
 | [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [ImageTexture](classes/ImageTexture.md) | [ImageTexture.cs](../src/Scene/Resources/ImageTexture.cs) | Copied image pixels, update/replacement and GPU sampling; partial format integration |
 | [Resources](domains/resources.md) | [Shader materials](components/shader-materials.md) | [AtlasTexture](classes/AtlasTexture.md) | [AtlasTexture.cs](../src/Scene/Resources/AtlasTexture.cs) | Borrowed nested views, margins, clipping, image/opacity queries, shared GPU storage and resource duplication |
 
-SDL_image uses the complete internal Image binding module from SDL3-CS v3.4.16.1 and `SDL3-CS.Linux.Image` 3.4.6.9. PNG/JPEG/WebP/BMP/TGA/SVG file/buffer decoding and PNG/JPEG saving have native Linux x64 checks; decoded PNG pixels feed GPU textures. Further codec APIs and full semantics remain pending. The engine's Linux native resolver ensures one core SDL library for P/Invoke and native extensions.
+SDL_image uses the internal Image binding module from SDL3-CS and selected platform assets. Web supplies a pinned SDL_image/libwebp static closure sharing its SDL core. PNG/JPEG/WebP/BMP/TGA/SVG file/buffer decoding and PNG/JPEG saving execute in native Linux and browser contract checks; Linux decoded PNG pixels also feed GPU textures. Pointer-sized SDL IO counts are checked through actual streams. Further codec APIs, browser presentation and full semantics remain separate.
 
 ## Internal rendering and image implementation
 
@@ -656,7 +656,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [BuiltInShaders](classes/BuiltInShaders.md) | [BuiltInShaders.cs](../src/Servers/Rendering/BuiltInShaders.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [ShaderCompiler](classes/ShaderCompiler.md) | [ShaderCompiler.cs](../src/Servers/Rendering/ShaderCompiler.cs) | [shader-materials](components/shader-materials.md) |
 | [SpirvReflection](classes/SpirvReflection.md) | [SpirvReflection.cs](../src/Servers/Rendering/SpirvReflection.cs), [boolean metadata](../src/Servers/Rendering/SpirvReflection.Booleans.cs) | [shader-materials](components/shader-materials.md) |
-| [NativeLibraries](classes/NativeLibraries.md) | [NativeLibraries.cs](../src/Properties/NativeLibraries.cs) | [Shader materials](components/shader-materials.md), [Text](components/text.md), [Audio playback](components/audio-playback.md); private dynamic resolution and Apple static import names, with target gates recorded separately |
+| [NativeLibraries](classes/NativeLibraries.md) | [NativeLibraries.cs](../src/Properties/NativeLibraries.cs) | [Shader materials](components/shader-materials.md), [Text](components/text.md), [Audio playback](components/audio-playback.md); private dynamic resolution, Apple executable imports and browser archive-module imports, with target gates recorded separately |
 
 ## Explicitly absent
 

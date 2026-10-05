@@ -36,9 +36,11 @@ jobs:
       - name: Install managed target workloads
         run: |
           python3 -c 'import json; from pathlib import Path; Path("global.json").write_text(json.dumps({"sdk": {"version": "10.0.302", "rollForward": "disable", "workloadVersion": "10.0.302.0"}}))'
-          dotnet workload install android ios tvos
-      - name: Pack the managed runtime for desktop, Android and Apple
-        run: dotnet pack Electron2D.csproj -c Release -o bin/managed-feed '-p:TargetFrameworks="net10.0;net10.0-android;net10.0-ios;net10.0-tvos"'
+          dotnet workload install android ios tvos wasm-tools
+      - name: Build the browser managed runtime asset
+        run: dotnet build Electron2D.csproj -c Release -r browser-wasm -o bin/browser-managed-runtime
+      - name: Pack the managed runtime for desktop, Android, Apple and Web
+        run: dotnet pack Electron2D.csproj -c Release -o bin/managed-feed '-p:TargetFrameworks="net10.0;net10.0-android;net10.0-ios;net10.0-tvos"' -p:BrowserManagedAssetDirectory="${{ github.workspace }}/bin/browser-managed-runtime"
       - uses: actions/upload-artifact@v4
         with:
           name: managed-engine-package

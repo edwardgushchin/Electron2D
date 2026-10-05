@@ -177,8 +177,12 @@ internal static class NativeFontPrecisionTests
         Reject<ArgumentOutOfRangeException>(() => font.GetGlyphAdvance(uint.MaxValue));
         Reject<ArgumentOutOfRangeException>(() => font.GetGlyphBounds(uint.MaxValue));
         Reject<ArgumentException>(() => font.Shape(['A'], NativeTextDirection.LTR, language: "en\0x"));
-        Task.Run(() => Reject<InvalidOperationException>(() => font.SetSize(18))).GetAwaiter().GetResult();
-        Task.Run(() => Reject<InvalidOperationException>(font.Dispose)).GetAwaiter().GetResult();
+        if (!OperatingSystem.IsBrowser())
+        {
+            Task.Run(() => Reject<InvalidOperationException>(() => font.SetSize(18))).GetAwaiter().GetResult();
+            Task.Run(() => Reject<InvalidOperationException>(font.Dispose)).GetAwaiter().GetResult();
+        }
+        else Console.WriteLine("The nonthreaded browser profile excludes foreign-thread font rejection checks.");
         font.Dispose(); font.Dispose();
         Reject<ObjectDisposedException>(() => font.Shape(['A'], NativeTextDirection.LTR));
     }

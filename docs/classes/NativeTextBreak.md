@@ -18,6 +18,8 @@ Each call pins the string only while setting and reading the iterators. Both ite
 
 ## Packaging and verification
 
+The Web package links the private text archive and uses its generated Mono module table. Chromium checks the independent ICU dictionary/locale/scalar/cache vectors and warmed allocation scope on one browser thread; concurrent-use checks remain on threaded runtimes. Public font wrapping also executes across repeated engine lifecycles.
+
 iOS/tvOS use the selected target's static text bridge through `__Internal`; ICU data remains embedded in the managed runtime and its private native symbols remain separate from OS globalization. Apple test applications execute dictionary wrapping as part of repeated engine lifecycles. Their native simulator result is still required; device bundles are unsigned build-only checks.
 
 The private library has its own identity and hides ICU symbols. It must not replace .NET globalization. Desktop packages use `runtimes/<RID>/native`, with a Linux `.so`, macOS `.dylib` or Windows `Electron2DTextBreak.dll`. [NativeLibraries](NativeLibraries.md) resolves that location; pinned data remains embedded in `Electron2D.dll`. [Build targets](../../tools/text-native.targets), [upstream manifest](../../src/Vendor/ICU/UPSTREAM.md) and [ADR 0046](../decisions/rendering.md#adr-0046) define source/data gates. Linux executes in CI. Windows x86/x64/ARM64 loading/full-suite checks are connected but pending; macOS fresh consumers passed while full-suite acceptance remains pending. Mobile/Web retain separate integration requirements.

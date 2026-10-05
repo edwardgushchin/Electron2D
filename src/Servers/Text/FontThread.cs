@@ -2,17 +2,17 @@ using System.Runtime.ExceptionServices;
 
 namespace Electron2D;
 
-// All mutable native font/raster state lives on this thread. A serialized reusable call slot keeps
-// synchronous resource queries thread-safe without allocating jobs in prepared shaping/drawing paths.
+// Native font/raster state has one owner: a worker, or the nonthreaded browser execution thread.
+// A serialized reusable call slot avoids allocating jobs in prepared shaping/drawing paths.
 // ponytail: native cache misses serialize here; shard font owners only if measured contention requires it.
 internal static class FontThread
 {
     private static readonly object InvocationGate = new(), WorkGate = new();
-    private static readonly Thread Worker = Start();
+    private static int _owner = OperatingSystem.IsBrowser() ? Environment.CurrentManagedThreadId : 0;
+    private static readonly Thread? Worker = OperatingSystem.IsBrowser() ? null : Start();
     private static Action? _operation;
     private static ExceptionDispatchInfo? _error;
     private static bool _complete;
-    private static int _owner;
 
     private static Thread Start()
     {
@@ -24,6 +24,7 @@ internal static class FontThread
         ArgumentNullException.ThrowIfNull(operation);
         _ = Worker;
         if (Environment.CurrentManagedThreadId == Volatile.Read(ref _owner)) { operation(); return; }
+        if (OperatingSystem.IsBrowser()) throw new InvalidOperationException("Browser font operations require their captured execution thread.");
         lock (InvocationGate)
         {
             ExceptionDispatchInfo? error;

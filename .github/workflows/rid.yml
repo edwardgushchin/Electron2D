@@ -176,6 +176,15 @@ jobs:
       - name: Execute browser WebAssembly contract app
         if: inputs.tests && inputs.suite == 'browser'
         run: python -B tools/ci/run_browser.py bin/ci-contracts/browser-wasm/wwwroot
+      - name: Pack the managed browser runtime asset
+        if: inputs.tests && inputs.suite == 'browser'
+        run: dotnet pack Electron2D.csproj -c Release -p:BrowserManagedAssetDirectory="${{ github.workspace }}/bin/ci/browser-wasm" -o bin/native-feed --nologo
+      - name: Execute a fresh browser native package consumer
+        if: inputs.tests && inputs.suite == 'browser'
+        run: |
+          dotnet restore tests/Electron2D.BrowserTests/Electron2D.BrowserTests.csproj -r browser-wasm -p:Electron2DUsePackage=true --packages "$RUNNER_TEMP/browser-package-consumer" --nologo
+          dotnet publish tests/Electron2D.BrowserTests/Electron2D.BrowserTests.csproj -c Release -r browser-wasm -p:Electron2DUsePackage=true --no-restore -o bin/ci-contracts/browser-wasm-package --nologo
+          python -B tools/ci/run_browser.py bin/ci-contracts/browser-wasm-package/wwwroot
       - name: Record verification scope
         if: inputs.tests
         run: |
@@ -184,8 +193,10 @@ jobs:
             echo "Library checks and unsigned test application build passed. Device execution is NOT checked: physical devices and signing are unavailable." >> "$GITHUB_STEP_SUMMARY"
           elif [[ "$CI_SUITE" == android ]]; then
             echo "Library contract, APK native RID/notices audit, managed contracts, native font shaping/rasterization, TLS trust/name/records, ENet and captured audio PCM with repeated lifecycle checks passed. ARM uses emulator native-bridge translation; physical-device, renderer and production host acceptance remain separate." >> "$GITHUB_STEP_SUMMARY"
-          elif [[ "$CI_SUITE" == apple-simulator || "$CI_SUITE" == browser ]]; then
-            echo "Library contract and executable managed contract tests passed (JSON/configuration/settings/theme catalog/headless physics). Android ARM runs use emulator native-bridge translation. Native text/audio/networking, rendering and production application lifecycle acceptance are separate gates." >> "$GITHUB_STEP_SUMMARY"
+          elif [[ "$CI_SUITE" == browser ]]; then
+            echo "Library contract, selected static WASM archives and notices, fresh package-only runtime selection, managed contracts, native font precision/dictionary boundaries/image codecs and FAudio PCM/output with two engine lifecycles passed. The browser profile is nonthreaded; rendering, physical audio, raw networking and production host acceptance remain separate." >> "$GITHUB_STEP_SUMMARY"
+          elif [[ "$CI_SUITE" == apple-simulator ]]; then
+            echo "Library/static native reference and notice checks, managed contracts, native font precision/dictionary wrapping, TLS trust/name/records, ENet and captured FAudio PCM with two engine lifecycles passed in the selected simulator. Rendering, physical devices/audio and production host acceptance remain separate." >> "$GITHUB_STEP_SUMMARY"
           elif [[ "$CI_SUITE" == portable ]]; then
             echo "Library contract and portable runtime suite passed. Native text/audio/networking, rendering and application-host acceptance are not covered." >> "$GITHUB_STEP_SUMMARY"
           else

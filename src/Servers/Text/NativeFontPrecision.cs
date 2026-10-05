@@ -64,7 +64,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             StyleName = Marshal.PtrToStringUTF8(face->StyleName) ?? string.Empty;
             _callbacks = (CallbackState*)NativeMemory.AllocZeroed((nuint)sizeof(CallbackState));
             _callbacks->Face = _face;
-            _hbFace = HBFaceCreate(&ReferenceTable, (nint)_callbacks, null);
+            _hbFace = HBFaceCreate((nint)(delegate* unmanaged[Cdecl]<nint, uint, nint, nint>)&ReferenceTable, (nint)_callbacks, 0);
             if (_hbFace == 0 || HBFaceGetGlyphCount(_hbFace) == 0) throw new ArgumentException("Font has no usable shaping tables.", nameof(immutableData));
             _parentFont = HBFontCreate(_hbFace);
             HBOTFontSetFuncs(_parentFont);
@@ -73,11 +73,11 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             if (funcs == 0 || _parentFont == 0 || _font == 0) throw new OutOfMemoryException();
             try
             {
-                HBFontFuncsSetHorizontalAdvance(funcs, &HorizontalAdvance, 0, null);
-                HBFontFuncsSetVerticalAdvance(funcs, &VerticalAdvance, 0, null);
-                HBFontFuncsSetGlyphExtents(funcs, &GlyphExtents, 0, null);
-                HBFontFuncsSetVerticalOrigin(funcs, &VerticalOrigin, 0, null);
-                HBFontSetFuncs(_font, funcs, (nint)_callbacks, null);
+                HBFontFuncsSetHorizontalAdvance(funcs, (nint)(delegate* unmanaged[Cdecl]<nint, nint, uint, nint, int>)&HorizontalAdvance, 0, 0);
+                HBFontFuncsSetVerticalAdvance(funcs, (nint)(delegate* unmanaged[Cdecl]<nint, nint, uint, nint, int>)&VerticalAdvance, 0, 0);
+                HBFontFuncsSetGlyphExtents(funcs, (nint)(delegate* unmanaged[Cdecl]<nint, nint, uint, HBGlyphExtents*, nint, int>)&GlyphExtents, 0, 0);
+                HBFontFuncsSetVerticalOrigin(funcs, (nint)(delegate* unmanaged[Cdecl]<nint, nint, uint, int*, int*, nint, int>)&VerticalOrigin, 0, 0);
+                HBFontSetFuncs(_font, funcs, (nint)_callbacks, 0);
             }
             finally { HBFontFuncsDestroy(funcs); }
             _buffer = HBBufferCreate();
@@ -320,7 +320,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             table = (byte*)NativeMemory.Alloc(size.Value);
             var error = FTLoadSFNTTable(state->Face, new CULong(tag), default, table, ref size);
             if (error != 0) { state->Error = error; NativeMemory.Free(table); return HBBlobGetEmpty(); }
-            return HBBlobCreate(table, (uint)size.Value, 2, (nint)table, &FreeTable);
+            return HBBlobCreate(table, (uint)size.Value, 2, (nint)table, (nint)(delegate* unmanaged[Cdecl]<nint, void>)&FreeTable);
         }
         catch { NativeMemory.Free(table); state->Error = -1; return HBBlobGetEmpty(); }
     }
@@ -392,10 +392,11 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Load_Glyph"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTLoadGlyph(nint face, uint glyph, int flags);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_MulFix"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint FTMulFixNative(CLong value, CLong scale);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Load_Sfnt_Table"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTLoadSFNTTable(nint face, CULong tag, CLong offset, byte* buffer, ref CULong length);
-    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_face_create_for_tables"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBFaceCreate(delegate* unmanaged[Cdecl]<nint, uint, nint, nint> callback, nint data, delegate* unmanaged[Cdecl]<nint, void> destroy);
+    // Pointer-sized ABI parameters also work with Mono/WASM's interpreter signature table.
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_face_create_for_tables"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBFaceCreate(nint callback, nint data, nint destroy);
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_face_destroy"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFaceDestroy(nint face);
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_face_get_glyph_count"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial uint HBFaceGetGlyphCount(nint face);
-    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_blob_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBBlobCreate(byte* data, uint length, int mode, nint owner, delegate* unmanaged[Cdecl]<nint, void> destroy);
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_blob_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBBlobCreate(byte* data, uint length, int mode, nint owner, nint destroy);
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_blob_get_empty"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBBlobGetEmpty();
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBFontCreate(nint face);
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_create_sub_font"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBFontCreateSubFont(nint parent);
@@ -404,11 +405,11 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_set_scale"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontSetScale(nint font, int x, int y);
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBFontFuncsCreate();
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_destroy"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsDestroy(nint funcs);
-    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_set_funcs"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontSetFuncs(nint font, nint funcs, nint data, delegate* unmanaged[Cdecl]<nint, void> destroy);
-    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_glyph_h_advance_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetHorizontalAdvance(nint funcs, delegate* unmanaged[Cdecl]<nint, nint, uint, nint, int> callback, nint data, delegate* unmanaged[Cdecl]<nint, void> destroy);
-    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_glyph_v_advance_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetVerticalAdvance(nint funcs, delegate* unmanaged[Cdecl]<nint, nint, uint, nint, int> callback, nint data, delegate* unmanaged[Cdecl]<nint, void> destroy);
-    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_glyph_extents_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetGlyphExtents(nint funcs, delegate* unmanaged[Cdecl]<nint, nint, uint, HBGlyphExtents*, nint, int> callback, nint data, delegate* unmanaged[Cdecl]<nint, void> destroy);
-    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_glyph_v_origin_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetVerticalOrigin(nint funcs, delegate* unmanaged[Cdecl]<nint, nint, uint, int*, int*, nint, int> callback, nint data, delegate* unmanaged[Cdecl]<nint, void> destroy);
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_set_funcs"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontSetFuncs(nint font, nint funcs, nint data, nint destroy);
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_glyph_h_advance_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetHorizontalAdvance(nint funcs, nint callback, nint data, nint destroy);
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_glyph_v_advance_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetVerticalAdvance(nint funcs, nint callback, nint data, nint destroy);
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_glyph_extents_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetGlyphExtents(nint funcs, nint callback, nint data, nint destroy);
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_font_funcs_set_glyph_v_origin_func"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFontFuncsSetVerticalOrigin(nint funcs, nint callback, nint data, nint destroy);
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_buffer_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBBufferCreate();
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_buffer_destroy"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBBufferDestroy(nint buffer);
     [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_buffer_clear_contents"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBBufferClear(nint buffer);

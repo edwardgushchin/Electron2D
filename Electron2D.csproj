@@ -35,6 +35,7 @@
     <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0-android'">Android</Electron2DNativePlatform>
     <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0-ios'">iOS</Electron2DNativePlatform>
     <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0-tvos'">tvOS</Electron2DNativePlatform>
+    <DefineConstants Condition="'$(Electron2DNativePlatform)' == 'Web'">$(DefineConstants);ELECTRON2D_BROWSER_NATIVE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src/**/*.cs" />
@@ -69,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="tools/package-readme.md" Pack="true" PackagePath="README.md" />
+    <None Include="$(BrowserManagedAssetDirectory)/Electron2D.dll;$(BrowserManagedAssetDirectory)/Electron2D.xml" Pack="true" PackagePath="runtimes/browser-wasm/lib/net10.0/" Condition="'$(BrowserManagedAssetDirectory)' != ''" />
     <None Remove="licence/*" />
     <None Include="licence/*" Exclude="licence/ReferenceData-LICENSE.txt" Pack="true" PackagePath="licence/" CopyToPublishDirectory="Never" />
     <None Update="licence/*" PublishFolderType="Resource" Condition="'$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'" />
@@ -76,6 +78,9 @@
   </ItemGroup>
   <Target Name="ValidateElectron2DNativeRID" BeforeTargets="Restore;Build;Publish" Condition="'$(Electron2DNativePlatform)' == ''">
     <Error Text="Electron2D has no native package mapping for RuntimeIdentifier '$(RuntimeIdentifier)'." />
+  </Target>
+  <Target Name="ValidateElectron2DBrowserManagedAsset" BeforeTargets="GenerateNuspec" Condition="'$(BrowserManagedAssetDirectory)' != ''">
+    <Error Condition="!Exists('$(BrowserManagedAssetDirectory)/Electron2D.dll') or !Exists('$(BrowserManagedAssetDirectory)/Electron2D.xml')" Text="The browser managed runtime and XML documentation must be built before packing." />
   </Target>
   <Import Project="tools/text-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/audio-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />

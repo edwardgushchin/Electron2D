@@ -29,7 +29,8 @@ LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectro
 ARCHIVES = ("libElectron2DTextBreak.a", "libFAudio.a", "libElectron2DENet.a", "libElectron2DCrypto.a",
             "libElectron2DSSL.a", "libElectron2DFreeType.a", "libElectron2DHarfBuzz.a", "libElectron2DZlib.a",
             "libElectron2DPNG.a", "libElectron2DBrotliDec.a", "libElectron2DBrotliCommon.a", "libElectron2DZstd.a")
-LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libElectron2DWasmCompat.a"))
+LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libElectron2DWasmCompat.a",
+                 "libSDL3_image.a", "libwebp.a", "libwebpdemux.a", "libwebpmux.a", "libsharpyuv.a"))
 
 
 def required_exports(name):
@@ -50,6 +51,16 @@ def required_exports(name):
         return {"hb_shape", "hb_buffer_create", "hb_font_create"}
     if name == "libSDL3.a":
         return {"SDL_Init", "SDL_OpenAudioDeviceStream", "SDL_PutAudioStreamData"}
+    if name == "libSDL3_image.a":
+        return {"IMG_LoadBMP_IO", "IMG_LoadJPG_IO", "IMG_LoadSizedSVG_IO", "IMG_LoadTGA_IO", "IMG_LoadWEBP_IO"}
+    if name == "libwebp.a":
+        return {"WebPDecodeRGBAInto"}
+    if name == "libwebpdemux.a":
+        return {"WebPDemuxInternal"}
+    if name == "libwebpmux.a":
+        return {"WebPNewInternal"}
+    if name == "libsharpyuv.a":
+        return {"SharpYuvConvert"}
     if "WasmCompat" in name:
         return {"__wasm_setjmp", "__wasm_setjmp_test"}
     return set()
