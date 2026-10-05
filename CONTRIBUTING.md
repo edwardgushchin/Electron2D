@@ -1,6 +1,6 @@
 # Contributing to Electron2D
 
-Help improve Electron2D through reproducible reports, documentation, examples and focused changes. First-time contributors are welcome. Follow our [code of conduct](CODE_OF_CONDUCT.md).
+Help improve Electron2D through reproducible reports, documentation, examples and focused changes. First-time contributors are welcome. Follow our [code of conduct](CODE_OF_CONDUCT.md) and [accessibility guidance](ACCESSIBILITY.md).
 
 ## Find the right place
 

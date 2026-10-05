@@ -8,6 +8,7 @@ Start with the [quick start](README.md#quick-start), [API Wiki](https://github.c
 | A possible feature or architecture direction | [Ideas](https://github.com/edwardgushchin/Electron2D/discussions/categories/ideas) |
 | A reproducible defect or measured performance regression | [Issue forms](https://github.com/edwardgushchin/Electron2D/issues/new/choose) |
 | A missing or incorrect documentation page | [Documentation form](https://github.com/edwardgushchin/Electron2D/issues/new?template=03-documentation.yml) |
+| An accessibility barrier | [Accessibility statement and reporting routes](ACCESSIBILITY.md) |
 | A security concern | [Private vulnerability report](https://github.com/edwardgushchin/Electron2D/security/advisories/new) and [security policy](SECURITY.md) |
 | Tutorials and examples from the community | [Guides and tutorials](https://github.com/edwardgushchin/Electron2D/discussions/categories/guides-and-tutorials) |
 | Share a project | [Show and tell](https://github.com/edwardgushchin/Electron2D/discussions/categories/show-and-tell) |
