@@ -8,7 +8,7 @@ This page describes the repository's contribution channels and their configurati
 
 The five README editions preserve the Sprite identity and provide links to questions, issue forms, contributions, support, conduct and security. The [root license](../LICENSE) is a byte-for-byte copy of the canonical [Electron2D license](../licence/Electron2D-LICENSE.txt), allowing GitHub to recognize the existing MIT terms. Keep both copies synchronized; third-party notices retain their separate licenses.
 
-[CONTRIBUTING.md](../CONTRIBUTING.md) explains checkout, scope, validation and review. [SUPPORT.md](../SUPPORT.md) routes questions and reports. [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) defines participation and moderation. [SECURITY.md](../SECURITY.md) routes vulnerabilities to private reporting. These files are at the repository root so GitHub exposes them in its community profile and navigation.
+[CONTRIBUTING.md](../CONTRIBUTING.md) explains checkout, scope, validation and review. [SUPPORT.md](../SUPPORT.md) routes questions and reports. [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) defines participation and moderation. [SECURITY.md](../SECURITY.md) routes vulnerabilities to private reporting. These files are at the repository root so GitHub exposes them in its community profile and navigation. [ACCESSIBILITY.md](../ACCESSIBILITY.md) describes documentation practices, actual runtime limitations and barrier-reporting routes; it is exposed as GitHub's additional accessibility community file.
 
 ## Issues and pull requests
 
