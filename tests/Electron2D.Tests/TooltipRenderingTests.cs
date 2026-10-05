@@ -39,7 +39,7 @@ internal static partial class RenderingRuntimeTests
                             for (var x = (int)panel.Position.X; x < panel.Position.X + panel.Size.X; x++)
                                 if (pixels.GetPixel(x, y).R > .6f) bright++;
                         Check(bright > 10, "Default tooltip renders real visible font glyphs above an int.MaxValue game layer.");
-                        File.WriteAllBytes($"/tmp/electron2d-tooltip-{backend}-default.png", pixels.SavePNGToBuffer());
+                        File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-tooltip-{backend}-default.png"), pixels.SavePNGToBuffer());
                         position = new(179, 109); SliderMotion(windowID, scale, position); return;
                     }
                     if (frame == 3)
@@ -54,7 +54,7 @@ internal static partial class RenderingRuntimeTests
                         Check(panel.Position.X < position.X && panel.Position.Y < position.Y, "Tooltip flips at both viewport edges.");
                         var point = panel.Position + new Vector2(10, 4);
                         Pixel(pixels, (int)point.X, (int)point.Y, Colors.Blue);
-                        File.WriteAllBytes($"/tmp/electron2d-tooltip-{backend}-custom.png", pixels.SavePNGToBuffer());
+                        File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-tooltip-{backend}-custom.png"), pixels.SavePNGToBuffer());
                         SliderButton(windowID, scale, point); SliderButton(windowID, scale, point, false); return;
                     }
                     Check(hits == 1 && tree.TooltipPanel is null, "Tooltip contents remain transparent to real routed pointer input during cancellation.");

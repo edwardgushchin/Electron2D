@@ -95,7 +95,7 @@ internal sealed class ENetTransport : IDisposable
             SecurePoll(); for (var i = 1; i < _endpoints.Count; i++) { var index = _dtlsIndex; if (++_dtlsIndex >= _endpoints.Count) _dtlsIndex = 1; var entry = _endpoints[index]; if (entry?.DTLS?.GetAvailablePacketCount() > 0) { token = (uint)index; port = (ushort)entry.Address.Port; return entry.DTLS.GetPacket(data); } }
             return 0;
         }
-        if (!_socket!.Poll(0, SelectMode.SelectRead)) return 0; var read = _socket.ReceiveFrom(data, SocketFlags.None, _receive); var address = DatagramAddress.Capture(_receive); if (Refuse && !_tokens.ContainsKey(address)) return 0; try { token = Token(address); } catch (IOException) { return 0; }
+        if (!_socket!.Poll(0, SelectMode.SelectRead)) return 0; var read = NetworkSockets.ReceiveDatagram(_socket, data, _receive); var address = DatagramAddress.Capture(_receive); if (Refuse && !_tokens.ContainsKey(address)) return 0; try { token = Token(address); } catch (IOException) { return 0; }
         port = (ushort)address.Port; return read;
     }
     internal void SocketSend(uint token, ReadOnlySpan<byte> data) { if (data.Length > 65507) throw new ArgumentException("UDP datagram exceeds capacity."); if (Send(token, data) != data.Length) throw new IOException("Transport is not ready to send the complete datagram."); }

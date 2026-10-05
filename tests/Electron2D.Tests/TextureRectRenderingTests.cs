@@ -48,7 +48,7 @@ internal static partial class RenderingRuntimeTests
                 else
                 { Pixel(pixels, 5, 5, Colors.Black); window.Tree!.Quit(); }
                 var profile = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? $"{backend}-dummy" : backend;
-                pixels.SavePNG($"/tmp/e2d-texture-rect-{profile}-{frames}.png");
+                pixels.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-texture-rect-{profile}-{frames}.png"));
                 frames++;
                 if (frames <= 6) node.StretchMode = (TextureStretchMode)frames;
                 else if (frames == 7) { node.FlipH = true; node.FlipV = true; }

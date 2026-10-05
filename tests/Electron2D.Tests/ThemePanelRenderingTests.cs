@@ -54,7 +54,7 @@ internal static partial class RenderingRuntimeTests
                 {
                     Pixel(pixels, 15, 50, Colors.Yellow); Pixel(pixels, 52, 45, Colors.Cyan); Pixel(pixels, 54, 45, Colors.Green);
                     Check(child.Position == new Vector2(8, 3) && child.Size == new Vector2(28, 22) && container.GetMinimumSize() == new Vector2(20, 14), "Borrowed style changes automatically redraw and refresh deferred content layout.");
-                    File.WriteAllBytes($"/tmp/electron2d-theme-panels-{backend}.png", pixels.SavePNGToBuffer());
+                    File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-theme-panels-{backend}.png"), pixels.SavePNGToBuffer());
                     panel.RemoveThemeStyleBoxOverride("panel"); container.RemoveThemeStyleBoxOverride("panel");
                 }
                 else

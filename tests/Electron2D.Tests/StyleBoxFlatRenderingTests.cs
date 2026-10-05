@@ -28,7 +28,7 @@ internal static partial class RenderingRuntimeTests
             RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
-                if (frames == 1) File.WriteAllBytes($"/tmp/electron2d-flat-styles-{backend}.png", pixels.SavePNGToBuffer());
+                if (frames == 1) File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-flat-styles-{backend}.png"), pixels.SavePNGToBuffer());
                 Pixel(pixels, 9, 25, Colors.Black); Pixel(pixels, 30, 11, Colors.Blue); Pixel(pixels, 11, 25, Colors.Blue);
                 Pixel(pixels, 10, 10, frames == 3 ? Colors.Blue : Colors.Black);
                 Pixel(pixels, 30, 25, frames == 2 ? Colors.Black : Colors.Red);

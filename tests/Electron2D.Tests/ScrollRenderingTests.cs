@@ -46,7 +46,7 @@ internal static partial class RenderingRuntimeTests
                         $"Focused {backend} scroll frame enables its separate border panel.");
                     Check(image.GetPixel(11, 11).G > .6f && image.GetPixel(20, 20).B > .8f,
                         $"Focused {backend} scroll frame draws a visible light border without covering the content center.");
-                    File.WriteAllBytes($"/tmp/electron2d-scroll-focus-{backend}.png", image.SavePNGToBuffer());
+                    File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-scroll-focus-{backend}.png"), image.SavePNGToBuffer());
                     window.Tree!.Quit();
                 }
             };
@@ -85,7 +85,7 @@ internal static partial class RenderingRuntimeTests
                 }
                 else if (frames == 2)
                 {
-                    File.WriteAllBytes($"/tmp/electron2d-scroll-hint-{backend}.png", image.SavePNGToBuffer());
+                    File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-scroll-hint-{backend}.png"), image.SavePNGToBuffer());
                     var hint = (Control)scroll.GetChild(2, includeInternal: true);
                     Check(image.GetPixel(20, 95).R < baseline - .04f &&
                           hint.Visible,

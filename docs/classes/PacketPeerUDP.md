@@ -8,6 +8,8 @@ Last updated: 2026-10-04
 
 ## Description
 
+Native-connected receives use Socket.Receive and retain the connected sender's normalized metadata. Unconnected reads restore reusable SocketAddress capacity before every ReceiveFrom call, including after a shorter native address result. This avoids the next receive rejecting a shortened buffer on macOS without allocating new endpoint storage.
+
 Transfers complete UDP datagrams with bounded queued receive storage.
 
 Standalone peers poll while reading/counting packets. Server-created peers share the listener and receive only their endpoint's packets. Closing such a peer detaches it without closing the listener. Bind/connection/destination resolution and first endpoint queries are cold operations; caller-span packet cycles reuse storage.

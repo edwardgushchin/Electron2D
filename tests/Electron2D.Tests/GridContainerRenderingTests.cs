@@ -47,7 +47,7 @@ internal static partial class RenderingRuntimeTests
                 {
                     Check(c.Size == new Vector2(31, 21) && a.Size == new Vector2(30, 21) && b.Size == new Vector2(31, 20) && b.Position.Y == 25, "Native grid resize redistributes both axes.");
                     Pixel(pixels, 66, 5, Colors.Red); Pixel(pixels, 5, 46, Colors.Blue); Pixel(pixels, 5, 26, Colors.Black); Pixel(pixels, 36, 5, Colors.Black);
-                    File.WriteAllBytes($"/tmp/electron2d-grid-layout-{backend}.png", pixels.SavePNGToBuffer()); grid.Columns = 3;
+                    File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-grid-layout-{backend}.png"), pixels.SavePNGToBuffer()); grid.Columns = 3;
                 }
                 else if (frames == 6)
                 {

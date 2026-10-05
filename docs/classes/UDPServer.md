@@ -8,6 +8,8 @@ Last updated: 2026-10-04
 
 ## Description
 
+Every datagram receive restores the reusable endpoint buffer's capacity; the native call may replace its reported size with a shorter sender address. No per-packet SocketAddress allocation is added.
+
 Routes UDP sender endpoints into independent caller-owned packet peers.
 
 Poll receives packets and queues new endpoints up to MaxPendingConnections. Pending peers are server-owned; TakeConnection transfers logical ownership and the server keeps only a weak reference. Stop closes the shared socket and detaches accepted peers. Existing accepted endpoints continue receiving when the pending limit is zero. Receive queues retain packet boundaries and drop packets that exceed their budget.

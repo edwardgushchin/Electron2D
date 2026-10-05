@@ -7,6 +7,23 @@ internal static class ContractChecks
 {
     internal static void Run()
     {
+        var timeScale = Engine.TimeScale;
+        var playbackScale = AudioServer.PlaybackSpeedScale;
+        try
+        {
+            Check(timeScale == 1 && playbackScale == 1, "Initial atomic floating-point settings.");
+            using var playlist = new AudioStreamPlaylist();
+            foreach (var value in new[] { 0.5, 1.25, 2.5 })
+            {
+                Engine.TimeScale = value;
+                AudioServer.PlaybackSpeedScale = (float)value;
+                playlist.FadeTime = value;
+                Check(Engine.TimeScale == value && AudioServer.PlaybackSpeedScale == (float)value && playlist.FadeTime == value,
+                    "Atomic floating-point configuration round trip.");
+            }
+        }
+        finally { Engine.TimeScale = timeScale; AudioServer.PlaybackSpeedScale = playbackScale; }
+
         var model = new Model { Number = 17, Values = [3, 5] };
         var metadata = TestJSONContext.Default.Model;
         var json = EngineJSON.FromNative(model, metadata)!;
@@ -67,7 +84,7 @@ internal static class ContractChecks
         using var tree = new SceneTree(root);
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 75 and < 85 && MathF.Abs(body.LinearVelocity.Y) < 2, "Public scene physics lifecycle.");
-        Console.WriteLine("PORTABILITY PASS: JSON, configuration, settings, theme catalog and headless scene physics.");
+        Console.WriteLine("PORTABILITY PASS: atomic floating-point settings, JSON, configuration, settings, theme catalog and headless scene physics.");
     }
 
     private static void Check(bool value, string message)

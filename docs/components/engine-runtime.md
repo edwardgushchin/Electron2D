@@ -1,8 +1,10 @@
 # Engine runtime component
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 ## Scope
+
+Floating-point timing snapshots use [integer-backed atomics](../classes/AtomicFloatingPoint.md) to retain cross-thread and 32-bit access semantics. Public TimeScale round trips are checked in the shared portability applications.
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 

@@ -137,7 +137,8 @@ public sealed partial class AudioServer
     /// <returns>The opened SDL device chunk duration plus currently queued source PCM duration.</returns>
     /// <remarks>Prepares output on first use. The live snapshot is refreshed by output callbacks, so
     /// repeated queries allocate no measured managed memory and do not join a driver callback. It describes
-    /// driver buffering rather than additional operating-system, transport or physical converter delay.</remarks>
+    /// driver buffering rather than additional operating-system, transport or physical converter delay.
+    /// Snapshot publication and reads remain atomic on 32-bit hosts.</remarks>
     /// <exception cref="InvalidOperationException">Access is off-owner/reentrant or output buffering is unavailable.</exception>
     public static double GetOutputLatency() => Service.GetOutputLatencyCore();
 
@@ -167,6 +168,7 @@ public sealed partial class AudioServer
 
     /// <summary>Gets or sets the positive global playback-rate multiplier.</summary>
     /// <value>One initially; actual player pitch combines this value with its local scale.</value>
+    /// <remarks>Passive reads are atomic on every host; configuration writes require the audio owner.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonpositive or nonfinite.</exception>
     /// <exception cref="NotSupportedException">Prepared native sample effective pitch is unsupported; the old configuration is restored.</exception>
     public static float PlaybackSpeedScale

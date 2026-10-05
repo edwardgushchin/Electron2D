@@ -29,7 +29,7 @@ internal static class ImmediateMeshRenderingTests
                 Pixel(frame, 8, 8, frames is 0 or 2 or 4 or 6 ? Colors.Black : Colors.Red);
                 Pixel(frame, 42, 8, frames is 0 or 2 or 4 or 6 ? Colors.Black : frames == 3 || frames == 5 ? Colors.White : Colors.Red);
                 if (frames is 3 or 5) Pixel(frame, 20, 8, Colors.Green);
-                frame.SavePNG($"/tmp/e2d-immediate-{method}-{frames}.png");
+                frame.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-immediate-{method}-{frames}.png"));
                 switch (++frames)
                 {
                     case 1: mesh.SurfaceEnd(); Check(RenderingServer.MeshGetSurfaceCount(mesh.GetRID()) == 1, "Server sees the commit."); break;
@@ -69,7 +69,7 @@ internal static class ImmediateMeshRenderingTests
                     var green = 0; for (var y = 5; y < 28; y++) for (var x = 5 + i * 26; x < 30 + i * 26; x++) if (frame.GetPixel(x, y).G > .5f) green++;
                     Check(green > 0, $"Immediate topology {i} produces geometry.");
                 }
-                frame.SavePNG($"/tmp/e2d-immediate-topologies-{method}.png"); window.Tree!.Quit();
+                frame.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-immediate-topologies-{method}.png")); window.Tree!.Quit();
             };
         };
         try { Engine.Run(window); }

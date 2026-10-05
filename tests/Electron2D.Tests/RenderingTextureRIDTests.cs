@@ -183,7 +183,7 @@ internal static partial class RenderingRuntimeTests
                     Pixel(frame, 61, 5, Colors.Magenta); Pixel(frame, 65, 5, Colors.Black);
                     using var query = RenderingServer.Texture2DGet(resourceRID); Check(query is not null, "Post-draw reads remain available.");
                     var profile = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? $"{backend}-dummy" : backend;
-                    frame.SavePNG($"/tmp/e2d-texture-rid-{profile}-{phase}.png");
+                    frame.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-texture-rid-{profile}-{phase}.png"));
                     if (phase < 3) Check(drawn == 1, "Update and replacement affect retained commands without redraw.");
                     if (++phase == 4)
                     {

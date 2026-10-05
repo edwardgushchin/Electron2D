@@ -7,7 +7,8 @@ namespace Electron2D;
 /// <remarks>Standalone peers poll while reading/counting packets. Server-created peers share the listener and
 /// receive only their endpoint's packets. Closing such a peer detaches it without closing the listener.
 /// Bind/connection/destination resolution and first endpoint queries are cold operations; caller-span packet cycles reuse storage.
-/// Native send/receive buffers hold at least 65536 bytes, preserving larger platform defaults.</remarks>
+/// Native send/receive buffers hold at least 65536 bytes, preserving larger platform defaults.
+/// Connected receive metadata comes from the fixed remote endpoint; unconnected receives restore reusable address capacity.</remarks>
 public class PacketPeerUDP : PacketPeer
 {
     internal long ConnectionGeneration { get; private set; }
@@ -79,9 +80,9 @@ public class PacketPeerUDP : PacketPeer
         while (_socket.Poll(0, SelectMode.SelectRead))
         {
             int received;
-            try { received = _socket.ReceiveFrom(_receive, SocketFlags.None, _receiveAddress!); }
+            try { received = _connected ? _socket.Receive(_receive, SocketFlags.None) : NetworkSockets.ReceiveDatagram(_socket, _receive, _receiveAddress!); }
             catch (SocketException error) when (NetworkSockets.Busy(error.SocketErrorCode)) { break; }
-            _queue.Store(DatagramAddress.Capture(_receiveAddress!), _receive.AsSpan(0, received));
+            _queue.Store(DatagramAddress.Capture(_connected ? _remote! : _receiveAddress!), _receive.AsSpan(0, received));
         }
     }
     /// <inheritdoc />

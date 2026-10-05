@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No runtime C# type or managed backend assembly is added.
+Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
@@ -199,6 +199,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Core](domains/core.md) | [Project settings](components/project-settings.md) | [`ProjectSettingsRegistry`](classes/ProjectSettingsRegistry.md) | [`ProjectSettingsRegistry.cs`](../src/Core/Config/ProjectSettingsRegistry.cs), [`ProjectSettingsRegistry.API.cs`](../src/Core/Config/ProjectSettingsRegistry.API.cs) | Current | Independent disposable registries and the retained runtime registry state. |
 | [Core](domains/core.md) | [Main loop](components/main-loop.md) | [`MainLoop`](classes/MainLoop.md) | [`MainLoop.cs`](../src/Core/OS/MainLoop.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Engine runtime](components/engine-runtime.md) | [`Engine`](classes/Engine.md) | [`Engine.cs`](../src/Core/Config/Engine.cs) | Current | Implemented and verified |
+| [Core](domains/core.md) | [Engine runtime](components/engine-runtime.md) | [AtomicFloatingPoint](classes/AtomicFloatingPoint.md) | [AtomicFloatingPoint.cs](../src/Core/Config/AtomicFloatingPoint.cs) | Internal | Integer-backed atomic floating-point snapshots on 32-bit and 64-bit hosts. |
 | [Core](domains/core.md) | [Engine runtime](components/engine-runtime.md) | [`EngineVersionInfo`](classes/EngineVersionInfo.md) | [`EngineVersionInfo.cs`](../src/Core/Config/EngineVersionInfo.cs) | Current | Implemented and verified |
 | [Navigation](domains/navigation.md) | [A-star point graph](components/astar-graph.md) | [`AStar`](classes/AStar.md) | [`AStar.cs`](../src/Navigation/2D/AStar.cs) | Current | Complete standalone graph API; managed path and edge checks |
 | [Navigation](domains/navigation.md) | [A-star grid](components/astar-grid.md) | [`AStarGrid`](classes/AStarGrid.md) | [`AStarGrid.cs`](../src/Navigation/2D/AStarGrid.cs) | Current | Complete standalone grid API; managed geometry, path and jumping checks |

@@ -15,6 +15,7 @@ internal static class NativeChecks
         for (var frame = 0; frame < pcm.Length / 2; frame++)
             BinaryPrimitives.WriteInt16LittleEndian(pcm.AsSpan(frame * 2), (short)(6000 * Math.Sin(2 * Math.PI * 440 * frame / 48000)));
         using var stream = new AudioStreamWAV { Data = pcm, MixRate = 48000 };
+        VerifySynchronizedGain(stream);
         for (var cycle = 0; cycle < 2; cycle++)
         {
             var root = new Node();
@@ -49,7 +50,8 @@ internal static class NativeChecks
                             nonzero |= Math.Abs(sample.X) > 0.001f || Math.Abs(sample.Y) > 0.001f;
                         }
                     }
-                    if (!nonzero || player.GetPlaybackPosition() <= 0 || AudioServer.GetOutputLatency() < 0)
+                    var latency = AudioServer.GetOutputLatency();
+                    if (!nonzero || player.GetPlaybackPosition() <= 0 || !double.IsFinite(latency) || latency <= 0)
                         throw new InvalidOperationException($"Native audio PCM/output bridge failed: nonzero={nonzero}, pushed={capture.GetPushedFrames()}, position={player.GetPlaybackPosition()}, latency={AudioServer.GetOutputLatency()}.");
                     player.Stop();
                 }
@@ -57,7 +59,29 @@ internal static class NativeChecks
             }
             finally { Engine.Stop(); }
         }
-        Console.WriteLine("Native WOFF2/text boundaries, ENet, TLS, audio PCM and repeated lifecycle checks passed.");
+        Console.WriteLine("Native WOFF2/text boundaries, ENet, TLS, synchronized gain, audio PCM and repeated lifecycle checks passed.");
+    }
+
+    private static void VerifySynchronizedGain(AudioStreamWAV stream)
+    {
+        using var synchronized = new AudioStreamSynchronized { StreamCount = 1 };
+        synchronized.SetSyncStream(0, stream);
+        using var reference = stream.InstantiatePlayback();
+        using var playback = synchronized.InstantiatePlayback();
+        reference.Start(); playback.Start();
+        foreach (var volume in new[] { -6f, -12f, 0f, float.NegativeInfinity })
+        {
+            synchronized.SetSyncStreamVolume(0, volume);
+            var expected = reference.MixAudio(1, 128);
+            var actual = playback.MixAudio(1, 128);
+            var gain = (float)Mathf.DBToLinear(volume);
+            if (expected.Length != 128 || actual.Length != 128)
+                throw new InvalidOperationException("Synchronized audio did not supply its requested frames.");
+            for (var frame = 0; frame < actual.Length; frame++)
+                if (!actual[frame].IsFinite() || Math.Abs(actual[frame].X - expected[frame].X * gain) > 0.00001f ||
+                    Math.Abs(actual[frame].Y - expected[frame].Y * gain) > 0.00001f)
+                    throw new InvalidOperationException("Atomic synchronized audio gain failed.");
+        }
     }
 
     private static void VerifyTLS()

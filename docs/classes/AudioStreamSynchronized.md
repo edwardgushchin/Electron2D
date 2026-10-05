@@ -1,6 +1,6 @@
 # AudioStreamSynchronized
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.AudioStreamSynchronized` · **Source:** [AudioStreamSynchronized.cs](../../src/Scene/Resources/AudioStreamSynchronized.cs).
 
@@ -260,6 +260,8 @@ System.ArgumentOutOfRangeException: The index or decibel/multiplier value is inv
 System.ObjectDisposedException: This resource is disposed.
 
 ## Verification and dependencies
+
+Live child gains use integer-backed atomic float reads/writes. The Android native test host compares public synchronized playback PCM with an independent playback at successive -6 dB, -12 dB, unity and mute gains, without restarting either cursor.
 
 [ADR 0047](../decisions/audio.md#adr-0047) and [synchronized streams](../components/audio-playback.md#synchronized-streams) define the executable contract and adaptations. AudioSynchronizedTests covers resource/metadata/copy/scene state, PCM/cursors/live gain/finish, transaction/callback/cycle failures, nested microphone owner handling and warmed CPU/native allocations. AudioSynchronizedHostTests runs real finite WAVs through public Window/Engine lifecycle, pause/seek/live gain and last-child Finished. Linux x64 dummy/native output is verified; physical listening/input, other platforms and driver-internal allocations remain unverified. Sample-driver, usage tags, further music/parameter resources and scene-file persistence retain their own coverage dependencies.
 

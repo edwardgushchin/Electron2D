@@ -18,7 +18,7 @@ def check_result(log, token):
             status = line.split(marker, 1)[1]
             if status == "PASS":
                 return True
-            raise RuntimeError("Contract checks failed: " + status)
+            raise RuntimeError("Contract checks failed:\n" + log[log.index(marker):][:12000])
     return False
 
 

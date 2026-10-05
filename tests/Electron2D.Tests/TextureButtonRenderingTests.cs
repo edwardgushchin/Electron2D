@@ -52,7 +52,7 @@ internal static partial class RenderingRuntimeTests
                 Pixel(pixels, 18, 36, stateColor); Pixel(pixels, 6, 36, frame == 5 ? Colors.White : stateColor);
                 Pixel(pixels, 30, 36, frame >= 6 ? Colors.White : Colors.Black); Pixel(pixels, 42, 36, Colors.Black);
                 Pixel(pixels, 54, 30, frame == 7 ? Colors.Blue : Colors.Red);
-                if (frame is 1 or 5) File.WriteAllBytes($"/tmp/electron2d-texture-button-{backend}-{frame}.png", pixels.SavePNGToBuffer());
+                if (frame is 1 or 5) File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-texture-button-{backend}-{frame}.png"), pixels.SavePNGToBuffer());
                 switch (frame)
                 {
                     case 1: foreach (var button in buttons) { button.FlipH = true; button.FlipV = true; } state.ButtonPressed = true; break;

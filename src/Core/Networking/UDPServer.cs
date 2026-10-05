@@ -6,7 +6,8 @@ namespace Electron2D;
 /// <remarks>Poll receives packets and queues new endpoints up to MaxPendingConnections. Pending peers are
 /// server-owned; TakeConnection transfers logical ownership and the server keeps only a weak reference.
 /// Stop closes the shared socket and detaches accepted peers. Existing accepted endpoints continue receiving
-/// when the pending limit is zero. Receive queues retain packet boundaries and drop packets that exceed their budget.</remarks>
+/// when the pending limit is zero. Receive queues retain packet boundaries and drop packets that exceed their budget.
+/// Each native receive restores the reusable endpoint buffer's capacity before reading another datagram.</remarks>
 public class UDPServer : ElectronObject
 {
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -41,7 +42,7 @@ public class UDPServer : ElectronObject
         while (_socket.Poll(0, SelectMode.SelectRead))
         {
             int count;
-            try { count = _socket.ReceiveFrom(_receive, SocketFlags.None, _receiveAddress!); }
+            try { count = NetworkSockets.ReceiveDatagram(_socket, _receive, _receiveAddress!); }
             catch (SocketException error) when (NetworkSockets.Busy(error.SocketErrorCode)) { break; }
             var address = DatagramAddress.Capture(_receiveAddress!); PacketPeerUDP? peer = null;
             if (_peers.TryGetValue(address, out var weak)) { if (!weak.TryGetTarget(out peer) || peer.IsDisposed) { _peers.Remove(address); peer = null; } }

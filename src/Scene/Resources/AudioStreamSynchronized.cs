@@ -75,16 +75,17 @@ public sealed class AudioStreamSynchronized : AudioStream
     /// <param name="streamIndex">Zero through MaxStreams minus one.</param>
     /// <param name="volumeDB">Decibels producing a finite float multiplier; negative infinity mutes and very negative finite values may underflow to silence.</param>
     /// <remarks>Does not raise Changed. Mixing reads the coefficient before each child block; a zero coefficient
-    /// still advances the child in sync. Successful edits do not allocate.</remarks>
+    /// still advances the child in sync. Coefficient publication is atomic on 32-bit hosts too.
+    /// Successful edits do not allocate.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index or decibel/multiplier value is invalid.</exception>
     /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
     public void SetSyncStreamVolume(int streamIndex, float volumeDB)
     {
         if (float.IsNaN(volumeDB) || float.IsPositiveInfinity(volumeDB)) throw new ArgumentOutOfRangeException(nameof(volumeDB));
         var gain = (float)Mathf.DBToLinear(volumeDB); if (!float.IsFinite(gain)) throw new ArgumentOutOfRangeException(nameof(volumeDB));
-        lock (GraphGate) { ThrowIfDisposed(); Index(streamIndex); _volumes[streamIndex] = volumeDB; Volatile.Write(ref _gains[streamIndex], gain); }
+        lock (GraphGate) { ThrowIfDisposed(); Index(streamIndex); _volumes[streamIndex] = volumeDB; AtomicFloatingPoint.Write(ref _gains[streamIndex], gain); }
     }
-    internal float Gain(int index) => Volatile.Read(ref _gains[index]);
+    internal float Gain(int index) => AtomicFloatingPoint.Read(ref _gains[index]);
     private static void Index(int index) { if ((uint)index >= MaxStreams) throw new ArgumentOutOfRangeException(nameof(index)); }
     private void CheckEdit() { ThrowIfDisposed(); if (_editing) throw new InvalidOperationException("Synchronized factories/cleanup cannot reenter structural authoring."); }
     internal override void AppendChildren(Stack<AudioStream> pending) { foreach (var child in _streams) if (child is not null) pending.Push(child); }

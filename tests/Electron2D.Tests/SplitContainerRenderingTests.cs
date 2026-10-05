@@ -60,7 +60,7 @@ internal static partial class RenderingRuntimeTests
                     case 15:
                         Pixel(pixels, 20, 20, Colors.Red); Pixel(pixels, 20, 80, Colors.Blue); Pixel(pixels, 20, 105, Colors.Green); window.Tree!.Quit(); break;
                 }
-                var profile = SDL.GetCurrentVideoDriver() == "dummy" ? backend + "-dummy" : backend; pixels.SavePNG($"/tmp/e2d-split-{profile}-{frames}.png");
+                var profile = SDL.GetCurrentVideoDriver() == "dummy" ? backend + "-dummy" : backend; pixels.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-split-{profile}-{frames}.png"));
             };
         };
         Engine.Run(window); Released(window); Check(frames == 15, "All split native phases completed."); VerifySplitIntersection(backend, skin, red, blue, green); VerifySplitWarm(backend, skin, red, blue);
@@ -85,7 +85,7 @@ internal static partial class RenderingRuntimeTests
                     case 5: Check(a.Size.X == 44 && !split.GetDragAreaControl().Visible, "Software collapse uses defaults and hides drag areas."); split.Vertical = true; split.Size = new(60, 100); break;
                     case 6: Pixel(pixels, 20, 20, Colors.Red); Pixel(pixels, 20, 80, Colors.Blue); window.Tree!.Quit(); break;
                 }
-                pixels.SavePNG($"/tmp/e2d-split-{backend}-dummy-{frames}.png");
+                pixels.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-split-{backend}-dummy-{frames}.png"));
             };
         };
         Engine.Run(window); Released(window); Check(frames == 6, "All software split phases completed.");
@@ -113,7 +113,7 @@ internal static partial class RenderingRuntimeTests
                 }
                 else if (frames == 5) { Check(outerEnds == 1 && innerEnds == 1, "Intersection release completes both drags once."); nested.DragNestedIntersections = false; }
                 else if (frames == 6) { Check(!outer.GetDragAreaControl().GetChildren(true).Any(n => n.Name.StartsWith("_split_intersection_")), "Native nested disable removes the joint pointer target."); window.Tree!.Quit(); }
-                if (frames == 4) pixels.SavePNG($"/tmp/e2d-split-intersection-{backend}.png");
+                if (frames == 4) pixels.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-split-intersection-{backend}.png"));
             };
         };
         Engine.Run(window); Released(window); Check(frames == 6, "Native intersection phases completed.");

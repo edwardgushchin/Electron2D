@@ -27,7 +27,7 @@ internal static partial class RenderingRuntimeTests
             RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frame++;
-                if (frame == 1) File.WriteAllBytes($"/tmp/electron2d-texture-progress-{backend}.png", pixels.SavePNGToBuffer());
+                if (frame == 1) File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-texture-progress-{backend}.png"), pixels.SavePNGToBuffer());
                 for (var mode = 0; mode < 9; mode++) for (var y = 0; y < 8; y++) for (var x = 0; x < 8; x++)
                         {
                             var filled = frame == 2 ? false : frame == 3 ? true : mode switch

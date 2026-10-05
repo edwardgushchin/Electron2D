@@ -56,7 +56,7 @@ internal static class MultiMeshRenderingTests
                 }
                 else if (phase == 6) { Pixel(frame, window, 15, 15, Colors.Black); resource.CustomAABB = default; node.Material = null; resource.SetInstanceColor(0, Colors.White); resource.SetInstanceColor(1, Colors.White); node.Texture = texture; }
                 else { Pixel(frame, window, 15, 15, Colors.Magenta); Pixel(frame, window, 45, 45, Colors.Magenta); RenderingServer.FreeRID(owned); window.Tree!.Quit(); }
-                frame.SavePNG($"/tmp/e2d-multimesh-{method}-{phase}.png"); phase++;
+                frame.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-multimesh-{method}-{phase}.png")); phase++;
             };
         };
         Check(Engine.Run(window) == 0 && window.IsDisposed && phase == 8 && !resource.IsDisposed && !mesh.IsDisposed && !texture.IsDisposed, "Resource/node ownership, actual native frames and teardown.");
