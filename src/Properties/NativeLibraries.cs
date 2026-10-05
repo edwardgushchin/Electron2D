@@ -5,12 +5,23 @@ namespace Electron2D;
 
 internal static class NativeLibraries
 {
+#if IOS || TVOS
+    // Static native references are linked into the Apple application executable.
+    internal const string SDLLibrary = "__Internal", SDLImageLibrary = "__Internal", SDLShaderCrossLibrary = "__Internal",
+        AudioLibrary = "__Internal", FreeTypeLibrary = "__Internal", HarfBuzzLibrary = "__Internal",
+        SSLLibrary = "__Internal", CryptoLibrary = "__Internal", ENetLibrary = "__Internal", TextBreakLibrary = "__Internal";
+#else
+    internal const string SDLLibrary = "SDL3", SDLImageLibrary = "SDL3_image", SDLShaderCrossLibrary = "SDL3_shadercross",
+        AudioLibrary = "FAudio", FreeTypeLibrary = "freetype", HarfBuzzLibrary = "HarfBuzzSharp",
+        SSLLibrary = "Electron2DSSL", CryptoLibrary = "Electron2DCrypto", ENetLibrary = "Electron2DENet", TextBreakLibrary = "Electron2DTextBreak";
+#endif
     private static readonly Lazy<nint> Sdl = new(() => NativeLibrary.Load(OperatingSystem.IsWindows() ? "SDL3.dll" : OperatingSystem.IsAndroid() ? "libSDL3.so" : OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null));
 
     [ModuleInitializer]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2255", Justification = "Register the assembly's native resolver before any SDL binding can load a second core library.")]
     internal static void Initialize()
     {
+        if (OperatingSystem.IsIOS() || OperatingSystem.IsTvOS()) return;
         NativeLibrary.SetDllImportResolver(typeof(NativeLibraries).Assembly, (name, assembly, path) =>
         {
             if (OperatingSystem.IsAndroid())

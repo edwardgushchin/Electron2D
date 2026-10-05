@@ -49,7 +49,7 @@ internal sealed unsafe partial class FAudioBusEffect : SafeHandle
     internal FAudioBusBuffer? BusBuffer { set => _state.Buffer = value; }
     internal bool InputTap { set => _state.InputTap = value; }
     public override bool IsInvalid => handle == 0;
-    [LibraryImport("FAudio", EntryPoint = "CreateFAPOBaseWithCustomAllocatorEXT")]
+    [LibraryImport(NativeLibraries.AudioLibrary, EntryPoint = "CreateFAPOBaseWithCustomAllocatorEXT")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void CreateBase(NativeEffect* value, F.FAPORegistrationProperties* properties, nint blocks, uint bytes, byte producer, delegate* unmanaged[Cdecl]<nuint, void*> malloc, delegate* unmanaged[Cdecl]<void*, void> free, delegate* unmanaged[Cdecl]<void*, nuint, void*> realloc);
     internal FAudioBusEffect(int channels, int frames, AudioEffect? source = null) : base(0, true)

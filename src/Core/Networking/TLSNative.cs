@@ -16,13 +16,13 @@ internal sealed class TLSHandle : SafeHandle
 
 internal static unsafe partial class TLSNative
 {
-    private const string SSL = "Electron2DSSL", Crypto = "Electron2DCrypto";
+    private const string SSL = NativeLibraries.SSLLibrary, Crypto = NativeLibraries.CryptoLibrary;
     internal static void CheckBackend(bool datagram = false)
     {
-        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("TLS requires a packaged desktop or Android OpenSSL 3 backend.");
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("TLS requires a packaged desktop, Android or Apple OpenSSL 3 backend.");
         try { if (datagram && BIO_s_dgram_pair() == 0) throw new PlatformNotSupportedException("OpenSSL datagram BIOs are unavailable."); if (TLS_method() == 0) throw new PlatformNotSupportedException("OpenSSL TLS is unavailable."); }
         catch (EntryPointNotFoundException error) { throw new PlatformNotSupportedException("DTLS requires OpenSSL 3.2 datagram BIO support.", error); }
-        catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires system Linux or packaged Windows/macOS/Android OpenSSL 3 libraries.", error); }
+        catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires system Linux or packaged desktop/mobile OpenSSL 3 libraries.", error); }
     }
     internal static TLSHandle CreateContext(TLSOptions options, bool datagram = false)
     {
@@ -34,7 +34,7 @@ internal static unsafe partial class TLSNative
             SSL_CTX_set_verify(pointer, options.IsServer() || options.IsUnsafeClient() && options.GetTrustedCAChain() is null ? 0 : 1, 0);
             if (!options.IsServer() && options.GetTrustedCAChain() is null && !options.IsUnsafeClient())
             {
-                if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows() || OperatingSystem.IsAndroid()) ConfigureSystemTrust(pointer);
+                if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows() || OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS()) ConfigureSystemTrust(pointer);
                 else Require(SSL_CTX_set_default_verify_paths(pointer), "System TLS trust is unavailable.");
             }
             return context;

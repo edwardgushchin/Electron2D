@@ -16,6 +16,9 @@ mv "$scratch/SDL3-CS/SDL" "$scratch/SDL"
 mv "$scratch/SDL3-CS/ShaderCross" "$scratch/ShaderCross"
 mv "$scratch/SDL3-CS/Image" "$scratch/Image"
 find "$scratch/SDL" "$scratch/ShaderCross" "$scratch/Image" -name '*.cs' -print0 | xargs -0 perl -pi -e 's/^public /internal /'
+sed -i 's/private const string SDLLibrary = "SDL3";/private const string SDLLibrary = global::Electron2D.NativeLibraries.SDLLibrary;/' "$scratch/SDL/SDL.cs"
+sed -i 's/private const string ImageLibrary = "SDL3_image";/private const string ImageLibrary = global::Electron2D.NativeLibraries.SDLImageLibrary;/' "$scratch/Image/Image.cs"
+sed -i 's/private const string ShaderCrossLibrary = "SDL3_shadercross";/private const string ShaderCrossLibrary = global::Electron2D.NativeLibraries.SDLShaderCrossLibrary;/' "$scratch/ShaderCross/Mixer.cs"
 sed -i '1s/^\xEF\xBB\xBF/#pragma warning disable CS0649 \/\/ Native SDL initializes this callback table.\n/' \
     "$scratch/SDL/File and IO Abstractions/storage/StorageInterface.cs"
 mv "$scratch/LICENSE" "$scratch/SDL3-CS-LICENSE.txt"
@@ -28,7 +31,9 @@ Commit: $revision
 
 The complete upstream SDL3-CS/SDL, SDL3-CS/ShaderCross and SDL3-CS/Image trees are compiled into Electron2D.dll.
 Local adaptation makes top-level binding types internal and suppresses CS0649 on
-the native-initialized storage callback table. The upstream license is retained.
+the native-initialized storage callback table. Core/Image/ShaderCross library
+constants use the engine resolver's names or static executable symbols on iOS/tvOS.
+The upstream license is retained.
 Refresh with tools/update-sdl3-cs.sh and a release tag, then inspect the diff and
 run the engine, test, coverage, and native example checks.
 EOF

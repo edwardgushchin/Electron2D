@@ -9,6 +9,7 @@ import subprocess
 import shutil
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from unittest.mock import Mock, patch
 from zipfile import ZipFile
 
@@ -21,6 +22,55 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_apple_static_references_select_only_the_requested_rid(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            targets = root / "buildTransitive/Electron2D.Native.targets"
+            targets.parent.mkdir()
+            shutil.copyfile(rids.ROOT / "tools/native/Electron2D.Native.targets", targets)
+            rows = [row for row in rids.matrix() if row["platform"] in {"iOS", "tvOS"}]
+            for row in rows:
+                native = root / "runtimes" / row["rid"] / "native"
+                native.mkdir(parents=True)
+                for name in check_rid.native_package.ARCHIVES:
+                    (native / name).write_bytes(b"!<arch>\n")
+            project = ET.Element("Project")
+            ET.SubElement(project, "Import", Project=str(targets))
+            sdl = root / "sdl-image"
+            sdl.mkdir()
+            group = ET.SubElement(project, "PropertyGroup")
+            ET.SubElement(group, "_SDL3CSNativeImageAppleStaticLibDir").text = str(sdl) + "/"
+            group = ET.SubElement(project, "ItemGroup", Condition="'$(TargetPlatformIdentifier)' == 'ios' or '$(TargetPlatformIdentifier)' == 'tvos'")
+            for name in ("libSDL3_image.a", "libpng16.a", "libz.a"):
+                (sdl / name).write_bytes(b"!<arch>\n")
+                ET.SubElement(group, "NativeReference", Include=str(sdl / name))
+            foreign = root / "unrelated/libz.a"
+            ET.SubElement(group, "NativeReference", Include=str(foreign))
+            fixture = root / "fixture.proj"
+            ET.ElementTree(project).write(fixture, encoding="unicode")
+            for row in rows + [dict(rows[0], platform="Linux")]:
+                with self.subTest(rid=row["rid"], platform=row["platform"]):
+                    result = subprocess.run(["dotnet", "msbuild", str(fixture), "-nologo",
+                                             "-p:RuntimeIdentifier=" + row["rid"],
+                                             "-p:TargetPlatformIdentifier=" + row["platform"].lower(),
+                                             "-t:Electron2DAppleCodecIdentity", "-getItem:NativeReference,LinkerArgument"],
+                                            check=True, capture_output=True, text=True)
+                    items = json.loads(result.stdout)["Items"]
+                    references = items["NativeReference"]
+                    if row["platform"] == "Linux":
+                        self.assertEqual(references, [])
+                        self.assertEqual(items["LinkerArgument"], [])
+                        continue
+                    self.assertEqual({Path(item["FullPath"]) for item in references},
+                                     {root / "runtimes" / row["rid"] / "native" / name for name in check_rid.native_package.ARCHIVES} | {sdl / "libSDL3_image.a", foreign})
+                    self.assertEqual(len(references), len(check_rid.native_package.ARCHIVES) + 2)
+                    for item in (item for item in references if Path(item["Identity"]).name in check_rid.native_package.ARCHIVES):
+                        self.assertEqual(Path(item["FullPath"]).parent, root / "runtimes" / row["rid"] / "native")
+                        self.assertEqual(item["Kind"], "Static")
+                        for flag in ("ForceLoad", "SmartLink", "IsCxx"):
+                            self.assertEqual(item[flag], "true")
+                    self.assertEqual([item["Identity"] for item in items["LinkerArgument"]], ["-framework", "CoreBluetooth"])
+
     def test_aggregate_status_requires_every_expected_dependency_to_pass(self):
         for group in ("build", "tests"):
             names = ("matrix", "native", group)
@@ -181,7 +231,7 @@ class Checks(unittest.TestCase):
                     rids.matrix()
 
     def test_artifacts_and_rejections(self):
-        for rid in ("linux-x64", "linux-arm64", "osx-x64", "osx-arm64", "win-x86", "win-x64", "win-arm64", "android-arm64", "ios-arm64", "browser-wasm"):
+        for rid in (row["rid"] for row in rids.matrix()):
             row = next(item for item in rids.matrix() if item["rid"] == rid)
             with self.subTest(rid=rid), tempfile.TemporaryDirectory() as directory, patch.object(check_rid.native_package, "windows_exports") as windows:
                 output = Path(directory)
@@ -191,8 +241,8 @@ class Checks(unittest.TestCase):
                     packages.append({"Identity": "Electron2D.Native.Linux"})
                     packages.append({"Identity": "Electron2D.Native.MacOS"})
                     packages.append({"Identity": "Electron2D.Native.Windows"})
-                if row["platform"] == "Android":
-                    packages.append({"Identity": "Electron2D.Native.Android"})
+                if row["platform"] in {"Android", "iOS", "tvOS"}:
+                    packages.append({"Identity": "Electron2D.Native." + row["platform"]})
                 profile = {"Properties": {"RuntimeIdentifier": rid, "TargetFramework": row["framework"], "Electron2DNativePlatform": row["platform"]}, "Items": {"PackageReference": packages}}
                 profile_file = output / "profile.json"
                 profile_file.write_text(json.dumps(profile))
@@ -219,6 +269,18 @@ class Checks(unittest.TestCase):
                         (native / name).write_bytes(header)
                 with redirect_stdout(StringIO()):
                     check_rid.check(rid, output)
+                if row["platform"] in {"Android", "iOS", "tvOS"}:
+                    for invalid in (None, "Electron2D.Native.Linux"):
+                        private = packages.pop()
+                        if invalid:
+                            packages.append({"Identity": invalid})
+                        profile_file.write_text(json.dumps(profile))
+                        with self.assertRaises(ValueError):
+                            check_rid.check(rid, output)
+                        if invalid:
+                            packages.pop()
+                        packages.append(private)
+                    profile_file.write_text(json.dumps(profile))
                 if row["platform"] == "Windows":
                     self.assertEqual(windows.call_count, 6)
                     windows.side_effect = ValueError("Wrong native PE architecture")

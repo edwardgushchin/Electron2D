@@ -28,7 +28,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal long MixPasses => Interlocked.Read(ref _mixPasses);
     internal long MixManagedBytes => Interlocked.Read(ref _mixManagedBytes);
     internal double SinceMix => _lastMix == 0 ? 0 : System.Diagnostics.Stopwatch.GetElapsedTime(Interlocked.Read(ref _lastMix)).TotalSeconds;
-    [LibraryImport("FAudio", EntryPoint = "FAudio_SetEngineProcedureEXT")]
+    [LibraryImport(NativeLibraries.AudioLibrary, EntryPoint = "FAudio_SetEngineProcedureEXT")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void SetProcedure(nint engine, delegate* unmanaged[Cdecl]<delegate* unmanaged[Cdecl]<nint, float*, void>, nint, float*, nint, void> procedure, nint user);
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
@@ -61,7 +61,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal int MixRate { get; private set; }
     internal int Channels { get; private set; }
     internal static long AllocationCalls => Interlocked.Read(ref _allocations) + Interlocked.Read(ref _reallocations);
-    [LibraryImport("FAudio", EntryPoint = "FAudioCreateWithCustomAllocatorEXT")]
+    [LibraryImport(NativeLibraries.AudioLibrary, EntryPoint = "FAudioCreateWithCustomAllocatorEXT")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial uint Create(out nint engine, uint flags, uint processor, delegate* unmanaged[Cdecl]<nuint, void*> malloc, delegate* unmanaged[Cdecl]<void*, void> free, delegate* unmanaged[Cdecl]<void*, nuint, void*> realloc);
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
@@ -72,7 +72,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal static void FreeStorage(void* value) => NativeMemory.Free(value);
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     internal static void* Reallocate(void* value, nuint size) { Interlocked.Increment(ref _reallocations); return NativeMemory.Realloc(value, size); }
-    [LibraryImport("FAudio", EntryPoint = "FAudioCreateVolumeMeterWithCustomAllocatorEXT")]
+    [LibraryImport(NativeLibraries.AudioLibrary, EntryPoint = "FAudioCreateVolumeMeterWithCustomAllocatorEXT")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial uint CreateMeter(out nint meter, uint flags, delegate* unmanaged[Cdecl]<nuint, void*> malloc, delegate* unmanaged[Cdecl]<void*, void> free, delegate* unmanaged[Cdecl]<void*, nuint, void*> realloc);
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -89,7 +89,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal FAudioContext(uint deviceIndex = 0, object? gate = null)
     {
         Gate = gate ?? new();
-        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid()) throw new NotSupportedException("Native audio output requires a packaged desktop or Android FAudio backend.");
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS()) throw new NotSupportedException("Native audio output requires a packaged desktop, Android or Apple FAudio backend.");
         try
         {
             Check(Create(out _engine, 0, F.FAUDIO_DEFAULT_PROCESSOR, &Allocate, &Free, &Reallocate), "create engine");

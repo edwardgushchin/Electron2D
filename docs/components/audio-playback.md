@@ -50,6 +50,8 @@ Runtime Autoplay works; editor-hint suppression requires the editor-hint lifecyc
 
 ## Verification
 
+Apple native app checks now select static FAudio/SDL imports and require captured nonzero finite PCM, playback progress/latency and two balanced engine lifecycles. Their headless profile uses SDL dummy output. Four simulator app runs remain required; unsigned iOS/tvOS device builds do not establish physical audio or production host acceptance.
+
 - `dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release`: AudioResourceTests runs in the standard suite; all four storage formats, independent IMA nibble vector, import/save and retained file rejection, copied state, duplication, loop modes, corrupt input, disposal and PackedScene configuration.
 - `ELECTRON2D_TEST_AUDIO=1 SDL_AUDIODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release`: actual FAudio mixed PCM, source waveform, native mix quanta, pause, pitch ×2, concrete loop cursor, detach/reentry, post-volume routing/mute/gain/solo, live graph edits, polyphony and natural completion.
 - `ELECTRON2D_TEST_AUDIO_SPEAKERS=1 SDL_AUDIO_CHANNELS=N SDL_AUDIODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release`: N=1/4/6/8 checks actual 2/4/6/8-channel native stereo/center/surround PCM, including LFE gain, through the preserved backend hint; this verifies logical native mix profiles, not physical speakers.

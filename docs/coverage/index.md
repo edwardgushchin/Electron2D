@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-05
 
+Apple target libraries now restore their private static package and executable-symbol imports, with native font/TLS/ENet/audio checks connected to four simulator apps and two unsigned device builds. MSBuild tests cover all six archive selectors and codec deduplication, and Linux builds compile both Apple import branches. Xcode linkage and simulator native execution remain unproven; no declaration coverage state is closed by this wiring. Browser application integration and complete Windows/macOS suites remain required.
+
 Desktop failure-path fixes retain the existing declaration coverage states: iterative randomizer construction keeps the 256-operation guard, shared TCP/UDS peek distinguishes FIN/RST, and independent TLS oracles force both-role TLS 1.2/1.3 without relying on macOS SslStream TLS 1.3 support. The full Linux suite and focused checks passed; all Windows/macOS target suites remain required. See [platform verification](../platform-verification.md).
 
 The [editor startup screen](../components/editor-startup.md) is a separate executable consumer of existing public Window, TextureRect, Label, FontFile, ResourceLoader, DisplayServer.SetIcon and Engine APIs. Its desktop launchers/identity assets belong to the editor consumer. It adds no runtime declaration or coverage-state change. Editor project/scene authoring, inspector/gizmos and shared CLI/batch operations remain dependent on their first executable slices under ADR 0090; displaying a logo does not satisfy those dependencies.

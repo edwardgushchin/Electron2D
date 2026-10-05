@@ -8,7 +8,7 @@ namespace Electron2D;
 // ponytail: boundary analysis serializes here; shard iterators only if measured concurrent shaping needs it.
 internal static unsafe partial class NativeTextBreak
 {
-    private const string Library = "Electron2DTextBreak";
+    private const string Library = NativeLibraries.TextBreakLibrary;
     private const int LineCapacity = 64;
     private static readonly object Gate = new();
     private static readonly Dictionary<string, (nint Handle, ulong Access)> Lines = new(StringComparer.Ordinal);
@@ -115,9 +115,9 @@ internal static unsafe partial class NativeTextBreak
     private static void Initialize()
     {
         if (_initialized) return;
-        if ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid()) ||
+        if ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS()) ||
             RuntimeInformation.ProcessArchitecture is not (Architecture.X64 or Architecture.Arm64) && !(OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X86) && !(OperatingSystem.IsAndroid() && RuntimeInformation.ProcessArchitecture is Architecture.X86 or Architecture.Arm))
-            throw new PlatformNotSupportedException("Native word and line boundaries require a packaged desktop or Android backend.");
+            throw new PlatformNotSupportedException("Native word and line boundaries require a packaged desktop, Android or Apple backend.");
         if (_data == 0)
         {
             using var stream = typeof(NativeTextBreak).Assembly.GetManifestResourceStream("Electron2D.TextBreak.dat")

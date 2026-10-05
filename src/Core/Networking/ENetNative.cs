@@ -15,12 +15,12 @@ internal struct ENetNativeEvent { internal int Type, Peer, Channel; internal uin
 internal unsafe struct ENetNativeBuffer { internal byte* Data; internal nuint Length; }
 internal static unsafe partial class ENetNative
 {
-    private const string Library = "Electron2DENet";
+    private const string Library = NativeLibraries.ENetLibrary;
     private static readonly object Gate = new();
     private static bool _ready;
     internal static void Prepare()
     {
-        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("ENet requires a packaged desktop or Android native backend.");
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("ENet requires a packaged desktop, Android or Apple native backend.");
         lock (Gate) { if (_ready) return; Callbacks(&ENetTransport.SendCallback, &ENetTransport.ReceiveCallback, &ENetTransport.WaitCallback, &ENetTransport.ControlCallback); _ready = true; }
     }
     [LibraryImport(Library, EntryPoint = "e2d_enet_callbacks"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void Callbacks(delegate* unmanaged[Cdecl]<int, uint, ushort, ENetNativeBuffer*, nuint, int> send, delegate* unmanaged[Cdecl]<int, uint*, ushort*, byte*, nuint, int> receive, delegate* unmanaged[Cdecl]<int, uint*, uint, int> wait, delegate* unmanaged[Cdecl]<int, int, int, int> control);

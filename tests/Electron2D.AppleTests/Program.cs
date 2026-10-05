@@ -35,7 +35,14 @@ public sealed class TestDelegate : UIApplicationDelegate
         {
             if (System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported)
                 throw new InvalidOperationException("Apple AOT contract hosts must not enable dynamic code generation.");
+            SDL3.SDL.SetMainReady();
+            SDL3.SDL.SetHint("SDL_AUDIODRIVER", "dummy");
+            Console.WriteLine("CHECK managed contracts");
             ContractChecks.Run();
+            Console.WriteLine("CHECK native font precision");
+            NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+            Console.WriteLine("CHECK native TLS/audio lifecycle");
+            NativeChecks.Run();
         }
         catch (Exception error) { status = "FAIL " + error; code = 1; }
         Console.WriteLine("ELECTRON2D_RESULT " + status);

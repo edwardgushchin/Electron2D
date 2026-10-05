@@ -14,6 +14,8 @@ Android loads private OpenSSL libraries from the SDK application bundle and uses
 
 ## Verification
 
+iOS/tvOS statically link the private OpenSSL closure and use the same bounded .NET OS-chain callback before native policy/name validation. Apple app tests exercise trusted records, hostname rejection and unknown OS-root rejection; actual SDK/simulator results remain required. Import constants preserve ordinary desktop/Android names and select `__Internal` only in Apple target compilation.
+
 [TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) executes native TLS over fragmented public streams and TCP, trust/name/failure/lifetime/finalization paths and independent SslStream interoperability. Prepared active/idle cycles measure managed allocation; external OpenSSL native allocation totals and other hosts remain unverified.
 
 [TLSSystemTrustTests](../../tests/Electron2D.Tests/TLSSystemTrustTests.cs) directly exercises the native verification context: an OS anchor succeeds, while an unknown root or missing certificate fails. The callback is bounded to 64 supplied certificates and 1 MiB per DER certificate, disables certificate downloads/revocation fetching, catches exceptions before returning to native code, and never modifies OS trust stores. Linux regressions passed; macOS executable integration remains pending.

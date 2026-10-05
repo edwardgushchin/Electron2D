@@ -8,10 +8,10 @@ internal sealed unsafe partial class FAudioContext
 {
     private bool _switchingOutput;
     private double _outputLatency;
-    [LibraryImport("FAudio", EntryPoint = "e2d_audio_output_latency")]
+    [LibraryImport(NativeLibraries.AudioLibrary, EntryPoint = "e2d_audio_output_latency")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial double OutputLatency(nint audio);
-    [LibraryImport("FAudio", EntryPoint = "e2d_audio_select_output")]
+    [LibraryImport(NativeLibraries.AudioLibrary, EntryPoint = "e2d_audio_select_output")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int SelectOutput(nint audio, uint device);
     internal double BufferedOutputLatency => AtomicFloatingPoint.Read(ref _outputLatency);

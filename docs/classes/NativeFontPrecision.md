@@ -47,7 +47,7 @@ Rasterize applies a horizontal 0..63 phase in 26.6 to the outline before rasteri
 
 Sequential ABI records model only documented public FreeType record fields. CLong/CULong preserve Windows C-long width and Unix native-long width. Public FreeType/HarfBuzz C entry points are called with Cdecl; no SDL_ttf private state is read. FontFile enforces the public 64 MiB source limit before constructing this backend.
 
-macOS resolves private FreeType 2.13.3 with statically linked Brotli/PNG/zlib and HarfBuzz auto-hinting support. Its producer checks the engine's bundled WOFF2 directly before packaging. The first upstream macOS binary failed WOFF2 decoding; [native delivery](../native-packaging.md) distinguishes that failure, the replacement producer and pending full runtime execution.
+macOS resolves private FreeType 2.14.3 with statically linked Brotli/PNG/zlib and HarfBuzz auto-hinting support. Its producer checks the engine's bundled WOFF2 directly before packaging. The first upstream macOS binary failed WOFF2 decoding; [native delivery](../native-packaging.md) distinguishes that failure, the replacement producer and pending full runtime execution.
 
 ## Feature tag conversion
 
@@ -55,6 +55,8 @@ macOS resolves private FreeType 2.13.3 with statically linked Brotli/PNG/zlib an
 OpenTypeFeatureTags maps 127 fixed readable aliases plus 99 character-variant and 20 stylistic-set aliases. Matching is ordinal and case-sensitive. Unknown keys remove all custom_ segments, replace non-ASCII scalars with spaces, stop at NUL, truncate to four bytes and space-pad shorter tags; the empty key maps to zero. FontFile retains original keys and signed values, compiling only nonnegative values into NativeFontFeature records.
 
 ## Verification and limits
+
+iOS/tvOS select static FreeType/HarfBuzz executable imports rather than desktop dynamic names. The Apple test app now includes the same complete precision/raster fixture used by Android, including fractional C-long metrics and WOFF2/Arabic/cluster/lifetime/allocation checks. Local preprocessing-branch compilation is not Apple SDK or native execution evidence; four simulator results remain required.
 
 [NativeFontPrecisionTests](../../tests/Electron2D.Tests/NativeFontPrecisionTests.cs) verifies independent FreeType C metrics, WOFF2 loading, metadata, table ownership, real cmap enumeration, ligature features, combining clusters, Arabic shaping/run context/tatweel flags, vertical origins, corrupt data, owner-thread guards and lifetime. Twelve independent C raster profiles verify complete pixel hashes and bearings across four quarter-pixel phases, all three hinting modes and multiple stroke radii; tests also verify transform restoration and empty/invalid glyph paths.
 

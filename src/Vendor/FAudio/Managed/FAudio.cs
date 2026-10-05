@@ -39,7 +39,7 @@ internal static class FAudio
 {
 	#region Native Library Name
 
-	const string nativeLibName = "FAudio";
+	const string nativeLibName = global::Electron2D.NativeLibraries.AudioLibrary;
 
 	#endregion
 

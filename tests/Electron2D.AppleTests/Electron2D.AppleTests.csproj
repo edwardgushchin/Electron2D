@@ -12,13 +12,14 @@
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>full</TrimMode>
     <DynamicCodeSupport>false</DynamicCodeSupport>
-    <MtouchExtraArgs>$(MtouchExtraArgs) --dlsym:+Electron2D</MtouchExtraArgs>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
   <ItemGroup>
-    <LinkerArgument Include="-framework" />
-    <LinkerArgument Include="CoreBluetooth" />
     <ProjectReference Include="../../Electron2D.csproj" SetRuntimeIdentifier="RuntimeIdentifier=$(RuntimeIdentifier)" AdditionalProperties="RuntimeIdentifier=$(RuntimeIdentifier)" />
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
+    <Compile Include="../Portability/NativeChecks.cs" Link="NativeChecks.cs" />
+    <Compile Include="../Electron2D.Tests/NativeFontPrecisionTests.cs" Link="NativeFontPrecisionTests.cs" />
+    <Compile Include="../Electron2D.Tests/FontTestFixtures.cs" Link="FontTestFixtures.cs" />
+    <EmbeddedResource Include="../Electron2D.Tests/Fixtures/Fonts/*.woff2;../Electron2D.Tests/Fixtures/Fonts/*.ttf" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

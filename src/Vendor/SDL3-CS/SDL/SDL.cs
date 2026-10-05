@@ -29,7 +29,7 @@ namespace SDL3;
 
 internal static partial class SDL
 {
-    private const string SDLLibrary = "SDL3";
+    private const string SDLLibrary = global::Electron2D.NativeLibraries.SDLLibrary;
     
     
     /// <summary>

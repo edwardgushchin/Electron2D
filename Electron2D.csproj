@@ -59,6 +59,9 @@
     <PackageReference Update="SDL3-CS.Android" ExcludeAssets="runtime;native" />
     <AndroidAsset Include="licence/*" Exclude="licence/ReferenceData-LICENSE.txt" Link="licence/%(Filename)%(Extension)" />
   </ItemGroup>
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'">
+    <PackageReference Include="Electron2D.Native.$(Electron2DNativePlatform)" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" />
+  </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
     <!-- The Android SDK scans this root project recursively; nested app outputs are not engine assets. -->
     <AndroidLibrary Remove="**/obj/**/*;**/bin/**/*" />

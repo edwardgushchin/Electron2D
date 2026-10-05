@@ -8,6 +8,7 @@
   "patches": [
     "Internal top-level binding; preserve nested upstream API inside private backend boundary.",
     "Disable nullable and missing-XML diagnostics for the preserved upstream binding.",
+    "Use the engine-owned native library constant, selecting executable static symbols on iOS/tvOS.",
     "Apply the desktop deployment default only to Darwin; retain the selected iOS/tvOS target minimum."
   ],
   "nativeOptions": {

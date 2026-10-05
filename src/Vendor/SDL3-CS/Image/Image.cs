@@ -44,5 +44,5 @@ namespace SDL3;
 /// </summary>
 internal partial class Image
 {
-    private const string ImageLibrary = "SDL3_image";
+    private const string ImageLibrary = global::Electron2D.NativeLibraries.SDLImageLibrary;
 }

@@ -16,6 +16,8 @@ The native Linux x64 low-level transport profile executes IPv4/IPv6 loopback and
 
 ## Verification
 
+Apple test apps now reference static ENet/OpenSSL and exercise public host binding, trusted TLS records, hostname mismatch and OS-root rejection. The existing bounded system-trust callback is reused. Four simulator results remain required; these mobile smoke checks do not replace the five complete Windows/macOS suites.
+
 Shared TCP/UDS polling uses non-consuming receive peek to distinguish drained FIN from RST. The retained networking fixture passed locally after the Windows x86 timeout fix. TLS checks force both-role TLS 1.2 through SslStream and both-role TLS 1.3 through independent OpenSSL, including graceful versus abrupt closure and borrowed transport lifetime. Linux focused checks passed; complete Windows/macOS runs are still required.
 
 Desktop runtime resolution selects private macOS/Windows ENet/OpenSSL and bounded .NET OS-chain trust before OpenSSL name/purpose verification. macOS fresh text/audio/ENet consumers passed; complete Windows/macOS full-suite acceptance remains pending. All three Windows full-suite/consumer profiles are connected. Linux regressions passed after loader/ABI/trust changes. Mobile/browser integration remains required, with no foreign acceptance inferred from Linux checks.

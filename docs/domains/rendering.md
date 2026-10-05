@@ -43,6 +43,8 @@ AnimatedTexture is a node-independent Texture that selects borrowed frame source
 
 ## Verification and limits
 
+Apple static text imports and NativeFontPrecisionTests are connected to all six iOS/tvOS test-app profiles. MSBuild selection checks and local preprocessing-branch compilation are separate from pending simulator/native raster execution; no Apple rendered or physical-device acceptance is inferred.
+
 Current native verification covers Linux Wayland GPU/Vulkan and compatibility, plus the software renderer under the dummy video driver. Pixel checks cover ordinary drawing, both shader languages, canvas ordering and lifecycle-driven recording through notifications/events/overrides; other target backends, user visual acceptance, broad-scene performance, lights, nested alpha-mask composition, meshes, remaining GUI families, multi-view/multiwindow rendering and device recovery remain unfinished. See the component pages for exact checks and limits.
 
 [ADR 0028](../decisions/rendering.md#adr-0028) owns backend/shader decisions, [ADR 0004](../decisions/product.md#adr-0004) owns the 2D product boundary, and [ADR 0021](../decisions/product.md#adr-0021) owns the current platform gate.

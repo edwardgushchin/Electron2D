@@ -9,3 +9,5 @@ ENetNative owns the thirteen private source-generated C entry points and callbac
 ENetTests exercises this support through public host/peer/scene API. Native allocator work and foreign/routed/rendered acceptance remain separate.
 
 Desktop and Android profiles resolve their target-built private bridge. Android's executable native host verifies a bound public ENet connection; this smoke check does not replace the full desktop wire, codecs, replication or routed tests.
+
+iOS/tvOS statically link the same private bridge with executable-symbol imports and caller-thread callbacks. The Apple native app checks a bound public ENet host during two engine lifecycles; simulator execution remains required and does not replace complete desktop wire/codec tests.

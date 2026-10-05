@@ -118,13 +118,13 @@ internal sealed unsafe partial class NativeFontPrecision
         internal RasterBitmap Bitmap;
     }
 
-    [LibraryImport("freetype", EntryPoint = "FT_Set_Transform"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTSetTransform(nint face, FTMatrix* matrix, FTVector* delta);
-    [LibraryImport("freetype", EntryPoint = "FT_Render_Glyph"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTRenderGlyph(nint slot, int mode);
-    [LibraryImport("freetype", EntryPoint = "FT_Get_Glyph"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTGetGlyph(nint slot, out nint glyph);
-    [LibraryImport("freetype", EntryPoint = "FT_Done_Glyph"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTDoneGlyph(nint glyph);
-    [LibraryImport("freetype", EntryPoint = "FT_Stroker_New"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTStrokerNew(nint library, out nint stroker);
-    [LibraryImport("freetype", EntryPoint = "FT_Stroker_Set"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTStrokerSet(nint stroker, CLong radius, int cap, int join, CLong miterLimit);
-    [LibraryImport("freetype", EntryPoint = "FT_Stroker_Done"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTStrokerDone(nint stroker);
-    [LibraryImport("freetype", EntryPoint = "FT_Glyph_Stroke"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTGlyphStroke(ref nint glyph, nint stroker, int destroy);
-    [LibraryImport("freetype", EntryPoint = "FT_Glyph_To_Bitmap"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTGlyphToBitmap(ref nint glyph, int mode, FTVector* origin, int destroy);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Set_Transform"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTSetTransform(nint face, FTMatrix* matrix, FTVector* delta);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Render_Glyph"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTRenderGlyph(nint slot, int mode);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Get_Glyph"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTGetGlyph(nint slot, out nint glyph);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Done_Glyph"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTDoneGlyph(nint glyph);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Stroker_New"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTStrokerNew(nint library, out nint stroker);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Stroker_Set"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTStrokerSet(nint stroker, CLong radius, int cap, int join, CLong miterLimit);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Stroker_Done"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTStrokerDone(nint stroker);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Glyph_Stroke"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTGlyphStroke(ref nint glyph, nint stroker, int destroy);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Glyph_To_Bitmap"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTGlyphToBitmap(ref nint glyph, int mode, FTVector* origin, int destroy);
 }

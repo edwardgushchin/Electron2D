@@ -1,6 +1,6 @@
 # FAudioContext
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Declaration:** `internal sealed unsafe partial class Electron2D.FAudioContext : IDisposable` · **Source:** [FAudioContext.cs](../../src/Servers/Audio/FAudioContext.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -15,6 +15,8 @@ Android selects `libFAudio.so` from its transitive native package and SDK APK li
 Bus input voices execute before descending public-effect voices, initializing [prepared detector PCM](FAudioBusBuffer.md) from direct sources. Final effects/gain publish current-quantum buffers and sends. Source/sample activity maps to the shared bus activity, which is advanced once per quantum. Input taps and voices participate in graph replacement, native error reporting and output teardown. Closing state suppresses further mixing; the engine joins its native worker while explicit held mix locks are temporarily released, then releases master/engine and callback lifetime.
 
 ## Verification and limits
+
+iOS/tvOS use the transitive static FAudio archive and SDL core with executable-symbol imports, including the existing engine-owned output bridge and custom allocator/procedure callbacks. Apple native tests require captured finite nonzero PCM, progress/latency and two balanced engine lifecycles with SDL dummy output. Actual simulator execution remains pending; physical device audio is not inferred from compilation or capture.
 
 Generic audio resource/runtime/bus/effect/sample checks verify owned voice and routing behavior. [AudioCompressorTests](../../tests/Electron2D.Tests/AudioCompressorTests.cs) verifies ordered sidechain PCM and repeated active/paused callback allocations. Current native output is verified on Linux x64 with logical 2/4/6/8 channel profiles; physical multichannel devices, listening, SDL/OS allocations and other platforms remain separate gates. See [ADR 0047](../decisions/audio.md#adr-0047).
 
