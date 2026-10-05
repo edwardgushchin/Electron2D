@@ -330,7 +330,15 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
 
     [StructLayout(LayoutKind.Sequential)] private struct CallbackState { internal nint Face; internal int Error; }
     [StructLayout(LayoutKind.Sequential)] private struct Generic { internal nint Data, Finalizer; }
-    // These are the documented public FreeType record prefixes. CLong/CULong follow LLP64 on Windows and LP64 on Unix.
+    // C long fields/arguments follow LLP64, LP64 and ILP32. Return scalar registers, not struct-return ABI.
+    private static CULong CharResult(nuint value) => new(OperatingSystem.IsWindows() ? (nuint)(uint)value : value);
+    private static CULong FTGetFirstChar(nint face, out uint glyph) => CharResult(FTGetFirstCharNative(face, out glyph));
+    private static CULong FTGetNextChar(nint face, CULong character, out uint glyph) => CharResult(FTGetNextCharNative(face, character, out glyph));
+    private static CLong FTMulFix(CLong value, CLong scale)
+    {
+        var result = FTMulFixNative(value, scale);
+        return new(OperatingSystem.IsWindows() ? (nint)(int)result : result);
+    }
     [StructLayout(LayoutKind.Sequential)]
     private struct FaceRecord
     {
@@ -377,12 +385,12 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     [LibraryImport("freetype", EntryPoint = "FT_Done_Face"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTDoneFace(nint face);
     [LibraryImport("freetype", EntryPoint = "FT_Set_Char_Size"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTSetCharSize(nint face, CLong width, CLong height, uint horizontalDPI, uint verticalDPI);
     [LibraryImport("freetype", EntryPoint = "FT_Get_Char_Index"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial uint FTGetCharIndex(nint face, CULong character);
-    [LibraryImport("freetype", EntryPoint = "FT_Get_First_Char"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CULong FTGetFirstChar(nint face, out uint glyph);
-    [LibraryImport("freetype", EntryPoint = "FT_Get_Next_Char"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CULong FTGetNextChar(nint face, CULong character, out uint glyph);
+    [LibraryImport("freetype", EntryPoint = "FT_Get_First_Char"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nuint FTGetFirstCharNative(nint face, out uint glyph);
+    [LibraryImport("freetype", EntryPoint = "FT_Get_Next_Char"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nuint FTGetNextCharNative(nint face, CULong character, out uint glyph);
     [LibraryImport("freetype", EntryPoint = "FT_Face_GetCharVariantIndex"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial uint FTGetCharVariantIndex(nint face, CULong character, CULong selector);
     [LibraryImport("freetype", EntryPoint = "FT_Get_Advance"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTGetAdvance(nint face, uint glyph, int flags, out CLong advance);
     [LibraryImport("freetype", EntryPoint = "FT_Load_Glyph"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTLoadGlyph(nint face, uint glyph, int flags);
-    [LibraryImport("freetype", EntryPoint = "FT_MulFix"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong FTMulFix(CLong value, CLong scale);
+    [LibraryImport("freetype", EntryPoint = "FT_MulFix"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint FTMulFixNative(CLong value, CLong scale);
     [LibraryImport("freetype", EntryPoint = "FT_Load_Sfnt_Table"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTLoadSFNTTable(nint face, CULong tag, CLong offset, byte* buffer, ref CULong length);
     [LibraryImport("HarfBuzzSharp", EntryPoint = "hb_face_create_for_tables"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint HBFaceCreate(delegate* unmanaged[Cdecl]<nint, uint, nint, nint> callback, nint data, delegate* unmanaged[Cdecl]<nint, void> destroy);
     [LibraryImport("HarfBuzzSharp", EntryPoint = "hb_face_destroy"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void HBFaceDestroy(nint face);

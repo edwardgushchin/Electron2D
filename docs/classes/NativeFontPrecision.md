@@ -1,6 +1,6 @@
 # NativeFontPrecision
 
-Last updated: 2026-09-27
+Last updated: 2026-10-05
 
 - Declaration: `internal sealed unsafe partial class NativeFontPrecision : IDisposable`
 - Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
@@ -10,6 +10,8 @@ Last updated: 2026-09-27
 ## Description
 
 Owns a copied native font source, a public FreeType face, and HarfBuzz face/font/buffer handles on one text-worker thread. FontData serializes access from public Font resources. SFNT tables are obtained through FT_Load_Sfnt_Table, allowing the same path to shape compressed WOFF2 and ordinary TTF/OTF/TTC data without reading private library structures. HarfBuzz OT functions supply shaping, while explicit FreeType callbacks preserve unhinted advances, glyph extents and vertical origins.
+
+C-long fields and arguments retain `CLong`/`CULong` widths. Native returns use integer registers (`nint`/`nuint`), with Windows results narrowed to its 32-bit C long. Returning the managed wrapper struct selected the wrong struct-return ABI on Android x86 and corrupted underline metrics; the shared regression retains exact metrics, character-map, shaping and raster assertions on the Android host.
 
 ## Internal member summary
 

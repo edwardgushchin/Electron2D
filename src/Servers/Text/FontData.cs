@@ -57,9 +57,9 @@ internal sealed class FontData : IDisposable
         _bytes = immutableData; _faceIndex = faceIndex; _execute = Execute;
         if (HasData)
         {
-            if ((!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) ||
-                RuntimeInformation.ProcessArchitecture is not (Architecture.X64 or Architecture.Arm64) && !(OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X86))
-                throw new PlatformNotSupportedException("Native font assets require a packaged desktop runtime.");
+            if ((!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsAndroid()) ||
+                RuntimeInformation.ProcessArchitecture is not (Architecture.X64 or Architecture.Arm64) && !(OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X86) && !(OperatingSystem.IsAndroid() && RuntimeInformation.ProcessArchitecture is Architecture.X86 or Architecture.Arm))
+                throw new PlatformNotSupportedException("Native font assets require a packaged desktop or Android runtime.");
             Run(Operation.Create);
         }
     }

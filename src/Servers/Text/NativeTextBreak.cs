@@ -115,9 +115,9 @@ internal static unsafe partial class NativeTextBreak
     private static void Initialize()
     {
         if (_initialized) return;
-        if ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows()) ||
-            RuntimeInformation.ProcessArchitecture is not (Architecture.X64 or Architecture.Arm64) && !(OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X86))
-            throw new PlatformNotSupportedException("Native word and line boundaries require the packaged desktop backend.");
+        if ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid()) ||
+            RuntimeInformation.ProcessArchitecture is not (Architecture.X64 or Architecture.Arm64) && !(OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X86) && !(OperatingSystem.IsAndroid() && RuntimeInformation.ProcessArchitecture is Architecture.X86 or Architecture.Arm))
+            throw new PlatformNotSupportedException("Native word and line boundaries require a packaged desktop or Android backend.");
         if (_data == 0)
         {
             using var stream = typeof(NativeTextBreak).Assembly.GetManifestResourceStream("Electron2D.TextBreak.dat")

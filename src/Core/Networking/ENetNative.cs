@@ -20,7 +20,7 @@ internal static unsafe partial class ENetNative
     private static bool _ready;
     internal static void Prepare()
     {
-        if (!OperatingSystem.IsWindows() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("ENet requires the packaged desktop native backend.");
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("ENet requires a packaged desktop or Android native backend.");
         lock (Gate) { if (_ready) return; Callbacks(&ENetTransport.SendCallback, &ENetTransport.ReceiveCallback, &ENetTransport.WaitCallback, &ENetTransport.ControlCallback); _ready = true; }
     }
     [LibraryImport(Library, EntryPoint = "e2d_enet_callbacks"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void Callbacks(delegate* unmanaged[Cdecl]<int, uint, ushort, ENetNativeBuffer*, nuint, int> send, delegate* unmanaged[Cdecl]<int, uint*, ushort*, byte*, nuint, int> receive, delegate* unmanaged[Cdecl]<int, uint*, uint, int> wait, delegate* unmanaged[Cdecl]<int, int, int, int> control);
