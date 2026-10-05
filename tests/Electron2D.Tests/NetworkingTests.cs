@@ -7,7 +7,7 @@ internal static class NetworkingTests
 {
     internal static void Run()
     {
-        Extensions(); Buffer(); TCP(); UDS(); UDP(); ReusableDatagramAddress(); UDPConnections(); Multicast(); IPv6(); Scene(); FramedPackets();
+        Extensions(); Buffer(); TCP(); UDS(); UDP(); ReusableDatagramAddress(); DatagramPeerDeparture(); UDPConnections(); Multicast(); IPv6(); Scene(); FramedPackets();
         Console.WriteLine("Native TCP/UDP/UDS, binary wire encoding, polling, queue/lifetime boundaries and warm transport checks passed.");
     }
     private sealed class FragmentStream : StreamPeer
@@ -177,6 +177,43 @@ internal static class NetworkingTests
                 Check(endpoint.Address().Equals(loopback) && endpoint.Port == ((IPEndPoint)sender.LocalEndPoint!).Port,
                     "Reusable IPv4/IPv6 address preparation preserves sender metadata.");
             }
+        }
+    }
+    private static void DatagramPeerDeparture()
+    {
+        Span<byte> received = stackalloc byte[8];
+        foreach (var family in Socket.OSSupportsIPv6 ? new[] { AddressFamily.InterNetwork, AddressFamily.InterNetworkV6 } : new[] { AddressFamily.InterNetwork })
+        {
+            var loopback = family == AddressFamily.InterNetwork ? IPAddress.Loopback : IPAddress.IPv6Loopback;
+            using var receiver = NetworkSockets.Create(family, SocketType.Dgram);
+            using var healthy = NetworkSockets.Create(family, SocketType.Dgram);
+            using var departed = NetworkSockets.Create(family, SocketType.Dgram);
+            using var control = OperatingSystem.IsWindows() ? new Socket(family, SocketType.Dgram, ProtocolType.Udp) { Blocking = false } : null;
+            receiver.Bind(new IPEndPoint(loopback, 0));
+            healthy.Bind(new IPEndPoint(loopback, 0));
+            departed.Bind(new IPEndPoint(loopback, 0));
+            control?.Bind(new IPEndPoint(loopback, 0));
+            var closedEndpoint = departed.LocalEndPoint!;
+            departed.Close();
+            receiver.SendTo(new byte[] { 27 }, closedEndpoint);
+            if (OperatingSystem.IsWindows())
+            {
+                // Negative control proves that this host delivers an ICMP error for the closed port.
+                control!.IOControl(unchecked((int)0x9800000C), new byte[] { 1, 0, 0, 0 }, null);
+                control.SendTo(new byte[] { 28 }, closedEndpoint);
+                Wait(() => control.Poll(0, SelectMode.SelectRead));
+                var reset = false;
+                try { NetworkSockets.ReceiveDatagram(control, received, new SocketAddress(family)); }
+                catch (SocketException error) when (error.SocketErrorCode == SocketError.ConnectionReset) { reset = true; }
+                Check(reset, "Windows reports port-unreachable as a reset when explicitly enabled.");
+            }
+            healthy.SendTo(new byte[] { 29 }, receiver.LocalEndPoint!);
+            Wait(() => receiver.Poll(0, SelectMode.SelectRead));
+            var address = new SocketAddress(family);
+            Check(NetworkSockets.ReceiveDatagram(receiver, received, address) == 1 && received[0] == 29,
+                "A departed UDP endpoint must not reset another peer's listener or fabricate an empty packet.");
+            Check(DatagramAddress.Capture(address).Port == ((IPEndPoint)healthy.LocalEndPoint!).Port,
+                "UDP listener retains the healthy sender after a peer departs.");
         }
     }
     private static void Multicast()

@@ -1,6 +1,6 @@
 # Native streams and packets
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 ## Scope and owned types
 
@@ -15,6 +15,8 @@ A stream listener owns its listening socket until Stop/Dispose. Each accepted co
 UDP destination assignment resolves and stores an address without opening a socket. Binding or connecting opens native state; first send implicitly opens/binds when necessary. A native-connected UDP socket filters to one sender. Standalone count/read methods poll datagrams into FIFO storage. Queue budgets round to a power of two, charge packet length plus 24 metadata bytes and retain IPv6 scope; overflow drops a whole packet. Sender text is formatted lazily. Empty UDP packets are real packets. Multicast membership accepts a native interface name/id; shared server peers cannot alter listener options.
 
 All native datagram sockets prepare at least 65536-byte send/receive buffers, preserving larger defaults. This covers both standalone and server-shared peers. macOS's smaller default send buffer rejected the maximum-payload regression; the fix retains the complete 65507-byte fixture rather than reducing it. The multicast fixture selects a live IPv4 multicast-capable interface instead of assuming Linux's `lo` name.
+
+Windows datagram creation disables SIO_UDP_CONNRESET through the private .NET socket backend: an ICMP port-unreachable reply from a departed endpoint must not reset a listener shared by healthy peers. This covers standalone UDP, UDPServer, plain/secure ENet and discovery sockets without changing TCP reset handling or hiding other socket errors. UDP still provides no remote-liveness or delivery guarantee. The IPv4/IPv6 regression sends to a closed port and then receives a healthy peer's exact payload and sender metadata; on Windows a separate reset-enabled socket proves that the host actually delivered the ICMP error. Linux regression execution does not verify that Windows-only control.
 
 UDPServer.Poll creates a pending peer on the first packet from a new endpoint. Pending peers are strongly server-owned; TakeConnection transfers logical ownership and keeps a weak endpoint route. Each accepted peer borrows the same native socket and has a separate receive queue. Closing a peer removes its route without closing the listener. Stopping the server disposes pending peers and detaches accepted peers. A zero pending limit rejects new senders while existing accepted peers work; lowering trims newest pending peers.
 

@@ -8,6 +8,7 @@ namespace Electron2D;
 /// receive only their endpoint's packets. Closing such a peer detaches it without closing the listener.
 /// Bind/connection/destination resolution and first endpoint queries are cold operations; caller-span packet cycles reuse storage.
 /// Native send/receive buffers hold at least 65536 bytes, preserving larger platform defaults.
+/// Windows ICMP port-unreachable replies do not reset the UDP socket; UDP does not guarantee remote liveness.
 /// Connected receive metadata comes from the fixed remote endpoint; unconnected receives restore reusable address capacity.</remarks>
 public class PacketPeerUDP : PacketPeer
 {

@@ -41,6 +41,8 @@ internal static partial class NetworkSockets
             if (family == AddressFamily.InterNetworkV6) socket.DualMode = true;
             if (type == SocketType.Dgram)
             {
+                // SIO_UDP_CONNRESET: a departed UDP endpoint must not reset the shared listener.
+                if (OperatingSystem.IsWindows()) socket.IOControl(unchecked((int)0x9800000C), new byte[4], null);
                 // Some native defaults cannot hold one maximum-size UDP datagram.
                 socket.SendBufferSize = Math.Max(socket.SendBufferSize, 65536);
                 socket.ReceiveBufferSize = Math.Max(socket.ReceiveBufferSize, 65536);

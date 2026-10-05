@@ -1,6 +1,6 @@
 # UDPServer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.UDPServer`.
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-04
 ## Description
 
 Every datagram receive restores the reusable endpoint buffer's capacity; the native call may replace its reported size with a shorter sender address. No per-packet SocketAddress allocation is added.
+
+Windows ICMP port-unreachable replies from departed endpoints do not reset the shared listener or disconnect healthy peers. The private datagram option does not alter TCP reset behavior or suppress other socket failures.
 
 Routes UDP sender endpoints into independent caller-owned packet peers.
 

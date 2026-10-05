@@ -7,6 +7,7 @@ namespace Electron2D;
 /// server-owned; TakeConnection transfers logical ownership and the server keeps only a weak reference.
 /// Stop closes the shared socket and detaches accepted peers. Existing accepted endpoints continue receiving
 /// when the pending limit is zero. Receive queues retain packet boundaries and drop packets that exceed their budget.
+/// Windows ICMP port-unreachable replies from departed endpoints do not reset the shared listener.
 /// Each native receive restores the reusable endpoint buffer's capacity before reading another datagram.</remarks>
 public class UDPServer : ElectronObject
 {

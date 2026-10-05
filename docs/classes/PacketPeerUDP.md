@@ -1,6 +1,6 @@
 # PacketPeerUDP
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.PacketPeerUDP`.
 
@@ -13,6 +13,8 @@ Native-connected receives use Socket.Receive and retain the connected sender's n
 Transfers complete UDP datagrams with bounded queued receive storage.
 
 Standalone peers poll while reading/counting packets. Server-created peers share the listener and receive only their endpoint's packets. Closing such a peer detaches it without closing the listener. Bind/connection/destination resolution and first endpoint queries are cold operations; caller-span packet cycles reuse storage.
+
+Windows ICMP port-unreachable replies do not reset the UDP socket. This is not a remote-liveness or delivery guarantee; other socket errors retain their typed failure behavior.
 
 The [networking component](../components/networking.md) records ownership, native/private boundaries, typed failures, allocation scopes and remaining protocol prerequisites. [ADR 0094](../decisions/networking.md#adr-0094) defines the accepted contract.
 
