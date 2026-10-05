@@ -492,7 +492,7 @@ This assembly row records the current build, not complete platform delivery. The
 | Product layer | Source root | Dependency direction | Current state |
 | --- | --- | --- | --- |
 | Runtime engine | [`src/`](../src/) and [`Electron2D.csproj`](../Electron2D.csproj) | May use only approved runtime dependencies | Implemented types compile into `Electron2D.dll` |
-| Self-hosted editor | [`editor/Electron2D.Editor/`](../editor/Electron2D.Editor/) | Future executable references `Electron2D.dll`; runtime never references editor | Directory boundary reserved; no project or source implemented |
+| Self-hosted editor | [`editor/`](../editor/) | Future executable references `Electron2D.dll`; runtime never references editor | Directory boundary reserved; no project or source implemented |
 | First-party games/examples | [`examples/`](../examples/) | Each executable references `Electron2D.dll`; runtime never references examples | First window/input example implemented; future feature and game examples pending |
 
 ## Audio

@@ -1,6 +1,6 @@
 # Electron2D product architecture decisions
 
-Last updated: 2026-10-03
+Last updated: 2026-10-05
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
@@ -192,7 +192,7 @@ SDL3-CS core binding source is pinned in `src/Vendor/SDL3-CS`, and Box2D.NET 3.1
 <a id="adr-0017"></a>
 ## ADR 0017: Source-tree module layout
 
-Last updated: 2026-09-21
+Last updated: 2026-10-05
 
 ### Status
 
@@ -210,7 +210,7 @@ All Electron2D-owned runtime production C# files live under `src/`. When a type 
 
 Physical directories express source ownership only. All current public types retain the flat `Electron2D` namespace, so this refactor does not break consumers or create nested API namespaces. `Electron2D.csproj` disables default compile discovery and includes only `src/**/*.cs`; tests remain under `tests/` and documentation under `docs/`.
 
-No `src/Editor` application directory is created. ADR 0027 supersedes that earlier future placement: editor-only production source belongs to the separate executable project root `editor/Electron2D.Editor/`, while reusable runtime capabilities remain in their owning `src/` modules.
+No `src/Editor` application directory is created. ADR 0027 supersedes that earlier future placement: editor-only production source belongs to the separate executable project root `editor/`, while reusable runtime capabilities remain in their owning `src/` modules.
 
 ### Consequences
 
@@ -318,7 +318,7 @@ ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback archi
 <a id="adr-0027"></a>
 ## ADR 0027: Self-hosted editor and game project boundary
 
-Last updated: 2026-10-01
+Last updated: 2026-10-05
 
 ### Status
 
@@ -335,7 +335,7 @@ The current repository contains one runtime project, an executable test project,
 The repository has three one-way product layers:
 
 1. `src/` and `Electron2D.csproj` contain only portable runtime engine code and produce the single Electron2D-owned runtime assembly `Electron2D.dll`.
-2. `editor/Electron2D.Editor/` is the reserved root for a future standalone editor executable project and all editor-only production source. The editor project will reference `Electron2D.csproj`/`Electron2D.dll`; it will not compile runtime source files into its own assembly.
+2. `editor/` is the reserved root for a future standalone editor executable project and all editor-only production source. Its future project file belongs at `editor/Electron2D.Editor.csproj`, without an additional directory named after the project. The editor project will reference `Electron2D.csproj`/`Electron2D.dll`; it will not compile runtime source files into its own assembly.
 3. `examples/<Example>/` is the root for user-facing examples and game templates. Each example is an independent executable project that references `Electron2D.csproj`/`Electron2D.dll`.
 
 Examples teach a user how to build with the public engine API. They may cover individual features such as shaders, lighting, audio, and networking, or complete small games such as a platformer or top-down game. Their code and explanations must be useful as application examples. Example source and project files must not name or depend on SDL, Box2D, or another implementation backend; this includes the application bootstrap. API conformance probes, injected events, failure fixtures, diagnostic harnesses, and coverage checks belong in `tests/` or development tools, even when they run an example's production path. Examples follow executable user API. The window/input consumer configures Window and calls Engine.Run; its former duplicate ApplicationHost has been removed. Native acceptance probes and failure fixtures remain in tests.
@@ -378,7 +378,7 @@ No editor project, executable, domain, component, or production type is implemen
 
 ### Verification boundary
 
-The repository boundary is verified by directory placement and current project compile includes. Existing runtime checks prove only that reserving `editor/Electron2D.Editor/` does not alter `Electron2D.dll`. Self-hosting, editor startup, UI, rendering, packaging, and desktop-platform behavior remain unimplemented and unverified.
+The repository boundary is verified by directory placement and current project compile includes. Existing runtime checks prove only that reserving `editor/` does not alter `Electron2D.dll`. Self-hosting, editor startup, UI, rendering, packaging, and desktop-platform behavior remain unimplemented and unverified.
 
 ### Related decisions
 
