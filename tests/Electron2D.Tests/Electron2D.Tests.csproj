@@ -10,9 +10,11 @@
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../../editor/EditorScene.cs" Link="Editor/EditorScene.cs" />
-    <Content Include="../../docs/design/assets/sprite/logo-stacked-dark.svg" Link="Assets/logo-stacked-dark.svg" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../docs/design/assets/sprite/sparkle.svg" Link="Assets/sparkle.svg" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="../../docs/design/assets/sprite/mark-dark.svg" Link="Assets/mark-dark.svg" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../docs/design/assets/sprite/app-icon.svg" Link="Assets/app-icon.svg" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="../../editor/Assets/IBMPlexSans-Regular.ttf" Link="Assets/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../editor/Assets/IBMPlexSans-SemiBold.ttf" Link="Assets/IBMPlexSans-SemiBold.ttf" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="Shaders/*.spv" LogicalName="TestShaders.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Fixtures/StyleBoxFlatGeometry.json" LogicalName="TestFixtures.StyleBoxFlatGeometry.json" />
     <EmbeddedResource Include="Fixtures/UnicodeTextConformance.json" LogicalName="TestFixtures.UnicodeTextConformance.json" />

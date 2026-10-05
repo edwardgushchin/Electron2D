@@ -8,23 +8,21 @@ The identity presents Electron2D as an **agent-native, cross-platform 2D game en
 
 ## Editable designs
 
-The local Penpot file is **Electron2D — Logo**. Earlier exploration remains as historical reference; the approved page is the source of truth.
+The local Penpot file is **Electron2D — Logo**. The approved page is the source of truth.
 
 - [Identity · Sprite](http://localhost:9001/#/workspace?team-id=50386cfd-724b-8089-8008-929cf6ab0402&file-id=25be5f50-4fa1-80d7-8008-b98e1f25e65f&page-id=7d6ffda9-e5e3-8008-8008-ba5db39b4086)
 
-The approved page contains six 1440×1000 boards: primary image, logo system, colors and typography, graphics, website and interface, and communication examples. Its library contains 13 color roles, four typography presets and two primary logo components. Localhost links require the local Penpot instance.
+The page contains seven 1440×1000 boards, including the editor startup composition. Its logo library contains Primary light, Primary dark and Mark shaded. The monochrome specimens were removed by the owner on 2026-10-05. Localhost links require the local Penpot instance.
 
 ## Name and logo geometry
 
 Use the spelling **Electron2D**. The primary lockup has a mark, wordmark and descriptor. The compact lockup omits the descriptor; the stacked lockup places the mark above the wordmark.
 
-The editor startup composition has a specific user-approved adaptation dated 2026-10-05: a 144 px visible mark above the unchanged outlined wordmark and a lighter `Game engine` caption in IBM Plex Sans Regular. It places the canonical mark and a cropped wordmark view separately to preserve the pixel grid and their different filtering needs. This startup-only arrangement does not replace the supplied communication lockups or alter the mark silhouette, face, colors or letter outlines. See [editor startup](../components/editor-startup.md) for its geometry and verification.
+The current shaded character has symmetric hollow ears, internal highlights, large eyes with light pupils, separate blush pixels and an open mouth. The same character colors and geometry serve both background variants. Light/dark lockups change the lettering to fit their background. There is no monochrome version or external white outline.
 
-A separate editor-only white outline preview was requested on 2026-10-05. The `--outline` launch option loads an experimental asset with a 3 px outward stepped border; the canonical SVGs and general no-stroke rule remain authoritative for identity use. Testing the preview does not approve it as a replacement master.
+Primary and compact SVGs preserve the current Penpot composition, including visible text alignment. The stacked communication lockup preserves the editor board's character, two open pixel sparkles, wordmark and descriptor, with a transparent cropped canvas. Clear space remains H/4; the nominal mark/name gap is about 0.43H. Preserve the supplied exported composition rather than recalculating it from text rectangles.
 
-Let H be the visible height of the mark. The combined visible height of wordmark and descriptor equals H. The horizontal gap is **0.43H**, and clear space on all sides is **H/4**. Preserve the supplied geometry instead of setting the text again. The vector wordmark is outlined, so it does not depend on installed fonts.
-
-All versions use one master silhouette and the same facial geometry: two eyes, two cheeks and one mouth. Version 1.2 uses a broad head with a flat base and short corner steps. Cheeks are separate internal pixels; every facial detail is surrounded by the silhouette, including in monochrome. Monochrome converts all five details to transparent cutouts; it does not remove or reshape them. Primary and compact lockups share the same outlined wordmark and gap. The primary light, dark and monochrome specimens on the logo-system board use the same H; compact specimens also share a size. Scale a complete supplied asset instead of rebuilding its parts.
+Penpot text remains editable in IBM Plex Sans SemiBold (600) and Regular (400). Repository communication SVGs contain glyph outlines generated from those fonts with their shaping and export positions, so image consumers need no installed fonts. Letter paths are not drawn manually. The editor instead renders real Label nodes with bundled fonts; see [editor startup](../components/editor-startup.md).
 
 | Asset | Minimum screen size | Use |
 | --- | --- | --- |
@@ -32,7 +30,7 @@ All versions use one master silhouette and the same facial geometry: two eyes, t
 | Compact logo | 160 px wide | Narrow navigation and cards |
 | Individual mark | 16 px canvas | Favicons and compact identifiers |
 
-Check the final rendered size; these are design minima rather than a substitute for visual review. At 16 px, a monochrome mark is preferred. Do not stretch, rotate, add a stroke or shadow, move the descriptor, or change the expression of the Sprite logo. For complex images, place the logo on a plain surface. The suffix `dark` means a logo for a dark background, `light` for a light background; SVG backgrounds are transparent.
+Check the final rendered size; these are design minima rather than a substitute for visual review. Do not stretch, rotate, add a stroke or shadow, move the descriptor, or change the expression of the Sprite logo. For complex images, place the logo on a plain surface. The suffix `dark` means a logo for a dark background, `light` for a light background; SVG backgrounds are transparent.
 
 ## Sprite identity
 
@@ -43,19 +41,31 @@ Sprite uses a berry pixel character, warm light backgrounds and dark plum text. 
 | Paper and main background | `#F9F3EE` | Warm light background |
 | Surface | `#FFFFFF` | Light cards |
 | Ink | `#3D2749` | Primary text |
-| Brand and Action | `#A63B75` | Mark, links and buttons |
+| Brand and Action | `#A63B75` | Light-background wordmark accent, links and buttons |
 | Muted | `#7C667A` | Secondary light-theme text |
 | Line | `#DAC9D5` | Decorative separators |
-| Warm | `#EDA181` | Light-version character details and illustrations |
+| Warm | `#EDA181` | Communication illustrations |
 | Dark | `#241B2C` | Alternate dark background |
-| BrandDark | `#F2A6CC` | Mark and accent on dark backgrounds |
-| FaceDark | `#3D2749` | Eyes, cheeks and mouth on the pink dark-version mark |
+| BrandDark | `#F2A6CC` | Dark-background wordmark accent and sparkles |
+| FaceDark | `#3D2749` | Eyes and mouth |
 
 Normal/hover/pressed action fills are `#A63B75` / `#8D3063` / `#772550`, with white labels. Focus uses a 2 px outline with a 2 px offset: berry on light and light pink on dark. Warm and Line are decorative colors, not small-text colors or required input boundaries.
 
-The dark version uses a pink silhouette and plum facial details. Their contrast is **7.01:1**; the former peach-on-pink pair was only 1.11:1. Keep the two eyes, cheeks and mouth distinct. Peach remains part of the light version.
+The shaded character palette is shared by both versions:
 
-The master mark uses an 8-unit smallest module. Raster output places each module on whole pixels and scales with nearest neighbor. The 24 px PNG uses extra canvas space to preserve that grid; do not trim it. The layout grid is 8 px, with main intervals 16/24/32/48 px and a 64 px outer margin on the 1440 px boards. Cards may use an 8 px radius; individual pixels remain square.
+| Role | HEX |
+| --- | --- |
+| Outer edge | `#D65D96` |
+| Face | `#FFADCF` |
+| Highlights | `#FFE4EE` |
+| Inner ears and mouth detail | `#E872A6` |
+| Lower face shading | `#F18BB8` |
+| Bottom shadow | `#B94780` |
+| Eyes and mouth | `#3D2749` |
+| Eye pupils | `#FFF9F3` |
+| Blush | `#E86C9F` |
+
+The JSON and CSS tokens include this palette alongside existing interface roles. Pixel shapes remain square. Icons use nearest-neighbor scaling from the canonical mark. Check the final small size because highlights can disappear during reduction. The layout grid remains 8 px with 16/24/32/48 px intervals and 64 px outer margins on the boards.
 
 ## Typography and accessible application
 
@@ -66,7 +76,7 @@ The master mark uses an 8-unit smallest module. Raster output places each module
 | Caption | IBM Plex Sans Regular | 12 / 16 px |
 | Code | JetBrains Mono Regular | At least 14 px |
 | Wordmark | IBM Plex Sans SemiBold | Fixed outlined asset |
-| Logo descriptor | IBM Plex Sans Medium | Fixed outlined asset |
+| Logo descriptor | IBM Plex Sans Regular | Editable source, outlined communication asset |
 
 Text and essential control boundaries must retain readable contrast. Use at least 4.5:1 for normal text and 3:1 for large text or essential non-text controls, following [WCAG 2.2](https://www.w3.org/TR/WCAG22/). Decorative Line colors do not establish compliant control boundaries.
 
@@ -76,18 +86,20 @@ Text and essential control boundaries must retain readable contrast. Use at leas
 | Secondary text on main background | 4.73:1 |
 | Brand accent on main background | 5.45:1 |
 | White button label on normal action fill | 5.99:1 |
-| Pink silhouette on dark background | 8.75:1 |
-| Plum facial details on pink silhouette | 7.01:1 |
+| Pink accent on dark background | 8.75:1 |
+| Plum eyes on shaded face (#FFADCF) | 7.65:1 |
 
 Ratios use relative sRGB luminance for the specified HEX colors. Recalculate for a different background, opacity or state. Links inside prose also have an underline. Errors include explanatory text and an icon. Use a target area of at least 44×44 px and visible keyboard focus. On narrow screens, use one column, 24 px outer margins, 32 px primary headings and a compact logo or mark as space requires. Decoration is reduced before content.
 
 ## Assets and communication
 
-Version-controlled sources are under [assets/sprite](assets/sprite): primary, compact, stacked and monochrome logo SVGs; color and monochrome mark SVGs; app icon SVGs; and JSON/CSS tokens. Keep the token file together with the Sprite assets. There is no runtime theme integration in this change.
+Version-controlled sources are under [assets/sprite](assets/sprite): primary, compact and stacked logo SVGs, light/dark copies of the same colored mark, the app icon, open pixel sparkle and JSON/CSS tokens. The four monochrome SVGs are removed. Token delivery does not integrate a runtime theme.
 
-The GitHub link preview uses the [1280×640 Sprite card](assets/sprite/github-social-preview.png), with its [editable SVG source](assets/sprite/github-social-preview.svg). It preserves the approved logo geometry and palette. Upload the PNG through repository Settings → General → Social preview; committing an image alone does not set the GitHub preview.
+The [1280×640 GitHub social preview](assets/sprite/github-social-preview.png) and its [editable SVG source](assets/sprite/github-social-preview.svg) use the refreshed primary logo. Committing this PNG does not configure the remote GitHub social preview; that requires uploading it in repository settings.
 
-The delivery package also contains transparent PNG marks at 16, 24, 32, 48, 64, 128, 256 and 512 px, 512 px app icons, PNG logo exports, six board exports, and licensed font files. Numbered `icon-N.png` files use the light-background mark; use `mark-dark.svg` for dark surfaces. The app icon has its own rounded background. Social formats use 1200×630 and 1080×1080 px, with margins of at least 64 px.
+Desktop identity uses app-icon.svg without text: Linux registers a PNG rasterization with an absolute file path, Windows embeds the refreshed [ICO](../../editor/Assets/Electron2D.ico), and macOS packages the refreshed [ICNS](../../editor/Assets/Electron2D.icns). The rounded [app-icon.svg](assets/sprite/app-icon.svg) is the desktop application identity. Raster containers are generated from this SVG at each icon size; editor build/publish needs no graphics-conversion tool.
+
+The five README editions share the refreshed primary and compact SVGs through their existing light/dark picture sources. Their logo alternative text includes the current descriptor and the primary image reserves a 640×148 slot. Their prose, language navigation and dynamic status badges retain their existing meaning.
 
 Voice is concise, warm and factual. Invitations such as “Соберите первую сцену” are appropriate; API documentation and error messages use precise terms and actionable explanations. State actual supported features in product copy. Website, scene, documentation and social examples are visual mockups, not screenshots of an implemented product.
 
@@ -95,9 +107,9 @@ Fonts: [JetBrains Mono](https://www.jetbrains.com/lp/mono/) and [IBM Plex](https
 
 ## Verification boundary
 
-The six board exports and final document pages were visually inspected. Penpot validation returned no issues. Source SVG/XML and tokens JSON are validated separately; contrast values are calculated rather than inferred from a screenshot. The accompanying design document includes the boards, expanded application rules and delivery guidance.
+The current Penpot file validates with zero issues. Native reference exports were compared with repository SVG rasterization, including symmetric ears, typography, alignment and transparent backgrounds. SVG/XML, tokens, icon contents and local README references are checked separately. The editor's real rendering checks and platform limits are documented in [editor startup](../components/editor-startup.md).
 
-This verification covers design, exported graphics and document layout. It does not establish interactive website behavior, runtime rendering, native application acceptance or print-profile accuracy.
+Graphic verification does not establish interactive website behavior, other desktop host acceptance or print-profile accuracy.
 
 ## README badges
 

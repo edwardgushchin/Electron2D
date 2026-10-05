@@ -7,24 +7,27 @@ internal static class EditorSceneTests
 {
     internal static void Run()
     {
-        using var texture = ResourceLoader.Load<ImageTexture>(IOPath.Combine(AppContext.BaseDirectory, "Assets", "logo-stacked-dark.svg"));
         using var mark = ResourceLoader.Load<ImageTexture>(IOPath.Combine(AppContext.BaseDirectory, "Assets", "mark-dark.svg"));
-        using var wordmark = new AtlasTexture { Atlas = texture, Region = new(24, 160, 440, 68), FilterClip = true };
-        using var font = new FontFile();
-        font.LoadDynamicFont(IOPath.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
+        using var sparkle = ResourceLoader.Load<ImageTexture>(IOPath.Combine(AppContext.BaseDirectory, "Assets", "sparkle.svg"));
+        using var appIcon = ResourceLoader.Load<ImageTexture>(IOPath.Combine(AppContext.BaseDirectory, "Assets", "app-icon.svg"));
+        using var semibold = new FontFile();
+        semibold.LoadDynamicFont(IOPath.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-SemiBold.ttf"));
+        using var regular = new FontFile();
+        regular.LoadDynamicFont(IOPath.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
         Engine.MaxFPS = 60;
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         foreach (var backend in new[] { "gpu", "compatibility" })
         {
             ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
-            var window = EditorScene.CreateWindow(mark, wordmark, font);
+            var window = EditorScene.CreateWindow(mark, sparkle, appIcon, semibold, regular);
             var brand = (Control)window.GetChild(0);
-            var character = (TextureRect)brand.GetChild(0);
-            var title = (TextureRect)brand.GetChild(1);
-            var caption = (Label)brand.GetChild(2);
+            var title = (Label)brand.GetChild(1);
+            var suffix = (Label)brand.GetChild(2);
+            var caption = (Label)brand.GetChild(3);
             Check(window.Size == new Vector2i(1152, 800) && window.Title == "Electron2D", "Initial window contract.");
-            Check(caption.Text == "Agent-native cross-platform game engine" && caption.HorizontalAlignment == HorizontalAlignment.Center, "Centered descriptor below the wordmark.");
-            Check(font.GetStringSize(caption.Text, fontSize: 32).X <= caption.Size.X, "The complete descriptor fits on one line.");
+            Check(title.Text + suffix.Text == "Electron2D" && caption.Text == "Agent-native cross-platform 2D game engine", "Live font-rendered title and complete descriptor.");
+            Check(ReferenceEquals(title.GetThemeFont("font"), semibold) && ReferenceEquals(suffix.GetThemeFont("font"), semibold) && ReferenceEquals(caption.GetThemeFont("font"), regular), "Brand labels use the supplied fonts rather than textures.");
+            Check(regular.GetStringSize(caption.Text, fontSize: 16).X < brand.Size.X, "The descriptor fits on one line.");
             var frames = 0;
             var resized = false;
             var closed = false;
@@ -39,12 +42,21 @@ internal static class EditorSceneTests
                 Check(pixels.Size == window.Size, "Native client dimensions.");
                 Pixel(pixels, 10, 10, "#241B2C");
                 var origin = (brand.Position + new Vector2(.5f, .5f)).Floor();
-                Pixel(pixels, (int)origin.X + 324, (int)origin.Y + 96, "#241B2C");
-                Pixel(pixels, (int)origin.X + 327, (int)origin.Y + 96, "#241B2C");
-                Pixel(pixels, (int)origin.X + 328, (int)origin.Y + 96, "#F2A6CC");
-                Pixel(pixels, (int)origin.X + 364, (int)origin.Y + 96, "#3D2749");
-                Pixel(pixels, (int)origin.X + 183, (int)origin.Y + 208, "#F9F3EE");
-                Check(ReferenceEquals(caption.GetThemeFont("font"), font), "Caption uses the bundled regular font.");
+                Pixel(pixels, (int)origin.X + 239, (int)origin.Y + 82, "#241B2C");
+                Pixel(pixels, (int)origin.X + 247, (int)origin.Y + 82, "#D65D96");
+                Pixel(pixels, (int)origin.X + 263, (int)origin.Y + 82, "#FFADCF");
+                Pixel(pixels, (int)origin.X + 277, (int)origin.Y + 84, "#3D2749");
+                Pixel(pixels, (int)origin.X + 289, (int)origin.Y + 94, "#FFF9F3");
+                Pixel(pixels, (int)origin.X + 208, (int)origin.Y + 83, "#FFE4EE");
+                Check(semibold.FontWeight == 600 && regular.FontWeight == 400, "Bundled branding fonts have the correct weights.");
+                var captionPixels = 0;
+                for (var y = (int)origin.Y + 277; y < (int)origin.Y + 310; y++)
+                    for (var x = (int)origin.X + 140; x < (int)origin.X + 500; x++)
+                    {
+                        var pixel = pixels.GetPixel(x, y);
+                        if (pixel.R > .8f && pixel.G > .8f && pixel.B > .8f) captionPixels++;
+                    }
+                Check(captionPixels > 400, "The regular-font descriptor is visibly rendered.");
                 var output = IOPath.GetFullPath("bin/editor-smoke");
                 Directory.CreateDirectory(output);
                 pixels.SavePNG(IOPath.Combine(output, $"{backend}-{(resized ? "resized" : "initial")}.png"));
@@ -55,7 +67,7 @@ internal static class EditorSceneTests
                 Check(SDL.PushEvent(ref close), "Native close event accepted.");
             };
             Check(Engine.Run(window) == 0 && closed, "Close exits successfully.");
-            Check(window.IsDisposed && character.IsDisposed && title.IsDisposed && caption.IsDisposed && !texture.IsDisposed && !mark.IsDisposed && !wordmark.IsDisposed && !font.IsDisposed && Engine.MainLoop is null && !DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Window cleanup preserves borrowed textures and font.");
+            Check(window.IsDisposed && brand.IsDisposed && title.IsDisposed && suffix.IsDisposed && caption.IsDisposed && !mark.IsDisposed && !sparkle.IsDisposed && !appIcon.IsDisposed && !semibold.IsDisposed && !regular.IsDisposed && Engine.MainLoop is null && !DisplayServer.IsAvailable && !RenderingServer.IsAvailable, "Window cleanup preserves borrowed textures and fonts.");
         }
         Console.WriteLine("Editor scene checks passed: native title/size, logo pixels, resize centering and close/cleanup on GPU and compatibility.");
     }

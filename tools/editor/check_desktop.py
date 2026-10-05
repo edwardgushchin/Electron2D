@@ -44,9 +44,18 @@ def main():
         entry = configparser.ConfigParser(interpolation=None)
         entry.read(desktop)
         assert entry["Desktop Entry"]["Name"] == "Electron2D"
-        assert entry["Desktop Entry"]["Icon"] == "Electron2D.Editor"
-        icon = Path(environment["XDG_DATA_HOME"]) / "icons/hicolor/scalable/apps/Electron2D.Editor.svg"
-        assert icon.read_bytes() == (source.parent / "Assets/mark-dark.svg").read_bytes()
+        icon = Path(environment["XDG_DATA_HOME"]) / "icons/hicolor/512x512/apps/Electron2D.Editor.app-icon.png"
+        assert entry["Desktop Entry"]["Icon"] == str(icon)
+        assert icon.read_bytes() == (source.parent / "Assets/Electron2D.png").read_bytes()
+        import gi
+        gi.require_version("Gtk", "3.0")
+        from gi.repository import Gio, Gtk
+        application = Gio.DesktopAppInfo.new_from_filename(str(desktop))
+        assert application is not None
+        registered_icon = application.get_icon()
+        assert isinstance(registered_icon, Gio.FileIcon) and registered_icon.get_file().get_path() == str(icon)
+        loaded = Gtk.IconTheme.get_default().lookup_by_gicon(registered_icon, 48, Gtk.IconLookupFlags.FORCE_SIZE).load_icon()
+        assert loaded.get_width() == 48 and loaded.get_height() == 48
         launch(["gio", "launch", str(desktop)], environment)
     print("Editor apphost, desktop identity, canonical icon and escaped launcher passed.")
 

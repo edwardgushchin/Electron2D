@@ -2,13 +2,15 @@ using Electron2D;
 using Electron2D.Editor;
 
 if (OperatingSystem.IsLinux()) RegisterDesktopApplication();
-using var texture = ResourceLoader.Load<ImageTexture>(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "logo-stacked-dark.svg"));
 using var mark = ResourceLoader.Load<ImageTexture>(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "mark-dark.svg"));
-using var wordmark = new AtlasTexture { Atlas = texture, Region = new(24, 160, 440, 68), FilterClip = true };
-using var font = new FontFile();
-font.LoadDynamicFont(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
+using var sparkle = ResourceLoader.Load<ImageTexture>(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "sparkle.svg"));
+using var appIcon = ResourceLoader.Load<ImageTexture>(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "app-icon.svg"));
+using var semibold = new FontFile();
+semibold.LoadDynamicFont(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-SemiBold.ttf"));
+using var regular = new FontFile();
+regular.LoadDynamicFont(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
 Engine.MaxFPS = 60;
-return Engine.Run(EditorScene.CreateWindow(mark, wordmark, font));
+return Engine.Run(EditorScene.CreateWindow(mark, sparkle, appIcon, semibold, regular));
 
 // Desktop shells match the executable's application ID to this entry on both Linux display protocols.
 static void RegisterDesktopApplication()
@@ -20,11 +22,12 @@ static void RegisterDesktopApplication()
     if (string.IsNullOrEmpty(data) || !System.IO.Path.IsPathFullyQualified(data))
         data = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local", "share");
     var applications = System.IO.Path.Combine(data, "applications");
-    var icons = System.IO.Path.Combine(data, "icons", "hicolor", "scalable", "apps");
+    var icons = System.IO.Path.Combine(data, "icons", "hicolor", "512x512", "apps");
     Directory.CreateDirectory(applications);
     Directory.CreateDirectory(icons);
-    File.Copy(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "mark-dark.svg"),
-        System.IO.Path.Combine(icons, "Electron2D.Editor.svg"), overwrite: true);
+    var iconPath = System.IO.Path.Combine(icons, "Electron2D.Editor.app-icon.png");
+    File.Copy(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "Electron2D.png"), iconPath, overwrite: true);
+    var iconEntry = iconPath.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r");
     // Exec quoting and desktop-string escaping are separate layers; %% is a literal percent in Exec.
     var quoted = executable.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("`", "\\`").Replace("$", "\\$").Replace("%", "%%");
     var command = ("\"" + quoted + "\"").Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r");
@@ -32,9 +35,9 @@ static void RegisterDesktopApplication()
         [Desktop Entry]
         Type=Application
         Name=Electron2D
-        Comment=Agent-native cross-platform game engine
+        Comment=Agent-native cross-platform 2D game engine
         Exec=/usr/bin/env {command}
-        Icon=Electron2D.Editor
+        Icon={iconEntry}
         StartupWMClass=Electron2D.Editor
         Terminal=false
         Categories=Development;IDE;

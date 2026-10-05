@@ -6,7 +6,7 @@ The editor is a separate desktop executable at [Electron2D.Editor.csproj](../../
 
 | Component | Types and integration | Current state |
 | --- | --- | --- |
-| [Editor startup](../components/editor-startup.md) | Internal [EditorScene](../classes/EditorScene.md), public Window, TextureRect, Label, ResourceLoader and Engine.Run | Centered approved dark stacked logo, native resize/close and VS Code F5 configuration |
+| [Editor startup](../components/editor-startup.md) | Internal [EditorScene](../classes/EditorScene.md), public Window, TextureRect, Label, FontFile, ResourceLoader and Engine.Run | Centered shaded character, live font-rendered title and descriptor, native resize/close and VS Code F5 configuration |
 
 The runtime never references this assembly. Desktop targets follow [ADR 0021](../decisions/product.md#adr-0021); the current executable gate is Linux/Wayland. [ADR 0027](../decisions/product.md#adr-0027) owns the source/assembly boundary. [ADR 0090](../decisions/agent-native.md#adr-0090) still governs future shared authoring operations.
 

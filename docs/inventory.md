@@ -492,7 +492,7 @@ This assembly row records the current build, not complete platform delivery. The
 | Product layer | Source root | Dependency direction | Current state |
 | --- | --- | --- | --- |
 | Runtime engine | [`src/`](../src/) and [`Electron2D.csproj`](../Electron2D.csproj) | May use only approved runtime dependencies | Implemented types compile into `Electron2D.dll` |
-| Self-hosted editor | [`editor/Electron2D.Editor.csproj`](../editor/Electron2D.Editor.csproj) | Executable references `Electron2D.dll`; runtime never references editor | Branded 1152×800 startup window; internal [EditorScene](classes/EditorScene.md), public runtime host, desktop name/mark metadata and apphost VS Code F5 configuration; authoring remains absent |
+| Self-hosted editor | [`editor/Electron2D.Editor.csproj`](../editor/Electron2D.Editor.csproj) | Executable references `Electron2D.dll`; runtime never references editor | Branded 1152×800 startup window with a compact shaded character and live font-rendered labels; internal [EditorScene](classes/EditorScene.md), public runtime host, desktop name/mark metadata and apphost VS Code F5 configuration; authoring remains absent |
 | First-party games/examples | [`examples/`](../examples/) | Each executable references `Electron2D.dll`; runtime never references examples | First window/input example implemented; future feature and game examples pending |
 
 ## Audio

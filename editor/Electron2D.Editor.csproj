@@ -9,16 +9,19 @@
     <AssemblyTitle>Electron2D</AssemblyTitle>
     <Version>0.1.0</Version>
     <Product>Electron2D</Product>
-    <Description>Agent-native cross-platform game engine</Description>
+    <Description>Agent-native cross-platform 2D game engine</Description>
     <ApplicationIcon>Assets/Electron2D.ico</ApplicationIcon>
     <EditorMacBundle Condition="($([MSBuild]::IsOSPlatform('OSX')) and '$(RuntimeIdentifier)' == '') or $([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('osx-'))">true</EditorMacBundle>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Electron2D.csproj" />
-    <Content Include="../docs/design/assets/sprite/logo-stacked-dark.svg" Link="Assets/logo-stacked-dark.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="../docs/design/assets/sprite/sparkle.svg" Link="Assets/sparkle.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="../docs/design/assets/sprite/mark-dark.svg" Link="Assets/mark-dark.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="../docs/design/assets/sprite/app-icon.svg" Link="Assets/app-icon.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Assets/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets/IBMPlexSans-SemiBold.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Assets/IBMPlexSans-OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets/Electron2D.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <Target Name="BundleEditorBuild" AfterTargets="Build" Condition="'$(EditorMacBundle)' == 'true'">
     <ItemGroup>

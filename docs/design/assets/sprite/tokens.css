@@ -17,4 +17,13 @@
   --e2d-action-normal: #A63B75;
   --e2d-action-hover: #8D3063;
   --e2d-action-pressed: #772550;
+  --e2d-sprite-edge: #D65D96;
+  --e2d-sprite-face: #FFADCF;
+  --e2d-sprite-highlight: #FFE4EE;
+  --e2d-sprite-ear: #E872A6;
+  --e2d-sprite-lower: #F18BB8;
+  --e2d-sprite-shadow: #B94780;
+  --e2d-sprite-eye: #3D2749;
+  --e2d-sprite-pupil: #FFF9F3;
+  --e2d-sprite-blush: #E86C9F;
 }
