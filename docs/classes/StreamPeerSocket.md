@@ -1,6 +1,6 @@
 # StreamPeerSocket
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Namespace:** `Electron2D`. **Declaration:** `public abstract class Electron2D.StreamPeerSocket`.
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-04
 
 Owns a nonblocking native stream socket with explicit connection polling.
 
-Partial operations do not wait. Full reads/writes can block until the peer supplies progress or closes. Poll detects connection completion, nonzero socket errors and FIN after queued bytes drain. Readiness without a socket error preserves queued data. Status queries are cached. Calls and disposal require the constructing thread.
+Partial operations do not wait. Full reads/writes can block until the peer supplies progress or closes. Poll detects connection completion, nonzero socket errors and FIN after queued bytes drain. Read readiness with no available bytes uses a non-consuming peek: zero-byte success is FIN, a reset is a socket error, and WouldBlock retains the connection. Queued data is preserved. Status queries are cached. Calls and disposal require the constructing thread.
 
 The [networking component](../components/networking.md) records ownership, native/private boundaries, typed failures, allocation scopes and remaining protocol prerequisites. [ADR 0094](../decisions/networking.md#adr-0094) defines the accepted contract.
 
@@ -47,7 +47,7 @@ Creates a disconnected stream socket.
 | `protected override System.Void Dispose(System.Boolean disposing)` | Deterministically releases resources owned by this object. |
 | `public override System.Int32 GetAvailableBytes()` | Reports immediately readable bytes without consuming them. |
 | `public Electron2D.StreamSocketStatus GetStatus()` | Returns the cached connection phase without polling. |
-| `public System.Void Poll()` | Advances connection completion and detects errors or drained remote closure. |
+| `public System.Void Poll()` | Advances connection completion and distinguishes socket errors from drained graceful closure without consuming queued bytes. |
 | `protected override System.Int32 ReadCore(System.Span<System.Byte> destination, System.Boolean block)` | Reads a prefix for the concrete transport. |
 | `protected override System.Int32 WriteCore(System.ReadOnlySpan<System.Byte> data, System.Boolean block)` | Writes a prefix for the concrete transport. |
 
@@ -96,7 +96,7 @@ Returns: The latest explicit phase.
 
 `public System.Void Poll()`
 
-Advances connection completion and detects errors or drained remote closure.
+Advances connection completion and distinguishes socket errors from drained graceful closure without consuming queued bytes.
 
 System.Net.Sockets.SocketException: The connection fails; state becomes Error and native resources close.
 

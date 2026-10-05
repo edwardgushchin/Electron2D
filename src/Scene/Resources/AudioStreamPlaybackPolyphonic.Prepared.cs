@@ -11,7 +11,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic
         try
         {
             Check(); Idle(); Owner(); _source.ValidateChild(stream); stream.EnsurePlaybackOwner(); _ = Random.Shared.NextDouble();
-            _busy = true; _source.EnterCall(0);
+            _source.EnterCall(0); _busy = true;
             try { PrepareStreamCore(stream, type, bus); _preparedRoots.Add(stream); } finally { AudioStream.ExitCall(); _busy = false; }
         }
         finally { server.UnlockCore(); }

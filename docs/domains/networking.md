@@ -1,6 +1,6 @@
 # Networking
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 ## Responsibility and public surface
 
@@ -15,6 +15,8 @@ The domain uses core ElectronObject identity/disposal, typed project settings an
 The native Linux x64 low-level transport profile executes IPv4/IPv6 loopback and Unix-domain IPC. Browser raw sockets fail explicitly. [TLS streams and certificate/key resources](../components/tls.md) execute native Linux OpenSSL client/server exchange and typed resource loading. [HTTP/HTTPS transfers and stream compression](../components/http.md) add native protocol, proxy, scene/worker and incremental codec behavior. [WebSocket messages](../components/websocket.md) execute WS/WSS client/server and bounded complete-message/control flow. [Typed multiplayer transports](../components/multiplayer.md) add offline authority and owned WS/WSS peer cohorts. [Native DTLS](../components/dtls.md), [ENet channels and multiplayer](../components/enet.md), [typed scene multiplayer](../components/scene-multiplayer.md), [scene replication](../components/scene-replication.md) and [UPNP](../components/upnp.md) execute their documented workflows. WebRTC retains its ICE/SDP/SCTP backend prerequisite in [coverage](../coverage/index.md). Other-platform transport behavior, routed traffic and native allocator totals remain separate gates.
 
 ## Verification
+
+Shared TCP/UDS polling uses non-consuming receive peek to distinguish drained FIN from RST. The retained networking fixture passed locally after the Windows x86 timeout fix. TLS checks force both-role TLS 1.2 through SslStream and both-role TLS 1.3 through independent OpenSSL, including graceful versus abrupt closure and borrowed transport lifetime. Linux focused checks passed; complete Windows/macOS runs are still required.
 
 Desktop runtime resolution selects private macOS/Windows ENet/OpenSSL and bounded .NET OS-chain trust before OpenSSL name/purpose verification. macOS fresh text/audio/ENet consumers passed; complete Windows/macOS full-suite acceptance remains pending. All three Windows full-suite/consumer profiles are connected. Linux regressions passed after loader/ABI/trust changes. Mobile/browser integration remains required, with no foreign acceptance inferred from Linux checks.
 

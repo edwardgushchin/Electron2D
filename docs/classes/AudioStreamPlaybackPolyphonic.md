@@ -1,6 +1,6 @@
 # AudioStreamPlaybackPolyphonic
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Declaration:** `public sealed class Electron2D.AudioStreamPlaybackPolyphonic` · **Source:** [AudioStreamPlaybackPolyphonic.cs](../../src/Scene/Resources/AudioStreamPlaybackPolyphonic.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -13,6 +13,8 @@ Owns a fixed child-voice array and independent parent-local Int64 IDs. A voice b
 The parent is an indefinite control mixer: Start sets active, including zero capacity; active restart clears old children. A finite Start/Seek position does not move the parent timeline; time/loop count remain zero. When children end, active parent mixing returns full silence and stays active for later dynamic calls. Zero-frame mix does not start pending voices or consume a fade. Stop cleans children even when the parent has not started, preventing native pre-start leaks.
 
 All control/mixing serializes on the audio gate. Sample or recording child ownership requires the audio owner, including retained inactive children. Factories, child callbacks and cleanup cannot reenter mutation/mixing/disposal. Scene queries borrow the mixer and reject direct Dispose while attached. Custom child callbacks must support serialized owner/native threads and keep warmed processing allocation-free.
+
+Preparation enters the composite callback guard before setting its busy state, so guard rejection leaves later controls usable. A failed child factory retains the original exception after owned-child cleanup; an additional cleanup error is aggregated.
 
 ## Example
 

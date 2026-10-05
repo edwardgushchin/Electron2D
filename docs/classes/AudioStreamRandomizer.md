@@ -16,6 +16,8 @@ The pool owns its immutable entry array; children are borrowed. A factory-create
 
 A shared authoring gate makes pool edits and cycle checks atomic. Snapshots are immutable and callbacks execute outside that gate. Direct/transitive mixed composite graph cycles reject before mutation; per-thread operation guards also reject recursive custom callbacks, historical duration cycles and nesting beyond 256 operations. Authoring, playback construction, copying and property discovery allocate; warmed successful mix and metadata queries reuse prepared state. Random draws use the standard shared random source; no new seed API is introduced.
 
+Consecutive randomizer factories select children iteratively, retain every resource's history/guard and build independent wrappers in reverse order. A 257-resource chain rejects normally on a 256 KiB worker stack; the same worker then creates and mixes a fresh empty capture, verifying guard cleanup. Factory failure preserves its original exception; an additional cleanup failure is aggregated. This check does not establish arbitrary deep Start/Dispose stack safety.
+
 ## Example
 
 Partial scene snippet: attach the player to a Node/Window and retain its borrowed resources until the scene is disposed.

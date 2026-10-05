@@ -98,7 +98,7 @@ public sealed class AudioStreamPlaylist : AudioStream
                 }
             return children;
         }
-        catch (Exception error) { ThrowCombined(error, AudioStreamPlaybackPlaylist.ReleaseChildren(children)); throw; }
+        catch (Exception error) { var cleanup = AudioStreamPlaybackPlaylist.ReleaseChildren(children); if (cleanup is not null) ThrowCombined(error, cleanup); throw; }
     }
     // Caller holds the audio gate; factories and owned-child cleanup are cold work outside the graph gate.
     private Exception? Configure(AudioStream?[] streams, int count)
@@ -125,7 +125,7 @@ public sealed class AudioStreamPlaylist : AudioStream
         catch (Exception error)
         {
             Exception? cleanup = null; foreach (var plan in plans) cleanup = Combine(cleanup, AudioStreamPlaybackPlaylist.ReleaseChildren(plan.Children));
-            ThrowCombined(error, cleanup); throw;
+            if (cleanup is not null) ThrowCombined(error, cleanup); throw;
         }
         finally { lock (GraphGate) _editing = false; }
     }
@@ -149,7 +149,7 @@ public sealed class AudioStreamPlaylist : AudioStream
                     var playback = new AudioStreamPlaybackPlaylist(this, new AudioStreamPlayback?[MaxStreams], streams, count);
                     var children = CreateChildren(streams, count, playback);
                     try { lock (GraphGate) { ThrowIfDisposed(); foreach (var child in streams) ValidateChild(child); playback.ReplaceChildren(children, streams, count); _playbacks.Add(new(playback)); return playback; } }
-                    catch (Exception error) { ThrowCombined(error, AudioStreamPlaybackPlaylist.ReleaseChildren(children)); throw; }
+                    catch (Exception error) { var cleanup = AudioStreamPlaybackPlaylist.ReleaseChildren(children); if (cleanup is not null) ThrowCombined(error, cleanup); throw; }
                 }
                 finally { lock (GraphGate) _editing = false; }
             }

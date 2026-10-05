@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-05
 
+Consecutive randomizer factory selection now traverses iteratively without changing resource history or wrapper identity. The 256-operation bound rejects a 257-node chain on a 256 KiB worker stack, and same-thread construction/mix recovery passes. Composite failures preserve their original exception after successful cleanup and aggregate distinct cleanup errors. Linux checks passed; Windows/macOS full-suite acceptance remains pending.
+
 Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. [Native delivery](../native-packaging.md) separates source production, audited packages and target execution. Complete Windows/macOS full-suite acceptance remains pending.
 
 

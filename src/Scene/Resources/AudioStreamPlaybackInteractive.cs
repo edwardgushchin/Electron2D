@@ -81,7 +81,7 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
                                 Check(); next[i]!.Playback.PrepareQueuedControls(); Check();
                             }
                     }
-                    catch (Exception error) { Resource.ThrowCombined(error, Release(next, _states)); throw; }
+                    catch (Exception error) { var cleanup = Release(next, _states); if (cleanup is not null) Resource.ThrowCombined(error, cleanup); throw; }
                     var previous = _states; var stopped = StopStates(false); _states = next; _version = c.Version;
                     Resource.ThrowCombined(stopped, Release(previous, next));
                 }
@@ -120,7 +120,7 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
             _current = -1; _held = -1; _currentOrder = 0; var c = _source.Capture();
             if ((uint)c.Initial < (uint)c.Count && _states[c.Initial] is not null) { _active = true; Queue(c.Initial, false, c); }
         }
-        catch (Exception error) { Resource.ThrowCombined(error, StopStates(true)); throw; }
+        catch (Exception error) { var cleanup = StopStates(true); if (cleanup is not null) Resource.ThrowCombined(error, cleanup); throw; }
         finally { _busy = false; AudioStream.ExitCall(); }
     }
     private Exception? StopStates(bool queued)
@@ -266,7 +266,7 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
                 }
                 return buffer.Length;
             }
-            catch (Exception error) { Resource.ThrowCombined(error, StopStates(true)); throw; }
+            catch (Exception error) { var cleanup = StopStates(true); if (cleanup is not null) Resource.ThrowCombined(error, cleanup); throw; }
             finally { _busy = false; AudioStream.ExitCall(); }
         }
     }

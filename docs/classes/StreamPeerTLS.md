@@ -1,6 +1,6 @@
 # StreamPeerTLS
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.StreamPeerTLS`. **Inherits:** [StreamPeer](StreamPeer.md). **Source:** [StreamPeerTLS.cs](../../src/Core/Networking/StreamPeerTLS.cs).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-04
 
 Encrypts ordered bytes over a borrowed StreamPeer through a polled TLS session.
 
-Calls require the constructing thread. The current native backend is Linux OpenSSL 3 with TLS 1.2/1.3, system/custom trust and expected-name validation. Poll processes handshake/control records and buffered output. Full I/O may wait; partial I/O retains bounded record buffers. Disconnect/Dispose never disposes the borrowed stream.
+Calls require the constructing thread. The native backend uses host OpenSSL 3 on Linux and private packaged OpenSSL on Windows/macOS, with TLS 1.2/1.3, system/custom trust and expected-name validation. Poll processes handshake/control records and buffered output. Full I/O may wait; partial I/O retains bounded record buffers. Close notification disconnects after preceding plaintext drains; abrupt transport EOF is an authentication error. Disconnect/Dispose never disposes the borrowed stream. Independent SslStream TLS 1.2 and OpenSSL TLS 1.3 oracles cover both roles locally; complete Windows/macOS target execution remains pending.
 
 The [TLS component](../components/tls.md) and [ADR 0094](../decisions/networking.md#adr-0094) specify trust, owner/lifetime, preparation, failure and platform boundaries.
 

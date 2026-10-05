@@ -18,6 +18,8 @@ Metadata projects maximum child length and beat count, first nonzero BPM/bar bea
 
 Shallow/deep/scene-local copies follow Resource graph policy, preserve aliases and store only active-prefix child/volume configuration. Hidden assignments and independent playback states are outside copied stored state. Disposal invalidates borrowing playbacks and clears resource references without disposing child resources or caller-owned playback. The factory weak registry never retains an otherwise unreferenced playback.
 
+Failed factory preparation rethrows the original exception after releasing newly owned children. A distinct child-cleanup failure is aggregated with that error; cleanup success does not replace or redispatch the original failure.
+
 ## Example
 
 The snippet requires the named live stream resources.

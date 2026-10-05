@@ -57,7 +57,7 @@ public sealed class AudioStreamPlaybackPlaylist : AudioStreamPlayback
                     cursor -= length;
                 }
         }
-        catch (Exception error) { Resource.ThrowCombined(error, StopCore(queued)); throw; }
+        catch (Exception error) { var cleanup = StopCore(queued); if (cleanup is not null) Resource.ThrowCombined(error, cleanup); throw; }
         finally { _busy = false; }
     }
     internal override void StartQueued(double time) { lock (AudioServer.Service.StreamGate) StartCore(time, true); }
@@ -129,7 +129,7 @@ public sealed class AudioStreamPlaybackPlaylist : AudioStreamPlayback
                 }
                 return buffer.Length;
             }
-            catch (Exception error) { buffer.Clear(); Resource.ThrowCombined(error, StopCore(true)); throw; }
+            catch (Exception error) { buffer.Clear(); var cleanup = StopCore(true); if (cleanup is not null) Resource.ThrowCombined(error, cleanup); throw; }
             finally { AudioStream.ExitCall(); _busy = false; }
         }
     }

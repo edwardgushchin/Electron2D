@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-05
 
+Desktop failure-path fixes retain the existing declaration coverage states: iterative randomizer construction keeps the 256-operation guard, shared TCP/UDS peek distinguishes FIN/RST, and independent TLS oracles force both-role TLS 1.2/1.3 without relying on macOS SslStream TLS 1.3 support. The full Linux suite and focused checks passed; all Windows/macOS target suites remain required. See [platform verification](../platform-verification.md).
+
 The [editor startup screen](../components/editor-startup.md) is a separate executable consumer of existing public Window, TextureRect, Label, FontFile, ResourceLoader, DisplayServer.SetIcon and Engine APIs. Its desktop launchers/identity assets belong to the editor consumer. It adds no runtime declaration or coverage-state change. Editor project/scene authoring, inspector/gizmos and shared CLI/batch operations remain dependent on their first executable slices under ADR 0090; displaying a logo does not satisfy those dependencies.
 
 [Private native delivery](../native-packaging.md) restores versioned desktop assets instead of compiling them during ordinary builds. Both Linux architectures execute their full headless suite; the preceding Linux package was publicly verified. macOS public text/audio/ENet consumers passed after the private WOFF2-capable FreeType fix; complete full-suite reruns remain required. Windows restoration/resolution, all three full-suite profiles and fresh consumers are connected but target acceptance is pending. Native producers cover all 18 declared RIDs; mobile/browser application integration remains open. No public API/member state changes are inferred from packaging or pending execution.

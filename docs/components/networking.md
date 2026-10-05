@@ -22,6 +22,8 @@ PacketPeerStream borrows its stream. It buffers partial headers/bodies, counts c
 
 ## Ownership, errors and invariants
 
+Read readiness with zero available bytes is checked by a non-consuming one-byte peek. Zero-byte success closes a drained FIN; a reset/error enters Error and throws, while WouldBlock leaves the connection open. This shared TCP/UDS path retains queued bytes and fixes the Windows x86 abortive-close timeout without reducing the fixture or its deadline.
+
 All transport calls and disposal require the constructing thread. Validation rejects foreign disposal before the object changes state. Peer objects inherit ElectronObject, not Resource; no native handles enter consumer API. Disposal closes owned sockets and preserves borrowed stream ownership. Snapshot arrays are copies; span operations borrow buffers only during the call. TCP/UDS full I/O may block, so a real-time consumer uses availability/partial methods or owns a separate constructing thread.
 
 BigEndian affects primitive numbers and text prefixes. Signed/unsigned widths use C# numeric types; IEEE half is projected as float with half precision on the wire. ASCII output replaces non-ASCII scalars with spaces. GetString decodes Latin-1 until NUL; UTF-8 skips a leading BOM, stops at NUL and replaces malformed bytes individually. MaxStringBytes is an explicit 16 MiB default receive-allocation budget. Queue/frame configuration caps native-layer prepared allocation at 64 MiB. Errors propagate as typed validation/stream/socket exceptions. PacketReadStatus and LastReadException report the latest attempted read; insufficient destination storage leaves the packet queued.

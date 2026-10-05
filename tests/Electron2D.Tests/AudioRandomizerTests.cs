@@ -94,7 +94,27 @@ internal static class AudioRandomizerTests
         var right = Task.Run(() => { try { concurrentB.AddStream(-1, concurrentA); return true; } catch (InvalidOperationException) { return false; } });
         Check(left.Result != right.Result, "Concurrent graph edits permit one link and reject the cycle atomically.");
         var deepChain = Enumerable.Range(0, 257).Select(_ => new AudioStreamRandomizer()).ToArray();
-        try { for (var i = deepChain.Length - 2; i >= 0; i--) deepChain[i].AddStream(-1, deepChain[i + 1]); Reject<InvalidOperationException>(() => deepChain[0].InstantiatePlayback()); }
+        try
+        {
+            for (var i = deepChain.Length - 2; i >= 0; i--) deepChain[i].AddStream(-1, deepChain[i + 1]);
+            Exception? failure = null;
+            var worker = new Thread(() =>
+            {
+                try
+                {
+                    Reject<InvalidOperationException>(() => deepChain[0].InstantiatePlayback());
+                    deepChain[0].StreamsCount = 0;
+                    using var recovered = deepChain[0].InstantiatePlayback();
+                    recovered.Start();
+                    Check(recovered.MixAudio(1, 2).Length == 2, "Small-stack rejection leaves the operation guard reusable.");
+                }
+                catch (Exception error) { failure = error; }
+            }, 256 * 1024)
+            { IsBackground = true };
+            worker.Start();
+            Check(worker.Join(TimeSpan.FromSeconds(10)), "Small-stack factory check completed.");
+            if (failure is not null) throw new InvalidOperationException("Small-stack audio factory check failed.", failure);
+        }
         finally { foreach (var item in deepChain) item.Dispose(); }
         using var victim = new AudioStreamRandomizer(); victim.AddStream(-1, child); child.AfterFactory = _ => victim.Dispose(); Reject<ObjectDisposedException>(() => victim.InstantiatePlayback()); Check(child.LastPlayback!.IsDisposed, "Dispose-during-factory releases a prepared child."); child.AfterFactory = null;
         using var deadParent = new AudioStreamRandomizer(); deadParent.AddStream(-1, child); using var p = deadParent.InstantiatePlayback(); deadParent.Dispose(); Reject<ObjectDisposedException>(() => p.Start()); p.Stop();

@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.rids) }}
-    name: Build
+    name: Build / ${{ matrix.label }}
     uses: ./.github/workflows/rid.yml
     with:
       rid: ${{ matrix.rid }}
@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.rids) }}
-    name: Tests
+    name: Tests / ${{ matrix.label }}
     uses: ./.github/workflows/rid.yml
     with:
       rid: ${{ matrix.rid }}

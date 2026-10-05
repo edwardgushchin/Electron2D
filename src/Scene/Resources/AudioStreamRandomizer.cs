@@ -205,19 +205,27 @@ public sealed partial class AudioStreamRandomizer : AudioStream
     /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback()
     {
-        EnterCall(0); AudioStreamPlayback? child = null;
+        var chain = new List<AudioStreamRandomizer>(); AudioStream? selected = this; AudioStreamPlayback? child = null;
         try
         {
-            AudioStream? selected;
-            lock (GraphGate) { ThrowIfDisposed(); selected = ChooseStream(); if (selected is not null) _last = selected; }
-            selected?.EnsurePlaybackOwner(); child = selected?.InstantiatePlayback(); ThrowIfDisposed(); return new Playback(this, child);
+            // Keep the same choices, history and callback guards without nesting native exception frames.
+            while (selected is AudioStreamRandomizer current)
+            {
+                current.EnterCall(0);
+                try { chain.Add(current); } catch { ExitCall(); throw; }
+                lock (GraphGate) { current.ThrowIfDisposed(); selected = current.ChooseStream(); if (selected is not null) current._last = selected; }
+                selected?.EnsurePlaybackOwner();
+            }
+            child = selected?.InstantiatePlayback();
+            for (var i = chain.Count - 1; i >= 0; i--) { chain[i].ThrowIfDisposed(); child = new Playback(chain[i], child); }
+            return child!;
         }
         catch (Exception error)
         {
             Exception? cleanup = null; try { child?.Dispose(); } catch (Exception failure) { cleanup = failure; }
-            Resource.ThrowCombined(error, cleanup); throw;
+            if (cleanup is not null) Resource.ThrowCombined(error, cleanup); throw;
         }
-        finally { ExitCall(); }
+        finally { for (var i = chain.Count - 1; i >= 0; i--) ExitCall(); }
     }
     /// <inheritdoc />
     protected override double OnGetLength()

@@ -1,6 +1,6 @@
 # AudioStreamPlaybackPlaylist
 
-Last updated: 2026-10-03
+Last updated: 2026-10-05
 
 **Declaration:** `public sealed class Electron2D.AudioStreamPlaybackPlaylist` · **Source:** [AudioStreamPlaybackPlaylist.cs](../../src/Scene/Resources/AudioStreamPlaybackPlaylist.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -15,6 +15,8 @@ Start clamps negative seconds to zero and resets cursor/loops. At or beyond tota
 Scheduling uses the actual output mix clock, child rate one and declared musical/sample duration, independent of caller rateScale. A destination starts at full gain; outgoing PCM fades from unity over FadeTime seconds. One outgoing state is retained: another transition stops the previous fade. Returning to the same looping child continues it rather than restarting; a nonlooping child restarts. Null/zero-duration slots are skipped with bounded search. Short child reads are zero-padded and do not move declared boundaries.
 
 Active mixing returns the requested size, including terminal silence in the completing call. Final completion stops all child transports, including input requests. Cursor is cycle-relative double seconds; it resets at loop wrap and preserves its completed value after Stop. Loop count resets on Start/Seek and saturates at Int32.MaxValue. Count/slot edits replace the full cohort and leave the mixer stopped; fade/order/loop controls remain live.
+
+Start/mix failure rethrows the original exception after stopping owned children. A distinct cleanup failure is aggregated; failed mixing also clears its caller buffer.
 
 ## Example
 

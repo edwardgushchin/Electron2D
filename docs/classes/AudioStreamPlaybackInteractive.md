@@ -1,6 +1,6 @@
 # AudioStreamPlaybackInteractive
 
-Last updated: 2026-10-03
+Last updated: 2026-10-05
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.AudioStreamPlaybackInteractive` · **Source:** [AudioStreamPlaybackInteractive.cs](../../src/Scene/Resources/AudioStreamPlaybackInteractive.cs).
 
@@ -19,6 +19,8 @@ Mixing uses fixed child rate one and the output clock, including when the reques
 Public controls/refresh and mutation serialize on the audio gate; callback mutation/query/mix/disposal reentry rejects before ownership is consumed. Unchanged children retain cached state at owner refresh; newly created children roll back on preparation failure, while cleanup failure after commit leaves the new stopped cache owned. Prepared scheduled internal controls support nested interactive/synchronized/randomized microphone children; public microphone controls/disposal still require the audio owner. Input preparation alone never records. Playback cleanup attempts every owned child, retains borrowed resources and releases recording reservations even after failures.
 
 Factories, parameter/property discovery, copies, owner refresh and MixAudio result arrays are cold. Warmed direct switches/span mixing reuse storage. Child resampling prefetch remains part of concrete timing; no sample-driver transport, foreign-platform or physical recording/listening acceptance is claimed. See [interactive streams](../components/audio-playback.md#interactive-streams).
+
+Preparation/start/mix failure rethrows the original exception after attempting all required child cleanup. An additional cleanup failure is aggregated with it; successful cleanup does not replace or redispatch the original error.
 
 ## Example
 

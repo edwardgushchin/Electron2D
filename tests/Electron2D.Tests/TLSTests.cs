@@ -1,4 +1,5 @@
 using Electron2D;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
@@ -23,7 +24,7 @@ internal static class TLSTests
         using var key = new CryptoKey(); key.LoadFromString(leafKey.ExportRSAPrivateKeyPem());
         using var chain = new Certificate(); chain.LoadFromString(leaf.ExportCertificatePem() + "\n" + authority.ExportCertificatePem());
         using var trust = new Certificate(); trust.LoadFromString(authority.ExportCertificatePem());
-        Resources(key, chain, trust, leafKey, leaf); Fragments(key, chain, trust); Abandoned(key, chain, trust); TCP(key, chain, trust); Failures(key, chain, trust, leafKey, authority); Interop(leaf, leafKey, authority, trust, key, chain);
+        Resources(key, chain, trust, leafKey, leaf); Fragments(key, chain, trust); Abandoned(key, chain, trust); TCP(key, chain, trust); Failures(key, chain, trust, leafKey, authority); Interop(leaf, leafKey, authority, trust, key, chain); OpenSSLInterop(trust, key, chain);
         Console.WriteLine("TLS native handshake/trust/name/records, PEM/DER resources, fragmented streams, socket/oracle interoperability and lifetime checks passed.");
     }
     private static X509Certificate2 Leaf(RSA key, X509Certificate2 authority, DateTimeOffset start, DateTimeOffset end)
@@ -142,10 +143,94 @@ internal static class TLSTests
         using var identity = leaf.CopyWithPrivateKey(leafKey); using var listener = new TcpListener(IPAddress.Loopback, 0); listener.Start(); var port = ((IPEndPoint)listener.LocalEndpoint).Port;
         var oracle = Task.Run(async () => { using var accepted = await listener.AcceptTcpClientAsync(); using var ssl = new SslStream(accepted.GetStream(), false); await ssl.AuthenticateAsServerAsync(identity, false, SslProtocols.Tls12, false); Check(ssl.SslProtocol == SslProtocols.Tls12, "Independent forced TLS 1.2 negotiation."); var bytes = new byte[8]; await ssl.ReadExactlyAsync(bytes); Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 42, "Independent TLS server reads wire value."); System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 99); await ssl.WriteAsync(bytes); await ssl.ShutdownAsync(); });
         using var raw = new StreamPeerTCP(); raw.ConnectToHost("127.0.0.1", port); Wait(() => { raw.Poll(); return raw.GetStatus() == StreamSocketStatus.Connected; }); using var options = TLSOptions.Client(trust); using var peer = new StreamPeerTLS(); peer.ConnectToStream(raw, "localhost", options); Wait(() => { peer.Poll(); return peer.GetStatus() == TLSStatus.Connected; }); peer.PutU64(42); Wait(() => { peer.Poll(); return peer.GetAvailableBytes() >= 8; }); Check(peer.GetU64() == 99, "Independent SslStream server reply."); Wait(() => oracle.IsCompleted); oracle.GetAwaiter().GetResult();
-        using var engineListener = new TCPServer(); engineListener.Listen(0, "127.0.0.1"); var enginePort = engineListener.GetLocalPort();
-        var reverse = Task.Run(async () => { using var socket = new TcpClient(); await socket.ConnectAsync(IPAddress.Loopback, enginePort); using var ssl = new SslStream(socket.GetStream(), false); var policy = new X509ChainPolicy { TrustMode = X509ChainTrustMode.CustomRootTrust, RevocationMode = X509RevocationMode.NoCheck }; policy.CustomTrustStore.Add(authority); await ssl.AuthenticateAsClientAsync(new SslClientAuthenticationOptions { TargetHost = "localhost", CertificateChainPolicy = policy, EnabledSslProtocols = SslProtocols.Tls13 }); Check(ssl.SslProtocol == SslProtocols.Tls13, "Independent forced TLS 1.3 negotiation."); var bytes = new byte[8]; System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 123); await ssl.WriteAsync(bytes); await ssl.ReadExactlyAsync(bytes); Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 456, "Independent TLS client reply."); });
-        Wait(engineListener.IsConnectionAvailable); using var engineSocket = engineListener.TakeConnection()!; using var serverOptions = TLSOptions.Server(key, chain); using var server = new StreamPeerTLS(); server.AcceptStream(engineSocket, serverOptions); Wait(() => { server.Poll(); return server.GetStatus() == TLSStatus.Connected; }); Wait(() => { server.Poll(); return server.GetAvailableBytes() >= 8; }); Check(server.GetU64() == 123, "Independent SslStream client request."); server.PutU64(456); Wait(() => reverse.IsCompleted); reverse.GetAwaiter().GetResult();
+        foreach (var graceful in new[] { true, false })
+        {
+            using var engineListener = new TCPServer(); engineListener.Listen(0, "127.0.0.1"); var enginePort = engineListener.GetLocalPort();
+            var reverse = Task.Run(async () =>
+            {
+                using var socket = new TcpClient(); await socket.ConnectAsync(IPAddress.Loopback, enginePort); using var ssl = new SslStream(socket.GetStream(), false);
+                var policy = new X509ChainPolicy { TrustMode = X509ChainTrustMode.CustomRootTrust, RevocationMode = X509RevocationMode.NoCheck }; policy.CustomTrustStore.Add(authority);
+                // Apple SecureTransport cannot negotiate TLS 1.3; the OpenSSL oracle below verifies it on every host.
+                await ssl.AuthenticateAsClientAsync(new SslClientAuthenticationOptions { TargetHost = "localhost", CertificateChainPolicy = policy, EnabledSslProtocols = SslProtocols.Tls12 });
+                Check(ssl.SslProtocol == SslProtocols.Tls12, "Independent forced TLS 1.2 client negotiation.");
+                var bytes = new byte[8]; System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 123); await ssl.WriteAsync(bytes); await ssl.ReadExactlyAsync(bytes);
+                Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 456, "Independent TLS client reply.");
+                if (graceful) await ssl.ShutdownAsync();
+                else socket.Client.Shutdown(SocketShutdown.Both);
+            });
+            Wait(engineListener.IsConnectionAvailable); using var engineSocket = engineListener.TakeConnection()!; using var serverOptions = TLSOptions.Server(key, chain); using var server = new StreamPeerTLS();
+            server.AcceptStream(engineSocket, serverOptions);
+            void Poll() { if (reverse.IsCompleted) reverse.GetAwaiter().GetResult(); server.Poll(); }
+            Wait(() => { Poll(); return server.GetStatus() == TLSStatus.Connected; }); Wait(() => { Poll(); return server.GetAvailableBytes() >= 8; });
+            Check(server.GetU64() == 123, "Independent SslStream client request."); server.PutU64(456); Wait(() => reverse.IsCompleted); reverse.GetAwaiter().GetResult();
+            if (graceful) Wait(() => { server.Poll(); return server.GetStatus() == TLSStatus.Disconnected; });
+            else
+            {
+                Reject<AuthenticationException>(() => Wait(() => { server.Poll(); return server.GetStatus() == TLSStatus.Disconnected; }));
+                Check(server.GetStatus() == TLSStatus.Error, "An abrupt TLS EOF remains an authentication error.");
+            }
+            Check(!engineSocket.IsDisposed && server.GetStream() is null, "Both TLS closure paths preserve borrowed transport ownership.");
+        }
     }
+    private static void OpenSSLInterop(Certificate trust, CryptoKey key, Certificate chain)
+    {
+        var folder = Path.Combine(Path.GetTempPath(), "e2d-tls-oracle-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder);
+        if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(folder, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        var keyPath = Path.Combine(folder, "key.pem"); var certPath = Path.Combine(folder, "cert.pem"); var trustPath = Path.Combine(folder, "trust.pem");
+        try
+        {
+            key.Save(keyPath); chain.Save(certPath); trust.Save(trustPath);
+            if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(keyPath, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+            int port; using (var reserve = new TCPServer()) { reserve.Listen(0, "127.0.0.1"); port = reserve.GetLocalPort(); }
+            using (var oracle = StartOracle(["s_server", "-quiet", "-no_ign_eof", "-tls1_3", "-naccept", "1", "-accept", "127.0.0.1:" + port, "-cert", certPath, "-key", keyPath], out var error))
+            {
+                try
+                {
+                    using var raw = new StreamPeerTCP();
+                    Wait(() =>
+                    {
+                        CheckOracle(oracle, error);
+                        try { if (raw.GetStatus() == StreamSocketStatus.None) raw.ConnectToHost("127.0.0.1", port); raw.Poll(); return raw.GetStatus() == StreamSocketStatus.Connected; }
+                        catch (SocketException failure) when (failure.SocketErrorCode == SocketError.ConnectionRefused) { raw.DisconnectFromHost(); Thread.Sleep(10); return false; }
+                    });
+                    using var options = TLSOptions.Client(trust); using var peer = new StreamPeerTLS(); peer.ConnectToStream(raw, "localhost", options);
+                    Wait(() => { CheckOracle(oracle, error); peer.Poll(); return peer.GetStatus() == TLSStatus.Connected; });
+                    var bytes = new byte[8]; var read = oracle.StandardOutput.BaseStream.ReadExactlyAsync(bytes).AsTask(); peer.PutU64(42);
+                    Wait(() => { CheckOracle(oracle, error); peer.Poll(); return read.IsCompleted; }); read.GetAwaiter().GetResult();
+                    Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 42, "Forced TLS 1.3 OpenSSL server decrypts wire value.");
+                    System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 99); oracle.StandardInput.BaseStream.Write(bytes); oracle.StandardInput.BaseStream.Flush();
+                    Wait(() => { CheckOracle(oracle, error); peer.Poll(); return peer.GetAvailableBytes() >= bytes.Length; }); Check(peer.GetU64() == 99, "Forced TLS 1.3 OpenSSL server reply.");
+                    oracle.StandardInput.Close(); Wait(() => { peer.Poll(); return peer.GetStatus() == TLSStatus.Disconnected && oracle.HasExited; }); CheckOracle(oracle, error);
+                }
+                finally { StopOracle(oracle); }
+            }
+            using var listener = new TCPServer(); listener.Listen(0, "127.0.0.1");
+            using var client = StartOracle(["s_client", "-quiet", "-no_ign_eof", "-tls1_3", "-connect", "127.0.0.1:" + listener.GetLocalPort(), "-CAfile", trustPath, "-verify_return_error", "-verify_hostname", "localhost"], out var clientError);
+            try
+            {
+                Wait(() => { CheckOracle(client, clientError); return listener.IsConnectionAvailable(); });
+                using var raw = listener.TakeConnection()!; using var options = TLSOptions.Server(key, chain); using var peer = new StreamPeerTLS(); peer.AcceptStream(raw, options);
+                Wait(() => { CheckOracle(client, clientError); peer.Poll(); return peer.GetStatus() == TLSStatus.Connected; });
+                var bytes = new byte[8]; System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 123); client.StandardInput.BaseStream.Write(bytes); client.StandardInput.BaseStream.Flush();
+                Wait(() => { CheckOracle(client, clientError); peer.Poll(); return peer.GetAvailableBytes() >= bytes.Length; }); Check(peer.GetU64() == 123, "Forced TLS 1.3 OpenSSL client request.");
+                var read = client.StandardOutput.BaseStream.ReadExactlyAsync(bytes).AsTask(); peer.PutU64(456);
+                Wait(() => { CheckOracle(client, clientError); peer.Poll(); return read.IsCompleted; }); read.GetAwaiter().GetResult();
+                Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 456, "Forced TLS 1.3 OpenSSL client authenticates and decrypts reply.");
+                client.StandardInput.Close(); Wait(() => { peer.Poll(); return peer.GetStatus() == TLSStatus.Disconnected && client.HasExited; }); CheckOracle(client, clientError);
+            }
+            finally { StopOracle(client); }
+        }
+        finally { Directory.Delete(folder, true); }
+        Console.WriteLine("Independent OpenSSL TLS 1.3 client/server records, trust/name validation and close notifications passed.");
+    }
+    private static Process StartOracle(string[] args, out Task<string> error)
+    {
+        var start = new ProcessStartInfo("openssl") { RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true };
+        foreach (var argument in args) start.ArgumentList.Add(argument);
+        var process = Process.Start(start) ?? throw new IOException("OpenSSL oracle did not start."); error = process.StandardError.ReadToEndAsync(); return process;
+    }
+    private static void CheckOracle(Process process, Task<string> error) { if (process.HasExited && process.ExitCode != 0) throw new IOException("OpenSSL oracle failed: " + error.GetAwaiter().GetResult()); }
+    private static void StopOracle(Process process) { if (!process.HasExited) process.Kill(true); Check(process.WaitForExit(3000), "Independent TLS oracle exits."); }
     private static void Handshake(StreamPeerTLS a, StreamPeerTLS b) => Wait(() => { a.Poll(); b.Poll(); return a.GetStatus() == TLSStatus.Connected && b.GetStatus() == TLSStatus.Connected; });
     private static void RoundTrip(StreamPeerTLS a, StreamPeerTLS b)
     {

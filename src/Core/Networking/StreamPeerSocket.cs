@@ -41,7 +41,7 @@ public abstract class StreamPeerSocket : StreamPeer
         catch (SocketException error) when (NetworkSockets.Busy(error.SocketErrorCode)) { _status = StreamSocketStatus.Connecting; }
         catch { DisconnectCore(); throw; }
     }
-    /// <summary>Advances connection completion and detects errors or drained remote closure.</summary>
+    /// <summary>Advances connection completion and distinguishes socket errors from drained graceful closure without consuming queued bytes.</summary>
     /// <exception cref="SocketException">The connection fails; state becomes Error and native resources close.</exception>
     /// <exception cref="TimeoutException">The configured connection deadline expires.</exception>
     public void Poll()
@@ -65,7 +65,14 @@ public abstract class StreamPeerSocket : StreamPeer
                     var error = (int)_socket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Error)!;
                     if (error != 0) throw new SocketException(error);
                 }
-                if (_socket.Poll(0, SelectMode.SelectRead) && _socket.Available == 0) DisconnectCore();
+                if (_socket.Poll(0, SelectMode.SelectRead) && _socket.Available == 0)
+                {
+                    // Read readiness alone does not distinguish FIN from a pending reset on every OS.
+                    Span<byte> probe = stackalloc byte[1];
+                    var count = _socket.Receive(probe, SocketFlags.Peek, out var error);
+                    if (error != SocketError.Success && !NetworkSockets.Busy(error)) throw new SocketException((int)error);
+                    if (error == SocketError.Success && count == 0) DisconnectCore();
+                }
             }
         }
         catch { DisconnectCore(); _status = StreamSocketStatus.Error; throw; }

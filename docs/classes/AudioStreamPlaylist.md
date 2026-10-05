@@ -14,6 +14,8 @@ Duration is the sum of eligible active resources: positive BPM and BeatCount use
 
 Changed count or any slot assignment (also equal/hidden slot writes) prepares complete new cohorts and leaves registered playback stopped. New factories/queued control preparation finish before configuration commits; failure preserves old graph and ownership. Old cleanup failures report after the new stopped state commits. Equal count only notifies PropertyListChanged; no setter emits Changed. Fade/loop/shuffle are live scalar controls and do not rebuild cohorts.
 
+Failed factory preparation rethrows the original exception after releasing newly owned children. A distinct child-cleanup failure is aggregated with that error; cleanup success does not replace or redispatch the original failure.
+
 ## Example
 
 ```csharp

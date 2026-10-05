@@ -1,6 +1,6 @@
 # TLS streams and security resources
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 ## Surface and dependency direction
 
@@ -35,6 +35,8 @@ Linux OpenSSL is host-provided and not redistributed. Windows/macOS use private 
 [TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) exercises RSA/EC PEM, private/public role, DER files, ordered chains, copied Resource state, loader discovery/cache/replace/failure, observer failure, resource-use rejection/release and abandoned-session finalization. Actual Linux OpenSSL TLS exchanges run over fragmented public StreamPeer and TCP, including 128 KiB partial transfer, DNS/IP/override, valid/wrong/system trust, expired identity, unsafe with/without required custom trust, matching-key rejection, close notification, preceding plaintext at FIN and a second TLS session over preserved TCP. Independent .NET SslStream peers verify both client and server wire interoperability without relying on Electron2D's TLS implementation.
 
 64 prepared active number/read/write/poll cycles and 64 idle status/availability/poll cycles measure zero managed allocated bytes on the owner thread. Native BIO capacity is fixed; OpenSSL internal native allocation totals, routed traffic/throughput, system CA variation, other platforms and owner acceptance are unverified. No renderer or unified editor/project tool acceptance is inferred from these network tests.
+
+Both independent SslStream roles force TLS 1.2; macOS SecureTransport cannot provide the TLS 1.3 oracle ([runtime issue](https://github.com/dotnet/runtime/issues/1979)). Independent OpenSSL processes force TLS 1.3 in both roles on every desktop test host, exchanging exact integer records, validating the client trust/name policy and checking close notifications. SslStream client teardown separately verifies explicit close notification and abrupt EOF, preserving the borrowed transport in both cases. Temporary private keys and owned oracle processes are released on every exit. These focused checks passed on Linux; target Windows/macOS reruns remain required.
 
 A self-contained linux-x64 test application was published to `/tmp/e2d-tls-native-publish` and its TLS selector executed from `/tmp` with LD_LIBRARY_PATH unset. TLS 1.2/1.3 interoperability and all focused resource/lifetime/allocation checks passed using packaged .NET runtime files and host OpenSSL 3.6.4. This confirms the exercised local deployment profile, not other hosts or an external consumer application.
 

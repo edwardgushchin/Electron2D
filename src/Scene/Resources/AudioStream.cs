@@ -53,6 +53,7 @@ public abstract class AudioStream : Resource
     /// <summary>Creates independent playback state for this stream.</summary>
     /// <returns>A new caller-owned playback that borrows this resource.</returns>
     /// <exception cref="ObjectDisposedException">The stream is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The factory returns invalid state or composite callbacks exceed their recursion bounds.</exception>
     public AudioStreamPlayback InstantiatePlayback() { ThrowIfDisposed(); var playback = PreparingAnimation && this is AudioStreamRandomizer randomizer ? randomizer.InstantiatePreparedPlayback() : OnInstantiatePlayback(); if (playback is null || playback.IsDisposed) throw new InvalidOperationException("A stream must create a live playback."); return playback; }
     /// <summary>Creates independent playback state.</summary>
     /// <returns>A new caller-owned playback.</returns>

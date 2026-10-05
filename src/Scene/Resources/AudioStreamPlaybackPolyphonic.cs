@@ -66,7 +66,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
         try
         {
             Check(); Idle(); Owner(); if (stream is null) return InvalidID;
-            if (_preparedRoots.Contains(stream)) { _busy = true; _source.EnterCall(0); try { return PlayPrepared(stream, fromOffset, volumeDB, pitchScale); } finally { AudioStream.ExitCall(); _busy = false; } }
+            if (_preparedRoots.Contains(stream)) { _source.EnterCall(0); _busy = true; try { return PlayPrepared(stream, fromOffset, volumeDB, pitchScale); } finally { AudioStream.ExitCall(); _busy = false; } }
             if (!double.IsFinite(fromOffset) || playbackType is < AudioServer.PlaybackType.Default or >= AudioServer.PlaybackType.Max) throw new ArgumentOutOfRangeException(nameof(fromOffset)); ArgumentNullException.ThrowIfNull(bus); var gain = Gain(volumeDB); Pitch(pitchScale);
             var index = -1;
             for (var i = 0; i < _voices.Length; i++)
@@ -98,7 +98,7 @@ public sealed partial class AudioStreamPlaybackPolyphonic : AudioStreamPlayback
             catch (Exception error)
             {
                 Exception? cleanup = null; if (owned && child is not null) { child.CompositeOwner = null; child.UpdateNativeOwner(null); try { child.Dispose(); } catch (Exception failure) { cleanup = failure; } }
-                Resource.ThrowCombined(error, cleanup); throw;
+                if (cleanup is not null) Resource.ThrowCombined(error, cleanup); throw;
             }
             finally { AudioStream.ExitCall(); _busy = false; }
         }
