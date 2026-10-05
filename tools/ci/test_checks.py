@@ -174,6 +174,11 @@ class Checks(unittest.TestCase):
             with self.subTest(rows=changed), patch.object(rids.json, "loads", return_value=changed):
                 with self.assertRaises(ValueError):
                     rids.matrix()
+        for label in (None, "", "  ", 1, rows[1]["label"]):
+            changed = [dict(rows[0], label=label)] + rows[1:]
+            with self.subTest(label=label), patch.object(rids.json, "loads", return_value=changed):
+                with self.assertRaises(ValueError):
+                    rids.matrix()
 
     def test_artifacts_and_rejections(self):
         for rid in ("linux-x64", "linux-arm64", "osx-x64", "osx-arm64", "win-x86", "win-x64", "win-arm64", "android-arm64", "ios-arm64", "browser-wasm"):

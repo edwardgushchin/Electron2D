@@ -30,10 +30,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.rids) }}
-    name: Build / ${{ matrix.rid }}
+    name: Build
     uses: ./.github/workflows/rid.yml
     with:
       rid: ${{ matrix.rid }}
+      label: ${{ matrix.label }}
       runner: ${{ matrix.runner }}
       workload: ${{ matrix.workload }}
       suite: ${{ matrix.suite }}
@@ -42,10 +43,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.rids) }}
-    name: Tests / ${{ matrix.rid }} / ${{ matrix.suite }}
+    name: Tests
     uses: ./.github/workflows/rid.yml
     with:
       rid: ${{ matrix.rid }}
+      label: ${{ matrix.label }}
       runner: ${{ matrix.runner }}
       workload: ${{ matrix.workload }}
       suite: ${{ matrix.suite }}

@@ -6,6 +6,9 @@ on:
       rid:
         required: true
         type: string
+      label:
+        required: true
+        type: string
       runner:
         required: true
         type: string
@@ -24,6 +27,7 @@ permissions:
 
 jobs:
   rid:
+    name: ${{ inputs.label }}
     runs-on: ${{ inputs.runner }}
     timeout-minutes: 90
     defaults:
