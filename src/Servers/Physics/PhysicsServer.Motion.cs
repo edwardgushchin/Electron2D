@@ -4,8 +4,8 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    internal bool BodyTestMotionCore(RID body, PhysicsTestMotionParameters2D parameters,
-    PhysicsTestMotionResult2D? result = null)
+    internal bool BodyTestMotionCore(RID body, PhysicsTestMotionParameters parameters,
+    PhysicsTestMotionResult? result = null)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);

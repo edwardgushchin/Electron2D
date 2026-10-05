@@ -263,7 +263,7 @@ internal static class ShapeCastTests
         PhysicsServer.BodyAddShape(body, shapeRID);
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
         PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(-40, 0)));
-        PhysicsServer.BodySetSpace(body, cast.GetWorld2D()!.Space);
+        PhysicsServer.BodySetSpace(body, cast.GetWorld()!.Space);
         target.Position = new(0, 200);
         cast.ForceShapecastUpdate();
         Check(cast.GetColliderRID(0) == body && cast.GetCollider(0) is null &&

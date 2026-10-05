@@ -1,8 +1,8 @@
-# PhysicsRayQueryParameters2D
+# PhysicsRayQueryParameters
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
-**Inherits:** ElectronObject · **Source:** [PhysicsQueryParameters2D.cs](../../src/Servers/Physics/PhysicsQueryParameters2D.cs)
+**Inherits:** ElectronObject · **Source:** [PhysicsQueryParameters.cs](../../src/Servers/Physics/PhysicsQueryParameters.cs)
 
 Configures one [PhysicsDirectSpaceState.IntersectRay](PhysicsDirectSpaceState.md) call. It is caller-owned and mutable; reads and writes of `Exclude` copy the RID array. Finite scene-unit endpoints are global coordinates.
 
@@ -11,17 +11,17 @@ Configures one [PhysicsDirectSpaceState.IntersectRay](PhysicsDirectSpaceState.md
 Partial snippet with an attached `player` body:
 
 ```csharp
-using var query = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 100));
+using var query = PhysicsRayQueryParameters.Create(new(0, 0), new(0, 100));
 query.Exclude = [player.GetRID()];
-var hit = player.GetWorld2D()?.DirectSpaceState.IntersectRay(query);
+var hit = player.GetWorld()?.DirectSpaceState.IntersectRay(query);
 ```
 
 ## API summary
 
 | Member | Default | Contract |
 | --- | --- | --- |
-| `public PhysicsRayQueryParameters2D()` | — | Zero-length origin ray. |
-| `public static PhysicsRayQueryParameters2D Create(Vector2 from, Vector2 to, uint collisionMask = uint.MaxValue, RID[]? exclude = null)` | — | Caller-owned preconfigured parameters. |
+| `public PhysicsRayQueryParameters()` | — | Zero-length origin ray. |
+| `public static PhysicsRayQueryParameters Create(Vector2 from, Vector2 to, uint collisionMask = uint.MaxValue, RID[]? exclude = null)` | — | Caller-owned preconfigured parameters. |
 | `public Vector2 From { get; set; }` | (0, 0) | Finite global ray origin. |
 | `public Vector2 To { get; set; }` | (0, 0) | Finite global ray endpoint. |
 | `public uint CollisionMask { get; set; }` | all bits | Eligible collider layers. |

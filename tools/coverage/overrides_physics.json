@@ -412,127 +412,127 @@
     },
     {
       "godot": "KinematicCollision2D::method:get_collider()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetCollider()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetCollider()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_collider_id()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderID()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetColliderID()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_collider_rid()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderRID()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetColliderRID()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_collider_shape()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderShape()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetColliderShape()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_collider_shape_index()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderShapeIndex()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetColliderShapeIndex()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_collider_velocity()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderVelocity()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetColliderVelocity()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_depth()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetDepth()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetDepth()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_local_shape()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetLocalShape()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetLocalShape()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_normal()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetNormal()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetNormal()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_position()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetPosition()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetPosition()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_remainder()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetRemainder()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetRemainder()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "KinematicCollision2D::method:get_travel()",
-      "electron2d": "method:Electron2D.KinematicCollision2D.GetTravel()",
+      "electron2d": "method:Electron2D.KinematicCollision.GetTravel()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collider()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollider()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetCollider()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collider_id()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderID()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetColliderID()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collider_rid()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderRID()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetColliderRID()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collider_shape()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderShape()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetColliderShape()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collider_velocity()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderVelocity()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetColliderVelocity()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collision_depth()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionDepth()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetCollisionDepth()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collision_local_shape()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionLocalShape()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetCollisionLocalShape()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collision_normal()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionNormal()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetCollisionNormal()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collision_point()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionPoint()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetCollisionPoint()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collision_safe_fraction()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionSafeFraction()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetCollisionSafeFraction()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_collision_unsafe_fraction()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionUnsafeFraction()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetCollisionUnsafeFraction()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_remainder()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetRemainder()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetRemainder()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
       "godot": "PhysicsTestMotionResult2D::method:get_travel()",
-      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetTravel()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult.GetTravel()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
     },
     {
@@ -577,7 +577,7 @@
     },
     {
       "godot": "CanvasItem::method:get_world_2d()",
-      "electron2d": "method:Electron2D.CanvasItem.GetWorld2D()",
+      "electron2d": "method:Electron2D.CanvasItem.GetWorld()",
       "reason": "Typed scene-tree world access; independent viewport world changes remain a separate scene/renderer dependency."
     },
     {
@@ -1152,17 +1152,17 @@
       "adr": "ADRs 0008, 0063"
     },
     {
-      "electron2d": "constructor:Electron2D.KinematicCollision2D..ctor()",
+      "electron2d": "constructor:Electron2D.KinematicCollision..ctor()",
       "reason": "Caller-owned typed output construction for TestMove, with an empty initial snapshot.",
       "adr": "ADRs 0001, 0003, 0063"
     },
     {
-      "electron2d": "constructor:Electron2D.PhysicsTestMotionParameters2D..ctor()",
+      "electron2d": "constructor:Electron2D.PhysicsTestMotionParameters..ctor()",
       "reason": "Managed parameter construction projects the pinned motion-test defaults.",
       "adr": "ADRs 0003, 0063"
     },
     {
-      "electron2d": "constructor:Electron2D.PhysicsTestMotionResult2D..ctor()",
+      "electron2d": "constructor:Electron2D.PhysicsTestMotionResult..ctor()",
       "reason": "Caller-owned typed result construction for server motion tests.",
       "adr": "ADRs 0001, 0003, 0063"
     },
@@ -1202,62 +1202,62 @@
       "adr": "ADRs 0008, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRestInfo2D.Collider()",
+      "electron2d": "property:Electron2D.PhysicsRestInfo.Collider()",
       "reason": "Typed projection of the Collider field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRestInfo2D.ColliderID()",
+      "electron2d": "property:Electron2D.PhysicsRestInfo.ColliderID()",
       "reason": "Typed projection of the ColliderID field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRestInfo2D.ColliderRID()",
+      "electron2d": "property:Electron2D.PhysicsRestInfo.ColliderRID()",
       "reason": "Typed projection of the ColliderRID field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRestInfo2D.LinearVelocity()",
+      "electron2d": "property:Electron2D.PhysicsRestInfo.LinearVelocity()",
       "reason": "Typed projection of the LinearVelocity field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRestInfo2D.Normal()",
+      "electron2d": "property:Electron2D.PhysicsRestInfo.Normal()",
       "reason": "Typed projection of the Normal field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRestInfo2D.Point()",
+      "electron2d": "property:Electron2D.PhysicsRestInfo.Point()",
       "reason": "Typed projection of the Point field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRestInfo2D.ShapeIndex()",
+      "electron2d": "property:Electron2D.PhysicsRestInfo.ShapeIndex()",
       "reason": "Typed projection of the ShapeIndex field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsShapeResult2D.Collider()",
+      "electron2d": "property:Electron2D.PhysicsShapeResult.Collider()",
       "reason": "Typed projection of the Collider field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsShapeResult2D.ColliderID()",
+      "electron2d": "property:Electron2D.PhysicsShapeResult.ColliderID()",
       "reason": "Typed projection of the ColliderID field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsShapeResult2D.ColliderRID()",
+      "electron2d": "property:Electron2D.PhysicsShapeResult.ColliderRID()",
       "reason": "Typed projection of the ColliderRID field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsShapeResult2D.ShapeIndex()",
+      "electron2d": "property:Electron2D.PhysicsShapeResult.ShapeIndex()",
       "reason": "Typed projection of the ShapeIndex field in a direct-space result dictionary.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "constructor:Electron2D.PhysicsShapeQueryParameters2D..ctor()",
+      "electron2d": "constructor:Electron2D.PhysicsShapeQueryParameters..ctor()",
       "reason": "Managed construction supplies the mutable shape-query defaults.",
       "adr": "ADRs 0003, 0063"
     },
@@ -1267,12 +1267,12 @@
       "adr": "ADRs 0003, 0063"
     },
     {
-      "electron2d": "T:Electron2D.PhysicsShapeResult2D",
+      "electron2d": "T:Electron2D.PhysicsShapeResult",
       "reason": "Typed value projects direct shape-result dictionary fields without Variant.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "T:Electron2D.PhysicsRestInfo2D",
+      "electron2d": "T:Electron2D.PhysicsRestInfo",
       "reason": "Typed value projects direct rest-result dictionary fields without Variant.",
       "adr": "ADRs 0001, 0004, 0063"
     },
@@ -1307,22 +1307,22 @@
       "adr": "ADRs 0008, 0063"
     },
     {
-      "electron2d": "T:Electron2D.PhysicsPointResult2D",
+      "electron2d": "T:Electron2D.PhysicsPointResult",
       "reason": "Typed C# value projects the dictionary entries of direct-space point hits without Variant or dynamic lookup.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "T:Electron2D.PhysicsRayResult2D",
+      "electron2d": "T:Electron2D.PhysicsRayResult",
       "reason": "Typed C# value projects the dictionary entries of direct-space ray hits without Variant or dynamic lookup.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
-      "electron2d": "constructor:Electron2D.PhysicsPointQueryParameters2D..ctor()",
+      "electron2d": "constructor:Electron2D.PhysicsPointQueryParameters..ctor()",
       "reason": "Managed construction projects the reference mutable point-parameter defaults.",
       "adr": "ADRs 0003, 0063"
     },
     {
-      "electron2d": "constructor:Electron2D.PhysicsRayQueryParameters2D..ctor()",
+      "electron2d": "constructor:Electron2D.PhysicsRayQueryParameters..ctor()",
       "reason": "Managed construction projects the reference mutable ray-parameter defaults.",
       "adr": "ADRs 0003, 0063"
     },
@@ -1367,57 +1367,62 @@
       "adr": "ADRs 0004, 0063"
     },
     {
-      "electron2d": "method:Electron2D.World2D.CreateDuplicateInstance()",
+      "electron2d": "method:Electron2D.World.CreateDuplicateInstance()",
       "reason": "Managed Resource duplication retains the same borrowed live space RID without copying a solver world.",
       "adr": "ADRs 0013, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsPointResult2D.Collider()",
+      "electron2d": "method:Electron2D.World.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Managed Resource duplication and copying retain the same borrowed live space RID without copying a solver world; PhysicsQueryTests verifies duplication.",
+      "adr": "ADRs 0013, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsPointResult.Collider()",
       "reason": "Typed projection of the collider object in a point-result dictionary; null for server-only colliders.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsPointResult2D.ColliderID()",
+      "electron2d": "property:Electron2D.PhysicsPointResult.ColliderID()",
       "reason": "Typed projection of point-result collider_id; zero for server-only colliders.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsPointResult2D.ColliderRID()",
+      "electron2d": "property:Electron2D.PhysicsPointResult.ColliderRID()",
       "reason": "Typed projection of the point-result RID, including server-only objects.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsPointResult2D.ShapeIndex()",
+      "electron2d": "property:Electron2D.PhysicsPointResult.ShapeIndex()",
       "reason": "Typed projection of the point-result stable shape-owner index.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRayResult2D.Collider()",
+      "electron2d": "property:Electron2D.PhysicsRayResult.Collider()",
       "reason": "Typed projection of the collider object in a ray-result dictionary; null for server-only colliders.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRayResult2D.ColliderID()",
+      "electron2d": "property:Electron2D.PhysicsRayResult.ColliderID()",
       "reason": "Typed projection of ray-result collider_id; zero for server-only colliders.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRayResult2D.ColliderRID()",
+      "electron2d": "property:Electron2D.PhysicsRayResult.ColliderRID()",
       "reason": "Typed projection of the ray-result RID, including server-only objects.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRayResult2D.Normal()",
+      "electron2d": "property:Electron2D.PhysicsRayResult.Normal()",
       "reason": "Typed projection of the global contact normal; zero on inside hits.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRayResult2D.Position()",
+      "electron2d": "property:Electron2D.PhysicsRayResult.Position()",
       "reason": "Typed projection of the global ray-hit position.",
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsRayResult2D.ShapeIndex()",
+      "electron2d": "property:Electron2D.PhysicsRayResult.ShapeIndex()",
       "reason": "Typed projection of the ray-result stable shape-owner index.",
       "adr": "ADRs 0001, 0063"
     },
@@ -2293,7 +2298,7 @@
         "World2D::property:navigation_map"
       ],
       "state": "Blocked",
-      "reason": "Trigger: renderer canvas RID and navigation-map RID lifetimes must be attached to the same World2D; physics space identity alone does not implement those server domains (ADRs 0028, 0052 and 0063)."
+      "reason": "Trigger: renderer canvas RID and navigation-map RID lifetimes must be attached to the same World; physics space identity alone does not implement those server domains (ADRs 0028, 0052 and 0063)."
     },
     {
       "godot": [
@@ -2333,7 +2338,7 @@
         "PhysicsPointQueryParameters2D::property:canvas_instance_id"
       ],
       "state": "Blocked",
-      "reason": "Trigger: independent viewport canvas instance identity and query filtering across multiple World2D resources (ADRs 0028 and 0063)."
+      "reason": "Trigger: independent viewport canvas instance identity and query filtering across multiple World resources (ADRs 0028 and 0063)."
     },
     {
       "godot": [

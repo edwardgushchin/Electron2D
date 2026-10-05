@@ -65,7 +65,7 @@ internal static class PhysicsServerAreaFieldTests
         try
         {
             PhysicsServer.ShapeSetData(shape, region);
-            PhysicsServer.AreaAddShape(area, shape); PhysicsServer.AreaSetSpace(area, low.GetWorld2D()!.Space); PhysicsServer.AreaSetCollisionMask(area, 1u << 31);
+            PhysicsServer.AreaAddShape(area, shape); PhysicsServer.AreaSetSpace(area, low.GetWorld()!.Space); PhysicsServer.AreaSetCollisionMask(area, 1u << 31);
             PhysicsServer.AreaSetGravity(area, 100); PhysicsServer.AreaSetGravityVector(area, new(1, 0)); PhysicsServer.AreaSetPriority(area, 10);
             var expected = new[] { new Vector2(0, 1180), new Vector2(100, 1180), new Vector2(100, 0), new Vector2(100, 0), new Vector2(100, 1180) };
             for (var mode = 0; mode <= 4; mode++)
@@ -82,7 +82,7 @@ internal static class PhysicsServerAreaFieldTests
             Near(rigid.GetGravity(), new(0, 1180), "Disabled receiver geometry contributes no field.");
             PhysicsServer.AreaSetShapeDisabled(area, 0, false); PhysicsServer.AreaSetSpace(area, default); tree.PhysicsFrame(1d / 60);
             Near(rigid.GetGravity(), new(0, 1180), "Detached fields cease participation.");
-            PhysicsServer.AreaSetSpace(area, low.GetWorld2D()!.Space); tree.PhysicsFrame(1d / 60); Near(rigid.GetGravity(), new(100, 0), "Reentry preserves fields and priority.");
+            PhysicsServer.AreaSetSpace(area, low.GetWorld()!.Space); tree.PhysicsFrame(1d / 60); Near(rigid.GetGravity(), new(100, 0), "Reentry preserves fields and priority.");
             PhysicsServer.FreeRID(area); area = default; tree.PhysicsFrame(1d / 60); Near(rigid.GetGravity(), new(0, 1180), "Freed field leaves no dangling reducer state.");
         }
         finally { if (area.IsValid()) PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(shape); }
@@ -153,7 +153,7 @@ internal static class PhysicsServerAreaFieldTests
     {
         using var circle = new CircleShape(); var root = new Node(); var scene = new Area { Monitoring = false, Monitorable = false }; Add(scene, circle); root.AddChild(scene);
         var probe = new FieldDuringPose { Area = scene, CanSleep = false, NotifyLocalTransformChanges = true, CollisionMask = 0 }; Add(probe, circle); root.AddChild(probe);
-        using var tree = new SceneTree(root); var server = PhysicsServer.Service; var rid = scene.GetRID(); var space = scene.GetWorld2D()!.Space;
+        using var tree = new SceneTree(root); var server = PhysicsServer.Service; var rid = scene.GetRID(); var space = scene.GetWorld()!.Space;
         PhysicsServer.AreaSetGravitySpaceOverride(rid, Area.SpaceOverride.Replace); PhysicsServer.AreaSetGravity(rid, 20); var entries = 0;
         PhysicsServer.AreaSetMonitorCallback(rid, (status, _, _, _, _) => { if (status == PhysicsServer.AreaBodyStatus.Added) { entries++; PhysicsServer.AreaSetGravity(rid, 30); } });
         tree.PhysicsFrame(1d / 60); Check(entries == 1 && probe.Rejected && PhysicsServer.AreaGetGravity(rid) == 30, "Receiver callback can change fields for next step; solver pose edits reject.");

@@ -1,6 +1,6 @@
 # SeparationRayShape
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -59,7 +59,7 @@ Returns `new Rect2(0, 0, 0, Length).Grow(MathF.Sqrt(0.5f) * 4f)`, including draw
 
 Contact requires a front-facing surface crossing. A ray starting inside filled geometry has no entry hit; ray-ray pairs never contact. Margin extends the endpoint along the axis. Ray motion extends it by the positive axial displacement; transverse movement does not create a swept solid segment. For an ordinary shape moving against a stationary ray, the union of initial/final native primitives and swept edges supplies directed contact, including rounded margins.
 
-Recovery always includes rays. The motion phase includes sliding rays automatically and other rays only when PhysicsTestMotionParameters2D.CollideSeparationRay is true. CharacterBody floor snap explicitly sets that flag. A touching ray may move away. RID, shape indices, point velocity, masks and exclusions retain the shared contract. Rays contribute zero inertia; ordinary dynamic solver impulses and contact reports remain incomplete.
+Recovery always includes rays. The motion phase includes sliding rays automatically and other rays only when PhysicsTestMotionParameters.CollideSeparationRay is true. CharacterBody floor snap explicitly sets that flag. A touching ray may move away. RID, shape indices, point velocity, masks and exclusions retain the shared contract. Rays contribute zero inertia; ordinary dynamic solver impulses and contact reports remain incomplete.
 
 [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) checks defaults, equal/invalid/disposed writes, bounds, copying, packing, every existing shape family, containment, rotation/offset, short/zero rays, both slope policies, forward/reverse sweeps, query exclusion, server creation, recovery, character sliding/snap, callback failure, Area sensing, zero inertia and the dynamic gap. Sixty-four warmed body recovery queries, reverse casts/rest queries and active directed Area frames each allocate zero managed bytes on Linux/.NET 10. Native allocation, other platforms, large-world throughput and owner visual acceptance remain unverified.
 

@@ -33,7 +33,7 @@ internal static class PhysicsCollisionExceptionTests
         Check(mover.GetCollisionExceptions() is [var listed] && ReferenceEquals(listed, floor) &&
               floor.GetCollisionExceptions().Length == 0,
             "A duplicate scene exception is idempotent and stored only on its owning body.");
-        using var probe = new KinematicCollision2D();
+        using var probe = new KinematicCollision();
         Check(!mover.TestMove(Transform.Identity, new(0, 100), probe) &&
               !floor.TestMove(floor.GlobalTransform, new(0, -100)),
             "A one-sided entry suppresses motion contacts in both body directions.");
@@ -83,7 +83,7 @@ internal static class PhysicsCollisionExceptionTests
         var server = PhysicsServer.Service;
         var serverBody = PhysicsServer.BodyCreate();
         PhysicsServer.BodySetMode(serverBody, PhysicsServer.BodyMode.Static);
-        PhysicsServer.BodySetSpace(serverBody, mover.GetWorld2D()!.Space);
+        PhysicsServer.BodySetSpace(serverBody, mover.GetWorld()!.Space);
         PhysicsServer.BodyAddCollisionException(mover.GetRID(), serverBody);
         Check(mover.GetCollisionExceptions() is [var sceneEntry, null] &&
               ReferenceEquals(sceneEntry, floor),
@@ -118,8 +118,8 @@ internal static class PhysicsCollisionExceptionTests
         PhysicsServer.BodyAddCollisionException(mover, sensor);
         PhysicsServer.BodyRemoveCollisionException(mover, sensor);
         PhysicsServer.BodyAddCollisionException(mover, floor);
-        using var query = new PhysicsTestMotionParameters2D { Motion = new(0, 100) };
-        using var reverseQuery = new PhysicsTestMotionParameters2D
+        using var query = new PhysicsTestMotionParameters { Motion = new(0, 100) };
+        using var reverseQuery = new PhysicsTestMotionParameters
         {
             From = new(0, Vector2.One, 0, new(0, 80)),
             Motion = new(0, -100)

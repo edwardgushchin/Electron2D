@@ -1,8 +1,8 @@
-# PhysicsPointResult2D
+# PhysicsPointResult
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
-**Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs) · **Declaration:** `public readonly struct PhysicsPointResult2D`
+**Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs) · **Declaration:** `public readonly struct PhysicsPointResult`
 
 A typed value for a filled shape containing a direct-space query point, replacing a dynamic result dictionary. [IntersectPoint](PhysicsDirectSpaceState.md) returns caller-owned arrays of these values.
 

@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Configures a direct overlap or motion query for one two-dimensional shape.</summary>
 /// <remarks>Assigning <see cref="Shape"/> retains the caller resource and its server RID.
 /// Assigning a different <see cref="ShapeRID"/> releases that borrowed reference.</remarks>
-public sealed class PhysicsShapeQueryParameters2D : ElectronObject
+public sealed class PhysicsShapeQueryParameters : ElectronObject
 {
     private Shape? _shape;
     private RID _shapeRID;
@@ -24,7 +24,7 @@ public sealed class PhysicsShapeQueryParameters2D : ElectronObject
     }
 
     /// <summary>Creates an empty query with all layers and body detection enabled.</summary>
-    public PhysicsShapeQueryParameters2D() { }
+    public PhysicsShapeQueryParameters() { }
 
     /// <summary>Gets or sets the caller-owned resource used for shape queries.</summary>
     /// <value>Null by default. A successful assignment also sets ShapeRID.</value>

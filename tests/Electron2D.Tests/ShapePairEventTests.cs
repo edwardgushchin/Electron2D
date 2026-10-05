@@ -64,7 +64,7 @@ internal static class ShapePairEventTests
         sequence.Clear(); other.Monitorable = false; tree.PhysicsFrame(1d / 60);
         Check(sequence.SequenceEqual(new[] { "object-", "shape-" }), "Monitorable policy generates pair/object departures.");
         var server = PhysicsServer.Service; var body = PhysicsServer.BodyCreate(); var shape = PhysicsServer.RectangleShapeCreate();
-        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodyAddShape(body, shape); PhysicsServer.BodySetSpace(body, area.GetWorld2D()!.Space);
+        PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodyAddShape(body, shape); PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
         area.BodyShapeEntered += (rid, node, remote, local) =>
         { Check(rid == body && node is null && remote == 0 && local == 0, "Server body payload uses RID and null scene object."); entered++; };
         area.BodyShapeExited += (rid, node, _, _) => { Check(rid == body && node is null, "Server body departure payload."); exited++; };
@@ -75,7 +75,7 @@ internal static class ShapePairEventTests
             "Server free emits retained exit values despite a failed departure handler.");
         area.BodyShapeExited -= failedExit;
         Reject<ArgumentException>(() => PhysicsServer.BodyGetDirectState(body));
-        var serverArea = PhysicsServer.AreaCreate(); PhysicsServer.AreaAddShape(serverArea, shape); PhysicsServer.AreaSetSpace(serverArea, area.GetWorld2D()!.Space);
+        var serverArea = PhysicsServer.AreaCreate(); PhysicsServer.AreaAddShape(serverArea, shape); PhysicsServer.AreaSetSpace(serverArea, area.GetWorld()!.Space);
         var serverAreaEntries = 0;
         area.AreaShapeEntered += (rid, node, _, _) => { if (rid == serverArea) { Check(node is null, "Server Area payload is nullable."); serverAreaEntries++; } };
         tree.PhysicsFrame(1d / 60); Check(serverAreaEntries == 0, "Server-created Areas default non-monitorable.");

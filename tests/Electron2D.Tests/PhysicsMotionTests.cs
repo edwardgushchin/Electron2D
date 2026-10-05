@@ -30,8 +30,8 @@ internal static class PhysicsMotionTests
         PhysicsServer.BodySetTransform(obstacle, new(0, Vector2.One, 0, new(0, 100)));
         PhysicsServer.BodySetSpace(mover, space);
         PhysicsServer.BodySetSpace(obstacle, space);
-        using var query = new PhysicsTestMotionParameters2D { Motion = new(0, 120) };
-        using var result = new PhysicsTestMotionResult2D();
+        using var query = new PhysicsTestMotionParameters { Motion = new(0, 120) };
+        using var result = new PhysicsTestMotionResult();
         Check(query.From == Transform.Identity && query.Margin == 0.08f &&
               !query.RecoveryAsCollision && query.ExcludeBodies.Length == 0 &&
               query.ExcludeObjects.Length == 0,
@@ -79,7 +79,7 @@ internal static class PhysicsMotionTests
         floor.AddChild(floorCollision);
         root.AddChild(mover); root.AddChild(floor);
         using var tree = new SceneTree(root);
-        using var tested = new KinematicCollision2D();
+        using var tested = new KinematicCollision();
         Check(mover.TestMove(Transform.Identity, new(0, 120), tested) &&
               mover.Position == Vector2.Zero && tested.GetColliderRID() == floor.GetRID() &&
               ReferenceEquals(tested.GetCollider(), floor) &&
@@ -112,11 +112,11 @@ internal static class PhysicsMotionTests
               !tested.GetColliderRID().IsValid(),
             "Body motion obeys reciprocal collision filters and clears a stale result on a miss.");
         floor.CollisionLayer = 1;
-        using var serverQuery = new PhysicsTestMotionParameters2D
+        using var serverQuery = new PhysicsTestMotionParameters
         {
             Motion = new(0, 120)
         };
-        using var serverResult = new PhysicsTestMotionResult2D();
+        using var serverResult = new PhysicsTestMotionResult();
         Check(PhysicsServer.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
               ReferenceEquals(serverResult.GetCollider(), floor) &&
               serverResult.GetColliderID() == floor.InstanceID &&
@@ -158,7 +158,7 @@ internal static class PhysicsMotionTests
         floor.AddChild(surface);
         root.AddChild(mover); root.AddChild(floor);
         using var tree = new SceneTree(root);
-        using var result = new KinematicCollision2D();
+        using var result = new KinematicCollision();
         var fromAbove = new Transform(0, Vector2.One, 0, new(0, 50));
         Check(mover.TestMove(fromAbove, new(0, 80), result) &&
               result.GetColliderRID() == floor.GetRID() && result.GetNormal().Y < -0.9f,

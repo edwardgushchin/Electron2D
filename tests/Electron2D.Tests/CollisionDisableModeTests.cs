@@ -33,8 +33,8 @@ internal static class CollisionDisableModeTests
         Check(!body.HasBackend && removedArea.BackendShapes.Count == 0 && independent.HasBackend,
             "Disabled inherited entry omits bodies/areas; an explicit process mode breaks inheritance.");
         branch.ProcessMode = ProcessMode.Pausable;
-        using var point = new PhysicsPointQueryParameters2D { Position = Vector2.Zero };
-        var direct = observer.GetWorld2D()!.DirectSpaceState;
+        using var point = new PhysicsPointQueryParameters { Position = Vector2.Zero };
+        var direct = observer.GetWorld()!.DirectSpaceState;
         Check(direct.IntersectPoint(point).Any(hit => hit.ColliderRID == rid), "Enabling restores query membership immediately.");
         var view = PhysicsServer.BodyGetDirectState(rid)!;
         tree.Paused = true;

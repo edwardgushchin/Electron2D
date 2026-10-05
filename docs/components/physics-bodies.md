@@ -1,10 +1,10 @@
 # Scene physics bodies component
 
-Last updated: 2026-09-30
+Last updated: 2026-10-05
 
 ## Scope and owned types
 
-[`CollisionObject`](../classes/CollisionObject.md) owns 32-bit layer/mask filtering. [`PhysicsBody`](../classes/PhysicsBody.md) owns direct CollisionShape children, backend body lifetime and typed motion queries; [`KinematicCollision2D`](../classes/KinematicCollision2D.md) carries motion contacts. [`StaticBody`](../classes/StaticBody.md) constrains movement; [`AnimatableBody`](../classes/AnimatableBody.md) inherits it and moves manually with kinematic contact velocity; [`CharacterBody`](../classes/CharacterBody.md) derives directly from PhysicsBody and performs grounded or floating slide motion; [`RigidBody`](../classes/RigidBody.md) responds to gravity, contacts, velocity and impulses. Concrete bodies borrow [`PhysicsMaterial`](../classes/PhysicsMaterial.md) where applicable. The hierarchy preserves the reference intermediate roles above Entity.
+[`CollisionObject`](../classes/CollisionObject.md) owns 32-bit layer/mask filtering. [`PhysicsBody`](../classes/PhysicsBody.md) owns direct CollisionShape children, backend body lifetime and typed motion queries; [`KinematicCollision`](../classes/KinematicCollision.md) carries motion contacts. [`StaticBody`](../classes/StaticBody.md) constrains movement; [`AnimatableBody`](../classes/AnimatableBody.md) inherits it and moves manually with kinematic contact velocity; [`CharacterBody`](../classes/CharacterBody.md) derives directly from PhysicsBody and performs grounded or floating slide motion; [`RigidBody`](../classes/RigidBody.md) responds to gravity, contacts, velocity and impulses. Concrete bodies borrow [`PhysicsMaterial`](../classes/PhysicsMaterial.md) where applicable. The hierarchy preserves the reference intermediate roles above Entity.
 
 ## Fixed-step flow
 

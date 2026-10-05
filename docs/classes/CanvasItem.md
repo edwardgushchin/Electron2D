@@ -1,12 +1,12 @@
 # CanvasItem
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** [Node](Node.md)
 
 **Inherited By:** [Entity](Entity.md), [Control](Control.md)
 
-- **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs), [CanvasItem.PhysicsInterpolation.cs](../../src/Scene/Main/CanvasItem.PhysicsInterpolation.cs), [CanvasItem.World2D.cs](../../src/Scene/Main/CanvasItem.World2D.cs)
+- **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs), [CanvasItem.PhysicsInterpolation.cs](../../src/Scene/Main/CanvasItem.PhysicsInterpolation.cs), [CanvasItem.World.cs](../../src/Scene/Main/CanvasItem.World.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class CanvasItem : Node`
 
@@ -199,7 +199,7 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public void DrawTextureRectRegion(Texture texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect2-electron2d-rect2-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
 | [`public void ForceUpdateTransform()`](#forceupdatetransform) | Immediately delivers this item's pending global notification. |
 | [`public Transform GetGlobalTransform()`](#m-electron2d-canvasitem-getglobaltransform) | Returns the transform composed through the direct canvas-parent chain. |
-| [`public World2D? GetWorld2D()`](#getworld2d) | Returns the SceneTree's shared physics world, or null while detached. |
+| [`public World? GetWorld()`](#getworld) | Returns the SceneTree's shared physics world, or null while detached. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-canvasitem-getpropertydescriptors) | Extends neutral descriptors with visibility, ordering, top-level state, modulation and borrowed materials. |
 | [`public abstract Transform GetTransform()`](#m-electron2d-canvasitem-gettransform) | Returns the local transform supplied by this item's placement model. |
 | [`public void Hide()`](#m-electron2d-canvasitem-hide) | Sets `CanvasItem.Visible` to `false`. |
@@ -731,10 +731,10 @@ Stretches a source region of a borrowed texture over a local rectangle during ca
 
 **System.ObjectDisposedException:** The node or texture is disposed.
 
-<a id="getworld2d"></a>
-### `public World2D? GetWorld2D()`
+<a id="getworld"></a>
+### `public World? GetWorld()`
 
-An attached item receives its SceneTree's shared [World2D](World2D.md) on the owner thread, creating the registered physics space lazily when necessary. A detached item returns null; disposed access throws. The world exposes a stable space RID and direct ray/point view. Independent viewport world assignment and world-change notification remain incomplete under [ADR 0063](../decisions/physics.md#adr-0063); this method is Partial in [coverage](../coverage/classes/CanvasItem.md).
+An attached item receives its SceneTree's shared [World](World.md) on the owner thread, creating the registered physics space lazily when necessary. A detached item returns null; disposed access throws. The world exposes a stable space RID and direct ray/point view. Independent viewport world assignment and world-change notification remain incomplete under [ADR 0063](../decisions/physics.md#adr-0063); this method is Partial in [coverage](../coverage/classes/CanvasItem.md).
 
 <a id="m-electron2d-canvasitem-getglobaltransform"></a>
 ### `public Transform GetGlobalTransform()`

@@ -27,10 +27,10 @@ public sealed class ShapeCast : Entity
             (node, value) => node.CollideWithBodies = value, _ => true, stored: true)
     ];
 
-    private readonly PhysicsShapeQueryParameters2D _query = new();
+    private readonly PhysicsShapeQueryParameters _query = new();
     private readonly HashSet<RID> _exceptions = [];
-    private readonly List<PhysicsRestInfo2D> _results = [];
-    private readonly List<PhysicsRestInfo2D> _staging = [];
+    private readonly List<PhysicsRestInfo> _results = [];
+    private readonly List<PhysicsRestInfo> _staging = [];
     private RID[] _exceptionSnapshot = [];
     private RID[] _excludeScratch = [];
     private Shape? _shape;
@@ -258,7 +258,7 @@ public sealed class ShapeCast : Entity
 
     /// <summary>Returns a caller-owned copy of every cached typed contact.</summary>
     /// <value>An empty array before a hit or after a miss; scene references resolve at read time.</value>
-    public PhysicsRestInfo2D[] CollisionResult
+    public PhysicsRestInfo[] CollisionResult
     {
         get
         {
@@ -267,7 +267,7 @@ public sealed class ShapeCast : Entity
             for (var index = 0; index < results.Length; index++)
             {
                 var hit = results[index];
-                results[index] = new PhysicsRestInfo2D(hit.ColliderRID,
+                results[index] = new PhysicsRestInfo(hit.ColliderRID,
                     PhysicsServer.Service.ResolveSceneObject(hit.ColliderRID), hit.ShapeIndex,
                     hit.Point, hit.Normal, hit.LinearVelocity);
             }
@@ -290,7 +290,7 @@ public sealed class ShapeCast : Entity
         EnsureMutable();
         if (_shape is null || _shape.IsDisposed)
             throw new InvalidOperationException("A shape cast requires a live Shape resource.");
-        var world = GetWorld2D() ?? throw new InvalidOperationException("A shape cast requires an attached scene world.");
+        var world = GetWorld() ?? throw new InvalidOperationException("A shape cast requires an attached scene world.");
         var transform = GetGlobalTransform();
         var motion = transform.BasisXform(_targetPosition);
         _query.Transform = transform;
@@ -393,7 +393,7 @@ public sealed class ShapeCast : Entity
 
     private void EnsureReadable() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
 
-    private PhysicsRestInfo2D Result(int index)
+    private PhysicsRestInfo Result(int index)
     {
         EnsureReadable();
         if ((uint)index >= (uint)_results.Count) throw new ArgumentOutOfRangeException(nameof(index));

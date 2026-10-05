@@ -4905,11 +4905,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.KinematicCollision2D",
+    "id": "T:Electron2D.KinematicCollision",
     "kind": "type",
-    "declaringType": "Electron2D.KinematicCollision2D",
-    "name": "KinematicCollision2D",
-    "signature": "public sealed class Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
+    "name": "KinematicCollision",
+    "signature": "public sealed class Electron2D.KinematicCollision",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
     "interfaces": [
@@ -5958,11 +5958,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsPointQueryParameters2D",
+    "id": "T:Electron2D.PhysicsPointQueryParameters",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
-    "name": "PhysicsPointQueryParameters2D",
-    "signature": "public sealed class Electron2D.PhysicsPointQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters",
+    "name": "PhysicsPointQueryParameters",
+    "signature": "public sealed class Electron2D.PhysicsPointQueryParameters",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
     "interfaces": [
@@ -5973,11 +5973,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsPointResult2D",
+    "id": "T:Electron2D.PhysicsPointResult",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsPointResult2D",
-    "name": "PhysicsPointResult2D",
-    "signature": "public struct Electron2D.PhysicsPointResult2D",
+    "declaringType": "Electron2D.PhysicsPointResult",
+    "name": "PhysicsPointResult",
+    "signature": "public struct Electron2D.PhysicsPointResult",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [],
@@ -5986,11 +5986,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsRayQueryParameters2D",
+    "id": "T:Electron2D.PhysicsRayQueryParameters",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
-    "name": "PhysicsRayQueryParameters2D",
-    "signature": "public sealed class Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
+    "name": "PhysicsRayQueryParameters",
+    "signature": "public sealed class Electron2D.PhysicsRayQueryParameters",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
     "interfaces": [
@@ -6001,11 +6001,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsRayResult2D",
+    "id": "T:Electron2D.PhysicsRayResult",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsRayResult2D",
-    "name": "PhysicsRayResult2D",
-    "signature": "public struct Electron2D.PhysicsRayResult2D",
+    "declaringType": "Electron2D.PhysicsRayResult",
+    "name": "PhysicsRayResult",
+    "signature": "public struct Electron2D.PhysicsRayResult",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [],
@@ -6014,11 +6014,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsRestInfo2D",
+    "id": "T:Electron2D.PhysicsRestInfo",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsRestInfo2D",
-    "name": "PhysicsRestInfo2D",
-    "signature": "public struct Electron2D.PhysicsRestInfo2D",
+    "declaringType": "Electron2D.PhysicsRestInfo",
+    "name": "PhysicsRestInfo",
+    "signature": "public struct Electron2D.PhysicsRestInfo",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [],
@@ -6096,11 +6096,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsShapeQueryParameters2D",
+    "id": "T:Electron2D.PhysicsShapeQueryParameters",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
-    "name": "PhysicsShapeQueryParameters2D",
-    "signature": "public sealed class Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
+    "name": "PhysicsShapeQueryParameters",
+    "signature": "public sealed class Electron2D.PhysicsShapeQueryParameters",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
     "interfaces": [
@@ -6111,11 +6111,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsShapeResult2D",
+    "id": "T:Electron2D.PhysicsShapeResult",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsShapeResult2D",
-    "name": "PhysicsShapeResult2D",
-    "signature": "public struct Electron2D.PhysicsShapeResult2D",
+    "declaringType": "Electron2D.PhysicsShapeResult",
+    "name": "PhysicsShapeResult",
+    "signature": "public struct Electron2D.PhysicsShapeResult",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [],
@@ -6124,11 +6124,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsTestMotionParameters2D",
+    "id": "T:Electron2D.PhysicsTestMotionParameters",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
-    "name": "PhysicsTestMotionParameters2D",
-    "signature": "public sealed class Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
+    "name": "PhysicsTestMotionParameters",
+    "signature": "public sealed class Electron2D.PhysicsTestMotionParameters",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
     "interfaces": [
@@ -6139,11 +6139,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.PhysicsTestMotionResult2D",
+    "id": "T:Electron2D.PhysicsTestMotionResult",
     "kind": "type",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
-    "name": "PhysicsTestMotionResult2D",
-    "signature": "public sealed class Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
+    "name": "PhysicsTestMotionResult",
+    "signature": "public sealed class Electron2D.PhysicsTestMotionResult",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
     "interfaces": [
@@ -8826,11 +8826,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.World2D",
+    "id": "T:Electron2D.World",
     "kind": "type",
-    "declaringType": "Electron2D.World2D",
-    "name": "World2D",
-    "signature": "public sealed class Electron2D.World2D",
+    "declaringType": "Electron2D.World",
+    "name": "World",
+    "signature": "public sealed class Electron2D.World",
     "visibility": "public",
     "baseType": "Electron2D.Resource",
     "interfaces": [
@@ -13010,11 +13010,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.KinematicCollision2D..ctor()",
+    "id": "constructor:Electron2D.KinematicCollision..ctor()",
     "kind": "constructor",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": ".ctor",
-    "signature": "public KinematicCollision2D()",
+    "signature": "public KinematicCollision()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13534,11 +13534,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.PhysicsPointQueryParameters2D..ctor()",
+    "id": "constructor:Electron2D.PhysicsPointQueryParameters..ctor()",
     "kind": "constructor",
-    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters",
     "name": ".ctor",
-    "signature": "public PhysicsPointQueryParameters2D()",
+    "signature": "public PhysicsPointQueryParameters()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13547,11 +13547,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.PhysicsRayQueryParameters2D..ctor()",
+    "id": "constructor:Electron2D.PhysicsRayQueryParameters..ctor()",
     "kind": "constructor",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": ".ctor",
-    "signature": "public PhysicsRayQueryParameters2D()",
+    "signature": "public PhysicsRayQueryParameters()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13560,11 +13560,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.PhysicsShapeQueryParameters2D..ctor()",
+    "id": "constructor:Electron2D.PhysicsShapeQueryParameters..ctor()",
     "kind": "constructor",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": ".ctor",
-    "signature": "public PhysicsShapeQueryParameters2D()",
+    "signature": "public PhysicsShapeQueryParameters()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13573,11 +13573,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.PhysicsTestMotionParameters2D..ctor()",
+    "id": "constructor:Electron2D.PhysicsTestMotionParameters..ctor()",
     "kind": "constructor",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
     "name": ".ctor",
-    "signature": "public PhysicsTestMotionParameters2D()",
+    "signature": "public PhysicsTestMotionParameters()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13586,11 +13586,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.PhysicsTestMotionResult2D..ctor()",
+    "id": "constructor:Electron2D.PhysicsTestMotionResult..ctor()",
     "kind": "constructor",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": ".ctor",
-    "signature": "public PhysicsTestMotionResult2D()",
+    "signature": "public PhysicsTestMotionResult()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -56242,16 +56242,16 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.CanvasItem.GetWorld2D()",
+    "id": "method:Electron2D.CanvasItem.GetWorld()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
-    "name": "GetWorld2D",
-    "signature": "public Electron2D.World2D GetWorld2D()",
+    "name": "GetWorld",
+    "signature": "public Electron2D.World GetWorld()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.World2D",
+    "returnType": "Electron2D.World",
     "value": null
   },
   {
@@ -56819,12 +56819,12 @@
     "kind": "method",
     "declaringType": "Electron2D.CharacterBody",
     "name": "GetLastSlideCollision",
-    "signature": "public Electron2D.KinematicCollision2D GetLastSlideCollision()",
+    "signature": "public Electron2D.KinematicCollision GetLastSlideCollision()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.KinematicCollision2D",
+    "returnType": "Electron2D.KinematicCollision",
     "value": null
   },
   {
@@ -56884,7 +56884,7 @@
     "kind": "method",
     "declaringType": "Electron2D.CharacterBody",
     "name": "GetSlideCollision",
-    "signature": "public Electron2D.KinematicCollision2D GetSlideCollision(System.Int32 index)",
+    "signature": "public Electron2D.KinematicCollision GetSlideCollision(System.Int32 index)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -56895,7 +56895,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.KinematicCollision2D",
+    "returnType": "Electron2D.KinematicCollision",
     "value": null
   },
   {
@@ -78224,9 +78224,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetAngle(System.Nullable\u003CElectron2D.Vector2\u003E)",
+    "id": "method:Electron2D.KinematicCollision.GetAngle(System.Nullable\u003CElectron2D.Vector2\u003E)",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetAngle",
     "signature": "public System.Single GetAngle(System.Nullable\u003CElectron2D.Vector2\u003E upDirection = null)",
     "visibility": "public",
@@ -78243,9 +78243,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetCollider()",
+    "id": "method:Electron2D.KinematicCollision.GetCollider()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetCollider",
     "signature": "public Electron2D.ElectronObject GetCollider()",
     "visibility": "public",
@@ -78256,9 +78256,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetColliderID()",
+    "id": "method:Electron2D.KinematicCollision.GetColliderID()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetColliderID",
     "signature": "public System.UInt64 GetColliderID()",
     "visibility": "public",
@@ -78269,9 +78269,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetColliderRID()",
+    "id": "method:Electron2D.KinematicCollision.GetColliderRID()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetColliderRID",
     "signature": "public Electron2D.RID GetColliderRID()",
     "visibility": "public",
@@ -78282,9 +78282,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetColliderShape()",
+    "id": "method:Electron2D.KinematicCollision.GetColliderShape()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetColliderShape",
     "signature": "public Electron2D.ElectronObject GetColliderShape()",
     "visibility": "public",
@@ -78295,9 +78295,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetColliderShapeIndex()",
+    "id": "method:Electron2D.KinematicCollision.GetColliderShapeIndex()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetColliderShapeIndex",
     "signature": "public System.Int32 GetColliderShapeIndex()",
     "visibility": "public",
@@ -78308,9 +78308,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetColliderVelocity()",
+    "id": "method:Electron2D.KinematicCollision.GetColliderVelocity()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetColliderVelocity",
     "signature": "public Electron2D.Vector2 GetColliderVelocity()",
     "visibility": "public",
@@ -78321,9 +78321,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetDepth()",
+    "id": "method:Electron2D.KinematicCollision.GetDepth()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetDepth",
     "signature": "public System.Single GetDepth()",
     "visibility": "public",
@@ -78334,9 +78334,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetLocalShape()",
+    "id": "method:Electron2D.KinematicCollision.GetLocalShape()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetLocalShape",
     "signature": "public Electron2D.ElectronObject GetLocalShape()",
     "visibility": "public",
@@ -78347,9 +78347,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetNormal()",
+    "id": "method:Electron2D.KinematicCollision.GetNormal()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetNormal",
     "signature": "public Electron2D.Vector2 GetNormal()",
     "visibility": "public",
@@ -78360,9 +78360,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetPosition()",
+    "id": "method:Electron2D.KinematicCollision.GetPosition()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetPosition",
     "signature": "public Electron2D.Vector2 GetPosition()",
     "visibility": "public",
@@ -78373,9 +78373,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetRemainder()",
+    "id": "method:Electron2D.KinematicCollision.GetRemainder()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetRemainder",
     "signature": "public Electron2D.Vector2 GetRemainder()",
     "visibility": "public",
@@ -78386,9 +78386,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.KinematicCollision2D.GetTravel()",
+    "id": "method:Electron2D.KinematicCollision.GetTravel()",
     "kind": "method",
-    "declaringType": "Electron2D.KinematicCollision2D",
+    "declaringType": "Electron2D.KinematicCollision",
     "name": "GetTravel",
     "signature": "public Electron2D.Vector2 GetTravel()",
     "visibility": "public",
@@ -88614,7 +88614,7 @@
     "kind": "method",
     "declaringType": "Electron2D.PhysicsBody",
     "name": "MoveAndCollide",
-    "signature": "public Electron2D.KinematicCollision2D MoveAndCollide(Electron2D.Vector2 motion, System.Boolean testOnly = false, System.Single safeMargin = 0.08f, System.Boolean recoveryAsCollision = false)",
+    "signature": "public Electron2D.KinematicCollision MoveAndCollide(Electron2D.Vector2 motion, System.Boolean testOnly = false, System.Single safeMargin = 0.08f, System.Boolean recoveryAsCollision = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -88640,7 +88640,7 @@
         "default": "false"
       }
     ],
-    "returnType": "Electron2D.KinematicCollision2D",
+    "returnType": "Electron2D.KinematicCollision",
     "value": null
   },
   {
@@ -88689,11 +88689,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsBody.TestMove(Electron2D.Transform,Electron2D.Vector2,Electron2D.KinematicCollision2D,System.Single,System.Boolean)",
+    "id": "method:Electron2D.PhysicsBody.TestMove(Electron2D.Transform,Electron2D.Vector2,Electron2D.KinematicCollision,System.Single,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsBody",
     "name": "TestMove",
-    "signature": "public System.Boolean TestMove(Electron2D.Transform from, Electron2D.Vector2 motion, Electron2D.KinematicCollision2D collision = null, System.Single safeMargin = 0.08f, System.Boolean recoveryAsCollision = false)",
+    "signature": "public System.Boolean TestMove(Electron2D.Transform from, Electron2D.Vector2 motion, Electron2D.KinematicCollision collision = null, System.Single safeMargin = 0.08f, System.Boolean recoveryAsCollision = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -88710,7 +88710,7 @@
       },
       {
         "name": "collision",
-        "type": "Electron2D.KinematicCollision2D",
+        "type": "Electron2D.KinematicCollision",
         "default": "null"
       },
       {
@@ -89271,18 +89271,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsDirectSpaceState.CastMotion(Electron2D.PhysicsShapeQueryParameters2D)",
+    "id": "method:Electron2D.PhysicsDirectSpaceState.CastMotion(Electron2D.PhysicsShapeQueryParameters)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
     "name": "CastMotion",
-    "signature": "public System.ValueTuple\u003CSystem.Single, System.Single\u003E CastMotion(Electron2D.PhysicsShapeQueryParameters2D parameters)",
+    "signature": "public System.ValueTuple\u003CSystem.Single, System.Single\u003E CastMotion(Electron2D.PhysicsShapeQueryParameters parameters)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "parameters",
-        "type": "Electron2D.PhysicsShapeQueryParameters2D",
+        "type": "Electron2D.PhysicsShapeQueryParameters",
         "default": null
       }
     ],
@@ -89290,18 +89290,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsDirectSpaceState.CollideShape(Electron2D.PhysicsShapeQueryParameters2D,System.Int32)",
+    "id": "method:Electron2D.PhysicsDirectSpaceState.CollideShape(Electron2D.PhysicsShapeQueryParameters,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
     "name": "CollideShape",
-    "signature": "public Electron2D.Vector2[] CollideShape(Electron2D.PhysicsShapeQueryParameters2D parameters, System.Int32 maxResults = 32)",
+    "signature": "public Electron2D.Vector2[] CollideShape(Electron2D.PhysicsShapeQueryParameters parameters, System.Int32 maxResults = 32)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "parameters",
-        "type": "Electron2D.PhysicsShapeQueryParameters2D",
+        "type": "Electron2D.PhysicsShapeQueryParameters",
         "default": null
       },
       {
@@ -89314,37 +89314,37 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsDirectSpaceState.GetRestInfo(Electron2D.PhysicsShapeQueryParameters2D)",
+    "id": "method:Electron2D.PhysicsDirectSpaceState.GetRestInfo(Electron2D.PhysicsShapeQueryParameters)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
     "name": "GetRestInfo",
-    "signature": "public System.Nullable\u003CElectron2D.PhysicsRestInfo2D\u003E GetRestInfo(Electron2D.PhysicsShapeQueryParameters2D parameters)",
+    "signature": "public System.Nullable\u003CElectron2D.PhysicsRestInfo\u003E GetRestInfo(Electron2D.PhysicsShapeQueryParameters parameters)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "parameters",
-        "type": "Electron2D.PhysicsShapeQueryParameters2D",
+        "type": "Electron2D.PhysicsShapeQueryParameters",
         "default": null
       }
     ],
-    "returnType": "System.Nullable\u003CElectron2D.PhysicsRestInfo2D\u003E",
+    "returnType": "System.Nullable\u003CElectron2D.PhysicsRestInfo\u003E",
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectPoint(Electron2D.PhysicsPointQueryParameters2D,System.Int32)",
+    "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectPoint(Electron2D.PhysicsPointQueryParameters,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
     "name": "IntersectPoint",
-    "signature": "public Electron2D.PhysicsPointResult2D[] IntersectPoint(Electron2D.PhysicsPointQueryParameters2D parameters, System.Int32 maxResults = 32)",
+    "signature": "public Electron2D.PhysicsPointResult[] IntersectPoint(Electron2D.PhysicsPointQueryParameters parameters, System.Int32 maxResults = 32)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "parameters",
-        "type": "Electron2D.PhysicsPointQueryParameters2D",
+        "type": "Electron2D.PhysicsPointQueryParameters",
         "default": null
       },
       {
@@ -89353,41 +89353,41 @@
         "default": "32"
       }
     ],
-    "returnType": "Electron2D.PhysicsPointResult2D[]",
+    "returnType": "Electron2D.PhysicsPointResult[]",
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectRay(Electron2D.PhysicsRayQueryParameters2D)",
+    "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectRay(Electron2D.PhysicsRayQueryParameters)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
     "name": "IntersectRay",
-    "signature": "public System.Nullable\u003CElectron2D.PhysicsRayResult2D\u003E IntersectRay(Electron2D.PhysicsRayQueryParameters2D parameters)",
+    "signature": "public System.Nullable\u003CElectron2D.PhysicsRayResult\u003E IntersectRay(Electron2D.PhysicsRayQueryParameters parameters)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "parameters",
-        "type": "Electron2D.PhysicsRayQueryParameters2D",
+        "type": "Electron2D.PhysicsRayQueryParameters",
         "default": null
       }
     ],
-    "returnType": "System.Nullable\u003CElectron2D.PhysicsRayResult2D\u003E",
+    "returnType": "System.Nullable\u003CElectron2D.PhysicsRayResult\u003E",
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectShape(Electron2D.PhysicsShapeQueryParameters2D,System.Int32)",
+    "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectShape(Electron2D.PhysicsShapeQueryParameters,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
     "name": "IntersectShape",
-    "signature": "public Electron2D.PhysicsShapeResult2D[] IntersectShape(Electron2D.PhysicsShapeQueryParameters2D parameters, System.Int32 maxResults = 32)",
+    "signature": "public Electron2D.PhysicsShapeResult[] IntersectShape(Electron2D.PhysicsShapeQueryParameters parameters, System.Int32 maxResults = 32)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "parameters",
-        "type": "Electron2D.PhysicsShapeQueryParameters2D",
+        "type": "Electron2D.PhysicsShapeQueryParameters",
         "default": null
       },
       {
@@ -89396,7 +89396,7 @@
         "default": "32"
       }
     ],
-    "returnType": "Electron2D.PhysicsShapeResult2D[]",
+    "returnType": "Electron2D.PhysicsShapeResult[]",
     "value": null
   },
   {
@@ -89465,11 +89465,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsRayQueryParameters2D.Create(Electron2D.Vector2,Electron2D.Vector2,System.UInt32,Electron2D.RID[])",
+    "id": "method:Electron2D.PhysicsRayQueryParameters.Create(Electron2D.Vector2,Electron2D.Vector2,System.UInt32,Electron2D.RID[])",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": "Create",
-    "signature": "public static Electron2D.PhysicsRayQueryParameters2D Create(Electron2D.Vector2 from, Electron2D.Vector2 to, System.UInt32 collisionMask = 4294967295, Electron2D.RID[] exclude = null)",
+    "signature": "public static Electron2D.PhysicsRayQueryParameters Create(Electron2D.Vector2 from, Electron2D.Vector2 to, System.UInt32 collisionMask = 4294967295, Electron2D.RID[] exclude = null)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -89495,7 +89495,7 @@
         "default": "null"
       }
     ],
-    "returnType": "Electron2D.PhysicsRayQueryParameters2D",
+    "returnType": "Electron2D.PhysicsRayQueryParameters",
     "value": null
   },
   {
@@ -91897,11 +91897,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsServer.BodyTestMotion(Electron2D.RID,Electron2D.PhysicsTestMotionParameters2D,Electron2D.PhysicsTestMotionResult2D)",
+    "id": "method:Electron2D.PhysicsServer.BodyTestMotion(Electron2D.RID,Electron2D.PhysicsTestMotionParameters,Electron2D.PhysicsTestMotionResult)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
     "name": "BodyTestMotion",
-    "signature": "public static System.Boolean BodyTestMotion(Electron2D.RID body, Electron2D.PhysicsTestMotionParameters2D parameters, Electron2D.PhysicsTestMotionResult2D result = null)",
+    "signature": "public static System.Boolean BodyTestMotion(Electron2D.RID body, Electron2D.PhysicsTestMotionParameters parameters, Electron2D.PhysicsTestMotionResult result = null)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -91913,12 +91913,12 @@
       },
       {
         "name": "parameters",
-        "type": "Electron2D.PhysicsTestMotionParameters2D",
+        "type": "Electron2D.PhysicsTestMotionParameters",
         "default": null
       },
       {
         "name": "result",
-        "type": "Electron2D.PhysicsTestMotionResult2D",
+        "type": "Electron2D.PhysicsTestMotionResult",
         "default": "null"
       }
     ],
@@ -92808,9 +92808,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollider()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetCollider()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetCollider",
     "signature": "public Electron2D.ElectronObject GetCollider()",
     "visibility": "public",
@@ -92821,9 +92821,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderID()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetColliderID()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetColliderID",
     "signature": "public System.UInt64 GetColliderID()",
     "visibility": "public",
@@ -92834,9 +92834,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderRID()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetColliderRID()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetColliderRID",
     "signature": "public Electron2D.RID GetColliderRID()",
     "visibility": "public",
@@ -92847,9 +92847,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderShape()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetColliderShape()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetColliderShape",
     "signature": "public System.Int32 GetColliderShape()",
     "visibility": "public",
@@ -92860,9 +92860,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderVelocity()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetColliderVelocity()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetColliderVelocity",
     "signature": "public Electron2D.Vector2 GetColliderVelocity()",
     "visibility": "public",
@@ -92873,9 +92873,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionDepth()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetCollisionDepth()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetCollisionDepth",
     "signature": "public System.Single GetCollisionDepth()",
     "visibility": "public",
@@ -92886,9 +92886,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionLocalShape()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetCollisionLocalShape()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetCollisionLocalShape",
     "signature": "public System.Int32 GetCollisionLocalShape()",
     "visibility": "public",
@@ -92899,9 +92899,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionNormal()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetCollisionNormal()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetCollisionNormal",
     "signature": "public Electron2D.Vector2 GetCollisionNormal()",
     "visibility": "public",
@@ -92912,9 +92912,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionPoint()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetCollisionPoint()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetCollisionPoint",
     "signature": "public Electron2D.Vector2 GetCollisionPoint()",
     "visibility": "public",
@@ -92925,9 +92925,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionSafeFraction()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetCollisionSafeFraction()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetCollisionSafeFraction",
     "signature": "public System.Single GetCollisionSafeFraction()",
     "visibility": "public",
@@ -92938,9 +92938,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionUnsafeFraction()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetCollisionUnsafeFraction()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetCollisionUnsafeFraction",
     "signature": "public System.Single GetCollisionUnsafeFraction()",
     "visibility": "public",
@@ -92951,9 +92951,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetRemainder()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetRemainder()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetRemainder",
     "signature": "public Electron2D.Vector2 GetRemainder()",
     "visibility": "public",
@@ -92964,9 +92964,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetTravel()",
+    "id": "method:Electron2D.PhysicsTestMotionResult.GetTravel()",
     "kind": "method",
-    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
     "name": "GetTravel",
     "signature": "public Electron2D.Vector2 GetTravel()",
     "visibility": "public",
@@ -118341,9 +118341,48 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.World2D.CreateDuplicateInstance()",
+    "id": "method:Electron2D.World.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
-    "declaringType": "Electron2D.World2D",
+    "declaringType": "Electron2D.World",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.World.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.World",
     "name": "CreateDuplicateInstance",
     "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
     "visibility": "protected",
@@ -137141,9 +137180,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointQueryParameters2D.CollideWithAreas()",
+    "id": "property:Electron2D.PhysicsPointQueryParameters.CollideWithAreas()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters",
     "name": "CollideWithAreas",
     "signature": "public System.Boolean CollideWithAreas { get; set; }",
     "visibility": "public",
@@ -137154,9 +137193,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointQueryParameters2D.CollideWithBodies()",
+    "id": "property:Electron2D.PhysicsPointQueryParameters.CollideWithBodies()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters",
     "name": "CollideWithBodies",
     "signature": "public System.Boolean CollideWithBodies { get; set; }",
     "visibility": "public",
@@ -137167,9 +137206,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointQueryParameters2D.CollisionMask()",
+    "id": "property:Electron2D.PhysicsPointQueryParameters.CollisionMask()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters",
     "name": "CollisionMask",
     "signature": "public System.UInt32 CollisionMask { get; set; }",
     "visibility": "public",
@@ -137180,9 +137219,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointQueryParameters2D.Exclude()",
+    "id": "property:Electron2D.PhysicsPointQueryParameters.Exclude()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters",
     "name": "Exclude",
     "signature": "public Electron2D.RID[] Exclude { get; set; }",
     "visibility": "public",
@@ -137193,9 +137232,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointQueryParameters2D.Position()",
+    "id": "property:Electron2D.PhysicsPointQueryParameters.Position()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters",
     "name": "Position",
     "signature": "public Electron2D.Vector2 Position { get; set; }",
     "visibility": "public",
@@ -137206,9 +137245,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointResult2D.Collider()",
+    "id": "property:Electron2D.PhysicsPointResult.Collider()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "declaringType": "Electron2D.PhysicsPointResult",
     "name": "Collider",
     "signature": "public Electron2D.CollisionObject Collider { get;  }",
     "visibility": "public",
@@ -137219,9 +137258,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointResult2D.ColliderID()",
+    "id": "property:Electron2D.PhysicsPointResult.ColliderID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "declaringType": "Electron2D.PhysicsPointResult",
     "name": "ColliderID",
     "signature": "public System.UInt64 ColliderID { get;  }",
     "visibility": "public",
@@ -137232,9 +137271,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointResult2D.ColliderRID()",
+    "id": "property:Electron2D.PhysicsPointResult.ColliderRID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "declaringType": "Electron2D.PhysicsPointResult",
     "name": "ColliderRID",
     "signature": "public Electron2D.RID ColliderRID { get;  }",
     "visibility": "public",
@@ -137245,9 +137284,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsPointResult2D.ShapeIndex()",
+    "id": "property:Electron2D.PhysicsPointResult.ShapeIndex()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "declaringType": "Electron2D.PhysicsPointResult",
     "name": "ShapeIndex",
     "signature": "public System.Int32 ShapeIndex { get;  }",
     "visibility": "public",
@@ -137258,9 +137297,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayQueryParameters2D.CollideWithAreas()",
+    "id": "property:Electron2D.PhysicsRayQueryParameters.CollideWithAreas()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": "CollideWithAreas",
     "signature": "public System.Boolean CollideWithAreas { get; set; }",
     "visibility": "public",
@@ -137271,9 +137310,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayQueryParameters2D.CollideWithBodies()",
+    "id": "property:Electron2D.PhysicsRayQueryParameters.CollideWithBodies()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": "CollideWithBodies",
     "signature": "public System.Boolean CollideWithBodies { get; set; }",
     "visibility": "public",
@@ -137284,9 +137323,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayQueryParameters2D.CollisionMask()",
+    "id": "property:Electron2D.PhysicsRayQueryParameters.CollisionMask()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": "CollisionMask",
     "signature": "public System.UInt32 CollisionMask { get; set; }",
     "visibility": "public",
@@ -137297,9 +137336,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayQueryParameters2D.Exclude()",
+    "id": "property:Electron2D.PhysicsRayQueryParameters.Exclude()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": "Exclude",
     "signature": "public Electron2D.RID[] Exclude { get; set; }",
     "visibility": "public",
@@ -137310,9 +137349,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayQueryParameters2D.From()",
+    "id": "property:Electron2D.PhysicsRayQueryParameters.From()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": "From",
     "signature": "public Electron2D.Vector2 From { get; set; }",
     "visibility": "public",
@@ -137323,9 +137362,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayQueryParameters2D.HitFromInside()",
+    "id": "property:Electron2D.PhysicsRayQueryParameters.HitFromInside()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": "HitFromInside",
     "signature": "public System.Boolean HitFromInside { get; set; }",
     "visibility": "public",
@@ -137336,9 +137375,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayQueryParameters2D.To()",
+    "id": "property:Electron2D.PhysicsRayQueryParameters.To()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters",
     "name": "To",
     "signature": "public Electron2D.Vector2 To { get; set; }",
     "visibility": "public",
@@ -137349,9 +137388,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayResult2D.Collider()",
+    "id": "property:Electron2D.PhysicsRayResult.Collider()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "declaringType": "Electron2D.PhysicsRayResult",
     "name": "Collider",
     "signature": "public Electron2D.CollisionObject Collider { get;  }",
     "visibility": "public",
@@ -137362,9 +137401,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayResult2D.ColliderID()",
+    "id": "property:Electron2D.PhysicsRayResult.ColliderID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "declaringType": "Electron2D.PhysicsRayResult",
     "name": "ColliderID",
     "signature": "public System.UInt64 ColliderID { get;  }",
     "visibility": "public",
@@ -137375,9 +137414,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayResult2D.ColliderRID()",
+    "id": "property:Electron2D.PhysicsRayResult.ColliderRID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "declaringType": "Electron2D.PhysicsRayResult",
     "name": "ColliderRID",
     "signature": "public Electron2D.RID ColliderRID { get;  }",
     "visibility": "public",
@@ -137388,9 +137427,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayResult2D.Normal()",
+    "id": "property:Electron2D.PhysicsRayResult.Normal()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "declaringType": "Electron2D.PhysicsRayResult",
     "name": "Normal",
     "signature": "public Electron2D.Vector2 Normal { get;  }",
     "visibility": "public",
@@ -137401,9 +137440,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayResult2D.Position()",
+    "id": "property:Electron2D.PhysicsRayResult.Position()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "declaringType": "Electron2D.PhysicsRayResult",
     "name": "Position",
     "signature": "public Electron2D.Vector2 Position { get;  }",
     "visibility": "public",
@@ -137414,9 +137453,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRayResult2D.ShapeIndex()",
+    "id": "property:Electron2D.PhysicsRayResult.ShapeIndex()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "declaringType": "Electron2D.PhysicsRayResult",
     "name": "ShapeIndex",
     "signature": "public System.Int32 ShapeIndex { get;  }",
     "visibility": "public",
@@ -137427,9 +137466,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRestInfo2D.Collider()",
+    "id": "property:Electron2D.PhysicsRestInfo.Collider()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRestInfo2D",
+    "declaringType": "Electron2D.PhysicsRestInfo",
     "name": "Collider",
     "signature": "public Electron2D.CollisionObject Collider { get;  }",
     "visibility": "public",
@@ -137440,9 +137479,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRestInfo2D.ColliderID()",
+    "id": "property:Electron2D.PhysicsRestInfo.ColliderID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRestInfo2D",
+    "declaringType": "Electron2D.PhysicsRestInfo",
     "name": "ColliderID",
     "signature": "public System.UInt64 ColliderID { get;  }",
     "visibility": "public",
@@ -137453,9 +137492,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRestInfo2D.ColliderRID()",
+    "id": "property:Electron2D.PhysicsRestInfo.ColliderRID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRestInfo2D",
+    "declaringType": "Electron2D.PhysicsRestInfo",
     "name": "ColliderRID",
     "signature": "public Electron2D.RID ColliderRID { get;  }",
     "visibility": "public",
@@ -137466,9 +137505,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRestInfo2D.LinearVelocity()",
+    "id": "property:Electron2D.PhysicsRestInfo.LinearVelocity()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRestInfo2D",
+    "declaringType": "Electron2D.PhysicsRestInfo",
     "name": "LinearVelocity",
     "signature": "public Electron2D.Vector2 LinearVelocity { get;  }",
     "visibility": "public",
@@ -137479,9 +137518,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRestInfo2D.Normal()",
+    "id": "property:Electron2D.PhysicsRestInfo.Normal()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRestInfo2D",
+    "declaringType": "Electron2D.PhysicsRestInfo",
     "name": "Normal",
     "signature": "public Electron2D.Vector2 Normal { get;  }",
     "visibility": "public",
@@ -137492,9 +137531,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRestInfo2D.Point()",
+    "id": "property:Electron2D.PhysicsRestInfo.Point()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRestInfo2D",
+    "declaringType": "Electron2D.PhysicsRestInfo",
     "name": "Point",
     "signature": "public Electron2D.Vector2 Point { get;  }",
     "visibility": "public",
@@ -137505,9 +137544,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsRestInfo2D.ShapeIndex()",
+    "id": "property:Electron2D.PhysicsRestInfo.ShapeIndex()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsRestInfo2D",
+    "declaringType": "Electron2D.PhysicsRestInfo",
     "name": "ShapeIndex",
     "signature": "public System.Int32 ShapeIndex { get;  }",
     "visibility": "public",
@@ -137518,9 +137557,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.CollideWithAreas()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.CollideWithAreas()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "CollideWithAreas",
     "signature": "public System.Boolean CollideWithAreas { get; set; }",
     "visibility": "public",
@@ -137531,9 +137570,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.CollideWithBodies()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.CollideWithBodies()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "CollideWithBodies",
     "signature": "public System.Boolean CollideWithBodies { get; set; }",
     "visibility": "public",
@@ -137544,9 +137583,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.CollisionMask()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.CollisionMask()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "CollisionMask",
     "signature": "public System.UInt32 CollisionMask { get; set; }",
     "visibility": "public",
@@ -137557,9 +137596,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.Exclude()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.Exclude()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "Exclude",
     "signature": "public Electron2D.RID[] Exclude { get; set; }",
     "visibility": "public",
@@ -137570,9 +137609,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.Margin()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.Margin()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "Margin",
     "signature": "public System.Single Margin { get; set; }",
     "visibility": "public",
@@ -137583,9 +137622,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.Motion()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.Motion()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "Motion",
     "signature": "public Electron2D.Vector2 Motion { get; set; }",
     "visibility": "public",
@@ -137596,9 +137635,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.Shape()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.Shape()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "Shape",
     "signature": "public Electron2D.Shape Shape { get; set; }",
     "visibility": "public",
@@ -137609,9 +137648,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.ShapeRID()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.ShapeRID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "ShapeRID",
     "signature": "public Electron2D.RID ShapeRID { get; set; }",
     "visibility": "public",
@@ -137622,9 +137661,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeQueryParameters2D.Transform()",
+    "id": "property:Electron2D.PhysicsShapeQueryParameters.Transform()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
+    "declaringType": "Electron2D.PhysicsShapeQueryParameters",
     "name": "Transform",
     "signature": "public Electron2D.Transform Transform { get; set; }",
     "visibility": "public",
@@ -137635,9 +137674,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeResult2D.Collider()",
+    "id": "property:Electron2D.PhysicsShapeResult.Collider()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeResult2D",
+    "declaringType": "Electron2D.PhysicsShapeResult",
     "name": "Collider",
     "signature": "public Electron2D.CollisionObject Collider { get;  }",
     "visibility": "public",
@@ -137648,9 +137687,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeResult2D.ColliderID()",
+    "id": "property:Electron2D.PhysicsShapeResult.ColliderID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeResult2D",
+    "declaringType": "Electron2D.PhysicsShapeResult",
     "name": "ColliderID",
     "signature": "public System.UInt64 ColliderID { get;  }",
     "visibility": "public",
@@ -137661,9 +137700,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeResult2D.ColliderRID()",
+    "id": "property:Electron2D.PhysicsShapeResult.ColliderRID()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeResult2D",
+    "declaringType": "Electron2D.PhysicsShapeResult",
     "name": "ColliderRID",
     "signature": "public Electron2D.RID ColliderRID { get;  }",
     "visibility": "public",
@@ -137674,9 +137713,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsShapeResult2D.ShapeIndex()",
+    "id": "property:Electron2D.PhysicsShapeResult.ShapeIndex()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsShapeResult2D",
+    "declaringType": "Electron2D.PhysicsShapeResult",
     "name": "ShapeIndex",
     "signature": "public System.Int32 ShapeIndex { get;  }",
     "visibility": "public",
@@ -137687,9 +137726,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsTestMotionParameters2D.CollideSeparationRay()",
+    "id": "property:Electron2D.PhysicsTestMotionParameters.CollideSeparationRay()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
     "name": "CollideSeparationRay",
     "signature": "public System.Boolean CollideSeparationRay { get; set; }",
     "visibility": "public",
@@ -137700,9 +137739,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsTestMotionParameters2D.ExcludeBodies()",
+    "id": "property:Electron2D.PhysicsTestMotionParameters.ExcludeBodies()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
     "name": "ExcludeBodies",
     "signature": "public Electron2D.RID[] ExcludeBodies { get; set; }",
     "visibility": "public",
@@ -137713,9 +137752,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsTestMotionParameters2D.ExcludeObjects()",
+    "id": "property:Electron2D.PhysicsTestMotionParameters.ExcludeObjects()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
     "name": "ExcludeObjects",
     "signature": "public System.UInt64[] ExcludeObjects { get; set; }",
     "visibility": "public",
@@ -137726,9 +137765,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsTestMotionParameters2D.From()",
+    "id": "property:Electron2D.PhysicsTestMotionParameters.From()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
     "name": "From",
     "signature": "public Electron2D.Transform From { get; set; }",
     "visibility": "public",
@@ -137739,9 +137778,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsTestMotionParameters2D.Margin()",
+    "id": "property:Electron2D.PhysicsTestMotionParameters.Margin()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
     "name": "Margin",
     "signature": "public System.Single Margin { get; set; }",
     "visibility": "public",
@@ -137752,9 +137791,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsTestMotionParameters2D.Motion()",
+    "id": "property:Electron2D.PhysicsTestMotionParameters.Motion()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
     "name": "Motion",
     "signature": "public Electron2D.Vector2 Motion { get; set; }",
     "visibility": "public",
@@ -137765,9 +137804,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.PhysicsTestMotionParameters2D.RecoveryAsCollision()",
+    "id": "property:Electron2D.PhysicsTestMotionParameters.RecoveryAsCollision()",
     "kind": "property",
-    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters",
     "name": "RecoveryAsCollision",
     "signature": "public System.Boolean RecoveryAsCollision { get; set; }",
     "visibility": "public",
@@ -140915,12 +140954,12 @@
     "kind": "property",
     "declaringType": "Electron2D.ShapeCast",
     "name": "CollisionResult",
-    "signature": "public Electron2D.PhysicsRestInfo2D[] CollisionResult { get;  }",
+    "signature": "public Electron2D.PhysicsRestInfo[] CollisionResult { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.PhysicsRestInfo2D[]",
+    "returnType": "Electron2D.PhysicsRestInfo[]",
     "value": null
   },
   {
@@ -144382,9 +144421,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.World2D.DirectSpaceState()",
+    "id": "property:Electron2D.World.DirectSpaceState()",
     "kind": "property",
-    "declaringType": "Electron2D.World2D",
+    "declaringType": "Electron2D.World",
     "name": "DirectSpaceState",
     "signature": "public Electron2D.PhysicsDirectSpaceState DirectSpaceState { get;  }",
     "visibility": "public",
@@ -144395,9 +144434,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.World2D.Space()",
+    "id": "property:Electron2D.World.Space()",
     "kind": "property",
-    "declaringType": "Electron2D.World2D",
+    "declaringType": "Electron2D.World",
     "name": "Space",
     "signature": "public Electron2D.RID Space { get;  }",
     "visibility": "public",

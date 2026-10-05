@@ -22,7 +22,7 @@ internal static class PhysicsServerShapeSlotTests
 
     private static bool Point(RID space, RID owner, Vector2 point, int index = 0, bool areas = false)
     {
-        using var query = new PhysicsPointQueryParameters2D
+        using var query = new PhysicsPointQueryParameters
         {
             Position = point,
             CollideWithBodies = !areas,
@@ -93,7 +93,7 @@ internal static class PhysicsServerShapeSlotTests
         var child = new CollisionShape { Shape = shape, Position = new(50, 0) }; body.AddChild(child);
         root.AddChild(body); root.AddChild(area);
         using var tree = new SceneTree(root);
-        var bodyRID = body.GetRID(); var areaRID = area.GetRID(); var space = body.GetWorld2D()!.Space;
+        var bodyRID = body.GetRID(); var areaRID = area.GetRID(); var space = body.GetWorld()!.Space;
         var serverShape = PhysicsServer.CircleShapeCreate();
         try
         {
@@ -113,7 +113,7 @@ internal static class PhysicsServerShapeSlotTests
             Check(PhysicsServer.BodyGetShapeTransform(bodyRID, 2) == At(60), "A later child transform edit reclaims its pose.");
             PhysicsServer.BodySetShape(bodyRID, 0, serverShape); PhysicsServer.AreaAddShape(areaRID, serverShape);
             var borrowed = body.ShapeOwnerGetShape(owner, 0);
-            using var query = new PhysicsShapeQueryParameters2D { Shape = borrowed };
+            using var query = new PhysicsShapeQueryParameters { Shape = borrowed };
             Check(query.ShapeRID == serverShape && PhysicsServer.AreaGetShape(areaRID, 0) == serverShape,
                 "Scene slots and resource query views use the same owned shape identity.");
             Reject<InvalidOperationException>(borrowed.Dispose);
@@ -174,7 +174,7 @@ internal static class PhysicsServerShapeSlotTests
         StaticBody? sceneBody = sceneMode ? new() { Position = new(0, 100) } : null;
         var root = new Node(); if (sceneBody is not null) root.AddChild(sceneBody);
         using var tree = new SceneTree(root);
-        var space = sceneBody?.GetWorld2D()!.Space ?? PhysicsServer.SpaceCreate();
+        var space = sceneBody?.GetWorld()!.Space ?? PhysicsServer.SpaceCreate();
         if (!sceneMode) PhysicsServer.SpaceSetActive(space, true);
         var platform = sceneBody?.GetRID() ?? PhysicsServer.BodyCreate();
         try
@@ -186,7 +186,7 @@ internal static class PhysicsServerShapeSlotTests
             PhysicsServer.BodyAddShape(moving, circle); PhysicsServer.BodySetTransform(moving, At(0, 120));
             PhysicsServer.BodySetGravityScale(moving, 0); PhysicsServer.BodySetSpace(moving, space);
             PhysicsServer.BodySetShapeAsOneWayCollision(platform, 0, true, 1);
-            using var motion = new PhysicsTestMotionParameters2D { From = At(0, 120), Motion = new(0, -50) };
+            using var motion = new PhysicsTestMotionParameters { From = At(0, 120), Motion = new(0, -50) };
             Check(!PhysicsServer.BodyTestMotion(moving, motion), "A raw one-way slot permits the upward body motion test.");
             PhysicsServer.BodySetLinearVelocity(moving, new(0, -80));
             for (var step = 0; step < 60; step++) { if (sceneMode) tree.PhysicsFrame(1d / 60); else PhysicsServer.SpaceStep(space, 1d / 60); }

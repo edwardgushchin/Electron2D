@@ -228,7 +228,7 @@ internal static class RayCastTests
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
         PhysicsServer.BodyAddShape(body, shape);
         PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 30)));
-        PhysicsServer.BodySetSpace(body, ray.GetWorld2D()!.Space);
+        PhysicsServer.BodySetSpace(body, ray.GetWorld()!.Space);
         tree.PhysicsFrame(1d / 60);
         Check(ray.IsColliding() && ray.GetCollider() is null && ray.GetColliderRID() == body,
             "A server-only hit retains its RID even without a scene collider object.");

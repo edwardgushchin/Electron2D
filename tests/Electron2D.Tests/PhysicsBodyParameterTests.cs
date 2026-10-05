@@ -64,7 +64,7 @@ internal static class PhysicsBodyParameterTests
         var server = PhysicsServer.Service; var body = PhysicsServer.BodyCreate(); var circle = PhysicsServer.CircleShapeCreate();
         try
         {
-            PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetSpace(body, area.GetWorld2D()!.Space);
+            PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
             PhysicsServer.BodySetGravityScale(body, 2); PhysicsServer.BodySetLinearDamp(body, 1); PhysicsServer.BodySetAngularDamp(body, 4);
             var state = PhysicsServer.BodyGetDirectState(body)!; state.LinearVelocity = new(100, 0); state.AngularVelocity = 12;
             tree.PhysicsFrame(1d / 60);
@@ -78,7 +78,7 @@ internal static class PhysicsBodyParameterTests
                 Near(state.LinearVelocity.X, -2), "Replace zero and signed gravity retain meaningful physics.");
             PhysicsServer.BodySetLinearDamp(body, -3); state.LinearVelocity = new(100, 0); tree.PhysicsFrame(1d / 60);
             Check(Near(state.LinearVelocity.X, 103), "Negative body damping accelerates before selected gravity.");
-            PhysicsServer.BodySetSpace(body, default); PhysicsServer.BodySetSpace(body, area.GetWorld2D()!.Space);
+            PhysicsServer.BodySetSpace(body, default); PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
             Check(PhysicsServer.BodyGetLinearDamp(body) == -3 && PhysicsServer.BodyGetGravityScale(body) == -1, "Detached reentry retains all body parameters.");
             state = PhysicsServer.BodyGetDirectState(body)!; state.Sleeping = true; PhysicsServer.BodySetGravityScale(body, 0); tree.PhysicsFrame(1d / 60);
             state.Sleeping = true; PhysicsServer.BodySetGravityScale(body, 1); Check(!state.Sleeping, "Leaving zero gravity scale wakes a body immediately.");
@@ -94,7 +94,7 @@ internal static class PhysicsBodyParameterTests
         var bouncy = PhysicsServer.BodyCreate(); var absorbent = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
         try
         {
-            foreach (var rid in new[] { bouncy, absorbent }) { PhysicsServer.BodyAddShape(rid, shape); PhysicsServer.BodySetSpace(rid, floor.GetWorld2D()!.Space); }
+            foreach (var rid in new[] { bouncy, absorbent }) { PhysicsServer.BodyAddShape(rid, shape); PhysicsServer.BodySetSpace(rid, floor.GetWorld()!.Space); }
             PhysicsServer.BodySetTransform(bouncy, new(0, Vector2.One, 0, new(-50, 0))); PhysicsServer.BodySetTransform(absorbent, new(0, Vector2.One, 0, new(50, 0)));
             PhysicsServer.BodySetBounce(floor.GetRID(), 0.5f); PhysicsServer.BodySetBounce(bouncy, 0.5f); PhysicsServer.BodySetBounce(absorbent, -1);
             var bounceState = PhysicsServer.BodyGetDirectState(bouncy)!; var absorbState = PhysicsServer.BodyGetDirectState(absorbent)!;

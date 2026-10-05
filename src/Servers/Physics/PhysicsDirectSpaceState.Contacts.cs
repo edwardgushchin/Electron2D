@@ -9,9 +9,9 @@ using static Box2D.NET.B2Worlds;
 namespace Electron2D;
 
 /// <summary>A typed closest contact for a shape at rest in a physics space.</summary>
-public readonly struct PhysicsRestInfo2D
+public readonly struct PhysicsRestInfo
 {
-    internal PhysicsRestInfo2D(RID rid, CollisionObject? collider, int shapeIndex, Vector2 point,
+    internal PhysicsRestInfo(RID rid, CollisionObject? collider, int shapeIndex, Vector2 point,
         Vector2 normal, Vector2 linearVelocity)
     {
         ColliderRID = rid;
@@ -55,7 +55,7 @@ public sealed partial class PhysicsDirectSpaceState
     /// <param name="maxResults">Maximum contact pairs, 32 by default.</param>
     /// <returns>A caller-owned even array: query point first, collider point second for each pair.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The maximum is negative.</exception>
-    public Vector2[] CollideShape(PhysicsShapeQueryParameters2D parameters, int maxResults = 32)
+    public Vector2[] CollideShape(PhysicsShapeQueryParameters parameters, int maxResults = 32)
     {
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
         var space = PrepareShapeQuery(parameters);
@@ -103,12 +103,12 @@ public sealed partial class PhysicsDirectSpaceState
     /// <summary>Returns the deepest contact across the shape's pose and motion, with collider velocity.</summary>
     /// <param name="parameters">A live shape, pose, global motion, margin and filters.</param>
     /// <returns>A typed contact, or null when the shape touches no eligible collider.</returns>
-    public PhysicsRestInfo2D? GetRestInfo(PhysicsShapeQueryParameters2D parameters)
+    public PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters)
     {
         var space = PrepareShapeQuery(parameters);
         var world = b2GetWorldFromId(space.WorldID);
         var motion = Shape.ToBackend(parameters.Motion);
-        PhysicsRestInfo2D? best = null;
+        PhysicsRestInfo? best = null;
         var bestDepth = float.NegativeInfinity;
         foreach (var candidate in _shapeCandidates)
         {
@@ -132,7 +132,7 @@ public sealed partial class PhysicsDirectSpaceState
                     var velocity = b2Shape_IsSensor(candidate.ShapeID) ? default :
                         b2Body_GetWorldPointVelocity(bodyID, colliderPoint);
                     bestDepth = depth;
-                    best = new PhysicsRestInfo2D(candidate.Tag.ColliderRID,
+                    best = new PhysicsRestInfo(candidate.Tag.ColliderRID,
                         PhysicsServer.Service.ResolveSceneObject(candidate.Tag.ColliderRID),
                         candidate.Tag.ShapeIndex, ToScene(colliderPoint),
                         new(-manifold.normal.X, -manifold.normal.Y),

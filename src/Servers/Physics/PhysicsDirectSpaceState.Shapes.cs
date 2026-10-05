@@ -9,9 +9,9 @@ using static Box2D.NET.B2Worlds;
 namespace Electron2D;
 
 /// <summary>A typed collider result from a direct shape-overlap query.</summary>
-public readonly struct PhysicsShapeResult2D
+public readonly struct PhysicsShapeResult
 {
-    internal PhysicsShapeResult2D(RID rid, CollisionObject? collider, int shapeIndex)
+    internal PhysicsShapeResult(RID rid, CollisionObject? collider, int shapeIndex)
     {
         ColliderRID = rid;
         Collider = collider;
@@ -49,14 +49,14 @@ public sealed partial class PhysicsDirectSpaceState
     /// <param name="maxResults">Maximum RID/index-ordered results; 32 by default.</param>
     /// <returns>A caller-owned array of unique collider shape-owner results.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The maximum count is negative.</exception>
-    public PhysicsShapeResult2D[] IntersectShape(PhysicsShapeQueryParameters2D parameters, int maxResults = 32)
+    public PhysicsShapeResult[] IntersectShape(PhysicsShapeQueryParameters parameters, int maxResults = 32)
     {
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
         var space = PrepareShapeQuery(parameters);
         if (maxResults == 0 || _queryProxies.Count == 0 || _shapeCandidates.Count == 0) return [];
         var world = b2GetWorldFromId(space.WorldID);
         var motion = Shape.ToBackend(parameters.Motion);
-        var hits = new List<PhysicsShapeResult2D>();
+        var hits = new List<PhysicsShapeResult>();
         foreach (var candidate in _shapeCandidates)
         {
             var backendShape = b2GetShape(world, candidate.ShapeID);
@@ -83,7 +83,7 @@ public sealed partial class PhysicsDirectSpaceState
             var order = left.ColliderRID.CompareTo(right.ColliderRID);
             return order != 0 ? order : left.ShapeIndex.CompareTo(right.ShapeIndex);
         });
-        var output = new List<PhysicsShapeResult2D>(Math.Min(maxResults, hits.Count));
+        var output = new List<PhysicsShapeResult>(Math.Min(maxResults, hits.Count));
         foreach (var hit in hits)
         {
             if (output.Count != 0 && hit.ColliderRID == output[^1].ColliderRID &&
@@ -97,7 +97,7 @@ public sealed partial class PhysicsDirectSpaceState
     /// <summary>Finds safe and unsafe fractions of a shape's requested global motion.</summary>
     /// <param name="parameters">A live query shape, pose, motion, margin and filters.</param>
     /// <returns>(1, 1) when no new collision occurs; initial overlaps are ignored.</returns>
-    public (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters2D parameters)
+    public (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
     {
         var space = PrepareShapeQuery(parameters);
         var motion = Shape.ToBackend(parameters.Motion);
@@ -154,7 +154,7 @@ public sealed partial class PhysicsDirectSpaceState
         return (bestSafe, bestUnsafe);
     }
 
-    private PhysicsSpace PrepareShapeQuery(PhysicsShapeQueryParameters2D parameters)
+    private PhysicsSpace PrepareShapeQuery(PhysicsShapeQueryParameters parameters)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);

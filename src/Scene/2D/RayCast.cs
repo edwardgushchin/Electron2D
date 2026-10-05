@@ -212,7 +212,7 @@ public sealed class RayCast : Entity
     public void ForceRaycastUpdate()
     {
         EnsureMutable();
-        var world = GetWorld2D() ?? throw new InvalidOperationException("A raycast requires an attached scene world.");
+        var world = GetWorld() ?? throw new InvalidOperationException("A raycast requires an attached scene world.");
         var transform = GetGlobalTransform();
         var target = _targetPosition == Vector2.Zero ? new Vector2(0, 0.01f) : _targetPosition;
         var result = world.DirectSpaceState.IntersectRay(transform.Origin, transform * target,

@@ -16,7 +16,7 @@ internal static class PhysicsShapeQueryTests
     private static void VerifyParametersAndBorrowedShapeRID()
     {
         var server = PhysicsServer.Service;
-        using var query = new PhysicsShapeQueryParameters2D();
+        using var query = new PhysicsShapeQueryParameters();
         Check(query.Shape is null && !query.ShapeRID.IsValid() && query.Transform == Transform.Identity &&
               query.Motion == Vector2.Zero && query.Margin == 0 && query.CollisionMask == uint.MaxValue &&
               query.Exclude.Length == 0 && query.CollideWithBodies && !query.CollideWithAreas,
@@ -45,7 +45,7 @@ internal static class PhysicsShapeQueryTests
         PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 50)));
         PhysicsServer.BodySetSpace(body, space);
         var direct = PhysicsServer.SpaceGetDirectState(space);
-        using var ray = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 100));
+        using var ray = PhysicsRayQueryParameters.Create(new(0, 0), new(0, 100));
         Check(direct.IntersectRay(ray)?.Position.Y is > 39 and < 41,
             "A server collider can borrow a managed Shape RID for live geometry.");
         circle.Radius = 20;
@@ -88,7 +88,7 @@ internal static class PhysicsShapeQueryTests
         PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 100)));
         PhysicsServer.BodySetSpace(body, space);
         var direct = PhysicsServer.SpaceGetDirectState(space);
-        using var query = new PhysicsShapeQueryParameters2D
+        using var query = new PhysicsShapeQueryParameters
         {
             Shape = probe,
             Transform = new(0, Vector2.One, 0, new(0, 70)),
@@ -191,7 +191,7 @@ internal static class PhysicsShapeQueryTests
         PhysicsServer.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 100)));
         PhysicsServer.BodySetSpace(body, space);
         var direct = PhysicsServer.SpaceGetDirectState(space);
-        using var query = new PhysicsShapeQueryParameters2D
+        using var query = new PhysicsShapeQueryParameters
         {
             Shape = circle,
             Transform = new(0, Vector2.One, 0, new(0, 70))
@@ -241,7 +241,7 @@ internal static class PhysicsShapeQueryTests
         using var capsule = new CapsuleShape();
         using var rectangle = new RectangleShape { Size = new(20, 20) };
         Shape[] families = [circle, capsule, rectangle];
-        using var query = new PhysicsShapeQueryParameters2D
+        using var query = new PhysicsShapeQueryParameters
         {
             Transform = new(0, Vector2.One, 0, new(0, -15))
         };
@@ -294,7 +294,7 @@ internal static class PhysicsShapeQueryTests
             vertices[index] = new(MathF.Cos(angle) * 20, MathF.Sin(angle) * 20);
         }
         using var convex = new ConvexPolygonShape { Points = vertices };
-        using var query = new PhysicsShapeQueryParameters2D { Shape = convex };
+        using var query = new PhysicsShapeQueryParameters { Shape = convex };
         Check(direct.IntersectShape(query) is [var compound] && compound.ColliderRID == body &&
               compound.ShapeIndex == 0,
             "A many-vertex convex query deduplicates compound proxy pieces by collider shape owner.");
@@ -338,8 +338,8 @@ internal static class PhysicsShapeQueryTests
         sensor.AddChild(new CollisionShape { Shape = sensorShape });
         root.AddChild(floor); root.AddChild(sensor);
         using var tree = new SceneTree(root);
-        var direct = floor.GetWorld2D()!.DirectSpaceState;
-        using var query = new PhysicsShapeQueryParameters2D
+        var direct = floor.GetWorld()!.DirectSpaceState;
+        using var query = new PhysicsShapeQueryParameters
         {
             Shape = probe,
             Transform = new(0, Vector2.One, 0, new(0, 90))

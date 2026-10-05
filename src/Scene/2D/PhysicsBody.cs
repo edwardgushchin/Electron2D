@@ -211,7 +211,7 @@ public abstract class PhysicsBody : CollisionObject
     /// <param name="safeMargin">Nonnegative contact recovery margin in scene units.</param>
     /// <param name="recoveryAsCollision">Whether initial depenetration can produce a collision result.</param>
     /// <returns>A caller-owned collision snapshot, or null when motion is unobstructed.</returns>
-    public KinematicCollision2D? MoveAndCollide(Vector2 motion, bool testOnly = false,
+    public KinematicCollision? MoveAndCollide(Vector2 motion, bool testOnly = false,
         float safeMargin = 0.08f, bool recoveryAsCollision = false)
     {
         EnsureMutable();
@@ -222,7 +222,7 @@ public abstract class PhysicsBody : CollisionObject
             recoveryAsCollision, [], []);
         if (!testOnly && data.Travel != Vector2.Zero)
             GlobalTransform = new Transform(from.Rotation, Vector2.One, 0, from.Origin + data.Travel);
-        return data.Collided ? new KinematicCollision2D(data) : null;
+        return data.Collided ? new KinematicCollision(data) : null;
     }
 
     /// <summary>Tests motion from a supplied global pose without moving this body.</summary>
@@ -232,7 +232,7 @@ public abstract class PhysicsBody : CollisionObject
     /// <param name="safeMargin">Nonnegative contact recovery margin in scene units.</param>
     /// <param name="recoveryAsCollision">Whether initial depenetration counts as a collision.</param>
     /// <returns>Whether motion or requested recovery reaches a body contact.</returns>
-    public bool TestMove(Transform from, Vector2 motion, KinematicCollision2D? collision = null,
+    public bool TestMove(Transform from, Vector2 motion, KinematicCollision? collision = null,
         float safeMargin = 0.08f, bool recoveryAsCollision = false)
     {
         EnsureMutable();

@@ -60,7 +60,7 @@ internal static class SeparationRayShapeTests
         PhysicsServer.BodySetTransform(floor, new(0, Vector2.One, 0, new(0, 25)));
         PhysicsServer.BodySetSpace(floor, space);
         using var ray = new SeparationRayShape { Length = 30 };
-        using var query = new PhysicsShapeQueryParameters2D { Shape = ray };
+        using var query = new PhysicsShapeQueryParameters { Shape = ray };
         var direct = PhysicsServer.SpaceGetDirectState(space);
         var rest = direct.GetRestInfo(query);
         var points = direct.CollideShape(query);
@@ -101,14 +101,14 @@ internal static class SeparationRayShapeTests
         PhysicsServer.BodySetMode(holder, PhysicsServer.BodyMode.Static);
         PhysicsServer.BodyAddShape(holder, rayRID);
         PhysicsServer.BodySetSpace(holder, space);
-        using var cast = PhysicsRayQueryParameters2D.Create(new(-5, 10), new(5, 10));
-        using var point = new PhysicsPointQueryParameters2D { Position = new(0, 10) };
+        using var cast = PhysicsRayQueryParameters.Create(new(-5, 10), new(5, 10));
+        using var point = new PhysicsPointQueryParameters { Position = new(0, 10) };
         Check(direct.IntersectRay(cast) is null && direct.IntersectPoint(point).Length == 0,
             "Separation rays cannot be intersected by ray or point queries.");
         query.Exclude = [floor];
         Check(direct.IntersectShape(query).Length == 0, "Ray-ray pairs never contact.");
         using var circle = new CircleShape { Radius = 3 };
-        using var solidQuery = new PhysicsShapeQueryParameters2D
+        using var solidQuery = new PhysicsShapeQueryParameters
         {
             Shape = circle,
             Exclude = [floor],
@@ -142,8 +142,8 @@ internal static class SeparationRayShapeTests
         mover.AddChild(new CollisionShape { Shape = ray });
         root.AddChild(floor); root.AddChild(mover);
         using var tree = new SceneTree(root);
-        using var parameters = new PhysicsTestMotionParameters2D { Motion = new(0, 10), Margin = 0 };
-        using var result = new PhysicsTestMotionResult2D();
+        using var parameters = new PhysicsTestMotionParameters { Motion = new(0, 10), Margin = 0 };
+        using var result = new PhysicsTestMotionResult();
         var server = PhysicsServer.Service;
         Check(!parameters.CollideSeparationRay && !PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result),
             "Non-sliding rays are ignored by default during the sweep.");
@@ -227,8 +227,8 @@ internal static class SeparationRayShapeTests
         var collision = new CollisionShape { Shape = circle };
         body.AddChild(collision); root.AddChild(body);
         using var tree = new SceneTree(root);
-        var direct = body.GetWorld2D()!.DirectSpaceState;
-        using var query = new PhysicsShapeQueryParameters2D { Shape = ray };
+        var direct = body.GetWorld()!.DirectSpaceState;
+        using var query = new PhysicsShapeQueryParameters { Shape = ray };
         foreach (var shape in new Shape[] { circle, capsule, segment, concave, convex })
         {
             collision.Shape = shape;

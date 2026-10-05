@@ -6,7 +6,7 @@ internal readonly record struct MotionResultData(
     Vector2 Travel, Vector2 Remainder, float SafeFraction, float UnsafeFraction, bool Collided);
 
 /// <summary>Configures a body motion test in a registered two-dimensional physics space.</summary>
-public sealed class PhysicsTestMotionParameters2D : ElectronObject
+public sealed class PhysicsTestMotionParameters : ElectronObject
 {
     private Transform _from = Transform.Identity;
     private Vector2 _motion;
@@ -20,7 +20,7 @@ public sealed class PhysicsTestMotionParameters2D : ElectronObject
     internal ulong[] ExcludedObjects => _excludeObjects;
 
     /// <summary>Creates identity-pose, zero-motion parameters with a 0.08-unit recovery margin.</summary>
-    public PhysicsTestMotionParameters2D() { }
+    public PhysicsTestMotionParameters() { }
 
     /// <summary>Gets or sets the finite unit-scale global pose at which testing begins.</summary>
     /// <value>Identity by default.</value>
@@ -97,12 +97,12 @@ public sealed class PhysicsTestMotionParameters2D : ElectronObject
 }
 
 /// <summary>Caller-owned snapshot of a server body motion test.</summary>
-public sealed class PhysicsTestMotionResult2D : ElectronObject
+public sealed class PhysicsTestMotionResult : ElectronObject
 {
     private MotionResultData _data;
 
     /// <summary>Creates an empty writable-by-the-server result.</summary>
-    public PhysicsTestMotionResult2D() { }
+    public PhysicsTestMotionResult() { }
 
     internal void Set(in MotionResultData data) { ThrowIfDisposed(); _data = data; }
 

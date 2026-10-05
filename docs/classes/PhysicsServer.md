@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -10,7 +10,7 @@ Public static declarations are in [`PhysicsServer.API.cs`](../../src/Servers/Phy
 
 Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
-The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's existing Box2D world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the six implemented shape families. A server-created collider can join either kind of space; [World2D](World2D.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
+The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's existing Box2D world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the six implemented shape families. A server-created collider can join either kind of space; [World](World.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
 
 ## Example
 
@@ -24,7 +24,7 @@ PhysicsServer.ShapeSetData(shape, circle);
 PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
 PhysicsServer.BodyAddShape(body, shape);
 PhysicsServer.BodySetSpace(body, space);
-using var ray = PhysicsRayQueryParameters2D.Create(new(0, -40), new(0, 40));
+using var ray = PhysicsRayQueryParameters.Create(new(0, -40), new(0, 40));
 var hit = PhysicsServer.SpaceGetDirectState(space).IntersectRay(ray);
 PhysicsServer.FreeRID(body);
 PhysicsServer.FreeRID(shape);
@@ -39,7 +39,7 @@ PhysicsServer.FreeRID(space);
 | `public static RID SpaceCreate()` | Caller-owned inactive independent physics space. |
 | `public static void SpaceStep(RID space, double delta)` | Advance only an explicitly created space; zero delta is inert. |
 | `public static PhysicsDirectSpaceState SpaceGetDirectState(RID space)` | Cached query view of any live server/scene space. |
-| `public static bool BodyTestMotion(RID body, PhysicsTestMotionParameters2D parameters, PhysicsTestMotionResult2D? result = null)` | Test a scene or server body against its current space without moving it; optionally fill typed output. |
+| `public static bool BodyTestMotion(RID body, PhysicsTestMotionParameters parameters, PhysicsTestMotionResult? result = null)` | Test a scene or server body against its current space without moving it; optionally fill typed output. |
 | `public static void BodyAddCollisionException(RID body, RID exceptedBody)` / `BodyRemoveCollisionException(RID body, RID exceptedBody)` | Change a one-sided body-owned RID exception affecting both solver contacts and motion tests. |
 | `public static RID BodyCreate()` / `AreaCreate()` | Detached rigid body or sensor Area with default layer/mask one. |
 | `public static RID CircleShapeCreate()` / `RectangleShapeCreate()` | Default concrete geometry RIDs. |
@@ -74,14 +74,14 @@ PhysicsServer.FreeRID(space);
 <a id="colliders"></a>
 ### Collider creation, shapes and ownership
 
-`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The six shape constructors correspond to the already implemented circle, rectangle, capsule, segment, convex and concave resource families. `ShapeSetData` rejects a disposed or different-kind Shape, duplicates caller data and rebuilds attached users; `ShapeGetData` returns another independent duplicate. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World2D.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
+`BodyCreate` defaults to rigid mode; `AreaCreate` defaults to a stationary nonresponding sensor. Neither has a space until `BodySetSpace` or `AreaSetSpace`. The six shape constructors correspond to the already implemented circle, rectangle, capsule, segment, convex and concave resource families. `ShapeSetData` rejects a disposed or different-kind Shape, duplicates caller data and rebuilds attached users; `ShapeGetData` returns another independent duplicate. Each `BodyAddShape` or `AreaAddShape` appends an indexed slot with a finite unit-scale, zero-skew local transform, default identity, and optional disabled state. Slot-count, disabled-toggle and removal methods make those indices executable after attachment; invalid indices throw before mutation. Compound fixtures from one slot share its public static query ShapeIndex. An explicit collider may be moved into the SceneTree's `World.Space`; direct queries then see it beside scene nodes. Queries return its RID with a null scene Collider.
 
 <a id="body-state"></a>
 ### Body state and filters
 
 `BodySetMode` supports all four numeric mode values and rejects undefined input. Static, kinematic and rigid bodies share the Box2D world; RigidLinear locks rotation and clears angular velocity. Switching to Static or Kinematic clears linear and angular velocity while retaining the solved pose. The typed `BodySetTransform`, `BodySetLinearVelocity` and `BodyGetTransform` methods cover the corresponding transform/linear-velocity branches of the dynamic reference state API. A moving body's solved pose and velocity are captured before space detachment, preserving state when reattached. Body layer/mask and Area layer setters accept all 32 bits; direct queries match the layer independently of the collider's mask. Server-only Area mask writes remain [Blocked](../coverage/classes/PhysicsServer2D.md) until Area overlap monitoring or fields consume them. Other body states, forces, parameters, callbacks and Area field parameters retain separate coverage gaps.
 
-`BodyTestMotion` prepares pending scene and server fixtures, then tests the supplied body's own shapes from a typed global pose. Reciprocal body filters, RID and managed-instance exclusions, one-way surfaces, recovery margin and initial overlap are applied. It returns false on a miss and updates an optional [PhysicsTestMotionResult2D](PhysicsTestMotionResult2D.md) with full travel and cleared contact fields. On a hit it reports contact identity, point, normal, depth, velocity, local/collider shape-owner indices and safe/unsafe fractions. It never changes the actual body pose. A detached body or wrong RID rejects; off-owner and in-step calls reject. [PhysicsTestMotionParameters2D](PhysicsTestMotionParameters2D.md) names the input. `CollideSeparationRay` enables non-sliding ray sweeps; sliding rays and recovery obey [ADR 0068](../decisions/physics.md#adr-0068).
+`BodyTestMotion` prepares pending scene and server fixtures, then tests the supplied body's own shapes from a typed global pose. Reciprocal body filters, RID and managed-instance exclusions, one-way surfaces, recovery margin and initial overlap are applied. It returns false on a miss and updates an optional [PhysicsTestMotionResult](PhysicsTestMotionResult.md) with full travel and cleared contact fields. On a hit it reports contact identity, point, normal, depth, velocity, local/collider shape-owner indices and safe/unsafe fractions. It never changes the actual body pose. A detached body or wrong RID rejects; off-owner and in-step calls reject. [PhysicsTestMotionParameters](PhysicsTestMotionParameters.md) names the input. `CollideSeparationRay` enables non-sliding ray sweeps; sliding rays and recovery obey [ADR 0068](../decisions/physics.md#adr-0068).
 
 `BodyAddCollisionException` and `BodyRemoveCollisionException` edit only the owner's RID list. Either body's entry suppresses the pair in fixed-step solver contacts and `BodyTestMotion`, independent of reciprocal collision masks; Area monitoring is unaffected. Duplicates and absent removals do nothing. The owner must be a live scene or server body; an arbitrary excepted RID, including an empty or later freed one, is retained but cannot match a live pair. An attached owner requires its space thread and cannot change exceptions while stepping. A list change marks that owner's fixtures for rebuilding before the next query or step, including when the pair is already touching. Freeing an owner removes its own entries; other bodies can retain its RID as an inert exception until explicitly removed.
 

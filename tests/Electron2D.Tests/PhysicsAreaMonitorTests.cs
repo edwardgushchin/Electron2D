@@ -155,7 +155,7 @@ internal static class PhysicsAreaMonitorTests
     private static SceneTree SceneSpace(out RID space)
     {
         var root = new Node(); var holder = new Area { CollisionLayer = 0, CollisionMask = 0, Monitoring = false, Monitorable = false };
-        root.AddChild(holder); var tree = new SceneTree(root); space = holder.GetWorld2D()!.Space; return tree;
+        root.AddChild(holder); var tree = new SceneTree(root); space = holder.GetWorld()!.Space; return tree;
     }
 
     private static void Add(CollisionObject collider, Shape shape) => collider.ShapeOwnerAddShape(collider.CreateShapeOwner(null), shape);

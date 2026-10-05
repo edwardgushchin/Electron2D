@@ -114,7 +114,7 @@ internal static class PhysicsBodyStateTests
             state.GetContactImpulse(0).Y < -10 && state.GetContactLocalVelocityAtPosition(0).Length() < 1 &&
             state.GetContactColliderVelocityAtPosition(0) == Vector2.Zero,
             $"Contact fields: {state.GetContactLocalPosition(0)}, {state.GetContactColliderPosition(0)}, {state.GetContactImpulse(0)}.");
-        using var query = new PhysicsPointQueryParameters2D { Position = floor.GlobalPosition };
+        using var query = new PhysicsPointQueryParameters { Position = floor.GlobalPosition };
         Check(state.GetSpaceState().IntersectPoint(query).Length > 0, "The live state exposes the existing space query view.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
         var before = GC.GetAllocatedBytesForCurrentThread();
@@ -195,7 +195,7 @@ internal static class PhysicsBodyStateTests
         using var tree = new SceneTree(root);
         var server = PhysicsServer.Service;
         var body = PhysicsServer.BodyCreate(); var circle = PhysicsServer.CircleShapeCreate();
-        PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetSpace(body, area.GetWorld2D()!.Space);
+        PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
         var state = PhysicsServer.BodyGetDirectState(body)!;
         state.LinearVelocity = new(100, 0);
         var inverseMass = state.InverseMass;

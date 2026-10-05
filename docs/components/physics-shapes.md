@@ -1,6 +1,6 @@
 # Collision shapes component
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
 ## Scope and owned types
 
@@ -14,7 +14,7 @@ A convex polygon starts empty, accepts convex perimeter arrays or a point cloud,
 
 A direct CollisionPolygon copies its local vertices and owns generated resources. Solids mode decomposes a valid contour into convex parts, while Segments mode closes the vertex list into hollow edges. Empty, insufficient or undecomposable contours contribute no geometry and report warnings; finite input validation rejects before mutation. Mode, contour, disabled and transform changes mark the same body or Area fixture owner dirty. Polygon one-way body contacts reuse the current pre-solve side selection; its margin also gates typed body motion recovery; an Area still senses from both sides. The node packs its typed contour and rebuilds its owned geometry after scene instantiation.
 
-A [PhysicsShapeQueryParameters2D](../classes/PhysicsShapeQueryParameters2D.md) may borrow any concrete Shape for direct overlap, motion and contact queries. The borrowed RID is allocated lazily, remains stable through geometry edits, and is released by the owning Shape's disposal. A server collider may also use that RID; edits mark its fixtures dirty before the next direct query. Compound convex pieces and hollow paired edges preserve the same direct shape-owner identity. These operations do not add the still missing standalone Shape methods.
+A [PhysicsShapeQueryParameters](../classes/PhysicsShapeQueryParameters.md) may borrow any concrete Shape for direct overlap, motion and contact queries. The borrowed RID is allocated lazily, remains stable through geometry edits, and is released by the owning Shape's disposal. A server collider may also use that RID; edits mark its fixtures dirty before the next direct query. Compound convex pieces and hollow paired edges preserve the same direct shape-owner identity. These operations do not add the still missing standalone Shape methods.
 
 ## Dependencies and verification
 

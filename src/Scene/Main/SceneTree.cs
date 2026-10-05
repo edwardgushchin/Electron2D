@@ -1047,9 +1047,9 @@ public sealed partial class SceneTree : MainLoop
         catch (Exception error) { CollectException(ref errors, error); }
         finally { PhysicsServer.Service.UnregisterSceneSpace(_physicsSpaceRID); _physicsSpaceRID = default; }
         _physicsSpace = null;
-        try { _physicsWorld2D?.Dispose(); }
+        try { _physicsWorld?.Dispose(); }
         catch (Exception error) { CollectException(ref errors, error); }
-        _physicsWorld2D = null;
+        _physicsWorld = null;
 
         FinalizeMultiplayer(ref errors);
         DisposePendingScenes(ref errors);

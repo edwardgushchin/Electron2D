@@ -1,8 +1,10 @@
-# KinematicCollision2D
+# KinematicCollision
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
-**Inherits:** ElectronObject · **Source:** [KinematicCollision2D.cs](../../src/Scene/2D/KinematicCollision2D.cs) · **Component:** [Scene physics bodies](../components/physics-bodies.md)
+**Inherits:** ElectronObject · **Source:** [KinematicCollision.cs](../../src/Scene/2D/KinematicCollision.cs) · **Component:** [Scene physics bodies](../components/physics-bodies.md)
+
+**Declaration:** `public sealed class KinematicCollision : ElectronObject`
 
 ## Description
 
@@ -21,7 +23,7 @@ if (hit is not null) Console.WriteLine(hit.GetNormal());
 
 | Member | Contract |
 | --- | --- |
-| `public KinematicCollision2D()` | Empty reusable output for `TestMove`. |
+| `public KinematicCollision()` | Empty reusable output for `TestMove`. |
 | `public float GetAngle(Vector2? upDirection = null)` | Positive angle to up, radians; default (0, -1). |
 | `public ElectronObject? GetLocalShape()` | Moving scene body's direct CollisionShape or CollisionPolygon owner. |
 | `public ElectronObject? GetCollider()` / `GetColliderShape()` | Live scene body/shape owner, or null after disposal or for a server-only body. |

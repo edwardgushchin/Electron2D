@@ -156,6 +156,16 @@ def main():
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
                 if row.startswith("| [`") and "github.com/godotengine" in row]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+    for source, target in (
+            ("PhysicsPointQueryParameters2D", "PhysicsPointQueryParameters"),
+            ("PhysicsRayQueryParameters2D", "PhysicsRayQueryParameters"),
+            ("PhysicsShapeQueryParameters2D", "PhysicsShapeQueryParameters"),
+            ("PhysicsTestMotionParameters2D", "PhysicsTestMotionParameters"),
+            ("PhysicsTestMotionResult2D", "PhysicsTestMotionResult"),
+            ("KinematicCollision2D", "KinematicCollision"),
+            ("World2D", "World"),
+    ):
+        assert f"../../classes/{target}.md" in pages[CLASS_PAGES / f"{source}.md"]
     world_rows = pages[CLASS_PAGES / "World2D.md"]
     assert "| Implemented |" in next(row for row in world_rows.splitlines()
                                        if row.startswith("| [`property RID space"))

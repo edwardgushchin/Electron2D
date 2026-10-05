@@ -1,8 +1,8 @@
-# PhysicsShapeResult2D
+# PhysicsShapeResult
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
-**Declaration:** `public readonly struct PhysicsShapeResult2D` · **Source:** [PhysicsDirectSpaceState.Shapes.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.Shapes.cs) · **Component:** [Physics queries](../components/physics-queries.md)
+**Declaration:** `public readonly struct PhysicsShapeResult` · **Source:** [PhysicsDirectSpaceState.Shapes.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.Shapes.cs) · **Component:** [Physics queries](../components/physics-queries.md)
 
 ## Description
 

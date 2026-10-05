@@ -1,14 +1,14 @@
 namespace Electron2D;
 
 /// <summary>A caller-owned snapshot of one physics body's motion contact.</summary>
-public sealed class KinematicCollision2D : ElectronObject
+public sealed class KinematicCollision : ElectronObject
 {
     private MotionResultData _data;
 
     /// <summary>Creates an empty result for an optional <see cref="PhysicsBody.TestMove"/> output.</summary>
-    public KinematicCollision2D() { }
+    public KinematicCollision() { }
 
-    internal KinematicCollision2D(in MotionResultData data) => _data = data;
+    internal KinematicCollision(in MotionResultData data) => _data = data;
     internal void Set(in MotionResultData data) { ThrowIfDisposed(); _data = data; }
 
     /// <summary>Returns the positive angle between the contact normal and an up direction.</summary>

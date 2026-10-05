@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Configures a direct ray query in world coordinates.</summary>
-public sealed class PhysicsRayQueryParameters2D : ElectronObject
+public sealed class PhysicsRayQueryParameters : ElectronObject
 {
     private Vector2 _from;
     private Vector2 _to;
@@ -10,7 +10,7 @@ public sealed class PhysicsRayQueryParameters2D : ElectronObject
     private bool _collideWithBodies = true;
 
     /// <summary>Creates an empty ray with all collision layers enabled.</summary>
-    public PhysicsRayQueryParameters2D() { }
+    public PhysicsRayQueryParameters() { }
 
     /// <summary>Creates parameters for a ray between two global points.</summary>
     /// <param name="from">Finite ray origin in scene units.</param>
@@ -18,7 +18,7 @@ public sealed class PhysicsRayQueryParameters2D : ElectronObject
     /// <param name="collisionMask">Accepted collision layers, all by default.</param>
     /// <param name="exclude">Collider RIDs to skip; null means empty.</param>
     /// <returns>A caller-owned parameter object.</returns>
-    public static PhysicsRayQueryParameters2D Create(Vector2 from, Vector2 to,
+    public static PhysicsRayQueryParameters Create(Vector2 from, Vector2 to,
         uint collisionMask = uint.MaxValue, RID[]? exclude = null) => new()
         {
             From = from,
@@ -90,7 +90,7 @@ public sealed class PhysicsRayQueryParameters2D : ElectronObject
 }
 
 /// <summary>Configures a direct point query in world coordinates.</summary>
-public sealed class PhysicsPointQueryParameters2D : ElectronObject
+public sealed class PhysicsPointQueryParameters : ElectronObject
 {
     private Vector2 _position;
     private RID[] _exclude = [];
@@ -98,7 +98,7 @@ public sealed class PhysicsPointQueryParameters2D : ElectronObject
     private bool _collideWithBodies = true;
 
     /// <summary>Creates a point query at the world origin with all layers enabled.</summary>
-    public PhysicsPointQueryParameters2D() { }
+    public PhysicsPointQueryParameters() { }
 
     /// <summary>Gets or sets the finite global sample point.</summary>
     /// <value>Zero by default.</value>

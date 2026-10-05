@@ -44,7 +44,7 @@ internal static class PhysicsActivityTests
             PhysicsServer.SpaceStep(space, 2);
             Check(PhysicsServer.BodyGetTransform(body).Origin == Vector2.Zero && calls == 0,
                 "An inactive explicit space does not move bodies or deliver integration callbacks.");
-            using var point = new PhysicsPointQueryParameters2D { Position = Vector2.Zero };
+            using var point = new PhysicsPointQueryParameters { Position = Vector2.Zero };
             Check(PhysicsServer.SpaceGetDirectState(space).IntersectPoint(point).Any(hit => hit.ColliderRID == body),
                 "Direct queries prepare and expose geometry while simulation is inactive.");
             PhysicsServer.SpaceSetActive(space, true); PhysicsServer.SpaceStep(space, 1d / 60);
@@ -154,7 +154,7 @@ internal static class PhysicsActivityTests
         var spring = new DampedSpringJoint { NodeA = "../Anchor", NodeB = "../Body", Length = 50, RestLength = 30, Damping = 0 };
         root.AddChild(anchor); root.AddChild(body); root.AddChild(spring);
         using var tree = new SceneTree(root);
-        var space = body.GetWorld2D()!.Space;
+        var space = body.GetWorld()!.Space;
         var frames = 0; var timedOut = false;
         tree.PhysicsFrameStarted += _ => frames++;
         using var timer = tree.CreateTimer(0.05, processInPhysics: true);

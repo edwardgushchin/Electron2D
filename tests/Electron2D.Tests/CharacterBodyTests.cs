@@ -56,12 +56,12 @@ internal static class CharacterBodyTests
               MathF.Abs(character.GetFloorAngle()) < 0.1f &&
               MathF.Abs(character.Velocity.Y) < 0.01f,
             $"MoveAndSlide floor state: floor={character.IsOnFloor()}, normal={character.GetFloorNormal()}, count={character.GetSlideCollisionCount()}, pos={character.GlobalPosition}, last={character.GetLastMotion()}, delta={character.GetPositionDelta()}, real={character.GetRealVelocity()}, velocity={character.Velocity}.");
-        using var immediatePoint = new PhysicsPointQueryParameters2D
+        using var immediatePoint = new PhysicsPointQueryParameters
         {
             Position = character.GlobalPosition,
             Exclude = [floor.GetRID()]
         };
-        Check(character.GetWorld2D()!.DirectSpaceState.IntersectPoint(immediatePoint) is [var sameFrame] &&
+        Check(character.GetWorld()!.DirectSpaceState.IntersectPoint(immediatePoint) is [var sameFrame] &&
               sameFrame.ColliderRID == character.GetRID(),
             "A direct query after MoveAndSlide sees the committed character pose in the same frame.");
         using var hit = character.GetLastSlideCollision();
@@ -231,12 +231,12 @@ internal static class CharacterBodyTests
         root.AddChild(character); root.AddChild(floor);
         using var tree = new SceneTree(root);
         tree.PhysicsFrame(1d / 60);
-        using var point = new PhysicsPointQueryParameters2D
+        using var point = new PhysicsPointQueryParameters
         {
             Position = character.GlobalPosition,
             Exclude = [floor.GetRID()]
         };
-        var hits = character.GetWorld2D()!.DirectSpaceState.IntersectPoint(point);
+        var hits = character.GetWorld()!.DirectSpaceState.IntersectPoint(point);
         Check(character.IsOnFloor() && character.GlobalPosition.Y is > 70 and < 85 &&
               hits is [var hit] && hit.ColliderRID == character.GetRID(),
             "A character moving inside the fixed lane leaves its scene pose and solver fixture aligned.");

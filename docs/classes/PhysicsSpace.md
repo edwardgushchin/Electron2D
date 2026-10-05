@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-09-30
+Last updated: 2026-10-05
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -8,7 +8,7 @@ Last updated: 2026-09-30
 
 ## Description and internal flow
 
-One owner-thread Box2D world shared by scene bodies/Areas/joints and caller-owned colliders. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World2D. No second scheduler exists.
+One owner-thread Box2D world shared by scene bodies/Areas/joints and caller-owned colliders. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World. No second scheduler exists.
 
 | State/operation | Contract |
 | --- | --- |

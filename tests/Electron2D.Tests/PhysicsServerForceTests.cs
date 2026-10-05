@@ -32,7 +32,7 @@ internal static class PhysicsServerForceTests
                 "All detached persistent operations share world-axis position and current rotated center.");
             PhysicsServer.BodySetConstantForce(body, Vector2.Zero); PhysicsServer.BodySetConstantTorque(body, 0);
             PhysicsServer.BodyApplyCentralForce(body, new(120, 0)); PhysicsServer.BodyApplyForce(body, new(0, 120), new(20, 0)); PhysicsServer.BodyApplyTorque(body, 120);
-            PhysicsServer.BodySetSpace(body, area.GetWorld2D()!.Space);
+            PhysicsServer.BodySetSpace(body, area.GetWorld()!.Space);
             var state = PhysicsServer.BodyGetDirectState(body)!;
             Check(state.LinearVelocity.IsEqualApprox(new(1, 1)) && Near(state.AngularVelocity, 0.3f),
                 "Detached impulses change retained state before attachment, using configured mass/inertia.");

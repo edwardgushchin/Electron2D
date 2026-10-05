@@ -70,13 +70,13 @@ internal static class ShapeOwnerTests
         var floorOwner = floor.CreateShapeOwner(null); floor.ShapeOwnerAddShape(floorOwner, box);
         root.AddChild(mover); root.AddChild(floor);
         using var tree = new SceneTree(root);
-        using var collision = new KinematicCollision2D();
+        using var collision = new KinematicCollision();
         Check(mover.TestMove(Transform.Identity, new(0, 120), collision) &&
             ReferenceEquals(collision.GetLocalShape(), identity) && collision.GetColliderShape() is null &&
             floor.ShapeFindOwner(collision.GetColliderShapeIndex()) == floorOwner,
             "Manual geometry executes motion with arbitrary owner object identity.");
-        var direct = floor.GetWorld2D()!.DirectSpaceState;
-        using var point = new PhysicsPointQueryParameters2D { Position = new(0, 100) };
+        var direct = floor.GetWorld()!.DirectSpaceState;
+        using var point = new PhysicsPointQueryParameters { Position = new(0, 100) };
         Check(direct.IntersectPoint(point) is [var hit] && hit.ShapeIndex == floor.ShapeOwnerGetShapeIndex(floorOwner, 0),
             "Direct query results expose global logical indices rather than owner IDs.");
         floor.ShapeOwnerSetTransform(floorOwner, At(300, 0));

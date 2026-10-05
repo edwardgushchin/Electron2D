@@ -1,6 +1,6 @@
 # CharacterBody
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-26
 
 ## Description
 
-A caller-driven kinematic body that turns `Velocity` into safe travel and slides along body contacts. [MoveAndSlide](#moveandslide) classifies floor, wall and ceiling in grounded mode; floating mode treats every hit as a wall. The body borrows direct [CollisionShape](CollisionShape.md) or [CollisionPolygon](CollisionPolygon.md) children, shares the SceneTree physics space, and records caller-owned [KinematicCollision2D](KinematicCollision2D.md) snapshots. A call from a physics callback uses that delivered delta; a process callback uses its process delta. An attached call outside a callback uses the last delivered physics delta. Before the first frame it uses 1/60 second.
+A caller-driven kinematic body that turns `Velocity` into safe travel and slides along body contacts. [MoveAndSlide](#moveandslide) classifies floor, wall and ceiling in grounded mode; floating mode treats every hit as a wall. The body borrows direct [CollisionShape](CollisionShape.md) or [CollisionPolygon](CollisionPolygon.md) children, shares the SceneTree physics space, and records caller-owned [KinematicCollision](KinematicCollision.md) snapshots. A call from a physics callback uses that delivered delta; a process callback uses its process delta. An attached call outside a callback uses the last delivered physics delta. Before the first frame it uses 1/60 second.
 
 ## Example
 
@@ -57,7 +57,7 @@ The subclass needs a live collision child and `PhysicsProcessEnabled = true`. Gr
 | `public Vector2 GetRealVelocity()` | zero | Actual displacement over that frame delta, scene units per second. |
 | `public Vector2 GetPlatformVelocity()` | zero | Last contacted platform point velocity, scene units per second. |
 | `public int GetSlideCollisionCount()` | 0 | Number of recorded motion contacts. |
-| `public KinematicCollision2D GetSlideCollision(int index)` / `GetLastSlideCollision()` | — / null | Caller-owned contact snapshots. |
+| `public KinematicCollision GetSlideCollision(int index)` / `GetLastSlideCollision()` | — / null | Caller-owned contact snapshots. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | — | Stores all query options, not transient contact state. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | — | Restores the exact CharacterBody type in PackedScene. |
 | `protected override void OnEnterTree()` | — | Resets transient floor/wall/platform and slide state. |

@@ -13,7 +13,7 @@ internal static class PhysicsQueryTests
 
     private static void VerifyParameters()
     {
-        using var ray = new PhysicsRayQueryParameters2D();
+        using var ray = new PhysicsRayQueryParameters();
         Check(ray.From == Vector2.Zero && ray.To == Vector2.Zero &&
               ray.CollisionMask == uint.MaxValue && ray.Exclude.Length == 0 &&
               ray.CollideWithBodies && !ray.CollideWithAreas && !ray.HitFromInside,
@@ -31,7 +31,7 @@ internal static class PhysicsQueryTests
         Reject<ArgumentNullException>(() => ray.Exclude = null!);
         Check(ray.From == Vector2.Zero && ray.To == Vector2.Zero && ray.Exclude.Length == 1,
             "Invalid ray edits reject before mutation.");
-        using var point = new PhysicsPointQueryParameters2D();
+        using var point = new PhysicsPointQueryParameters();
         Check(point.Position == Vector2.Zero && point.CollisionMask == uint.MaxValue &&
               point.Exclude.Length == 0 && point.CollideWithBodies && !point.CollideWithAreas,
             "Point parameters expose their complete defaults.");
@@ -54,22 +54,26 @@ internal static class PhysicsQueryTests
         var area = new Area { Name = "Area", Position = new(0, 50) };
         area.AddChild(new CollisionShape { Shape = sensorShape });
         root.AddChild(floor); root.AddChild(area);
-        Check(floor.GetWorld2D() is null, "A detached canvas item has no physics world.");
+        Check(floor.GetWorld() is null, "A detached canvas item has no physics world.");
         var bodyRID = floor.GetRID();
         Check(bodyRID.IsValid() && new RID(bodyRID) == bodyRID && bodyRID > empty &&
               bodyRID.GetID() == new RID(bodyRID).GetID(),
             "A scene collision object has a copyable, ordered, nonempty RID.");
         using var tree = new SceneTree(root);
-        var world = floor.GetWorld2D() ?? throw new InvalidOperationException("Attached body has no world.");
-        Check(ReferenceEquals(world, area.GetWorld2D()) && world.Space.IsValid(),
+        World world = floor.GetWorld() ?? throw new InvalidOperationException("Attached body has no world.");
+        Check(ReferenceEquals(world, area.GetWorld()) && world.Space.IsValid(),
             "Canvas items in one tree share a physics world and space RID.");
+        using var duplicate = (World)world.Duplicate();
+        Check(!ReferenceEquals(world, duplicate) && duplicate.Space == world.Space &&
+              ReferenceEquals(duplicate.DirectSpaceState, world.DirectSpaceState),
+            "A World duplicate borrows the same live space and direct query view.");
         var direct = world.DirectSpaceState;
         Check(ReferenceEquals(direct, PhysicsServer.SpaceGetDirectState(world.Space)),
             "World and server access return the same live direct-space view.");
         Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(bodyRID));
         Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(world.Space));
 
-        using var ray = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 200));
+        using var ray = PhysicsRayQueryParameters.Create(new(0, 0), new(0, 200));
         var hit = direct.IntersectRay(ray);
         Check(hit is { } result && result.ColliderRID == bodyRID && ReferenceEquals(result.Collider, floor) &&
               result.ColliderID == floor.InstanceID && result.ShapeIndex == 0 &&
@@ -107,7 +111,7 @@ internal static class PhysicsQueryTests
         tree.PhysicsFrame(1d / 60);
         Check(floor.GetRID() == bodyRID && direct.IntersectRay(ray)?.ShapeIndex == 0,
             "A live fixture rebuild preserves the collider RID and shape-owner index.");
-        using var point = new PhysicsPointQueryParameters2D { Position = new(0, 100) };
+        using var point = new PhysicsPointQueryParameters { Position = new(0, 100) };
         Check(direct.IntersectPoint(point).Any(candidate => candidate.ColliderRID == bodyRID),
             "A point query detects a scene body even when its collision mask is zero.");
 
@@ -132,10 +136,10 @@ internal static class PhysicsQueryTests
             "A disposed direct view is recreated for the same live space.");
         var sceneSpaceRID = world.Space;
         world.Dispose();
-        var reopenedWorld = floor.GetWorld2D();
+        var reopenedWorld = floor.GetWorld();
         Check(reopenedWorld is not null && !ReferenceEquals(world, reopenedWorld) &&
               reopenedWorld.Space == sceneSpaceRID,
-            "A disposed World2D wrapper is recreated without replacing the SceneTree space.");
+            "A disposed World wrapper is recreated without replacing the SceneTree space.");
         tree.Dispose();
         Check(bodyRID.IsValid(), "An externally held RID remains nonzero after its object is freed.");
         Reject<ObjectDisposedException>(() => floor.GetRID());
@@ -156,13 +160,13 @@ internal static class PhysicsQueryTests
         PhysicsServer.BodySetSpace(body, space);
         Check(PhysicsServer.BodyGetSpace(body) == space && PhysicsServer.BodyGetMode(body) == PhysicsServer.BodyMode.Static,
             "A server-created body is attached to its explicit space with its requested mode.");
-        using var ray = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 100));
+        using var ray = PhysicsRayQueryParameters.Create(new(0, 0), new(0, 100));
         var direct = PhysicsServer.SpaceGetDirectState(space);
         var hit = direct.IntersectRay(ray);
         Check(hit is { } bodyHit && bodyHit.ColliderRID == body && bodyHit.Collider is null &&
               bodyHit.ColliderID == 0 && bodyHit.ShapeIndex == 0 && bodyHit.Position.Y is > 39 and < 41,
             "A server-only shape is queried in the same world with its RID and stable index.");
-        using var point = new PhysicsPointQueryParameters2D { Position = new(0, 50) };
+        using var point = new PhysicsPointQueryParameters { Position = new(0, 50) };
         var pointHits = direct.IntersectPoint(point);
         Check(pointHits.Length == 1 && pointHits[0].ColliderRID == body && pointHits[0].Collider is null,
             "Point queries return a typed result for server-only filled geometry.");
@@ -232,7 +236,7 @@ internal static class PhysicsQueryTests
         point.Exclude = [];
 
         circle.Radius = 20;
-        Check(direct.IntersectRay(new PhysicsRayQueryParameters2D { From = new(0, 0), To = new(0, 100) })?.Position.Y is > 39 and < 41,
+        Check(direct.IntersectRay(new PhysicsRayQueryParameters { From = new(0, 0), To = new(0, 100) })?.Position.Y is > 39 and < 41,
             "Caller resource edits do not alter server-owned shape data.");
         PhysicsServer.ShapeSetData(shape, circle);
         ray.CollideWithAreas = false;
@@ -338,11 +342,11 @@ internal static class PhysicsQueryTests
         PhysicsServer.BodyAddShape(body, concaveRID, new(0, Vector2.One, 0, new(300, 0)));
         PhysicsServer.BodySetSpace(body, space);
         var direct = PhysicsServer.SpaceGetDirectState(space);
-        using var ray = PhysicsRayQueryParameters2D.Create(new(0, -50), new(0, 50));
+        using var ray = PhysicsRayQueryParameters.Create(new(0, -50), new(0, 50));
         Check(direct.IntersectRay(ray)?.ShapeIndex == 0, "A server capsule fixture answers a ray query.");
         ray.From = new(50, 0); ray.To = new(150, 0);
         Check(direct.IntersectRay(ray)?.ShapeIndex == 1, "A server segment fixture answers a ray query.");
-        using var point = new PhysicsPointQueryParameters2D { Position = new(200, 0) };
+        using var point = new PhysicsPointQueryParameters { Position = new(200, 0) };
         Check(direct.IntersectPoint(point) is [var convexHit] && convexHit.ShapeIndex == 2,
             "Compound convex server fixtures keep one stable public shape-owner index.");
         ray.From = new(300, -50); ray.To = new(300, 50);

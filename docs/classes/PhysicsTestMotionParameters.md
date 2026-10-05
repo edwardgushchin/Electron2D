@@ -1,8 +1,8 @@
-# PhysicsTestMotionParameters2D
+# PhysicsTestMotionParameters
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
-**Inherits:** ElectronObject · **Source:** [PhysicsTestMotion2D.cs](../../src/Servers/Physics/PhysicsTestMotion2D.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
+**Inherits:** ElectronObject · **Source:** [PhysicsTestMotion.cs](../../src/Servers/Physics/PhysicsTestMotion.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
 ## Description
 
@@ -13,7 +13,7 @@ Caller-owned mutable input to [PhysicsServer.BodyTestMotion](PhysicsServer.md). 
 Partial snippet with a registered `bodyRID`:
 
 ```csharp
-using var parameters = new PhysicsTestMotionParameters2D
+using var parameters = new PhysicsTestMotionParameters
 {
     From = Transform.Identity,
     Motion = new Vector2(0, 100)
@@ -25,7 +25,7 @@ bool blocked = PhysicsServer.BodyTestMotion(bodyRID, parameters);
 
 | Member | Default | Contract |
 | --- | --- | --- |
-| `public PhysicsTestMotionParameters2D()` | — | Mutable identity-pose query. |
+| `public PhysicsTestMotionParameters()` | — | Mutable identity-pose query. |
 | `public Transform From { get; set; }` | identity | Finite unit-scale, zero-skew global pose. |
 | `public Vector2 Motion { get; set; }` | zero | Finite global displacement with finite length. |
 | `public float Margin { get; set; }` | 0.08 | Finite nonnegative recovery margin in scene units. |

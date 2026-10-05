@@ -1,6 +1,6 @@
 # PhysicsBody
 
-Last updated: 2026-09-30
+Last updated: 2026-10-05
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [RigidBody](RigidBody.md), [StaticBody](StaticBody.md), [CharacterBody](CharacterBody.md)
 
@@ -25,8 +25,8 @@ The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) remains stable
 | `public void AddCollisionExceptionWith(PhysicsBody body)` / `RemoveCollisionExceptionWith(PhysicsBody body)` | Add or remove a one-sided exception entry by another scene body's RID. |
 | `protected override void ValidateDisposal()` | Preflight scene and dependent-joint world ownership/phases before disposal. |
 | `public PhysicsBody?[] GetCollisionExceptions()` | Caller-owned deduplicated explicit/joint array; a server-only or freed RID has a null scene slot. |
-| `public KinematicCollision2D? MoveAndCollide(Vector2 motion, bool testOnly = false, float safeMargin = 0.08f, bool recoveryAsCollision = false)` | Move to safe travel or test without moving; return a caller-owned contact or null. |
-| `public bool TestMove(Transform from, Vector2 motion, KinematicCollision2D? collision = null, float safeMargin = 0.08f, bool recoveryAsCollision = false)` | Query from an arbitrary global pose without moving; optionally fill a caller-owned result. |
+| `public KinematicCollision? MoveAndCollide(Vector2 motion, bool testOnly = false, float safeMargin = 0.08f, bool recoveryAsCollision = false)` | Move to safe travel or test without moving; return a caller-owned contact or null. |
+| `public bool TestMove(Transform from, Vector2 motion, KinematicCollision? collision = null, float safeMargin = 0.08f, bool recoveryAsCollision = false)` | Query from an arbitrary global pose without moving; optionally fill a caller-owned result. |
 | `protected override void OnEnterTree()` / `OnExitTree()` | Attaches or detaches the backend body from this SceneTree's world. |
 | `protected override void Dispose(bool disposing)` | Releases any remaining backend body and shape slots before inherited cleanup. |
 
@@ -42,7 +42,7 @@ A dynamic [RigidBody](RigidBody.md) reports its most recently resolved [Area](Ar
 <a id="motion"></a>
 ### `MoveAndCollide` and `TestMove`
 
-Both methods use finite global scene-unit motion and a finite nonnegative recovery margin. They prepare pending body/shape/filter edits before scanning other bodies in the same physics space; Areas are sensors and do not block. Reciprocal layer/mask bits, the body's own RID and one-way pass-through direction are respected. Initial penetration is moved out before the sweep; `recoveryAsCollision=true` also reports that depenetration. Remaining overlap after recovery attempts stops motion at a zero safe fraction rather than allowing tunneling. Eight sweep refinements bracket the first new impact. Compound fixtures retain their direct owner indices. `TestMove` uses its supplied finite unit-scale global pose, leaves the body unchanged and fills `collision` on a completed hit or miss. A detached `TestMove` returns false; an attached `MoveAndCollide` is required and throws if no registered space exists. `MoveAndCollide(testOnly:true)` returns a collision without changing pose. On a regular call it applies travel, including recovery; a miss returns null. Callers own returned [KinematicCollision2D](KinematicCollision2D.md) objects.
+Both methods use finite global scene-unit motion and a finite nonnegative recovery margin. They prepare pending body/shape/filter edits before scanning other bodies in the same physics space; Areas are sensors and do not block. Reciprocal layer/mask bits, the body's own RID and one-way pass-through direction are respected. Initial penetration is moved out before the sweep; `recoveryAsCollision=true` also reports that depenetration. Remaining overlap after recovery attempts stops motion at a zero safe fraction rather than allowing tunneling. Eight sweep refinements bracket the first new impact. Compound fixtures retain their direct owner indices. `TestMove` uses its supplied finite unit-scale global pose, leaves the body unchanged and fills `collision` on a completed hit or miss. A detached `TestMove` returns false; an attached `MoveAndCollide` is required and throws if no registered space exists. `MoveAndCollide(testOnly:true)` returns a collision without changing pose. On a regular call it applies travel, including recovery; a miss returns null. Callers own returned [KinematicCollision](KinematicCollision.md) objects.
 
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) covers scene and server colliders, contact owners/angle, test-only and actual travel, alternate starting pose, masks, disabled fixtures, one-way approach and margin, deep overlap, owner-thread rejection and 64 warmed unchanged `TestMove` calls with zero managed allocation on Linux/.NET 8. Input picking retains its own [coverage](../coverage/classes/PhysicsBody2D.md); the derived CharacterBody's separation-ray floor behavior remains a distinct [coverage gap](../coverage/classes/CharacterBody2D.md). Native allocation, other platforms and owner acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 

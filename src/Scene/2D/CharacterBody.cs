@@ -343,16 +343,16 @@ public partial class CharacterBody : PhysicsBody
     /// <param name="index">Zero-based contact index.</param>
     /// <returns>The contact snapshot.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the last slide list.</exception>
-    public KinematicCollision2D GetSlideCollision(int index)
+    public KinematicCollision GetSlideCollision(int index)
     {
         EnsureReadable();
         if ((uint)index >= (uint)_slideResults.Count) throw new ArgumentOutOfRangeException(nameof(index));
-        return new KinematicCollision2D(_slideResults[index]);
+        return new KinematicCollision(_slideResults[index]);
     }
 
     /// <summary>Returns a caller-owned copy of the final slide contact.</summary>
     /// <returns>Null when no collision was recorded.</returns>
-    public KinematicCollision2D? GetLastSlideCollision()
+    public KinematicCollision? GetLastSlideCollision()
     {
         EnsureReadable();
         return _slideResults.Count == 0 ? null : new(_slideResults[^1]);

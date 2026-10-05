@@ -1,6 +1,6 @@
 # RayCast
 
-Last updated: 2026-09-25
+Last updated: 2026-10-05
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-25
 
 ## Description
 
-A spatial ray from its local origin to `TargetPosition` that caches the nearest eligible collider. An enabled RayCast samples in its internal fixed physics lane and holds that result until the next eligible physics frame; `ForceRaycastUpdate()` samples immediately, even while disabled. Its endpoint follows the full global transform, including rotation and scale. A direct CollisionObject parent is excluded by default. The current scene and server share one [World2D](World2D.md) solver/query view. A server-only hit has a valid collider RID and null scene object.
+A spatial ray from its local origin to `TargetPosition` that caches the nearest eligible collider. An enabled RayCast samples in its internal fixed physics lane and holds that result until the next eligible physics frame; `ForceRaycastUpdate()` samples immediately, even while disabled. Its endpoint follows the full global transform, including rotation and scale. A direct CollisionObject parent is excluded by default. The current scene and server share one [World](World.md) solver/query view. A server-only hit has a valid collider RID and null scene object.
 
 ## Example
 

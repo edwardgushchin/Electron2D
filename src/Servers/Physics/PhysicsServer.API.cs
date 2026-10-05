@@ -681,8 +681,8 @@ public sealed partial class PhysicsServer
     /// <param name="parameters">Global starting pose, motion, margin and exclusions.</param>
     /// <param name="result">Optional caller-owned result updated after a successful test.</param>
     /// <returns>Whether motion or requested recovery reached a body contact.</returns>
-    public static bool BodyTestMotion(RID body, PhysicsTestMotionParameters2D parameters,
-        PhysicsTestMotionResult2D? result = null) => Service.BodyTestMotionCore(body, parameters, result);
+    public static bool BodyTestMotion(RID body, PhysicsTestMotionParameters parameters,
+        PhysicsTestMotionResult? result = null) => Service.BodyTestMotionCore(body, parameters, result);
 
     /// <summary>Sets signed friction; negative values project rough-surface precedence.</summary>
     /// <param name="body">A live scene or server body RID.</param>

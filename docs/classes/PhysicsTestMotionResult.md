@@ -1,8 +1,8 @@
-# PhysicsTestMotionResult2D
+# PhysicsTestMotionResult
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
-**Inherits:** ElectronObject · **Source:** [PhysicsTestMotion2D.cs](../../src/Servers/Physics/PhysicsTestMotion2D.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
+**Inherits:** ElectronObject · **Source:** [PhysicsTestMotion.cs](../../src/Servers/Physics/PhysicsTestMotion.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
 ## Description
 
@@ -13,7 +13,7 @@ Caller-owned output updated by [PhysicsServer.BodyTestMotion](PhysicsServer.md).
 Partial snippet with a registered `bodyRID` and live `parameters`:
 
 ```csharp
-using var result = new PhysicsTestMotionResult2D();
+using var result = new PhysicsTestMotionResult();
 if (PhysicsServer.BodyTestMotion(bodyRID, parameters, result))
     Console.WriteLine(result.GetCollisionNormal());
 ```
@@ -22,7 +22,7 @@ if (PhysicsServer.BodyTestMotion(bodyRID, parameters, result))
 
 | Member | Contract |
 | --- | --- |
-| `public PhysicsTestMotionResult2D()` | Empty caller-owned output. |
+| `public PhysicsTestMotionResult()` | Empty caller-owned output. |
 | `public ElectronObject? GetCollider()` | Live scene collider, or null for server-only/freed bodies. |
 | `public ulong GetColliderID()` / `public RID GetColliderRID()` | Sampled collider identities. |
 | `public int GetColliderShape()` / `GetCollisionLocalShape()` | Direct collider/moving shape-owner indices. |

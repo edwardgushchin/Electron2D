@@ -4,14 +4,14 @@ public sealed partial class SceneTree
 {
     private PhysicsSpace? _physicsSpace;
     private RID _physicsSpaceRID;
-    private World2D? _physicsWorld2D;
+    private World? _physicsWorld;
 
-    internal World2D GetPhysicsWorld2D()
+    internal World GetPhysicsWorld()
     {
         EnsureOwnerThread();
         EnsurePhysicsSpace();
-        return _physicsWorld2D is { IsDisposed: false } world ? world :
-            _physicsWorld2D = new World2D(_physicsSpaceRID);
+        return _physicsWorld is { IsDisposed: false } world ? world :
+            _physicsWorld = new World(_physicsSpaceRID);
     }
 
     private PhysicsSpace EnsurePhysicsSpace()

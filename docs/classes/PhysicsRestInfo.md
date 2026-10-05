@@ -1,8 +1,8 @@
-# PhysicsRestInfo2D
+# PhysicsRestInfo
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
-**Declaration:** `public readonly struct PhysicsRestInfo2D` · **Source:** [PhysicsDirectSpaceState.Contacts.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.Contacts.cs) · **Component:** [Physics queries](../components/physics-queries.md)
+**Declaration:** `public readonly struct PhysicsRestInfo` · **Source:** [PhysicsDirectSpaceState.Contacts.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.Contacts.cs) · **Component:** [Physics queries](../components/physics-queries.md)
 
 ## Description
 
@@ -13,7 +13,7 @@ Copied typed contact selected by [GetRestInfo](PhysicsDirectSpaceState.md). The 
 Partial snippet with a live `direct` view and `query`:
 
 ```csharp
-PhysicsRestInfo2D? rest = direct.GetRestInfo(query);
+PhysicsRestInfo? rest = direct.GetRestInfo(query);
 if (rest is { } contact) Console.WriteLine(contact.Normal);
 ```
 

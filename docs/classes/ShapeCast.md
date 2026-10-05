@@ -1,6 +1,6 @@
 # ShapeCast
 
-Last updated: 2026-09-25
+Last updated: 2026-10-05
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-25
 
 ## Description
 
-A spatial shape query from this node's global pose along `TargetPosition` in local coordinates. An enabled ShapeCast samples in its internal fixed physics lane. `ForceShapecastUpdate()` samples immediately, even while disabled or before the first physics frame. It caches the safe/unsafe motion fractions and contacts at the earliest new impact, or at its current pose for a zero target or initial overlap. Each contact represents a different collider RID; server-only colliders have no scene object. The caller owns `Shape`, which is borrowed for querying. The node shares its SceneTree's [World2D](World2D.md) and owns no solver world.
+A spatial shape query from this node's global pose along `TargetPosition` in local coordinates. An enabled ShapeCast samples in its internal fixed physics lane. `ForceShapecastUpdate()` samples immediately, even while disabled or before the first physics frame. It caches the safe/unsafe motion fractions and contacts at the earliest new impact, or at its current pose for a zero target or initial overlap. Each contact represents a different collider RID; server-only colliders have no scene object. The caller owns `Shape`, which is borrowed for querying. The node shares its SceneTree's [World](World.md) and owns no solver world.
 
 ## Example
 
@@ -37,7 +37,7 @@ if (cast.IsColliding()) Console.WriteLine(cast.GetCollisionNormal(0));
 | `public bool ExcludeParent { get; set; }` | true | Add the direct CollisionObject parent's RID on entry. |
 | `public bool CollideWithAreas { get; set; }` | false | Include Area sensors. |
 | `public bool CollideWithBodies { get; set; }` | true | Include physics bodies. |
-| `public PhysicsRestInfo2D[] CollisionResult { get; }` | empty | Caller-owned copy of cached typed contacts. |
+| `public PhysicsRestInfo[] CollisionResult { get; }` | empty | Caller-owned copy of cached typed contacts. |
 | `public void AddException(CollisionObject node)` / `RemoveException(CollisionObject node)` | — | Change scene collider exclusion by RID. |
 | `public void AddExceptionRID(RID rid)` / `RemoveExceptionRID(RID rid)` | — | Change any scene/server RID exclusion. |
 | `public void ClearExceptions()` | — | Clear every current exception, including the parent RID. |

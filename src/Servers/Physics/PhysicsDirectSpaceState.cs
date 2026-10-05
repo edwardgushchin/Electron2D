@@ -4,9 +4,9 @@ using static Box2D.NET.B2Shapes;
 namespace Electron2D;
 
 /// <summary>A typed result for the nearest ray hit in a two-dimensional physics space.</summary>
-public readonly struct PhysicsRayResult2D
+public readonly struct PhysicsRayResult
 {
-    internal PhysicsRayResult2D(RID rid, CollisionObject? collider, int shapeIndex, Vector2 position, Vector2 normal)
+    internal PhysicsRayResult(RID rid, CollisionObject? collider, int shapeIndex, Vector2 position, Vector2 normal)
     {
         ColliderRID = rid;
         Collider = collider;
@@ -36,9 +36,9 @@ public readonly struct PhysicsRayResult2D
 }
 
 /// <summary>A typed collider and shape-owner result for a point query.</summary>
-public readonly struct PhysicsPointResult2D
+public readonly struct PhysicsPointResult
 {
-    internal PhysicsPointResult2D(RID rid, CollisionObject? collider, int shapeIndex)
+    internal PhysicsPointResult(RID rid, CollisionObject? collider, int shapeIndex)
     {
         ColliderRID = rid;
         Collider = collider;
@@ -74,7 +74,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
     /// <exception cref="ArgumentNullException">Parameters are null.</exception>
     /// <exception cref="InvalidOperationException">The caller is off-owner or the world is stepping.</exception>
     /// <exception cref="ObjectDisposedException">The view has been disposed.</exception>
-    public PhysicsRayResult2D? IntersectRay(PhysicsRayQueryParameters2D parameters)
+    public PhysicsRayResult? IntersectRay(PhysicsRayQueryParameters parameters)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);
@@ -82,7 +82,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
             parameters.CollideWithAreas, parameters.CollideWithBodies, parameters.HitFromInside);
     }
 
-    internal PhysicsRayResult2D? IntersectRay(Vector2 from, Vector2 to, uint mask, RID[] excluded,
+    internal PhysicsRayResult? IntersectRay(Vector2 from, Vector2 to, uint mask, RID[] excluded,
         bool collideWithAreas, bool collideWithBodies, bool hitFromInside)
     {
         ThrowIfDisposed();
@@ -95,7 +95,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         if (motion == Vector2.Zero || mask == 0 || !collideWithBodies && !collideWithAreas) return null;
 
         var input = new B2RayCastInput(Shape.ToBackend(from), Shape.ToBackend(motion), 1);
-        PhysicsRayResult2D? best = null;
+        PhysicsRayResult? best = null;
         var bestFraction = float.PositiveInfinity;
         if (collideWithBodies)
             for (var index = 0; index < space.Bodies.Count; index++)
@@ -122,7 +122,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
     /// <exception cref="ArgumentNullException">Parameters are null.</exception>
     /// <exception cref="InvalidOperationException">The caller is off-owner or the world is stepping.</exception>
     /// <exception cref="ObjectDisposedException">The view has been disposed.</exception>
-    public PhysicsPointResult2D[] IntersectPoint(PhysicsPointQueryParameters2D parameters, int maxResults = 32)
+    public PhysicsPointResult[] IntersectPoint(PhysicsPointQueryParameters parameters, int maxResults = 32)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);
@@ -135,7 +135,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         var point = Shape.ToBackend(parameters.Position);
         var excluded = parameters.Exclude;
         var mask = parameters.CollisionMask;
-        var hits = new List<PhysicsPointResult2D>();
+        var hits = new List<PhysicsPointResult>();
         if (parameters.CollideWithBodies)
             for (var index = 0; index < space.Bodies.Count; index++)
                 ScanPointShapes(space.Bodies[index].BackendShapes, point, mask, excluded, hits);
@@ -153,7 +153,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
             var order = left.ColliderRID.CompareTo(right.ColliderRID);
             return order != 0 ? order : left.ShapeIndex.CompareTo(right.ShapeIndex);
         });
-        var output = new List<PhysicsPointResult2D>(Math.Min(maxResults, hits.Count));
+        var output = new List<PhysicsPointResult>(Math.Min(maxResults, hits.Count));
         foreach (var hit in hits)
         {
             if (output.Count != 0 && hit.ColliderRID == output[^1].ColliderRID &&
@@ -165,7 +165,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
     }
 
     private static void ScanRayShapes(IReadOnlyList<B2ShapeId> shapes, B2RayCastInput input, Vector2 from,
-        uint mask, RID[] excluded, bool hitFromInside, ref PhysicsRayResult2D? best, ref float bestFraction)
+        uint mask, RID[] excluded, bool hitFromInside, ref PhysicsRayResult? best, ref float bestFraction)
     {
         // ponytail: Scene fixture scans are linear; use a query broad phase when large-world profiling needs it.
         for (var index = 0; index < shapes.Count; index++)
@@ -184,13 +184,13 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
             var point = startsInside ? from : new Vector2(output.point.X * PhysicsSpace.UnitsPerMeter,
                 output.point.Y * PhysicsSpace.UnitsPerMeter);
             var normal = startsInside ? Vector2.Zero : new Vector2(output.normal.X, output.normal.Y);
-            best = new PhysicsRayResult2D(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID),
+            best = new PhysicsRayResult(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID),
                 tag.ShapeIndex, point, normal);
         }
     }
 
     private static void ScanPointShapes(IReadOnlyList<B2ShapeId> shapes, B2Vec2 point, uint mask,
-        RID[] excluded, List<PhysicsPointResult2D> hits)
+        RID[] excluded, List<PhysicsPointResult> hits)
     {
         for (var index = 0; index < shapes.Count; index++)
         {

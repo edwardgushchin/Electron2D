@@ -1,8 +1,8 @@
-# PhysicsShapeQueryParameters2D
+# PhysicsShapeQueryParameters
 
-Last updated: 2026-09-25
+Last updated: 2026-10-05
 
-**Inherits:** ElectronObject · **Source:** [PhysicsShapeQueryParameters2D.cs](../../src/Servers/Physics/PhysicsShapeQueryParameters2D.cs) · **Component:** [Physics queries](../components/physics-queries.md)
+**Inherits:** ElectronObject · **Source:** [PhysicsShapeQueryParameters.cs](../../src/Servers/Physics/PhysicsShapeQueryParameters.cs) · **Component:** [Physics queries](../components/physics-queries.md)
 
 ## Description
 
@@ -13,20 +13,20 @@ Caller-owned mutable input for the four direct shape operations. Assigning `Shap
 Partial snippet with an attached `player` body and a live `probe` shape:
 
 ```csharp
-using var query = new PhysicsShapeQueryParameters2D
+using var query = new PhysicsShapeQueryParameters
 {
     Shape = probe,
     Transform = new Transform(0, Vector2.One, 0, new Vector2(0, 70)),
     Motion = new Vector2(0, 40)
 };
-var fractions = player.GetWorld2D()!.DirectSpaceState.CastMotion(query);
+var fractions = player.GetWorld()!.DirectSpaceState.CastMotion(query);
 ```
 
 ## API summary
 
 | Member | Default | Contract |
 | --- | --- | --- |
-| `public PhysicsShapeQueryParameters2D()` | — | Empty shape selection and default filters. |
+| `public PhysicsShapeQueryParameters()` | — | Empty shape selection and default filters. |
 | `public Shape? Shape { get; set; }` | null | Retained caller resource; assignment requires a live nonnull shape. |
 | `public RID ShapeRID { get; set; }` | empty | Server shape identity; a different RID clears `Shape`. |
 | `public Transform Transform { get; set; }` | identity | Finite global pose with unit scale and zero skew. |
