@@ -30,11 +30,11 @@
   <a href="#feedback-and-contributing">Участие</a>
 </p>
 
-<p align="center">⭐ <a href="https://github.com/edwardgushchin/Electron2D">Поставьте нам звезду на GitHub</a> - это очень мотивирует!</p>
+<p align="center"><img src="docs/design/assets/sprite/readme-features.svg" width="16" height="16" align="absmiddle" alt=""> <a href="https://github.com/edwardgushchin/Electron2D">Поставьте нам звезду на GitHub</a> - это очень мотивирует!</p>
 
 <a id="about"></a>
 
-## 🧭 О проекте
+## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="absmiddle" alt=""> О проекте
 
 Electron2D - **свободный кроссплатформенный 2D-движок на C# для совместной разработки игр человеком и ИИ-агентами**.
 
@@ -42,7 +42,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 <a id="features"></a>
 
-## ✨ Возможности
+## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="absmiddle" alt=""> Возможности
 
 - [Графика](docs/domains/rendering.md). Спрайты и атласы, камеры, параллакс, рисование фигур и текста. Импорт шейдеров HLSL и GLSL для материалов.
 - [Сцены и анимация](docs/domains/scene.md). Повторно используемые объекты и уровни, покадровая анимация, анимация свойств и таймеры.
@@ -59,7 +59,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 <a id="quick-start"></a>
 
-## 🚀 Быстрый старт
+## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="absmiddle" alt=""> Быстрый старт
 
 Начните с примера «Окно и ввод». Приведённые команды предназначены для Linux x64 с Wayland.
 
@@ -127,7 +127,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="platforms"></a>
 
-## 🖥️ Платформы
+## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="absmiddle" alt=""> Платформы
 
 Целевые платформы игры и результаты проверок приведены отдельно. Визуальный редактор предназначен для Windows, Linux и macOS.
 
@@ -149,7 +149,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="development"></a>
 
-## 🔧 Разработка движка
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="absmiddle" alt=""> Разработка движка
 
 Сейчас с Electron2D можно работать через C# и .NET. Шаблоны `PackedScene` поддерживают типизированные [файлы ресурсов и сцен](docs/components/resource-files.md), включая загрузку в новом процессе. Визуальный редактор и команды управления игровыми проектами остаются в планах.
 
@@ -159,7 +159,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="documentation"></a>
 
-## 📚 Документация
+## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="absmiddle" alt=""> Документация
 
 | Нужно | Где читать |
 | --- | --- |
@@ -175,7 +175,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="feedback-and-contributing"></a>
 
-## 💬 Участие в проекте
+## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="absmiddle" alt=""> Участие в проекте
 
 [Задать вопрос](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Сообщить о проблеме](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Руководство для участников](CONTRIBUTING.md) · [Помощь](SUPPORT.md) · [Правила общения](CODE_OF_CONDUCT.md) · [Безопасность](SECURITY.md)
 
@@ -196,7 +196,7 @@ tools/coverage/check.sh
 
 <a id="license"></a>
 
-## 📄 Лицензия
+## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="absmiddle" alt=""> Лицензия
 
 Electron2D распространяется по [лицензии MIT](licence/Electron2D-LICENSE.txt). Движок можно использовать в коммерческих играх; сохраняйте уведомление об авторских правах и текст лицензии.
 

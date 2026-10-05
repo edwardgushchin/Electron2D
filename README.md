@@ -30,11 +30,11 @@
   <a href="#feedback-and-contributing">Contribute</a>
 </p>
 
-<p align="center">⭐ <a href="https://github.com/edwardgushchin/Electron2D">Star us on GitHub</a> - it motivates us a lot!</p>
+<p align="center"><img src="docs/design/assets/sprite/readme-features.svg" width="16" height="16" align="absmiddle" alt=""> <a href="https://github.com/edwardgushchin/Electron2D">Star us on GitHub</a> - it motivates us a lot!</p>
 
 <a id="about"></a>
 
-## 🧭 About
+## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="absmiddle" alt=""> About
 
 Electron2D is a **free and open-source cross-platform 2D engine written in C# for developers and AI agents to build games together**.
 
@@ -42,7 +42,7 @@ Create game worlds and mechanics with familiar .NET tools and AI assistants such
 
 <a id="features"></a>
 
-## ✨ Features
+## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="absmiddle" alt=""> Features
 
 - [Graphics](docs/domains/rendering.md). Sprites and atlases, cameras, parallax, shape and text drawing. HLSL and GLSL shader import for materials.
 - [Scenes and animation](docs/domains/scene.md). Reusable objects and levels, frame animation, property animation and timers.
@@ -59,7 +59,7 @@ Shader materials require the GPU renderer. The compatibility renderer supports b
 
 <a id="quick-start"></a>
 
-## 🚀 Quick start
+## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="absmiddle" alt=""> Quick start
 
 Start with the “Window and input” example. These commands are for Linux x64 with Wayland.
 
@@ -127,7 +127,7 @@ Building the engine produces `Electron2D.dll`. Publishing a game includes the en
 
 <a id="platforms"></a>
 
-## 🖥️ Platforms
+## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="absmiddle" alt=""> Platforms
 
 Game targets and completed checks are listed separately. The visual editor targets Windows, Linux and macOS.
 
@@ -149,7 +149,7 @@ See the [platform report](docs/platform-verification.md) for device models, comm
 
 <a id="development"></a>
 
-## 🔧 Engine development
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="absmiddle" alt=""> Engine development
 
 You can currently use Electron2D through C# and .NET. `PackedScene` templates support typed [resource and scene files](docs/components/resource-files.md), including loading in a new process. A visual editor and commands for managing game projects remain planned.
 
@@ -159,7 +159,7 @@ Next tasks and the status of individual methods are listed in the [development r
 
 <a id="documentation"></a>
 
-## 📚 Documentation
+## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="absmiddle" alt=""> Documentation
 
 | You want to | Read |
 | --- | --- |
@@ -175,7 +175,7 @@ Separate instructions are available for reproducing the [Android](tests/Electron
 
 <a id="feedback-and-contributing"></a>
 
-## 💬 Contributing
+## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="absmiddle" alt=""> Contributing
 
 [Ask a question](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Report an issue](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Contribution guide](CONTRIBUTING.md) · [Support](SUPPORT.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Security policy](SECURITY.md)
 
@@ -196,7 +196,7 @@ The project is maintained by [Eduard Gushchin](https://github.com/edwardgushchin
 
 <a id="license"></a>
 
-## 📄 License
+## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="absmiddle" alt=""> License
 
 Electron2D is distributed under the [MIT license](licence/Electron2D-LICENSE.txt). You can use the engine in commercial games; retain the copyright notice and license text.
 
