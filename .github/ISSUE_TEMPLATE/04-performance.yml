@@ -1,0 +1,73 @@
+name: Performance report
+description: Report a measured regression, allocation issue or bottleneck.
+labels:
+- performance
+- 'status: needs triage'
+body:
+- type: markdown
+  attributes:
+    value: Check [existing issues](https://github.com/edwardgushchin/Electron2D/issues?q=is%3Aissue) first. Need
+      help using the engine? Use [Q&A](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a).
+      Report vulnerabilities [privately](https://github.com/edwardgushchin/Electron2D/security/advisories/new).
+      Remove secrets and personal data from attachments.
+- type: input
+  id: version
+  attributes:
+    label: Engine commit or version
+    description: Use the full commit hash if building from source.
+    placeholder: git rev-parse HEAD
+  validations:
+    required: true
+- type: textarea
+  id: environment
+  attributes:
+    label: Environment
+    description: OS/version, CPU architecture, .NET SDK, renderer (GPU/compatibility/headless), and device or GPU
+      when relevant.
+    placeholder: Linux x64 / .NET 10 / Wayland / GPU renderer
+  validations:
+    required: true
+- type: dropdown
+  id: area
+  attributes:
+    label: Affected area
+    options:
+    - Core and I/O
+    - Scenes and animation
+    - Rendering and shaders
+    - Game UI and text
+    - Physics
+    - Audio
+    - Input and display
+    - Navigation
+    - Networking
+    - Resources and localization
+    - Build, packaging and CI
+    - Documentation
+    - Other / unsure
+- type: textarea
+  id: reproduction
+  attributes:
+    label: Benchmark and reproduction
+    description: Include source, build configuration, warmup, workload and exact command.
+  validations:
+    required: true
+- type: textarea
+  id: measurements
+  attributes:
+    label: Measurements
+    description: Before/after commits, sample count and units. Distinguish managed/native allocations and CPU/GPU
+      time.
+  validations:
+    required: true
+- type: textarea
+  id: impact
+  attributes:
+    label: Impact on the application
+  validations:
+    required: true
+- type: textarea
+  id: artifacts
+  attributes:
+    label: Profiler output or additional evidence
+    description: Share sanitized traces or screenshots when available.

@@ -177,6 +177,8 @@ Linux x64 的完整原生文本和音频库已构建。其他平台的构建与�
 
 ## 💬 参与项目
 
+[提问](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [报告问题](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [贡献指南](CONTRIBUTING.md) · [获取帮助](SUPPORT.md) · [行为准则](CODE_OF_CONDUCT.md) · [安全政策](SECURITY.md)
+
 通过 [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) 报告错误或提出功能建议。报告错误时，请注明引擎版本或提交、操作系统和渲染器，并附上最小复现示例及错误输出。
 
 通过 [Pull Request](https://github.com/edwardgushchin/Electron2D/pulls) 提交修复。开始前请阅读[维护指南](docs/maintaining.md)及相关架构决策。代码、测试和文档应一起更新。

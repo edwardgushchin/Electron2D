@@ -1,0 +1,15 @@
+body:
+- type: markdown
+  attributes:
+    value: 'Maintainer updates: summarize what changed and link the evidence. Clearly identify plans, experiments
+      and released capabilities.'
+- type: textarea
+  id: summary
+  attributes:
+    label: Announcement
+  validations:
+    required: true
+- type: textarea
+  id: links
+  attributes:
+    label: References and next steps

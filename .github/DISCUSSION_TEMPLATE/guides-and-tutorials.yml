@@ -1,0 +1,34 @@
+body:
+- type: textarea
+  id: goal
+  attributes:
+    label: What will the reader learn?
+  validations:
+    required: true
+- type: input
+  id: version
+  attributes:
+    label: Engine commit or version
+    description: Use the full commit hash if building from source.
+    placeholder: git rev-parse HEAD
+  validations:
+    required: true
+- type: textarea
+  id: prerequisites
+  attributes:
+    label: Prerequisites
+    description: State the OS, SDK, renderer and required tools.
+  validations:
+    required: true
+- type: textarea
+  id: guide
+  attributes:
+    label: Steps and example code
+  validations:
+    required: true
+- type: textarea
+  id: verification
+  attributes:
+    label: Expected result and verification limits
+  validations:
+    required: true

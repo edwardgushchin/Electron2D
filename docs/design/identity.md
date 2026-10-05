@@ -81,6 +81,8 @@ Ratios use relative sRGB luminance for the specified HEX colors. Recalculate for
 
 Version-controlled sources are under [assets/sprite](assets/sprite): primary, compact, stacked and monochrome logo SVGs; color and monochrome mark SVGs; app icon SVGs; and JSON/CSS tokens. Keep the token file together with the Sprite assets. There is no runtime theme integration in this change.
 
+The GitHub link preview uses the [1280×640 Sprite card](assets/sprite/github-social-preview.png), with its [editable SVG source](assets/sprite/github-social-preview.svg). It preserves the approved logo geometry and palette. Upload the PNG through repository Settings → General → Social preview; committing an image alone does not set the GitHub preview.
+
 The delivery package also contains transparent PNG marks at 16, 24, 32, 48, 64, 128, 256 and 512 px, 512 px app icons, PNG logo exports, six board exports, and licensed font files. Numbered `icon-N.png` files use the light-background mark; use `mark-dark.svg` for dark surfaces. The app icon has its own rounded background. Social formats use 1200×630 and 1080×1080 px, with margins of at least 64 px.
 
 Voice is concise, warm and factual. Invitations such as “Соберите первую сцену” are appropriate; API documentation and error messages use precise terms and actionable explanations. State actual supported features in product copy. Website, scene, documentation and social examples are visual mockups, not screenshots of an implemented product.

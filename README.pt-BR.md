@@ -177,6 +177,8 @@ Há instruções separadas para reproduzir as verificações de [Android](tests/
 
 ## 💬 Contribua com o projeto
 
+[Fazer uma pergunta](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Relatar um problema](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Guia de contribuição](CONTRIBUTING.md) · [Ajuda](SUPPORT.md) · [Código de conduta](CODE_OF_CONDUCT.md) · [Segurança](SECURITY.md)
+
 Relate erros e sugira recursos no [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). Ao relatar um erro, informe a versão ou o commit do motor, o sistema operacional e o renderizador. Anexe um exemplo mínimo e a saída do erro.
 
 Envie correções por meio de [pull requests](https://github.com/edwardgushchin/Electron2D/pulls). Antes de começar, leia o [guia de manutenção](docs/maintaining.md) e as decisões de arquitetura sobre o assunto. Atualize código, testes e documentação juntos.

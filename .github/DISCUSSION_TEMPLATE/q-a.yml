@@ -1,0 +1,37 @@
+body:
+- type: markdown
+  attributes:
+    value: Read the [getting started guide](https://github.com/edwardgushchin/Electron2D#quick-start) and [support
+      guide](https://github.com/edwardgushchin/Electron2D/blob/main/SUPPORT.md). Include a small example and remove
+      secrets.
+- type: textarea
+  id: question
+  attributes:
+    label: Question
+    description: What are you trying to achieve, and where are you stuck?
+  validations:
+    required: true
+- type: input
+  id: version
+  attributes:
+    label: Engine commit or version
+    description: Use the full commit hash if building from source.
+    placeholder: git rev-parse HEAD
+  validations:
+    required: true
+- type: textarea
+  id: environment
+  attributes:
+    label: Environment
+    description: OS/version, CPU architecture, .NET SDK, renderer (GPU/compatibility/headless), and device or GPU
+      when relevant.
+    placeholder: Linux x64 / .NET 10 / Wayland / GPU renderer
+  validations:
+    required: true
+- type: textarea
+  id: attempts
+  attributes:
+    label: What have you tried?
+    description: Include code, exact commands and relevant error output.
+  validations:
+    required: true

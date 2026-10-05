@@ -1,0 +1,21 @@
+changelog:
+  categories:
+  - title: Features and improvements
+    labels:
+    - enhancement
+  - title: Fixes
+    labels:
+    - bug
+  - title: Performance
+    labels:
+    - performance
+  - title: Documentation
+    labels:
+    - documentation
+  - title: Build and tooling
+    labels:
+    - 'area: build'
+    - 'area: tooling'
+  - title: Other changes
+    labels:
+    - '*'

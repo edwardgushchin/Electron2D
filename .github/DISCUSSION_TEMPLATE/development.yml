@@ -1,0 +1,23 @@
+body:
+- type: markdown
+  attributes:
+    value: Link the relevant [architecture decision](https://github.com/edwardgushchin/Electron2D/blob/main/docs/decisions/index.md),
+      issue or pull request. Changes to accepted decisions need an explicit proposal.
+- type: textarea
+  id: topic
+  attributes:
+    label: Technical question or proposal
+  validations:
+    required: true
+- type: textarea
+  id: evidence
+  attributes:
+    label: Current behavior and evidence
+  validations:
+    required: true
+- type: textarea
+  id: decision
+  attributes:
+    label: Options and decision needed
+  validations:
+    required: true

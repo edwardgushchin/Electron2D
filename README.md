@@ -177,6 +177,8 @@ Separate instructions are available for reproducing the [Android](tests/Electron
 
 ## 💬 Contributing
 
+[Ask a question](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Report an issue](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Contribution guide](CONTRIBUTING.md) · [Support](SUPPORT.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Security policy](SECURITY.md)
+
 Report bugs and suggest features in [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). For a bug report, include the engine version or commit, operating system and renderer. Attach a minimal example and the error output.
 
 Send fixes through [pull requests](https://github.com/edwardgushchin/Electron2D/pulls). Before starting, read the [maintenance guide](docs/maintaining.md) and architecture decisions for your topic. Update code, tests and documentation together.

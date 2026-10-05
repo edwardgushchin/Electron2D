@@ -41,6 +41,9 @@ This directory describes the engine as it exists now. Planned features are liste
 
 ## Navigation
 
+- [Contributing](../CONTRIBUTING.md), [support](../SUPPORT.md), [community code of conduct](../CODE_OF_CONDUCT.md) and [security policy](../SECURITY.md)
+- [GitHub community structure](community.md)
+
 - [Inventory](inventory.md)
 - [Third-party software](thirdparty.md)
 - [Approved Sprite identity and source assets](design/identity.md)
