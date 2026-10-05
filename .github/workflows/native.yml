@@ -249,11 +249,17 @@ jobs:
           path: bin/native-feed/*.nupkg
           if-no-files-found: error
   consumer:
-    needs: [package, package_macos]
+    needs: [package, package_macos, package_windows]
     strategy:
       fail-fast: false
       matrix:
-        runner: [ubuntu-24.04, macos-26, macos-26-intel]
+        include:
+          - {runner: ubuntu-24.04, rid: linux-x64}
+          - {runner: macos-26, rid: osx-arm64}
+          - {runner: macos-26-intel, rid: osx-x64}
+          - {runner: windows-2025, rid: win-x64}
+          - {runner: windows-2025, rid: win-x86}
+          - {runner: windows-11-arm, rid: win-arm64}
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
@@ -266,7 +272,7 @@ jobs:
           merge-multiple: true
           path: bin/native-feed/
       - name: Verify public native consumers with native tools blocked
-        run: python3 -B tools/native/test_consumer.py bin/native-feed
+        run: python -B tools/native/test_consumer.py bin/native-feed '${{ matrix.rid }}'
   native_cross:
     needs: cross_matrix
     strategy:

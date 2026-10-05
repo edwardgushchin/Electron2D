@@ -16,7 +16,7 @@ The native Linux x64 low-level transport profile executes IPv4/IPv6 loopback and
 
 ## Verification
 
-macOS private ENet/OpenSSL producers and package audits have passed. The runtime selects those libraries and uses .NET/Keychain system-chain trust before OpenSSL name/purpose verification; full headless/native public consumer execution is now configured but pending. Linux regressions passed after the loader/ABI/trust changes. Windows/mobile/browser native integration remains required work, with no foreign acceptance inferred from this Linux run.
+Desktop runtime resolution selects private macOS/Windows ENet/OpenSSL and bounded .NET OS-chain trust before OpenSSL name/purpose verification. macOS fresh text/audio/ENet consumers passed; complete Windows/macOS full-suite acceptance remains pending. All three Windows full-suite/consumer profiles are connected. Linux regressions passed after loader/ABI/trust changes. Mobile/browser integration remains required, with no foreign acceptance inferred from Linux checks.
 
 [NetworkingTests](../../tests/Electron2D.Tests/NetworkingTests.cs) verifies real local sockets and wire/queue/lifecycle boundaries plus a public Node/SceneTree request/reply workflow. Prepared buffer/TCP/UDP repeated caller-span operations have 64-cycle managed allocation checks; the component defines what those checks include and exclude. Headless scene execution does not prove rendering, editor/agent-tool support or owner acceptance.
 

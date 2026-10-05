@@ -99,11 +99,11 @@ def cross(rid, output, environment, flags):
     subprocess.run(["make", "-j2", "build_libs"], cwd=directory, env=environment, check=True)
     for original, private in (("crypto", "Crypto"), ("ssl", "SSL")):
         name = "libElectron2D" + private + (".so" if android else ".a")
-        shutil.copy2(directory / ("lib" + original + (".so.3" if android else ".a")), output / name)
+        shutil.copy2(directory / ("lib" + original + (".so" if android else ".a")), output / name)
         if android:
             subprocess.run(["patchelf", "--page-size", "16384", "--set-soname", name, str(output / name)], check=True)
             if original == "ssl":
-                subprocess.run(["patchelf", "--page-size", "16384", "--replace-needed", "libcrypto.so.3", "libElectron2DCrypto.so", str(output / name)], check=True)
+                subprocess.run(["patchelf", "--page-size", "16384", "--replace-needed", "libcrypto.so", "libElectron2DCrypto.so", str(output / name)], check=True)
 
 
 if __name__ == "__main__":

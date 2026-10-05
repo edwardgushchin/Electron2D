@@ -71,7 +71,7 @@ def archive_exports(path, rid):
     commands = subprocess.check_output(["otool", "-l", str(path)], text=True)
     platforms = re.findall(r"cmd LC_BUILD_VERSION\s+cmdsize \d+\s+platform (\d+)", commands)
     expected_platform = {"ios-arm64": "2", "iossimulator-arm64": "7", "iossimulator-x64": "7",
-                         "tvos-arm64": "4", "tvossimulator-arm64": "8", "tvossimulator-x64": "8"}[rid]
+                         "tvos-arm64": "3", "tvossimulator-arm64": "8", "tvossimulator-x64": "8"}[rid]
     if not processors or set(processors) != {expected_cpu} or len(platforms) != len(processors) or set(platforms) != {expected_platform}:
         raise ValueError(f"Foreign CPU or device/simulator platform in archive: {path}")
     symbols = subprocess.check_output(["nm", "-gU", str(path)], text=True)

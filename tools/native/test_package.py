@@ -7,9 +7,11 @@ import struct
 import tempfile
 import unittest
 from unittest.mock import patch
+from zipfile import ZipFile
 
 import build_tls
 import package
+import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
@@ -33,6 +35,14 @@ class NativePackageTests(unittest.TestCase):
                 with patch.object(package.subprocess, "check_output", side_effect=outputs[:2]):
                     with self.assertRaises(ValueError):
                         package.archive_exports(path, rid)
+            for code in ("3", "4"):
+                television = [outputs[0], outputs[1].replace("platform 7", "platform " + code), outputs[2]]
+                with patch.object(package.subprocess, "check_output", side_effect=television):
+                    if code == "3":
+                        self.assertEqual(package.archive_exports(path, "tvos-arm64"), {"e2d_text_init"})
+                    else:
+                        with self.assertRaises(ValueError):
+                            package.archive_exports(path, "tvos-arm64")
             for arch in ("aarch64", "x86_64", ""):
                 with patch.object(package.subprocess, "check_output", return_value="Format: WASM\nArch: " + arch + "\n"):
                     with self.assertRaises(ValueError):
@@ -92,6 +102,36 @@ class NativePackageTests(unittest.TestCase):
                 self.assertIn("no-apps", command)
                 self.assertIn("CFLAGS=-target x86_64-apple-tvos15.0-simulator -isysroot '/SDK path'", command)
                 self.assertNotIn("x86_64-apple-tvos15.0-simulator", command)
+
+    def test_android_openssl_uses_unversioned_libraries_and_private_dependency(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            with patch.object(build_tls, "prepare", return_value=(path, path)), \
+                    patch.object(build_tls.subprocess, "run") as run, patch.object(build_tls.shutil, "copy2") as copy:
+                build_tls.cross("android-arm64", path, {}, [])
+                self.assertEqual([call.args[0].name for call in copy.call_args_list], ["libcrypto.so", "libssl.so"])
+                self.assertIn(["patchelf", "--page-size", "16384", "--replace-needed", "libcrypto.so",
+                               "libElectron2DCrypto.so", str(path / "libElectron2DSSL.so")],
+                              [call.args[0] for call in run.call_args_list])
+
+    def test_consumer_accepts_manifested_native_dlls_but_rejects_managed_assemblies(self):
+        with tempfile.TemporaryDirectory() as directory:
+            feed = Path(directory)
+            path = feed / "Electron2D.Native.Windows.fixture.nupkg"
+            payload = b"native fixture"
+            manifest = {"win-x64": {"files": {"FAudio.dll": hashlib.sha256(payload).hexdigest()}}}
+            for extra in (None, "lib/net10.0/Managed.dll", "Managed.dll"):
+                with ZipFile(path, "w") as archive:
+                    archive.writestr("native-manifest.json", json.dumps(manifest))
+                    archive.writestr("runtimes/win-x64/native/FAudio.dll", payload)
+                    if extra:
+                        archive.writestr(extra, b"managed fixture")
+                if extra:
+                    with self.assertRaises(RuntimeError):
+                        test_consumer.read_manifests(feed)
+                else:
+                    self.assertEqual(test_consumer.read_manifests(feed), manifest)
+
     def test_macos_freetype_rejects_global_codec_dependencies(self):
         with tempfile.TemporaryDirectory() as directory:
             library = Path(directory) / "libElectron2DFreeType.dylib"

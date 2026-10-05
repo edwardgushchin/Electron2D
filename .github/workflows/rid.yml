@@ -74,6 +74,15 @@ jobs:
         run: |
           brew install ffmpeg openssl@3
           echo "$(brew --prefix openssl@3)/bin" >> "$GITHUB_PATH"
+      - name: Install Windows artifact auditor and test oracles
+        if: inputs.tests && startsWith(inputs.rid, 'win-')
+        shell: pwsh
+        run: |
+          python -m pip install --require-hashes -r tools/native/requirements-windows.txt
+          if (!(Get-Command ffmpeg -ErrorAction SilentlyContinue)) { choco install ffmpeg --yes --no-progress; if ($LASTEXITCODE) { exit $LASTEXITCODE } }
+          if (!(Get-Command openssl -ErrorAction SilentlyContinue)) { choco install openssl --yes --no-progress; if ($LASTEXITCODE) { exit $LASTEXITCODE } }
+          "C:\Program Files\OpenSSL-Win64\bin" >> $env:GITHUB_PATH
+          "C:\Program Files\OpenSSL\bin" >> $env:GITHUB_PATH
       - name: Build runtime with trimming and AOT analysis
         run: dotnet build Electron2D.csproj -c Release -r "$CI_RID" -p:EnableTrimAnalyzer=true -p:EnableAotAnalyzer=true -o "bin/ci/$CI_RID" --nologo
       - name: Verify public API architecture and coverage

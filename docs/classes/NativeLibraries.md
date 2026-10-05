@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
+Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. [Native delivery](../native-packaging.md) separates source production, audited packages, executable checks and public publication; complete Windows/macOS target verification remains pending.
 
 - Declaration: `internal static class NativeLibraries`
 - Source: [NativeLibraries.cs](../../src/Properties/NativeLibraries.cs)
@@ -11,7 +11,7 @@ Private native binaries come from versioned Linux/macOS packages in ordinary des
 
 ## Description
 
-Installs Electron2D.dll's native import resolver before binding calls. On Linux and macOS, the pinned packages contain aliases that can otherwise load two SDL core copies with inconsistent object ownership. A lazy process-lifetime core handle uses canonical `libSDL3.so.0` or `libSDL3.0.dylib`. There is intentionally no public setup or unload API.
+Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API.
 
 The private `libElectron2DTextBreak.so`, `libFAudio.so.0` and `libElectron2DENet.so` live under `runtimes/<RID>/native` beneath the application base directory. macOS uses the corresponding dylibs plus private OpenSSL and WOFF2-capable `libElectron2DFreeType.dylib`. Resolution uses the executing runtime identifier and `AppContext.BaseDirectory`, independently of the working directory and managed assembly location. The native package targets preserve this directory for project and package consumers; ordinary .NET resolution remains available as a fallback. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
 
@@ -30,6 +30,8 @@ The private `libElectron2DTextBreak.so`, `libFAudio.so.0` and `libElectron2DENet
 Runs automatically once as a module initializer. HarfBuzz imports resolve their packaged native identity on every platform. On Linux, private text imports resolve the runtime-directory library; SDL3 imports return the retained core handle; FAudio first loads that same SDL core and then resolves its runtime-directory library. SDL3_image/SDL3_shadercross force the shared core to load before returning zero for ordinary dependency resolution. Other names return zero untouched. Missing native libraries propagate at first relevant use. Calling Initialize manually a second time is unsupported because .NET allows one resolver per assembly.
 
 ## Verification and limits
+
+Windows selects private text/audio/ENet/FreeType DLLs and loads private crypto before SSL. Its fresh ProjectReference/NuGet publish consumers cover x86/x64/ARM64, with first complete target execution pending. Mobile/Web loader or static-link integration remains separate.
 
 Self-contained Linux x64 tests loaded images and GPU shaders with LD_LIBRARY_PATH unset; loader diagnostics found one published libSDL3.so.0. The macOS resolver additionally selects private text/FAudio/ENet and OpenSSL dylibs from the RID directory, loading the shared SDL core before FAudio. Matching native production passed; public consumer and full-suite execution remain pending. Windows and mobile/browser native integration retain their gates.
 

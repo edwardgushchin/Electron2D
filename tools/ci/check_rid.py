@@ -7,6 +7,8 @@ import sys
 import xml.etree.ElementTree as ET
 
 from rids import matrix
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "native"))
+import package as native_package
 
 
 def check_result(log, token):
@@ -50,7 +52,7 @@ def check(rid, output):
     if sdl != wanted:
         raise ValueError(f"Wrong SDL dependency selection: {sdl} != {wanted}")
     native_packages = {name for name in packages if name.startswith("Electron2D.Native.")}
-    expected_native = {"Electron2D.Native.Linux", "Electron2D.Native.MacOS"} if row["platform"] in {"Windows", "Linux", "MacOS"} else set()
+    expected_native = {"Electron2D.Native." + platform for platform in ("Linux", "MacOS", "Windows")} if row["platform"] in {"Windows", "Linux", "MacOS"} else set()
     if native_packages != expected_native:
         raise ValueError(f"Wrong private native dependency selection: {native_packages} != {expected_native}")
     with (output / "Electron2D.dll").open("rb") as assembly:
@@ -58,14 +60,16 @@ def check(rid, output):
             raise ValueError("Missing managed PE assembly")
     if ET.parse(output / "Electron2D.xml").findtext("./assembly/name") != "Electron2D":
         raise ValueError("Wrong XML documentation assembly")
-    linux = {"libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"}
-    macos = {"libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"}
-    private = linux | macos
+    desktop = {platform: set(native_package.LIBRARIES[platform]) for platform in ("Linux", "MacOS", "Windows")}
+    private = set().union(*desktop.values())
     found = {path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file() and path.name in private}
-    wanted = {f"runtimes/{rid}/native/{name}" for name in linux if row["platform"] == "Linux"} | {f"runtimes/{rid}/native/{name}" for name in macos if row["platform"] == "MacOS"}
+    wanted = {f"runtimes/{rid}/native/{name}" for name in desktop.get(row["platform"], ())}
     if found != wanted:
         raise ValueError(f"Wrong private native payload: {found} != {wanted}")
     for file in found:
+        if row["platform"] == "Windows":
+            native_package.windows_exports(output / file, rid, Path(file).name)
+            continue
         header = (output / file).read_bytes()[:20]
         if row["platform"] == "MacOS":
             machine = 0x01000007 if rid == "osx-x64" else 0x0100000c

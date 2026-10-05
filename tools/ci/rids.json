@@ -1,7 +1,7 @@
 [
-  {"rid": "win-x86", "runner": "windows-2025", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "portable"},
-  {"rid": "win-x64", "runner": "windows-2025", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "portable"},
-  {"rid": "win-arm64", "runner": "windows-11-arm", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "portable"},
+  {"rid": "win-x86", "runner": "windows-2025", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "full"},
+  {"rid": "win-x64", "runner": "windows-2025", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "full"},
+  {"rid": "win-arm64", "runner": "windows-11-arm", "workload": "", "framework": "net10.0", "platform": "Windows", "suite": "full"},
   {"rid": "linux-x64", "runner": "ubuntu-26.04", "workload": "", "framework": "net10.0", "platform": "Linux", "suite": "full"},
   {"rid": "linux-arm64", "runner": "ubuntu-26.04-arm", "workload": "", "framework": "net10.0", "platform": "Linux", "suite": "full"},
   {"rid": "osx-x64", "runner": "macos-26-intel", "workload": "", "framework": "net10.0", "platform": "MacOS", "suite": "full"},

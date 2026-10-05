@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private text/audio/ENet libraries are owned by the `Electron2D.Native.Linux` package in ordinary builds; [native delivery](native-packaging.md) documents the explicit source-build mode and its verification limits. This adds no runtime C# type or managed backend assembly.
+Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No runtime C# type or managed backend assembly is added.
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
@@ -116,7 +116,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Networking](domains/networking.md) | [TLS and security resources](components/tls.md) | [`TLSOptions`](classes/TLSOptions.md) | [`TLSOptions.cs`](../src/Core/Networking/TLSOptions.cs) | Current | Typed resources, retained configuration or private polled TLS backend under ADR 0094. |
 | [Networking](domains/networking.md) | [TLS and security resources](components/tls.md) | [`StreamPeerTLS`](classes/StreamPeerTLS.md) | [`StreamPeerTLS.cs`](../src/Core/Networking/StreamPeerTLS.cs) | Current | Typed resources, retained configuration or private polled TLS backend under ADR 0094. |
 | [Networking](domains/networking.md) | [TLS and security resources](components/tls.md) | [`TLSStatus`](classes/TLSStatus.md) | [`StreamPeerTLS.cs`](../src/Core/Networking/StreamPeerTLS.cs) | Current | Typed resources, retained configuration or private polled TLS backend under ADR 0094. |
-| [Networking](domains/networking.md) | [TLS and security resources](components/tls.md) | [`TLSNative`](classes/TLSNative.md) | [`TLSNative.cs`](../src/Core/Networking/TLSNative.cs), [system trust](../src/Core/Networking/TLSNative.SystemTrust.cs) | Current | Private polled TLS with Linux system OpenSSL or packaged macOS OpenSSL and OS-chain validation under ADR 0094; target verification is recorded separately. |
+| [Networking](domains/networking.md) | [TLS and security resources](components/tls.md) | [`TLSNative`](classes/TLSNative.md) | [`TLSNative.cs`](../src/Core/Networking/TLSNative.cs), [system trust](../src/Core/Networking/TLSNative.SystemTrust.cs) | Current | Private polled TLS with Linux system OpenSSL or packaged Windows/macOS OpenSSL and OS-chain validation under ADR 0094; target verification is recorded separately. |
 | [Networking](domains/networking.md) | [TLS and security resources](components/tls.md) | [`TLSHandle`](classes/TLSHandle.md) | [`TLSNative.cs`](../src/Core/Networking/TLSNative.cs) | Current | Typed resources, retained configuration or private polled TLS backend under ADR 0094. |
 | [Networking](domains/networking.md) | [Native streams and packets](components/networking.md) | [`StreamPeer`](classes/StreamPeer.md) | [`StreamPeer.cs`](../src/Core/Networking/StreamPeer.cs) | Current | Typed byte transport, ownership, framing or native backend support under ADR 0094. |
 | [Networking](domains/networking.md) | [Native streams and packets](components/networking.md) | [`StreamPeerBuffer`](classes/StreamPeerBuffer.md) | [`StreamPeerBuffer.cs`](../src/Core/Networking/StreamPeerBuffer.cs) | Current | Typed byte transport, ownership, framing or native backend support under ADR 0094. |

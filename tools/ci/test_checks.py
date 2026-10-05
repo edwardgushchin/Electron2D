@@ -144,20 +144,26 @@ class Checks(unittest.TestCase):
                     rids.matrix()
 
     def test_artifacts_and_rejections(self):
-        for rid in ("linux-x64", "linux-arm64", "osx-x64", "osx-arm64", "win-x86", "android-arm64", "ios-arm64", "browser-wasm"):
+        for rid in ("linux-x64", "linux-arm64", "osx-x64", "osx-arm64", "win-x86", "win-x64", "win-arm64", "android-arm64", "ios-arm64", "browser-wasm"):
             row = next(item for item in rids.matrix() if item["rid"] == rid)
-            with self.subTest(rid=rid), tempfile.TemporaryDirectory() as directory:
+            with self.subTest(rid=rid), tempfile.TemporaryDirectory() as directory, patch.object(check_rid.native_package, "windows_exports") as windows:
                 output = Path(directory)
                 platforms = {"Windows", "Linux", "MacOS"} if row["platform"] in {"Windows", "Linux", "MacOS"} else {row["platform"]}
                 packages = [{"Identity": f"SDL3-CS.{platform}{suffix}"} for platform in platforms for suffix in ("", ".Image", ".Shadercross")] if row["platform"] != "Web" else []
                 if row["platform"] in {"Windows", "Linux", "MacOS"}:
                     packages.append({"Identity": "Electron2D.Native.Linux"})
                     packages.append({"Identity": "Electron2D.Native.MacOS"})
+                    packages.append({"Identity": "Electron2D.Native.Windows"})
                 profile = {"Properties": {"RuntimeIdentifier": rid, "TargetFramework": row["framework"], "Electron2DNativePlatform": row["platform"]}, "Items": {"PackageReference": packages}}
                 profile_file = output / "profile.json"
                 profile_file.write_text(json.dumps(profile))
                 (output / "Electron2D.dll").write_bytes(b"MZ")
                 (output / "Electron2D.xml").write_text("<doc><assembly><name>Electron2D</name></assembly></doc>")
+                if row["platform"] == "Windows":
+                    native = output / "runtimes" / rid / "native"
+                    native.mkdir(parents=True)
+                    for name in check_rid.native_package.LIBRARIES["Windows"]:
+                        (native / name).write_bytes(b"native PE fixture; parsing covered by test_windows.py")
                 if row["platform"] == "Linux":
                     native = output / "runtimes" / rid / "native"
                     native.mkdir(parents=True)
@@ -174,6 +180,12 @@ class Checks(unittest.TestCase):
                         (native / name).write_bytes(header)
                 with redirect_stdout(StringIO()):
                     check_rid.check(rid, output)
+                if row["platform"] == "Windows":
+                    self.assertEqual(windows.call_count, 6)
+                    windows.side_effect = ValueError("Wrong native PE architecture")
+                    with self.assertRaises(ValueError):
+                        check_rid.check(rid, output)
+                    windows.side_effect = None
                 profile["Properties"]["RuntimeIdentifier"] = "wrong-rid"
                 profile_file.write_text(json.dumps(profile))
                 with self.assertRaises(ValueError):

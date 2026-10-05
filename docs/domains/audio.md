@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
+Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. [Native delivery](../native-packaging.md) separates source production, audited packages and target execution. Complete Windows/macOS full-suite acceptance remains pending.
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

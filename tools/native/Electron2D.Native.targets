@@ -3,7 +3,7 @@
     <_Electron2DNativeNoticeRID Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</_Electron2DNativeNoticeRID>
     <_Electron2DNativeNoticeRID Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</_Electron2DNativeNoticeRID>
   </PropertyGroup>
-  <ItemGroup Condition="('$(MSBuildThisFileName)' == 'Electron2D.Native.MacOS' and $([System.String]::Copy('$(_Electron2DNativeNoticeRID)').StartsWith('osx-'))) or ('$(MSBuildThisFileName)' == 'Electron2D.Native.Linux' and !$([System.String]::Copy('$(_Electron2DNativeNoticeRID)').StartsWith('osx-')))">
+  <ItemGroup Condition="('$(MSBuildThisFileName)' == 'Electron2D.Native.MacOS' and $([System.String]::Copy('$(_Electron2DNativeNoticeRID)').StartsWith('osx-'))) or ('$(MSBuildThisFileName)' == 'Electron2D.Native.Linux' and $([System.String]::Copy('$(_Electron2DNativeNoticeRID)').StartsWith('linux-'))) or ('$(MSBuildThisFileName)' == 'Electron2D.Native.Windows' and $([System.String]::Copy('$(_Electron2DNativeNoticeRID)').StartsWith('win-')))">
     <None Include="$(MSBuildThisFileDirectory)../licence/*" Link="licence/%(Filename)%(Extension)" CopyToPublishDirectory="Always" Pack="false" Visible="false" />
   </ItemGroup>
   <!-- Preserve the private library directory for project and package consumers. -->
