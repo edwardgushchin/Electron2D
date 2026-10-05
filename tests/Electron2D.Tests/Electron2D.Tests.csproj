@@ -12,6 +12,7 @@
     <Compile Include="../../editor/EditorScene.cs" Link="Editor/EditorScene.cs" />
     <Content Include="../../docs/design/assets/sprite/logo-stacked-dark.svg" Link="Assets/logo-stacked-dark.svg" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="../../docs/design/assets/sprite/mark-dark.svg" Link="Assets/mark-dark.svg" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../editor/Assets/mark-dark-outlined.svg" Link="Assets/mark-dark-outlined.svg" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="../../editor/Assets/IBMPlexSans-Regular.ttf" Link="Assets/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="Shaders/*.spv" LogicalName="TestShaders.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Fixtures/StyleBoxFlatGeometry.json" LogicalName="TestFixtures.StyleBoxFlatGeometry.json" />

@@ -10,6 +10,16 @@ The editor borrows the two image textures, atlas view and font for the window's 
 
 The bundled [IBM Plex Sans Regular TTF](../../editor/Assets/IBMPlexSans-Regular.ttf) is version 3.005, weight 400, from [IBM/plex revision 763c36ef9117782905ae010056dfbe8fd2653a25](https://github.com/IBM/plex/blob/763c36ef9117782905ae010056dfbe8fd2653a25/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-Regular.ttf). SHA-256: `975dcda37d80f038dcd143c22e33ca2d97a0cc5a929aace1c749153b0fe1afa5`. Its corresponding [SIL OFL 1.1](../../editor/Assets/IBMPlexSans-OFL.txt) is copied from that package into the same output directory, with line endings and trailing spaces normalized. The font is an editor-owned content asset; it requires no system font installation.
 
+## White outline trial
+
+The user requested a separate outline trial on 2026-10-05. `--outline` selects [mark-dark-outlined.svg](../../editor/Assets/mark-dark-outlined.svg); without it, the entry point still loads the canonical mark. The trial draws a white miter-joined stroke behind the original pink silhouette, giving a 3 px outward border at the current 1.5× scale. The pink core, face, placement, wordmark and caption retain their previous geometry and colors. The outer mark becomes 150×150; the core remains 144×144. This is an editor preview, not approval of a new identity master.
+
+The current VS Code launch passes `--outline` so F5 displays the trial. For a terminal comparison, add `-- --outline` to the launch command below. Omitting that argument displays the baseline.
+
+Native GPU and compatibility checks passed for the trial and baseline. Frame comparison found exactly 1,908 changed pixels per initial frame, all from background to pure white within `(501, 254)` through `(650, 403)`; the core, face and text pixels are unchanged. The 150×150 outer mark and 3 px edge remain crisp after odd resize. The initial trial frame was visually inspected. Debug and self-contained entry points opened with `--outline` from `/tmp`, with the exact trial SVG in their output. Temporarily removing that Debug asset produced an explicit startup failure for `--outline`, while the baseline still opened; the file was restored.
+
+The shared checkout's coverage check encountered an unrelated in-progress networking page. Release runtime, coverage, wiki generator tests/generation/check and the outline native tests passed separately on a clean `edd2104b` snapshot plus only these preview changes, with existing Linux x64 native binaries supplied through the supported prebuilt-library properties. This verification excludes parallel physics/networking edits and physical F5 input.
+
 ## Launch and verification
 
 Open the repository root in VS Code and press F5. [launch.json](../../.vscode/launch.json) selects `Electron2D Editor`; its [prelaunch task](../../.vscode/tasks.json) builds the Debug editor and launches `editor/bin/Debug/net10.0/Electron2D.Editor.dll`. The Microsoft C# extension is required. The task selects the existing native source-build mode because the current development native packages are unpublished; see [native prerequisites](../native-packaging.md). It requires the existing CMake, Ninja and C/C++ toolchain.
@@ -21,6 +31,8 @@ dotnet run --project editor/Electron2D.Editor.csproj -p:Electron2DBuildNativeFro
 ```
 
 [EditorSceneTests](../../tests/Electron2D.Tests/EditorSceneTests.cs) compiles the same scene source into the test consumer and exercises real Engine.Run hosts. It checks native title/client size, a sharp mark/background boundary, face and outlined-name pixels, the explicit caption font, center anchors after native resize to odd dimensions, native close delivery, zero exit status and cleanup without disposing borrowed textures or font. Internal readback stays in tests; it is not an editor capture API.
+
+Set `ELECTRON2D_TEST_EDITOR_OUTLINE=1` alongside the existing test selector to exercise the trial, including an adjacent white border pixel. Its four captures go to ignored `bin/editor-outline/`; the baseline still uses `bin/editor-smoke/`.
 
 ```bash
 env -u LD_LIBRARY_PATH ELECTRON2D_TEST_EDITOR=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -p:Electron2DBuildNativeFromSource=true
