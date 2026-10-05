@@ -11,7 +11,7 @@ internal static class Program
 [Register("Electron2DTestDelegate")]
 internal sealed class TestDelegate : UIApplicationDelegate
 {
-    public override bool FinishedLaunching(UIApplication application, NSDictionary options)
+    public override bool FinishedLaunching(UIApplication application, NSDictionary? options)
     {
         var code = 0;
         try { ContractChecks.Run(); Console.WriteLine("ELECTRON2D_RESULT PASS"); }
