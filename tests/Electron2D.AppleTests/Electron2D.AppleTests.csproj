@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-ios</TargetFramework>
+    <TargetFramework Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('tvos'))">net10.0-tvos</TargetFramework>
+    <ApplicationId>org.electron2d.tests</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Electron2D.csproj" SetRuntimeIdentifier="RuntimeIdentifier=$(RuntimeIdentifier)" AdditionalProperties="RuntimeIdentifier=$(RuntimeIdentifier)" />
+    <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
+  </ItemGroup>
+</Project>

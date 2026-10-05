@@ -1,6 +1,6 @@
 # ProjectSetting\<T\>
 
-Last updated: 2026-09-21
+Last updated: 2026-10-05
 
 **Inherits:** —
 
@@ -39,6 +39,7 @@ int current = difficulty.DefaultValue;
 | Member | Description |
 | --- | --- |
 | [`public ProjectSetting<T>(string name, T defaultValue, Func<T, bool> validator = null)`](#m-electron2d-projectsetting-1-ctor-system-string-0-system-func-0-system-boolean) | Initializes a strongly typed project setting. |
+| `public ProjectSetting<T>(string name, T defaultValue, Func<T, bool>? validator, JsonTypeInfo<T>? typeInfo)` | Carries compiled custom-model metadata through defaults, validation, base values and feature overrides. |
 
 ## Properties
 
@@ -49,6 +50,13 @@ int current = difficulty.DefaultValue;
 | [`public T DefaultValue { get; }`](#p-electron2d-projectsetting-1-defaultvalue) | Gets an independent copy of the default value. |
 
 ## Constructor Descriptions
+
+<a id="constructor-metadata"></a>
+### `public ProjectSetting<T>(string name, T defaultValue, Func<T, bool>? validator, JsonTypeInfo<T>? typeInfo)`
+
+The first three arguments preserve the existing constructor's validation and snapshot contract. `typeInfo` is complete `System.Text.Json.Serialization.Metadata.JsonTypeInfo<T>` metadata, normally from an application source-generated context. It is validated, frozen and retained through registration, default decoding and both ordinary and feature-specific keys. For a custom model in trimmed/AOT hosts use `new ProjectSetting<Model>("game/model", initial, validator: null, typeInfo: AppJSONContext.Default.Model)`.
+
+Null metadata chooses the built-in catalog or the reflection-enabled host's resolver. Other null/invalid arguments and validator rejection preserve the original exceptions. Indented metadata throws `ArgumentException`; untyped or engine-object members throw `NotSupportedException`. There is no public untyped metadata/value getter.
 
 <a id="m-electron2d-projectsetting-1-ctor-system-string-0-system-func-0-system-boolean"></a>
 ### `public ProjectSetting<T>(string name, T defaultValue, Func<T, bool> validator = null)`

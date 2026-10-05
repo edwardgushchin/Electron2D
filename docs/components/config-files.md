@@ -1,6 +1,6 @@
 # Configuration files component
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 ## Scope
 
@@ -26,6 +26,8 @@ Both types are implemented in [`src/Core/IO/ConfigFile.cs`](../../src/Core/IO/Co
 6. Encrypted loads authenticate/decrypt before UTF-8 decoding and parsing, so failed authentication cannot alter state.
 
 ## Dependencies
+
+Built-in values use generated JSON metadata with the existing numeric converters. Custom models/collections outside that catalog use a complete compact `JsonTypeInfo<T>` on their key in trimmed/AOT hosts; reflection-enabled hosts preserve model discovery. The shared [contract checks](../../tests/Portability/ContractChecks.cs) exercise schema rejection, snapshot isolation, parse/reload and nested integer-rectangle converters with JSON reflection disabled.
 
 - Core `ElectronObject` lifetime and diagnostics.
 - .NET JSON, collections, strict UTF-8, file-system, randomness, PBKDF2, and AES-GCM primitives.

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Electron2D;
 
@@ -13,6 +14,7 @@ namespace Electron2D;
 /// <remarks>
 /// Reuse one key instance for each logical setting. The empty section addresses entries before the first section header.
 /// Values are serialized with the declared type rather than a runtime-wide universal value container.
+/// Custom models in trimmed or ahead-of-time compiled hosts require the constructor that accepts compiled JSON metadata.
 /// </remarks>
 public sealed class ConfigKey<T>
 {
@@ -32,6 +34,23 @@ public sealed class ConfigKey<T>
         Section = section;
         Name = name;
     }
+
+    /// <summary>Initializes a typed key with compiled JSON serialization metadata.</summary>
+    /// <param name="section">The case-sensitive section name.</param>
+    /// <param name="name">The case-sensitive entry name.</param>
+    /// <param name="typeInfo">Metadata for the complete value schema, including its nested types.</param>
+    /// <remarks>Use source-generated metadata for application models in trimmed or ahead-of-time compiled hosts.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="section"/>, <paramref name="name"/> or <paramref name="typeInfo"/> is null.</exception>
+    /// <exception cref="ArgumentException">The metadata requests indented configuration tokens.</exception>
+    /// <exception cref="NotSupportedException">The metadata contains an untyped or engine-object member.</exception>
+    public ConfigKey(string section, string name, JsonTypeInfo<T> typeInfo) : this(section, name)
+    {
+        ArgumentNullException.ThrowIfNull(typeInfo);
+        if (typeInfo.Options.WriteIndented) throw new ArgumentException("Configuration metadata must write compact JSON tokens.", nameof(typeInfo));
+        JSONTypeInfo = ConfigFile.CheckJSONTypeInfo(typeInfo);
+    }
+
+    internal JsonTypeInfo<T>? JSONTypeInfo { get; }
 
     /// <summary>Gets the case-sensitive section name.</summary>
     /// <value>The section name, or an empty string for a sectionless entry.</value>
@@ -53,7 +72,7 @@ public sealed class ConfigKey<T>
 /// concurrently and are serialized at document mutation boundaries. File operations use ordinary operating-system
 /// paths and are unsuitable for a real-time frame callback.
 /// </remarks>
-public sealed class ConfigFile : ElectronObject
+public sealed partial class ConfigFile : ElectronObject
 {
     private const byte EncryptionVersion = 1;
     private const byte RawKeyEncryption = 0;
@@ -515,7 +534,7 @@ public sealed class ConfigFile : ElectronObject
             return;
         }
 
-        var serialized = SerializeSnapshot(value);
+        var serialized = SerializeSnapshot(value, key.JSONTypeInfo);
         lock (_gate)
         {
             ThrowIfDisposed();
@@ -577,11 +596,11 @@ public sealed class ConfigFile : ElectronObject
             ValidateValueType(argument);
     }
 
-    internal static T DeserializeSnapshot<T>(string serialized, string diagnosticName)
+    internal static T DeserializeSnapshot<T>(string serialized, string diagnosticName, JsonTypeInfo<T>? typeInfo = null)
     {
         try
         {
-            var value = JsonSerializer.Deserialize<T>(serialized, ValueJsonOptions);
+            var value = JsonSerializer.Deserialize(serialized, GetJSONTypeInfo(typeInfo));
             return value is null
                 ? throw new InvalidDataException($"Configuration entry '{diagnosticName}' decoded to null, which is not a stored value.")
                 : value;
@@ -600,10 +619,10 @@ public sealed class ConfigFile : ElectronObject
         }
     }
 
-    internal static string SerializeSnapshot<T>(T value) => JsonSerializer.Serialize(value, ValueJsonOptions);
+    internal static string SerializeSnapshot<T>(T value, JsonTypeInfo<T>? typeInfo = null) => JsonSerializer.Serialize(value, GetJSONTypeInfo(typeInfo));
 
     private static T DeserializeValue<T>(string serialized, ConfigKey<T> key) =>
-        DeserializeSnapshot<T>(serialized, key.ToString());
+        DeserializeSnapshot(serialized, key.ToString(), key.JSONTypeInfo);
 
     private static string DecodeIdentifier(string token, bool allowEmpty, int lineNumber)
     {
@@ -620,7 +639,7 @@ public sealed class ConfigFile : ElectronObject
 
         try
         {
-            return JsonSerializer.Deserialize<string>(token) ??
+            return JsonSerializer.Deserialize(token, GetJSONTypeInfo<string>()) ??
                    throw new FormatException($"Configuration line {lineNumber} has a null identifier.");
         }
         catch (JsonException error)
@@ -670,7 +689,7 @@ public sealed class ConfigFile : ElectronObject
         if (identifier.Length > 0 && identifier.All(IsSafeIdentifierCharacter))
             return identifier;
 
-        return JsonSerializer.Serialize(identifier);
+        return JsonSerializer.Serialize(identifier, GetJSONTypeInfo<string>());
     }
 
     private static byte[] Encrypt(
@@ -790,7 +809,7 @@ public sealed class ConfigFile : ElectronObject
                     name,
                     document.RootElement.ValueKind == JsonValueKind.Null
                         ? null
-                        : JsonSerializer.Serialize(document.RootElement, ValueJsonOptions)));
+                        : JsonSerializer.Serialize(document.RootElement, GetJSONTypeInfo<JsonElement>())));
             }
             catch (JsonException error)
             {
@@ -1530,9 +1549,9 @@ internal sealed class Rect2iJsonConverter : JsonConverter<Rect2i>
 
             fields |= field;
             if (field == Position)
-                position = JsonSerializer.Deserialize<Vector2i>(ref reader, options);
+                position = JsonSerializer.Deserialize(ref reader, ConfigFile.GetJSONTypeInfo<Vector2i>());
             else
-                size = JsonSerializer.Deserialize<Vector2i>(ref reader, options);
+                size = JsonSerializer.Deserialize(ref reader, ConfigFile.GetJSONTypeInfo<Vector2i>());
         }
 
         if (reader.TokenType != JsonTokenType.EndObject)
@@ -1547,9 +1566,9 @@ internal sealed class Rect2iJsonConverter : JsonConverter<Rect2i>
     {
         writer.WriteStartObject();
         writer.WritePropertyName(nameof(Rect2i.Position));
-        JsonSerializer.Serialize(writer, value.Position, options);
+        JsonSerializer.Serialize(writer, value.Position, ConfigFile.GetJSONTypeInfo<Vector2i>());
         writer.WritePropertyName(nameof(Rect2i.Size));
-        JsonSerializer.Serialize(writer, value.Size, options);
+        JsonSerializer.Serialize(writer, value.Size, ConfigFile.GetJSONTypeInfo<Vector2i>());
         writer.WriteEndObject();
     }
 }

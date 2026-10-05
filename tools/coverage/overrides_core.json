@@ -27,10 +27,12 @@
     {"godot": "ProjectSettings::property:input/ui_right", "electron2d": "property:Electron2D.ProjectSettings.InputUIRight()", "state": "Partial", "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and navigate GUI focus in managed tests; native controller delivery and reference platform variants remain unverified (ADR 0038)."},
     {"godot": "ProjectSettings::property:input/ui_down", "electron2d": "property:Electron2D.ProjectSettings.InputUIDown()", "state": "Partial", "reason": "Typed arrow, D-pad and left-stick defaults survive project-file reload and match managed input events; native controller delivery and reference platform variants remain unverified (ADR 0038)."},
     {"godot": "JSON::method:from_native(Variant:,bool:)", "electron2d": "method:Electron2D.JSON.FromNative`1(T)", "reason": "Explicit generic native type replaces Variant; engine objects are excluded by ADR 0048."},
+    {"godot": "JSON::method:from_native(Variant:,bool:)", "electron2d": "method:Electron2D.JSON.FromNative`1(T,JsonTypeInfo<T>)", "reason": "ADR 0048 supplies compiled typed metadata for custom model conversion in trimmed/AOT hosts; no engine-object reconstruction."},
     {"godot": "JSON::method:get_error_line()", "electron2d": "method:Electron2D.JSON.GetErrorLine()", "reason": "Managed JSON parser error line and diagnostics under ADR 0048."},
     {"godot": "JSON::method:get_error_message()", "electron2d": "method:Electron2D.JSON.GetErrorMessage()", "reason": "Managed JSON parser error text under ADR 0048."},
     {"godot": "JSON::method:get_parsed_text()", "electron2d": "method:Electron2D.JSON.GetParsedText()", "reason": "Returns optionally retained source text under ADR 0048."},
     {"godot": "JSON::method:to_native(Variant:,bool:)", "electron2d": "method:Electron2D.JSON.ToNative`1(System.Text.Json.Nodes.JsonNode)", "reason": "Explicit generic destination replaces Variant; arbitrary engine-object reconstruction is excluded by ADR 0048."},
+    {"godot": "JSON::method:to_native(Variant:,bool:)", "electron2d": "method:Electron2D.JSON.ToNative`1(System.Text.Json.Nodes.JsonNode,JsonTypeInfo<T>)", "reason": "ADR 0048 supplies compiled typed metadata for custom model conversion in trimmed/AOT hosts; no runtime type names."},
     {"godot": "FastNoiseLite::enum:CellularDistanceFunction", "electron2d": "T:Electron2D.CellularDistanceFunction", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
     {"godot": "FastNoiseLite::enum:CellularReturnType", "electron2d": "T:Electron2D.CellularReturnType", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
     {"godot": "FastNoiseLite::enum:DomainWarpFractalType", "electron2d": "T:Electron2D.DomainWarpFractalType", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
@@ -750,6 +752,11 @@
       "adr": "adr-0018"
     },
     {
+      "electron2d": "constructor:Electron2D.ConfigKey<T>..ctor(System.String,System.String,JsonTypeInfo<T>)",
+      "reason": "ADR 0018 typed key carries a compact compiled value schema for trimmed/AOT hosts, preserving the same snapshot/file boundary.",
+      "adr": "adr-0018"
+    },
+    {
       "electron2d": "method:Electron2D.ConfigKey<T>.ToString()",
       "reason": "Typed section/key identity in place of string/Variant parameters; no upstream helper type.",
       "adr": "adr-0018"
@@ -852,6 +859,11 @@
     {
       "electron2d": "constructor:Electron2D.ProjectSetting<T>..ctor(System.String,T,Func<T, System.Boolean>)",
       "reason": "Typed setting identity/default/validation object; no upstream helper type.",
+      "adr": "adr-0019"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ProjectSetting<T>..ctor(System.String,T,Func<T, System.Boolean>,JsonTypeInfo<T>)",
+      "reason": "ADR 0019 compiled typed metadata reaches default, validation, registered base value and feature override snapshots in trimmed/AOT hosts.",
       "adr": "adr-0019"
     },
     {

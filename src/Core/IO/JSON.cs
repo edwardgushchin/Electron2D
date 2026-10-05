@@ -13,7 +13,6 @@ namespace Electron2D;
 /// </remarks>
 public sealed class JSON : Resource
 {
-    private static readonly JsonSerializerOptions NativeOptions = CreateNativeOptions();
     private static readonly IComparer<string> KeyOrder = Comparer<string>.Create(CompareKeys);
     private readonly object _gate = new();
     private JsonNode? _data;
@@ -113,26 +112,57 @@ public sealed class JSON : Resource
     /// <typeparam name="T">The concrete scalar, collection, or serializable model type.</typeparam>
     /// <param name="value">The native value.</param>
     /// <returns>An independent mutable JSON tree, or null for a null value.</returns>
-    /// <remarks>Engine object identity is deliberately not serialized. The caller chooses the model type at compile time.</remarks>
+    /// <remarks>Engine object identity is deliberately not serialized. Built-in value types use compiled metadata. Custom models require explicit metadata when JSON reflection is disabled by trimming or ahead-of-time compilation.</remarks>
     /// <exception cref="NotSupportedException">The type is an engine object or an untyped object container.</exception>
     /// <exception cref="JsonException">The value cannot be serialized.</exception>
     public static JsonNode? FromNative<T>(T value)
     {
         CheckNativeType<T>();
-        return JsonSerializer.SerializeToNode(value, NativeOptions);
+        return JsonSerializer.SerializeToNode(value, ConfigFile.GetJSONTypeInfo<T>());
+    }
+
+    /// <summary>Converts a typed value using compiled JSON metadata.</summary>
+    /// <typeparam name="T">The declared native value type.</typeparam>
+    /// <param name="value">The value to snapshot.</param>
+    /// <param name="typeInfo">The complete source-generated or explicitly configured serialization schema.</param>
+    /// <returns>An independent mutable JSON tree, or null.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="typeInfo"/> is null.</exception>
+    /// <exception cref="NotSupportedException">The schema contains an untyped or engine-object value.</exception>
+    /// <exception cref="JsonException">The value cannot be serialized.</exception>
+    public static JsonNode? FromNative<T>(T value, JsonTypeInfo<T> typeInfo)
+    {
+        CheckNativeType<T>();
+        ArgumentNullException.ThrowIfNull(typeInfo);
+        return JsonSerializer.SerializeToNode(value, ConfigFile.CheckJSONTypeInfo(typeInfo));
     }
 
     /// <summary>Converts JSON-only data into a caller-selected native type.</summary>
     /// <typeparam name="T">The concrete destination type.</typeparam>
     /// <param name="json">The JSON value.</param>
     /// <returns>A decoded native value, or the selected type's default for JSON null, including value types.</returns>
-    /// <remarks>The generic destination type is required; arbitrary engine objects and runtime type names are not constructed from JSON.</remarks>
+    /// <remarks>The generic destination type is required; arbitrary engine objects and runtime type names are not constructed from JSON. Custom models require explicit metadata when JSON reflection is disabled.</remarks>
     /// <exception cref="NotSupportedException">The destination is an engine object or an untyped object container.</exception>
     /// <exception cref="JsonException">The JSON value does not match <typeparamref name="T"/>.</exception>
     public static T? ToNative<T>(JsonNode? json)
     {
         CheckNativeType<T>();
-        return json is null ? default : JsonSerializer.Deserialize<T>(json.ToJsonString(), NativeOptions);
+        return json is null ? default : JsonSerializer.Deserialize(json.ToJsonString(), ConfigFile.GetJSONTypeInfo<T>());
+    }
+
+    /// <summary>Decodes JSON using compiled native-value metadata.</summary>
+    /// <typeparam name="T">The declared destination type.</typeparam>
+    /// <param name="json">The JSON tree, or null.</param>
+    /// <param name="typeInfo">The complete source-generated or explicitly configured deserialization schema.</param>
+    /// <returns>The decoded value, or the destination default for JSON null.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="typeInfo"/> is null.</exception>
+    /// <exception cref="NotSupportedException">The schema contains an untyped or engine-object value.</exception>
+    /// <exception cref="JsonException">The document does not match the schema.</exception>
+    public static T? ToNative<T>(JsonNode? json, JsonTypeInfo<T> typeInfo)
+    {
+        CheckNativeType<T>();
+        ArgumentNullException.ThrowIfNull(typeInfo);
+        ConfigFile.CheckJSONTypeInfo(typeInfo);
+        return json is null ? default : JsonSerializer.Deserialize(json.ToJsonString(), typeInfo);
     }
 
     /// <inheritdoc />
@@ -168,19 +198,6 @@ public sealed class JSON : Resource
         var type = typeof(T);
         if (type == typeof(object) || typeof(ElectronObject).IsAssignableFrom(type))
             throw new NotSupportedException("JSON native conversion requires a concrete non-engine type.");
-    }
-
-    private static JsonSerializerOptions CreateNativeOptions()
-    {
-        var options = new JsonSerializerOptions(ConfigFile.ValueJsonOptions);
-        var resolver = new DefaultJsonTypeInfoResolver();
-        resolver.Modifiers.Add(info =>
-        {
-            if (info.Type == typeof(object) || typeof(ElectronObject).IsAssignableFrom(info.Type))
-                throw new NotSupportedException("JSON native conversion requires concrete non-engine member types.");
-        });
-        options.TypeInfoResolver = resolver;
-        return options;
     }
 
     private static void AppendValue(StringBuilder text, JsonNode? node, string indent, bool sortKeys, bool fullPrecision, int depth)

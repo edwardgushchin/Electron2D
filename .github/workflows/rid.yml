@@ -41,6 +41,11 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
+      - uses: actions/setup-java@v5
+        if: inputs.workload == 'android'
+        with:
+          distribution: temurin
+          java-version: '21'
       - name: Install target workload
         if: inputs.workload != ''
         run: dotnet workload install "$CI_WORKLOAD"
@@ -66,8 +71,8 @@ jobs:
           cmake --install "$RUNNER_TEMP/sdl-build"
           echo "CMAKE_PREFIX_PATH=$RUNNER_TEMP/sdl-install" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=$RUNNER_TEMP/sdl-install/lib" >> "$GITHUB_ENV"
-      - name: Build untrimmed runtime library
-        run: dotnet build Electron2D.csproj -c Release -r "$CI_RID" -p:EnableTrimAnalyzer=false -o "bin/ci/$CI_RID" --nologo
+      - name: Build runtime with trimming and AOT analysis
+        run: dotnet build Electron2D.csproj -c Release -r "$CI_RID" -p:EnableTrimAnalyzer=true -p:EnableAotAnalyzer=true -o "bin/ci/$CI_RID" --nologo
       - name: Evaluate target profile
         if: inputs.tests
         run: dotnet msbuild Electron2D.csproj -p:RuntimeIdentifier="$CI_RID" -getProperty:RuntimeIdentifier,TargetFramework,Electron2DNativePlatform -getItem:PackageReference > "bin/ci/$CI_RID/profile.json"
@@ -75,7 +80,7 @@ jobs:
         if: inputs.tests
         run: python -B tools/ci/check_rid.py "$CI_RID" "bin/ci/$CI_RID"
       - name: Publish desktop test runner
-        if: inputs.tests && inputs.suite != 'artifact'
+        if: inputs.tests && (inputs.suite == 'full' || inputs.suite == 'portable')
         run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r "$CI_RID" --self-contained true -o "bin/ci-tests/$CI_RID" --nologo
       - name: Run full headless runtime suite
         if: inputs.tests && inputs.suite == 'full'
@@ -88,12 +93,63 @@ jobs:
           executable="$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"
           if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
           "$executable"
+      - name: Publish trimmed desktop contract tests
+        if: inputs.tests && (inputs.suite == 'full' || inputs.suite == 'portable')
+        run: dotnet publish tests/Electron2D.PortabilityTests/Electron2D.PortabilityTests.csproj -c Release -r "$CI_RID" --self-contained true -o "bin/ci-contracts/$CI_RID" --nologo
+      - name: Run trimmed desktop contract tests
+        if: inputs.tests && (inputs.suite == 'full' || inputs.suite == 'portable')
+        run: |
+          executable="$GITHUB_WORKSPACE/bin/ci-contracts/$CI_RID/Electron2D.PortabilityTests"
+          if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
+          "$executable"
+      - name: Publish NativeAOT contract tests
+        if: inputs.tests && (inputs.suite == 'full' || inputs.suite == 'portable') && inputs.rid != 'win-x86'
+        run: dotnet publish tests/Electron2D.PortabilityTests/Electron2D.PortabilityTests.csproj -c Release -r "$CI_RID" --self-contained true -p:PublishAot=true -o "bin/ci-aot/$CI_RID" --nologo
+      - name: Execute NativeAOT contract tests
+        if: inputs.tests && (inputs.suite == 'full' || inputs.suite == 'portable') && inputs.rid != 'win-x86'
+        run: |
+          executable="$GITHUB_WORKSPACE/bin/ci-aot/$CI_RID/Electron2D.PortabilityTests"
+          if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
+          "$executable"
+      - name: Build Android contract app
+        if: inputs.tests && inputs.suite == 'android'
+        run: dotnet build tests/Electron2D.AndroidTests/Electron2D.AndroidTests.csproj -c Release -r "$CI_RID" --nologo
+      - name: Enable Android emulator acceleration
+        if: inputs.tests && inputs.suite == 'android'
+        run: sudo chmod a+rw /dev/kvm
+      - name: Execute Android contract app
+        if: inputs.tests && inputs.suite == 'android'
+        uses: reactivecircus/android-emulator-runner@4c44018e59b437e86cdfc41da381398f93ed8808 # v2
+        with:
+          api-level: ${{ (inputs.rid == 'android-arm' || inputs.rid == 'android-x86') && 30 || 35 }}
+          target: google_apis
+          arch: ${{ (inputs.rid == 'android-arm' || inputs.rid == 'android-x86') && 'x86' || 'x86_64' }}
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
+          script: python -B tools/ci/run_android.py "tests/Electron2D.AndroidTests/bin/Release/net10.0-android/$CI_RID/org.electron2d.tests-Signed.apk" "$CI_RID" --serial emulator-5554
+      - name: Build Apple contract app
+        if: inputs.tests && (inputs.suite == 'apple-simulator' || inputs.suite == 'apple-device')
+        run: dotnet build tests/Electron2D.AppleTests/Electron2D.AppleTests.csproj -c Release -r "$CI_RID" -p:EnableCodeSigning=false --nologo
+      - name: Execute Apple simulator contract app
+        if: inputs.tests && inputs.suite == 'apple-simulator'
+        run: |
+          platform=iOS
+          framework=net10.0-ios
+          if [[ "$CI_RID" == tvos* ]]; then platform=tvOS; framework=net10.0-tvos; fi
+          python -B tools/ci/run_apple.py "tests/Electron2D.AppleTests/bin/Release/$framework/$CI_RID/Electron2D.AppleTests.app" "$platform"
+      - name: Publish browser contract app
+        if: inputs.tests && inputs.suite == 'browser'
+        run: dotnet publish tests/Electron2D.BrowserTests/Electron2D.BrowserTests.csproj -c Release -r browser-wasm -o bin/ci-contracts/browser-wasm --nologo
+      - name: Execute browser WebAssembly contract app
+        if: inputs.tests && inputs.suite == 'browser'
+        run: python -B tools/ci/run_browser.py bin/ci-contracts/browser-wasm/wwwroot
       - name: Record verification scope
         if: inputs.tests
         run: |
           echo "### $CI_RID: $CI_SUITE" >> "$GITHUB_STEP_SUMMARY"
-          if [[ "$CI_SUITE" == artifact ]]; then
-            echo "Library, RID and dependency checks passed. Target execution is unavailable: production mobile/TV/browser host and native integration remain required." >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$CI_SUITE" == apple-device ]]; then
+            echo "Library checks and unsigned test application build passed. Device execution is NOT checked: physical devices and signing are unavailable." >> "$GITHUB_STEP_SUMMARY"
+          elif [[ "$CI_SUITE" == android || "$CI_SUITE" == apple-simulator || "$CI_SUITE" == browser ]]; then
+            echo "Library contract and executable managed contract tests passed (JSON/configuration/settings/theme catalog/headless physics). Android ARM runs use emulator native-bridge translation. Native text/audio/networking, rendering and production application lifecycle acceptance are separate gates." >> "$GITHUB_STEP_SUMMARY"
           elif [[ "$CI_SUITE" == portable ]]; then
             echo "Library contract and portable runtime suite passed. Native text/audio/networking, rendering and application-host acceptance are not covered." >> "$GITHUB_STEP_SUMMARY"
           else
@@ -103,4 +159,14 @@ jobs:
         with:
           name: ${{ inputs.tests && 'tests' || 'build' }}-${{ inputs.rid }}
           path: bin/ci/${{ inputs.rid }}/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: inputs.tests
+        with:
+          name: contract-host-${{ inputs.rid }}
+          path: |
+            bin/ci-contracts/${{ inputs.rid }}/
+            bin/ci-aot/${{ inputs.rid }}/
+            tests/Electron2D.AndroidTests/bin/Release/net10.0-android/${{ inputs.rid }}/*Signed.apk
+            tests/Electron2D.AppleTests/bin/Release/net10.0-*/${{ inputs.rid }}/*.app/
           if-no-files-found: error

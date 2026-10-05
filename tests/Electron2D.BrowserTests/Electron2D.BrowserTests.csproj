@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+    <WasmMainJSPath>wwwroot/main.js</WasmMainJSPath>
+    <WasmMainHTMLPath>wwwroot/index.html</WasmMainHTMLPath>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Electron2D.csproj" SetRuntimeIdentifier="RuntimeIdentifier=browser-wasm" AdditionalProperties="RuntimeIdentifier=browser-wasm" />
+    <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
+    <Content Update="wwwroot/main.js;wwwroot/index.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

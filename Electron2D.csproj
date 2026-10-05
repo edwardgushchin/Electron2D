@@ -50,6 +50,10 @@
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.11" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
+    <!-- The AAR already supplies SDL JNI binaries; the RID payload is the same library. -->
+    <PackageReference Update="SDL3-CS.Android" ExcludeAssets="runtime;native" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
     <!-- The Android SDK scans this root project recursively; nested app outputs are not engine assets. -->
     <AndroidLibrary Remove="**/obj/**/*;**/bin/**/*" />
     <AndroidNativeLibrary Remove="**/obj/**/*.so;**/bin/**/*.so" />

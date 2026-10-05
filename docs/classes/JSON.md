@@ -1,6 +1,6 @@
 # JSON
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 **Inherits:** [Resource](Resource.md)
 **Inherited By:** —
@@ -35,9 +35,16 @@ string output = Electron2D.JSON.Stringify(document.Data, indent: "  ");
 | `string GetParsedText()` | Verbatim last input only when `keepText` was true; empty after parsing without retention or assigning `Data`. |
 | `static string Stringify(JsonNode? data, string indent = "", bool sortKeys = true, bool fullPrecision = false)` | Formats a document value; null emits `null`. Keys sort by Unicode scalar value by default; arbitrary indent text repeats by depth. Values past depth 1024 emit `...` and report a trace diagnostic. |
 | `static JsonNode? FromNative<T>(T value)` | Serializes an explicitly typed scalar, collection, or model to an independent JSON tree. |
+| `static JsonNode? FromNative<T>(T value, JsonTypeInfo<T> typeInfo)` | Snapshots a custom model using complete compiled metadata. |
 | `static T? ToNative<T>(JsonNode? json)` | Deserializes a tree to a caller-selected concrete type. JSON null yields that type's default, including zero for `int`. |
+| `static T? ToNative<T>(JsonNode? json, JsonTypeInfo<T> typeInfo)` | Decodes using complete compiled metadata; JSON null yields default after validation. |
 
 ## Ownership, errors and limits
+
+<a id="fromnative-metadata"></a><a id="tonative-metadata"></a>
+**Compiled native conversion:** `typeInfo` is a `System.Text.Json.Serialization.Metadata.JsonTypeInfo<T>` from a source-generated context or an explicitly constructed complete schema. It is validated and frozen before conversion. Null metadata throws `ArgumentNullException`; untyped or engine-object members throw `NotSupportedException`; mismatched input throws `JsonException`. Conversion snapshots values and does not retain model aliases. Unlike configuration tokens, document conversion can use indented metadata.
+
+Built-in scalars and engine numerics use generated metadata with existing converters. Ordinary reflection-enabled hosts retain custom-model discovery. When JSON reflection is disabled, custom models and collections outside the built-in catalog must use the metadata overloads, for example `JSON.FromNative(model, AppJSONContext.Default.Model)` and `JSON.ToNative(tree, AppJSONContext.Default.Model)`. The context must include all nested types; typed engine-object reconstruction remains forbidden.
 
 The returned `Data` tree is live and mutable; callers must synchronize their own edits. Assigning `Data` and duplicating the resource deep-copy its tree. Disposal invalidates instance access. `Parse` leaves `Data` null on failure and stores the document parser's error message and zero-based line. Literal line feeds, including those inside strings, increment the line; escaped `\n` does not. Success clears previous diagnostics. Success and failure retain the attempted source only with `keepText: true`; parsing without retention and assigning `Data` clear it. This state reset follows [ADR 0048](../decisions/core-data-io.md#adr-0048). Use `Parse` when a valid JSON null must be distinguished from an error.
 

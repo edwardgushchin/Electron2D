@@ -1,0 +1,1 @@
+ContractChecks.Run();

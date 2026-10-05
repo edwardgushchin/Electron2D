@@ -6,6 +6,7 @@ trap 'rm -rf "$coverage_tmp"' EXIT
 
 dotnet run --project tools/coverage/Exporter.csproj -c Release -- "$coverage_tmp/electron2d.json"
 cmp docs/coverage/data/electron2d.json "$coverage_tmp/electron2d.json"
+python3 -B tools/coverage/theme_types.py --check
 python3 -B tools/coverage/test_render.py
 python3 -B tools/coverage/render.py --check
 

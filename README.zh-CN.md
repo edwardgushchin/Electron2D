@@ -145,7 +145,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 Linux x64 的完整原生文本和音频库已构建。其他平台的构建与集成仍是独立任务。Android 和浏览器验证仅涵盖特定场景。
 
-构建和测试徽章覆盖全部 18 个 RID：每个目标的库构建与产物检查、Linux 的完整无窗口测试，以及 Windows/macOS 的可移植测试。移动设备、TV 和浏览器应用的运行验证仍需单独完成。参见 [CI 验证范围](docs/platform-verification.md#automated-rid-checks)。
+构建和测试徽章覆盖全部 18 个 RID：启用分析器的库构建、Linux 完整无窗口测试或桌面可移植测试，以及 trimmed/AOT、Android、Apple 模拟器和浏览器契约测试应用。Apple 实机及其他平台的完整原生运行验收仍需单独完成。参见 [CI 验证范围](docs/platform-verification.md#automated-rid-checks)。
 
 设备型号、命令和验证范围见[平台报告](docs/platform-verification.md)。
 

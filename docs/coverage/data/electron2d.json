@@ -12129,6 +12129,35 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.ConfigKey\u003CT\u003E..ctor(System.String,System.String,JsonTypeInfo\u003CT\u003E)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ConfigKey\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public ConfigKey(System.String section, System.String name, JsonTypeInfo\u003CT\u003E typeInfo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "section",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "typeInfo",
+        "type": "JsonTypeInfo\u003CT\u003E",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Container..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Container",
@@ -13619,6 +13648,40 @@
         "name": "validator",
         "type": "Func\u003CT, System.Boolean\u003E",
         "default": "null"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ProjectSetting\u003CT\u003E..ctor(System.String,T,Func\u003CT, System.Boolean\u003E,JsonTypeInfo\u003CT\u003E)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ProjectSetting\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public ProjectSetting(System.String name, T defaultValue, Func\u003CT, System.Boolean\u003E validator, JsonTypeInfo\u003CT\u003E typeInfo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "defaultValue",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "validator",
+        "type": "Func\u003CT, System.Boolean\u003E",
+        "default": null
+      },
+      {
+        "name": "typeInfo",
+        "type": "JsonTypeInfo\u003CT\u003E",
+        "default": null
       }
     ],
     "returnType": null,
@@ -77868,6 +77931,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.JSON.FromNative\u00601(T,JsonTypeInfo\u003CT\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "FromNative",
+    "signature": "public static System.Text.Json.Nodes.JsonNode FromNative\u003CT\u003E(T value, JsonTypeInfo\u003CT\u003E typeInfo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "typeInfo",
+        "type": "JsonTypeInfo\u003CT\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Text.Json.Nodes.JsonNode",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.JSON.GetErrorLine()",
     "kind": "method",
     "declaringType": "Electron2D.JSON",
@@ -77996,6 +78083,30 @@
       {
         "name": "json",
         "type": "System.Text.Json.Nodes.JsonNode",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.JSON.ToNative\u00601(System.Text.Json.Nodes.JsonNode,JsonTypeInfo\u003CT\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.JSON",
+    "name": "ToNative",
+    "signature": "public static T ToNative\u003CT\u003E(System.Text.Json.Nodes.JsonNode json, JsonTypeInfo\u003CT\u003E typeInfo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "json",
+        "type": "System.Text.Json.Nodes.JsonNode",
+        "default": null
+      },
+      {
+        "name": "typeInfo",
+        "type": "JsonTypeInfo\u003CT\u003E",
         "default": null
       }
     ],

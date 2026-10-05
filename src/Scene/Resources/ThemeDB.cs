@@ -10,8 +10,6 @@ namespace Electron2D;
 /// Initial service construction decodes the built-in slider, button, text-field and scroll-hint icons through the SVG image codec at scale one.</remarks>
 public sealed partial class ThemeDB : ElectronObject
 {
-    private static readonly Dictionary<string, Type> NativeTypes = typeof(ElectronObject).Assembly.GetExportedTypes()
-        .Where(type => typeof(ElectronObject).IsAssignableFrom(type) && !type.IsGenericTypeDefinition).ToDictionary(type => type.Name, StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<Type, string[]> TypeChains = new();
     private static readonly ConcurrentDictionary<string, string[]> NameChains = new(StringComparer.Ordinal);
     private static readonly Lazy<ThemeDB> Singleton = new(() => new ThemeDB());

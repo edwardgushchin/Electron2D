@@ -28,7 +28,7 @@ internal static class NativeLibraries
 
     private static nint LoadRuntime(string name, System.Reflection.Assembly assembly, DllImportSearchPath? searchPath)
     {
-        var file = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(assembly.Location) ?? AppContext.BaseDirectory,
+        var file = System.IO.Path.Combine(AppContext.BaseDirectory,
             "runtimes", RuntimeInformation.RuntimeIdentifier, "native", name);
         // Project references preserve the runtime directory; NuGet RID publishes can flatten native assets.
         return NativeLibrary.Load(File.Exists(file) ? file : name, assembly, searchPath);

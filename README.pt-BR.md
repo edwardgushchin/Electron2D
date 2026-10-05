@@ -145,7 +145,7 @@ As plataformas de destino do jogo e as verificações realizadas são apresentad
 
 O conjunto completo de bibliotecas nativas de texto e áudio foi compilado para Linux x64. A compilação e a integração nas outras plataformas continuam sendo tarefas separadas. As verificações de Android e navegador cobrem cenários específicos.
 
-Os indicadores de compilação e testes abrangem os 18 RID: compilação da biblioteca e verificação de artefatos para cada destino, testes completos sem janela no Linux e testes portáveis no Windows/macOS. A execução de aplicativos em dispositivos móveis, TV e navegadores exige verificações separadas. Veja o [escopo do CI](docs/platform-verification.md#automated-rid-checks).
+Os indicadores abrangem os 18 RID: compilações com analisadores, testes completos sem janela no Linux ou portáveis em desktop e aplicativos de contrato trimmed/AOT, Android, simuladores Apple e navegador. Dispositivos Apple físicos e a aceitação nativa completa de outras plataformas continuam separados. Veja o [escopo do CI](docs/platform-verification.md#automated-rid-checks).
 
 Consulte os modelos dos dispositivos, os comandos e os limites das verificações no [relatório de plataformas](docs/platform-verification.md).
 

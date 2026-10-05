@@ -1,6 +1,6 @@
 # ConfigKey\<T\>
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 **Inherits:** —
 
@@ -38,6 +38,7 @@ config.SetValue(fullscreen, true);
 | Member | Description |
 | --- | --- |
 | [`public ConfigKey<T>(string section, string name)`](#m-electron2d-configkey-1-ctor-system-string-system-string) | Initializes a typed configuration key. |
+| `public ConfigKey<T>(string section, string name, JsonTypeInfo<T> typeInfo)` | Retains a complete compact compiled schema for custom-model snapshots. |
 
 ## Properties
 
@@ -53,6 +54,13 @@ config.SetValue(fullscreen, true);
 | [`public override string ToString()`](#m-electron2d-configkey-1-tostring) | Returns the section and entry name for diagnostics. |
 
 ## Constructor Descriptions
+
+<a id="constructor-metadata"></a>
+### `public ConfigKey<T>(string section, string name, JsonTypeInfo<T> typeInfo)`
+
+Applies the same identifier and value-type validation as the two-argument constructor, then validates and freezes a complete `System.Text.Json.Serialization.Metadata.JsonTypeInfo<T>`. Reuse source-generated metadata for custom models in trimmed/AOT applications, for example `new ConfigKey<Model>("game", "model", AppJSONContext.Default.Model)`. Built-in scalars and engine numerics do not need an explicit schema; reflection-enabled hosts preserve the ordinary custom-model path.
+
+Null section/name/metadata throws `ArgumentNullException`; `WriteIndented=true` throws `ArgumentException` because stored values must stay on one line. Untyped or engine-object members throw `NotSupportedException`. The metadata is retained by the key and reused for both encoding and decoding; values remain independent snapshots.
 
 <a id="m-electron2d-configkey-1-ctor-system-string-system-string"></a>
 ### `public ConfigKey<T>(string section, string name)`

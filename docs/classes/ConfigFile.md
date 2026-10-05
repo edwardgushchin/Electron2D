@@ -1,6 +1,6 @@
 # ConfigFile
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -455,6 +455,8 @@ Releases resources owned by a derived class.
 Public and protected members inherited from [ElectronObject](ElectronObject.md). Their lifecycle and error contracts remain applicable unless this page states an override.
 
 ## Parsing and persistence
+
+Built-in scalar/numeric schemas use compiled JSON metadata. Custom models in trimmed/AOT applications must use the [`ConfigKey<T>` metadata constructor](ConfigKey.Generic.md#constructor-metadata); reflection-enabled hosts retain the ordinary model path. The complete schema must produce compact tokens. Encoding, decoding, parse/reload and snapshot isolation share that same retained schema. The generated implementation is in [ConfigFile.NativeJSON.cs](../../src/Core/IO/ConfigFile.NativeJSON.cs).
 
 Parsing first builds a complete validated operation list. A malformed section, assignment, quoted identifier, or JSON token throws `FormatException` and leaves all existing state unchanged. Successful input is merged: matching entries are replaced, JSON `null` removes an entry, new entries append in encounter order, and existing entries not mentioned remain. Duplicate assignments resolve to the final value without moving the entry.
 

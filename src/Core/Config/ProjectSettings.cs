@@ -1,6 +1,7 @@
 using IOPath = System.IO.Path;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Electron2D;
 
@@ -11,6 +12,7 @@ namespace Electron2D;
 /// <c>application/config/name</c>. Values are serialized snapshots, so mutable values returned from
 /// <see cref="DefaultValue"/> do not mutate the stored default. A validator can run concurrently on caller threads;
 /// it must therefore be deterministic, thread-safe, and free of registry mutations.
+/// Custom models in trimmed or ahead-of-time compiled hosts require explicit JSON metadata at construction.
 /// </remarks>
 public sealed class ProjectSetting<T>
     where T : notnull
@@ -32,14 +34,33 @@ public sealed class ProjectSetting<T>
     /// <exception cref="NotSupportedException"><typeparamref name="T"/> is not a supported configuration value type.</exception>
     /// <exception cref="System.Text.Json.JsonException"><paramref name="defaultValue"/> cannot be serialized as <typeparamref name="T"/>.</exception>
     public ProjectSetting(string name, T defaultValue, Func<T, bool>? validator = null)
+        : this(name, defaultValue, validator, null) { }
+
+    /// <summary>Initializes a setting with optional compiled JSON metadata.</summary>
+    /// <param name="name">The full case-sensitive category path.</param>
+    /// <param name="defaultValue">The non-null initial value.</param>
+    /// <param name="validator">An optional pure validation predicate.</param>
+    /// <param name="typeInfo">Compiled metadata for a custom model, or null for the built-in schema or reflection-enabled host.</param>
+    /// <remarks>Pass source-generated metadata for custom models in trimmed or ahead-of-time compiled hosts.</remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="name"/> or <paramref name="defaultValue"/> is null.</exception>
+    /// <exception cref="ArgumentException">The name is invalid or metadata requests indented tokens.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The validator rejects the initial value.</exception>
+    /// <exception cref="NotSupportedException">The value or metadata schema is unsupported.</exception>
+    /// <exception cref="System.Text.Json.JsonException">The default cannot be serialized.</exception>
+    public ProjectSetting(string name, T defaultValue, Func<T, bool>? validator, JsonTypeInfo<T>? typeInfo)
     {
         ValidateName(name);
         ArgumentNullException.ThrowIfNull(defaultValue);
         ConfigFile.ValidateValueType(typeof(T));
+        if (typeInfo is not null)
+        {
+            if (typeInfo.Options.WriteIndented) throw new ArgumentException("Setting metadata must write compact JSON tokens.", nameof(typeInfo));
+            JSONTypeInfo = ConfigFile.CheckJSONTypeInfo(typeInfo);
+        }
 
         Name = name;
         _validator = validator;
-        _defaultSerialized = ConfigFile.SerializeSnapshot(defaultValue);
+        _defaultSerialized = ConfigFile.SerializeSnapshot(defaultValue, JSONTypeInfo);
         ValidateSerialized(_defaultSerialized);
     }
 
@@ -56,18 +77,19 @@ public sealed class ProjectSetting<T>
     public T DefaultValue => Deserialize(_defaultSerialized);
 
     internal string DefaultSerialized => _defaultSerialized;
+    internal JsonTypeInfo<T>? JSONTypeInfo { get; }
 
     internal T Deserialize(string serialized)
     {
         if (!_canCacheValue)
-            return ConfigFile.DeserializeSnapshot<T>(serialized, Name);
+            return ConfigFile.DeserializeSnapshot(serialized, Name, JSONTypeInfo);
 
         lock (_cacheGate)
         {
             if (StringComparer.Ordinal.Equals(_cachedSerialized, serialized))
                 return _cachedValue!;
 
-            var value = ConfigFile.DeserializeSnapshot<T>(serialized, Name);
+            var value = ConfigFile.DeserializeSnapshot(serialized, Name, JSONTypeInfo);
             _cachedSerialized = serialized;
             _cachedValue = value;
             return value;
@@ -77,7 +99,7 @@ public sealed class ProjectSetting<T>
     internal string SerializeAndValidate(T value)
     {
         ArgumentNullException.ThrowIfNull(value);
-        var serialized = ConfigFile.SerializeSnapshot(value);
+        var serialized = ConfigFile.SerializeSnapshot(value, JSONTypeInfo);
         ValidateSerialized(serialized);
         return serialized;
     }

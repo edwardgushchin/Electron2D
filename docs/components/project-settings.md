@@ -1,8 +1,10 @@
 # Project settings component
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 ## Scope
+
+Custom model definitions can carry compiled `JsonTypeInfo<T>` through the four-argument [`ProjectSetting<T>` constructor](../classes/ProjectSetting.Generic.md#constructor-metadata). Defaults, validation, registered base values and feature overrides reuse that compact schema. Trimmed/AOT applications do not discover arbitrary models through reflection; ordinary reflection-enabled hosts retain the existing path. [Contract checks](../../tests/Portability/ContractChecks.cs) verify both override paths and validation rollback.
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 

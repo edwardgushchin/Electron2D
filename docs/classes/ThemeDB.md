@@ -1,12 +1,14 @@
 # ThemeDB
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
 **Declaration:** `public sealed partial class ThemeDB : ElectronObject` · **Source:** [ThemeDB.cs](../../src/Scene/Resources/ThemeDB.cs), [ThemeDB.Buttons.cs](../../src/Scene/Resources/ThemeDB.Buttons.cs), [ThemeDB.Scroll.cs](../../src/Scene/Resources/ThemeDB.Scroll.cs), [ThemeDB.Split.cs](../../src/Scene/Resources/ThemeDB.Split.cs) · **Component:** [Typed themes](../components/themes.md)
 
 ## Description and example
+
+Native type ancestry and variation-name validation use [ThemeDB.Types.cs](../../src/Scene/Resources/ThemeDB.Types.cs), a compiled catalog generated from the exported type inventory. Coverage checks reject catalog drift. This retains native names after trimming without assembly-wide reflection; it does not load fonts or claim target text/rendering acceptance.
 
 The process-wide service for the current built-in theme and universal typed fallbacks. Consumers borrow the singleton and its built-in resources; they do not own their lifetime. It supplies real data for implemented controls while the complete GUI default catalog and project Theme-file loading remain separate dependencies.
 

@@ -11,9 +11,25 @@ from unittest.mock import patch
 
 import check_rid
 import rids
+import run_android
+import run_apple
 
 
 class Checks(unittest.TestCase):
+    def test_mobile_driver_rejects_missing_stale_and_failed_results(self):
+        self.assertFalse(run_android.result("RESULT old PASS", "current"))
+        self.assertFalse(run_android.result("app crashed", "current"))
+        self.assertTrue(run_android.result("I/Electron2DTests: RESULT current PASS", "current"))
+        with self.assertRaises(RuntimeError):
+            run_android.result("E/Electron2DTests: RESULT current FAIL exception", "current")
+        with self.assertRaises(RuntimeError):
+            run_apple.select({"runtimes": [], "devicetypes": []}, "iOS")
+        profiles = {"runtimes": [{"name": "iOS 26", "version": "26.0", "identifier": "older", "isAvailable": True},
+                                  {"name": "iOS 26.1", "version": "26.1", "identifier": "newer", "isAvailable": True},
+                                  {"name": "iOS 27", "version": "27.0", "identifier": "missing", "isAvailable": False}],
+                    "devicetypes": [{"name": "iPhone 17", "identifier": "phone"}]}
+        self.assertEqual(run_apple.select(profiles, "iOS"), ("newer", "phone"))
+
     def test_matrix_rejects_missing_duplicate_and_wrong_platform(self):
         rows = rids.matrix()
         for changed in (rows[:-1], rows + [rows[0]], [dict(rows[0], platform="Linux")] + rows[1:]):

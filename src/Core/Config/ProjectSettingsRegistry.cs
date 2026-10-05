@@ -795,10 +795,11 @@ public partial class ProjectSettingsRegistry : ElectronObject
         }
     }
 
-    internal static ConfigKey<T> CreateConfigKey<T>(string fullName)
+    internal static ConfigKey<T> CreateConfigKey<T>(string fullName, System.Text.Json.Serialization.Metadata.JsonTypeInfo<T>? typeInfo = null)
     {
         var separator = fullName.IndexOf('/');
-        return new ConfigKey<T>(fullName[..separator], fullName[(separator + 1)..]);
+        return typeInfo is null ? new ConfigKey<T>(fullName[..separator], fullName[(separator + 1)..])
+            : new ConfigKey<T>(fullName[..separator], fullName[(separator + 1)..], typeInfo);
     }
 
     internal static ProjectSetting<InputActionSettings> CreateDefaultKeyAction(
@@ -1285,7 +1286,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         internal SettingEntry(ProjectSetting<T> setting, int order, bool isBasic, bool isBuiltIn)
             : base(setting, setting.Name, setting.DefaultSerialized, order, isBasic, isBuiltIn)
         {
-            BaseKey = CreateConfigKey<T>(setting.Name);
+            BaseKey = CreateConfigKey(setting.Name, setting.JSONTypeInfo);
         }
 
         private ProjectSetting<T> Setting => (ProjectSetting<T>)Definition;
@@ -1297,7 +1298,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             if (_overrideKeys.TryGetValue(feature, out var key))
                 return key;
 
-            key = CreateConfigKey<T>($"{Name}.{feature}");
+            key = CreateConfigKey($"{Name}.{feature}", Setting.JSONTypeInfo);
             _overrideKeys.Add(feature, key);
             return key;
         }

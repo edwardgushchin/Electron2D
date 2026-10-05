@@ -70,6 +70,8 @@ def xml_id(record):
         name = match.group()
         if name in generic_names:
             return generic_names[name]
+        if name == "JsonTypeInfo":
+            return "System.Text.Json.Serialization.Metadata.JsonTypeInfo"
         if name in system_types:
             return "System." + name
         if name in engine_types:

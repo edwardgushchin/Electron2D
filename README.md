@@ -145,7 +145,7 @@ Game targets and completed checks are listed separately. The visual editor targe
 
 The full set of native text and audio libraries has been built for Linux x64. Building and integrating them for other platforms remains separate work. Android and browser checks cover individual scenarios.
 
-The Build and Tests badges cover all 18 RIDs: library builds and artifact checks for every target, the full headless suite on Linux, and portable tests on Windows/macOS. Mobile, TV and browser application execution remains separate. See the [CI verification scope](docs/platform-verification.md#automated-rid-checks).
+The Build and Tests badges cover all 18 RIDs: analyzed library builds, the full Linux headless or portable desktop suite, and executable trimmed/AOT, Android, Apple-simulator and browser contract hosts. Physical Apple devices and complete foreign native runtime acceptance remain separate. See the [CI verification scope](docs/platform-verification.md#automated-rid-checks).
 
 See the [platform report](docs/platform-verification.md) for device models, commands and verification limits.
 

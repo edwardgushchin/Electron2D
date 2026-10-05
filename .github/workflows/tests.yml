@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [main]
+    branches: [main, codex/rid-runtime-checks]
   pull_request:
   workflow_dispatch:
 

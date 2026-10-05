@@ -9,7 +9,7 @@ Decisions in this log: [0018](#adr-0018), [0019](#adr-0019), [0020](#adr-0020), 
 <a id="adr-0018"></a>
 ## ADR 0018: Typed configuration files
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 ### Status
 
@@ -24,6 +24,8 @@ At the time of this decision Electron2D had accepted managed deterministic lifet
 ### Decision
 
 `ConfigFile` inherits `ElectronObject` directly; managed memory replaces reference-counted lifetime. `ConfigKey<T>` binds each section/name pair to a compile-time type; section and entry names may be empty. The public boundary rejects `object`, JSON DOM nodes, delegates, and engine objects. Values are serialized immediately as compact JSON tokens with public fields enabled, allowing typed scalars, 2D numerics, collections, and stable user models without storing CLR type names or live aliases.
+
+Built-in schemas use compiled `System.Text.Json` metadata. Reflection-enabled hosts retain custom-model discovery; trimmed/AOT hosts use `ConfigKey<T>(section, name, JsonTypeInfo<T>)` for custom models and collections outside the built-in catalog. Metadata must describe the complete concrete non-engine schema and produce compact tokens. Unsupported metadata fails before mutation; no reflection fallback is enabled in an application that disables JSON reflection.
 
 The text container remains section-oriented and human-readable. Safe identifiers are bare; unsafe identifiers are JSON-quoted. Values are one-line JSON. Full semicolon comment lines and a leading BOM are accepted, comments are discarded, names are ordinal/case-sensitive, and first-insertion order is preserved. Null means removal. Parse/load fully validate before one locked merge; existing unmentioned values survive, matching the reference merge behavior while removing its partial-mutation-on-parse-error risk.
 
@@ -94,7 +96,7 @@ Executable checks cover the public matrix, validation, stable ordering, typed ro
 <a id="adr-0019"></a>
 ## ADR 0019: Typed project settings and directory-backed virtual paths
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 ### Status
 
@@ -109,6 +111,8 @@ The reference project-settings singleton combines a universal-value registry, de
 Global operations use the static ProjectSettings surface under [ADR 0095](singleton-services.md#adr-0095). The retained object derives from ProjectSettingsRegistry, which supplies the same state implementation and disposable independent tool/project registries. SettingsChanged carries the exact ProjectSettingsRegistry sender; the permanent sender retains its ProjectSettings identity.
 
 `ProjectSetting<T>` is the immutable public setting identity: full name, JSON-snapshotted default, and optional typed validator. `ProjectSettings` accepts only exact registered definitions for value access. Internally heterogeneous definitions are type-erased behind private generic entries; no untyped value crosses the public boundary.
+
+The four-argument `ProjectSetting<T>(name, defaultValue, validator, JsonTypeInfo<T>)` carries compiled custom-model metadata through default decoding, validation, registration, base values and feature overrides. A null metadata argument selects the built-in schema or the host's enabled reflection fallback. This is the same typed snapshot contract as ConfigFile, including rejection of indented tokens.
 
 `ProjectSettings` is the non-disposable runtime registry and an Engine built-in singleton. ProjectSettingsRegistry constructors provide isolated disposable registries; ProjectSettings uses only static global operations. Every registry starts with implemented application/timing, rendering, six GUI-focus input, two locale-selection, and nine pseudolocalization definitions; other domains add definitions only with executable consumers. Engine timing properties use active feature overrides from the process registry, so the settings layer is the single source rather than a duplicate bag. The typed `input/<action>` schema and atomic `InputMap` reload are owned by ADR 0038; ProjectSettings supplies exact-definition registration and a private typed group snapshot without exposing an untyped value store. The startup sampling, catalog fallback and transformation reload of localization settings are owned by ADR 0007.
 
@@ -289,7 +293,7 @@ The executable harness verifies ordinary and virtual scope behavior, listing sta
 <a id="adr-0048"></a>
 ## ADR 0048: Dedicated JSON documents with typed native conversion
 
-Last updated: 2026-09-24
+Last updated: 2026-10-05
 
 ### Status
 
@@ -302,6 +306,8 @@ ADR 0001 excludes a universal engine value container. ADRs 0018 and 0019 separat
 ### Decision
 
 `JSON : Resource` owns one `System.Text.Json.Nodes.JsonNode` tree. `Parse` accepts JSON documents, reports success as `bool`, and retains diagnostics and optional source text. `ParseString` returns a JSON tree or null. `Stringify` accepts a JSON tree with optional key ordering, indentation and floating-point precision. `FromNative<T>` and `ToNative<T>` convert explicitly selected C# types using the established typed value schemas; untyped `object` roots and engine objects are rejected. A null JSON root converts to the selected type's default, including value types. The tree is confined to this document API and is never a universal engine property or settings value. Data assignment and resource duplication copy the tree; a returned tree is live, mutable, and caller-synchronized.
+
+Both native-conversion methods additionally accept `JsonTypeInfo<T>` for compiled custom-model schemas. Built-in scalars and engine numerics use generated metadata with the existing numeric converters; ordinary reflection-enabled hosts retain model discovery. Trimmed/AOT hosts must supply complete metadata for other models. Metadata validation rejects untyped and engine-object members without enumerating assembly types or promising arbitrary-model discovery after trimming.
 
 The document parser follows the reference token grammar for trailing commas, raw string line breaks, whitespace, escaped Unicode pairs, structural diagnostics and 1024-level nesting. `Parse` and `ParseString` use the same path. Numeric tokens use the reference 18-digit mantissa and power-of-ten conversion before entering the document tree. Exponent text beyond the native signed-integer range is safely capped instead of relying on overflow; this is the accepted managed boundary for exceptional inputs. Parsing replaces the document and diagnostics together; source text is retained only when requested and is cleared by a parse without retention or a `Data` assignment. This deterministic state reset is the managed document adaptation. A valid JSON null and a parse failure both yield null from `ParseString`; use `Parse` when diagnostics matter. `Stringify` uses the matching fixed and Grisu2 floating formats, key ordering and document escapes; values deeper than 1024 levels emit an ellipsis and report through managed trace listeners. JSON work is allocating and stays outside real-time callbacks.
 
