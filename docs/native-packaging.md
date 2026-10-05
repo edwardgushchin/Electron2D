@@ -42,7 +42,17 @@ The ENet bridge normalizes socket buffers into its engine-owned pointer/length A
 
 The native workflow now configures three Windows producers (`win-x86`, `win-x64`, `win-arm64`) and a combined `Electron2D.Native.Windows` package. The selected MSVC environment builds private ICU, FAudio, ENet, WOFF2-capable FreeType and OpenSSL. FAudio uses an import library generated from the restored, CPU-checked SDL DLL instead of compiling another SDL core. FreeType codecs, ENet compression dependencies and the C/C++ runtime are linked statically; OpenSSL has private DLL identities. The PE audit checks the target machine, native DLL/export identity, engine bridge exports and dependency closure, rejecting managed assemblies and unbundled compiler/codec libraries. Source receipts and the existing cache/packing gates apply unchanged.
 
-This is a producer candidate awaiting execution on Windows runners. It does not yet add the package to ordinary runtime restoration, remove Windows backend guards or establish full Windows runtime acceptance. Android, Apple mobile/TV and browser native producers remain missing.
+The first Windows candidate compiled ICU and FAudio on the three selected architectures, then stopped while configuring the stock ENet test oracle because its Windows source file was not retained. That unchanged file now comes from the same pinned ENet commit and is covered by its source manifest. The corrected producer still requires a target run. It does not yet add the package to ordinary runtime restoration, remove Windows backend guards or establish full Windows runtime acceptance.
+
+## Android, Apple and Web producers
+
+The shared native workflow also selects all eleven Android/iOS/tvOS/Web rows from the authoritative CI RID registry and packs one complete package per platform. A contract check rejects any difference between the package RID registry and the declared eighteen targets. Each producer contributes actual target-compiled files and current source receipts; missing or foreign binaries fail packing. These producer candidates are not runtime acceptance or public publication.
+
+Android uses NDK `28.2.13676358`, API21, static C++ runtime and the existing pinned SDL binary. Its private ELF closure contains ICU, FAudio, ENet, OpenSSL, FreeType and HarfBuzz. Audits verify ELF32/ELF64 CPU, SONAME, bridge exports, closed dynamic dependencies and 16 KB load-segment alignment. OpenSSL's private loader names preserve that alignment.
+
+Apple uses Xcode with explicit CPU, SDK, minimum version and device/simulator target. Its static archives include the private bridges, OpenSSL, FreeType/HarfBuzz and their codec dependencies. Every object must carry the selected Mach-O CPU and device/simulator platform; an ARM64 device archive cannot substitute for an ARM64 simulator archive. The FAudio build retains the selected mobile deployment target instead of imposing its desktop default. No physical Apple execution or signing is claimed.
+
+Web uses the Emscripten toolchain supplied by the selected .NET WebAssembly SDK. It builds real wasm32 archives, including SDL3 from its pinned 3.4.16 source archive, and rejects archives containing foreign objects. A linked native FreeType executable decodes and rasterizes the bundled WOFF2 and rejects corrupt data under Node. Browser engine hosting, presentation, audio lifecycle and application static-link integration remain separate unverified work.
 
 ## Public publication
 

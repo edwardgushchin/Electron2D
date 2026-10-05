@@ -14,13 +14,22 @@ sys.path.insert(0, str(ROOT / "tools"))
 from check_native_publish import TEXT_EXPORTS, check_private_text
 
 PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-arm64"),
-             "Windows": ("win-x86", "win-x64", "win-arm64")}
+             "Windows": ("win-x86", "win-x64", "win-arm64"),
+             "Android": ("android-arm", "android-arm64", "android-x86", "android-x64"),
+             "iOS": ("ios-arm64", "iossimulator-arm64", "iossimulator-x64"),
+             "tvOS": ("tvos-arm64", "tvossimulator-arm64", "tvossimulator-x64"), "Web": ("browser-wasm",)}
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
 LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"),
              "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib",
                        "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"),
              "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll",
                          "libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll", "Electron2DFreeType.dll")}
+LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectron2DENet.so",
+                        "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so")
+ARCHIVES = ("libElectron2DTextBreak.a", "libFAudio.a", "libElectron2DENet.a", "libElectron2DCrypto.a",
+            "libElectron2DSSL.a", "libElectron2DFreeType.a", "libElectron2DHarfBuzz.a", "libElectron2DZlib.a",
+            "libElectron2DPNG.a", "libElectron2DBrotliDec.a", "libElectron2DBrotliCommon.a", "libElectron2DZstd.a")
+LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libElectron2DWasmCompat.a"))
 
 
 def required_exports(name):
@@ -34,8 +43,39 @@ def required_exports(name):
         return TEXT_EXPORTS
     if "FAudio" in name:
         return {"e2d_audio_select_output", "e2d_audio_output_latency"}
-    return {"e2d_enet_" + item for item in ("callbacks", "create", "destroy", "connect", "service", "flush",
-                                         "send", "packet", "release", "peer", "stat", "host", "compress")}
+    if "ENet" in name:
+        return {"e2d_enet_" + item for item in ("callbacks", "create", "destroy", "connect", "service", "flush",
+                                             "send", "packet", "release", "peer", "stat", "host", "compress")}
+    if "HarfBuzz" in name:
+        return {"hb_shape", "hb_buffer_create", "hb_font_create"}
+    if name == "libSDL3.a":
+        return {"SDL_Init", "SDL_OpenAudioDeviceStream", "SDL_PutAudioStreamData"}
+    if "WasmCompat" in name:
+        return {"__wasm_setjmp", "__wasm_setjmp_test"}
+    return set()
+
+
+def archive_exports(path, rid):
+    if path.read_bytes()[:8] != b"!<arch>\n":
+        raise ValueError(f"Expected a static native archive: {path}")
+    if rid == "browser-wasm":
+        headers = subprocess.check_output(["llvm-readobj", "--file-headers", str(path)], text=True)
+        architectures = re.findall(r"^Arch: (.+)$", headers, re.MULTILINE)
+        if not architectures or set(architectures) != {"wasm32"} or headers.count("Format: WASM") != len(architectures):
+            raise ValueError(f"Foreign or non-Wasm object in archive: {path}")
+        symbols = subprocess.check_output(["llvm-nm", "--extern-only", "--defined-only", "--format=posix", str(path)], text=True, stderr=subprocess.PIPE)
+        return {line.split()[0] for line in symbols.splitlines() if len(line.split()) == 4}
+    headers = subprocess.check_output(["otool", "-hv", str(path)], text=True)
+    processors = re.findall(r"MH_MAGIC_64\s+(\S+)", headers)
+    expected_cpu = "X86_64" if rid.endswith("-x64") else "ARM64"
+    commands = subprocess.check_output(["otool", "-l", str(path)], text=True)
+    platforms = re.findall(r"cmd LC_BUILD_VERSION\s+cmdsize \d+\s+platform (\d+)", commands)
+    expected_platform = {"ios-arm64": "2", "iossimulator-arm64": "7", "iossimulator-x64": "7",
+                         "tvos-arm64": "4", "tvossimulator-arm64": "8", "tvossimulator-x64": "8"}[rid]
+    if not processors or set(processors) != {expected_cpu} or len(platforms) != len(processors) or set(platforms) != {expected_platform}:
+        raise ValueError(f"Foreign CPU or device/simulator platform in archive: {path}")
+    symbols = subprocess.check_output(["nm", "-gU", str(path)], text=True)
+    return {line.split()[-1].removeprefix("_") for line in symbols.splitlines() if len(line.split()) == 3}
 
 
 def windows_exports(path, rid, name):
@@ -117,6 +157,12 @@ def inspect(rid, directory):
     for name in libraries:
         path = directory / name
         data = path.read_bytes()
+        if name.endswith(".a"):
+            exports = archive_exports(path, rid)
+            if not required_exports(name) <= exports:
+                raise ValueError(f"Missing engine or dependency ABI in archive: {path}")
+            checksums[name] = hashlib.sha256(data).hexdigest()
+            continue
         if rid.startswith(("osx-", "win-")):
             exports = windows_exports(path, rid, name) if rid.startswith("win-") else macos_exports(path, rid, name)
             required = required_exports(name)
@@ -124,7 +170,10 @@ def inspect(rid, directory):
                 raise ValueError(f"Missing or foreign engine ABI exports: {path}")
             checksums[name] = hashlib.sha256(data).hexdigest()
             continue
-        if data[:6] != b"\x7fELF\x02\x01" or int.from_bytes(data[18:20], "little") != {"linux-x64": 62, "linux-arm64": 183}[rid]:
+        machines = {"linux-x64": (2, 62), "linux-arm64": (2, 183), "android-arm": (1, 40),
+                    "android-arm64": (2, 183), "android-x86": (1, 3), "android-x64": (2, 62)}
+        elf_class, machine = machines[rid]
+        if data[:6] != b"\x7fELF" + bytes((elf_class, 1)) or int.from_bytes(data[18:20], "little") != machine:
             raise ValueError(f"Wrong native architecture: {path}")
         dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(path)], text=True)
         if re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) != [name]:
@@ -135,10 +184,24 @@ def inspect(rid, directory):
             raise ValueError("FAudio must share the packaged SDL3 core")
         symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(path)], text=True)
         exports = {line.split()[-1] for line in symbols.splitlines()}
-        required = {"e2d_audio_select_output", "e2d_audio_output_latency"} if name == "libFAudio.so.0" else {
-            "e2d_enet_" + item for item in ("callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")}
+        required = required_exports(name)
         if name != "libElectron2DTextBreak.so" and not required <= exports:
             raise ValueError(f"Missing engine bridge exports: {path}")
+        if rid.startswith("android-"):
+            segments = subprocess.check_output(["readelf", "--wide", "--program-headers", str(path)], text=True)
+            alignments = [int(line.split()[-1], 16) for line in segments.splitlines() if line.strip().startswith("LOAD ")]
+            if not alignments or min(alignments) < 16384:
+                raise ValueError(f"Android native ELF must support 16 KB pages: {path}")
+            dependencies = set(re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic))
+            allowed = set(libraries) | {"libSDL3.so", "libc.so", "libm.so", "libdl.so", "liblog.so"}
+            if not dependencies <= allowed:
+                raise ValueError(f"Unbundled Android dependency: {path}: {dependencies - allowed}")
+            if name == "libFAudio.so" and "libSDL3.so" not in dependencies:
+                raise ValueError("FAudio must share the packaged Android SDL core")
+            if name == "libElectron2DSSL.so" and "libElectron2DCrypto.so" not in dependencies:
+                raise ValueError("Android OpenSSL must use its private crypto library")
+            if name == "libElectron2DTextBreak.so" and exports != TEXT_EXPORTS:
+                raise ValueError("Private Android ICU must export only its engine bridge")
         checksums[name] = hashlib.sha256(data).hexdigest()
     if rid.startswith("linux-"):
         check_private_text(rid, directory / libraries[0])

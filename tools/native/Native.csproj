@@ -16,10 +16,14 @@
     <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'Linux'">linux-x64,linux-arm64</NativePackageRIDs>
     <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'MacOS'">osx-x64,osx-arm64</NativePackageRIDs>
     <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'Windows'">win-x86,win-x64,win-arm64</NativePackageRIDs>
+    <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'Android'">android-arm,android-arm64,android-x86,android-x64</NativePackageRIDs>
+    <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'iOS'">ios-arm64,iossimulator-arm64,iossimulator-x64</NativePackageRIDs>
+    <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'tvOS'">tvos-arm64,tvossimulator-arm64,tvossimulator-x64</NativePackageRIDs>
+    <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'Web'">browser-wasm</NativePackageRIDs>
     <NativeArtifacts Condition="'$(NativeArtifacts)' == ''">$(MSBuildThisFileDirectory)../../bin/native-artifacts</NativeArtifacts>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SDL3-CS.$(NativePackagePlatform)" Version="[$(Electron2DSDLVersion)]" />
+    <PackageReference Include="SDL3-CS.$(NativePackagePlatform)" Version="[$(Electron2DSDLVersion)]" Condition="'$(NativePackagePlatform)' != 'Web'" />
     <None Include="$(NativeArtifacts)/runtimes/**/*" Pack="true" PackagePath="runtimes/" />
     <None Include="$(NativeArtifacts)/native-manifest.json" Pack="true" PackagePath="/" />
     <None Include="../../licence/*" Exclude="../../licence/ReferenceData-LICENSE.txt" Pack="true" PackagePath="licence/" />

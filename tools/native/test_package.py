@@ -1,6 +1,7 @@
 """Reject mismatched native architectures and modified pinned source inputs."""
 
 import hashlib
+import json
 from pathlib import Path
 import struct
 import tempfile
@@ -12,6 +13,31 @@ import package
 
 
 class NativePackageTests(unittest.TestCase):
+    def test_every_declared_rid_has_a_native_payload_and_package(self):
+        matrix = json.loads((package.ROOT / "tools/ci/rids.json").read_text())
+        self.assertEqual({row["rid"] for row in matrix}, set(package.RIDS))
+        self.assertEqual(len(package.RIDS), len(set(package.RIDS)))
+        for row in matrix:
+            self.assertEqual(package.platform(row["rid"]), row["platform"])
+            self.assertTrue(package.LIBRARIES[row["platform"]])
+
+    def test_static_archives_reject_wrong_device_and_object_architecture(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "fixture.a"
+            path.write_bytes(b"!<arch>\n")
+            outputs = ["MH_MAGIC_64 ARM64 ALL OBJECT\n", "cmd LC_BUILD_VERSION\ncmdsize 24\nplatform 7\n",
+                       "000000 T _e2d_text_init\n"]
+            with patch.object(package.subprocess, "check_output", side_effect=outputs):
+                self.assertEqual(package.archive_exports(path, "iossimulator-arm64"), {"e2d_text_init"})
+            for rid in ("ios-arm64", "tvossimulator-arm64", "iossimulator-x64"):
+                with patch.object(package.subprocess, "check_output", side_effect=outputs[:2]):
+                    with self.assertRaises(ValueError):
+                        package.archive_exports(path, rid)
+            for arch in ("aarch64", "x86_64", ""):
+                with patch.object(package.subprocess, "check_output", return_value="Format: WASM\nArch: " + arch + "\n"):
+                    with self.assertRaises(ValueError):
+                        package.archive_exports(path, "browser-wasm")
+
     def test_source_fingerprint_includes_the_native_build_recipe(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

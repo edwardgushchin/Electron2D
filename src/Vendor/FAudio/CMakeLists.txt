@@ -61,7 +61,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 # Platform Flags
 if(APPLE)
 	set(CMAKE_MACOSX_RPATH ON)
-	set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+	if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+		set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+	endif()
 elseif(WIN32)
 	# "FAudio.dll", not "libFAudio.dll"
 	set(CMAKE_SHARED_LIBRARY_PREFIX "")

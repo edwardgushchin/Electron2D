@@ -17,6 +17,24 @@ permissions:
   contents: read
 
 jobs:
+  cross_matrix:
+    runs-on: ubuntu-24.04
+    outputs:
+      rids: ${{ steps.matrix.outputs.rids }}
+      packages: ${{ steps.matrix.outputs.packages }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: matrix
+        run: |
+          python3 -B tools/native/test_package.py
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          rows = json.loads(Path('tools/ci/rids.json').read_text())
+          platforms = ('Android', 'iOS', 'tvOS', 'Web')
+          print('rids=' + json.dumps({'include': [row for row in rows if row['platform'] in platforms]}))
+          print('packages=' + json.dumps({'include': [{'platform': name, 'runner': 'macos-26' if name in ('iOS', 'tvOS') else 'ubuntu-24.04'} for name in platforms]}))
+          PY
   native:
     strategy:
       fail-fast: false
@@ -249,3 +267,99 @@ jobs:
           path: bin/native-feed/
       - name: Verify public native consumers with native tools blocked
         run: python3 -B tools/native/test_consumer.py bin/native-feed
+  native_cross:
+    needs: cross_matrix
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.cross_matrix.outputs.rids) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - id: recipe
+        run: echo "hash=$(python -B tools/native/package.py fingerprint)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        id: native_cache
+        if: ${{ !inputs.rebuild }}
+        with:
+          path: bin/native-artifacts/
+          key: native-${{ matrix.rid }}-${{ runner.os }}-${{ runner.arch }}-${{ steps.recipe.outputs.hash }}
+      - uses: actions/setup-java@v5
+        if: matrix.platform == 'Android' && steps.native_cache.outputs.cache-hit != 'true'
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install pinned Android toolchain
+        if: matrix.platform == 'Android' && steps.native_cache.outputs.cache-hit != 'true'
+        run: |
+          sdkmanager 'ndk;28.2.13676358'
+          sudo apt-get update
+          sudo apt-get install -y patchelf
+      - name: Install SDK-matched WebAssembly toolchain
+        if: matrix.platform == 'Web' && steps.native_cache.outputs.cache-hit != 'true'
+        run: dotnet workload install wasm-tools
+      - name: Install WebAssembly archive audit tools
+        if: matrix.platform == 'Web'
+        run: |
+          if ! command -v llvm-readobj > /dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y llvm
+          fi
+      - name: Restore the pinned target SDL core
+        if: steps.native_cache.outputs.cache-hit != 'true'
+        run: dotnet restore tools/native/Native.csproj -p:NativePackagePlatform="${{ matrix.platform }}"
+      - name: Build actual target libraries and audit their native closure
+        if: steps.native_cache.outputs.cache-hit != 'true'
+        run: |
+          args=()
+          if [[ '${{ matrix.platform }}' == Android ]]; then args+=(--ndk "$ANDROID_HOME/ndk/28.2.13676358"); fi
+          python -B tools/native/build_cross.py '${{ matrix.rid }}' bin/native-artifacts "${args[@]}"
+      - name: Validate current source receipts and binary identities
+        run: python -B tools/native/package.py check bin/native-artifacts --rids '${{ matrix.rid }}' --platform '${{ matrix.platform }}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: private-native-Cross-${{ matrix.platform }}-${{ matrix.rid }}
+          path: bin/native-artifacts/
+          if-no-files-found: error
+  package_cross:
+    needs: [cross_matrix, native_cross]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.cross_matrix.outputs.packages) }}
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install WebAssembly archive audit tools
+        if: matrix.platform == 'Web'
+        run: |
+          if ! command -v llvm-readobj > /dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y llvm
+          fi
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: private-native-Cross-${{ matrix.platform }}-*
+          merge-multiple: true
+          path: bin/native-artifacts/
+      - name: Pack every architecture of the selected platform
+        run: dotnet pack tools/native/Native.csproj -c Release -p:NativePackagePlatform='${{ matrix.platform }}' -o bin/native-feed
+      - uses: actions/upload-artifact@v4
+        with:
+          name: private-native-package-${{ matrix.platform }}
+          path: bin/native-feed/*.nupkg
+          if-no-files-found: error

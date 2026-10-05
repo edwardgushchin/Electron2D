@@ -17,8 +17,8 @@ public enum StreamSocketStatus
 
 /// <summary>Owns a nonblocking native stream socket with explicit connection polling.</summary>
 /// <remarks>Partial operations do not wait. Full reads/writes can block until the peer supplies progress or closes.
-    /// Poll detects connection completion, nonzero socket errors and FIN after queued bytes drain.
-    /// Readiness without a socket error preserves queued data. Status queries are cached.
+/// Poll detects connection completion, nonzero socket errors and FIN after queued bytes drain.
+/// Readiness without a socket error preserves queued data. Status queries are cached.
 /// Calls and disposal require the constructing thread.</remarks>
 public abstract class StreamPeerSocket : StreamPeer
 {

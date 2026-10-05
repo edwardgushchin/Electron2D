@@ -2,16 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 project(Electron2DENet C)
 set(base "${CMAKE_CURRENT_SOURCE_DIR}/../../src/Vendor")
 set(ENET_ROOT "${base}/ENet")
-if(APPLE OR WIN32)
+if(APPLE OR WIN32 OR ANDROID OR EMSCRIPTEN)
   include(FetchContent)
-  if(WIN32)
+  if(NOT TARGET ZLIB::ZLIB AND (WIN32 OR ANDROID OR EMSCRIPTEN))
     FetchContent_Declare(Zlib
       GIT_REPOSITORY https://github.com/madler/zlib.git
       GIT_TAG 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf)
     set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(Zlib)
     add_library(ZLIB::ZLIB ALIAS zlibstatic)
-  else()
+  elseif(NOT TARGET ZLIB::ZLIB)
     find_package(ZLIB REQUIRED)
   endif()
   FetchContent_Declare(Zstd
@@ -29,19 +29,25 @@ else()
   find_package(ZLIB REQUIRED)
   find_library(ZSTD_LIBRARY NAMES zstd REQUIRED)
 endif()
-add_library(Electron2DENet SHARED bridge.c
+set(E2D_ENET_KIND SHARED)
+if(ELECTRON2D_STATIC_NATIVE)
+  set(E2D_ENET_KIND STATIC)
+endif()
+add_library(Electron2DENet ${E2D_ENET_KIND} bridge.c
   "${base}/ENet/callbacks.c" "${base}/ENet/compress.c" "${base}/ENet/host.c"
   "${base}/ENet/list.c" "${base}/ENet/packet.c" "${base}/ENet/peer.c" "${base}/ENet/protocol.c"
   "${base}/FastLZ/fastlz.c")
 target_include_directories(Electron2DENet PRIVATE "${base}/ENet/include" "${base}/FastLZ")
-if(APPLE OR WIN32)
+if(APPLE OR WIN32 OR ANDROID OR EMSCRIPTEN)
   target_include_directories(Electron2DENet PRIVATE "${zstd_SOURCE_DIR}/lib")
 endif()
 target_link_libraries(Electron2DENet PRIVATE ZLIB::ZLIB "${ZSTD_LIBRARY}")
 set_target_properties(Electron2DENet PROPERTIES C_VISIBILITY_PRESET hidden LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}" RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
-if(APPLE)
+if(ELECTRON2D_STATIC_NATIVE)
+  # The application linker resolves the platform-specific socket adapter.
+elseif(APPLE)
   set_target_properties(Electron2DENet PROPERTIES INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE SKIP_BUILD_RPATH TRUE)
   target_link_options(Electron2DENet PRIVATE "-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/exports-macos.txt")
 elseif(WIN32)

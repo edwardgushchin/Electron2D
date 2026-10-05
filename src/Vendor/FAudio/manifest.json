@@ -7,7 +7,8 @@
   "managedUpstreamSha256": "21638c943bf9fa8341ddf8f33761993da5129ebf75b303842988de66b8a5267f",
   "patches": [
     "Internal top-level binding; preserve nested upstream API inside private backend boundary.",
-    "Disable nullable and missing-XML diagnostics for the preserved upstream binding."
+    "Disable nullable and missing-XML diagnostics for the preserved upstream binding.",
+    "Apply the desktop deployment default only to Darwin; retain the selected iOS/tvOS target minimum."
   ],
   "nativeOptions": {
     "BUILD_SDL3": true,

@@ -2,6 +2,7 @@
 #include <enet/time.h>
 #include <fastlz.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <zlib.h>
@@ -11,8 +12,12 @@
 #include <bcrypt.h>
 #define API __declspec(dllexport)
 #define THREAD_LOCAL __declspec(thread)
-#elif defined(__linux__)
+#elif defined(__linux__) && !defined(__ANDROID__)
 #include <sys/random.h>
+#define API __attribute__((visibility("default")))
+#define THREAD_LOCAL _Thread_local
+#elif defined(__EMSCRIPTEN__)
+#include <unistd.h>
 #define API __attribute__((visibility("default")))
 #define THREAD_LOCAL _Thread_local
 #else
@@ -57,8 +62,11 @@ uint32_t enet_host_random_seed(void) {
   if (BCryptGenRandom(NULL, (PUCHAR)&seed, sizeof(seed),
                      BCRYPT_USE_SYSTEM_PREFERRED_RNG) == 0)
     return seed;
-#elif defined(__linux__)
+#elif defined(__linux__) && !defined(__ANDROID__)
   if (getrandom(&seed, sizeof(seed), 0) == sizeof(seed))
+    return seed;
+#elif defined(__EMSCRIPTEN__)
+  if (getentropy(&seed, sizeof(seed)) == 0)
     return seed;
 #else
   arc4random_buf(&seed, sizeof(seed));
