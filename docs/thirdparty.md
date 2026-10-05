@@ -1,6 +1,6 @@
 # Third-party software
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 This page lists Electron2D's direct third-party integrations and backends selected by accepted decisions. **Selected** does not mean **integrated**. The project files, vendor provenance records and shader toolchain lock are the sources for exact versions; native packages may have their own transitive dependencies.
 
@@ -17,6 +17,10 @@ This page lists Electron2D's direct third-party integrations and backends select
 | PCG32 algorithm | Adapted random number generator core; no separate package or binary. | [Random generation component](components/random-generation.md); [notice and license](../licence/PCG32-LICENSE.txt) |
 
 These are direct integrations. The three pinned native SDL packages are delivered separately from `Electron2D.dll`; the single-assembly rule applies to managed code, not native binaries. The generic desktop engine reference carries all three desktop package families so NuGet selects the native files for the application RID; Android, iOS and tvOS retain target-specific references, and Android TV uses Android packages. Only Linux x64 has a current self-contained artifact audit. Browser WASM selects no SDL package until its host is implemented. See [ADR 0012](decisions/product.md#adr-0012) and [ADR 0021](decisions/product.md#adr-0021).
+
+## Editor content
+
+The editor bundles IBM Plex Sans Regular 3.005 (weight 400) for its startup caption. The [font and its corresponding SIL OFL 1.1 license](components/editor-startup.md) are copied into the editor's `Assets/` directory during build/publish. They are editor content and are not included in `Electron2D.dll` or game runtime assets. The component records the pinned upstream revision and font SHA-256.
 
 ## Shader import and build tools
 
