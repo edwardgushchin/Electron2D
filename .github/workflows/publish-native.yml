@@ -1,0 +1,44 @@
+name: Publish private native package
+
+on:
+  workflow_dispatch:
+    inputs:
+      nuget_user:
+        description: NuGet profile name (not an email address)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-private-native-package
+  cancel-in-progress: false
+
+jobs:
+  native:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/native.yml
+  publish:
+    needs: native
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/download-artifact@v4
+        with:
+          name: private-native-package
+          path: bin/native-feed/
+      - name: Obtain a short-lived NuGet publishing key
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ inputs.nuget_user }}
+      - name: Publish the audited native package
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push bin/native-feed/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json
