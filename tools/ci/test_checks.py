@@ -127,12 +127,19 @@ class Checks(unittest.TestCase):
         profiles = {"runtimes": [{"name": "iOS 26", "version": "26.0", "identifier": "runtime", "isAvailable": True,
                                   "supportedDeviceTypes": [{"name": "iPhone 17", "identifier": "phone"}]}],
                     "devicetypes": [{"name": "iPhone 17", "identifier": "phone"}]}
-        for status in ("PASS", "FAIL fixture", "missing", "stale"):
-            with self.subTest(status=status), tempfile.TemporaryDirectory() as directory, redirect_stdout(StringIO()):
+        cases = [(status, False, False) for status in ("PASS", "FAIL fixture", "missing", "stale")]
+        cases += [("PASS", True, False), ("FAIL fixture", True, False), ("PASS", True, True)]
+        for status, shutdown_timeout, delete_failure in cases:
+            with self.subTest(status=status, shutdown_timeout=shutdown_timeout, delete_failure=delete_failure), \
+                    tempfile.TemporaryDirectory() as directory, redirect_stdout(StringIO()) as log:
                 container = Path(directory)
                 (container / "tmp").mkdir()
 
                 def command(args, **kwargs):
+                    if args[2] == "shutdown" and shutdown_timeout:
+                        raise subprocess.TimeoutExpired(args, kwargs["timeout"])
+                    if args[2] == "delete" and delete_failure:
+                        raise subprocess.CalledProcessError(1, args, "", "deletion fixture")
                     output = json.dumps(profiles) if args[2] == "list" else "fixture" if args[2] == "create" else directory if args[2] == "get_app_container" else ""
                     if args[2] == "launch" and status != "missing":
                         env = kwargs["env"]
@@ -145,15 +152,21 @@ class Checks(unittest.TestCase):
                     return subprocess.CompletedProcess(args, 0, output, "")
 
                 with patch.object(run_apple.subprocess, "run", side_effect=command) as process:
-                    if status == "PASS":
+                    if status == "PASS" and not delete_failure:
                         run_apple.run(Path("fixture.app"), "iOS")
                     else:
                         with self.assertRaises((RuntimeError, TimeoutError)) as error:
                             run_apple.run(Path("fixture.app"), "iOS", timeout=.01)
                         if status in ("missing", "stale"):
                             self.assertIn("native launch exception fixture", str(error.exception))
+                        elif delete_failure:
+                            self.assertIn("deletion fixture", str(error.exception))
+                        else:
+                            self.assertIn("FAIL fixture", str(error.exception))
                 self.assertEqual(process.call_args_list[-2].args[0], ["xcrun", "simctl", "shutdown", "fixture"])
                 self.assertEqual(process.call_args_list[-1].args[0], ["xcrun", "simctl", "delete", "fixture"])
+                if shutdown_timeout:
+                    self.assertIn("shutdown timed out; attempting deletion", log.getvalue())
 
     def test_matrix_rejects_missing_duplicate_and_wrong_platform(self):
         rows = rids.matrix()

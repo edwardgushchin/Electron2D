@@ -71,8 +71,12 @@ def run(app, platform, timeout=120):
                 output += "\nCrash: " + json.dumps({key: crash.get(key) for key in ("exception", "termination", "asi", "lastExceptionBacktrace")})[:6000]
         raise TimeoutError("Apple app did not report completion within the deadline:\n" + output[-8000:])
     finally:
-        subprocess.run(["xcrun", "simctl", "shutdown", udid], capture_output=True, timeout=60)
-        command("delete", udid)
+        try:
+            subprocess.run(["xcrun", "simctl", "shutdown", udid], capture_output=True, timeout=60)
+        except subprocess.TimeoutExpired:
+            print(f"Simulator {udid} shutdown timed out; attempting deletion.")
+        finally:
+            command("delete", udid)
 
 
 if __name__ == "__main__":
