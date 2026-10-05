@@ -7,6 +7,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Decision domain | Canonical document | ADRs |
 | --- | --- | --- |
 | Product architecture | [product.md](product.md) | 0001, 0002, 0004, 0012, 0017, 0021, 0027, 0030, 0045, 0051 |
+| Product versioning | [versioning.md](versioning.md) | 0096 |
 | Agent-native development | [agent-native.md](agent-native.md) | 0090 |
 | C# scripting | [scripting.md](scripting.md) | 0091 |
 | Core object and runtime | [core-object-runtime.md](core-object-runtime.md) | 0003, 0005, 0009, 0010, 0015, 0016, 0050 |

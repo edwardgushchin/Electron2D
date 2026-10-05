@@ -1,6 +1,6 @@
 # EngineVersionInfo
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Inherits:** —
 
@@ -18,13 +18,15 @@ Describes the version embedded in the Electron2D assembly.
 
 `EngineVersionInfo` is the immutable typed replacement for an untyped version dictionary. `Engine` creates one process-wide value from the loaded `Electron2D.dll` metadata and retains it for the process lifetime. Consumers neither own nor dispose it.
 
+[ADR 0096](../decisions/versioning.md#adr-0096) defines the product's semantic version policy and accepts `0.1.0-alpha.1` for current development. Build metadata has not yet adopted that version: ordinary SDK defaults still report `1.0.0` (`1.0.0.0` numerically), with source revision metadata when supplied by the build. This type reports those actual assembly values, not the milestone assigned by the decision.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
 EngineVersionInfo version = Engine.VersionInfo;
-Console.WriteLine(version.String);
+Console.WriteLine(version.InformationalVersion);
 ```
 
 ## Properties
