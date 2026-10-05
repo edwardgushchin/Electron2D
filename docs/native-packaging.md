@@ -1,6 +1,6 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 ## Installation model
 
@@ -19,7 +19,7 @@ Each platform package supplies audited engine-owned native assets and selects on
 
 **A game build or publish for a specific RID must receive only the native libraries needed by that OS and architecture. This applies to SDL3-CS, Electron2D's platform packages and every other native dependency, including font, audio, image and shader libraries. Foreign platform or architecture binaries must not be copied into the game output.**
 
-A platform package may contain all supported architectures of its OS, under the ordinary NuGet `runtimes/<RID>/native` layout. The requested game RID selects the files to deploy. A project may reference several platform packages for cross-platform development, but one build still deploys only its own RID. A desktop build without an explicit RID selects the SDK host's native assets, including those from transitive dependencies. Native runtime files preserve the selected RID directory; the .NET runtime and SDK application host retain their own normal layout. SDK static-link/native-app rules apply to Apple, Android and Web artifacts.
+A platform package may contain all supported architectures of its OS, under the ordinary NuGet `runtimes/<RID>/native` layout. The requested game RID selects the files to deploy. A project may reference several platform packages for cross-platform development, but one build still deploys only its own RID. A desktop build without an explicit RID selects the SDK host's native assets, including those from transitive dependencies. Universal macOS dependencies using the architecture-neutral `osx` RID are retained on macOS and deployed into the selected `osx-x64` or `osx-arm64` directory; they are excluded on other desktop hosts. Native runtime files preserve the selected RID directory; the .NET runtime and SDK application host retain their own normal layout. SDK static-link/native-app rules apply to Apple, Android and Web artifacts.
 
 ## Version and minimum engine
 

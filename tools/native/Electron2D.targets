@@ -26,7 +26,11 @@
   <Target Name="Electron2DNativeBuildLayout" AfterTargets="ResolvePackageAssets">
     <ItemGroup>
       <!-- A desktop run without an explicit RID deploys only the SDK host's native assets. -->
-      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0' and '%(RuntimeTargetsCopyLocalItems.AssetType)' == 'native' and '%(RuntimeTargetsCopyLocalItems.RuntimeIdentifier)' != '$(NETCoreSdkRuntimeIdentifier)'" />
+      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0' and '%(RuntimeTargetsCopyLocalItems.AssetType)' == 'native' and '%(RuntimeTargetsCopyLocalItems.RuntimeIdentifier)' != '$(NETCoreSdkRuntimeIdentifier)' and !('%(RuntimeTargetsCopyLocalItems.RuntimeIdentifier)' == 'osx' and $([System.String]::Copy('$(NETCoreSdkRuntimeIdentifier)').StartsWith('osx-')))" />
+      <!-- Universal macOS dependencies carry osx, not the host's architecture-qualified RID. -->
+      <RuntimeTargetsCopyLocalItems Update="@(RuntimeTargetsCopyLocalItems)" Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0' and '%(RuntimeTargetsCopyLocalItems.AssetType)' == 'native' and '%(RuntimeTargetsCopyLocalItems.RuntimeIdentifier)' == 'osx' and $([System.String]::Copy('$(NETCoreSdkRuntimeIdentifier)').StartsWith('osx-'))">
+        <DestinationSubDirectory>runtimes/$(NETCoreSdkRuntimeIdentifier)/native/</DestinationSubDirectory>
+      </RuntimeTargetsCopyLocalItems>
       <NativeCopyLocalItems Update="@(NativeCopyLocalItems)" Condition="('$(RuntimeIdentifier)' != '') and ($([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('Electron2D.')) or $([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('SDL3-CS.')) or $([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('HarfBuzzSharp.NativeAssets.')) or '%(NativeCopyLocalItems.NuGetPackageId)' == 'MonoGame.Library.FreeType')">
         <DestinationSubDirectory>runtimes/$(RuntimeIdentifier)/native/</DestinationSubDirectory>
       </NativeCopyLocalItems>
@@ -34,6 +38,9 @@
   </Target>
   <Target Name="Electron2DNativePublishLayout" AfterTargets="_ResolveCopyLocalAssetsForPublish;_ComputeResolvedCopyLocalPublishAssets">
     <ItemGroup>
+      <_ResolvedCopyLocalPublishAssets Update="@(_ResolvedCopyLocalPublishAssets)" Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0' and '%(_ResolvedCopyLocalPublishAssets.AssetType)' == 'native' and '%(_ResolvedCopyLocalPublishAssets.RuntimeIdentifier)' == 'osx' and $([System.String]::Copy('$(NETCoreSdkRuntimeIdentifier)').StartsWith('osx-'))">
+        <DestinationSubDirectory>runtimes/$(NETCoreSdkRuntimeIdentifier)/native/</DestinationSubDirectory>
+      </_ResolvedCopyLocalPublishAssets>
       <_ResolvedCopyLocalPublishAssets Update="@(_ResolvedCopyLocalPublishAssets)" Condition="('$(RuntimeIdentifier)' != '') and ($([System.String]::Copy('%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)').StartsWith('Electron2D.')) or $([System.String]::Copy('%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)').StartsWith('SDL3-CS.')) or $([System.String]::Copy('%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)').StartsWith('HarfBuzzSharp.NativeAssets.')) or '%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)' == 'MonoGame.Library.FreeType')">
         <DestinationSubDirectory>runtimes/$(RuntimeIdentifier)/native/</DestinationSubDirectory>
       </_ResolvedCopyLocalPublishAssets>

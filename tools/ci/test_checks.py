@@ -22,6 +22,37 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_default_desktop_layout_keeps_universal_macos_native_assets(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            project = ET.Element("Project")
+            properties = ET.SubElement(project, "PropertyGroup")
+            ET.SubElement(properties, "TargetFramework").text = "net10.0"
+            for kind in ("RuntimeTargetsCopyLocalItems", "_ResolvedCopyLocalPublishAssets"):
+                group = ET.SubElement(project, "ItemGroup")
+                for rid in ("osx", "osx-x64", "osx-arm64", "linux-x64", "win-x64"):
+                    item = ET.SubElement(group, kind, Include=f"runtimes/{rid}/native/{rid}.fixture")
+                    for name, value in (("RuntimeIdentifier", rid), ("AssetType", "native"),
+                                        ("DestinationSubDirectory", f"runtimes/{rid}/native/")):
+                        ET.SubElement(item, name).text = value
+            ET.SubElement(project, "Import", Project=str(rids.ROOT / "tools/native/Electron2D.targets"))
+            fixture = root / "fixture.proj"
+            ET.ElementTree(project).write(fixture, encoding="unicode")
+            for host in ("osx-x64", "osx-arm64", "linux-x64", "win-x64"):
+                with self.subTest(host=host):
+                    result = subprocess.run(["dotnet", "msbuild", str(fixture), "-nologo",
+                                             "-p:NETCoreSdkRuntimeIdentifier=" + host,
+                                             "-t:Electron2DNativeBuildLayout,Electron2DNativePublishLayout",
+                                             "-getItem:RuntimeTargetsCopyLocalItems,_ResolvedCopyLocalPublishAssets"],
+                                            check=True, capture_output=True, text=True)
+                    items = json.loads(result.stdout)["Items"]
+                    selected = items["RuntimeTargetsCopyLocalItems"]
+                    expected = {host, "osx"} if host.startswith("osx-") else {host}
+                    self.assertEqual({item["RuntimeIdentifier"] for item in selected}, expected)
+                    self.assertEqual({item["DestinationSubDirectory"] for item in selected}, {f"runtimes/{host}/native/"})
+                    universal = next(item for item in items["_ResolvedCopyLocalPublishAssets"] if item["RuntimeIdentifier"] == "osx")
+                    self.assertEqual(universal["DestinationSubDirectory"], f"runtimes/{host}/native/" if host.startswith("osx-") else "runtimes/osx/native/")
+
     def test_browser_static_references_do_not_leak_into_other_rids(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
