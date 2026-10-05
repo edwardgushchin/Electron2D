@@ -9,7 +9,8 @@ import subprocess
 import shutil
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
+from zipfile import ZipFile
 
 import check_rid
 import rids
@@ -19,6 +20,30 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_browser_cleanup_stops_only_its_process_group(self):
+        for timeout in (False, True):
+            process = Mock(pid=12345)
+            process.wait.side_effect = [subprocess.TimeoutExpired("fixture", 10), 0] if timeout else [0, 0]
+            with self.subTest(timeout=timeout), patch.object(run_browser.os, "killpg") as kill:
+                run_browser.stop(process)
+                self.assertEqual([call.args for call in kill.call_args_list],
+                                 [(12345, run_browser.signal.SIGTERM), (12345, run_browser.signal.SIGKILL)])
+                process.terminate.assert_not_called()
+
+    def test_android_apk_notice_paths(self):
+        notices = Path(__file__).resolve().parents[2] / "licence"
+        with tempfile.TemporaryDirectory() as directory, redirect_stdout(StringIO()):
+            apk = Path(directory) / "fixture.apk"
+            with ZipFile(apk, "w"):
+                pass
+            with self.assertRaises(RuntimeError):
+                run_android.check_apk(apk)
+            with ZipFile(apk, "w") as archive:
+                for source in notices.iterdir():
+                    if source.is_file() and source.name != "ReferenceData-LICENSE.txt":
+                        archive.write(source, "assets/licence/" + source.name)
+            run_android.check_apk(apk)
+
     def test_apple_bundle_requires_notices_and_excludes_source_data(self):
         notices = Path(__file__).resolve().parents[2] / "licence"
         with tempfile.TemporaryDirectory() as directory, redirect_stdout(StringIO()):
@@ -64,20 +89,29 @@ class Checks(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             run_apple.select(profiles, "iOS")
 
-    def test_apple_console_checks_both_streams_and_cleans_up(self):
+    def test_apple_report_checks_completion_and_cleans_up(self):
         profiles = {"runtimes": [{"name": "iOS 26", "version": "26.0", "identifier": "runtime", "isAvailable": True,
                                   "supportedDeviceTypes": [{"name": "iPhone 17", "identifier": "phone"}]}],
                     "devicetypes": [{"name": "iPhone 17", "identifier": "phone"}]}
-        for stdout, stderr, success in (("ELECTRON2D_RESULT PASS", "", True), ("app: 17", "ELECTRON2D_RESULT PASS", True),
-                                        ("app: 17", "ELECTRON2D_RESULT FAIL fixture", False), ("app: 17", "", False)):
-            outputs = [(json.dumps(profiles), ""), ("fixture", ""), ("", ""), ("", ""), ("", ""), (stdout, stderr), ("", ""), ("", "")]
-            results = [subprocess.CompletedProcess([], 0, out, err) for out, err in outputs]
-            with self.subTest(stdout=stdout, stderr=stderr), patch.object(run_apple.subprocess, "run", side_effect=results) as process, redirect_stdout(StringIO()):
-                if success:
-                    run_apple.run(Path("fixture.app"), "iOS")
-                else:
-                    with self.assertRaises(RuntimeError):
+        for status in ("PASS", "FAIL fixture", "missing", "stale"):
+            with self.subTest(status=status), tempfile.TemporaryDirectory() as directory, redirect_stdout(StringIO()):
+                container = Path(directory)
+                (container / "tmp").mkdir()
+
+                def command(args, **kwargs):
+                    output = json.dumps(profiles) if args[2] == "list" else "fixture" if args[2] == "create" else directory if args[2] == "get_app_container" else ""
+                    if args[2] == "launch" and status != "missing":
+                        env = kwargs["env"]
+                        token = "old" if status == "stale" else env["SIMCTL_CHILD_ELECTRON2D_RUN_TOKEN"]
+                        Path(env["SIMCTL_CHILD_ELECTRON2D_RESULT_PATH"]).write_text("RESULT " + token + " " + status + "\n")
+                    return subprocess.CompletedProcess(args, 0, output, "")
+
+                with patch.object(run_apple.subprocess, "run", side_effect=command) as process:
+                    if status == "PASS":
                         run_apple.run(Path("fixture.app"), "iOS")
+                    else:
+                        with self.assertRaises((RuntimeError, TimeoutError)):
+                            run_apple.run(Path("fixture.app"), "iOS", timeout=.01)
                 self.assertEqual(process.call_args_list[-2].args[0], ["xcrun", "simctl", "shutdown", "fixture"])
                 self.assertEqual(process.call_args_list[-1].args[0], ["xcrun", "simctl", "delete", "fixture"])
 

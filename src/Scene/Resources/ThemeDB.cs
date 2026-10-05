@@ -7,12 +7,16 @@ namespace Electron2D;
 /// The singleton and its built-in resources are borrowed. Project theme-file loading
 /// and skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
 /// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.
-/// Initial service construction decodes the built-in slider, button, text-field and scroll-hint icons through the SVG image codec at scale one.</remarks>
+/// Initial service construction decodes the built-in slider, button, text-field and scroll-hint icons through the SVG image codec at scale one.
+/// Native type-name queries use compiled names and inheritance chains without initializing the native theme service.</remarks>
 public sealed partial class ThemeDB : ElectronObject
 {
     private static readonly ConcurrentDictionary<Type, string[]> TypeChains = new();
     private static readonly ConcurrentDictionary<string, string[]> NameChains = new(StringComparer.Ordinal);
-    private static readonly Lazy<ThemeDB> Singleton = new(() => new ThemeDB());
+    private static class ServiceHolder
+    {
+        internal static readonly Lazy<ThemeDB> Singleton = new(() => new ThemeDB());
+    }
     private readonly object _gate = new();
     private readonly Theme _defaultTheme;
     private readonly List<Resource> _owned = [];
@@ -98,7 +102,7 @@ public sealed partial class ThemeDB : ElectronObject
         using var image = new Image(); image.LoadSVGFromBuffer(svg);
         var texture = ImageTexture.CreateFromImage(image); _owned.Add(texture); return texture;
     }
-    internal static ThemeDB Service => Singleton.Value;
+    internal static ThemeDB Service => ServiceHolder.Singleton.Value;
     internal Theme GetDefaultThemeCore() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
     internal event Action? FallbackChangedCore;
     internal event Action? ContextChanged;
@@ -156,7 +160,7 @@ public sealed partial class ThemeDB : ElectronObject
         for (var ancestor = current; ancestor is not null && typeof(ElectronObject).IsAssignableFrom(ancestor); ancestor = ancestor.BaseType) result.Add(ancestor.Name);
         return result.ToArray();
     });
-    internal static string[] NativeDependencies(string name) => NameChains.GetOrAdd(name, static key => NativeTypes.TryGetValue(key, out var type) ? NativeDependencies(type) : [key]);
+    internal static string[] NativeDependencies(string name) => NativeTypes.TryGetValue(name, out var chain) ? chain : NameChains.GetOrAdd(name, static key => [key]);
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {

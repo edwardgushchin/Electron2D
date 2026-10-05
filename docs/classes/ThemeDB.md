@@ -8,7 +8,7 @@ Last updated: 2026-10-05
 
 ## Description and example
 
-Native type ancestry and variation-name validation use [ThemeDB.Types.cs](../../src/Scene/Resources/ThemeDB.Types.cs), a compiled catalog generated from the exported type inventory. Coverage checks reject catalog drift. This retains native names after trimming without assembly-wide reflection; it does not load fonts or claim target text/rendering acceptance.
+Native type ancestry and variation-name validation use [ThemeDB.Types.cs](../../src/Scene/Resources/ThemeDB.Types.cs), compiled names and ancestry chains generated from the exported type inventory. Coverage checks reject catalog drift. The catalog does not retain runtime `Type` objects or the native theme factory; the service has a separate lazy holder. Native names remain available after trimming without loading fonts or claiming target text/rendering acceptance.
 
 The process-wide service for the current built-in theme and universal typed fallbacks. Consumers borrow the singleton and its built-in resources; they do not own their lifetime. It supplies real data for implemented controls while the complete GUI default catalog and project Theme-file loading remain separate dependencies.
 

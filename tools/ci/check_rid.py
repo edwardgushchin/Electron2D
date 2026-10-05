@@ -9,6 +9,34 @@ import xml.etree.ElementTree as ET
 from rids import matrix
 
 
+def check_result(log, token):
+    marker = "RESULT " + token + " "
+    for line in log.splitlines():
+        if marker in line:
+            status = line.split(marker, 1)[1]
+            if status == "PASS":
+                return True
+            raise RuntimeError("Contract checks failed: " + status)
+    return False
+
+
+def check_notices(read):
+    notices = Path(__file__).resolve().parents[2] / "licence"
+    for source in notices.iterdir():
+        if source.is_file() and source.name != "ReferenceData-LICENSE.txt":
+            try:
+                data = read(source.name)
+            except (KeyError, FileNotFoundError) as error:
+                raise RuntimeError(f"Missing bundle notice: {source.name}") from error
+            if data != source.read_bytes():
+                raise RuntimeError(f"Changed bundle notice: {source.name}")
+    try:
+        read("ReferenceData-LICENSE.txt")
+    except (KeyError, FileNotFoundError):
+        return
+    raise RuntimeError("Source-only reference-data notice must not be in an application bundle.")
+
+
 def check(rid, output):
     row = next(item for item in matrix() if item["rid"] == rid)
     profile = json.loads((output / "profile.json").read_text())

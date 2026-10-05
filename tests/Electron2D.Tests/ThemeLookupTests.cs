@@ -4,6 +4,8 @@ internal static class ThemeLookupTests
 {
     internal static void Run()
     {
+        foreach (var type in typeof(ThemeDB).Assembly.GetExportedTypes().Where(type => !type.IsGenericType && typeof(ElectronObject).IsAssignableFrom(type)))
+            Check(ThemeDB.NativeDependencies(type.Name).SequenceEqual(ThemeDB.NativeDependencies(type)), "Compiled ancestry matches " + type.Name);
         VerifyPriorityAndVariations();
         VerifyBoundariesAndWindow();
         VerifyNotificationsAndOverrides();

@@ -1,11 +1,14 @@
 """Run the published browser test app in Chromium and require its PASS result."""
 
 import argparse
+from contextlib import suppress
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 from pathlib import Path
 import shutil
+import signal
 import subprocess
 import tempfile
 from threading import Event, Thread
@@ -19,6 +22,20 @@ def validate_result(value, token):
     if not isinstance(value.get("error", ""), str):
         raise ValueError("Invalid browser error detail.")
     return value
+
+
+def stop(process):
+    # Chromium children can outlive the launcher and keep writing its temporary profile.
+    try:
+        with suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGTERM)
+        process.wait(timeout=10)
+    except subprocess.TimeoutExpired:
+        pass
+    finally:
+        with suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGKILL)
+        process.wait(timeout=10)
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -58,7 +75,7 @@ def run(directory, browser):
                     browser, "--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage",
                     "--no-first-run", "--user-data-dir=" + profile, "--remote-debugging-port=0", "--enable-logging=stderr",
                     f"http://127.0.0.1:{server.server_port}/index.html?run={server.token}",
-                ], stdout=log, stderr=log, text=True)
+                ], stdout=log, stderr=log, text=True, start_new_session=True)
                 try:
                     deadline = time.monotonic() + 120
                     while not server.completed.wait(1):
@@ -69,12 +86,7 @@ def run(directory, browser):
                         raise RuntimeError("Browser contract checks failed: " + server.result.get("error", ""))
                     print("Browser WebAssembly contract checks passed in Chromium.")
                 finally:
-                    process.terminate()
-                    try:
-                        process.wait(timeout=10)
-                    except subprocess.TimeoutExpired:
-                        process.kill()
-                        process.wait(timeout=10)
+                    stop(process)
         finally:
             server.shutdown()
             thread.join()

@@ -2,8 +2,13 @@
 
 import argparse
 import json
+import os
 from pathlib import Path
 import subprocess
+import time
+import uuid
+
+from check_rid import check_notices, check_result as result
 
 
 def select(profiles, platform):
@@ -19,24 +24,17 @@ def select(profiles, platform):
 
 
 def check_bundle(app):
-    notices = Path(__file__).resolve().parents[2] / "licence"
-    for source in notices.iterdir():
-        target = app / "licence" / source.name
-        if source.is_file() and source.name != "ReferenceData-LICENSE.txt":
-            if not target.is_file() or target.read_bytes() != source.read_bytes():
-                raise RuntimeError(f"Missing or changed Apple bundle notice: {source.name}")
-    if (app / "licence/ReferenceData-LICENSE.txt").exists():
-        raise RuntimeError("Source-only reference-data notice must not be in an Apple bundle.")
+    check_notices(lambda name: (app / "licence" / name).read_bytes())
     print("Apple bundle notices passed.")
 
 
-def run(app, platform):
-    def command(*args, timeout=180, console=False):
+def run(app, platform, timeout=120):
+    def command(*args, timeout=180, env=None):
         try:
-            process = subprocess.run(["xcrun", "simctl", *args], check=True, capture_output=True, text=True, timeout=timeout)
+            process = subprocess.run(["xcrun", "simctl", *args], check=True, capture_output=True, text=True, timeout=timeout, env=env)
         except subprocess.CalledProcessError as error:
             raise RuntimeError(f"simctl {' '.join(args)} failed: {error.stdout}{error.stderr}") from error
-        return process.stdout + process.stderr if console else process.stdout
+        return process.stdout
 
     runtime, device = select(json.loads(command("list", "--json")), platform)
     udid = command("create", "Electron2D contract tests", device, runtime).strip()
@@ -44,10 +42,22 @@ def run(app, platform):
         command("boot", udid)
         command("bootstatus", udid, "-b", timeout=300)
         command("install", udid, str(app.resolve()))
-        output = command("launch", "--console", "--terminate-running-process", udid, "org.electron2d.tests", console=True)
-        if "ELECTRON2D_RESULT PASS" not in output or "ELECTRON2D_RESULT FAIL" in output:
-            raise RuntimeError("Apple app did not report success: " + output)
-        print(f"{platform}: simulator contract checks passed.")
+        container = Path(command("get_app_container", udid, "org.electron2d.tests", "data").strip())
+        token = uuid.uuid4().hex
+        report = container / "tmp" / ("e2d-result-" + token + ".txt")
+        env = dict(os.environ, SIMCTL_CHILD_ELECTRON2D_RESULT_PATH=str(report), SIMCTL_CHILD_ELECTRON2D_RUN_TOKEN=token)
+        command("launch", "--terminate-running-process", udid, "org.electron2d.tests", env=env)
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            if report.is_file():
+                text = report.read_text()
+                if text.endswith("\n") and result(text, token):
+                    print(f"{platform}: simulator contract checks passed.")
+                    return
+            time.sleep(.2)
+        output = command("spawn", udid, "log", "show", "--last", "2m", "--style", "compact",
+                         "--predicate", 'process == "Electron2D.AppleTests"')
+        raise TimeoutError("Apple app did not report completion within the deadline:\n" + output[-4000:])
     finally:
         subprocess.run(["xcrun", "simctl", "shutdown", udid], capture_output=True, timeout=60)
         command("delete", udid)

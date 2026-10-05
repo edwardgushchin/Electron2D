@@ -5,24 +5,23 @@ from pathlib import Path
 import subprocess
 import time
 import uuid
+from zipfile import ZipFile
+
+from check_rid import check_notices, check_result as result
 
 
 ABIS = {"android-x64": "x86_64", "android-x86": "x86", "android-arm64": "arm64-v8a", "android-arm": "armeabi-v7a"}
 PACKAGE = "org.electron2d.tests"
 
 
-def result(log, token):
-    marker = "RESULT " + token + " "
-    for line in log.splitlines():
-        if marker in line:
-            status = line.split(marker, 1)[1]
-            if status == "PASS":
-                return True
-            raise RuntimeError("Android contract checks failed: " + status)
-    return False
+def check_apk(apk):
+    with ZipFile(apk) as archive:
+        check_notices(lambda name: archive.read("assets/licence/" + name))
+    print("Android APK notices passed.")
 
 
 def run(apk, rid, serial, timeout=120):
+    check_apk(apk)
     adb = ["adb", "-s", serial]
 
     def command(*args):
