@@ -15,6 +15,13 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    def test_default_elf_symbol_versions_resolve_but_nondefault_versions_do_not(self):
+        symbols = "0001 T BIO_s_dgram_pair@@OPENSSL_3.2.0\n0002 T ERR_get_error@@OPENSSL_3.0.0\n0003 T TLS_method@LEGACY\n0004 T e2d_audio_select_output\n"
+        with patch.object(package.subprocess, "check_output", return_value=symbols):
+            exports = package.elf_exports(Path("fixture.so"))
+            self.assertEqual(exports, {"BIO_s_dgram_pair", "ERR_get_error", "TLS_method@LEGACY", "e2d_audio_select_output"})
+            self.assertNotIn("TLS_method", exports)
+
     def test_every_declared_rid_has_a_native_payload_and_package(self):
         matrix = json.loads((package.ROOT / "tools/ci/rids.json").read_text())
         self.assertEqual({row["rid"] for row in matrix}, set(package.RIDS))

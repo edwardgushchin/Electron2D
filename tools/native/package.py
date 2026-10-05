@@ -147,6 +147,11 @@ def source_hash():
     return digest.hexdigest()
 
 
+def elf_exports(path):
+    symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(path)], text=True)
+    return {line.split()[-1].split("@@", 1)[0] for line in symbols.splitlines() if line.strip()}
+
+
 def inspect(rid, directory):
     if rid not in RIDS:
         raise ValueError(f"Unsupported native RID: {rid}")
@@ -182,11 +187,10 @@ def inspect(rid, directory):
             raise ValueError(f"Native package must not retain a build-machine search path: {path}")
         if name == "libFAudio.so.0" and "[libSDL3.so.0]" not in dynamic:
             raise ValueError("FAudio must share the packaged SDL3 core")
-        symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(path)], text=True)
-        exports = {line.split()[-1] for line in symbols.splitlines()}
+        exports = elf_exports(path)
         required = required_exports(name)
         if name != "libElectron2DTextBreak.so" and not required <= exports:
-            raise ValueError(f"Missing engine bridge exports: {path}")
+            raise ValueError(f"Missing engine bridge exports: {path}: {required - exports}")
         if rid.startswith("android-"):
             segments = subprocess.check_output(["readelf", "--wide", "--program-headers", str(path)], text=True)
             alignments = [int(line.split()[-1], 16) for line in segments.splitlines() if line.strip().startswith("LOAD ")]
