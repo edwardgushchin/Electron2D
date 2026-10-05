@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="licence/*" CopyToPublishDirectory="Always" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' or '$(Electron2DNativePlatform)' == 'Web' or '$(TargetFramework)' != 'net10.0'" />
+    <None Update="licence/*" PublishFolderType="Resource" Condition="'$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'" />
     <None Update="licence/ReferenceData-LICENSE.txt" CopyToPublishDirectory="Never" />
   </ItemGroup>
   <Target Name="ValidateElectron2DNativeRID" BeforeTargets="Restore;Build;Publish" Condition="'$(Electron2DNativePlatform)' == ''">

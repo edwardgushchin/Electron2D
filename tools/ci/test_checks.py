@@ -5,6 +5,8 @@ from io import StringIO
 import json
 from pathlib import Path
 import struct
+import subprocess
+import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -17,6 +19,25 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_apple_bundle_requires_notices_and_excludes_source_data(self):
+        notices = Path(__file__).resolve().parents[2] / "licence"
+        with tempfile.TemporaryDirectory() as directory, redirect_stdout(StringIO()):
+            app = Path(directory)
+            (app / "licence").mkdir()
+            with self.assertRaises(RuntimeError):
+                run_apple.check_bundle(app)
+            for source in notices.iterdir():
+                if source.is_file() and source.name != "ReferenceData-LICENSE.txt":
+                    shutil.copyfile(source, app / "licence" / source.name)
+            run_apple.check_bundle(app)
+            (app / "licence/Electron2D-LICENSE.txt").write_text("changed")
+            with self.assertRaises(RuntimeError):
+                run_apple.check_bundle(app)
+            shutil.copyfile(notices / "Electron2D-LICENSE.txt", app / "licence/Electron2D-LICENSE.txt")
+            shutil.copyfile(notices / "ReferenceData-LICENSE.txt", app / "licence/ReferenceData-LICENSE.txt")
+            with self.assertRaises(RuntimeError):
+                run_apple.check_bundle(app)
+
     def test_browser_completion_rejects_stale_or_invalid_reports(self):
         for value in (None, {"run": "old", "status": "passed"}, {"run": "current", "status": "unknown"}, {"run": "current", "status": []},
                       {"run": "current", "status": "failed", "error": 7}):
@@ -34,10 +55,31 @@ class Checks(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             run_apple.select({"runtimes": [], "devicetypes": []}, "iOS")
         profiles = {"runtimes": [{"name": "iOS 26", "version": "26.0", "identifier": "older", "isAvailable": True},
-                                  {"name": "iOS 26.1", "version": "26.1", "identifier": "newer", "isAvailable": True},
+                                  {"name": "iOS 26.1", "version": "26.1", "identifier": "newer", "isAvailable": True,
+                                   "supportedDeviceTypes": [{"name": "iPhone 17", "identifier": "phone"}]},
                                   {"name": "iOS 27", "version": "27.0", "identifier": "missing", "isAvailable": False}],
-                    "devicetypes": [{"name": "iPhone 17", "identifier": "phone"}]}
+                    "devicetypes": [{"name": "iPhone 17", "identifier": "phone"}, {"name": "iPhone 6s Plus", "identifier": "unsupported"}]}
         self.assertEqual(run_apple.select(profiles, "iOS"), ("newer", "phone"))
+        profiles["runtimes"][1]["supportedDeviceTypes"] = []
+        with self.assertRaises(RuntimeError):
+            run_apple.select(profiles, "iOS")
+
+    def test_apple_console_checks_both_streams_and_cleans_up(self):
+        profiles = {"runtimes": [{"name": "iOS 26", "version": "26.0", "identifier": "runtime", "isAvailable": True,
+                                  "supportedDeviceTypes": [{"name": "iPhone 17", "identifier": "phone"}]}],
+                    "devicetypes": [{"name": "iPhone 17", "identifier": "phone"}]}
+        for stdout, stderr, success in (("ELECTRON2D_RESULT PASS", "", True), ("app: 17", "ELECTRON2D_RESULT PASS", True),
+                                        ("app: 17", "ELECTRON2D_RESULT FAIL fixture", False), ("app: 17", "", False)):
+            outputs = [(json.dumps(profiles), ""), ("fixture", ""), ("", ""), ("", ""), ("", ""), (stdout, stderr), ("", ""), ("", "")]
+            results = [subprocess.CompletedProcess([], 0, out, err) for out, err in outputs]
+            with self.subTest(stdout=stdout, stderr=stderr), patch.object(run_apple.subprocess, "run", side_effect=results) as process, redirect_stdout(StringIO()):
+                if success:
+                    run_apple.run(Path("fixture.app"), "iOS")
+                else:
+                    with self.assertRaises(RuntimeError):
+                        run_apple.run(Path("fixture.app"), "iOS")
+                self.assertEqual(process.call_args_list[-2].args[0], ["xcrun", "simctl", "shutdown", "fixture"])
+                self.assertEqual(process.call_args_list[-1].args[0], ["xcrun", "simctl", "delete", "fixture"])
 
     def test_matrix_rejects_missing_duplicate_and_wrong_platform(self):
         rows = rids.matrix()

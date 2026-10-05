@@ -128,6 +128,13 @@ jobs:
       - name: Build Apple contract app
         if: inputs.tests && (inputs.suite == 'apple-simulator' || inputs.suite == 'apple-device')
         run: dotnet build tests/Electron2D.AppleTests/Electron2D.AppleTests.csproj -c Release -r "$CI_RID" -p:EnableCodeSigning=false --nologo
+      - name: Check Apple bundle notices
+        if: inputs.tests && (inputs.suite == 'apple-simulator' || inputs.suite == 'apple-device')
+        run: |
+          platform=iOS
+          framework=net10.0-ios
+          if [[ "$CI_RID" == tvos* ]]; then platform=tvOS; framework=net10.0-tvos; fi
+          python -B tools/ci/run_apple.py "tests/Electron2D.AppleTests/bin/Release/$framework/$CI_RID/Electron2D.AppleTests.app" "$platform" --bundle-only
       - name: Execute Apple simulator contract app
         if: inputs.tests && inputs.suite == 'apple-simulator'
         run: |

@@ -9,9 +9,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
   <ItemGroup>
+    <LinkerArgument Include="-framework" />
+    <LinkerArgument Include="CoreBluetooth" />
     <ProjectReference Include="../../Electron2D.csproj" SetRuntimeIdentifier="RuntimeIdentifier=$(RuntimeIdentifier)" AdditionalProperties="RuntimeIdentifier=$(RuntimeIdentifier)" />
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
   </ItemGroup>
