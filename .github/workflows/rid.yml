@@ -56,10 +56,8 @@ jobs:
         run: |
           if [[ "$CI_WORKLOAD" == ios || "$CI_WORKLOAD" == tvos ]]; then
             python -c 'import json; from pathlib import Path; Path("global.json").write_text(json.dumps({"sdk": {"version": "10.0.302", "rollForward": "disable", "workloadVersion": "10.0.302.0"}}))'
-            dotnet workload install "$CI_WORKLOAD" --version 10.0.302.0
-          else
-            dotnet workload install "$CI_WORKLOAD"
           fi
+          dotnet workload install "$CI_WORKLOAD"
       - name: Check Apple toolchain
         if: inputs.workload == 'ios' || inputs.workload == 'tvos'
         run: xcodebuild -version
@@ -83,6 +81,8 @@ jobs:
         run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r "$CI_RID" --self-contained true -o "bin/ci-tests/$CI_RID" --nologo
       - name: Run full headless runtime suite
         if: inputs.tests && inputs.suite == 'full'
+        env:
+          DOTNET_TieredCompilation: '0'
         run: '"$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"'
       - name: Run portable runtime suite
         if: inputs.tests && inputs.suite == 'portable'

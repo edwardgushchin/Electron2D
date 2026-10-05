@@ -16,6 +16,7 @@ internal static class ContractChecks
         Check(EngineJSON.ToNative<int>(EngineJSON.FromNative(7)) == 7, "Built-in scalar metadata.");
         Check(EngineJSON.ToNative<Vector2>(EngineJSON.FromNative(new Vector2(2, 4))) == new Vector2(2, 4), "Built-in numeric converters.");
         Reject<NotSupportedException>(() => EngineJSON.FromNative(new UnsafeModel(), TestJSONContext.Default.UnsafeModel));
+        Reject<NotSupportedException>(() => EngineJSON.FromNative<IModel>(new UnsafeModel(), TestJSONContext.Default.IModel));
         Reject<ArgumentNullException>(() => EngineJSON.FromNative(model, null!));
         Reject<JsonException>(() => EngineJSON.ToNative(System.Text.Json.Nodes.JsonNode.Parse("\"wrong\""), metadata));
         Reject<NotSupportedException>(() => EngineJSON.ToNative(null, TestJSONContext.Default.UnsafeModel));
@@ -88,7 +89,11 @@ internal sealed class Model
     public int[] Values = [];
 }
 
-internal sealed class UnsafeModel
+[JsonPolymorphic]
+[JsonDerivedType(typeof(UnsafeModel), "unsafe")]
+internal interface IModel;
+
+internal sealed class UnsafeModel : IModel
 {
     public object Value { get; set; } = new();
 }
@@ -96,4 +101,5 @@ internal sealed class UnsafeModel
 [JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Metadata, IncludeFields = true)]
 [JsonSerializable(typeof(Model))]
 [JsonSerializable(typeof(UnsafeModel))]
+[JsonSerializable(typeof(IModel))]
 internal sealed partial class TestJSONContext : JsonSerializerContext;

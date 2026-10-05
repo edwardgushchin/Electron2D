@@ -126,6 +126,7 @@ public sealed class JSON : Resource
     /// <param name="value">The value to snapshot.</param>
     /// <param name="typeInfo">The complete source-generated or explicitly configured serialization schema.</param>
     /// <returns>An independent mutable JSON tree, or null.</returns>
+    /// <remarks>Property, collection and registered polymorphic derived-type schemas are validated and frozen before conversion.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="typeInfo"/> is null.</exception>
     /// <exception cref="NotSupportedException">The schema contains an untyped or engine-object value.</exception>
     /// <exception cref="JsonException">The value cannot be serialized.</exception>
@@ -154,6 +155,7 @@ public sealed class JSON : Resource
     /// <param name="json">The JSON tree, or null.</param>
     /// <param name="typeInfo">The complete source-generated or explicitly configured deserialization schema.</param>
     /// <returns>The decoded value, or the destination default for JSON null.</returns>
+    /// <remarks>Registered polymorphic derived types must satisfy the same concrete non-engine schema boundary.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="typeInfo"/> is null.</exception>
     /// <exception cref="NotSupportedException">The schema contains an untyped or engine-object value.</exception>
     /// <exception cref="JsonException">The document does not match the schema.</exception>

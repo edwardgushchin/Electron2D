@@ -14,6 +14,8 @@ This Core component owns [`JSON`](../classes/JSON.md), a mutable document resour
 
 Built-in scalar/numeric conversion uses compiled metadata. Both generic conversion methods accept complete `JsonTypeInfo<T>` for custom models in trimmed/AOT applications; reflection-enabled hosts retain custom-model discovery. The shared [contract checks](../../tests/Portability/ContractChecks.cs) verify compiled models, rejected untyped schemas and snapshot isolation with JSON reflection disabled.
 
+Schema validation traverses property, collection and explicitly registered polymorphic derived-type metadata. A base/interface schema cannot hide an untyped or engine-object member in a derived contract; validation rejects it before conversion and does not discover types through assembly reflection.
+
 The JSON tree exists only at the document API boundary. It cannot be used as a universal engine value or stored in configuration and project settings. Setting `Data` and duplicating the resource copy their trees, but getter-returned nodes are live and caller-synchronized. Parser and formatter work is allocating and not frame-safe. A valid JSON null shares the `ParseString` null result with malformed text; use `Parse` for diagnostics. Formatting past 1024 levels emits `...` and a managed trace diagnostic; the truncated text is not valid JSON. The document escape set includes `\v`, which strict JSON parsers may reject. All applicable own rows are [Implemented](../coverage/classes/JSON.md) under ADR 0048.
 
 ## Verification and decision

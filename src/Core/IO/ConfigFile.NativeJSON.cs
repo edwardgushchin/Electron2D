@@ -29,6 +29,8 @@ public sealed partial class ConfigFile
                 CheckNativeJSONType(property.PropertyType);
                 Check(info.Options.GetTypeInfo(property.PropertyType));
             }
+            if (info.PolymorphismOptions is { } polymorphism)
+                foreach (var derived in polymorphism.DerivedTypes) Check(info.Options.GetTypeInfo(derived.DerivedType));
             if (info.Kind is JsonTypeInfoKind.Enumerable or JsonTypeInfoKind.Dictionary)
             {
                 if (info.Type.GetElementType() is { } element) Check(info.Options.GetTypeInfo(element));
