@@ -655,7 +655,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [BuiltInShaders](classes/BuiltInShaders.md) | [BuiltInShaders.cs](../src/Servers/Rendering/BuiltInShaders.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [ShaderCompiler](classes/ShaderCompiler.md) | [ShaderCompiler.cs](../src/Servers/Rendering/ShaderCompiler.cs) | [shader-materials](components/shader-materials.md) |
 | [SpirvReflection](classes/SpirvReflection.md) | [SpirvReflection.cs](../src/Servers/Rendering/SpirvReflection.cs), [boolean metadata](../src/Servers/Rendering/SpirvReflection.Booleans.cs) | [shader-materials](components/shader-materials.md) |
-| [NativeLibraries](classes/NativeLibraries.md) | [NativeLibraries.cs](../src/Properties/NativeLibraries.cs) | [Shader materials](components/shader-materials.md), [Text](components/text.md), [Audio playback](components/audio-playback.md); private native runtime-directory resolution |
+| [NativeLibraries](classes/NativeLibraries.md) | [NativeLibraries.cs](../src/Properties/NativeLibraries.cs) | [Shader materials](components/shader-materials.md), [Text](components/text.md), [Audio playback](components/audio-playback.md); private runtime-directory resolution including macOS WOFF2-capable FreeType |
 
 ## Explicitly absent
 

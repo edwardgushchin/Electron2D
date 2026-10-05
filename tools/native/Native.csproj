@@ -26,6 +26,6 @@
     <None Include="Electron2D.Native.targets" Pack="true" PackagePath="buildTransitive/$(PackageId).targets" />
   </ItemGroup>
   <Target Name="CheckNativePackageInputs" BeforeTargets="GenerateNuspec">
-    <Exec Command="python3 -B &quot;$(MSBuildThisFileDirectory)package.py&quot; check &quot;$(NativeArtifacts)&quot; --rids $(NativePackageRIDs) --platform $(NativePackagePlatform)" />
+    <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)package.py&quot; check &quot;$(NativeArtifacts)&quot; --rids $(NativePackageRIDs) --platform $(NativePackagePlatform)" />
   </Target>
 </Project>

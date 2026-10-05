@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
@@ -29,7 +30,7 @@ internal static unsafe partial class TLSNative
         var context = new TLSHandle(pointer, SSL_CTX_free);
         try
         {
-            Require(SSL_CTX_ctrl(pointer, 123, datagram ? 0xfefd : 0x303, 0), datagram ? "DTLS 1.2 minimum configuration failed." : "TLS 1.2 minimum configuration failed.");
+            Require(SSLContextControl(pointer, 123, datagram ? 0xfefd : 0x303, 0), datagram ? "DTLS 1.2 minimum configuration failed." : "TLS 1.2 minimum configuration failed.");
             SSL_CTX_set_verify(pointer, options.IsServer() || options.IsUnsafeClient() && options.GetTrustedCAChain() is null ? 0 : 1, 0);
             if (!options.IsServer() && options.GetTrustedCAChain() is null && !options.IsUnsafeClient())
             {
@@ -51,15 +52,15 @@ internal static unsafe partial class TLSNative
         foreach (var bytes in certificates.Skip(1))
         {
             var certificate = DecodeCertificate(bytes);
-            try { Require(SSL_CTX_ctrl(context, 14, 0, certificate.Pointer), "TLS intermediate certificate import failed."); certificate.SetHandleAsInvalid(); }
+            try { Require(SSLContextControl(context, 14, 0, certificate.Pointer), "TLS intermediate certificate import failed."); certificate.SetHandleAsInvalid(); }
             finally { certificate.Dispose(); }
         }
-        fixed (byte* p = key) { var cursor = p; var pointer = d2i_AutoPrivateKey(0, ref cursor, key.Length); if (pointer == 0) throw Failure("TLS private key import failed."); using var nativeKey = new TLSHandle(pointer, EVP_PKEY_free); Require(SSL_CTX_use_PrivateKey(context, pointer), "TLS private key configuration failed."); }
+        fixed (byte* p = key) { var cursor = p; var pointer = d2i_AutoPrivateKey(0, ref cursor, new CLong(key.Length)); if (pointer == 0) throw Failure("TLS private key import failed."); using var nativeKey = new TLSHandle(pointer, EVP_PKEY_free); Require(SSL_CTX_use_PrivateKey(context, pointer), "TLS private key configuration failed."); }
         Require(SSL_CTX_check_private_key(context), "TLS key does not match the certificate.");
     }
     private static TLSHandle DecodeCertificate(byte[] data)
     {
-        fixed (byte* p = data) { var cursor = p; var pointer = d2i_X509(0, ref cursor, data.Length); if (pointer == 0) throw Failure("TLS certificate import failed."); return new(pointer, X509_free); }
+        fixed (byte* p = data) { var cursor = p; var pointer = d2i_X509(0, ref cursor, new CLong(data.Length)); if (pointer == 0) throw Failure("TLS certificate import failed."); return new(pointer, X509_free); }
     }
     internal static TLSHandle CreateSession(nint context, bool server, string name, bool validateName, out TLSHandle network, bool datagram = false)
     {
@@ -110,52 +111,56 @@ internal static unsafe partial class TLSNative
         var cookie = SSL_get_ex_data(ssl, 0); return cookie != 0 && size == 32 && CryptographicOperations.FixedTimeEquals(new ReadOnlySpan<byte>((void*)cookie, 32), new ReadOnlySpan<byte>(input, 32)) ? 1 : 0;
     }
     internal static int Peek(nint ssl) { byte value; return SSL_peek(ssl, &value, 1); }
-    [LibraryImport(SSL)] internal static partial nint TLS_method();
-    [LibraryImport(SSL)] private static partial nint DTLS_method();
-    [LibraryImport(SSL)] internal static partial ulong SSL_set_options(nint ssl, ulong options);
-    [LibraryImport(SSL)] internal static partial long SSL_ctrl(nint ssl, int command, long value, nint pointer);
-    [LibraryImport(SSL)] internal static partial int SSL_set_ex_data(nint ssl, int index, nint data);
-    [LibraryImport(SSL)] private static partial nint SSL_get_ex_data(nint ssl, int index);
-    [LibraryImport(SSL)] private static partial void SSL_CTX_set_cookie_generate_cb(nint context, delegate* unmanaged[Cdecl]<nint, byte*, uint*, int> callback);
-    [LibraryImport(SSL)] private static partial void SSL_CTX_set_cookie_verify_cb(nint context, delegate* unmanaged[Cdecl]<nint, byte*, uint, int> callback);
-    [LibraryImport(Crypto)] private static partial nint BIO_s_dgram_pair();
-    [LibraryImport(Crypto)] private static partial int BIO_new_bio_dgram_pair(out nint first, nuint firstSize, out nint second, nuint secondSize);
-    [LibraryImport(SSL)] private static partial nint SSL_CTX_new(nint method);
-    [LibraryImport(SSL)] private static partial void SSL_CTX_free(nint context);
-    [LibraryImport(SSL)] private static partial long SSL_CTX_ctrl(nint context, int command, long value, nint pointer);
-    [LibraryImport(SSL)] private static partial void SSL_CTX_set_verify(nint context, int mode, nint callback);
-    [LibraryImport(SSL)] private static partial int SSL_CTX_set_default_verify_paths(nint context);
-    [LibraryImport(SSL)] private static partial nint SSL_CTX_get_cert_store(nint context);
-    [LibraryImport(SSL)] private static partial int SSL_CTX_use_certificate(nint context, nint certificate);
-    [LibraryImport(SSL)] private static partial int SSL_CTX_use_PrivateKey(nint context, nint key);
-    [LibraryImport(SSL)] private static partial int SSL_CTX_check_private_key(nint context);
-    [LibraryImport(SSL)] private static partial nint SSL_new(nint context);
-    [LibraryImport(SSL)] private static partial void SSL_free(nint ssl);
-    [LibraryImport(SSL)] private static partial void SSL_set_bio(nint ssl, nint read, nint write);
-    [LibraryImport(SSL)] private static partial void SSL_set_connect_state(nint ssl);
-    [LibraryImport(SSL)] private static partial void SSL_set_accept_state(nint ssl);
-    [LibraryImport(SSL)] private static partial int SSL_set1_host(nint ssl, byte* name);
-    [LibraryImport(SSL)] private static partial nint SSL_get0_param(nint ssl);
-    [LibraryImport(SSL)] internal static partial int SSL_do_handshake(nint ssl);
-    [LibraryImport(SSL)] internal static partial int SSL_get_error(nint ssl, int result);
-    [LibraryImport(SSL)] internal static partial long SSL_get_verify_result(nint ssl);
-    [LibraryImport(SSL)] internal static partial int SSL_pending(nint ssl);
-    [LibraryImport(SSL)] internal static partial int SSL_shutdown(nint ssl);
-    [LibraryImport(SSL)] private static partial int SSL_read(nint ssl, byte* buffer, int size);
-    [LibraryImport(SSL)] private static partial int SSL_write(nint ssl, byte* buffer, int size);
-    [LibraryImport(SSL)] private static partial int SSL_peek(nint ssl, byte* buffer, int size);
-    [LibraryImport(Crypto)] private static partial int BIO_new_bio_pair(out nint first, nuint firstSize, out nint second, nuint secondSize);
-    [LibraryImport(Crypto)] private static partial int BIO_free(nint bio);
-    [LibraryImport(Crypto)] private static partial int BIO_read(nint bio, byte* buffer, int length);
-    [LibraryImport(Crypto)] private static partial int BIO_write(nint bio, byte* buffer, int length);
-    [LibraryImport(Crypto)] internal static partial long BIO_ctrl(nint bio, int command, long value, nint pointer);
-    [LibraryImport(Crypto)] private static partial nint d2i_X509(nint ignored, ref byte* data, long size);
-    [LibraryImport(Crypto)] private static partial void X509_free(nint certificate);
-    [LibraryImport(Crypto)] private static partial int X509_STORE_add_cert(nint store, nint certificate);
-    [LibraryImport(Crypto)] private static partial int X509_VERIFY_PARAM_set1_ip_asc(nint parameters, byte* address);
-    [LibraryImport(Crypto)] private static partial nint d2i_AutoPrivateKey(nint ignored, ref byte* data, long size);
-    [LibraryImport(Crypto)] private static partial void EVP_PKEY_free(nint key);
-    [LibraryImport(Crypto)] internal static partial void ERR_clear_error();
-    [LibraryImport(Crypto)] private static partial ulong ERR_get_error();
-    [LibraryImport(Crypto)] private static partial void ERR_error_string_n(ulong error, byte* buffer, nuint size);
+    internal static long SSL_ctrl(nint ssl, int command, long value, nint pointer) => SSLControl(ssl, command, new CLong(checked((nint)value)), pointer).Value;
+    internal static long SSL_get_verify_result(nint ssl) => SSLVerifyResult(ssl).Value;
+    internal static long BIO_ctrl(nint bio, int command, long value, nint pointer) => BIOControl(bio, command, new CLong(checked((nint)value)), pointer).Value;
+    private static long SSLContextControl(nint context, int command, long value, nint pointer) => SSLContextControlNative(context, command, new CLong(checked((nint)value)), pointer).Value;
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint TLS_method();
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint DTLS_method();
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial ulong SSL_set_options(nint ssl, ulong options);
+    [LibraryImport(SSL, EntryPoint = "SSL_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong SSLControl(nint ssl, int command, CLong value, nint pointer);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_set_ex_data(nint ssl, int index, nint data);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_get_ex_data(nint ssl, int index);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_CTX_set_cookie_generate_cb(nint context, delegate* unmanaged[Cdecl]<nint, byte*, uint*, int> callback);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_CTX_set_cookie_verify_cb(nint context, delegate* unmanaged[Cdecl]<nint, byte*, uint, int> callback);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint BIO_s_dgram_pair();
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_new_bio_dgram_pair(out nint first, nuint firstSize, out nint second, nuint secondSize);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_CTX_new(nint method);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_CTX_free(nint context);
+    [LibraryImport(SSL, EntryPoint = "SSL_CTX_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong SSLContextControlNative(nint context, int command, CLong value, nint pointer);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_CTX_set_verify(nint context, int mode, nint callback);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_CTX_set_default_verify_paths(nint context);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_CTX_get_cert_store(nint context);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_CTX_use_certificate(nint context, nint certificate);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_CTX_use_PrivateKey(nint context, nint key);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_CTX_check_private_key(nint context);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_new(nint context);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_free(nint ssl);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_set_bio(nint ssl, nint read, nint write);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_set_connect_state(nint ssl);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_set_accept_state(nint ssl);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_set1_host(nint ssl, byte* name);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_get0_param(nint ssl);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_do_handshake(nint ssl);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_get_error(nint ssl, int result);
+    [LibraryImport(SSL, EntryPoint = "SSL_get_verify_result"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong SSLVerifyResult(nint ssl);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_pending(nint ssl);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_shutdown(nint ssl);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_read(nint ssl, byte* buffer, int size);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_write(nint ssl, byte* buffer, int size);
+    [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_peek(nint ssl, byte* buffer, int size);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_new_bio_pair(out nint first, nuint firstSize, out nint second, nuint secondSize);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_free(nint bio);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_read(nint bio, byte* buffer, int length);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_write(nint bio, byte* buffer, int length);
+    [LibraryImport(Crypto, EntryPoint = "BIO_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong BIOControl(nint bio, int command, CLong value, nint pointer);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint d2i_X509(nint ignored, ref byte* data, CLong size);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void X509_free(nint certificate);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int X509_STORE_add_cert(nint store, nint certificate);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int X509_VERIFY_PARAM_set1_ip_asc(nint parameters, byte* address);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint d2i_AutoPrivateKey(nint ignored, ref byte* data, CLong size);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void EVP_PKEY_free(nint key);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial void ERR_clear_error();
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CULong ERR_get_error();
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void ERR_error_string_n(CULong error, byte* buffer, nuint size);
 }

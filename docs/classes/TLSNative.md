@@ -1,12 +1,14 @@
 # TLSNative
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Visibility:** internal. **Source:** [TLSNative.cs](../../src/Core/Networking/TLSNative.cs). **Component:** [TLS](../components/tls.md).
 
 ## Responsibilities
 
 Internal source-generated OpenSSL 3 imports, context/trust/server-identity setup, DNS/IP/SNI verification, bounded BIO-pair preparation, native record and error handling. Native pointers never enter public API. Linux uses system `libssl.so.3`/`libcrypto.so.3`; macOS resolves private OpenSSL 3.6.4 dylibs from its audited native package. [TLSNative.SystemTrust.cs](../../src/Core/Networking/TLSNative.SystemTrust.cs) uses .NET/Keychain chain validation for macOS system-trust clients before OpenSSL name/purpose verification. Custom CA and unsafe options retain their existing policy.
+
+Every OpenSSL import explicitly uses Cdecl. C `long`/`unsigned long` parameters and results use `CLong`/`CULong`, preserving LLP64/LP64 widths; OpenSSL 3's `uint64_t` option mask remains a 64-bit value. This ABI correction does not enable the still-gated Windows backend.
 
 ## Verification
 

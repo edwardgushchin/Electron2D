@@ -1,7 +1,9 @@
 <Project>
   <PropertyGroup>
-    <Electron2DNativePackageVersion>0.1.0-preview.2</Electron2DNativePackageVersion>
+    <Electron2DNativePackageVersion>0.1.0-preview.3</Electron2DNativePackageVersion>
     <Electron2DSDLVersion>3.4.16</Electron2DSDLVersion>
+    <Electron2DNativePython Condition="'$(Electron2DNativePython)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">python</Electron2DNativePython>
+    <Electron2DNativePython Condition="'$(Electron2DNativePython)' == ''">python3</Electron2DNativePython>
     <Electron2DBuildNativeFromSource Condition="'$(Electron2DBuildNativeFromSource)' == ''">false</Electron2DBuildNativeFromSource>
     <_Electron2DPrivateNativeRID Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</_Electron2DPrivateNativeRID>
     <_Electron2DPrivateNativeRID Condition="'$(_Electron2DPrivateNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</_Electron2DPrivateNativeRID>

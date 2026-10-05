@@ -36,7 +36,7 @@ internal static unsafe class TLSSystemTrustTests
             {
                 var newStore = (delegate* unmanaged[Cdecl]<nint>)NativeLibrary.GetExport(library, "X509_STORE_new");
                 var newContext = (delegate* unmanaged[Cdecl]<nint>)NativeLibrary.GetExport(library, "X509_STORE_CTX_new");
-                var decode = (delegate* unmanaged[Cdecl]<nint, byte**, long, nint>)NativeLibrary.GetExport(library, "d2i_X509");
+                var decode = (delegate* unmanaged[Cdecl]<nint, byte**, CLong, nint>)NativeLibrary.GetExport(library, "d2i_X509");
                 var initialize = (delegate* unmanaged[Cdecl]<nint, nint, nint, nint, int>)NativeLibrary.GetExport(library, "X509_STORE_CTX_init");
                 var freeCertificate = (delegate* unmanaged[Cdecl]<nint, void>)NativeLibrary.GetExport(library, "X509_free");
                 var freeContext = (delegate* unmanaged[Cdecl]<nint, void>)NativeLibrary.GetExport(library, "X509_STORE_CTX_free");
@@ -48,7 +48,7 @@ internal static unsafe class TLSSystemTrustTests
                     if (certificate is not null)
                     {
                         var bytes = certificate.RawData;
-                        fixed (byte* start = bytes) { var cursor = start; native = decode(0, &cursor, bytes.Length); }
+                        fixed (byte* start = bytes) { var cursor = start; native = decode(0, &cursor, new CLong(bytes.Length)); }
                         if (native == 0) throw new InvalidOperationException("Fixture certificate import failed.");
                     }
                     if (initialize(context, store, native, 0) != 1) throw new InvalidOperationException("Fixture verification context failed.");

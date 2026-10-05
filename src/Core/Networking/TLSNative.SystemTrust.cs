@@ -37,7 +37,7 @@ internal static unsafe partial class TLSNative
                 Require(X509_STORE_add_cert(store, certificate.Pointer), "System TLS certificate import failed.");
             }
             if (chain.ChainElements.Count == 1) Require(X509_STORE_add_cert(store, X509_STORE_CTX_get0_cert(context)), "System TLS anchor import failed.");
-            Require(X509_VERIFY_PARAM_set_flags(X509_STORE_CTX_get0_param(context), 0x80000), "System TLS partial-chain trust failed.");
+            Require(X509_VERIFY_PARAM_set_flags(X509_STORE_CTX_get0_param(context), new CULong(0x80000)), "System TLS partial-chain trust failed.");
             return X509_verify_cert(context);
         }
         catch { X509_STORE_CTX_set_error(context, 50); return 0; }
@@ -68,7 +68,7 @@ internal static unsafe partial class TLSNative
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint X509_STORE_CTX_get0_store(nint context);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint X509_STORE_CTX_get0_param(nint context);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void X509_STORE_CTX_set_error(nint context, int error);
-    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int X509_VERIFY_PARAM_set_flags(nint parameters, ulong flags);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int X509_VERIFY_PARAM_set_flags(nint parameters, CULong flags);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int X509_verify_cert(nint context);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int OPENSSL_sk_num(nint stack);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint OPENSSL_sk_value(nint stack, int index);

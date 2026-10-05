@@ -75,5 +75,6 @@
   <Import Project="tools/audio-native.targets" />
   <Import Project="tools/enet-native.targets" />
   <Import Project="tools/tls-native.targets" />
+  <Import Project="tools/font-native.targets" />
   <Import Project="tools/native-package.targets" />
 </Project>

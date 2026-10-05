@@ -79,7 +79,7 @@ def check(feed):
         environment.pop("LD_LIBRARY_PATH", None)
         environment.pop("Electron2DBuildNativeFromSource", None)
         run([dotnet, "build", "Electron2D.csproj", "-c", "Release", "--nologo"], engine, environment)
-        if any((engine / "obj" / name).exists() for name in ("text-native", "audio-native", "enet-native")):
+        if any((engine / "obj" / name).exists() for name in ("text-native", "audio-native", "enet-native", "tls-native", "font-native")):
             raise RuntimeError("Consumer build created native compilation directories")
         # A package consumer has no reference to the engine source or its private build targets.
         engine_feed = work / "feed"
