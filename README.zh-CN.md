@@ -71,7 +71,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 通过 NuGet 安装 `Electron2D` 以及游戏目标平台的包，例如 `Electron2D.Windows`、`Electron2D.Linux` 或 `Electron2D.MacOS`。原生依赖会自动还原。[平台包及版本规则](docs/native-packaging.md)。
 
-当前的 `0.1.0-alpha.1` 包仍在准备发布。
+当前的 `0.1.0-alpha` 包仍在准备发布。
 
 ### 构建与运行
 

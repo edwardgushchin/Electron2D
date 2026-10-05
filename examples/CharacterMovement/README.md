@@ -10,7 +10,7 @@ Install .NET 10 SDK and run from the repository root:
 dotnet run --project examples/CharacterMovement
 ```
 
-The example explicitly selects the Electron2D platform package for its target OS and RID. NuGet supplies the native dependencies automatically. The current `0.1.0-alpha.1` packages are still being prepared for public publication; see [package availability](../../docs/native-packaging.md).
+The example explicitly selects the Electron2D platform package for its target OS and RID. NuGet supplies the native dependencies automatically. The current `0.1.0-alpha` packages are still being prepared for public publication; see [package availability](../../docs/native-packaging.md).
 
 [Program.cs](Program.cs) loads the borrowed texture and font, limits the loop to 60 FPS, and passes [CharacterMovementScene](CharacterMovementScene.cs)'s window to `Engine.Run`. The scene starts at 800×600 and combines a retained grid, two live text labels and a nearest-filtered `Sprite`. Arrow keys move the sprite at 160 pixels per second, with normalized diagonal movement and a field boundary that follows the window size. Change `MovementSpeed` in [Player.cs](Player.cs) to try your first code edit.
 

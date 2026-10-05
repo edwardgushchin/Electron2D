@@ -71,7 +71,7 @@ Empieza con el ejemplo «Movimiento del personaje». Verás un personaje que pue
 
 Instala mediante NuGet `Electron2D` y los paquetes de las plataformas de tu juego, como `Electron2D.Windows`, `Electron2D.Linux` o `Electron2D.MacOS`. Las dependencias nativas se restauran automáticamente. [Paquetes de plataforma y reglas de versiones](docs/native-packaging.md).
 
-Los paquetes actuales `0.1.0-alpha.1` aún se están preparando para su publicación.
+Los paquetes actuales `0.1.0-alpha` aún se están preparando para su publicación.
 
 ### Compilar y ejecutar
 

@@ -7,7 +7,7 @@ This directory describes the engine as it exists now. Planned features are liste
 ## Current snapshot
 
 - Product boundary: exclusively 2D; 3D is out of scope.
-- [Product versioning](decisions/versioning.md#adr-0096): SemVer 2.0.0 with one runtime/editor product version. The accepted current development version is `0.1.0-alpha.1`; applying it to build metadata remains pending, and the SDK still supplies `1.0.0`. Complete stable runtime API targets `1.0.0`; compatible editor delivery targets the next `1.x.0` release.
+- [Product versioning](decisions/versioning.md#adr-0096): SemVer 2.0.0 with one runtime/editor product version. Shared build metadata uses the accepted current development version `0.1.0-alpha`. Complete stable runtime API targets `1.0.0`; compatible editor delivery targets the next `1.x.0` release.
 - Game runtime target matrix: Windows, macOS, Linux on X11 and Wayland, Android, iOS, Android TV, tvOS, and Web. Editor target matrix: Windows, macOS, and Linux on X11 and Wayland. These are product boundaries, not claims of completed delivery.
 - Game-object model: Node-based and scene-oriented. `Node` is the primary public game object, `SceneTree` owns the active hierarchy, and `PackedScene` packages any reusable Node hierarchy—from one composed object to a complete level—for independent instantiation. The current packing implementation is typed and in-memory; disk and editor workflows are not implemented.
 - Public engine assembly: one managed `Electron2D.dll` class library, including internal SDL3-CS bindings, Box2D.NET physics and the managed text/audio dependency sources. Native libraries remain separate deployment files.

@@ -18,7 +18,7 @@ Describes the version embedded in the Electron2D assembly.
 
 `EngineVersionInfo` is the immutable typed replacement for an untyped version dictionary. `Engine` creates one process-wide value from the loaded `Electron2D.dll` metadata and retains it for the process lifetime. Consumers neither own nor dispose it.
 
-[ADR 0096](../decisions/versioning.md#adr-0096) defines the product version policy. Shared build metadata now reports `0.1.0-alpha.1`, numeric assembly/file versions `0.1.0.0`, and supplied source revision metadata. This type reports those actual loaded values.
+[ADR 0096](../decisions/versioning.md#adr-0096) defines the product version policy. Shared build metadata now reports `0.1.0-alpha`, numeric assembly/file versions `0.1.0.0`, and supplied source revision metadata. This type reports those actual loaded values.
 
 ## Examples
 

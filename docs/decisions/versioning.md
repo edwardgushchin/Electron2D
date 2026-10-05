@@ -1,6 +1,6 @@
 # Electron2D versioning decisions
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 This bounded document owns product versioning and compatibility milestones. Use [the decision index](index.md) for other architectural domains; class pages describe the version metadata actually exposed by the runtime.
 
@@ -9,9 +9,9 @@ Decisions in this log: [0096](#adr-0096).
 <a id="adr-0096"></a>
 ## ADR 0096: Use semantic product versions with separate runtime and editor milestones
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
-- Status: Accepted by the user on 2026-10-05.
+- Status: Accepted; the current unnumbered alpha suffix was selected by the user on 2026-10-06.
 - Scope: Electron2D product releases, public compatibility, development channels and runtime/editor milestones.
 - Preserves: [0004: Runtime product boundary](product.md#adr-0004), [0021: Platform verification](product.md#adr-0021), [0027: Editor/game boundary](product.md#adr-0027) and [0090: Agent-native workflows](agent-native.md#adr-0090).
 
@@ -25,7 +25,7 @@ Electron2D uses [Semantic Versioning 2.0.0](https://semver.org/), in the form `M
 
 | Product milestone | Version and acceptance boundary |
 | --- | --- |
-| Current runtime development | `0.1.0-alpha.1` is the accepted development version; the public API is not yet stable. |
+| Current runtime development | `0.1.0-alpha` is the accepted development version; the public API is not yet stable. |
 | Complete stable runtime API | `1.0.0`, after the entire accepted runtime scope is implemented, behaviorally verified, documented and stabilized. Accepted exclusions remain excluded; editor-only obligations remain tracked for the editor milestone. |
 | Complete editor with compatible runtime | The next `1.x.0` release, for example `1.1.0` if it directly follows `1.0.0`. The editor must execute its accepted visual and programmatic workflows through the public runtime API. |
 | Incompatible public contract | The next major release, for example `2.0.0` after the `1.x` series. Delivering an editor alone does not require a major increment. |
@@ -38,19 +38,19 @@ The public compatibility contract includes documented public/protected API, obse
 
 During `0.x` development, new functionality or incompatible changes increment `MINOR`; compatible fixes increment `PATCH`. Describe incompatible changes explicitly. A minor version is not a percentage of API completion, and individual implementation commits do not each require a product release.
 
-Prerelease candidates use `alpha.N`, `beta.N` and `rc.N` channels before removing the suffix for a stable release. Alpha permits incomplete work and evolving contracts; beta has the planned release scope implemented and undergoing stabilization; a release candidate has passed the required release checks with no known blocking defect. Increment the numeric channel identifier for a new published candidate. Build metadata such as `+<source-revision>` may identify a build but does not change version precedence or replace a unique published package version. Never replace the contents of an already published version.
+Prerelease candidates use `alpha`, `beta` and `rc` channels before removing the suffix for a stable release; a numeric candidate identifier is optional. The current development channel is unnumbered `alpha`. Alpha permits incomplete work and evolving contracts; beta has the planned release scope implemented and undergoing stabilization; a release candidate has passed the required release checks with no known blocking defect. A new published candidate must have a distinct product version, channel or candidate identifier. Build metadata such as `+<source-revision>` may identify a build but does not change version precedence or replace a unique published package version. Never replace the contents of an already published version.
 
 Runtime API completion is judged against the accepted product scope and its coverage obligations, not declaration counts alone. The runtime milestone does not claim an implemented editor, full external-reference parity or verification on every target. Release verification follows the active platform gate in ADR 0021; the editor milestone additionally requires the executable authoring and observation workflows in ADR 0090. Missing capabilities and unverified platforms remain explicit.
 
 ### Platform package versions and minimum engine
 
-The package family is `Electron2D` plus `Electron2D.{Platform}` under ADR 0012, matching the user's chosen naming model. A platform package's version identifies its minimum supported Electron2D product version, including the complete prerelease suffix. For example, `Electron2D.Linux` `0.1.0-alpha.1` requires `Electron2D` `0.1.0-alpha.1` or later; `Electron2D.Windows` `1.4.2` requires Electron2D `1.4.2` or later. The generated NuGet dependency and native manifest record the minimum. Restore must reject an explicitly selected older engine.
+The package family is `Electron2D` plus `Electron2D.{Platform}` under ADR 0012, matching the user's chosen naming model. A platform package's version identifies its minimum supported Electron2D product version, including the complete prerelease suffix. For example, `Electron2D.Linux` `0.1.0-alpha` requires `Electron2D` `0.1.0-alpha` or later; `Electron2D.Windows` `1.4.2` requires Electron2D `1.4.2` or later. The generated NuGet dependency and native manifest record the minimum. Restore must reject an explicitly selected older engine.
 
 Use matching product/platform release versions by default. The minimum dependency is a lower bound, not proof of compatibility with every future native ABI or product release. A different combination requires verified compatibility. A changed published native payload requires a new product patch or prerelease candidate and newly supported baseline; never replace the contents of an existing version. Internal SDL, ICU, FAudio, FreeType, HarfBuzz and OpenSSL versions remain pinned implementation details rather than platform package version numbers. Serialized file schemas retain their independent technical versions and loader compatibility rules.
 
 ### Current implementation and verification boundary
 
-The shared source [`tools/native-package.props`](../../tools/native-package.props) assigns `Electron2DVersion` `0.1.0-alpha.1`. The managed runtime and first-party consumers use this value; platform packages use it as their version and minimum-engine dependency. Numeric assembly/file versions are `0.1.0.0`, and informational metadata includes the prerelease label and supplied source revision. [`EngineVersionInfo`](../classes/EngineVersionInfo.md) reports the loaded assembly's actual metadata.
+The shared source [`tools/native-package.props`](../../tools/native-package.props) assigns `Electron2DVersion` `0.1.0-alpha`. The managed runtime and first-party consumers use this value; platform packages use it as their version and minimum-engine dependency. Numeric assembly/file versions are `0.1.0.0`, and informational metadata includes the prerelease label and supplied source revision. [`EngineVersionInfo`](../classes/EngineVersionInfo.md) reports the loaded assembly's actual metadata.
 
 Local package/consumer checks verify this delivery boundary. Publication, complete RID CI and target-native execution remain separate gates under ADR 0021. Product metadata does not establish a stable runtime or delivered editor.
 

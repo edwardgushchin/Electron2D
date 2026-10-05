@@ -71,7 +71,7 @@ Start with the “Character movement” example. You will see a character and mo
 
 Use NuGet to install `Electron2D` and the packages for your game targets, such as `Electron2D.Windows`, `Electron2D.Linux` or `Electron2D.MacOS`. Native dependencies restore automatically. [Platform packages and version rules](docs/native-packaging.md).
 
-The current `0.1.0-alpha.1` packages are still being prepared for publication.
+The current `0.1.0-alpha` packages are still being prepared for publication.
 
 ### Build and run
 
