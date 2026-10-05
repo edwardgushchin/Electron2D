@@ -34,7 +34,7 @@
 
 <a id="about"></a>
 
-## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="absmiddle" alt=""> О проекте
+## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="texttop" alt=""> О проекте
 
 Electron2D - **свободный кроссплатформенный 2D-движок на C# для совместной разработки игр человеком и ИИ-агентами**.
 
@@ -42,7 +42,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 <a id="features"></a>
 
-## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="absmiddle" alt=""> Возможности
+## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="texttop" alt=""> Возможности
 
 - [Графика](docs/domains/rendering.md). Спрайты и атласы, камеры, параллакс, рисование фигур и текста. Импорт шейдеров HLSL и GLSL для материалов.
 - [Сцены и анимация](docs/domains/scene.md). Повторно используемые объекты и уровни, покадровая анимация, анимация свойств и таймеры.
@@ -59,7 +59,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 <a id="quick-start"></a>
 
-## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="absmiddle" alt=""> Быстрый старт
+## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="texttop" alt=""> Быстрый старт
 
 Начните с примера «Окно и ввод». Приведённые команды предназначены для Linux x64 с Wayland.
 
@@ -127,7 +127,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="platforms"></a>
 
-## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="absmiddle" alt=""> Платформы
+## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="texttop" alt=""> Платформы
 
 Целевые платформы игры и результаты проверок приведены отдельно. Визуальный редактор предназначен для Windows, Linux и macOS.
 
@@ -149,7 +149,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="development"></a>
 
-## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="absmiddle" alt=""> Разработка движка
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="texttop" alt=""> Разработка движка
 
 Сейчас с Electron2D можно работать через C# и .NET. Шаблоны `PackedScene` поддерживают типизированные [файлы ресурсов и сцен](docs/components/resource-files.md), включая загрузку в новом процессе. Визуальный редактор и команды управления игровыми проектами остаются в планах.
 
@@ -159,7 +159,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="documentation"></a>
 
-## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="absmiddle" alt=""> Документация
+## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="texttop" alt=""> Документация
 
 | Нужно | Где читать |
 | --- | --- |
@@ -175,7 +175,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="feedback-and-contributing"></a>
 
-## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="absmiddle" alt=""> Участие в проекте
+## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="texttop" alt=""> Участие в проекте
 
 [Задать вопрос](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Сообщить о проблеме](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Руководство для участников](CONTRIBUTING.md) · [Помощь](SUPPORT.md) · [Правила общения](CODE_OF_CONDUCT.md) · [Безопасность](SECURITY.md)
 
@@ -196,7 +196,7 @@ tools/coverage/check.sh
 
 <a id="license"></a>
 
-## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="absmiddle" alt=""> Лицензия
+## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="texttop" alt=""> Лицензия
 
 Electron2D распространяется по [лицензии MIT](licence/Electron2D-LICENSE.txt). Движок можно использовать в коммерческих играх; сохраняйте уведомление об авторских правах и текст лицензии.
 

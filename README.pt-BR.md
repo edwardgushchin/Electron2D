@@ -34,7 +34,7 @@
 
 <a id="about"></a>
 
-## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="absmiddle" alt=""> Sobre o projeto
+## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="texttop" alt=""> Sobre o projeto
 
 Electron2D é um **motor 2D livre e multiplataforma em C# para desenvolver jogos em colaboração com agentes de IA**.
 
@@ -42,7 +42,7 @@ Crie mundos e mecânicas de jogo com as ferramentas habituais do .NET e assisten
 
 <a id="features"></a>
 
-## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="absmiddle" alt=""> Recursos
+## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="texttop" alt=""> Recursos
 
 - [Gráficos](docs/domains/rendering.md). Sprites e atlas, câmeras, paralaxe, desenho de formas e texto. Importação de shaders HLSL e GLSL para materiais.
 - [Cenas e animação](docs/domains/scene.md). Objetos e fases reutilizáveis, animação por quadros, animação de propriedades e temporizadores.
@@ -59,7 +59,7 @@ Materiais com shaders exigem o renderizador GPU. O renderizador de compatibilida
 
 <a id="quick-start"></a>
 
-## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="absmiddle" alt=""> Primeiros passos
+## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="texttop" alt=""> Primeiros passos
 
 Comece pelo exemplo «Janela e entrada». Estes comandos são para Linux x64 com Wayland.
 
@@ -127,7 +127,7 @@ A compilação do motor gera `Electron2D.dll`. A publicação do jogo inclui a b
 
 <a id="platforms"></a>
 
-## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="absmiddle" alt=""> Plataformas
+## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="texttop" alt=""> Plataformas
 
 As plataformas de destino do jogo e as verificações realizadas são apresentadas separadamente. O editor visual é destinado a Windows, Linux e macOS.
 
@@ -149,7 +149,7 @@ Consulte os modelos dos dispositivos, os comandos e os limites das verificaçõe
 
 <a id="development"></a>
 
-## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="absmiddle" alt=""> Desenvolvimento do motor
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="texttop" alt=""> Desenvolvimento do motor
 
 Atualmente, você pode usar o Electron2D por meio de C# e .NET. Os modelos `PackedScene` oferecem [arquivos tipados de recursos e cenas](docs/components/resource-files.md), incluindo carregamento em um novo processo. O editor visual e os comandos para gerenciar projetos de jogo continuam planejados.
 
@@ -159,7 +159,7 @@ As próximas tarefas e o estado dos métodos estão no [plano de desenvolvimento
 
 <a id="documentation"></a>
 
-## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="absmiddle" alt=""> Documentação
+## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="texttop" alt=""> Documentação
 
 | Você quer | Onde consultar |
 | --- | --- |
@@ -175,7 +175,7 @@ Há instruções separadas para reproduzir as verificações de [Android](tests/
 
 <a id="feedback-and-contributing"></a>
 
-## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="absmiddle" alt=""> Contribua com o projeto
+## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="texttop" alt=""> Contribua com o projeto
 
 [Fazer uma pergunta](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Relatar um problema](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Guia de contribuição](CONTRIBUTING.md) · [Ajuda](SUPPORT.md) · [Código de conduta](CODE_OF_CONDUCT.md) · [Segurança](SECURITY.md)
 
@@ -196,7 +196,7 @@ O projeto é mantido por [Eduard Gushchin](https://github.com/edwardgushchin). T
 
 <a id="license"></a>
 
-## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="absmiddle" alt=""> Licença
+## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="texttop" alt=""> Licença
 
 O Electron2D é distribuído sob a [licença MIT](licence/Electron2D-LICENSE.txt). Você pode usar o motor em jogos comerciais; preserve o aviso de direitos autorais e o texto da licença.
 
