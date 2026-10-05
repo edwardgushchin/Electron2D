@@ -11,7 +11,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>full</TrimMode>
-    <Registrar>managed-static</Registrar>
+    <DynamicCodeSupport>false</DynamicCodeSupport>
     <MtouchExtraArgs>$(MtouchExtraArgs) --dlsym:+Electron2D</MtouchExtraArgs>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>

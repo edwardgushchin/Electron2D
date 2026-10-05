@@ -31,7 +31,12 @@ public sealed class TestDelegate : UIApplicationDelegate
     {
         var code = 0;
         var status = "PASS";
-        try { ContractChecks.Run(); }
+        try
+        {
+            if (System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported)
+                throw new InvalidOperationException("Apple AOT contract hosts must not enable dynamic code generation.");
+            ContractChecks.Run();
+        }
         catch (Exception error) { status = "FAIL " + error; code = 1; }
         Console.WriteLine("ELECTRON2D_RESULT " + status);
         if (Environment.GetEnvironmentVariable("ELECTRON2D_RESULT_PATH") is { } path &&
