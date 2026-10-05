@@ -19,9 +19,11 @@ internal static class CharacterMovementTests
             var player = (Sprite)window.GetChild(3);
             var previous = player.Position;
             var frames = 0;
+            var step = 0;
             window.Ready += _ => RenderingServer.FramePostDraw += () =>
             {
-                switch (++frames)
+                Check(++frames < 120, "Resize and close complete within the frame budget.");
+                switch (++step)
                 {
                     case 1:
                         using (var pixels = RenderingServer.Service!.Readback())
@@ -53,6 +55,52 @@ internal static class CharacterMovementTests
                     case 7:
                         Check(player.Position == new Vector2(720, 480), "Diagonal movement stays inside the grid.");
                         KeyEvent(SDL.Scancode.Right, false); KeyEvent(SDL.Scancode.Down, false);
+                        window.Size = new(1200, 800);
+                        break;
+                    case 8:
+                        using (var pixels = RenderingServer.Service!.Readback())
+                        {
+                            // The compositor commits resize requests asynchronously.
+                            if (pixels.Size != new Vector2i(1200, 800)) { step--; break; }
+                            Check(pixels.GetPixel(1080, 700).IsEqualApprox(Color.FromHTML("#2E2238")), "The grid expands into the new window area.");
+                            Check(((Label)window.GetChild(2)).Position == new Vector2(32, 752), "Instructions follow the bottom edge.");
+                            Check(player.Position == new Vector2(720, 480), "Growing the window preserves the character position.");
+                            pixels.SavePNG($"bin/character-movement/{backend}-wide.png");
+                        }
+                        player.Position = new(1119.999f, 679.999f);
+                        KeyEvent(SDL.Scancode.Right, true); KeyEvent(SDL.Scancode.Down, true);
+                        break;
+                    case 9:
+                        Check(player.Position == new Vector2(1120, 680), "Movement uses the enlarged field boundary.");
+                        KeyEvent(SDL.Scancode.Right, false); KeyEvent(SDL.Scancode.Down, false);
+                        window.Size = new(500, 400);
+                        break;
+                    case 10:
+                        using (var pixels = RenderingServer.Service!.Readback())
+                        {
+                            if (pixels.Size != new Vector2i(500, 400)) { step--; break; }
+                            Check(player.Position == new Vector2(420, 280), "Shrinking keeps the whole character inside the field.");
+                            Check(((Label)window.GetChild(2)).Position == new Vector2(32, 352), "Instructions remain visible after shrinking.");
+                        }
+                        window.Size = window.MinSize;
+                        break;
+                    case 11:
+                        using (var pixels = RenderingServer.Service!.Readback())
+                        {
+                            if (pixels.Size != new Vector2i(400, 300)) { step--; break; }
+                            Check(player.Position == new Vector2(320, 180), "Minimum size keeps valid character bounds.");
+                            Check(((Label)window.GetChild(2)).Position == new Vector2(32, 252), "Minimum size retains the instruction margin.");
+                            Check(pixels.GetPixel(40, 100).IsEqualApprox(Color.FromHTML("#2E2238")), "Minimum-size grid is rendered.");
+                            pixels.SavePNG($"bin/character-movement/{backend}-small.png");
+                        }
+                        window.Size = new(800, 600);
+                        break;
+                    case 12:
+                        using (var pixels = RenderingServer.Service!.Readback())
+                        {
+                            if (pixels.Size != new Vector2i(800, 600)) { step--; break; }
+                            Check(player.Position == new Vector2(320, 180), "Restoring the size preserves the clamped position.");
+                        }
                         if (backend == "gpu") KeyEvent(SDL.Scancode.Escape, true);
                         else
                         {
@@ -62,14 +110,13 @@ internal static class CharacterMovementTests
                             Check(SDL.PushEvent(ref close), "Native close event accepted.");
                         }
                         break;
-                    default: Check(frames < 12, "Close completes within the frame budget."); break;
                 }
             };
-            Check(Engine.Run(window) == 0 && frames >= 7, "Scene exits successfully.");
+            Check(Engine.Run(window) == 0 && step >= 12, "Scene exits successfully after resize checks.");
             Check(window.IsDisposed && player.IsDisposed && !texture.IsDisposed && !font.IsDisposed &&
                 Engine.MainLoop is null && !RenderingServer.IsAvailable && !DisplayServer.IsAvailable, "Cleanup preserves borrowed assets.");
         }
-        Console.WriteLine("Character movement passed: real GPU/compatibility images, four movement directions, key release, bounds, Escape/native close and cleanup.");
+        Console.WriteLine("Character movement passed: real GPU/compatibility images, native grow/shrink/minimum/restore, movement bounds, Escape/native close and cleanup.");
     }
 
     private static void KeyEvent(SDL.Scancode scancode, bool pressed)

@@ -5,11 +5,11 @@ internal sealed class Player : Sprite
 {
     private const float MovementSpeed = 160f;
     private const float DisplaySize = 96f;
-    private readonly Rect2 _movementBounds;
+    private Rect2 _movementBounds;
 
     /// <summary>Centers the character in the field and scales its borrowed texture to 96 pixels.</summary>
     /// <param name="texture">The character texture, kept alive by the entry point.</param>
-    /// <param name="playArea">The fixed field that contains the whole character.</param>
+    /// <param name="playArea">The field that contains the whole character.</param>
     internal Player(Texture texture, Rect2 playArea)
     {
         Name = "Player";
@@ -18,8 +18,16 @@ internal sealed class Player : Sprite
         Position = playArea.GetCenter();
         Scale = new(DisplaySize / texture.GetWidth(), DisplaySize / texture.GetHeight());
 
+        SetPlayArea(playArea);
+    }
+
+    /// <summary>Updates the field after a resize, keeping the whole character inside it.</summary>
+    /// <param name="playArea">The current field rectangle in window pixels.</param>
+    internal void SetPlayArea(Rect2 playArea)
+    {
         // The sprite is centered on Position, so leave half its size clear at each field edge.
         _movementBounds = playArea.Grow(-DisplaySize / 2);
+        Position = Position.Clamp(_movementBounds.Position, _movementBounds.End);
     }
 
     /// <summary>Enables input and frame updates after scene activation.</summary>
