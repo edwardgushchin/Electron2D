@@ -104,14 +104,20 @@ class Checks(unittest.TestCase):
                         env = kwargs["env"]
                         token = "old" if status == "stale" else env["SIMCTL_CHILD_ELECTRON2D_RUN_TOKEN"]
                         Path(env["SIMCTL_CHILD_ELECTRON2D_RESULT_PATH"]).write_text("RESULT " + token + " " + status + "\n")
+                    if args[2] == "launch":
+                        stderr = next(arg.split("=", 1)[1] for arg in args if arg.startswith("--stderr="))
+                        Path(stderr).write_text("native launch exception fixture")
+                        self.assertTrue(any(arg.startswith("--stdout=") for arg in args))
                     return subprocess.CompletedProcess(args, 0, output, "")
 
                 with patch.object(run_apple.subprocess, "run", side_effect=command) as process:
                     if status == "PASS":
                         run_apple.run(Path("fixture.app"), "iOS")
                     else:
-                        with self.assertRaises((RuntimeError, TimeoutError)):
+                        with self.assertRaises((RuntimeError, TimeoutError)) as error:
                             run_apple.run(Path("fixture.app"), "iOS", timeout=.01)
+                        if status in ("missing", "stale"):
+                            self.assertIn("native launch exception fixture", str(error.exception))
                 self.assertEqual(process.call_args_list[-2].args[0], ["xcrun", "simctl", "shutdown", "fixture"])
                 self.assertEqual(process.call_args_list[-1].args[0], ["xcrun", "simctl", "delete", "fixture"])
 

@@ -45,8 +45,10 @@ def run(app, platform, timeout=120):
         container = Path(command("get_app_container", udid, "org.electron2d.tests", "data").strip())
         token = uuid.uuid4().hex
         report = container / "tmp" / ("e2d-result-" + token + ".txt")
+        stdout = report.with_suffix(".stdout")
+        stderr = report.with_suffix(".stderr")
         env = dict(os.environ, SIMCTL_CHILD_ELECTRON2D_RESULT_PATH=str(report), SIMCTL_CHILD_ELECTRON2D_RUN_TOKEN=token)
-        command("launch", "--terminate-running-process", udid, "org.electron2d.tests", env=env)
+        command("launch", "--terminate-running-process", "--stdout=" + str(stdout), "--stderr=" + str(stderr), udid, "org.electron2d.tests", env=env)
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             if report.is_file():
@@ -59,10 +61,14 @@ def run(app, platform, timeout=120):
                          "--predicate", 'process CONTAINS "Electron2D" OR eventMessage CONTAINS "org.electron2d.tests"')
         started = report.with_name(report.name + ".started")
         output += "\nStartup: " + (started.read_text() if started.is_file() else "managed entry point was not reached")
+        for path in (stdout, stderr):
+            if path.is_file():
+                output += "\n" + path.suffix + ": " + path.read_text()[-6000:]
         if os.environ.get("GITHUB_ACTIONS") == "true":
             crashes = sorted((Path.home() / "Library/Logs/DiagnosticReports").glob("Electron2D.AppleTests*.ips"), key=lambda path: path.stat().st_mtime)
             if crashes:
-                output += "\nCrash: " + crashes[-1].read_text()[:4000]
+                crash = json.loads(crashes[-1].read_text().split("\n", 1)[1])
+                output += "\nCrash: " + json.dumps({key: crash.get(key) for key in ("exception", "termination", "asi", "lastExceptionBacktrace")})[:6000]
         raise TimeoutError("Apple app did not report completion within the deadline:\n" + output[-8000:])
     finally:
         subprocess.run(["xcrun", "simctl", "shutdown", udid], capture_output=True, timeout=60)
