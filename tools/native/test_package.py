@@ -82,6 +82,16 @@ class NativePackageTests(unittest.TestCase):
             with patch.object(build_tls, "SHA256", hashlib.sha256(b"fixture").hexdigest()):
                 build_tls.checked_archive(archive)
 
+    def test_apple_openssl_excludes_cli_helpers_and_keeps_target_flags_together(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            with patch.object(build_tls, "prepare", return_value=(path, path)), \
+                    patch.object(build_tls.subprocess, "run") as run, patch.object(build_tls.shutil, "copy2"):
+                build_tls.cross("tvossimulator-x64", path, {}, ["-target", "x86_64-apple-tvos15.0-simulator", "-isysroot", "/SDK path"])
+                command = run.call_args_list[0].args[0]
+                self.assertIn("no-apps", command)
+                self.assertIn("CFLAGS=-target x86_64-apple-tvos15.0-simulator -isysroot '/SDK path'", command)
+                self.assertNotIn("x86_64-apple-tvos15.0-simulator", command)
     def test_macos_freetype_rejects_global_codec_dependencies(self):
         with tempfile.TemporaryDirectory() as directory:
             library = Path(directory) / "libElectron2DFreeType.dylib"

@@ -301,7 +301,7 @@ jobs:
       - name: Install pinned Android toolchain
         if: matrix.platform == 'Android' && steps.native_cache.outputs.cache-hit != 'true'
         run: |
-          sdkmanager 'ndk;28.2.13676358'
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'ndk;28.2.13676358'
           sudo apt-get update
           sudo apt-get install -y patchelf
       - name: Install SDK-matched WebAssembly toolchain

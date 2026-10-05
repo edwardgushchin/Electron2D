@@ -38,14 +38,14 @@ def build(rid, output):
     source, directory = prepare(output)
     if windows:
         environment = dict(os.environ, OPENSSL_LOCAL_CONFIG_DIR=str(Path(__file__).resolve().parent))
-        subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-tests", "no-docs", "no-asm", "no-uplink", "enable-static-vcruntime",
+        subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs", "no-asm", "no-uplink",
                         "--prefix=" + str(output / "install")], cwd=directory, env=environment, check=True)
         subprocess.run(["nmake", "/nologo", "build_libs"], cwd=directory, check=True)
         for name in ("libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll"):
             shutil.copy2(directory / name, output / name)
         print(f"{rid}: pinned OpenSSL {VERSION} built with private DLL identities")
         return
-    subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-tests", "no-docs",
+    subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs",
                     "--prefix=/Electron2D", "--openssldir=/etc/ssl"], cwd=directory, check=True)
     subprocess.run(["make", "-j4", "build_libs"], cwd=directory, check=True)
     for original, name in LIBRARIES.items():
@@ -89,7 +89,7 @@ def cross(rid, output, environment, flags):
     environment = dict(environment, OPENSSL_LOCAL_CONFIG_DIR=str(Path(__file__).resolve().parent))
     if rid != "browser-wasm" and not android:
         flags = ["CFLAGS=" + " ".join(shlex.quote(flag) for flag in flags)]
-    options = ["shared" if android else "no-shared", "no-tests", "no-docs", "no-asm", "no-dso"]
+    options = ["shared" if android else "no-shared", "no-apps", "no-tests", "no-docs", "no-asm", "no-dso"]
     if rid == "browser-wasm":
         options.extend(["no-threads", "no-uplink", "no-async", "no-afalgeng"])
     if android:
