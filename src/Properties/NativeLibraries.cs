@@ -15,6 +15,11 @@ internal static class NativeLibraries
         AudioLibrary = "FAudio", FreeTypeLibrary = "freetype", HarfBuzzLibrary = "HarfBuzzSharp",
         SSLLibrary = "Electron2DSSL", CryptoLibrary = "Electron2DCrypto", ENetLibrary = "Electron2DENet", TextBreakLibrary = "Electron2DTextBreak";
 #endif
+    // Distribution runtimes may report arch-x64 or another nonportable RID.
+    private static readonly string? DesktopPlatform = OperatingSystem.IsWindows() ? "win" :
+        OperatingSystem.IsMacOS() ? "osx" : OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid() ? "linux" : null;
+    internal static string RuntimeRID { get; } = DesktopPlatform is null ? RuntimeInformation.RuntimeIdentifier :
+        DesktopPlatform + "-" + RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
     private static readonly Lazy<nint> Sdl = new(() => LoadRuntime(OperatingSystem.IsWindows() ? "SDL3.dll" : OperatingSystem.IsAndroid() ? "libSDL3.so" : OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null));
 
     [ModuleInitializer]
@@ -102,7 +107,7 @@ internal static class NativeLibraries
     private static nint LoadRuntime(string name, System.Reflection.Assembly assembly, DllImportSearchPath? searchPath)
     {
         var file = System.IO.Path.Combine(AppContext.BaseDirectory,
-            "runtimes", RuntimeInformation.RuntimeIdentifier, "native", name);
+            "runtimes", RuntimeRID, "native", name);
         // Platform packages preserve this directory; ordinary resolution also supports older flat layouts.
         return NativeLibrary.Load(File.Exists(file) ? file : name, assembly, searchPath);
     }

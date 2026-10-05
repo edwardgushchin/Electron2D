@@ -15,15 +15,22 @@ iOS/tvOS compile the ten owned backend import names as `__Internal`, referring t
 
 Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, Android `libSDL3.so`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API.
 
-The private `libElectron2DTextBreak.so`, `libFAudio.so.0` and `libElectron2DENet.so` live under `runtimes/<RID>/native` beneath the application base directory. macOS uses the corresponding dylibs plus private OpenSSL and WOFF2-capable `libElectron2DFreeType.dylib`. Resolution uses the executing runtime identifier and `AppContext.BaseDirectory`, independently of the working directory and managed assembly location. The native package targets preserve this directory for project and package consumers; ordinary .NET resolution remains available as a fallback. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
+The private `libElectron2DTextBreak.so`, `libFAudio.so.0` and `libElectron2DENet.so` live under `runtimes/<RID>/native` beneath the application base directory. macOS uses the corresponding dylibs plus private OpenSSL and WOFF2-capable `libElectron2DFreeType.dylib`. Resolution uses the portable OS/process-architecture RID and `AppContext.BaseDirectory`, independently of the working directory and managed assembly location. The native package targets preserve this directory for project and package consumers; ordinary .NET resolution remains available as a fallback. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
 
 ## Member summary
 
 | Declaration | Contract |
 | --- | --- |
+| `internal static string RuntimeRID { get; }` | Portable native asset RID, independent of distribution-specific .NET identity |
 | `internal static void Initialize()` | [Module initialization](#module-initialization) |
 
 ## Member descriptions
+
+### RuntimeRID
+
+`internal static string RuntimeRID { get; }`
+
+Desktop resolution uses `win`, `osx` or `linux` plus the executing process architecture. A distribution identity such as `arch-x64` therefore selects the portable `linux-x64` package directory. Other platforms retain the SDK runtime identifier and their native application loading rules.
 
 ### Module initialization
 
@@ -40,3 +47,5 @@ Android resolves its seven private `.so` files through the SDK's APK native-libr
 Self-contained Linux x64 tests loaded images and GPU shaders with LD_LIBRARY_PATH unset; loader diagnostics found one published libSDL3.so.0. The macOS resolver additionally selects private text/FAudio/ENet and OpenSSL dylibs from the RID directory, loading the shared SDL core before FAudio. Matching native production and public consumers passed; full-suite execution remains pending.
 
 [NativeLibraryTests](../../tests/Electron2D.Tests/NativeLibraryTests.cs) checks project-reference runtime-directory files and rejects root copies. The CharacterMovement Linux x64 publish and fresh ProjectReference/NuGet consumer checks preserve the entire selected native layout, including SDL and font libraries. The executable suite passes; focused font/audio checks and both Wayland audio hosts load the libraries with `LD_LIBRARY_PATH` unset from an external working directory. A local NuGet consumer verifies public text/audio calls in both its ordinary build and Linux x64 RID-directory publish. These checks do not establish foreign native execution or physical listening.
+
+The default Debug apphost was also exercised against the system .NET runtime reporting `arch-x64`. Native resolution selects the packaged `linux-x64` directory by OS and process architecture; it does not require a custom DOTNET_ROOT or a distribution-specific native package.
