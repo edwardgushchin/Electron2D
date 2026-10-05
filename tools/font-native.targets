@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <_Electron2DFontBuild>$(MSBuildThisFileDirectory)../obj/font-native/$(_Electron2DPrivateNativeRID)</_Electron2DFontBuild>
+    <_Electron2DFontName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DFreeType.dylib</_Electron2DFontName>
+    <_Electron2DFontLibrary>$(_Electron2DFontBuild)/$(_Electron2DFontName)</_Electron2DFontLibrary>
+    <_Electron2DFontLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_Native_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DFontName)</_Electron2DFontLibrary>
+    <Electron2DFontNativeJobs Condition="'$(Electron2DFontNativeJobs)' == ''">2</Electron2DFontNativeJobs>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'MacOS'">
+    <None Include="$(_Electron2DFontLibrary)" Link="runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DFontName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+  </ItemGroup>
+  <Target Name="BuildElectron2DFontNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativePlatform)' == 'MacOS'" Inputs="$(MSBuildThisFileDirectory)font-native/CMakeLists.txt;$(MSBuildThisFileFullPath)" Outputs="$(_Electron2DFontLibrary)">
+    <Error Condition="'$(_Electron2DPrivateNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)'" Text="Private FreeType requires a matching target-native build host." />
+    <Exec Command="cmake -S &quot;$(MSBuildThisFileDirectory)font-native&quot; -B &quot;$(_Electron2DFontBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release" />
+    <Exec Command="cmake --build &quot;$(_Electron2DFontBuild)&quot; --target freetype --parallel $(Electron2DFontNativeJobs)" />
+    <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)font-native/test_freetype.py&quot; &quot;$(_Electron2DFontLibrary)&quot;" />
+  </Target>
+</Project>

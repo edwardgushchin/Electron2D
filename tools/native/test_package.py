@@ -44,6 +44,21 @@ class NativePackageTests(unittest.TestCase):
             with patch.object(build_tls, "SHA256", hashlib.sha256(b"fixture").hexdigest()):
                 build_tls.checked_archive(archive)
 
+    def test_macos_freetype_rejects_global_codec_dependencies(self):
+        with tempfile.TemporaryDirectory() as directory:
+            library = Path(directory) / "libElectron2DFreeType.dylib"
+            library.write_bytes(struct.pack("<II", 0xfeedfacf, 0x0100000c) + bytes(24))
+            for dependency in ("/usr/lib/libSystem.B.dylib", "@rpath/libpng16.dylib",
+                               "@rpath/libz.1.dylib", "@rpath/libbrotlidec.dylib", "@rpath/libharfbuzz.dylib"):
+                outputs = [str(library) + ":\n@rpath/" + library.name + "\n", "cmd LC_ID_DYLIB\n",
+                           str(library) + ":\n" + dependency + "\n", "000001 T _FT_Init_FreeType\n"]
+                with patch.object(package.subprocess, "check_output", side_effect=outputs):
+                    if dependency.startswith("/usr/lib/"):
+                        self.assertEqual(package.macos_exports(library, "osx-arm64", library.name), {"FT_Init_FreeType"})
+                    else:
+                        with self.assertRaises(ValueError):
+                            package.macos_exports(library, "osx-arm64", library.name)
+
 
 if __name__ == "__main__":
     unittest.main()

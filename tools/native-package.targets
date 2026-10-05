@@ -5,8 +5,9 @@
   <Target Name="BuildElectron2DNativeAssets">
     <Error Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" Text="Native compilation requires -p:Electron2DBuildNativeFromSource=true." />
     <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and '$(Electron2DNativePlatform)' != 'MacOS'" Text="Private native builds require a supported Linux or MacOS profile." />
-    <CallTarget Targets="BuildElectron2DTextNative;BuildElectron2DAudioNative;BuildElectron2DENetNative;BuildElectron2DTLSNative" />
+    <CallTarget Targets="BuildElectron2DTextNative;BuildElectron2DAudioNative;BuildElectron2DENetNative;BuildElectron2DTLSNative;BuildElectron2DFontNative" />
     <Copy SourceFiles="$(_Electron2DTextNativeLibrary);$(_Electron2DAudioLibrary);$(_Electron2DENetLibrary);@(_Electron2DTLSNative)" DestinationFolder="$(NativeArtifacts)/runtimes/$(_Electron2DPrivateNativeRID)/native" />
-    <Exec Command="python3 -B &quot;$(MSBuildThisFileDirectory)native/package.py&quot; stage $(_Electron2DPrivateNativeRID) &quot;$(NativeArtifacts)&quot;" />
+    <Copy SourceFiles="$(_Electron2DFontLibrary)" DestinationFolder="$(NativeArtifacts)/runtimes/$(_Electron2DPrivateNativeRID)/native" Condition="'$(Electron2DNativePlatform)' == 'MacOS'" />
+    <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)native/package.py&quot; stage $(_Electron2DPrivateNativeRID) &quot;$(NativeArtifacts)&quot;" />
   </Target>
 </Project>

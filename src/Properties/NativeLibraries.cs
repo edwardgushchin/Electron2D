@@ -16,6 +16,7 @@ internal static class NativeLibraries
             if (name == "HarfBuzzSharp") return NativeLibrary.Load("libHarfBuzzSharp", assembly, path);
             if (OperatingSystem.IsMacOS())
             {
+                if (name == "freetype") return LoadRuntime("libElectron2DFreeType.dylib", assembly, path);
                 if (name == "Electron2DCrypto") return LoadRuntime("libElectron2DCrypto.3.dylib", assembly, path);
                 if (name == "Electron2DSSL") return LoadRuntime("libElectron2DSSL.3.dylib", assembly, path);
                 if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.dylib", assembly, path);

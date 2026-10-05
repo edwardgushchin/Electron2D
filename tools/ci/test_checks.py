@@ -155,7 +155,7 @@ class Checks(unittest.TestCase):
                     native = output / "runtimes" / rid / "native"
                     native.mkdir(parents=True)
                     header = struct.pack("<II", 0xfeedfacf, 0x01000007 if rid == "osx-x64" else 0x0100000c) + bytes(12)
-                    for name in ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib"):
+                    for name in ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"):
                         (native / name).write_bytes(header)
                 with redirect_stdout(StringIO()):
                     check_rid.check(rid, output)

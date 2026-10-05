@@ -45,6 +45,8 @@ Rasterize applies a horizontal 0..63 phase in 26.6 to the outline before rasteri
 
 Sequential ABI records model only documented public FreeType record fields. CLong/CULong preserve Windows C-long width and Unix native-long width. Public FreeType/HarfBuzz C entry points are called with Cdecl; no SDL_ttf private state is read. FontFile enforces the public 64 MiB source limit before constructing this backend.
 
+macOS resolves private FreeType 2.13.3 with statically linked Brotli/PNG/zlib and HarfBuzz auto-hinting support. Its producer checks the engine's bundled WOFF2 directly before packaging. The first upstream macOS binary failed WOFF2 decoding; [native delivery](../native-packaging.md) distinguishes that failure, the replacement producer and pending full runtime execution.
+
 ## Feature tag conversion
 
 <a id="opentypefeaturetags"></a>

@@ -17,7 +17,7 @@ PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-ar
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
 LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"),
              "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib",
-                       "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib")}
+                       "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib")}
 
 
 def platform(rid):
@@ -42,6 +42,9 @@ def macos_exports(path, rid, name):
         raise ValueError("Private OpenSSL must resolve its own bundled crypto library")
     if "libicu" in imports.lower():
         raise ValueError("Private text must not depend on global ICU")
+    if "FreeType" in name and any(dependency in imports.lower() for dependency in
+                                  ("libpng", "libz.", "libbrotli", "libharfbuzz")):
+        raise ValueError("Private FreeType codecs and auto-hinting dependencies must be statically linked")
     symbols = subprocess.check_output(["nm", "-gU", str(path)], text=True)
     return {line.split()[-1].removeprefix("_") for line in symbols.splitlines() if line.strip()}
 
@@ -56,7 +59,7 @@ def source_hash():
     files = set()
     for directory in ("src/Vendor/ICU", "src/Vendor/FAudio", "src/Vendor/ENet",
                       "src/Vendor/FastLZ", "src/Servers/Text/Native",
-                      "tools/audio-native", "tools/enet-native", "tools/native"):
+                      "tools/audio-native", "tools/enet-native", "tools/font-native", "tools/native"):
         files.update(p for p in (ROOT / directory).rglob("*") if p.is_file()
                      and not {"bin", "obj", "__pycache__"} & set(p.relative_to(ROOT).parts))
     files.update((ROOT / "tools").glob("*-native.targets"))
@@ -80,7 +83,7 @@ def inspect(rid, directory):
         data = path.read_bytes()
         if rid.startswith("osx-"):
             exports = macos_exports(path, rid, name)
-            required = {"BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"} if "Crypto" in name else {"TLS_method", "DTLS_method", "SSL_CTX_new"} if "SSL" in name else TEXT_EXPORTS if "TextBreak" in name else {"e2d_audio_select_output", "e2d_audio_output_latency"} if "FAudio" in name else {
+            required = {"FT_Init_FreeType", "FT_New_Memory_Face", "FT_Load_Glyph"} if "FreeType" in name else {"BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"} if "Crypto" in name else {"TLS_method", "DTLS_method", "SSL_CTX_new"} if "SSL" in name else TEXT_EXPORTS if "TextBreak" in name else {"e2d_audio_select_output", "e2d_audio_output_latency"} if "FAudio" in name else {
                 "e2d_enet_" + item for item in ("callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")}
             if not required <= exports or ("TextBreak" in name or "ENet" in name) and exports != required:
                 raise ValueError(f"Missing or foreign engine ABI exports: {path}")

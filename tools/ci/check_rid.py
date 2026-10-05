@@ -59,7 +59,7 @@ def check(rid, output):
     if ET.parse(output / "Electron2D.xml").findtext("./assembly/name") != "Electron2D":
         raise ValueError("Wrong XML documentation assembly")
     linux = {"libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"}
-    macos = {"libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib"}
+    macos = {"libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"}
     private = linux | macos
     found = {path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file() and path.name in private}
     wanted = {f"runtimes/{rid}/native/{name}" for name in linux if row["platform"] == "Linux"} | {f"runtimes/{rid}/native/{name}" for name in macos if row["platform"] == "MacOS"}
