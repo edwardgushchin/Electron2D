@@ -6,7 +6,7 @@ Private text/audio/ENet libraries are owned by the `Electron2D.Native.Linux` pac
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
-Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, Android TV, tvOS, and Web; its editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. All currently implemented production rows in this inventory are runtime types belonging to `Electron2D.dll`. Approved managed SDL3-CS bindings are internal source in that assembly under ADR 0012; native libraries remain platform deployment files. The future first-party editor is a separate executable consumer under ADR 0027 and has no implemented production rows yet.
+Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, Android TV, tvOS, and Web; its editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. Runtime type rows belong to `Electron2D.dll`. Approved managed SDL3-CS bindings are internal source in that assembly under ADR 0012; native libraries remain platform deployment files. The separate first-party editor and its internal scene builder are recorded under repository product boundaries, following ADR 0027.
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
@@ -492,7 +492,7 @@ This assembly row records the current build, not complete platform delivery. The
 | Product layer | Source root | Dependency direction | Current state |
 | --- | --- | --- | --- |
 | Runtime engine | [`src/`](../src/) and [`Electron2D.csproj`](../Electron2D.csproj) | May use only approved runtime dependencies | Implemented types compile into `Electron2D.dll` |
-| Self-hosted editor | [`editor/`](../editor/) | Future executable references `Electron2D.dll`; runtime never references editor | Directory boundary reserved; no project or source implemented |
+| Self-hosted editor | [`editor/Electron2D.Editor.csproj`](../editor/Electron2D.Editor.csproj) | Executable references `Electron2D.dll`; runtime never references editor | Branded 1152×800 startup window; internal [EditorScene](classes/EditorScene.md), public runtime host and VS Code F5 configuration; authoring remains absent |
 | First-party games/examples | [`examples/`](../examples/) | Each executable references `Electron2D.dll`; runtime never references examples | First window/input example implemented; future feature and game examples pending |
 
 ## Audio

@@ -9,6 +9,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
+    <Compile Include="../../editor/EditorScene.cs" Link="Editor/EditorScene.cs" />
+    <Content Include="../../docs/design/assets/sprite/logo-stacked-dark.svg" Link="Assets/logo-stacked-dark.svg" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="Shaders/*.spv" LogicalName="TestShaders.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Fixtures/StyleBoxFlatGeometry.json" LogicalName="TestFixtures.StyleBoxFlatGeometry.json" />
     <EmbeddedResource Include="Fixtures/UnicodeTextConformance.json" LogicalName="TestFixtures.UnicodeTextConformance.json" />

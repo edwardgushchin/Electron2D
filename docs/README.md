@@ -36,7 +36,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Managed CPU images implement raw pixel layouts, copied-buffer ownership, mip chains, format conversion, transforms, filters, compositing, channel/alpha inspection, normal-map helpers and metrics. PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG encoding execute through the native image integration. Further codecs and block compression/decompression remain incomplete under ADR 0039.
 - Rendering has Linux Wayland native pixel checks for canvas geometry, shader parameters, textures, text and resource cleanup; broader rendering and shader features remain partial in coverage. Physics and non-spatial audio playback/recording are implemented within their documented profiles. Scene file serialization and an editor application remain absent. Native input pumping exists in DisplayServer; remaining hardware gaps have explicit triggers in ADR 0038.
 - Native TCP/UDP/Unix-domain listeners and peers, endian-aware stream codecs, caller-span packets, framed streams and extensible typed transport hooks are implemented. Linux x64 IPv4/IPv6 loopback, local IPC, scene-owned exchange and warmed managed allocation checks pass; TLS client/server streams, key/certificate resources and `.key`/`.crt` resource loading are implemented on Linux OpenSSL 3; further protocol layers, routed traffic and other platforms retain separate gates in the [networking domain](domains/networking.md).
-- The editor source root is reserved in this repository, but no editor project or source exists yet. Its future assembly is a consumer of `Electron2D.dll` and is not part of the one-runtime-DLL boundary.
+- The [editor](domains/editor.md) is a separate executable consumer of `Electron2D.dll`. Its first slice displays the approved centered logo in a 1152×800 native window and has a VS Code F5 configuration; project and scene editing remain absent.
 - Persistent event connections: deferred until a typed stable endpoint schema exists.
 - Packed/exported resource filesystems, import remapping, `uid://`, and `pipe://` are not implemented; current `res://`/`user://` resolution is directory-backed and lexically confined. FastLZ and Zstandard are explicit file-access gaps. Extended attributes and directory links are implemented for Linux, macOS, and Windows, with native-host verification currently limited to Linux. Android/iOS link and drive-enumeration integration is explicitly absent.
 
@@ -51,6 +51,8 @@ This directory describes the engine as it exists now. Planned features are liste
 - [Approved Sprite identity and source assets](design/identity.md)
 - [API comparison and implementation roadmap](coverage/index.md)
 - Domain: [Core](domains/core.md)
+- Domain: [Editor](domains/editor.md)
+- Component: [Editor startup](components/editor-startup.md)
 - Domain: [Input](domains/input.md)
 - Domain: [Scene](domains/scene.md)
 - Domain: [Localization](domains/localization.md)

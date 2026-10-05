@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-05
 
+The [editor startup screen](../components/editor-startup.md) is a separate executable consumer of existing public Window, TextureRect, Label, ResourceLoader and Engine APIs. It adds no runtime declaration or coverage-state change. Editor project/scene authoring, inspector/gizmos and shared CLI/batch operations remain dependent on their first executable slices under ADR 0090; displaying a logo does not satisfy those dependencies.
+
 [Private native delivery](../native-packaging.md) restores versioned assets rather than compiling them during ordinary builds. Both Linux architectures execute their full headless suite; the preceding Linux package was publicly verified. Both macOS native producers and package audits passed, but the first connected consumers failed WOFF2 decoding. Private FreeType with pinned static codec/auto-hinting dependencies now passes its local decoder check; target consumer/full-suite reruns remain required. Windows/mobile/browser native closures remain open. No public API/member state changes are inferred from packaging or pending target tests.
 
 The [native ENet slice](../components/enet.md) closes all 92 own host/peer/multiplayer class/member rows, with real IPv4/IPv6 UDP/DTLS channels, five codecs, server/client/mesh routing and existing SceneMultiplayer consumers. Native tests cover delivery metadata, fragmentation/loss retry, bounded queues, ownership/refusal/tuning and a separate stock Unix ENet socket process. Prepared active/idle intervals allocate zero managed bytes; native allocations, routed/browser/foreign/human/rendered/editor acceptance remain separate.

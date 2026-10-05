@@ -1,0 +1,12 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-editor",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["build", "${workspaceFolder}/editor/Electron2D.Editor.csproj", "-c", "Debug", "-p:Electron2DBuildNativeFromSource=true"],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
