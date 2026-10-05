@@ -81,6 +81,7 @@ internal static class ENetTests
     }
     private static void Exchange(string address, ENetCompressionMode codec)
     {
+        Console.WriteLine($"ENet {address}, {codec}: connect.");
         using var server = new ENetConnection(); using var client = new ENetConnection();
         server.CreateHostBound(address, 0, 4, 3); client.CreateHost(1, 3);
         server.Compress(codec); client.Compress(codec); var outgoing = client.ConnectToHost(address, server.GetLocalPort(), 3, 123);
@@ -92,10 +93,13 @@ internal static class ENetTests
         var data = new byte[20000]; for (var i = 0; i < data.Length; i++) data[i] = (byte)(i % 16);
         foreach (var flags in new[] { ENetPacketFlags.Reliable, ENetPacketFlags.None, ENetPacketFlags.Unsequenced | ENetPacketFlags.UnreliableFragment })
         {
+            Console.WriteLine($"ENet {address}, {codec}: 20000-byte {flags} fragments.");
             outgoing.Send(2, data, flags); Wait(Poll, () => incoming!.GetAvailablePacketCount() > 0); Check((incoming!.GetPacketFlags() & ENetPacketFlags.Reliable) != 0 == (flags == ENetPacketFlags.Reliable || flags == ENetPacketFlags.None), "Next packet reliability flags."); Reject<ArgumentException>(() => incoming.GetPacket(new byte[1])); Check(incoming.GetAvailablePacketCount() == 1, "Undersized read preserves packet."); Check(incoming.GetPacket().AsSpan().SequenceEqual(data), "Fragmented channel packet.");
         }
+        Console.WriteLine($"ENet {address}, {codec}: reply.");
         incoming!.PutPacket("answer"u8); Wait(Poll, () => outgoing.GetAvailablePacketCount() > 0); Check(outgoing.GetPacket().AsSpan().SequenceEqual("answer"u8), "Reply.");
         Check(server.PopStatistic(ENetHostStatistic.TotalReceivedData) > 0 && server.PopStatistic(ENetHostStatistic.TotalReceivedData) == 0, "Statistics reset.");
+        Console.WriteLine($"ENet {address}, {codec}: disconnect.");
         outgoing.PeerDisconnect(42); var disconnected = false; Wait(() => { var e = server.Service(); if (e.Type == ENetEventType.Disconnect) { Check(e.Data == 42, "Disconnect data."); disconnected = true; } client.Service(); }, () => disconnected && !outgoing.IsActive());
         Check(!incoming!.IsActive(), "Disconnected peer detaches."); server.Destroy(); Check(!incoming!.IsDisposed && incoming.GetState() == ENetPeerState.Disconnected, "Destroy preserves borrowed peer object identity.");
     }

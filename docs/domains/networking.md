@@ -4,6 +4,8 @@ Last updated: 2026-10-05
 
 ## Responsibility and public surface
 
+Desktop DTLS oracles now use actual UDP binding readiness and exact byte-stream packet exchange with shared TLS process diagnostics. Native DTLS and ENet cold stage markers narrow target failures without changing protocol assertions, deadlines or warmed allocation intervals. Focused Linux checks passed; the remaining Windows/macOS full-suite failures retain their target gates.
+
 Networking owns ordered binary streams, native TCP/UDP/UDS connections/listeners, UDP endpoint routing and packet framing. The [native streams and packets component](../components/networking.md) exposes StreamPeer/Buffer/Socket/TCP/UDS, SocketServer/TCPServer/UDSServer, PacketPeer/UDP/Stream and UDPServer. Runtime code is under `src/Core/Networking/` and ships in Electron2D.dll.
 
 ## Dependency direction and invariants

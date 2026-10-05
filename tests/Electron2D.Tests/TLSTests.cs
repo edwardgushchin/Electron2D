@@ -1,11 +1,11 @@
 using Electron2D;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using static OpenSSLOracle;
 using Path = System.IO.Path;
 using RandomNumberGenerator = System.Security.Cryptography.RandomNumberGenerator;
 using Certificate = Electron2D.X509Certificate;
@@ -223,14 +223,6 @@ internal static class TLSTests
         finally { Directory.Delete(folder, true); }
         Console.WriteLine("Independent OpenSSL TLS 1.3 client/server records, trust/name validation and close notifications passed.");
     }
-    private static Process StartOracle(string[] args, out Task<string> error)
-    {
-        var start = new ProcessStartInfo("openssl") { RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true };
-        foreach (var argument in args) start.ArgumentList.Add(argument);
-        var process = Process.Start(start) ?? throw new IOException("OpenSSL oracle did not start."); error = process.StandardError.ReadToEndAsync(); return process;
-    }
-    private static void CheckOracle(Process process, Task<string> error) { if (process.HasExited && process.ExitCode != 0) throw new IOException("OpenSSL oracle failed: " + error.GetAwaiter().GetResult()); }
-    private static void StopOracle(Process process) { if (!process.HasExited) process.Kill(true); Check(process.WaitForExit(3000), "Independent TLS oracle exits."); }
     private static void Handshake(StreamPeerTLS a, StreamPeerTLS b) => Wait(() => { a.Poll(); b.Poll(); return a.GetStatus() == TLSStatus.Connected && b.GetStatus() == TLSStatus.Connected; });
     private static void RoundTrip(StreamPeerTLS a, StreamPeerTLS b)
     {

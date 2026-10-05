@@ -34,6 +34,8 @@ Linux OpenSSL is host-provided and not redistributed. Windows/macOS use private 
 
 ## Verification
 
+TLS and DTLS independent OpenSSL processes share the same bounded cleanup and stderr-preserving exit checks. The TLS 1.3 fixtures passed on Linux after extracting that helper; native TLS behavior and assertions are unchanged.
+
 [TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) exercises RSA/EC PEM, private/public role, DER files, ordered chains, copied Resource state, loader discovery/cache/replace/failure, observer failure, resource-use rejection/release and abandoned-session finalization. Actual Linux OpenSSL TLS exchanges run over fragmented public StreamPeer and TCP, including 128 KiB partial transfer, DNS/IP/override, valid/wrong/system trust, expired identity, unsafe with/without required custom trust, matching-key rejection, close notification, preceding plaintext at FIN and a second TLS session over preserved TCP. Independent .NET SslStream peers verify both client and server wire interoperability without relying on Electron2D's TLS implementation.
 
 64 prepared active number/read/write/poll cycles and 64 idle status/availability/poll cycles measure zero managed allocated bytes on the owner thread. Native BIO capacity is fixed; OpenSSL internal native allocation totals, routed traffic/throughput, system CA variation, other platforms and owner acceptance are unverified. No renderer or unified editor/project tool acceptance is inferred from these network tests.
