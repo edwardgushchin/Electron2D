@@ -16,7 +16,7 @@ def build(rid, sdl, artifacts):
     if platform.system() != "Windows" or os.environ.get("VSCMD_ARG_TGT_ARCH") != rid.removeprefix("win-"):
         raise RuntimeError("Windows native production requires the selected MSVC target environment")
     root = package.ROOT
-    output = root / "obj/native-windows" / rid
+    output = root / "obj/native-windows" / package.configuration()["version"] / rid
     windows.sdl_import_library(sdl, rid, output / "sdl")
     for source, target, name, options in (
             ("src/Servers/Text/Native", "Electron2DTextBreak", "Electron2DTextBreak.dll", []),

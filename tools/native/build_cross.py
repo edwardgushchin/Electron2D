@@ -58,7 +58,7 @@ def profile(rid, ndk):
 def build(rid, artifacts, sdl=None, ndk=None):
     environment, options, flags = profile(rid, ndk)
     root = package.ROOT
-    directory = root / "obj/native-cross" / rid
+    directory = root / "obj/native-cross" / package.configuration()["version"] / rid
     font = next((root / "src/Scene/Theme/Fonts").glob("*.woff2"))
     if sdl is None and rid != "browser-wasm":
         packages = Path(os.environ.get("NUGET_PACKAGES", Path.home() / ".nuget/packages"))
