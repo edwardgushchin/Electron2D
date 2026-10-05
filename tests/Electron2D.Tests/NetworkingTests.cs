@@ -1,4 +1,5 @@
 using Electron2D;
+using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
 
@@ -75,6 +76,25 @@ internal static class NetworkingTests
         var before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) { RoundTrip(client, accepted); client.Poll(); accepted.Poll(); _ = client.GetStatus(); _ = client.GetLocalPort(); _ = server.IsListening(); }
         var bytes = GC.GetAllocatedBytesForCurrentThread() - before; Check(bytes == 0, "64 TCP warm cycles allocate " + bytes); Console.WriteLine("64 TCP stream/number/poll cycles: " + bytes + " managed bytes.");
         client.PutU8(42); client.DisconnectFromHost(); Wait(() => accepted.GetAvailableBytes() == 1); accepted.Poll(); Check(accepted.GetStatus() == StreamSocketStatus.Connected && accepted.GetU8() == 42, "FIN preserves queued bytes."); Wait(() => { accepted.Poll(); return accepted.GetStatus() == StreamSocketStatus.None; });
+        using (var resetListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+        using (var resetClient = new StreamPeerTCP())
+        {
+            resetListener.Bind(new IPEndPoint(IPAddress.Loopback, 0)); resetListener.Listen(1);
+            resetClient.ConnectToHost("127.0.0.1", ((IPEndPoint)resetListener.LocalEndPoint!).Port);
+            using (var resetPeer = resetListener.Accept())
+            {
+                Wait(() => { resetClient.Poll(); return resetClient.GetStatus() == StreamSocketStatus.Connected; });
+                resetPeer.LingerState = new LingerOption(true, 0);
+            }
+            var resetDetected = false;
+            Wait(() =>
+            {
+                try { resetClient.Poll(); }
+                catch (SocketException error) when (error.SocketErrorCode is SocketError.ConnectionReset or SocketError.ConnectionAborted) { resetDetected = true; }
+                return resetDetected;
+            });
+            Check(resetClient.GetStatus() == StreamSocketStatus.Error && resetClient.GetLocalPort() == 0, "RST reports the actual socket error and closes native state.");
+        }
         Reject<InvalidOperationException>(() => client.SetNoDelay(true)); Reject<ArgumentOutOfRangeException>(() => client.ConnectToHost("127.0.0.1", 0));
         using var refused = new StreamPeerTCP(); try { refused.ConnectToHost("127.0.0.1", server.GetLocalPort() == 0 ? local : server.GetLocalPort()); Wait(() => { refused.Poll(); return refused.GetStatus() != StreamSocketStatus.Connecting; }); } catch (SocketException) { }
         using var duplicateListener = new TCPServer(); using var occupied = new TCPServer(); occupied.Listen(0, "127.0.0.1"); Reject<SocketException>(() => duplicateListener.Listen(occupied.GetLocalPort(), "127.0.0.1")); Check(!duplicateListener.IsListening(), "Failed listen releases native state.");

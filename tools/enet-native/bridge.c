@@ -70,10 +70,10 @@ void enet_time_set(uint32_t value) {
   time_offset = enet_time_get() + time_offset - value;
 }
 ENetSocket enet_socket_create(ENetSocketType type) {
-  return type == ENET_SOCKET_TYPE_DATAGRAM ? creating_socket : -1;
+  return type == ENET_SOCKET_TYPE_DATAGRAM ? (ENetSocket)creating_socket : ENET_SOCKET_NULL;
 }
 int enet_socket_bind(ENetSocket s, const ENetAddress *a) {
-  return s >= 0 ? 0 : -1;
+  return s != ENET_SOCKET_NULL ? 0 : -1;
 }
 int enet_socket_get_address(ENetSocket s, ENetAddress *a) {
   memset(a, 0, sizeof(*a));

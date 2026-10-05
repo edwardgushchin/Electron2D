@@ -348,7 +348,7 @@
     {
       "godot": "class:StreamPeerSocket",
       "electron2d": "T:Electron2D.StreamPeerSocket",
-      "reason": "ADR 0094: executable typed streams and native TCP/UDP/UDS listeners/peers plus fixed little-endian packet framing. .NET socket backend, owner-thread operations/disposal, span progress or typed I/O exceptions replace heterogeneous Error/Array results; exact-width integer/IEEE codecs, ASCII spaces and UTF-8 BOM/NUL/malformed-byte behavior preserve wire semantics. Native Linux x64 NetworkingTests verifies IPv4/IPv6 loopback, IPC cleanup, port conflict/restart, partial transfer/FIN, datagram/framing boundaries and budgets, connected filtering, UDP endpoint/lifetime/limit routing, multicast membership, scene-owned request/reply and 64 warm buffer/TCP/UDP managed-allocation boundaries. Browser raw sockets, other platforms, routed network/multicast/broadcast, native allocator totals and owner acceptance remain separate gates."
+      "reason": "ADR 0094: executable typed streams and native TCP/UDP/UDS listeners/peers plus fixed little-endian packet framing. .NET socket backend, owner-thread operations/disposal, span progress or typed I/O exceptions replace heterogeneous Error/Array results; exact-width integer/IEEE codecs, ASCII spaces and UTF-8 BOM/NUL/malformed-byte behavior preserve wire semantics. Native Linux x64 NetworkingTests verifies IPv4/IPv6 loopback, IPC cleanup, port conflict/restart, partial transfer/FIN, datagram/framing boundaries and budgets, connected filtering, UDP endpoint/lifetime/limit routing, multicast membership, scene-owned request/reply and 64 warm buffer/TCP/UDP managed-allocation boundaries. Browser raw sockets, other platforms, routed network/multicast/broadcast, native allocator totals and owner acceptance remain separate gates. Poll distinguishes queued FIN from abortive RST by reading the actual socket error; Linux loopback regression passes, and the corrected macOS full suite awaits a target rerun."
     },
     {
       "godot": "StreamPeerSocket::enum:Status",
@@ -388,7 +388,7 @@
     {
       "godot": "StreamPeerSocket::method:poll()",
       "electron2d": "method:Electron2D.StreamPeerSocket.Poll()",
-      "reason": "ADR 0094: executable typed streams and native TCP/UDP/UDS listeners/peers plus fixed little-endian packet framing. .NET socket backend, owner-thread operations/disposal, span progress or typed I/O exceptions replace heterogeneous Error/Array results; exact-width integer/IEEE codecs, ASCII spaces and UTF-8 BOM/NUL/malformed-byte behavior preserve wire semantics. Native Linux x64 NetworkingTests verifies IPv4/IPv6 loopback, IPC cleanup, port conflict/restart, partial transfer/FIN, datagram/framing boundaries and budgets, connected filtering, UDP endpoint/lifetime/limit routing, multicast membership, scene-owned request/reply and 64 warm buffer/TCP/UDP managed-allocation boundaries. Browser raw sockets, other platforms, routed network/multicast/broadcast, native allocator totals and owner acceptance remain separate gates."
+      "reason": "ADR 0094: executable typed streams and native TCP/UDP/UDS listeners/peers plus fixed little-endian packet framing. .NET socket backend, owner-thread operations/disposal, span progress or typed I/O exceptions replace heterogeneous Error/Array results; exact-width integer/IEEE codecs, ASCII spaces and UTF-8 BOM/NUL/malformed-byte behavior preserve wire semantics. Native Linux x64 NetworkingTests verifies IPv4/IPv6 loopback, IPC cleanup, port conflict/restart, partial transfer/FIN, datagram/framing boundaries and budgets, connected filtering, UDP endpoint/lifetime/limit routing, multicast membership, scene-owned request/reply and 64 warm buffer/TCP/UDP managed-allocation boundaries. Browser raw sockets, other platforms, routed network/multicast/broadcast, native allocator totals and owner acceptance remain separate gates. Poll distinguishes queued FIN from abortive RST by reading the actual socket error; Linux loopback regression passes, and the corrected macOS full suite awaits a target rerun."
     },
     {
       "godot": "class:StreamPeerTCP",
@@ -5274,7 +5274,6 @@
         "StreamPeerSocket::enum_value:Status.STATUS_NONE",
         "StreamPeerSocket::method:disconnect_from_host()",
         "StreamPeerSocket::method:get_status()",
-        "StreamPeerSocket::method:poll()",
         "StreamPeerTCP::method:bind(int:,String:)",
         "StreamPeerTCP::method:connect_to_host(String:,int:)",
         "StreamPeerTCP::method:get_connected_host()",
@@ -5303,7 +5302,6 @@
         "class:SocketServer",
         "class:StreamPeer",
         "class:StreamPeerBuffer",
-        "class:StreamPeerSocket",
         "class:StreamPeerTCP",
         "class:StreamPeerUDS",
         "class:TCPServer",
@@ -5311,6 +5309,11 @@
         "class:UDSServer"
       ],
       "reason": "ADR 0094: executable typed streams and native TCP/UDP/UDS listeners/peers plus fixed little-endian packet framing. .NET socket backend, owner-thread operations/disposal, span progress or typed I/O exceptions replace heterogeneous Error/Array results; exact-width integer/IEEE codecs, ASCII spaces and UTF-8 BOM/NUL/malformed-byte behavior preserve wire semantics. Native Linux x64 NetworkingTests verifies IPv4/IPv6 loopback, IPC cleanup, port conflict/restart, partial transfer/FIN, datagram/framing boundaries and budgets, connected filtering, UDP endpoint/lifetime/limit routing, multicast membership, scene-owned request/reply and 64 warm buffer/TCP/UDP managed-allocation boundaries. Browser raw sockets, other platforms, routed network/multicast/broadcast, native allocator totals and owner acceptance remain separate gates."
+    },
+    {
+      "state": "Implemented",
+      "godot": ["class:StreamPeerSocket", "StreamPeerSocket::method:poll()"],
+      "reason": "ADR 0094: owner-thread nonblocking TCP/UDS stream lifecycle and cached connection phases. Poll preserves queued FIN and reports abortive RST through the actual nonzero socket error; error readiness alone is not a reset. Linux loopback FIN/RST and warmed allocation regressions pass. The corrected full macOS suite still requires a target rerun; other targets and routed traffic remain separate gates."
     },
     {
       "state": "Excluded",

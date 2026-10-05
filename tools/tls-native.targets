@@ -8,7 +8,10 @@
     <_Electron2DTLSNative Include="$(PkgElectron2D_Native_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/libElectron2DCrypto.3.dylib;$(PkgElectron2D_Native_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/libElectron2DSSL.3.dylib" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
     <None Include="@(_Electron2DTLSNative)" Link="runtimes/$(_Electron2DPrivateNativeRID)/native/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
   </ItemGroup>
-  <Target Name="BuildElectron2DTLSNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativePlatform)' == 'MacOS'" Inputs="$(MSBuildThisFileDirectory)native/build_tls.py;$(MSBuildThisFileDirectory)native-package.props" Outputs="@(_Electron2DTLSNative)">
-    <Exec Command="python3 -B &quot;$(MSBuildThisFileDirectory)native/build_tls.py&quot; $(_Electron2DPrivateNativeRID) &quot;$(_Electron2DTLSBuild)&quot;" />
+  <ItemGroup Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativePlatform)' == 'Windows'">
+    <_Electron2DTLSNative Include="$(_Electron2DTLSBuild)/libcrypto-3-Electron2D.dll;$(_Electron2DTLSBuild)/libssl-3-Electron2D.dll" />
+  </ItemGroup>
+  <Target Name="BuildElectron2DTLSNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and ('$(Electron2DNativePlatform)' == 'MacOS' or '$(Electron2DNativePlatform)' == 'Windows')" Inputs="$(MSBuildThisFileDirectory)native/build_tls.py;$(MSBuildThisFileDirectory)native/openssl-windows.conf;$(MSBuildThisFileDirectory)native-package.props" Outputs="@(_Electron2DTLSNative)">
+    <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)native/build_tls.py&quot; $(_Electron2DPrivateNativeRID) &quot;$(_Electron2DTLSBuild)&quot;" />
   </Target>
 </Project>

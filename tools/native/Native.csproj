@@ -15,6 +15,7 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
     <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'Linux'">linux-x64,linux-arm64</NativePackageRIDs>
     <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'MacOS'">osx-x64,osx-arm64</NativePackageRIDs>
+    <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'Windows'">win-x86,win-x64,win-arm64</NativePackageRIDs>
     <NativeArtifacts Condition="'$(NativeArtifacts)' == ''">$(MSBuildThisFileDirectory)../../bin/native-artifacts</NativeArtifacts>
   </PropertyGroup>
   <ItemGroup>

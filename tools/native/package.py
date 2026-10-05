@@ -13,11 +13,46 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 from check_native_publish import TEXT_EXPORTS, check_private_text
 
-PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-arm64")}
+PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-arm64"),
+             "Windows": ("win-x86", "win-x64", "win-arm64")}
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
 LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"),
              "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib",
-                       "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib")}
+                       "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"),
+             "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll",
+                         "libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll", "Electron2DFreeType.dll")}
+
+
+def required_exports(name):
+    if "FreeType" in name:
+        return {"FT_Init_FreeType", "FT_New_Memory_Face", "FT_Load_Glyph"}
+    if "Crypto" in name or "crypto" in name:
+        return {"BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"}
+    if "SSL" in name or "ssl" in name:
+        return {"TLS_method", "DTLS_method", "SSL_CTX_new"}
+    if "TextBreak" in name:
+        return TEXT_EXPORTS
+    if "FAudio" in name:
+        return {"e2d_audio_select_output", "e2d_audio_output_latency"}
+    return {"e2d_enet_" + item for item in ("callbacks", "create", "destroy", "connect", "service", "flush",
+                                         "send", "packet", "release", "peer", "stat", "host", "compress")}
+
+
+def windows_exports(path, rid, name):
+    from windows import inspect
+    exports, imports = inspect(path, rid, name)
+    system = {"kernel32.dll", "ntdll.dll", "advapi32.dll", "bcrypt.dll", "crypt32.dll", "user32.dll",
+              "ws2_32.dll", "gdi32.dll", "shell32.dll", "ole32.dll", "winmm.dll"}
+    private = {library.lower() for library in LIBRARIES["Windows"]} | {"sdl3.dll"}
+    if any(dependency not in system | private and not dependency.startswith("api-ms-win-") for dependency in imports):
+        raise ValueError(f"Unbundled private DLL dependency: {path}: {imports - system - private}")
+    if name == "FAudio.dll" and "sdl3.dll" not in imports:
+        raise ValueError("FAudio must share the packaged SDL3 core")
+    if name == "libssl-3-Electron2D.dll" and "libcrypto-3-electron2d.dll" not in imports:
+        raise ValueError("Private OpenSSL must resolve its own bundled crypto library")
+    if "FreeType" in name and imports & (private - {name.lower()}):
+        raise ValueError("Private FreeType codecs and auto-hinting dependencies must be statically linked")
+    return exports
 
 
 def platform(rid):
@@ -82,10 +117,9 @@ def inspect(rid, directory):
     for name in libraries:
         path = directory / name
         data = path.read_bytes()
-        if rid.startswith("osx-"):
-            exports = macos_exports(path, rid, name)
-            required = {"FT_Init_FreeType", "FT_New_Memory_Face", "FT_Load_Glyph"} if "FreeType" in name else {"BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"} if "Crypto" in name else {"TLS_method", "DTLS_method", "SSL_CTX_new"} if "SSL" in name else TEXT_EXPORTS if "TextBreak" in name else {"e2d_audio_select_output", "e2d_audio_output_latency"} if "FAudio" in name else {
-                "e2d_enet_" + item for item in ("callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")}
+        if rid.startswith(("osx-", "win-")):
+            exports = windows_exports(path, rid, name) if rid.startswith("win-") else macos_exports(path, rid, name)
+            required = required_exports(name)
             if not required <= exports or ("TextBreak" in name or "ENet" in name) and exports != required:
                 raise ValueError(f"Missing or foreign engine ABI exports: {path}")
             checksums[name] = hashlib.sha256(data).hexdigest()

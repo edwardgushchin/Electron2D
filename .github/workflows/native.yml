@@ -150,6 +150,86 @@ jobs:
           name: private-native-package-macos
           path: bin/native-feed/*.nupkg
           if-no-files-found: error
+  native_windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rid: win-x86
+            arch: x86
+            runner: windows-2025
+          - rid: win-x64
+            arch: x64
+            runner: windows-2025
+          - rid: win-arm64
+            arch: arm64
+            runner: windows-11-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 75
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@a102174a2b586eec2ea151a69e6fd14404a8ce7c # v1.13.0
+        with:
+          arch: ${{ matrix.arch }}
+      - name: Install pinned PE audit dependency
+        run: python -m pip install --require-hashes -r tools/native/requirements-windows.txt
+      - name: Restore the pinned native SDL package
+        run: dotnet restore Electron2D.csproj -r "${{ matrix.rid }}" -p:Electron2DBuildNativeFromSource=true
+      - id: recipe
+        run: echo "hash=$(python -B tools/native/package.py fingerprint)" >> "$GITHUB_OUTPUT"
+        shell: bash
+      - uses: actions/cache@v4
+        id: native_cache
+        if: ${{ !inputs.rebuild }}
+        with:
+          path: bin/native-artifacts/
+          key: native-${{ matrix.rid }}-${{ runner.os }}-${{ runner.arch }}-${{ steps.recipe.outputs.hash }}
+      - name: Build and audit selected Windows libraries
+        if: steps.native_cache.outputs.cache-hit != 'true'
+        run: |
+          $packages = if ($env:NUGET_PACKAGES) { $env:NUGET_PACKAGES } else { Join-Path $HOME '.nuget/packages' }
+          $sdl = Join-Path $packages 'sdl3-cs.windows/3.4.16/runtimes/${{ matrix.rid }}/native/SDL3.dll'
+          python -B tools/native/build_windows.py '${{ matrix.rid }}' $sdl bin/native-artifacts
+      - name: Validate current source receipts and binary identities
+        run: python -B tools/native/package.py check bin/native-artifacts --rids "${{ matrix.rid }}" --platform Windows
+      - uses: actions/upload-artifact@v4
+        with:
+          name: private-native-Windows-${{ matrix.rid }}
+          path: bin/native-artifacts/
+          if-no-files-found: error
+  package_windows:
+    needs: native_windows
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --require-hashes -r tools/native/requirements-windows.txt
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: private-native-Windows-*
+          merge-multiple: true
+          path: bin/native-artifacts/
+      - name: Pack all three Windows native architectures
+        run: dotnet pack tools/native/Native.csproj -c Release -p:NativePackagePlatform=Windows -o bin/native-feed
+      - uses: actions/upload-artifact@v4
+        with:
+          name: private-native-package-windows
+          path: bin/native-feed/*.nupkg
+          if-no-files-found: error
   consumer:
     needs: [package, package_macos]
     strategy:

@@ -10,7 +10,7 @@ Last updated: 2026-10-04
 
 Owns a nonblocking native stream socket with explicit connection polling.
 
-Partial operations do not wait. Full reads/writes can block until the peer supplies progress or closes. Poll detects connection completion, errors and FIN after queued bytes drain. Status queries are cached. Calls and disposal require the constructing thread.
+Partial operations do not wait. Full reads/writes can block until the peer supplies progress or closes. Poll detects connection completion, nonzero socket errors and FIN after queued bytes drain. Readiness without a socket error preserves queued data. Status queries are cached. Calls and disposal require the constructing thread.
 
 The [networking component](../components/networking.md) records ownership, native/private boundaries, typed failures, allocation scopes and remaining protocol prerequisites. [ADR 0094](../decisions/networking.md#adr-0094) defines the accepted contract.
 

@@ -60,3 +60,7 @@ set_target_properties(freetype PROPERTIES OUTPUT_NAME Electron2DFreeType
 if(APPLE)
     set_target_properties(freetype PROPERTIES INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE)
 endif()
+
+add_executable(Electron2DFreeTypeCheck EXCLUDE_FROM_ALL test_freetype.c)
+target_link_libraries(Electron2DFreeTypeCheck PRIVATE freetype)
+set_target_properties(Electron2DFreeTypeCheck PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")

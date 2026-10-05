@@ -38,6 +38,12 @@ Private macOS OpenSSL uses OS certificate-chain validation through .NET/Keychain
 
 The ENet bridge normalizes socket buffers into its engine-owned pointer/length ABI because upstream Windows and Unix structs use different field order. Clock/RNG primitives are selected by platform, and every managed ENet import explicitly uses Cdecl. The Linux wire/codec/fragmentation and warmed allocation regression passed after this change.
 
+## Windows native producer
+
+The native workflow now configures three Windows producers (`win-x86`, `win-x64`, `win-arm64`) and a combined `Electron2D.Native.Windows` package. The selected MSVC environment builds private ICU, FAudio, ENet, WOFF2-capable FreeType and OpenSSL. FAudio uses an import library generated from the restored, CPU-checked SDL DLL instead of compiling another SDL core. FreeType codecs, ENet compression dependencies and the C/C++ runtime are linked statically; OpenSSL has private DLL identities. The PE audit checks the target machine, native DLL/export identity, engine bridge exports and dependency closure, rejecting managed assemblies and unbundled compiler/codec libraries. Source receipts and the existing cache/packing gates apply unchanged.
+
+This is a producer candidate awaiting execution on Windows runners. It does not yet add the package to ordinary runtime restoration, remove Windows backend guards or establish full Windows runtime acceptance. Android, Apple mobile/TV and browser native producers remain missing.
+
 ## Public publication
 
 The active NuGet trusted publishing policy uses repository owner `edwardgushchin`, repository `Electron2D`, workflow file `publish-native.yml`, and package scope `Electron2D.Native*`. It permits publishing new native packages and versions; the optional environment is empty. Manually run **Publish private native package** on `main`, supplying the owner's NuGet profile name. The workflow collects all `private-native-package*` artifacts from the native producer and publishes their audited platform packages without a stored API key. It rejects duplicate-version publication instead of silently accepting a different payload under an existing version. A publishing policy does not supply missing target binaries or establish their runtime acceptance.

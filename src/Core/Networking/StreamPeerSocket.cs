@@ -17,7 +17,8 @@ public enum StreamSocketStatus
 
 /// <summary>Owns a nonblocking native stream socket with explicit connection polling.</summary>
 /// <remarks>Partial operations do not wait. Full reads/writes can block until the peer supplies progress or closes.
-/// Poll detects connection completion, errors and FIN after queued bytes drain. Status queries are cached.
+    /// Poll detects connection completion, nonzero socket errors and FIN after queued bytes drain.
+    /// Readiness without a socket error preserves queued data. Status queries are cached.
 /// Calls and disposal require the constructing thread.</remarks>
 public abstract class StreamPeerSocket : StreamPeer
 {
@@ -57,8 +58,15 @@ public abstract class StreamPeerSocket : StreamPeer
                 }
                 else if (Environment.TickCount64 > _deadline) throw new TimeoutException("Stream connection deadline expired.");
             }
-            else if (_socket.Poll(0, SelectMode.SelectRead) && _socket.Available == 0) DisconnectCore();
-            else if (_socket.Poll(0, SelectMode.SelectError)) throw new SocketException((int)SocketError.ConnectionReset);
+            else
+            {
+                if (_socket.Poll(0, SelectMode.SelectError))
+                {
+                    var error = (int)_socket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Error)!;
+                    if (error != 0) throw new SocketException(error);
+                }
+                if (_socket.Poll(0, SelectMode.SelectRead) && _socket.Available == 0) DisconnectCore();
+            }
         }
         catch { DisconnectCore(); _status = StreamSocketStatus.Error; throw; }
     }
