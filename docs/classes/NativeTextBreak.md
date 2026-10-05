@@ -1,6 +1,6 @@
 # NativeTextBreak
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
 **Declaration:** `internal static unsafe partial class NativeTextBreak` · **Source:** [NativeTextBreak.cs](../../src/Servers/Text/NativeTextBreak.cs) · **Component:** [Text](../components/text.md)
 
@@ -21,3 +21,5 @@ Each call pins the string only while setting and reading the iterators. Both ite
 The private library has its own identity and hides ICU symbols. It must not replace .NET globalization. Desktop packages use `runtimes/<RID>/native`, with a Linux `.so`, macOS `.dylib` or Windows `Electron2DTextBreak.dll`. [NativeLibraries](NativeLibraries.md) resolves that location; pinned data remains embedded in `Electron2D.dll`. [Build targets](../../tools/text-native.targets), [upstream manifest](../../src/Vendor/ICU/UPSTREAM.md) and [ADR 0046](../decisions/rendering.md#adr-0046) define source/data gates. Linux executes in CI. Windows x86/x64/ARM64 loading/full-suite checks are connected but pending; macOS fresh consumers passed while full-suite acceptance remains pending. Mobile/Web retain separate integration requirements.
 
 [NativeTextBreakTests](../../tests/Electron2D.Tests/NativeTextBreakTests.cs) checks dictionary boundaries, locale tailoring, scalar positions, bounded cache eviction, concurrent use and warmed allocations. Text-layout tests additionally verify that those boundaries affect actual wrapping and justification. A Unicode default-rule conformance result alone does not prove dictionary segmentation.
+
+Android's private `.so` and embedded ICU data are now connected to the SDK application bundle and resolver. The Android native host checks actual dictionary-driven wrapping; local x64/ARM64 runs passed. The remaining 32-bit execution and Apple/Web static-link gates are recorded in the platform matrix.

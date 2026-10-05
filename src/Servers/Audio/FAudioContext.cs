@@ -89,7 +89,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal FAudioContext(uint deviceIndex = 0, object? gate = null)
     {
         Gate = gate ?? new();
-        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows()) throw new NotSupportedException("Native audio output requires the packaged desktop FAudio backend.");
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid()) throw new NotSupportedException("Native audio output requires a packaged desktop or Android FAudio backend.");
         try
         {
             Check(Create(out _engine, 0, F.FAUDIO_DEFAULT_PROCESSOR, &Allocate, &Free, &Reallocate), "create engine");

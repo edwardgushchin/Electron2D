@@ -17,6 +17,8 @@ Native FAudio build and package entries use `runtimes/<RID>/native/libFAudio.so.
 
 Native output selects packaged Linux/macOS/Windows FAudio and a shared SDL core. macOS fresh public consumers passed; complete full-suite acceptance remains pending. Windows restoration/resolution and all three full-suite/consumer profiles are connected with execution pending. Mobile/TV/Web loading/static linking and public audio/lifecycle checks remain required under [ADR 0012](../decisions/product.md#adr-0012) and [the native backlog](../platform-verification.md#required-native-dependency-builds). Backend replacement remains subject to ADR 0047.
 
+Android's transitive package, APK native selection and SDLActivity loader are now connected. The native host captures nonzero finite stereo PCM through AudioEffectCapture, verifies playback progress/output latency and performs two Engine.Start/Stop cycles with balanced effect/resource cleanup. Local x64/ARM64 runs passed. Headless CI selects SDL dummy output; 32-bit verification, physical audio and complete mobile lifecycle acceptance remain separate.
+
 ## Runtime flow and invariants
 
 WAV import validates RIFF chunks, PCM/IEEE-float dimensions and finite samples, uses the existing SDL WAV/conversion bindings, then performs typed edits and prepares encoded PCM/IMA/QOA. Encoded bytes and tags are copied; resource duplication is independent. Decode publishes an immutable versioned float PCM snapshot. Previously prepared resources refresh on their setter thread; warmed audio callbacks do not decode/allocate. Invalid compressed input fails on consumption. WAV SaveToWAV uses the existing AtomicFile writer; unsupported compressed save leaves an existing file intact.

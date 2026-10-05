@@ -6,7 +6,8 @@ namespace Electron2D;
 /// <summary>Transfers complete UDP datagrams with bounded queued receive storage.</summary>
 /// <remarks>Standalone peers poll while reading/counting packets. Server-created peers share the listener and
 /// receive only their endpoint's packets. Closing such a peer detaches it without closing the listener.
-/// Bind/connection/destination resolution and first endpoint queries are cold operations; caller-span packet cycles reuse storage.</remarks>
+/// Bind/connection/destination resolution and first endpoint queries are cold operations; caller-span packet cycles reuse storage.
+/// Native send/receive buffers hold at least 65536 bytes, preserving larger platform defaults.</remarks>
 public class PacketPeerUDP : PacketPeer
 {
     internal long ConnectionGeneration { get; private set; }

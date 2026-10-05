@@ -52,12 +52,28 @@ class Checks(unittest.TestCase):
             with ZipFile(apk, "w"):
                 pass
             with self.assertRaises(RuntimeError):
-                run_android.check_apk(apk)
+                run_android.check_apk(apk, "android-arm64")
             with ZipFile(apk, "w") as archive:
                 for source in notices.iterdir():
                     if source.is_file() and source.name != "ReferenceData-LICENSE.txt":
                         archive.write(source, "assets/licence/" + source.name)
-            run_android.check_apk(apk)
+            with self.assertRaises(RuntimeError):
+                run_android.check_apk(apk, "android-arm64")
+            for rid, abi in run_android.ABIS.items():
+                elf_class, machine = {"android-arm": (1, 40), "android-arm64": (2, 183), "android-x86": (1, 3), "android-x64": (2, 62)}[rid]
+                header = bytearray(20); header[:6] = b"\x7fELF" + bytes((elf_class, 1)); struct.pack_into("<H", header, 18, machine)
+                native = Path(directory) / (rid + ".apk")
+                shutil.copyfile(apk, native)
+                with ZipFile(native, "a") as archive:
+                    for name in (*run_android.native_package.LIBRARIES["Android"], "libSDL3.so"):
+                        archive.writestr(f"lib/{abi}/{name}", header)
+                run_android.check_apk(native, rid)
+                with self.assertRaises(RuntimeError):
+                    run_android.check_apk(native, "android-x86" if rid != "android-x86" else "android-x64")
+                with self.assertWarns(UserWarning), ZipFile(native, "a") as archive:
+                    archive.writestr(f"lib/{abi}/libSDL3.so", b"foreign duplicate")
+                with self.assertRaises(RuntimeError):
+                    run_android.check_apk(native, rid)
 
     def test_apple_bundle_requires_notices_and_excludes_source_data(self):
         notices = Path(__file__).resolve().parents[2] / "licence"
@@ -154,6 +170,8 @@ class Checks(unittest.TestCase):
                     packages.append({"Identity": "Electron2D.Native.Linux"})
                     packages.append({"Identity": "Electron2D.Native.MacOS"})
                     packages.append({"Identity": "Electron2D.Native.Windows"})
+                if row["platform"] == "Android":
+                    packages.append({"Identity": "Electron2D.Native.Android"})
                 profile = {"Properties": {"RuntimeIdentifier": rid, "TargetFramework": row["framework"], "Electron2DNativePlatform": row["platform"]}, "Items": {"PackageReference": packages}}
                 profile_file = output / "profile.json"
                 profile_file.write_text(json.dumps(profile))

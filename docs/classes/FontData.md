@@ -1,6 +1,6 @@
 # FontData
 
-Last updated: 2026-09-27
+Last updated: 2026-10-05
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
@@ -11,3 +11,5 @@ Owns immutable encoded bytes, one native precision face, metadata, prepared metr
 ## Integration and verification
 
 Used through [Font](Font.md), [FontFile](FontFile.md) and canvas/Label consumers. These helpers do not add a public compatibility API. The [text component](../components/text.md#verification-boundaries) distinguishes source, managed, native pixel, allocation and platform evidence. [ADR 0046](../decisions/rendering.md#adr-0046) owns the backend and integration boundary.
+
+Nonempty data accepts the packaged desktop and Android process architectures, including Windows/Android x86 and Android ARM32. A matching native library and working host remain required; accepting the architecture does not establish target execution.

@@ -5,7 +5,7 @@ namespace Electron2D;
 
 internal static class NativeLibraries
 {
-    private static readonly Lazy<nint> Sdl = new(() => NativeLibrary.Load(OperatingSystem.IsWindows() ? "SDL3.dll" : OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null));
+    private static readonly Lazy<nint> Sdl = new(() => NativeLibrary.Load(OperatingSystem.IsWindows() ? "SDL3.dll" : OperatingSystem.IsAndroid() ? "libSDL3.so" : OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null));
 
     [ModuleInitializer]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2255", Justification = "Register the assembly's native resolver before any SDL binding can load a second core library.")]
@@ -13,6 +13,21 @@ internal static class NativeLibraries
     {
         NativeLibrary.SetDllImportResolver(typeof(NativeLibraries).Assembly, (name, assembly, path) =>
         {
+            if (OperatingSystem.IsAndroid())
+            {
+                if (name == "HarfBuzzSharp") return NativeLibrary.Load("libElectron2DHarfBuzz.so", assembly, path);
+                if (name == "freetype") return NativeLibrary.Load("libElectron2DFreeType.so", assembly, path);
+                if (name == "Electron2DSSL")
+                {
+                    NativeLibrary.Load("libElectron2DCrypto.so", assembly, path);
+                    return NativeLibrary.Load("libElectron2DSSL.so", assembly, path);
+                }
+                if (name is "Electron2DCrypto" or "Electron2DENet" or "Electron2DTextBreak")
+                    return NativeLibrary.Load("lib" + name + ".so", assembly, path);
+                if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
+                var androidCore = Sdl.Value;
+                return name == "SDL3" ? androidCore : name == "FAudio" ? NativeLibrary.Load("libFAudio.so", assembly, path) : 0;
+            }
             if (OperatingSystem.IsWindows())
             {
                 if (name == "HarfBuzzSharp") return NativeLibrary.Load("libHarfBuzzSharp.dll", assembly, path);

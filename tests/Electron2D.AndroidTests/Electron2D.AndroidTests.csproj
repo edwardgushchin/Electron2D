@@ -11,10 +11,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" SetTargetFramework="TargetFramework=net10.0-android" />
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
+    <Compile Include="../Portability/NativeChecks.cs" Link="NativeChecks.cs" />
+    <Compile Include="../Electron2D.Tests/NativeFontPrecisionTests.cs" Link="NativeFontPrecisionTests.cs" />
+    <Compile Include="../Electron2D.Tests/FontTestFixtures.cs" Link="FontTestFixtures.cs" />
+    <EmbeddedResource Include="../Electron2D.Tests/Fixtures/Fonts/*.woff2;../Electron2D.Tests/Fixtures/Fonts/*.ttf" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

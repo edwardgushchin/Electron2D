@@ -2,6 +2,9 @@
   <PropertyGroup>
     <NativeArtifacts Condition="'$(NativeArtifacts)' == ''">$(MSBuildThisFileDirectory)../bin/native-artifacts</NativeArtifacts>
   </PropertyGroup>
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Windows' and '$(Electron2DBuildNativeFromSource)' != 'true'">
+    <None Include="$(PkgElectron2D_Native_Windows)/runtimes/$(_Electron2DPrivateNativeRID)/native/*.dll" Link="runtimes/$(_Electron2DPrivateNativeRID)/native/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+  </ItemGroup>
   <Target Name="BuildElectron2DNativeAssets">
     <Error Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" Text="Native compilation requires -p:Electron2DBuildNativeFromSource=true." />
     <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and '$(Electron2DNativePlatform)' != 'MacOS'" Text="Private native builds require a supported Linux or MacOS profile." />

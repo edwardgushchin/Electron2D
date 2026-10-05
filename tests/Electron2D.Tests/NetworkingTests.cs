@@ -120,6 +120,8 @@ internal static class NetworkingTests
     }
     private static void UDP()
     {
+        using (var native = NetworkSockets.Create(AddressFamily.InterNetwork, SocketType.Dgram))
+            Check(native.SendBufferSize >= 65536 && native.ReceiveBufferSize >= 65536, "Native UDP buffers hold a maximum datagram independently of OS defaults.");
         using var receiver = new PacketPeerUDP(); receiver.Bind(0, "127.0.0.1"); using var sender = new PacketPeerUDP(); sender.SetDestAddress("localhost", receiver.GetLocalPort()); Check(!sender.IsBound(), "Destination assignment does not open UDP.");
         // Use the numeric loopback for this IPv4 receiver after exercising resolver configuration.
         sender.SetDestAddress("127.0.0.1", receiver.GetLocalPort()); sender.PutPacket(new byte[] { 1, 2, 3 }); Wait(() => receiver.GetAvailablePacketCount() == 1);
@@ -156,7 +158,8 @@ internal static class NetworkingTests
     private static void Multicast()
     {
         using var peer = new PacketPeerUDP(); peer.Bind(0, "0.0.0.0"); peer.SetBroadcastEnabled(true); peer.SetBroadcastEnabled(false);
-        peer.JoinMulticastGroup("239.255.42.42", "lo"); peer.LeaveMulticastGroup("239.255.42.42", "lo"); Reject<ArgumentException>(() => peer.JoinMulticastGroup("127.0.0.1", "lo"));
+        var interfaceName = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces().First(n => n.SupportsMulticast && n.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up && n.GetIPProperties().UnicastAddresses.Any(a => a.Address.AddressFamily == AddressFamily.InterNetwork)).Name;
+        peer.JoinMulticastGroup("239.255.42.42", interfaceName); peer.LeaveMulticastGroup("239.255.42.42", interfaceName); Reject<ArgumentException>(() => peer.JoinMulticastGroup("127.0.0.1", interfaceName));
     }
     private static void IPv6()
     {

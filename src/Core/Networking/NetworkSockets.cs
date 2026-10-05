@@ -35,7 +35,19 @@ internal static partial class NetworkSockets
     {
         if (OperatingSystem.IsBrowser()) throw new PlatformNotSupportedException("Raw sockets require a native host.");
         var socket = new Socket(family, type, family == AddressFamily.Unix ? ProtocolType.Unspecified : type == SocketType.Stream ? ProtocolType.Tcp : ProtocolType.Udp);
-        try { socket.Blocking = false; if (family == AddressFamily.InterNetworkV6) socket.DualMode = true; return socket; } catch { socket.Dispose(); throw; }
+        try
+        {
+            socket.Blocking = false;
+            if (family == AddressFamily.InterNetworkV6) socket.DualMode = true;
+            if (type == SocketType.Dgram)
+            {
+                // Some native defaults cannot hold one maximum-size UDP datagram.
+                socket.SendBufferSize = Math.Max(socket.SendBufferSize, 65536);
+                socket.ReceiveBufferSize = Math.Max(socket.ReceiveBufferSize, 65536);
+            }
+            return socket;
+        }
+        catch { socket.Dispose(); throw; }
     }
     internal static IPEndPoint Endpoint(Socket socket, IPAddress address, int port)
     {

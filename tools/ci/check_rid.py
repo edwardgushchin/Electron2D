@@ -52,7 +52,7 @@ def check(rid, output):
     if sdl != wanted:
         raise ValueError(f"Wrong SDL dependency selection: {sdl} != {wanted}")
     native_packages = {name for name in packages if name.startswith("Electron2D.Native.")}
-    expected_native = {"Electron2D.Native." + platform for platform in ("Linux", "MacOS", "Windows")} if row["platform"] in {"Windows", "Linux", "MacOS"} else set()
+    expected_native = {"Electron2D.Native." + platform for platform in ("Linux", "MacOS", "Windows")} if row["platform"] in {"Windows", "Linux", "MacOS"} else {"Electron2D.Native.Android"} if row["platform"] == "Android" else set()
     if native_packages != expected_native:
         raise ValueError(f"Wrong private native dependency selection: {native_packages} != {expected_native}")
     with (output / "Electron2D.dll").open("rb") as assembly:

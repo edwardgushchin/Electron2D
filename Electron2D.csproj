@@ -54,6 +54,7 @@
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.13" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
+    <PackageReference Include="Electron2D.Native.Android" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" />
     <!-- The AAR already supplies SDL JNI binaries; the RID payload is the same library. -->
     <PackageReference Update="SDL3-CS.Android" ExcludeAssets="runtime;native" />
     <AndroidAsset Include="licence/*" Exclude="licence/ReferenceData-LICENSE.txt" Link="licence/%(Filename)%(Extension)" />

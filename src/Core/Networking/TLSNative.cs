@@ -19,10 +19,10 @@ internal static unsafe partial class TLSNative
     private const string SSL = "Electron2DSSL", Crypto = "Electron2DCrypto";
     internal static void CheckBackend(bool datagram = false)
     {
-        if (!OperatingSystem.IsWindows() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("TLS requires the desktop OpenSSL 3 backend.");
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("TLS requires a packaged desktop or Android OpenSSL 3 backend.");
         try { if (datagram && BIO_s_dgram_pair() == 0) throw new PlatformNotSupportedException("OpenSSL datagram BIOs are unavailable."); if (TLS_method() == 0) throw new PlatformNotSupportedException("OpenSSL TLS is unavailable."); }
         catch (EntryPointNotFoundException error) { throw new PlatformNotSupportedException("DTLS requires OpenSSL 3.2 datagram BIO support.", error); }
-        catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires system Linux or packaged Windows/macOS OpenSSL 3 libraries.", error); }
+        catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires system Linux or packaged Windows/macOS/Android OpenSSL 3 libraries.", error); }
     }
     internal static TLSHandle CreateContext(TLSOptions options, bool datagram = false)
     {
@@ -34,7 +34,7 @@ internal static unsafe partial class TLSNative
             SSL_CTX_set_verify(pointer, options.IsServer() || options.IsUnsafeClient() && options.GetTrustedCAChain() is null ? 0 : 1, 0);
             if (!options.IsServer() && options.GetTrustedCAChain() is null && !options.IsUnsafeClient())
             {
-                if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows()) ConfigureSystemTrust(pointer);
+                if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows() || OperatingSystem.IsAndroid()) ConfigureSystemTrust(pointer);
                 else Require(SSL_CTX_set_default_verify_paths(pointer), "System TLS trust is unavailable.");
             }
             return context;
@@ -111,14 +111,16 @@ internal static unsafe partial class TLSNative
         var cookie = SSL_get_ex_data(ssl, 0); return cookie != 0 && size == 32 && CryptographicOperations.FixedTimeEquals(new ReadOnlySpan<byte>((void*)cookie, 32), new ReadOnlySpan<byte>(input, 32)) ? 1 : 0;
     }
     internal static int Peek(nint ssl) { byte value; return SSL_peek(ssl, &value, 1); }
-    internal static long SSL_ctrl(nint ssl, int command, long value, nint pointer) => SSLControl(ssl, command, new CLong(checked((nint)value)), pointer).Value;
-    internal static long SSL_get_verify_result(nint ssl) => SSLVerifyResult(ssl).Value;
-    internal static long BIO_ctrl(nint bio, int command, long value, nint pointer) => BIOControl(bio, command, new CLong(checked((nint)value)), pointer).Value;
-    private static long SSLContextControl(nint context, int command, long value, nint pointer) => SSLContextControlNative(context, command, new CLong(checked((nint)value)), pointer).Value;
+    // C long returns use scalar registers; CLong as a return type selects struct-return ABI on ILP32 Unix.
+    private static long LongResult(nint value) => OperatingSystem.IsWindows() ? (int)value : value;
+    internal static long SSL_ctrl(nint ssl, int command, long value, nint pointer) => LongResult(SSLControl(ssl, command, new CLong(checked((nint)value)), pointer));
+    internal static long SSL_get_verify_result(nint ssl) => LongResult(SSLVerifyResult(ssl));
+    internal static long BIO_ctrl(nint bio, int command, long value, nint pointer) => LongResult(BIOControl(bio, command, new CLong(checked((nint)value)), pointer));
+    private static long SSLContextControl(nint context, int command, long value, nint pointer) => LongResult(SSLContextControlNative(context, command, new CLong(checked((nint)value)), pointer));
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint TLS_method();
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint DTLS_method();
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial ulong SSL_set_options(nint ssl, ulong options);
-    [LibraryImport(SSL, EntryPoint = "SSL_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong SSLControl(nint ssl, int command, CLong value, nint pointer);
+    [LibraryImport(SSL, EntryPoint = "SSL_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSLControl(nint ssl, int command, CLong value, nint pointer);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_set_ex_data(nint ssl, int index, nint data);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_get_ex_data(nint ssl, int index);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_CTX_set_cookie_generate_cb(nint context, delegate* unmanaged[Cdecl]<nint, byte*, uint*, int> callback);
@@ -127,7 +129,7 @@ internal static unsafe partial class TLSNative
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_new_bio_dgram_pair(out nint first, nuint firstSize, out nint second, nuint secondSize);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_CTX_new(nint method);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_CTX_free(nint context);
-    [LibraryImport(SSL, EntryPoint = "SSL_CTX_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong SSLContextControlNative(nint context, int command, CLong value, nint pointer);
+    [LibraryImport(SSL, EntryPoint = "SSL_CTX_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSLContextControlNative(nint context, int command, CLong value, nint pointer);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void SSL_CTX_set_verify(nint context, int mode, nint callback);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_CTX_set_default_verify_paths(nint context);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_CTX_get_cert_store(nint context);
@@ -143,7 +145,7 @@ internal static unsafe partial class TLSNative
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSL_get0_param(nint ssl);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_do_handshake(nint ssl);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_get_error(nint ssl, int result);
-    [LibraryImport(SSL, EntryPoint = "SSL_get_verify_result"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong SSLVerifyResult(nint ssl);
+    [LibraryImport(SSL, EntryPoint = "SSL_get_verify_result"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSLVerifyResult(nint ssl);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_pending(nint ssl);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int SSL_shutdown(nint ssl);
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int SSL_read(nint ssl, byte* buffer, int size);
@@ -153,7 +155,7 @@ internal static unsafe partial class TLSNative
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_free(nint bio);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_read(nint bio, byte* buffer, int length);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int BIO_write(nint bio, byte* buffer, int length);
-    [LibraryImport(Crypto, EntryPoint = "BIO_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CLong BIOControl(nint bio, int command, CLong value, nint pointer);
+    [LibraryImport(Crypto, EntryPoint = "BIO_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint BIOControl(nint bio, int command, CLong value, nint pointer);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint d2i_X509(nint ignored, ref byte* data, CLong size);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void X509_free(nint certificate);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int X509_STORE_add_cert(nint store, nint certificate);
@@ -161,6 +163,11 @@ internal static unsafe partial class TLSNative
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint d2i_AutoPrivateKey(nint ignored, ref byte* data, CLong size);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void EVP_PKEY_free(nint key);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial void ERR_clear_error();
-    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial CULong ERR_get_error();
+    private static CULong ERR_get_error()
+    {
+        var value = ErrorCode();
+        return new(OperatingSystem.IsWindows() ? (nuint)(uint)value : value);
+    }
+    [LibraryImport(Crypto, EntryPoint = "ERR_get_error"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nuint ErrorCode();
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void ERR_error_string_n(CULong error, byte* buffer, nuint size);
 }

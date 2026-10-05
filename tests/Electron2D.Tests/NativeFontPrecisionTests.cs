@@ -26,7 +26,7 @@ internal static class NativeFontPrecisionTests
             "The pinned WOFF2 exposes the expected face metadata through public FreeType records.");
         Check(Marshal.SizeOf<CLong>() == (OperatingSystem.IsWindows() ? 4 : IntPtr.Size), "C long follows LLP64/LP64 ABI rather than assuming pointer size.");
         Check(font.Ascent == 18 && font.Descent == 5 && font.LineHeight == 22 && font.UnderlinePosition == 63 / 64f && font.UnderlineThickness == 25 / 64f,
-            "The face metrics retain independent ascent/descent, line height and fractional underline metrics.");
+            $"The face metrics retain independent ascent/descent, line height and fractional underline metrics: {font.Ascent}, {font.Descent}, {font.LineHeight}, {font.UnderlinePosition}, {font.UnderlineThickness}.");
         // Independent C FT_Get_Advance(FT_LOAD_NO_HINTING) oracle at 16 pixels:
         // glyph 36/57/76/3 => 16.16 advances 693248/653312/292352/272384.
         uint[] text = ['A', 'V', 'i', ' ']; int[] expected = [677, 638, 286, 266];

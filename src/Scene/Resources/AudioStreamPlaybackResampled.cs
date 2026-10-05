@@ -36,7 +36,7 @@ public abstract class AudioStreamPlaybackResampled : AudioStreamPlayback
         {
             ThrowIfDisposed();
             var rate = OnGetStreamSamplingRate(); var ratio = (rate * rateScale * AudioServer.PlaybackSpeedScale) / (double)AudioServer.GetMixRate();
-            if (!double.IsFinite(ratio) || ratio < 0 || ratio * 65536 > ulong.MaxValue) throw new InvalidOperationException("Audio resampling rate exceeds the finite cursor range.");
+            if (!double.IsFinite(ratio) || ratio < 0 || ratio * 65536 > ulong.MaxValue) throw new InvalidOperationException($"Audio resampling rate exceeds the finite cursor range: source={rate}, scale={rateScale}, speed={AudioServer.PlaybackSpeedScale}, mix={AudioServer.GetMixRate()}, ratio={ratio}.");
             var increment = (ulong)(ratio * 65536); var mixed = -1;
             for (var i = 0; i < buffer.Length; i++)
             {

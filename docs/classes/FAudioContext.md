@@ -10,6 +10,8 @@ Internal owner of the native output engine/master voice, prepared stream/sample 
 
 The native backend is delivered under `runtimes/<RID>/native` as `libFAudio.so.0` on Linux, `libFAudio.0.dylib` on macOS or `FAudio.dll` on Windows. [NativeLibraries](NativeLibraries.md) resolves it after loading the shared SDL3 core. Applications need no backend references or loader setup. macOS producers and fresh consumers passed; complete full-suite acceptance remains pending. Windows x86/x64/ARM64 package resolution/full-suite checks are connected with target execution pending.
 
+Android selects `libFAudio.so` from its transitive native package and SDK APK library directory. The SDLActivity test host checks nonzero finite bus PCM, playback progress, output latency and two complete engine lifecycles. Its headless CI profile uses SDL dummy output; physical output/listening remains separate. Local x64/ARM64 execution passed; 32-bit and CI acceptance remains required.
+
 Bus input voices execute before descending public-effect voices, initializing [prepared detector PCM](FAudioBusBuffer.md) from direct sources. Final effects/gain publish current-quantum buffers and sends. Source/sample activity maps to the shared bus activity, which is advanced once per quantum. Input taps and voices participate in graph replacement, native error reporting and output teardown. Closing state suppresses further mixing; the engine joins its native worker while explicit held mix locks are temporarily released, then releases master/engine and callback lifetime.
 
 ## Verification and limits

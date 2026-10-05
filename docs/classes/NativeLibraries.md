@@ -11,7 +11,7 @@ Private native binaries come from versioned Linux/macOS/Windows packages in ordi
 
 ## Description
 
-Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API.
+Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, Android `libSDL3.so`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API.
 
 The private `libElectron2DTextBreak.so`, `libFAudio.so.0` and `libElectron2DENet.so` live under `runtimes/<RID>/native` beneath the application base directory. macOS uses the corresponding dylibs plus private OpenSSL and WOFF2-capable `libElectron2DFreeType.dylib`. Resolution uses the executing runtime identifier and `AppContext.BaseDirectory`, independently of the working directory and managed assembly location. The native package targets preserve this directory for project and package consumers; ordinary .NET resolution remains available as a fallback. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
 
@@ -31,8 +31,10 @@ Runs automatically once as a module initializer. HarfBuzz imports resolve their 
 
 ## Verification and limits
 
-Windows selects private text/audio/ENet/FreeType DLLs and loads private crypto before SSL. Its fresh ProjectReference/NuGet publish consumers cover x86/x64/ARM64, with first complete target execution pending. Mobile/Web loader or static-link integration remains separate.
+Windows selects private text/audio/ENet/FreeType DLLs and loads private crypto before SSL. Its fresh ProjectReference/NuGet publish consumers passed on x86/x64/ARM64 in run 37319099153. The ordinary Windows library build now preserves all six private DLLs as well; complete full-suite reruns remain required.
 
-Self-contained Linux x64 tests loaded images and GPU shaders with LD_LIBRARY_PATH unset; loader diagnostics found one published libSDL3.so.0. The macOS resolver additionally selects private text/FAudio/ENet and OpenSSL dylibs from the RID directory, loading the shared SDL core before FAudio. Matching native production passed; public consumer and full-suite execution remain pending. Windows and mobile/browser native integration retain their gates.
+Android resolves its seven private `.so` files through the SDK's APK native-library search path, not an application-relative desktop directory. FreeType/HarfBuzz use private identities; crypto loads before SSL and SDL loads before FAudio. The engine reference supplies `Electron2D.Native.Android` transitively. Package targets omit the redundant SDL RID copy because the AAR already provides the same JNI core. Local x64/ARM64 APK execution covered font raster/shaping, TLS records/trust rejection and text/audio/ENet lifecycle; the 32-bit profiles and updated CI remain separate gates. Apple/Web static linking remains unimplemented.
+
+Self-contained Linux x64 tests loaded images and GPU shaders with LD_LIBRARY_PATH unset; loader diagnostics found one published libSDL3.so.0. The macOS resolver additionally selects private text/FAudio/ENet and OpenSSL dylibs from the RID directory, loading the shared SDL core before FAudio. Matching native production and public consumers passed; full-suite execution remains pending.
 
 [NativeLibraryTests](../../tests/Electron2D.Tests/NativeLibraryTests.cs) checks project-reference runtime-directory files and rejects root copies. Generic and Linux x64 RID engine builds, a fresh self-contained HostExample publish and local NuGet package entries preserve the selected private native layout. The executable suite passes; focused font/audio checks and both Wayland audio hosts load the libraries with `LD_LIBRARY_PATH` unset from an external working directory. A local NuGet consumer verifies public text/audio calls in both its ordinary build and SDK-flattened Linux x64 RID publish. These checks do not establish foreign native execution or physical listening.

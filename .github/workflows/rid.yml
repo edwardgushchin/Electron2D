@@ -131,13 +131,13 @@ jobs:
           executable="$GITHUB_WORKSPACE/bin/ci-aot/$CI_RID/Electron2D.PortabilityTests"
           if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
           "$executable"
-      - name: Build Android contract app
+      - name: Build Android contract and native app
         if: inputs.tests && inputs.suite == 'android'
         run: dotnet build tests/Electron2D.AndroidTests/Electron2D.AndroidTests.csproj -c Release -r "$CI_RID" --nologo
       - name: Enable Android emulator acceleration
         if: inputs.tests && inputs.suite == 'android'
         run: sudo chmod a+rw /dev/kvm
-      - name: Execute Android contract app
+      - name: Execute Android contract and native app
         if: inputs.tests && inputs.suite == 'android'
         uses: reactivecircus/android-emulator-runner@4c44018e59b437e86cdfc41da381398f93ed8808 # v2
         with:
@@ -178,7 +178,9 @@ jobs:
           echo "### $CI_RID: $CI_SUITE" >> "$GITHUB_STEP_SUMMARY"
           if [[ "$CI_SUITE" == apple-device ]]; then
             echo "Library checks and unsigned test application build passed. Device execution is NOT checked: physical devices and signing are unavailable." >> "$GITHUB_STEP_SUMMARY"
-          elif [[ "$CI_SUITE" == android || "$CI_SUITE" == apple-simulator || "$CI_SUITE" == browser ]]; then
+          elif [[ "$CI_SUITE" == android ]]; then
+            echo "Library contract, APK native RID/notices audit, managed contracts, native font shaping/rasterization, TLS trust/name/records, ENet and captured audio PCM with repeated lifecycle checks passed. ARM uses emulator native-bridge translation; physical-device, renderer and production host acceptance remain separate." >> "$GITHUB_STEP_SUMMARY"
+          elif [[ "$CI_SUITE" == apple-simulator || "$CI_SUITE" == browser ]]; then
             echo "Library contract and executable managed contract tests passed (JSON/configuration/settings/theme catalog/headless physics). Android ARM runs use emulator native-bridge translation. Native text/audio/networking, rendering and production application lifecycle acceptance are separate gates." >> "$GITHUB_STEP_SUMMARY"
           elif [[ "$CI_SUITE" == portable ]]; then
             echo "Library contract and portable runtime suite passed. Native text/audio/networking, rendering and application-host acceptance are not covered." >> "$GITHUB_STEP_SUMMARY"

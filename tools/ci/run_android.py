@@ -3,29 +3,45 @@
 import argparse
 from pathlib import Path
 import subprocess
+import struct
 import time
 import uuid
 from zipfile import ZipFile
 
-from check_rid import check_notices, check_result as result
+from check_rid import check_notices, check_result as result, native_package
 
 
 ABIS = {"android-x64": "x86_64", "android-x86": "x86", "android-arm64": "arm64-v8a", "android-arm": "armeabi-v7a"}
 PACKAGE = "org.electron2d.tests"
 
 
-def check_apk(apk):
+def check_apk(apk, rid):
     with ZipFile(apk) as archive:
         check_notices(lambda name: archive.read("assets/licence/" + name))
-    print("Android APK notices passed.")
+        libraries = {*native_package.LIBRARIES["Android"], "libSDL3.so"}
+        expected = {f"lib/{ABIS[rid]}/{name}" for name in libraries}
+        found = [name for name in archive.namelist() if Path(name).name in libraries]
+        if set(found) != expected or len(found) != len(expected):
+            raise RuntimeError("Android APK has missing, duplicate or foreign native payloads.")
+        elf_class, machine = {"android-arm": (1, 40), "android-arm64": (2, 183),
+                              "android-x86": (1, 3), "android-x64": (2, 62)}[rid]
+        for name in found:
+            with archive.open(name) as library:
+                header = library.read(20)
+            if len(header) != 20 or header[:6] != b"\x7fELF" + bytes((elf_class, 1)) or struct.unpack_from("<H", header, 18)[0] != machine:
+                raise RuntimeError("Android APK has the wrong native architecture: " + name)
+    print("Android APK notices and complete native RID payload passed.")
 
 
 def run(apk, rid, serial, timeout=120):
-    check_apk(apk)
+    check_apk(apk, rid)
     adb = ["adb", "-s", serial]
 
     def command(*args):
-        return subprocess.run(adb + list(args), check=True, capture_output=True, text=True, timeout=timeout).stdout
+        process = subprocess.run(adb + list(args), capture_output=True, text=True, timeout=timeout)
+        if process.returncode:
+            raise RuntimeError("adb command failed: " + process.stdout + process.stderr)
+        return process.stdout
 
     abis = command("shell", "getprop", "ro.product.cpu.abilist").strip().split(",")
     if ABIS[rid] not in abis:
@@ -40,10 +56,11 @@ def run(apk, rid, serial, timeout=120):
         while time.monotonic() < deadline:
             log = command("logcat", "-d", "-v", "brief", "Electron2DTests:I", "*:S")
             if result(log, token):
-                print(f"{rid}: Android contract checks passed on {serial} ({ABIS[rid]}).")
+                print(f"{rid}: Android contract and native checks passed on {serial} ({ABIS[rid]}).")
                 return
             time.sleep(1)
-        raise TimeoutError("Android app did not report completion within the deadline.")
+        diagnostics = command("logcat", "-d", "-v", "brief", "AndroidRuntime:E", "DEBUG:E", "libc:F", "mono-rt:E", "Electron2DTests:I", "*:S")
+        raise TimeoutError("Android app did not report completion within the deadline.\n" + diagnostics[-12000:])
     finally:
         command("shell", "am", "force-stop", PACKAGE)
         command("uninstall", PACKAGE)

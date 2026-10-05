@@ -7,6 +7,12 @@
     <None Include="$(MSBuildThisFileDirectory)../licence/*" Link="licence/%(Filename)%(Extension)" CopyToPublishDirectory="Always" Pack="false" Visible="false" />
   </ItemGroup>
   <!-- Preserve the private library directory for project and package consumers. -->
+  <Target Name="Electron2DAndroidSDLLayout" AfterTargets="ResolvePackageAssets" Condition="'$(TargetPlatformIdentifier)' == 'android'">
+    <ItemGroup>
+      <!-- The SDL AAR supplies JNI and the core library together. -->
+      <NativeCopyLocalItems Remove="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.NuGetPackageId)' == 'SDL3-CS.Android'" />
+    </ItemGroup>
+  </Target>
   <Target Name="Electron2DNativeBuildLayout" AfterTargets="ResolvePackageAssets">
     <ItemGroup>
       <NativeCopyLocalItems Update="@(NativeCopyLocalItems)" Condition="$([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('Electron2D.Native.')) and '$(RuntimeIdentifier)' != ''">
