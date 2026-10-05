@@ -3,34 +3,78 @@
 import argparse
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import json
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
-from threading import Thread
+from threading import Event, Thread
+import time
+import uuid
+
+
+def validate_result(value, token):
+    if not isinstance(value, dict) or value.get("run") != token or value.get("status") not in ("passed", "failed"):
+        raise ValueError("Invalid or stale browser test result.")
+    if not isinstance(value.get("error", ""), str):
+        raise ValueError("Invalid browser error detail.")
+    return value
 
 
 class Handler(SimpleHTTPRequestHandler):
     def log_message(self, *_):
         pass
 
+    def do_POST(self):
+        if self.path != "/__electron2d_result":
+            self.send_error(404)
+            return
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 0 < length <= 16384:
+                raise ValueError("Invalid result length.")
+            value = validate_result(json.loads(self.rfile.read(length)), self.server.token)
+        except (ValueError, UnicodeError):
+            self.send_error(400)
+            return
+        self.server.result = value
+        self.send_response(204)
+        self.end_headers()
+        self.server.completed.set()
+
 
 def run(directory, browser):
     if not (directory / "index.html").exists():
         raise ValueError("The published browser test index is missing.")
     with ThreadingHTTPServer(("127.0.0.1", 0), partial(Handler, directory=str(directory))) as server:
+        server.token = uuid.uuid4().hex
+        server.result = None
+        server.completed = Event()
         thread = Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
-            with tempfile.TemporaryDirectory(prefix="e2d-chromium-") as profile:
-                result = subprocess.run([
+            with tempfile.TemporaryDirectory(prefix="e2d-chromium-") as profile, tempfile.TemporaryFile(mode="w+t") as log:
+                process = subprocess.Popen([
                     browser, "--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage",
-                    "--no-first-run", "--user-data-dir=" + profile, "--dump-dom", "--virtual-time-budget=60000",
-                    f"http://127.0.0.1:{server.server_port}/index.html",
-                ], capture_output=True, text=True, timeout=120, check=True)
-                if "<body>PASS</body>" not in result.stdout:
-                    raise RuntimeError("Browser test did not pass:\n" + result.stdout + "\n" + result.stderr[-4000:])
-                print("Browser WebAssembly contract checks passed in Chromium.")
+                    "--no-first-run", "--user-data-dir=" + profile, "--remote-debugging-port=0", "--enable-logging=stderr",
+                    f"http://127.0.0.1:{server.server_port}/index.html?run={server.token}",
+                ], stdout=log, stderr=log, text=True)
+                try:
+                    deadline = time.monotonic() + 120
+                    while not server.completed.wait(1):
+                        if process.poll() is not None or time.monotonic() >= deadline:
+                            log.seek(0)
+                            raise RuntimeError("Browser exited or timed out without a test result:\n" + log.read()[-4000:])
+                    if server.result["status"] != "passed":
+                        raise RuntimeError("Browser contract checks failed: " + server.result.get("error", ""))
+                    print("Browser WebAssembly contract checks passed in Chromium.")
+                finally:
+                    process.terminate()
+                    try:
+                        process.wait(timeout=10)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.wait(timeout=10)
         finally:
             server.shutdown()
             thread.join()

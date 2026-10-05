@@ -11,3 +11,12 @@ try {
   document.body.textContent = `FAIL: ${error}`;
   console.error(error);
 }
+
+const run = new URLSearchParams(location.search).get("run");
+if (run) {
+  await fetch("/__electron2d_result", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ run, ...globalThis.electron2dResult }),
+  });
+}

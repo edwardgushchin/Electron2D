@@ -13,9 +13,18 @@ import check_rid
 import rids
 import run_android
 import run_apple
+import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_browser_completion_rejects_stale_or_invalid_reports(self):
+        for value in (None, {"run": "old", "status": "passed"}, {"run": "current", "status": "unknown"}, {"run": "current", "status": []},
+                      {"run": "current", "status": "failed", "error": 7}):
+            with self.assertRaises(ValueError):
+                run_browser.validate_result(value, "current")
+        self.assertEqual(run_browser.validate_result({"run": "current", "status": "passed"}, "current")["status"], "passed")
+        self.assertEqual(run_browser.validate_result({"run": "current", "status": "failed", "error": "fixture"}, "current")["status"], "failed")
+
     def test_mobile_driver_rejects_missing_stale_and_failed_results(self):
         self.assertFalse(run_android.result("RESULT old PASS", "current"))
         self.assertFalse(run_android.result("app crashed", "current"))

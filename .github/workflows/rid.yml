@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: ${{ (inputs.workload == 'ios' || inputs.workload == 'tvos') && '10.0.302' || '10.0.x' }}
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -48,7 +48,13 @@ jobs:
           java-version: '21'
       - name: Install target workload
         if: inputs.workload != ''
-        run: dotnet workload install "$CI_WORKLOAD"
+        run: |
+          if [[ "$CI_WORKLOAD" == ios || "$CI_WORKLOAD" == tvos ]]; then
+            python -c 'import json; from pathlib import Path; Path("global.json").write_text(json.dumps({"sdk": {"version": "10.0.302", "rollForward": "disable", "workloadVersion": "10.0.302.0"}}))'
+            dotnet workload install "$CI_WORKLOAD" --version 10.0.302.0
+          else
+            dotnet workload install "$CI_WORKLOAD"
+          fi
       - name: Check Apple toolchain
         if: inputs.workload == 'ios' || inputs.workload == 'tvos'
         run: xcodebuild -version
