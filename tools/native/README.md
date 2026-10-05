@@ -1,9 +1,16 @@
-# Electron2D Native Packages
+# Electron2D platform packages
 
-Private native libraries used by Electron2D for text boundaries, audio mixing/output and networking. This package adds no managed assembly or public backend API.
+Install `Electron2D` for the managed C# runtime, then add `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Android`, `Electron2D.iOS`, `Electron2D.tvOS` or `Electron2D.Web` for your game targets. Each platform package contains its audited native files and selects the matching SDL, image, shader and font dependencies. It contains no managed backend assembly.
 
-The seven platform packages cover all 18 declared RIDs with assets under `runtimes/<RID>/native`. Linux and Android use ELF libraries, Windows uses native PE DLLs, macOS uses Mach-O libraries, and iOS/tvOS/Web use target-specific static archives. Apple device and simulator payloads are distinct. SDL3 comes from the pinned SDL3-CS platform dependency except Web, whose archive is built from the same pinned SDL source release.
+For example, a Linux game uses:
 
-The package manifest records the native source fingerprint and SHA-256 of each binary. CI verifies architecture, loader or archive platform identity, required engine exports and absence of build-machine library search paths before packing. Android ELF segments must support 16 KB pages. Zstandard 1.5.7 and OpenSSL 3.6.5 retain their original notices.
+```bash
+dotnet add package Electron2D --prerelease
+dotnet add package Electron2D.Linux --prerelease
+```
 
-Ordinary desktop Electron2D builds restore the Linux/macOS/Windows packages. Windows runtime resolution and full headless checks are connected, with target execution pending. Mobile/Web producer candidates still require runtime loader/static-link integration and execution before they establish engine support. Native production runs once per RID in shared CI and requires CMake, Ninja and the selected target compiler. Cross-target production uses `tools/native/build_cross.py`; Windows uses `tools/native/build_windows.py`. Linux/macOS full rebuilds retain `-p:Electron2DBuildNativeFromSource=true`.
+The platform package version is the minimum supported Electron2D version, including its prerelease suffix. `Electron2D.Linux` version `0.1.0-alpha.1` therefore requires `Electron2D` version `0.1.0-alpha.1` or later. NuGet records and enforces that minimum dependency; a version of SDL, FreeType or OpenSSL is not the version of the Electron2D platform package. Use matching product/platform release versions unless a different combination has been verified.
+
+Publish for a specific RID to include only its native assets under `runtimes/<RID>/native`. Platform package installation does not establish target execution or complete game hosting; refer to the repository platform report for current verification limits. Native archives for Apple and Web still follow their SDK's static-link rules.
+
+Native producers keep source receipts, binary SHA-256 values, architecture/loader/export checks and bundled notices. The maintainer source-build mode and CI prepare packages; game developers do not compile the native backends.

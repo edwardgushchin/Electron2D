@@ -61,7 +61,7 @@ Los materiales con shaders requieren el renderizador GPU. El renderizador de com
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="texttop" alt=""> Inicio rápido
 
-Empieza con el ejemplo «Ventana y entrada». Estos comandos son para Linux x64 con Wayland.
+Empieza con el ejemplo «Movimiento del personaje». Verás un personaje que puedes mover con las flechas. Los comandos de .NET siguientes se utilizan en Windows, Linux y macOS; consulta las comprobaciones de ejecución en la [tabla de plataformas](#platforms).
 
 <a id="installation"></a>
 
@@ -69,7 +69,9 @@ Empieza con el ejemplo «Ventana y entrada». Estos comandos son para Linux x64 
 
 - [SDK de .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0) y Git.
 
-Los componentes nativos privados se restauran como dependencias de NuGet. Consulta la [distribución de paquetes nativos](docs/native-packaging.md) para conocer la disponibilidad del primer paquete y las instrucciones de recompilación nativa completa.
+Instala mediante NuGet `Electron2D` y los paquetes de las plataformas de tu juego, como `Electron2D.Windows`, `Electron2D.Linux` o `Electron2D.MacOS`. Las dependencias nativas se restauran automáticamente. [Paquetes de plataforma y reglas de versiones](docs/native-packaging.md).
+
+Los paquetes actuales `0.1.0-alpha.1` aún se están preparando para su publicación.
 
 ### Compilar y ejecutar
 
@@ -81,16 +83,17 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-Publica el ejemplo con su propio entorno de ejecución de .NET e inícialo:
+Ejecuta el ejemplo:
 
 ```bash
-dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-host-example
-/tmp/electron2d-host-example/HostExample
+dotnet run --project examples/CharacterMovement
 ```
 
-Se abrirá una ventana. Las flechas mueven un objeto del juego y sus coordenadas aparecen en la terminal. Escape o cerrar la ventana termina la aplicación. Este ejemplo no dibuja la escena; muestra cómo iniciar el motor y procesar la entrada.
+Se abrirá una escena con un personaje rosa sobre una cuadrícula. Las flechas lo mueven dentro del campo; Escape o cerrar la ventana termina la aplicación. Prueba a cambiar la velocidad en `Player.cs` y ejecuta el ejemplo de nuevo.
 
-[Código del ejemplo](examples/HostExample/Program.cs) · [Instrucciones de ejecución](examples/HostExample/README.md)
+![Movimiento del personaje de Electron2D: personaje sobre una cuadrícula e instrucciones de teclado](docs/images/character-movement.png)
+
+[Código del ejemplo](examples/CharacterMovement/CharacterMovementScene.cs) · [Instrucciones de ejecución](examples/CharacterMovement/README.md)
 
 ### Usar Electron2D en tu juego
 
@@ -101,6 +104,14 @@ dotnet new console -n MyGame -o ../MyGame --framework net10.0
 dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
 ```
 
+Añade el paquete de tu plataforma mediante NuGet. Elige un comando:
+
+| Plataforma | Comando |
+| --- | --- |
+| Windows | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add ../MyGame/MyGame.csproj package Electron2D.MacOS --prerelease` |
+
 Sustituye el contenido de `MyGame/Program.cs` por este código:
 
 ```csharp
@@ -109,7 +120,7 @@ using Electron2D;
 var window = new Window
 {
     Title = "Mi juego",
-    Size = new Vector2i(960, 540)
+    Size = new Vector2i(800, 600)
 };
 
 return Engine.Run(window);
@@ -129,7 +140,7 @@ La compilación del motor genera `Electron2D.dll`. Al publicar el juego se inclu
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="texttop" alt=""> Plataformas
 
-Las plataformas objetivo del juego y las comprobaciones realizadas se indican por separado. El editor visual está destinado a Windows, Linux y macOS.
+La tabla indica qué se ha comprobado en cada plataforma del juego. El editor visual está destinado a Windows, Linux y macOS.
 
 | Plataforma objetivo del juego | Comprobado en este repositorio |
 | --- | --- |
@@ -141,9 +152,9 @@ Las plataformas objetivo del juego y las comprobaciones realizadas se indican po
 | iOS y tvOS, dispositivos y simuladores | Se ha preparado la compilación automática de la biblioteca. Todavía no se han realizado comprobaciones en dispositivos |
 | Navegadores | Se han comprobado el renderizado y la física en una aplicación de prueba independiente. Todavía no se ha implementado la ejecución de juegos en el navegador |
 
-Se ha compilado el conjunto completo de bibliotecas nativas de texto y audio para Linux x64. Su compilación e integración en otras plataformas sigue siendo una tarea aparte. Las comprobaciones de Android y navegador abarcan escenarios concretos.
+Las comprobaciones de Android y navegador cubren escenarios concretos. Consulta la [distribución de bibliotecas nativas](docs/native-packaging.md) para saber cuáles están disponibles en tu plataforma.
 
-Los indicadores cubren los 18 RID: compilación con analizadores, pruebas completas sin ventana en Linux o portables en escritorio, y aplicaciones de contrato trimmed/AOT, Android, simuladores Apple y navegador. Los dispositivos Apple físicos y la aceptación nativa completa de otras plataformas siguen separados. Consulta el [alcance del CI](docs/platform-verification.md#automated-rid-checks).
+Los indicadores de compilación y pruebas muestran el estado de las comprobaciones automáticas del código y las aplicaciones de prueba. La ejecución en dispositivos reales se comprueba por separado. [Detalles de las comprobaciones automáticas](docs/platform-verification.md#automated-rid-checks).
 
 Consulta los modelos de dispositivos, los comandos y el alcance de las comprobaciones en el [informe de plataformas](docs/platform-verification.md).
 
@@ -151,9 +162,9 @@ Consulta los modelos de dispositivos, los comandos y el alcance de las comprobac
 
 ## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="texttop" alt=""> Desarrollo del motor
 
-Actualmente puedes usar Electron2D mediante C# y .NET. Las plantillas `PackedScene` admiten [archivos tipados de recursos y escenas](docs/components/resource-files.md), incluida la carga en un proceso nuevo. El editor visual y los comandos para gestionar proyectos de juego siguen previstos.
+Puedes guardar escenas en archivos y reutilizarlas, incluso en el siguiente inicio del juego, con `PackedScene` y [archivos tipados de recursos y escenas](docs/components/resource-files.md). El editor visual muestra por ahora una pantalla de inicio; la edición de proyectos de juego y los comandos para gestionarlos aún no están implementados.
 
-La colaboración con IA forma parte de la [arquitectura del motor](docs/decisions/agent-native.md#adr-0090): las operaciones de proyecto, la ejecución de escenarios de juego y la comprobación de imágenes deben estar disponibles mediante herramientas documentadas. El conjunto completo de herramientas aún está por implementar.
+La [arquitectura del motor](docs/decisions/agent-native.md#adr-0090) prevé comandos para que los asistentes de IA trabajen con proyectos y ejecuten escenarios de juego con comprobación de imágenes. El conjunto completo de herramientas aún está por implementar.
 
 Las próximas tareas y el estado de los métodos se detallan en el [plan de desarrollo](docs/coverage/index.md). El comportamiento implementado se describe en la referencia de la API.
 

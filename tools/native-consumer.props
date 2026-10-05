@@ -1,0 +1,20 @@
+<Project>
+  <Import Project="native-package.props" />
+  <PropertyGroup>
+    <Version>$(Electron2DVersion)</Version>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0'">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+    <Electron2DConsumerPlatform Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">Windows</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('Linux'))">Linux</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('OSX'))">MacOS</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('win-'))">Windows</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('linux-'))">Linux</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('osx-'))">MacOS</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="$([System.String]::Copy('$(TargetFramework)').EndsWith('-android'))">Android</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="$([System.String]::Copy('$(TargetFramework)').EndsWith('-ios'))">iOS</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="$([System.String]::Copy('$(TargetFramework)').EndsWith('-tvos'))">tvOS</Electron2DConsumerPlatform>
+    <Electron2DConsumerPlatform Condition="'$(RuntimeIdentifier)' == 'browser-wasm'">Web</Electron2DConsumerPlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Electron2D.$(Electron2DConsumerPlatform)" Version="[$(Electron2DNativePackageVersion)]" />
+  </ItemGroup>
+</Project>

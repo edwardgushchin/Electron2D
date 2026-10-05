@@ -2,11 +2,20 @@
   <Import Project="tools/native-package.props" />
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework Condition="'$(TargetFrameworks)' != ''" />
     <TargetFramework Condition="'$(RuntimeIdentifier)' == 'android-arm' or '$(RuntimeIdentifier)' == 'android-arm64' or '$(RuntimeIdentifier)' == 'android-x86' or '$(RuntimeIdentifier)' == 'android-x64'">net10.0-android</TargetFramework>
     <TargetFramework Condition="'$(RuntimeIdentifier)' == 'ios-arm64' or '$(RuntimeIdentifier)' == 'iossimulator-arm64' or '$(RuntimeIdentifier)' == 'iossimulator-x64'">net10.0-ios</TargetFramework>
     <TargetFramework Condition="'$(RuntimeIdentifier)' == 'tvos-arm64' or '$(RuntimeIdentifier)' == 'tvossimulator-arm64' or '$(RuntimeIdentifier)' == 'tvossimulator-x64'">net10.0-tvos</TargetFramework>
     <AndroidGenerateResourceDesigner Condition="'$(TargetFramework)' == 'net10.0-android'">false</AndroidGenerateResourceDesigner>
     <AssemblyName>Electron2D</AssemblyName>
+    <PackageId>Electron2D</PackageId>
+    <Version>$(Electron2DVersion)</Version>
+    <Authors>Eduard Gushchin</Authors>
+    <Description>Typed C# runtime for building cross-platform 2D games. Add Electron2D platform packages for native dependencies.</Description>
+    <PackageLicenseFile>licence/Electron2D-LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/edwardgushchin/Electron2D</RepositoryUrl>
+    <IsRidAgnostic>false</IsRidAgnostic>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -23,44 +32,34 @@
     <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'ios-arm64' or '$(RuntimeIdentifier)' == 'iossimulator-arm64' or '$(RuntimeIdentifier)' == 'iossimulator-x64'">iOS</Electron2DNativePlatform>
     <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'tvos-arm64' or '$(RuntimeIdentifier)' == 'tvossimulator-arm64' or '$(RuntimeIdentifier)' == 'tvossimulator-x64'">tvOS</Electron2DNativePlatform>
     <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'browser-wasm'">Web</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0-android'">Android</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0-ios'">iOS</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0-tvos'">tvOS</Electron2DNativePlatform>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src/**/*.cs" />
+    <EmbeddedResource Include="src/Vendor/ICU/data/TextBreak78.dat" LogicalName="Electron2D.TextBreak.dat" />
     <EmbeddedResource Include="src/Servers/Rendering/Shaders/*.spv" LogicalName="Electron2D.Shaders.%(Filename)%(Extension)" />
     <EmbeddedResource Include="src/Scene/Theme/Fonts/*.woff2" LogicalName="Electron2D.Fonts.%(Filename)%(Extension)" />
     <EmbeddedResource Include="src/Scene/Theme/Icons/*.svg" LogicalName="Electron2D.Icons.%(Filename)%(Extension)" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' and '$(Electron2DNativePlatform)' != 'Web'">
-    <PackageReference Include="Electron2D.Native.Linux" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
-    <PackageReference Include="Electron2D.Native.MacOS" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
-    <PackageReference Include="Electron2D.Native.Windows" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
-    <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.1.301" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="14.2.1.301" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="14.2.1.301" />
-    <PackageReference Include="SDL3-CS.Windows" Version="$(Electron2DSDLVersion)" />
-    <PackageReference Include="SDL3-CS.Windows.Image" Version="3.4.6.12" />
-    <PackageReference Include="SDL3-CS.Windows.Shadercross" Version="3.0.0.13" />
-    <PackageReference Include="SDL3-CS.MacOS" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" />
-    <PackageReference Include="SDL3-CS.MacOS.Image" Version="3.4.6.12" />
-    <PackageReference Include="SDL3-CS.MacOS.Shadercross" Version="3.0.0.13" />
-    <PackageReference Include="SDL3-CS.Linux" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" />
-    <PackageReference Include="SDL3-CS.Linux.Image" Version="3.4.6.12" />
-    <PackageReference Include="SDL3-CS.Linux.Shadercross" Version="3.0.0.13" />
+  <ItemGroup Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform)" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.12" PrivateAssets="all" />
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.13" PrivateAssets="all" />
+    <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" PrivateAssets="all" Condition="'$(Electron2DNativePlatform)' == 'Linux'" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.1.301" PrivateAssets="all" Condition="'$(Electron2DNativePlatform)' == 'Linux'" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="14.2.1.301" PrivateAssets="all" Condition="'$(Electron2DNativePlatform)' == 'Windows'" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="14.2.1.301" PrivateAssets="all" Condition="'$(Electron2DNativePlatform)' == 'MacOS'" />
   </ItemGroup>
-  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android' or '$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'">
-    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform)" Version="$(Electron2DSDLVersion)" />
-    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.12" />
-    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.13" />
+  <ItemGroup Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and ('$(Electron2DNativePlatform)' == 'Android' or '$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS')">
+    <PackageReference PrivateAssets="all" Include="SDL3-CS.$(Electron2DNativePlatform)" Version="$(Electron2DSDLVersion)" />
+    <PackageReference PrivateAssets="all" Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.12" />
+    <PackageReference PrivateAssets="all" Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.13" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
-    <PackageReference Include="Electron2D.Native.Android" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" />
     <!-- The AAR already supplies SDL JNI binaries; the RID payload is the same library. -->
     <PackageReference Update="SDL3-CS.Android" ExcludeAssets="runtime;native" />
-    <AndroidAsset Include="licence/*" Exclude="licence/ReferenceData-LICENSE.txt" Link="licence/%(Filename)%(Extension)" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'">
-    <PackageReference Include="Electron2D.Native.$(Electron2DNativePlatform)" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
     <!-- The Android SDK scans this root project recursively; nested app outputs are not engine assets. -->
@@ -69,17 +68,19 @@
     <AndroidJavaSource Remove="**/obj/**/*.java" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="licence/*" CopyToPublishDirectory="Always" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' or '$(Electron2DNativePlatform)' == 'Web' or '$(TargetFramework)' != 'net10.0'" />
+    <None Include="tools/package-readme.md" Pack="true" PackagePath="README.md" />
+    <None Remove="licence/*" />
+    <None Include="licence/*" Exclude="licence/ReferenceData-LICENSE.txt" Pack="true" PackagePath="licence/" CopyToPublishDirectory="Never" />
     <None Update="licence/*" PublishFolderType="Resource" Condition="'$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'" />
-    <None Update="licence/ReferenceData-LICENSE.txt" CopyToPublishDirectory="Never" />
+    <None Update="licence/ReferenceData-LICENSE.txt" Pack="false" CopyToPublishDirectory="Never" />
   </ItemGroup>
   <Target Name="ValidateElectron2DNativeRID" BeforeTargets="Restore;Build;Publish" Condition="'$(Electron2DNativePlatform)' == ''">
     <Error Text="Electron2D has no native package mapping for RuntimeIdentifier '$(RuntimeIdentifier)'." />
   </Target>
-  <Import Project="tools/text-native.targets" />
-  <Import Project="tools/audio-native.targets" />
-  <Import Project="tools/enet-native.targets" />
-  <Import Project="tools/tls-native.targets" />
-  <Import Project="tools/font-native.targets" />
-  <Import Project="tools/native-package.targets" />
+  <Import Project="tools/text-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
+  <Import Project="tools/audio-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
+  <Import Project="tools/enet-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
+  <Import Project="tools/tls-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
+  <Import Project="tools/font-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
+  <Import Project="tools/native-package.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
 </Project>

@@ -22,4 +22,5 @@
     <Compile Include="../Electron2D.Tests/FontTestFixtures.cs" Link="FontTestFixtures.cs" />
     <EmbeddedResource Include="../Electron2D.Tests/Fixtures/Fonts/*.woff2;../Electron2D.Tests/Fixtures/Fonts/*.ttf" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
 </Project>

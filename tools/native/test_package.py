@@ -124,7 +124,7 @@ class NativePackageTests(unittest.TestCase):
     def test_consumer_accepts_manifested_native_dlls_but_rejects_managed_assemblies(self):
         with tempfile.TemporaryDirectory() as directory:
             feed = Path(directory)
-            path = feed / "Electron2D.Native.Windows.fixture.nupkg"
+            path = feed / "Electron2D.Windows.fixture.nupkg"
             payload = b"native fixture"
             manifest = {"win-x64": {"files": {"FAudio.dll": hashlib.sha256(payload).hexdigest()}}}
             for extra in (None, "lib/net10.0/Managed.dll", "Managed.dll"):

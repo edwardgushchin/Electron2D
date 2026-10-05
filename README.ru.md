@@ -61,7 +61,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="texttop" alt=""> Быстрый старт
 
-Начните с примера «Окно и ввод». Приведённые команды предназначены для Linux x64 с Wayland.
+Начните с примера «Управление персонажем». Вы увидите персонажа и сможете перемещать его стрелками. Команды .NET ниже используются на Windows, Linux и macOS; результаты проверки запуска приведены в [таблице платформ](#platforms).
 
 <a id="installation"></a>
 
@@ -69,7 +69,9 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) и Git.
 
-Приватные нативные компоненты загружаются как зависимости NuGet. Доступность первого пакета и инструкции полной пересборки описаны в [доставке нативных компонентов](docs/native-packaging.md).
+Подключайте движок через NuGet: пакет `Electron2D` и пакеты нужных платформ, например `Electron2D.Windows`, `Electron2D.Linux` или `Electron2D.MacOS`. Нативные зависимости восстанавливаются автоматически. [Платформенные пакеты и правила версий](docs/native-packaging.md).
+
+Пакеты текущей версии `0.1.0-alpha.1` ещё готовятся к публикации.
 
 ### Сборка и запуск
 
@@ -81,16 +83,17 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-Опубликуйте пример с собственной средой .NET и запустите его:
+Запустите пример:
 
 ```bash
-dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-host-example
-/tmp/electron2d-host-example/HostExample
+dotnet run --project examples/CharacterMovement
 ```
 
-Откроется окно. Стрелки перемещают игровой объект, а его координаты появляются в терминале. Escape или закрытие окна завершают приложение. В этом примере сцена не рисуется: он показывает запуск движка и обработку ввода.
+Откроется сцена с розовым персонажем на сетке. Стрелки перемещают его в пределах поля, Escape или закрытие окна завершают приложение. Попробуйте изменить скорость в `Player.cs` и запустить пример снова.
 
-[Исходный код примера](examples/HostExample/Program.cs) · [Подробности запуска](examples/HostExample/README.md)
+![Управление персонажем Electron2D: персонаж на сетке и подсказки управления](docs/images/character-movement.png)
+
+[Исходный код примера](examples/CharacterMovement/CharacterMovementScene.cs) · [Подробности запуска](examples/CharacterMovement/README.md)
 
 ### Подключение к своей игре
 
@@ -101,6 +104,14 @@ dotnet new console -n MyGame -o ../MyGame --framework net10.0
 dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
 ```
 
+Добавьте пакет своей платформы через NuGet. Выберите одну команду:
+
+| Платформа | Команда |
+| --- | --- |
+| Windows | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add ../MyGame/MyGame.csproj package Electron2D.MacOS --prerelease` |
+
 Замените содержимое `MyGame/Program.cs` следующим кодом:
 
 ```csharp
@@ -109,7 +120,7 @@ using Electron2D;
 var window = new Window
 {
     Title = "Моя игра",
-    Size = new Vector2i(960, 540)
+    Size = new Vector2i(800, 600)
 };
 
 return Engine.Run(window);
@@ -129,7 +140,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="texttop" alt=""> Платформы
 
-Целевые платформы игры и результаты проверок приведены отдельно. Визуальный редактор предназначен для Windows, Linux и macOS.
+В таблице указано, что проверено на каждой целевой платформе игры. Визуальный редактор предназначен для Windows, Linux и macOS.
 
 | Целевая платформа игры | Проверено в репозитории |
 | --- | --- |
@@ -141,9 +152,9 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 | iOS и tvOS, устройства и симуляторы | Подготовлена автоматическая сборка библиотеки. Проверки на устройствах ещё не проводились |
 | Браузеры | Отрисовка и физика проверены в отдельном тестовом приложении. Запуск игры в браузере ещё не реализован |
 
-Для Linux x64 собран полный набор нативных библиотек текста и звука. Для остальных платформ их сборка и интеграция остаются отдельными задачами. Проверки Android и браузера охватывают отдельные сценарии.
+Проверки Android и браузера пока относятся к отдельным сценариям. Доступность нативных библиотек для выбранной платформы описана в [инструкциях по их доставке](docs/native-packaging.md).
 
-Бейджи сборки и тестов охватывают все 18 RID: сборки с анализаторами, полные тесты Linux или переносимые тесты desktop, а также исполняемые trimmed/AOT, Android, Apple-симуляторные и браузерные тестовые приложения. Реальные Apple-устройства и полная нативная проверка остальных платформ остаются отдельными этапами. См. [границы проверки CI](docs/platform-verification.md#automated-rid-checks).
+Бейджи сборки и тестов показывают состояние автоматических проверок кода и тестовых приложений. Запуск на реальных устройствах проверяется отдельно. [Подробности автоматических проверок](docs/platform-verification.md#automated-rid-checks).
 
 Модели устройств, команды и границы проверок перечислены в [отчёте о платформах](docs/platform-verification.md).
 
@@ -151,9 +162,9 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 ## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="texttop" alt=""> Разработка движка
 
-Сейчас с Electron2D можно работать через C# и .NET. Шаблоны `PackedScene` поддерживают типизированные [файлы ресурсов и сцен](docs/components/resource-files.md), включая загрузку в новом процессе. Визуальный редактор и команды управления игровыми проектами остаются в планах.
+Сцены можно сохранять в файлы и использовать повторно, в том числе при следующем запуске игры. Для этого служат `PackedScene` и [типизированные файлы ресурсов и сцен](docs/components/resource-files.md). Визуальный редактор пока показывает стартовое окно; редактирование игровых проектов и команды управления ими ещё не реализованы.
 
-Работа с ИИ заложена в [архитектуру движка](docs/decisions/agent-native.md#adr-0090): операции с проектом, запуск игровых сценариев и проверка изображения должны быть доступны через документированные инструменты. Полный набор этих инструментов ещё предстоит реализовать.
+Для ИИ-помощников в [архитектуре движка](docs/decisions/agent-native.md#adr-0090) предусмотрены команды работы с проектом и запуска игровых сценариев с проверкой изображения. Полный набор этих инструментов ещё предстоит реализовать.
 
 Следующие задачи и состояние отдельных методов доступны в [плане разработки](docs/coverage/index.md). Реализованное поведение описано в справочнике API.
 

@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
-    <Electron2DNativePackageVersion>0.1.0-preview.4</Electron2DNativePackageVersion>
+    <Electron2DVersion>0.1.0-alpha.1</Electron2DVersion>
+    <Electron2DNativePackageVersion>$(Electron2DVersion)</Electron2DNativePackageVersion>
     <Electron2DSDLVersion>3.4.18</Electron2DSDLVersion>
     <Electron2DNativePython Condition="'$(Electron2DNativePython)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">python</Electron2DNativePython>
     <Electron2DNativePython Condition="'$(Electron2DNativePython)' == ''">python3</Electron2DNativePython>

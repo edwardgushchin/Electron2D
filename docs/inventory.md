@@ -484,9 +484,9 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 
 | Assembly | Project | Target | State |
 | --- | --- | --- | --- |
-| `Electron2D.dll` | [`Electron2D.csproj`](../Electron2D.csproj) | `net8.0` | The public engine assembly, including internal SDL3-CS source; the user example has a separate executable assembly |
+| `Electron2D.dll` | [`Electron2D.csproj`](../Electron2D.csproj) | `net10.0` and mobile SDK profiles | Managed-only `Electron2D` package and public engine assembly, including internal SDL3-CS source; explicit `Electron2D.{Platform}` packages deliver target-native assets |
 
-This assembly row records the current build, not complete platform delivery. The user-facing executable example starts under Linux Wayland with packaged SDL; user-assisted real arrow-key input and Escape exit passed; a complete target build/package/test matrix, Web browser host/build, and Android/iOS host projects do not exist yet.
+This assembly row records the build and package contract. CharacterMovement is rendered and exercised on Linux x64/Wayland. The CI registry configures all eighteen target profiles, including separate Android, Apple and browser contract applications; production game hosting and native execution remain subject to the limits in the platform report.
 
 ## Repository product boundaries
 
@@ -494,7 +494,7 @@ This assembly row records the current build, not complete platform delivery. The
 | --- | --- | --- | --- |
 | Runtime engine | [`src/`](../src/) and [`Electron2D.csproj`](../Electron2D.csproj) | May use only approved runtime dependencies | Implemented types compile into `Electron2D.dll` |
 | Self-hosted editor | [`editor/Electron2D.Editor.csproj`](../editor/Electron2D.Editor.csproj) | Executable references `Electron2D.dll`; runtime never references editor | Branded 1152×800 startup window with a compact shaded character and live font-rendered labels; internal [EditorScene](classes/EditorScene.md), public runtime host, desktop name/mark metadata and apphost VS Code F5 configuration; authoring remains absent |
-| First-party games/examples | [`examples/`](../examples/) | Each executable references `Electron2D.dll`; runtime never references examples | First window/input example implemented; future feature and game examples pending |
+| First-party games/examples | [`examples/`](../examples/) | Each executable references `Electron2D.dll`; runtime never references examples | Rendered [first scene](../examples/CharacterMovement/README.md) with a grid, live labels and an arrow-key-controlled character; [CharacterMovementScene](classes/CharacterMovementScene.md) consumes only the public runtime API |
 
 ## Audio
 

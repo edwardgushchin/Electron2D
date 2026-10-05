@@ -42,13 +42,17 @@ Prerelease candidates use `alpha.N`, `beta.N` and `rc.N` channels before removin
 
 Runtime API completion is judged against the accepted product scope and its coverage obligations, not declaration counts alone. The runtime milestone does not claim an implemented editor, full external-reference parity or verification on every target. Release verification follows the active platform gate in ADR 0021; the editor milestone additionally requires the executable authoring and observation workflows in ADR 0090. Missing capabilities and unverified platforms remain explicit.
 
-Native dependency packages and serialized file schemas keep independent technical versions. Releases pin the required dependency versions, and loaders enforce their documented schema compatibility. A native package or schema version must not be presented as the Electron2D product version.
+### Platform package versions and minimum engine
+
+The package family is `Electron2D` plus `Electron2D.{Platform}` under ADR 0012, matching the user's chosen naming model. A platform package's version identifies its minimum supported Electron2D product version, including the complete prerelease suffix. For example, `Electron2D.Linux` `0.1.0-alpha.1` requires `Electron2D` `0.1.0-alpha.1` or later; `Electron2D.Windows` `1.4.2` requires Electron2D `1.4.2` or later. The generated NuGet dependency and native manifest record the minimum. Restore must reject an explicitly selected older engine.
+
+Use matching product/platform release versions by default. The minimum dependency is a lower bound, not proof of compatibility with every future native ABI or product release. A different combination requires verified compatibility. A changed published native payload requires a new product patch or prerelease candidate and newly supported baseline; never replace the contents of an existing version. Internal SDL, ICU, FAudio, FreeType, HarfBuzz and OpenSSL versions remain pinned implementation details rather than platform package version numbers. Serialized file schemas retain their independent technical versions and loader compatibility rules.
 
 ### Current implementation and verification boundary
 
-This decision assigns the current development milestone `0.1.0-alpha.1`; it does not change build metadata or publish a release. `Electron2D.csproj` currently has no explicit product version, so SDK defaults still produce `Version`/`PackageVersion` `1.0.0`, `AssemblyVersion`/`FileVersion` `1.0.0.0` and an informational version based on `1.0.0` with source revision metadata when supplied by the build. These defaults do not establish a stable `1.0.0` product release.
+The shared source [`tools/native-package.props`](../../tools/native-package.props) assigns `Electron2DVersion` `0.1.0-alpha.1`. The managed runtime and first-party consumers use this value; platform packages use it as their version and minimum-engine dependency. Numeric assembly/file versions are `0.1.0.0`, and informational metadata includes the prerelease label and supplied source revision. [`EngineVersionInfo`](../classes/EngineVersionInfo.md) reports the loaded assembly's actual metadata.
 
-[`EngineVersionInfo`](../classes/EngineVersionInfo.md) reports the metadata of the loaded assembly; it does not derive a version from coverage or this document. Applying the accepted development version to a single shared build-version source and checking artifact agreement remains a separate implementation task. Runtime, managed product package, documentation and release identities must agree before publishing a product release. A documentation change does not establish runtime, editor or platform acceptance.
+Local package/consumer checks verify this delivery boundary. Publication, complete RID CI and target-native execution remain separate gates under ADR 0021. Product metadata does not establish a stable runtime or delivered editor.
 
 ### Consequences
 

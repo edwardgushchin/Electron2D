@@ -10,6 +10,8 @@
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../../editor/EditorScene.cs" Link="Editor/EditorScene.cs" />
+    <Compile Include="../../examples/CharacterMovement/CharacterMovementScene.cs" Link="Examples/CharacterMovementScene.cs" />
+    <Compile Include="../../examples/CharacterMovement/Player.cs" Link="Examples/Player.cs" />
     <Content Include="../../docs/design/assets/sprite/sparkle.svg" Link="Assets/sparkle.svg" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="../../docs/design/assets/sprite/mark-dark.svg" Link="Assets/mark-dark.svg" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="../../docs/design/assets/sprite/app-icon.svg" Link="Assets/app-icon.svg" CopyToOutputDirectory="PreserveNewest" />
@@ -30,4 +32,5 @@
     <EmbeddedResource Include="Fixtures/Audio/Phaser/reference.json" LogicalName="TestAudio.PhaserReference.json" />
     <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
 </Project>

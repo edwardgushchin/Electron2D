@@ -1,0 +1,54 @@
+<Project>
+  <PropertyGroup>
+    <_Electron2DNativeNoticeRID Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</_Electron2DNativeNoticeRID>
+    <_Electron2DNativeNoticeRID Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</_Electron2DNativeNoticeRID>
+  </PropertyGroup>
+  <ItemGroup Condition="('$(MSBuildThisFileName)' == 'Electron2D.MacOS' and $([System.String]::Copy('$(_Electron2DNativeNoticeRID)').StartsWith('osx-'))) or ('$(MSBuildThisFileName)' == 'Electron2D.Linux' and $([System.String]::Copy('$(_Electron2DNativeNoticeRID)').StartsWith('linux-'))) or ('$(MSBuildThisFileName)' == 'Electron2D.Windows' and $([System.String]::Copy('$(_Electron2DNativeNoticeRID)').StartsWith('win-')))">
+    <None Include="$(MSBuildThisFileDirectory)../licence/*" Link="licence/%(Filename)%(Extension)" CopyToPublishDirectory="Always" Pack="false" Visible="false" />
+  </ItemGroup>
+  <ItemGroup Condition="('$(MSBuildThisFileName)' == 'Electron2D.iOS' and '$(TargetPlatformIdentifier)' == 'ios') or ('$(MSBuildThisFileName)' == 'Electron2D.tvOS' and '$(TargetPlatformIdentifier)' == 'tvos') or ('$(MSBuildThisFileName)' == 'Electron2D.Web' and '$(RuntimeIdentifier)' == 'browser-wasm')">
+    <None Include="$(MSBuildThisFileDirectory)../licence/*" Link="licence/%(Filename)%(Extension)" CopyToPublishDirectory="Always" Pack="false" Visible="false" PublishFolderType="Resource" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(MSBuildThisFileName)' == 'Electron2D.Android' and '$(TargetPlatformIdentifier)' == 'android'">
+    <AndroidAsset Include="$(MSBuildThisFileDirectory)../licence/*" Link="licence/%(Filename)%(Extension)" />
+  </ItemGroup>
+  <!-- Preserve the private library directory for project and package consumers. -->
+  <Target Name="Electron2DAndroidSDLLayout" AfterTargets="ResolvePackageAssets" Condition="'$(TargetPlatformIdentifier)' == 'android'">
+    <ItemGroup>
+      <!-- The SDL AAR supplies JNI and the core library together. -->
+      <NativeCopyLocalItems Remove="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.NuGetPackageId)' == 'SDL3-CS.Android'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="Electron2DNativeBuildLayout" AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <!-- A desktop run without an explicit RID deploys only the SDK host's native assets. -->
+      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="'$(RuntimeIdentifier)' == '' and '$(TargetFramework)' == 'net10.0' and '%(RuntimeTargetsCopyLocalItems.AssetType)' == 'native' and '%(RuntimeTargetsCopyLocalItems.RuntimeIdentifier)' != '$(NETCoreSdkRuntimeIdentifier)'" />
+      <NativeCopyLocalItems Update="@(NativeCopyLocalItems)" Condition="('$(RuntimeIdentifier)' != '') and ($([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('Electron2D.')) or $([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('SDL3-CS.')) or $([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('HarfBuzzSharp.NativeAssets.')) or '%(NativeCopyLocalItems.NuGetPackageId)' == 'MonoGame.Library.FreeType')">
+        <DestinationSubDirectory>runtimes/$(RuntimeIdentifier)/native/</DestinationSubDirectory>
+      </NativeCopyLocalItems>
+    </ItemGroup>
+  </Target>
+  <Target Name="Electron2DNativePublishLayout" AfterTargets="_ResolveCopyLocalAssetsForPublish;_ComputeResolvedCopyLocalPublishAssets">
+    <ItemGroup>
+      <_ResolvedCopyLocalPublishAssets Update="@(_ResolvedCopyLocalPublishAssets)" Condition="('$(RuntimeIdentifier)' != '') and ($([System.String]::Copy('%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)').StartsWith('Electron2D.')) or $([System.String]::Copy('%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)').StartsWith('SDL3-CS.')) or $([System.String]::Copy('%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)').StartsWith('HarfBuzzSharp.NativeAssets.')) or '%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)' == 'MonoGame.Library.FreeType')">
+        <DestinationSubDirectory>runtimes/$(RuntimeIdentifier)/native/</DestinationSubDirectory>
+      </_ResolvedCopyLocalPublishAssets>
+    </ItemGroup>
+  </Target>
+  <ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'ios' or '$(TargetPlatformIdentifier)' == 'tvos'">
+    <NativeReference Include="$(MSBuildThisFileDirectory)../runtimes/$(RuntimeIdentifier)/native/*.a">
+      <Kind>Static</Kind>
+      <ForceLoad>true</ForceLoad>
+      <SmartLink>true</SmartLink>
+      <IsCxx>true</IsCxx>
+    </NativeReference>
+    <LinkerArgument Include="-framework" />
+    <LinkerArgument Include="CoreBluetooth" />
+  </ItemGroup>
+  <Target Name="Electron2DAppleCodecIdentity" BeforeTargets="CoreCompile;_ExpandNativeReferences" Condition="('$(TargetPlatformIdentifier)' == 'ios' or '$(TargetPlatformIdentifier)' == 'tvos') and '$(_SDL3CSNativeImageAppleStaticLibDir)' != ''">
+    <!-- FreeType and SDL_image share the audited PNG/zlib archives instead of force-loading two copies. -->
+    <ItemGroup>
+      <NativeReference Remove="$(_SDL3CSNativeImageAppleStaticLibDir)libpng16.a;$(_SDL3CSNativeImageAppleStaticLibDir)libz.a" />
+    </ItemGroup>
+  </Target>
+</Project>

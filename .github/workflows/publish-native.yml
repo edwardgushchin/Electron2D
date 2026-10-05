@@ -1,4 +1,4 @@
-name: Publish private native package
+name: Publish Electron2D packages
 
 on:
   workflow_dispatch:
@@ -21,8 +21,30 @@ jobs:
     uses: ./.github/workflows/native.yml
     with:
       rebuild: true
+  managed:
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.302
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install managed target workloads
+        run: |
+          python3 -c 'import json; from pathlib import Path; Path("global.json").write_text(json.dumps({"sdk": {"version": "10.0.302", "rollForward": "disable", "workloadVersion": "10.0.302.0"}}))'
+          dotnet workload install android ios tvos
+      - name: Pack the managed runtime for desktop, Android and Apple
+        run: dotnet pack Electron2D.csproj -c Release -o bin/managed-feed '-p:TargetFrameworks="net10.0;net10.0-android;net10.0-ios;net10.0-tvos"'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: managed-engine-package
+          path: bin/managed-feed/*.nupkg
   publish:
-    needs: native
+    needs: [native, managed]
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -33,7 +55,7 @@ jobs:
           dotnet-version: 10.0.x
       - uses: actions/download-artifact@v4
         with:
-          pattern: private-native-package*
+          pattern: "*-package*"
           merge-multiple: true
           path: bin/native-feed/
       - name: Obtain a short-lived NuGet publishing key
@@ -41,7 +63,7 @@ jobs:
         id: login
         with:
           user: ${{ inputs.nuget_user }}
-      - name: Publish the audited native packages
+      - name: Publish the managed and audited platform packages
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: dotnet nuget push bin/native-feed/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json

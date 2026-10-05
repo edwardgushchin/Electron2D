@@ -17,4 +17,5 @@
     <AndroidNativeLibrary Remove="obj/**/*.so;bin/**/*.so" />
     <AndroidJavaSource Remove="obj/**/*.java" />
   </ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
 </Project>

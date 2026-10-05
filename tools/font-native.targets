@@ -3,7 +3,7 @@
     <_Electron2DFontBuild>$(MSBuildThisFileDirectory)../obj/font-native/$(Electron2DNativePackageVersion)/$(_Electron2DPrivateNativeRID)</_Electron2DFontBuild>
     <_Electron2DFontName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DFreeType.dylib</_Electron2DFontName>
     <_Electron2DFontLibrary>$(_Electron2DFontBuild)/$(_Electron2DFontName)</_Electron2DFontLibrary>
-    <_Electron2DFontLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_Native_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DFontName)</_Electron2DFontLibrary>
+    <_Electron2DFontLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DFontName)</_Electron2DFontLibrary>
     <Electron2DFontNativeJobs Condition="'$(Electron2DFontNativeJobs)' == ''">2</Electron2DFontNativeJobs>
   </PropertyGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'MacOS'">

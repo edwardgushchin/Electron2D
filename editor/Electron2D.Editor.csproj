@@ -39,4 +39,5 @@
     <Copy SourceFiles="Assets/Info.plist" DestinationFolder="$(PublishDir)Electron2D.app/Contents" />
     <Copy SourceFiles="Assets/Electron2D.icns" DestinationFolder="$(PublishDir)Electron2D.app/Contents/Resources" />
   </Target>
+  <Import Project="../tools/native-consumer.props" />
 </Project>

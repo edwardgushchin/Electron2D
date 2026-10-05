@@ -126,7 +126,8 @@ def macos_exports(path, rid, name):
 
 def configuration():
     props = ET.parse(ROOT / "tools/native-package.props")
-    return {"version": props.findtext(".//Electron2DNativePackageVersion"),
+    return {"version": props.findtext(".//Electron2DVersion"),
+            "minimumEngineVersion": props.findtext(".//Electron2DVersion"),
             "sdlVersion": props.findtext(".//Electron2DSDLVersion")}
 
 

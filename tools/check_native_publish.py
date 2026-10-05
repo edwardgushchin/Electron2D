@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a self-contained HostExample publish and its private Linux text/ENet ABIs."""
+"""Check a self-contained CharacterMovement publish and its private Linux text/ENet ABIs."""
 
 import json
 import re
@@ -33,16 +33,16 @@ def check_private_text(rid: str, library: Path) -> None:
 
 def check(rid: str, publish: Path) -> None:
     if rid.startswith("win-"):
-        platform, host, names = "Windows", "HostExample.exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "freetype.dll", "libHarfBuzzSharp.dll")
+        platform, host, names = "Windows", "CharacterMovement.exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll")
     elif rid.startswith("osx-"):
-        platform, host, names = "MacOS", "HostExample", ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libfreetype.dylib", "libHarfBuzzSharp.dylib")
+        platform, host, names = "MacOS", "CharacterMovement", ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib")
     elif rid.startswith("linux-"):
-        platform, host, names = "Linux", "HostExample", ("libSDL3.so", "libSDL3_image.so", "libSDL3_shadercross.so", "libfreetype.so", "libHarfBuzzSharp.so")
+        platform, host, names = "Linux", "CharacterMovement", ("libSDL3.so", "libSDL3_image.so", "libSDL3_shadercross.so", "libfreetype.so", "libHarfBuzzSharp.so")
     else:
         raise ValueError(f"No self-contained desktop host for {rid}")
 
     assert (publish / host).is_file() and (publish / "Electron2D.dll").is_file(), "Missing application host or engine"
-    packages = json.loads((publish / "HostExample.deps.json").read_text())["libraries"]
+    packages = json.loads((publish / "CharacterMovement.deps.json").read_text())["libraries"]
     expected = {
         f"SDL3-CS.{platform}/3.4.18",
         f"SDL3-CS.{platform}.Image/3.4.6.12",
@@ -50,12 +50,17 @@ def check(rid: str, publish: Path) -> None:
     }
     actual = {name for name in packages if name.startswith("SDL3-CS.")}
     text_platform = {"Windows": "Win32", "MacOS": "macOS", "Linux": "Linux"}[platform]
-    assert "MonoGame.Library.FreeType/2.13.2.5" in packages, "Missing pinned native FreeType package"
+    if platform == "Linux":
+        assert "MonoGame.Library.FreeType/2.13.2.5" in packages, "Missing pinned native FreeType package"
     assert f"HarfBuzzSharp.NativeAssets.{text_platform}/14.2.1.301" in packages, "Missing pinned native HarfBuzz package"
     assert actual == expected, f"Wrong SDL packages: {actual}"
     assert f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/10.0.1" in packages, "Missing self-contained runtime pack"
-    assert all((publish / name).is_file() for name in names), f"Missing native render/text files: {names}"
     native = publish / "runtimes" / rid / "native"
+    assert all((native / name).is_file() for name in names), f"Missing native render/text files: {names}"
+    assert not any((publish / name).exists() for name in names), "Native render/text files must retain their RID directory"
+    assert {path.name for path in (publish / "runtimes").iterdir()} == {rid}, "Foreign RID assets leaked into the game"
+    platform_packages = {name.split("/")[0] for name in packages if name.startswith("Electron2D.")}
+    assert platform_packages == {f"Electron2D.{platform}"}, f"Wrong engine platform packages: {platform_packages}"
     private_text = native / "libElectron2DTextBreak.so"
     assert not (publish / "libElectron2DTextBreak.so").exists(), "Private text library must be under runtimes/RID/native"
     assert not (publish / "libFAudio.so.0").exists(), "Private audio library must be under runtimes/RID/native"

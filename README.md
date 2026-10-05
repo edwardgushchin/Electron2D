@@ -61,7 +61,7 @@ Shader materials require the GPU renderer. The compatibility renderer supports b
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="texttop" alt=""> Quick start
 
-Start with the “Window and input” example. These commands are for Linux x64 with Wayland.
+Start with the “Character movement” example. You will see a character and move it with the arrow keys. The .NET commands below are used on Windows, Linux and macOS; see the [platform table](#platforms) for completed run checks.
 
 <a id="installation"></a>
 
@@ -69,7 +69,9 @@ Start with the “Window and input” example. These commands are for Linux x64 
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) and Git.
 
-Private native components are restored as NuGet dependencies. See [native package delivery](docs/native-packaging.md) for the initial package availability and full native rebuild instructions.
+Use NuGet to install `Electron2D` and the packages for your game targets, such as `Electron2D.Windows`, `Electron2D.Linux` or `Electron2D.MacOS`. Native dependencies restore automatically. [Platform packages and version rules](docs/native-packaging.md).
+
+The current `0.1.0-alpha.1` packages are still being prepared for publication.
 
 ### Build and run
 
@@ -81,16 +83,17 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-Publish the example with its own .NET runtime and launch it:
+Run the example:
 
 ```bash
-dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-host-example
-/tmp/electron2d-host-example/HostExample
+dotnet run --project examples/CharacterMovement
 ```
 
-A window opens. The arrow keys move a game object, and its coordinates appear in the terminal. Escape or closing the window exits the application. This example does not draw the scene; it shows engine startup and input handling.
+A scene opens with a pink character on a grid. The arrow keys move it within the field; Escape or closing the window exits. Try changing the movement speed in `Player.cs` and run the example again.
 
-[Example source](examples/HostExample/Program.cs) · [Run instructions](examples/HostExample/README.md)
+![Electron2D first scene: a character on a grid with keyboard instructions](docs/images/character-movement.png)
+
+[Example source](examples/CharacterMovement/CharacterMovementScene.cs) · [Run instructions](examples/CharacterMovement/README.md)
 
 ### Use Electron2D in your game
 
@@ -101,6 +104,14 @@ dotnet new console -n MyGame -o ../MyGame --framework net10.0
 dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
 ```
 
+Add your platform package through NuGet. Choose one command:
+
+| Platform | Command |
+| --- | --- |
+| Windows | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add ../MyGame/MyGame.csproj package Electron2D.MacOS --prerelease` |
+
 Replace the contents of `MyGame/Program.cs` with this code:
 
 ```csharp
@@ -109,7 +120,7 @@ using Electron2D;
 var window = new Window
 {
     Title = "My game",
-    Size = new Vector2i(960, 540)
+    Size = new Vector2i(800, 600)
 };
 
 return Engine.Run(window);
@@ -129,7 +140,7 @@ Building the engine produces `Electron2D.dll`. Publishing a game includes the en
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="texttop" alt=""> Platforms
 
-Game targets and completed checks are listed separately. The visual editor targets Windows, Linux and macOS.
+The table lists what has been checked on each game target. The visual editor targets Windows, Linux and macOS.
 
 | Game target | Checked in this repository |
 | --- | --- |
@@ -141,9 +152,9 @@ Game targets and completed checks are listed separately. The visual editor targe
 | iOS and tvOS, devices and simulators | Automated library builds have been prepared. Device checks have not been run yet |
 | Browsers | Rendering and physics have been checked in a separate test application. Running a game in the browser is not implemented yet |
 
-The full set of native text and audio libraries has been built for Linux x64. Building and integrating them for other platforms remains separate work. Android and browser checks cover individual scenarios.
+Android and browser checks currently cover individual scenarios. See [native library delivery](docs/native-packaging.md) for library availability on your target platform.
 
-The Build and Tests badges cover all 18 RIDs: analyzed library builds, the full Linux headless or portable desktop suite, and executable trimmed/AOT, Android, Apple-simulator and browser contract hosts. Physical Apple devices and complete foreign native runtime acceptance remain separate. See the [CI verification scope](docs/platform-verification.md#automated-rid-checks).
+The Build and Tests badges show the status of automated code checks and test applications. Running on real devices is checked separately. [Automated check details](docs/platform-verification.md#automated-rid-checks).
 
 See the [platform report](docs/platform-verification.md) for device models, commands and verification limits.
 
@@ -151,9 +162,9 @@ See the [platform report](docs/platform-verification.md) for device models, comm
 
 ## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="texttop" alt=""> Engine development
 
-You can currently use Electron2D through C# and .NET. `PackedScene` templates support typed [resource and scene files](docs/components/resource-files.md), including loading in a new process. A visual editor and commands for managing game projects remain planned.
+Save scenes to files and reuse them, including on the next game launch, with `PackedScene` and typed [resource and scene files](docs/components/resource-files.md). The visual editor currently shows a startup screen; game project editing and project management commands are not implemented yet.
 
-AI collaboration is part of the [engine architecture](docs/decisions/agent-native.md#adr-0090): project operations, game scenario execution and image verification must be available through documented tools. The full toolset is still to be implemented.
+The [engine architecture](docs/decisions/agent-native.md#adr-0090) calls for AI assistants to use project commands and run game scenarios with image verification. The complete toolset is still to be implemented.
 
 Next tasks and the status of individual methods are listed in the [development roadmap](docs/coverage/index.md). Implemented behavior is documented in the API reference.
 

@@ -6,8 +6,8 @@
     <_Electron2DAudioSDL>$(PkgSDL3-CS_Linux)/runtimes/$(Electron2DAudioNativeRID)/native/libSDL3.so.0</_Electron2DAudioSDL>
     <_Electron2DAudioName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libFAudio.0.dylib</_Electron2DAudioName>
     <_Electron2DAudioSDL Condition="'$(Electron2DNativePlatform)' == 'MacOS'">$(PkgSDL3-CS_MacOS)/runtimes/$(Electron2DAudioNativeRID)/native/libSDL3.0.dylib</_Electron2DAudioSDL>
-    <Electron2DAudioNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DAudioNativeLibrary)' == '' and '$(Electron2DNativePlatform)' != 'MacOS'">$(PkgElectron2D_Native_Linux)/runtimes/$(Electron2DAudioNativeRID)/native/libFAudio.so.0</Electron2DAudioNativeLibrary>
-    <Electron2DAudioNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DAudioNativeLibrary)' == '' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_Native_MacOS)/runtimes/$(Electron2DAudioNativeRID)/native/libFAudio.0.dylib</Electron2DAudioNativeLibrary>
+    <Electron2DAudioNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DAudioNativeLibrary)' == '' and '$(Electron2DNativePlatform)' != 'MacOS'">$(PkgElectron2D_Linux)/runtimes/$(Electron2DAudioNativeRID)/native/libFAudio.so.0</Electron2DAudioNativeLibrary>
+    <Electron2DAudioNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DAudioNativeLibrary)' == '' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(Electron2DAudioNativeRID)/native/libFAudio.0.dylib</Electron2DAudioNativeLibrary>
     <Electron2DAudioNativeEnabled Condition="'$(Electron2DAudioNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'Linux' and ('$(Electron2DAudioNativeRID)' == 'linux-x64' or '$(Electron2DAudioNativeRID)' == 'linux-arm64')">true</Electron2DAudioNativeEnabled>
     <Electron2DAudioNativeEnabled Condition="'$(Electron2DAudioNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'MacOS' and ('$(Electron2DAudioNativeRID)' == 'osx-x64' or '$(Electron2DAudioNativeRID)' == 'osx-arm64')">true</Electron2DAudioNativeEnabled>
     <Electron2DAudioNativeEnabled Condition="'$(Electron2DAudioNativeEnabled)' == ''">false</Electron2DAudioNativeEnabled>
@@ -21,7 +21,7 @@
   </PropertyGroup>
   <ItemGroup>
     <_Electron2DAudioInput Include="$(_Electron2DAudioSource)/**/*.c;$(_Electron2DAudioSource)/**/*.h;$(_Electron2DAudioSource)/**/CMakeLists.txt;$(_Electron2DAudioSource)/manifest.json;$(_Electron2DAudioWrapper)/**/*;$(MSBuildThisFileDirectory)native-package.props;$(MSBuildThisFileFullPath)" />
-    <None Include="$(_Electron2DAudioLibrary)" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DAudioNativeRID)/native/$(_Electron2DAudioName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="$(Electron2DBuildNativeFromSource)" PackagePath="runtimes/$(Electron2DAudioNativeRID)/native/" Visible="false" />
+    <None Include="$(_Electron2DAudioLibrary)" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DAudioNativeRID)/native/$(_Electron2DAudioName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" PackagePath="runtimes/$(Electron2DAudioNativeRID)/native/" Visible="false" />
   </ItemGroup>
   <Target Name="ValidateElectron2DAudioNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'">
     <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and '$(Electron2DNativePlatform)' != 'MacOS'" Text="Native audio builds require Linux or MacOS; foreign profiles must not package host libraries." />

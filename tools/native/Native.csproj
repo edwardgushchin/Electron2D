@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <NativePackagePlatform Condition="'$(NativePackagePlatform)' == ''">Linux</NativePackagePlatform>
-    <PackageId>Electron2D.Native.$(NativePackagePlatform)</PackageId>
+    <PackageId>Electron2D.$(NativePackagePlatform)</PackageId>
     <Version>$(Electron2DNativePackageVersion)</Version>
     <Authors>Eduard Gushchin</Authors>
-    <Description>Private $(NativePackagePlatform) text, audio and networking libraries for Electron2D.</Description>
+    <Description>Native $(NativePackagePlatform) libraries for Electron2D $(Electron2DVersion) or later. Install this package alongside Electron2D.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>licence/Electron2D-LICENSE.txt</PackageLicenseFile>
     <RepositoryUrl>https://github.com/edwardgushchin/Electron2D</RepositoryUrl>
@@ -23,12 +23,19 @@
     <NativeArtifacts Condition="'$(NativeArtifacts)' == ''">$(MSBuildThisFileDirectory)../../bin/native-artifacts</NativeArtifacts>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Electron2D.csproj" PrivateAssets="none" />
     <PackageReference Include="SDL3-CS.$(NativePackagePlatform)" Version="[$(Electron2DSDLVersion)]" Condition="'$(NativePackagePlatform)' != 'Web'" />
+    <PackageReference Include="SDL3-CS.$(NativePackagePlatform).Image" Version="[3.4.6.12]" Condition="'$(NativePackagePlatform)' != 'Web'" />
+    <PackageReference Include="SDL3-CS.$(NativePackagePlatform).Shadercross" Version="[3.0.0.13]" Condition="'$(NativePackagePlatform)' != 'Web'" />
+    <PackageReference Include="MonoGame.Library.FreeType" Version="[2.13.2.5]" Condition="'$(NativePackagePlatform)' == 'Linux'" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="[14.2.1.301]" Condition="'$(NativePackagePlatform)' == 'Linux'" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="[14.2.1.301]" Condition="'$(NativePackagePlatform)' == 'Windows'" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="[14.2.1.301]" Condition="'$(NativePackagePlatform)' == 'MacOS'" />
     <None Include="$(NativeArtifacts)/runtimes/**/*" Pack="true" PackagePath="runtimes/" />
     <None Include="$(NativeArtifacts)/native-manifest.json" Pack="true" PackagePath="/" />
     <None Include="../../licence/*" Exclude="../../licence/ReferenceData-LICENSE.txt" Pack="true" PackagePath="licence/" />
     <None Include="README.md" Pack="true" PackagePath="/" />
-    <None Include="Electron2D.Native.targets" Pack="true" PackagePath="buildTransitive/$(PackageId).targets" />
+    <None Include="Electron2D.targets" Pack="true" PackagePath="buildTransitive/$(PackageId).targets" />
   </ItemGroup>
   <Target Name="CheckNativePackageInputs" BeforeTargets="GenerateNuspec">
     <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)package.py&quot; check &quot;$(NativeArtifacts)&quot; --rids $(NativePackageRIDs) --platform $(NativePackagePlatform)" />

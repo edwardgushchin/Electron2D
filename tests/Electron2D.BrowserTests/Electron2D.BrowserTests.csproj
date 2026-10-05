@@ -15,4 +15,5 @@
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
     <Content Update="wwwroot/main.js;wwwroot/index.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
 </Project>

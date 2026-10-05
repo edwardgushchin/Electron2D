@@ -40,3 +40,5 @@ A fresh self-contained Linux x64 HostExample publish passes native and license a
 ## Single-line editing
 
 [LineEdit](../classes/LineEdit.md) uses complete shaped-line caret/selection geometry, scalar editing, grapheme/word navigation, native IME/commits, history, typed command dispatch, clipboard and text dragging. Nonprinting control display emits clipped hexadecimal placeholders. Local text clipping also applies to glyph rasters and missing-glyph geometry; other consumers keep their previous unclipped path. Caret geometry is prepared once per layout, with linear hit testing and reused buffers. The LineEdit class page records the exact remaining popup, virtual-keyboard and picker prerequisites and test boundaries.
+
+Native delivery now uses the explicit `Electron2D.{Platform}` package. The filtered `TextBreak78.dat` remains embedded in the managed engine independently of native source-build mode. Native font, shaping and text libraries resolve from the selected RID directory. See [the delivery contract](../native-packaging.md).

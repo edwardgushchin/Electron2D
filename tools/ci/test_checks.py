@@ -25,9 +25,9 @@ class Checks(unittest.TestCase):
     def test_apple_static_references_select_only_the_requested_rid(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            targets = root / "buildTransitive/Electron2D.Native.targets"
+            targets = root / "buildTransitive/Electron2D.targets"
             targets.parent.mkdir()
-            shutil.copyfile(rids.ROOT / "tools/native/Electron2D.Native.targets", targets)
+            shutil.copyfile(rids.ROOT / "tools/native/Electron2D.targets", targets)
             rows = [row for row in rids.matrix() if row["platform"] in {"iOS", "tvOS"}]
             for row in rows:
                 native = root / "runtimes" / row["rid"] / "native"
@@ -231,62 +231,18 @@ class Checks(unittest.TestCase):
                     rids.matrix()
 
     def test_artifacts_and_rejections(self):
-        for rid in (row["rid"] for row in rids.matrix()):
-            row = next(item for item in rids.matrix() if item["rid"] == rid)
-            with self.subTest(rid=rid), tempfile.TemporaryDirectory() as directory, patch.object(check_rid.native_package, "windows_exports") as windows:
+        for row in rids.matrix():
+            rid = row["rid"]
+            with self.subTest(rid=rid), tempfile.TemporaryDirectory() as directory:
                 output = Path(directory)
-                platforms = {"Windows", "Linux", "MacOS"} if row["platform"] in {"Windows", "Linux", "MacOS"} else {row["platform"]}
-                packages = [{"Identity": f"SDL3-CS.{platform}{suffix}"} for platform in platforms for suffix in ("", ".Image", ".Shadercross")] if row["platform"] != "Web" else []
-                if row["platform"] in {"Windows", "Linux", "MacOS"}:
-                    packages.append({"Identity": "Electron2D.Native.Linux"})
-                    packages.append({"Identity": "Electron2D.Native.MacOS"})
-                    packages.append({"Identity": "Electron2D.Native.Windows"})
-                if row["platform"] in {"Android", "iOS", "tvOS"}:
-                    packages.append({"Identity": "Electron2D.Native." + row["platform"]})
-                profile = {"Properties": {"RuntimeIdentifier": rid, "TargetFramework": row["framework"], "Electron2DNativePlatform": row["platform"]}, "Items": {"PackageReference": packages}}
+                profile = {"Properties": {"RuntimeIdentifier": rid, "TargetFramework": row["framework"],
+                                         "Electron2DNativePlatform": row["platform"]},
+                           "Items": {"PackageReference": []}}
                 profile_file = output / "profile.json"
                 profile_file.write_text(json.dumps(profile))
                 (output / "Electron2D.dll").write_bytes(b"MZ")
                 (output / "Electron2D.xml").write_text("<doc><assembly><name>Electron2D</name></assembly></doc>")
-                if row["platform"] == "Windows":
-                    native = output / "runtimes" / rid / "native"
-                    native.mkdir(parents=True)
-                    for name in check_rid.native_package.LIBRARIES["Windows"]:
-                        (native / name).write_bytes(b"native PE fixture; parsing covered by test_windows.py")
-                if row["platform"] == "Linux":
-                    native = output / "runtimes" / rid / "native"
-                    native.mkdir(parents=True)
-                    header = bytearray(20)
-                    header[:6] = b"\x7fELF\x02\x01"
-                    struct.pack_into("<H", header, 18, 62 if rid == "linux-x64" else 183)
-                    for name in ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"):
-                        (native / name).write_bytes(header)
-                if row["platform"] == "MacOS":
-                    native = output / "runtimes" / rid / "native"
-                    native.mkdir(parents=True)
-                    header = struct.pack("<II", 0xfeedfacf, 0x01000007 if rid == "osx-x64" else 0x0100000c) + bytes(12)
-                    for name in ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"):
-                        (native / name).write_bytes(header)
-                with redirect_stdout(StringIO()):
-                    check_rid.check(rid, output)
-                if row["platform"] in {"Android", "iOS", "tvOS"}:
-                    for invalid in (None, "Electron2D.Native.Linux"):
-                        private = packages.pop()
-                        if invalid:
-                            packages.append({"Identity": invalid})
-                        profile_file.write_text(json.dumps(profile))
-                        with self.assertRaises(ValueError):
-                            check_rid.check(rid, output)
-                        if invalid:
-                            packages.pop()
-                        packages.append(private)
-                    profile_file.write_text(json.dumps(profile))
-                if row["platform"] == "Windows":
-                    self.assertEqual(windows.call_count, 6)
-                    windows.side_effect = ValueError("Wrong native PE architecture")
-                    with self.assertRaises(ValueError):
-                        check_rid.check(rid, output)
-                    windows.side_effect = None
+                check_rid.check(rid, output)
                 profile["Properties"]["RuntimeIdentifier"] = "wrong-rid"
                 profile_file.write_text(json.dumps(profile))
                 with self.assertRaises(ValueError):
@@ -296,20 +252,18 @@ class Checks(unittest.TestCase):
                 profile_file.write_text(json.dumps(profile))
                 with self.assertRaises(ValueError):
                     check_rid.check(rid, output)
-                profile["Items"]["PackageReference"].pop()
+                profile["Items"]["PackageReference"].clear()
                 profile_file.write_text(json.dumps(profile))
-                (output / "libFAudio.so.0").write_bytes(b"foreign or flattened payload")
+                flat = output / "libFAudio.so.0"
+                flat.write_bytes(b"native payload in a managed-only product")
                 with self.assertRaises(ValueError):
                     check_rid.check(rid, output)
-                (output / "libFAudio.so.0").unlink()
-                if row["platform"] == "Linux":
-                    (native / "libFAudio.so.0").write_bytes(b"wrong ABI")
-                    with self.assertRaises(ValueError):
-                        check_rid.check(rid, output)
-                if row["platform"] == "MacOS":
-                    (native / "libFAudio.0.dylib").write_bytes(b"wrong ABI")
-                    with self.assertRaises(ValueError):
-                        check_rid.check(rid, output)
+                flat.unlink()
+                native = output / "runtimes" / rid / "native"
+                native.mkdir(parents=True)
+                (native / "foreign.so").write_bytes(b"native payload in a managed-only product")
+                with self.assertRaises(ValueError):
+                    check_rid.check(rid, output)
 
 
 if __name__ == "__main__":

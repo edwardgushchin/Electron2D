@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. [Native delivery](../native-packaging.md) separates source production, audited packages, executable checks and public publication; complete Windows/macOS target verification remains pending.
+Native binaries come from the explicitly selected `Electron2D.{Platform}` package and its platform-only dependencies. The managed `Electron2D` package contains no native payload or implicit platform references. [Native delivery](../native-packaging.md) records the package/version/RID contract and separates local validation from publication and target execution.
 
 - Declaration: `internal static class NativeLibraries`
 - Source: [NativeLibraries.cs](../../src/Properties/NativeLibraries.cs)
@@ -11,7 +11,7 @@ Private native binaries come from versioned Linux/macOS/Windows packages in ordi
 
 ## Description
 
-iOS/tvOS compile the ten owned backend import names as `__Internal`, referring to symbols linked into the application executable. Module initialization does not register a dynamic resolver there. `Electron2D.Native.iOS`/`tvOS` supplies the selected RID's twelve static archives through transitive NativeReference metadata and CoreBluetooth; FreeType/SDL_image use one audited PNG/zlib copy. Apple SDK linking and simulator execution remain target gates, not outcomes of a Linux build.
+iOS/tvOS compile the ten owned backend import names as `__Internal`, referring to symbols linked into the application executable. Module initialization does not register a dynamic resolver there. `Electron2D.iOS`/`Electron2D.tvOS` supplies the selected RID's twelve static archives through transitive NativeReference metadata and CoreBluetooth; FreeType/SDL_image use one audited PNG/zlib copy. Apple SDK linking and simulator execution remain target gates, not outcomes of a Linux build.
 
 Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, Android `libSDL3.so`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API.
 
@@ -29,14 +29,14 @@ The private `libElectron2DTextBreak.so`, `libFAudio.so.0` and `libElectron2DENet
 
 `internal static void Initialize()`
 
-Runs automatically once as a module initializer. HarfBuzz imports resolve their packaged native identity on every platform. On Linux, private text imports resolve the runtime-directory library; SDL3 imports return the retained core handle; FAudio first loads that same SDL core and then resolves its runtime-directory library. SDL3_image/SDL3_shadercross force the shared core to load before returning zero for ordinary dependency resolution. Other names return zero untouched. Missing native libraries propagate at first relevant use. Calling Initialize manually a second time is unsupported because .NET allows one resolver per assembly.
+Runs automatically once as a module initializer. HarfBuzz imports resolve their packaged native identity on every platform. On Linux, private text imports resolve the runtime-directory library; SDL3 imports return the retained core handle; FAudio first loads that same SDL core and then resolves its runtime-directory library. SDL3_image/SDL3_shadercross load the shared core first, then resolve their selected runtime-directory files. Other names return zero untouched. Missing native libraries propagate at first relevant use. Calling Initialize manually a second time is unsupported because .NET allows one resolver per assembly.
 
 ## Verification and limits
 
-Windows selects private text/audio/ENet/FreeType DLLs and loads private crypto before SSL. Its fresh ProjectReference/NuGet publish consumers passed on x86/x64/ARM64 in run 37319099153. The ordinary Windows library build now preserves all six private DLLs as well; complete full-suite reruns remain required.
+Windows selects private text/audio/ENet/FreeType DLLs and loads private crypto before SSL. Its fresh ProjectReference/NuGet publish consumers passed on x86/x64/ARM64 in run 37319099153. The explicitly selected platform package preserves all six private DLLs; complete full-suite reruns remain required.
 
-Android resolves its seven private `.so` files through the SDK's APK native-library search path, not an application-relative desktop directory. FreeType/HarfBuzz use private identities; crypto loads before SSL and SDL loads before FAudio. The engine reference supplies `Electron2D.Native.Android` transitively. Package targets omit the redundant SDL RID copy because the AAR already provides the same JNI core. All four Android native apps passed in run 37335292748; updated CI and physical acceptance remain separate gates. Apple static application references are connected with target execution pending; Web application linking remains absent.
+Android resolves its seven private `.so` files through the SDK's APK native-library search path, not an application-relative desktop directory. FreeType/HarfBuzz use private identities; crypto loads before SSL and SDL loads before FAudio. The executable explicitly selects `Electron2D.Android`; the managed engine supplies no implicit native package. Package targets omit the redundant SDL RID copy because the AAR already provides the same JNI core. All four Android native apps passed in run 37335292748; updated CI and physical acceptance remain separate gates. Apple static application references are connected with target execution pending; Web application linking remains absent.
 
 Self-contained Linux x64 tests loaded images and GPU shaders with LD_LIBRARY_PATH unset; loader diagnostics found one published libSDL3.so.0. The macOS resolver additionally selects private text/FAudio/ENet and OpenSSL dylibs from the RID directory, loading the shared SDL core before FAudio. Matching native production and public consumers passed; full-suite execution remains pending.
 
-[NativeLibraryTests](../../tests/Electron2D.Tests/NativeLibraryTests.cs) checks project-reference runtime-directory files and rejects root copies. Generic and Linux x64 RID engine builds, a fresh self-contained HostExample publish and local NuGet package entries preserve the selected private native layout. The executable suite passes; focused font/audio checks and both Wayland audio hosts load the libraries with `LD_LIBRARY_PATH` unset from an external working directory. A local NuGet consumer verifies public text/audio calls in both its ordinary build and SDK-flattened Linux x64 RID publish. These checks do not establish foreign native execution or physical listening.
+[NativeLibraryTests](../../tests/Electron2D.Tests/NativeLibraryTests.cs) checks project-reference runtime-directory files and rejects root copies. The CharacterMovement Linux x64 publish and fresh ProjectReference/NuGet consumer checks preserve the entire selected native layout, including SDL and font libraries. The executable suite passes; focused font/audio checks and both Wayland audio hosts load the libraries with `LD_LIBRARY_PATH` unset from an external working directory. A local NuGet consumer verifies public text/audio calls in both its ordinary build and Linux x64 RID-directory publish. These checks do not establish foreign native execution or physical listening.

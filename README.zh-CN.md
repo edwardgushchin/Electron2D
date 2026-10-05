@@ -61,7 +61,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="texttop" alt=""> 快速开始
 
-先运行“窗口与输入”示例。以下命令适用于使用 Wayland 的 Linux x64 环境。
+先运行“角色移动”示例。你会看到一个角色，并能用方向键移动它。以下 .NET 命令适用于 Windows、Linux 和 macOS；已完成的运行验证见[平台表](#platforms)。
 
 <a id="installation"></a>
 
@@ -69,7 +69,9 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) 和 Git。
 
-私有原生组件作为 NuGet 依赖项还原。首个包的可用性和完整原生重建说明见[原生包交付](docs/native-packaging.md)。
+通过 NuGet 安装 `Electron2D` 以及游戏目标平台的包，例如 `Electron2D.Windows`、`Electron2D.Linux` 或 `Electron2D.MacOS`。原生依赖会自动还原。[平台包及版本规则](docs/native-packaging.md)。
+
+当前的 `0.1.0-alpha.1` 包仍在准备发布。
 
 ### 构建与运行
 
@@ -81,16 +83,17 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-发布包含独立 .NET 运行时的示例并启动：
+运行示例：
 
 ```bash
-dotnet publish examples/HostExample/HostExample.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-host-example
-/tmp/electron2d-host-example/HostExample
+dotnet run --project examples/CharacterMovement
 ```
 
-程序会打开一个窗口。方向键移动游戏对象，其坐标会显示在终端中。按 Escape 或关闭窗口可退出程序。此示例不绘制场景，而是展示引擎启动和输入处理。
+程序会打开一个场景，网格上有一个粉色角色。方向键让角色在区域内移动，按 Escape 或关闭窗口可退出。试着修改 `Player.cs` 中的移动速度，然后重新运行示例。
 
-[示例源码](examples/HostExample/Program.cs) · [运行说明](examples/HostExample/README.md)
+![Electron2D 角色移动：网格上的角色和键盘操作提示](docs/images/character-movement.png)
+
+[示例源码](examples/CharacterMovement/CharacterMovementScene.cs) · [运行说明](examples/CharacterMovement/README.md)
 
 ### 在自己的游戏中使用 Electron2D
 
@@ -101,6 +104,14 @@ dotnet new console -n MyGame -o ../MyGame --framework net10.0
 dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
 ```
 
+通过 NuGet 添加目标平台的包，选择以下一条命令：
+
+| 平台 | 命令 |
+| --- | --- |
+| Windows | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add ../MyGame/MyGame.csproj package Electron2D.MacOS --prerelease` |
+
 将 `MyGame/Program.cs` 的内容替换为以下代码：
 
 ```csharp
@@ -109,7 +120,7 @@ using Electron2D;
 var window = new Window
 {
     Title = "我的游戏",
-    Size = new Vector2i(960, 540)
+    Size = new Vector2i(800, 600)
 };
 
 return Engine.Run(window);
@@ -129,7 +140,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="texttop" alt=""> 平台
 
-游戏的目标平台和已完成的验证分列如下。可视化编辑器面向 Windows、Linux 和 macOS。
+下表列出各游戏目标平台已完成的验证。可视化编辑器面向 Windows、Linux 和 macOS。
 
 | 游戏目标平台 | 本仓库已完成的验证 |
 | --- | --- |
@@ -141,9 +152,9 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 | iOS 和 tvOS，设备与模拟器 | 已准备自动化库构建，尚未进行设备验证 |
 | 浏览器 | 已在独立测试程序中验证渲染和物理。尚未实现浏览器游戏运行支持 |
 
-Linux x64 的完整原生文本和音频库已构建。其他平台的构建与集成仍是独立任务。Android 和浏览器验证仅涵盖特定场景。
+Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生库可用情况见[原生库交付说明](docs/native-packaging.md)。
 
-构建和测试徽章覆盖全部 18 个 RID：启用分析器的库构建、Linux 完整无窗口测试或桌面可移植测试，以及 trimmed/AOT、Android、Apple 模拟器和浏览器契约测试应用。Apple 实机及其他平台的完整原生运行验收仍需单独完成。参见 [CI 验证范围](docs/platform-verification.md#automated-rid-checks)。
+构建和测试徽章显示代码自动检查及测试应用的状态。真实设备上的运行需要单独验证。[自动检查详情](docs/platform-verification.md#automated-rid-checks)。
 
 设备型号、命令和验证范围见[平台报告](docs/platform-verification.md)。
 
@@ -151,9 +162,9 @@ Linux x64 的完整原生文本和音频库已构建。其他平台的构建与�
 
 ## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="texttop" alt=""> 引擎开发
 
-目前可通过 C# 和 .NET 使用 Electron2D。`PackedScene` 模板支持[类型化资源和场景文件](docs/components/resource-files.md)，并可在新进程中加载。可视化编辑器和游戏项目管理命令仍在计划中。
+场景可以保存到文件中重复使用，也可以在游戏下次启动时加载。这由 `PackedScene` 和[类型化资源及场景文件](docs/components/resource-files.md)提供。目前可视化编辑器仅显示启动画面，游戏项目编辑和项目管理命令尚未实现。
 
-与 AI 协作已纳入[引擎架构](docs/decisions/agent-native.md#adr-0090)：项目操作、游戏场景运行和图像验证需要通过有文档说明的工具完成。完整工具集仍待实现。
+[引擎架构](docs/decisions/agent-native.md#adr-0090)规划了供 AI 助手使用的项目操作命令，以及带图像验证的游戏场景运行工具。完整工具集仍待实现。
 
 下一步任务和各方法的状态见[开发路线图](docs/coverage/index.md)。已实现的行为在 API 参考中说明。
 
