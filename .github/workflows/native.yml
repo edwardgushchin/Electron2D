@@ -59,11 +59,65 @@ jobs:
           merge-multiple: true
           path: bin/native-artifacts/
       - name: Pack both native architectures
-        run: dotnet pack tools/native/Native.csproj -c Release -o bin/native-feed
+        run: |
+          python3 -B tools/native/test_package.py
+          dotnet pack tools/native/Native.csproj -c Release -o bin/native-feed
       - name: Verify the consumer build without native tools
         run: python3 -B tools/native/test_consumer.py bin/native-feed
       - uses: actions/upload-artifact@v4
         with:
           name: private-native-package
+          path: bin/native-feed/*.nupkg
+          if-no-files-found: error
+  native_macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rid: osx-x64
+            runner: macos-26-intel
+          - rid: osx-arm64
+            runner: macos-26
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Restore the pinned native SDL package
+        run: dotnet restore Electron2D.csproj -r "${{ matrix.rid }}" -p:Electron2DBuildNativeFromSource=true
+      - name: Build and audit matching macOS libraries
+        run: >-
+          dotnet msbuild Electron2D.csproj -t:BuildElectron2DNativeAssets
+          -p:RuntimeIdentifier=${{ matrix.rid }} -p:Configuration=Release
+          -p:Electron2DBuildNativeFromSource=true -p:Electron2DTextNativeJobs=2
+          -p:Electron2DAudioNativeJobs=2 -p:Electron2DENetNativeJobs=2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: private-native-MacOS-${{ matrix.rid }}
+          path: bin/native-artifacts/
+          if-no-files-found: error
+  package_macos:
+    needs: native_macos
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: private-native-MacOS-*
+          merge-multiple: true
+          path: bin/native-artifacts/
+      - name: Pack both macOS native architectures
+        run: dotnet pack tools/native/Native.csproj -c Release -p:NativePackagePlatform=MacOS -o bin/native-feed
+      - uses: actions/upload-artifact@v4
+        with:
+          name: private-native-package-macos
           path: bin/native-feed/*.nupkg
           if-no-files-found: error

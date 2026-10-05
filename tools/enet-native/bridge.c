@@ -3,13 +3,28 @@
 #include <fastlz.h>
 #include <stdint.h>
 #include <string.h>
-#include <sys/random.h>
 #include <time.h>
 #include <zlib.h>
 #include <zstd.h>
+#if defined(_WIN32)
+#include <windows.h>
+#include <bcrypt.h>
+#define API __declspec(dllexport)
+#define THREAD_LOCAL __declspec(thread)
+#elif defined(__linux__)
+#include <sys/random.h>
 #define API __attribute__((visibility("default")))
+#define THREAD_LOCAL _Thread_local
+#else
+#define API __attribute__((visibility("default")))
+#define THREAD_LOCAL _Thread_local
+#endif
 
-typedef int (*Send)(int, uint32_t, uint16_t, const ENetBuffer *, size_t);
+typedef struct {
+  void *data;
+  size_t length;
+} E2DBuffer;
+typedef int (*Send)(int, uint32_t, uint16_t, const E2DBuffer *, size_t);
 typedef int (*Receive)(int, uint32_t *, uint16_t *, void *, size_t);
 typedef int (*Wait)(int, uint32_t *, uint32_t);
 static Send send_cb;
@@ -17,7 +32,7 @@ static Receive receive_cb;
 static Wait wait_cb;
 typedef int (*Control)(int, int, int);
 static Control control_cb;
-static _Thread_local int creating_socket = -1;
+static THREAD_LOCAL int creating_socket = -1;
 static uint32_t time_offset;
 API void e2d_enet_callbacks(Send s, Receive r, Wait w, Control c) {
   send_cb = s;
@@ -28,14 +43,27 @@ API void e2d_enet_callbacks(Send s, Receive r, Wait w, Control c) {
 int enet_initialize(void) { return 0; }
 void enet_deinitialize(void) {}
 uint32_t enet_time_get(void) {
+#if defined(_WIN32)
+  return (uint32_t)GetTickCount64() - time_offset;
+#else
   struct timespec t;
   clock_gettime(CLOCK_MONOTONIC, &t);
   return (uint32_t)(t.tv_sec * 1000 + t.tv_nsec / 1000000) - time_offset;
+#endif
 }
 uint32_t enet_host_random_seed(void) {
   uint32_t seed;
+#if defined(_WIN32)
+  if (BCryptGenRandom(NULL, (PUCHAR)&seed, sizeof(seed),
+                     BCRYPT_USE_SYSTEM_PREFERRED_RNG) == 0)
+    return seed;
+#elif defined(__linux__)
   if (getrandom(&seed, sizeof(seed), 0) == sizeof(seed))
     return seed;
+#else
+  arc4random_buf(&seed, sizeof(seed));
+  return seed;
+#endif
   return enet_time_get();
 }
 void enet_time_set(uint32_t value) {
@@ -57,7 +85,15 @@ int enet_socket_get_address(ENetSocket s, ENetAddress *a) {
 }
 int enet_socket_send(ENetSocket s, const ENetAddress *a, const ENetBuffer *b,
                      size_t n) {
-  return send_cb(s, a->host, a->port, b, n);
+  if (n > ENET_BUFFER_MAXIMUM)
+    return -1;
+  // ENet's Windows and Unix buffers have different field order; the engine ABI does not.
+  E2DBuffer buffers[ENET_BUFFER_MAXIMUM];
+  for (size_t i = 0; i < n; i++) {
+    buffers[i].data = b[i].data;
+    buffers[i].length = b[i].dataLength;
+  }
+  return send_cb((int)s, a->host, a->port, buffers, n);
 }
 int enet_socket_receive(ENetSocket s, ENetAddress *a, ENetBuffer *b, size_t n) {
   return n == 1 ? receive_cb(s, &a->host, &a->port, b[0].data, b[0].dataLength)
@@ -147,7 +183,7 @@ API int e2d_enet_connect(State *s, uint32_t token, uint16_t port, int channels,
   ENetPeer *p = enet_host_connect(s->host, &a, channels, data);
   return p ? (int)(p - s->host->peers) : -1;
 }
-static _Thread_local State *servicing;
+static THREAD_LOCAL State *servicing;
 static int intercept(ENetHost *host, ENetEvent *event) {
   if (!servicing || !servicing->refuse || host->receivedDataLength < 2)
     return 0;

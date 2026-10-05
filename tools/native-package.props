@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Electron2DNativePackageVersion>0.1.0-preview.1</Electron2DNativePackageVersion>
+    <Electron2DNativePackageVersion>0.1.0-preview.2</Electron2DNativePackageVersion>
     <Electron2DSDLVersion>3.4.16</Electron2DSDLVersion>
     <Electron2DBuildNativeFromSource Condition="'$(Electron2DBuildNativeFromSource)' == ''">false</Electron2DBuildNativeFromSource>
     <_Electron2DPrivateNativeRID Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</_Electron2DPrivateNativeRID>

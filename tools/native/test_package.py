@@ -1,0 +1,49 @@
+"""Reject mismatched native architectures and modified pinned source inputs."""
+
+import hashlib
+from pathlib import Path
+import struct
+import tempfile
+import unittest
+from unittest.mock import patch
+
+import build_tls
+import package
+
+
+class NativePackageTests(unittest.TestCase):
+    def test_macos_identity_architecture_imports_and_exports(self):
+        with tempfile.TemporaryDirectory() as directory:
+            library = Path(directory) / "libFAudio.0.dylib"
+            library.write_bytes(struct.pack("<II", 0xfeedfacf, 0x0100000c) + bytes(24))
+
+            def command(args, **kwargs):
+                if args[1] == "-D":
+                    return str(library) + ":\n@rpath/libFAudio.0.dylib\n"
+                if args[1] == "-l":
+                    return "cmd LC_ID_DYLIB\n"
+                if args[1] == "-L":
+                    return str(library) + ":\n@rpath/libSDL3.0.dylib (compatibility version 0.0.0)\n"
+                return "000001 T _e2d_audio_output_latency\n000002 T _e2d_audio_select_output\n"
+
+            with patch.object(package.subprocess, "check_output", side_effect=command):
+                self.assertEqual(package.macos_exports(library, "osx-arm64", library.name),
+                                 {"e2d_audio_output_latency", "e2d_audio_select_output"})
+                with self.assertRaises(ValueError):
+                    package.macos_exports(library, "osx-x64", library.name)
+            with patch.object(package.subprocess, "check_output", return_value=str(library) + ":\n/build-machine/libFAudio.0.dylib\n"):
+                with self.assertRaises(ValueError):
+                    package.macos_exports(library, "osx-arm64", library.name)
+
+    def test_openssl_source_is_verified_before_extraction(self):
+        with tempfile.TemporaryDirectory() as directory:
+            archive = Path(directory) / "fixture.tar.gz"
+            archive.write_bytes(b"fixture")
+            with self.assertRaises(ValueError):
+                build_tls.checked_archive(archive)
+            with patch.object(build_tls, "SHA256", hashlib.sha256(b"fixture").hexdigest()):
+                build_tls.checked_archive(archive)
+
+
+if __name__ == "__main__":
+    unittest.main()

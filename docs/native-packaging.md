@@ -4,7 +4,7 @@ Last updated: 2026-10-05
 
 Ordinary Electron2D source builds restore `Electron2D.Native.Linux` alongside the existing native dependencies. They do not compile the private text, audio or ENet libraries and do not require CMake, Ninja, C/C++ compilers or an installed SDL development package. The managed bindings and ICU data remain inside `Electron2D.dll`. [ADR 0012](decisions/product.md#adr-0012) owns this boundary.
 
-The initial package version is `0.1.0-preview.1`, defined with the SDL version in `tools/native-package.props`. Its first public publication is pending. Until that publication, use the `private-native-package` CI artifact as a local NuGet feed, or prepare a local package with the commands below. Set `RestoreAdditionalProjectSources` to the feed's absolute directory when running `dotnet restore`, `build`, `pack` or `publish`; the normal nuget.org source remains available. A clean checkout cannot restore this new package from nuget.org before publication.
+The current package version is `0.1.0-preview.2`, defined with the SDL version in `tools/native-package.props`; it bumps the native source/ABI adaptation and notice payload together. Public publication remains a separate gate. Until publication, use the `private-native-package` CI artifact as a local NuGet feed, or prepare a local package with the commands below. Set `RestoreAdditionalProjectSources` to the feed's absolute directory when running `dotnet restore`, `build`, `pack` or `publish`; the normal nuget.org source remains available. A clean checkout cannot restore an unpublished package from nuget.org.
 
 ## CI and package contents
 
@@ -19,6 +19,14 @@ Each RID contributes exactly these files:
 Staging records the source fingerprint and binary SHA-256 values. Packing rejects missing/extra RIDs, stale source receipts, changed binaries, wrong ELF architectures or SONAMEs, missing bridge exports, and build-machine RPATH/RUNPATH entries. The final package includes that manifest, required notices and transitive build targets; it includes no managed backend DLL. Native files retain their runtime directory in both project and package consumers. Notices flow to `licence/` during publication.
 
 Build and Tests first prepare the package, then restore it from the workflow's local feed for the existing RID matrix. The native workflow uploads the `.nupkg`. The separate manual [publishing workflow](../.github/workflows/publish-native.yml) rebuilds and verifies the complete bundle before publishing it to nuget.org. It runs only from `main` and obtains a short-lived credential through [NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing). Version changes and rebuilt payloads require the artifact/license checks in [Maintaining](maintaining.md).
+
+## macOS native producer
+
+The same package project accepts `NativePackagePlatform=MacOS` and produces `Electron2D.Native.MacOS` with both `osx-x64` and `osx-arm64`. Matching macOS runners build private ICU, FAudio over the restored SDL core, ENet with statically linked pinned Zstandard, and private OpenSSL 3.6.4. Native assets retain the RID directory. Mach-O checks require the exact CPU, relocatable library identities, expected bridge exports, shared SDL identity, private crypto dependency and no build-machine RPATH. Source archive hashes and original licenses are pinned; OpenSSL loader identities are changed and the dylibs ad-hoc signed after relocation.
+
+This is the native production stage of the full foreign-platform task. Its first target CI run is still required. The runtime's macOS guards and portable CI profile remain until these binaries are connected to executable public text/audio/networking checks and the full suite. Source production or a `.nupkg` alone must not be reported as that integration.
+
+The ENet bridge normalizes socket buffers into its engine-owned pointer/length ABI because upstream Windows and Unix structs use different field order. Clock/RNG primitives are selected by platform, and every managed ENet import explicitly uses Cdecl. The Linux wire/codec/fragmentation and warmed allocation regression passed after this change.
 
 ## Public publication
 

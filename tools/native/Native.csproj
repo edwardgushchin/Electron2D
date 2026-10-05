@@ -2,28 +2,30 @@
   <Import Project="../native-package.props" />
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <PackageId>Electron2D.Native.Linux</PackageId>
+    <NativePackagePlatform Condition="'$(NativePackagePlatform)' == ''">Linux</NativePackagePlatform>
+    <PackageId>Electron2D.Native.$(NativePackagePlatform)</PackageId>
     <Version>$(Electron2DNativePackageVersion)</Version>
     <Authors>Eduard Gushchin</Authors>
-    <Description>Private Linux text, audio and networking libraries for Electron2D.</Description>
+    <Description>Private $(NativePackagePlatform) text, audio and networking libraries for Electron2D.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>licence/Electron2D-LICENSE.txt</PackageLicenseFile>
     <RepositoryUrl>https://github.com/edwardgushchin/Electron2D</RepositoryUrl>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <EnableDefaultItems>false</EnableDefaultItems>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
-    <NativePackageRIDs Condition="'$(NativePackageRIDs)' == ''">linux-x64,linux-arm64</NativePackageRIDs>
+    <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'Linux'">linux-x64,linux-arm64</NativePackageRIDs>
+    <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'MacOS'">osx-x64,osx-arm64</NativePackageRIDs>
     <NativeArtifacts Condition="'$(NativeArtifacts)' == ''">$(MSBuildThisFileDirectory)../../bin/native-artifacts</NativeArtifacts>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SDL3-CS.Linux" Version="[$(Electron2DSDLVersion)]" />
+    <PackageReference Include="SDL3-CS.$(NativePackagePlatform)" Version="[$(Electron2DSDLVersion)]" />
     <None Include="$(NativeArtifacts)/runtimes/**/*" Pack="true" PackagePath="runtimes/" />
     <None Include="$(NativeArtifacts)/native-manifest.json" Pack="true" PackagePath="/" />
     <None Include="../../licence/*" Exclude="../../licence/ReferenceData-LICENSE.txt" Pack="true" PackagePath="licence/" />
     <None Include="README.md" Pack="true" PackagePath="/" />
-    <None Include="Electron2D.Native.Linux.targets" Pack="true" PackagePath="buildTransitive/" />
+    <None Include="Electron2D.Native.targets" Pack="true" PackagePath="buildTransitive/$(PackageId).targets" />
   </ItemGroup>
   <Target Name="CheckNativePackageInputs" BeforeTargets="GenerateNuspec">
-    <Exec Command="python3 -B &quot;$(MSBuildThisFileDirectory)package.py&quot; check &quot;$(NativeArtifacts)&quot; --rids $(NativePackageRIDs)" />
+    <Exec Command="python3 -B &quot;$(MSBuildThisFileDirectory)package.py&quot; check &quot;$(NativeArtifacts)&quot; --rids $(NativePackageRIDs) --platform $(NativePackagePlatform)" />
   </Target>
 </Project>

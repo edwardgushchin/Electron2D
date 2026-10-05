@@ -5,14 +5,14 @@
   <!-- Preserve the private library directory for project and package consumers. -->
   <Target Name="Electron2DNativeBuildLayout" AfterTargets="ResolvePackageAssets">
     <ItemGroup>
-      <NativeCopyLocalItems Update="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.NuGetPackageId)' == 'Electron2D.Native.Linux' and '$(RuntimeIdentifier)' != ''">
+      <NativeCopyLocalItems Update="@(NativeCopyLocalItems)" Condition="$([System.String]::Copy('%(NativeCopyLocalItems.NuGetPackageId)').StartsWith('Electron2D.Native.')) and '$(RuntimeIdentifier)' != ''">
         <DestinationSubDirectory>runtimes/$(RuntimeIdentifier)/native/</DestinationSubDirectory>
       </NativeCopyLocalItems>
     </ItemGroup>
   </Target>
   <Target Name="Electron2DNativePublishLayout" AfterTargets="_ResolveCopyLocalAssetsForPublish;_ComputeResolvedCopyLocalPublishAssets">
     <ItemGroup>
-      <_ResolvedCopyLocalPublishAssets Update="@(_ResolvedCopyLocalPublishAssets)" Condition="'%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)' == 'Electron2D.Native.Linux' and '$(RuntimeIdentifier)' != ''">
+      <_ResolvedCopyLocalPublishAssets Update="@(_ResolvedCopyLocalPublishAssets)" Condition="$([System.String]::Copy('%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)').StartsWith('Electron2D.Native.')) and '$(RuntimeIdentifier)' != ''">
         <DestinationSubDirectory>runtimes/$(RuntimeIdentifier)/native/</DestinationSubDirectory>
       </_ResolvedCopyLocalPublishAssets>
     </ItemGroup>

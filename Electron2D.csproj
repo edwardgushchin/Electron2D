@@ -39,7 +39,7 @@
     <PackageReference Include="SDL3-CS.Windows" Version="$(Electron2DSDLVersion)" />
     <PackageReference Include="SDL3-CS.Windows.Image" Version="3.4.6.9" />
     <PackageReference Include="SDL3-CS.Windows.Shadercross" Version="3.0.0.11" />
-    <PackageReference Include="SDL3-CS.MacOS" Version="$(Electron2DSDLVersion)" />
+    <PackageReference Include="SDL3-CS.MacOS" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" />
     <PackageReference Include="SDL3-CS.MacOS.Image" Version="3.4.6.9" />
     <PackageReference Include="SDL3-CS.MacOS.Shadercross" Version="3.0.0.11" />
     <PackageReference Include="SDL3-CS.Linux" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" />
@@ -73,5 +73,6 @@
   <Import Project="tools/text-native.targets" />
   <Import Project="tools/audio-native.targets" />
   <Import Project="tools/enet-native.targets" />
+  <Import Project="tools/tls-native.targets" />
   <Import Project="tools/native-package.targets" />
 </Project>
