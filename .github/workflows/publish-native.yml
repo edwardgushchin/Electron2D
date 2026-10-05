@@ -19,6 +19,8 @@ jobs:
   native:
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/native.yml
+    with:
+      rebuild: true
   publish:
     needs: native
     runs-on: ubuntu-24.04

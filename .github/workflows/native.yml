@@ -2,7 +2,16 @@ name: Private native package
 
 on:
   workflow_call:
+    inputs:
+      rebuild:
+        type: boolean
+        default: false
   workflow_dispatch:
+    inputs:
+      rebuild:
+        description: Rebuild native libraries without using the CI cache
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -34,12 +43,23 @@ jobs:
           dotnet-version: 10.0.x
       - name: Restore the pinned native SDL package
         run: dotnet restore Electron2D.csproj -r "${{ matrix.rid }}" -p:Electron2DBuildNativeFromSource=true
+      - id: recipe
+        run: echo "hash=$(python3 -B tools/native/package.py fingerprint)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        id: native_cache
+        if: ${{ !inputs.rebuild }}
+        with:
+          path: bin/native-artifacts/
+          key: native-${{ matrix.rid }}-${{ runner.os }}-${{ runner.arch }}-${{ steps.recipe.outputs.hash }}
       - name: Build and audit private native libraries
+        if: steps.native_cache.outputs.cache-hit != 'true'
         run: >-
           dotnet msbuild Electron2D.csproj -t:BuildElectron2DNativeAssets
           -p:RuntimeIdentifier=${{ matrix.rid }} -p:Configuration=Release
           -p:Electron2DBuildNativeFromSource=true -p:Electron2DTextNativeJobs=2
           -p:Electron2DAudioNativeJobs=2 -p:Electron2DENetNativeJobs=2
+      - name: Validate current source receipts and binary identities
+        run: python3 -B tools/native/package.py check bin/native-artifacts --rids "${{ matrix.rid }}" --platform Linux
       - uses: actions/upload-artifact@v4
         with:
           name: private-native-${{ matrix.rid }}
@@ -88,12 +108,23 @@ jobs:
           python-version: '3.12'
       - name: Restore the pinned native SDL package
         run: dotnet restore Electron2D.csproj -r "${{ matrix.rid }}" -p:Electron2DBuildNativeFromSource=true
+      - id: recipe
+        run: echo "hash=$(python3 -B tools/native/package.py fingerprint)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        id: native_cache
+        if: ${{ !inputs.rebuild }}
+        with:
+          path: bin/native-artifacts/
+          key: native-${{ matrix.rid }}-${{ runner.os }}-${{ runner.arch }}-${{ steps.recipe.outputs.hash }}
       - name: Build and audit matching macOS libraries
+        if: steps.native_cache.outputs.cache-hit != 'true'
         run: >-
           dotnet msbuild Electron2D.csproj -t:BuildElectron2DNativeAssets
           -p:RuntimeIdentifier=${{ matrix.rid }} -p:Configuration=Release
           -p:Electron2DBuildNativeFromSource=true -p:Electron2DTextNativeJobs=2
           -p:Electron2DAudioNativeJobs=2 -p:Electron2DENetNativeJobs=2
+      - name: Validate current source receipts and binary identities
+        run: python3 -B tools/native/package.py check bin/native-artifacts --rids "${{ matrix.rid }}" --platform MacOS
       - uses: actions/upload-artifact@v4
         with:
           name: private-native-MacOS-${{ matrix.rid }}

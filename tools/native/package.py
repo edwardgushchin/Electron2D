@@ -64,6 +64,7 @@ def source_hash():
                      and not {"bin", "obj", "__pycache__"} & set(p.relative_to(ROOT).parts))
     files.update((ROOT / "tools").glob("*-native.targets"))
     files.update((ROOT / "tools").glob("native-package.*"))
+    files.add(ROOT / ".github/workflows/native.yml")
     digest = hashlib.sha256()
     for path in sorted(files):
         digest.update(path.relative_to(ROOT).as_posix().encode() + b"\0")
@@ -141,6 +142,7 @@ def check(artifacts, rids, selected_platform="Linux"):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("fingerprint")
     staging = sub.add_parser("stage")
     staging.add_argument("rid", choices=RIDS)
     staging.add_argument("artifacts", type=Path)
@@ -149,7 +151,9 @@ if __name__ == "__main__":
     checking.add_argument("--rids", default=",".join(PLATFORMS["Linux"]))
     checking.add_argument("--platform", choices=PLATFORMS, default="Linux")
     args = parser.parse_args()
-    if args.command == "stage":
+    if args.command == "fingerprint":
+        print(source_hash())
+    elif args.command == "stage":
         stage(args.rid, args.artifacts)
     else:
         check(args.artifacts, args.rids.split(","), args.platform)

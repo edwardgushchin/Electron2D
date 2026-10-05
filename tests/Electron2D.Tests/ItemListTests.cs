@@ -234,14 +234,14 @@ internal static class ItemListTests
         void Click(int index, bool control = false, bool shift = false)
         {
             var point = list.Position + list.GetItemRect(index).Position + new Vector2(5, 5);
-            using var press = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left, Pressed = true, ControlPressed = control, ShiftPressed = shift };
-            using var release = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left, Pressed = false, ControlPressed = control, ShiftPressed = shift };
+            using var press = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left, Pressed = true, CommandOrControlAutoremap = control, ShiftPressed = shift };
+            using var release = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left, Pressed = false, CommandOrControlAutoremap = control, ShiftPressed = shift };
             viewport.PushInput(press, inLocalCoordinates: true);
             viewport.PushInput(release, inLocalCoordinates: true);
         }
         Click(1, control: true);
         Check(list.GetSelectedItems().SequenceEqual([1]) && list.Current == 0,
-            "Control-click adds a multi-selection without moving the current anchor.");
+            "Command/Control-click adds a multi-selection without moving the current anchor.");
         Click(2);
         Check(list.GetSelectedItems().SequenceEqual([2]) && list.Current == 2,
             "A plain multi-mode click replaces the selected set and current item.");

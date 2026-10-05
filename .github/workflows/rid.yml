@@ -63,14 +63,14 @@ jobs:
         if: inputs.workload == 'ios' || inputs.workload == 'tvos'
         run: xcodebuild -version
       - name: Install Linux native prerequisites
-        if: inputs.suite == 'full' && startsWith(inputs.rid, 'linux-')
+        if: inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'linux-')
         run: |
           sudo apt-get update
           sudo apt-get install -y libzstd1 libssl-dev ffmpeg
           openssl version
           python -c 'import ctypes; ctypes.CDLL("libcrypto.so.3").BIO_s_dgram_pair'
       - name: Install macOS test oracles
-        if: inputs.suite == 'full' && startsWith(inputs.rid, 'osx-')
+        if: inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'osx-')
         run: |
           brew install ffmpeg openssl@3
           echo "$(brew --prefix openssl@3)/bin" >> "$GITHUB_PATH"

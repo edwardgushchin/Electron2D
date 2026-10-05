@@ -89,7 +89,7 @@ internal static class LineEditTests
         layout.Build(font, new("e\u0301😀", 16, 0, HorizontalAlignment.Left, 1, 0, 0, TextDirection.LTR, TextOrientation.Horizontal), new(Overrun: 0));
         var left = layout.CaretX(0, TextDirection.LTR); var right = layout.CaretX(2, TextDirection.LTR); Check(layout.HitColumn((left + right) / 2, false) != 1, "Pointer hit avoids combining interior.");
     }
-    private static void KeyEvent(Viewport root, Key key, bool command = false, bool shift = false) { using var input = new InputEventKey { Keycode = key, Pressed = true, ControlPressed = command, ShiftPressed = shift }; root.PushInput(input, true); }
+    private static void KeyEvent(Viewport root, Key key, bool command = false, bool shift = false) { using var input = new InputEventKey { Keycode = key, Pressed = true, CommandOrControlAutoremap = command, ShiftPressed = shift }; root.PushInput(input, true); }
     internal static void RunHost()
     {
         Run(); var backend = Environment.GetEnvironmentVariable("ELECTRON2D_LINE_RENDERER") ?? "gpu"; var settings = ProjectSettings.Service; var prior = ProjectSettings.Get(ProjectSettings.RenderingMethod); ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);

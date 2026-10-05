@@ -12,6 +12,18 @@ import package
 
 
 class NativePackageTests(unittest.TestCase):
+    def test_source_fingerprint_includes_the_native_build_recipe(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            recipe = root / ".github/workflows/native.yml"
+            recipe.parent.mkdir(parents=True)
+            recipe.write_text("container: ubuntu:22.04\n")
+            with patch.object(package, "ROOT", root):
+                original = package.source_hash()
+                self.assertEqual(original, package.source_hash())
+                recipe.write_text("container: ubuntu:26.04\n")
+                self.assertNotEqual(original, package.source_hash())
+
     def test_macos_identity_architecture_imports_and_exports(self):
         with tempfile.TemporaryDirectory() as directory:
             library = Path(directory) / "libFAudio.0.dylib"
