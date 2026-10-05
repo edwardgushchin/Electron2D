@@ -22,7 +22,7 @@ Build and Tests first prepare the package, then restore it from the workflow's l
 
 ## Public publication
 
-Configure a NuGet trusted publishing policy for repository owner `edwardgushchin`, repository `Electron2D`, workflow file `publish-native.yml`, and package scope `Electron2D.Native.Linux`. Permit publishing the new package and new versions; leave the optional environment empty. Then manually run **Publish private native package** on `main`, supplying the owner's NuGet profile name. The workflow needs no stored API key. It rejects duplicate-version publication instead of silently accepting a different payload under an existing version.
+The active NuGet trusted publishing policy uses repository owner `edwardgushchin`, repository `Electron2D`, workflow file `publish-native.yml`, and package scope `Electron2D.Native*`. It permits publishing new native packages and versions; the optional environment is empty. Manually run **Publish private native package** on `main`, supplying the owner's NuGet profile name. The workflow collects all `private-native-package*` artifacts from the native producer and publishes their audited platform packages without a stored API key. It rejects duplicate-version publication instead of silently accepting a different payload under an existing version. A publishing policy does not supply missing target binaries or establish their runtime acceptance.
 
 After publication and NuGet indexing, verify a fresh source build and public text/audio/ENet consumer with an empty package cache, the default nuget.org feed and native build tools blocked. Compare the downloaded package's manifest and payload hashes with the CI artifact before removing the initial-publication caveat above.
 
