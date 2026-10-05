@@ -13,6 +13,7 @@ from unittest.mock import Mock, patch
 from zipfile import ZipFile
 
 import check_rid
+import check_status
 import rids
 import run_android
 import run_apple
@@ -20,6 +21,20 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_aggregate_status_requires_every_expected_dependency_to_pass(self):
+        for group in ("build", "tests"):
+            names = ("matrix", "native", group)
+            passed = {name: {"result": "success"} for name in names}
+            check_status.check(passed, group)
+            for name in names:
+                for result in ("failure", "cancelled", "skipped", "timed_out", None, "unknown"):
+                    failed = dict(passed, **{name: {"result": result}})
+                    with self.subTest(group=group, dependency=name, result=result), self.assertRaises(RuntimeError):
+                        check_status.check(failed, group)
+            for invalid in ({}, None, {group: {"result": "success"}}, dict(passed, extra={"result": "success"})):
+                with self.assertRaises(ValueError):
+                    check_status.check(invalid, group)
+
     def test_browser_cleanup_stops_only_its_process_group(self):
         for timeout in (False, True):
             process = Mock(pid=12345)

@@ -18,8 +18,8 @@
 
 <p align="center">
   <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Последний коммит в main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%9F%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BD%D0%B8%D0%B9+%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/build.yml"><img alt="Статус автоматической сборки" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/build.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%A1%D0%B1%D0%BE%D1%80%D0%BA%D0%B0&amp;branch=main" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/tests.yml"><img alt="Тесты (GitHub Actions)" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/tests.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%A2%D0%B5%D1%81%D1%82%D1%8B&amp;branch=main" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="Статус автоматической сборки" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%A1%D0%B1%D0%BE%D1%80%D0%BA%D0%B0&amp;nameFilter=Build" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="Тесты (GitHub Actions)" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%D0%A2%D0%B5%D1%81%D1%82%D1%8B&amp;nameFilter=Tests" height="28"></a>
 </p>
 
 <p align="center">

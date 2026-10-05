@@ -18,8 +18,8 @@
 
 <p align="center">
   <a href="https://github.com/edwardgushchin/Electron2D/commits/main"><img alt="Último commit na main" src="https://img.shields.io/github/last-commit/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=%C3%9Altimo+commit&amp;display_timestamp=committer&amp;color=A63B75" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/build.yml"><img alt="Status da compilação automática" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/build.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Compila%C3%A7%C3%A3o&amp;branch=main" height="28"></a>
-  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/tests.yml"><img alt="Testes (GitHub Actions)" src="https://img.shields.io/github/actions/workflow/status/edwardgushchin/Electron2D/tests.yml?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Testes&amp;branch=main" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="Status da compilação automática" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Compila%C3%A7%C3%A3o&amp;nameFilter=Build" height="28"></a>
+  <a href="https://github.com/edwardgushchin/Electron2D/actions/workflows/ci.yml"><img alt="Testes (GitHub Actions)" src="https://img.shields.io/github/check-runs/edwardgushchin/Electron2D/main?style=flat&amp;labelColor=3D2749&amp;cacheSeconds=300&amp;label=Testes&amp;nameFilter=Tests" height="28"></a>
 </p>
 
 <p align="center">

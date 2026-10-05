@@ -11,7 +11,7 @@ This matrix records execution on hosts and devices available during this audit. 
 | Samsung SM-A256E, Android API 36, `arm64-v8a` | Pass: `opengles2`, red readback `(1,0,0)` | Pass: Vulkan device with optional clip-distance, depth-clamping, indirect-first-instance and anisotropy disabled; red readback `(1,0,0)` | Pass: pinned HLSL SPIR-V material, red readback `(1,0,0)` | Pass: dynamic rectangle rests at `Y=80.009`, vertical velocity `0` after 120 steps |
 | MiTV-MSSP3, Android TV API 30, `armeabi-v7a` | Pass: `opengles2`, red readback `(1,0,0)` | Blocked: OpenGL ES 2 is advertised, Vulkan is not; SDL reports no supported GPU device even after optional features are disabled. `auto` falls back to `opengles2` and preserves the red pixel | Electron2D ShaderMaterial blocked before submission; standalone GLES2 fragment shader rendered red `(255,0,0,255)` with GL error `0` | Pass: dynamic rectangle rests at `Y=80.009`, vertical velocity `0` after 120 steps |
 | WebAssembly in the isolated SDL 3.4.16/Emscripten browser probe | Pass: direct SDL_Renderer red canvas in Chrome | Blocked: Chrome has WebGL2 and a WebGPU adapter/device, but this SDL build lists zero GPU drivers and `SDL_CreateGPUDevice(SPIRV)` returns null | Electron2D ShaderMaterial blocked; standalone Chrome WebGPU WGSL fragment shader rendered a red frame | Pass: managed Box2D contact at `Y=80.009` after 120 steps |
-| iOS/tvOS | Not run: [RID CI](../.github/workflows/build.yml) checks library compilation separately | Not run | Not run | Not run |
+| iOS/tvOS | Not run: [RID CI](../.github/workflows/ci.yml) checks library compilation separately | Not run | Not run | Not run |
 | Windows/macOS | Not run: no native host in this environment | Not run | Not run | Not run |
 
 ## Private native package delivery
@@ -49,7 +49,7 @@ The Linux Wayland gate in [ADR 0021](decisions/product.md#adr-0021) remains the 
 
 ## Automated RID checks
 
-[Build](../.github/workflows/build.yml) and [Tests](../.github/workflows/tests.yml) share the complete 18-RID [matrix](../tools/ci/rids.json) and the same [target workflow](../.github/workflows/rid.yml). The matrix generator rejects missing, duplicate, extra or differently mapped RIDs relative to `Electron2D.csproj`. Both workflows run on main pushes, pull requests and manual dispatch, with fail-fast disabled so each target reports its own result. The two README badges aggregate these workflows; a successful badge covers the checks below, not full platform acceptance.
+The single [CI workflow](../.github/workflows/ci.yml) owns the complete 18-RID [matrix](../tools/ci/rids.json), one shared [native producer](../.github/workflows/native.yml), and separate Build/Tests matrices using the same [target workflow](../.github/workflows/rid.yml). Both matrices restore the same audited native artifacts from that run; native compilation, package auditing and fresh consumer checks are not duplicated. The matrix generator rejects missing, duplicate, extra or differently mapped RIDs relative to `Electron2D.csproj`. CI runs on main pushes, pull requests and manual dispatch, with fail-fast disabled and superseded runs cancelled per ref. Its final `Build` and `Tests` checks require every respective dependency to succeed; failures, skipped and cancelled work cannot count as passing. The two README badges select those checks by name on `main`; a successful badge covers the checks below, not full platform acceptance.
 
 | RIDs | Build | Tests |
 | --- | --- | --- |
