@@ -34,7 +34,7 @@
 
 <a id="about"></a>
 
-## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="texttop" alt=""> About
+## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="absmiddle" alt=""> About
 
 Electron2D is a **free and open-source cross-platform 2D engine written in C# for developers and AI agents to build games together**.
 
@@ -42,7 +42,7 @@ Create game worlds and mechanics with familiar .NET tools and AI assistants such
 
 <a id="features"></a>
 
-## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="texttop" alt=""> Features
+## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="absmiddle" alt=""> Features
 
 - [Graphics](docs/domains/rendering.md). Sprites and atlases, cameras, parallax, shape and text drawing. HLSL and GLSL shader import for materials.
 - [Scenes and animation](docs/domains/scene.md). Reusable objects and levels, frame animation, property animation and timers.
@@ -59,7 +59,7 @@ Shader materials require the GPU renderer. The compatibility renderer supports b
 
 <a id="quick-start"></a>
 
-## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="texttop" alt=""> Quick start
+## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="absmiddle" alt=""> Quick start
 
 Start with the “Character movement” example. You will see a character and move it with the arrow keys. The .NET commands below are used on Windows, Linux and macOS; see the [platform table](#platforms) for completed run checks.
 
@@ -138,7 +138,7 @@ Building the engine produces `Electron2D.dll`. Publishing a game includes the en
 
 <a id="platforms"></a>
 
-## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="texttop" alt=""> Platforms
+## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="absmiddle" alt=""> Platforms
 
 The table lists what has been checked on each game target. The visual editor targets Windows, Linux and macOS.
 
@@ -160,7 +160,7 @@ See the [platform report](docs/platform-verification.md) for device models, comm
 
 <a id="development"></a>
 
-## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="texttop" alt=""> Engine development
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="absmiddle" alt=""> Engine development
 
 Save scenes to files and reuse them, including on the next game launch, with `PackedScene` and typed [resource and scene files](docs/components/resource-files.md). The visual editor currently shows a startup screen; game project editing and project management commands are not implemented yet.
 
@@ -170,7 +170,7 @@ Next tasks and the status of individual methods are listed in the [development r
 
 <a id="documentation"></a>
 
-## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="texttop" alt=""> Documentation
+## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="absmiddle" alt=""> Documentation
 
 | You want to | Read |
 | --- | --- |
@@ -186,7 +186,7 @@ Separate instructions are available for reproducing the [Android](tests/Electron
 
 <a id="feedback-and-contributing"></a>
 
-## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="texttop" alt=""> Contributing
+## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="absmiddle" alt=""> Contributing
 
 [Ask a question](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Report an issue](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Contribution guide](CONTRIBUTING.md) · [Support](SUPPORT.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Security policy](SECURITY.md)
 
@@ -207,7 +207,7 @@ The project is maintained by [Eduard Gushchin](https://github.com/edwardgushchin
 
 <a id="license"></a>
 
-## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="texttop" alt=""> License
+## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="absmiddle" alt=""> License
 
 Electron2D is distributed under the [MIT license](licence/Electron2D-LICENSE.txt). You can use the engine in commercial games; retain the copyright notice and license text.
 
