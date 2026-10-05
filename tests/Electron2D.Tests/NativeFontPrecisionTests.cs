@@ -8,6 +8,8 @@ internal static class NativeFontPrecisionTests
     // Inputs are the pinned Open Sans SemiBold WOFF2 and a fixture with Arabic coverage.
     internal static void Run(byte[] openSansData, byte[] arabicData)
     {
+        using (var resource = new FontFile { Data = openSansData })
+            Check(resource.GetStringSize("ffi").X > 0, "The public font resource accepts the current packaged process architecture.");
         VerifyMetricsAndShaping(openSansData);
         VerifyMetadataAndRasterMetrics(openSansData);
         VerifyRasterPhases(openSansData);

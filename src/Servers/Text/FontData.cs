@@ -58,8 +58,8 @@ internal sealed class FontData : IDisposable
         if (HasData)
         {
             if ((!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) ||
-                RuntimeInformation.ProcessArchitecture is not (Architecture.X64 or Architecture.Arm64))
-                throw new PlatformNotSupportedException("Native font assets are currently packaged for desktop x64 and ARM64 runtimes.");
+                RuntimeInformation.ProcessArchitecture is not (Architecture.X64 or Architecture.Arm64) && !(OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X86))
+                throw new PlatformNotSupportedException("Native font assets require a packaged desktop runtime.");
             Run(Operation.Create);
         }
     }
