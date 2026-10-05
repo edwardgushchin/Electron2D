@@ -1,10 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UseAppHost>true</UseAppHost>
+    <AssemblyTitle>Electron2D</AssemblyTitle>
+    <Version>0.1.0</Version>
+    <Product>Electron2D</Product>
+    <Description>Agent-native cross-platform game engine</Description>
+    <ApplicationIcon>Assets/Electron2D.ico</ApplicationIcon>
+    <EditorMacBundle Condition="($([MSBuild]::IsOSPlatform('OSX')) and '$(RuntimeIdentifier)' == '') or $([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('osx-'))">true</EditorMacBundle>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Electron2D.csproj" />
@@ -12,6 +19,21 @@
     <Content Include="../docs/design/assets/sprite/mark-dark.svg" Link="Assets/mark-dark.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Assets/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Assets/IBMPlexSans-OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="Assets/mark-dark-outlined.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
+  <Target Name="BundleEditorBuild" AfterTargets="Build" Condition="'$(EditorMacBundle)' == 'true'">
+    <ItemGroup>
+      <EditorBundleFiles Include="$(TargetDir)**/*" Exclude="$(TargetDir)Electron2D.app/**" />
+    </ItemGroup>
+    <Copy SourceFiles="@(EditorBundleFiles)" DestinationFiles="@(EditorBundleFiles->'$(TargetDir)Electron2D.app/Contents/MacOS/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="Assets/Info.plist" DestinationFolder="$(TargetDir)Electron2D.app/Contents" />
+    <Copy SourceFiles="Assets/Electron2D.icns" DestinationFolder="$(TargetDir)Electron2D.app/Contents/Resources" />
+  </Target>
+  <Target Name="BundleEditorPublish" AfterTargets="Publish" Condition="'$(EditorMacBundle)' == 'true'">
+    <ItemGroup>
+      <EditorPublishFiles Include="$(PublishDir)**/*" Exclude="$(PublishDir)Electron2D.app/**" />
+    </ItemGroup>
+    <Copy SourceFiles="@(EditorPublishFiles)" DestinationFiles="@(EditorPublishFiles->'$(PublishDir)Electron2D.app/Contents/MacOS/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="Assets/Info.plist" DestinationFolder="$(PublishDir)Electron2D.app/Contents" />
+    <Copy SourceFiles="Assets/Electron2D.icns" DestinationFolder="$(PublishDir)Electron2D.app/Contents/Resources" />
+  </Target>
 </Project>

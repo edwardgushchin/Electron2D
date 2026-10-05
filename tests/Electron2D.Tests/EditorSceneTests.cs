@@ -8,8 +8,7 @@ internal static class EditorSceneTests
     internal static void Run()
     {
         using var texture = ResourceLoader.Load<ImageTexture>(IOPath.Combine(AppContext.BaseDirectory, "Assets", "logo-stacked-dark.svg"));
-        var outlined = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_OUTLINE") == "1";
-        using var mark = ResourceLoader.Load<ImageTexture>(IOPath.Combine(AppContext.BaseDirectory, "Assets", outlined ? "mark-dark-outlined.svg" : "mark-dark.svg"));
+        using var mark = ResourceLoader.Load<ImageTexture>(IOPath.Combine(AppContext.BaseDirectory, "Assets", "mark-dark.svg"));
         using var wordmark = new AtlasTexture { Atlas = texture, Region = new(24, 160, 440, 68), FilterClip = true };
         using var font = new FontFile();
         font.LoadDynamicFont(IOPath.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
@@ -24,7 +23,8 @@ internal static class EditorSceneTests
             var title = (TextureRect)brand.GetChild(1);
             var caption = (Label)brand.GetChild(2);
             Check(window.Size == new Vector2i(1152, 800) && window.Title == "Electron2D", "Initial window contract.");
-            Check(caption.Text == "Game engine" && caption.HorizontalAlignment == HorizontalAlignment.Center, "Centered descriptor below the wordmark.");
+            Check(caption.Text == "Agent-native cross-platform game engine" && caption.HorizontalAlignment == HorizontalAlignment.Center, "Centered descriptor below the wordmark.");
+            Check(font.GetStringSize(caption.Text, fontSize: 32).X <= caption.Size.X, "The complete descriptor fits on one line.");
             var frames = 0;
             var resized = false;
             var closed = false;
@@ -39,13 +39,13 @@ internal static class EditorSceneTests
                 Check(pixels.Size == window.Size, "Native client dimensions.");
                 Pixel(pixels, 10, 10, "#241B2C");
                 var origin = (brand.Position + new Vector2(.5f, .5f)).Floor();
-                Pixel(pixels, (int)origin.X + 168, (int)origin.Y + 96, "#241B2C");
-                Pixel(pixels, (int)origin.X + 171, (int)origin.Y + 96, outlined ? "#FFFFFF" : "#241B2C");
-                Pixel(pixels, (int)origin.X + 172, (int)origin.Y + 96, "#F2A6CC");
-                Pixel(pixels, (int)origin.X + 208, (int)origin.Y + 96, "#3D2749");
-                Pixel(pixels, (int)origin.X + 27, (int)origin.Y + 208, "#F9F3EE");
+                Pixel(pixels, (int)origin.X + 324, (int)origin.Y + 96, "#241B2C");
+                Pixel(pixels, (int)origin.X + 327, (int)origin.Y + 96, "#241B2C");
+                Pixel(pixels, (int)origin.X + 328, (int)origin.Y + 96, "#F2A6CC");
+                Pixel(pixels, (int)origin.X + 364, (int)origin.Y + 96, "#3D2749");
+                Pixel(pixels, (int)origin.X + 183, (int)origin.Y + 208, "#F9F3EE");
                 Check(ReferenceEquals(caption.GetThemeFont("font"), font), "Caption uses the bundled regular font.");
-                var output = IOPath.GetFullPath(outlined ? "bin/editor-outline" : "bin/editor-smoke");
+                var output = IOPath.GetFullPath("bin/editor-smoke");
                 Directory.CreateDirectory(output);
                 pixels.SavePNG(IOPath.Combine(output, $"{backend}-{(resized ? "resized" : "initial")}.png"));
                 if (!resized) { resized = true; window.Size = new(1281, 901); return; }

@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-The [editor startup screen](../components/editor-startup.md) is a separate executable consumer of existing public Window, TextureRect, Label, ResourceLoader and Engine APIs. It adds no runtime declaration or coverage-state change. Editor project/scene authoring, inspector/gizmos and shared CLI/batch operations remain dependent on their first executable slices under ADR 0090; displaying a logo does not satisfy those dependencies.
+The [editor startup screen](../components/editor-startup.md) is a separate executable consumer of existing public Window, TextureRect, Label, ResourceLoader, DisplayServer.SetIcon and Engine APIs. Its desktop launchers/identity assets belong to the editor consumer. It adds no runtime declaration or coverage-state change. Editor project/scene authoring, inspector/gizmos and shared CLI/batch operations remain dependent on their first executable slices under ADR 0090; displaying a logo does not satisfy those dependencies.
 
 [Private native delivery](../native-packaging.md) restores versioned assets rather than compiling them during ordinary builds. Both Linux architectures execute their full headless suite; the preceding Linux package was publicly verified. Both macOS native producers and package audits passed, but the first connected consumers failed WOFF2 decoding. Private FreeType with pinned static codec/auto-hinting dependencies now passes its local decoder check; target consumer/full-suite reruns remain required. Windows/mobile/browser native closures remain open. No public API/member state changes are inferred from packaging or pending target tests.
 

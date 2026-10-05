@@ -11,8 +11,16 @@ internal static class EditorScene
     internal static Window CreateWindow(Texture mark, Texture wordmark, Font font)
     {
         var window = new Window { Title = "Electron2D", Size = new(1152, 800), SnapTransformsToPixel = true };
-        window.Ready += _ => RenderingServer.SetDefaultClearColor(Color.FromHTML("#241B2C"));
-        var brand = new Control { Name = "Brand", Size = new(488, 334), MouseFilter = MouseFilter.Ignore };
+        window.Ready += _ =>
+        {
+            RenderingServer.SetDefaultClearColor(Color.FromHTML("#241B2C"));
+            if (DisplayServer.HasFeature(DisplayServer.Feature.Icon))
+            {
+                using var icon = mark.GetImage();
+                DisplayServer.SetIcon(icon ?? throw new InvalidOperationException("The editor mark has no image."));
+            }
+        };
+        var brand = new Control { Name = "Brand", Size = new(800, 334), MouseFilter = MouseFilter.Ignore };
         var character = new TextureRect
         {
             Name = "Mark",
@@ -21,7 +29,7 @@ internal static class EditorScene
             StretchMode = TextureStretchMode.KeepAspectCentered,
             MouseFilter = MouseFilter.Ignore,
             TextureFilter = TextureFilter.Nearest,
-            Position = new(148, 0),
+            Position = new(304, 0),
             Size = new(192, 192)
         };
         var title = new TextureRect
@@ -32,14 +40,14 @@ internal static class EditorScene
             StretchMode = TextureStretchMode.Keep,
             MouseFilter = MouseFilter.Ignore,
             TextureFilter = TextureFilter.Linear,
-            Position = new(24, 198),
+            Position = new(180, 198),
             Size = wordmark.GetSize()
         };
-        var caption = new Label("Game engine")
+        var caption = new Label("Agent-native cross-platform game engine")
         {
             Name = "Caption",
             Position = new(0, 270),
-            Size = new(488, 44),
+            Size = new(800, 44),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Top,
             MouseFilter = MouseFilter.Ignore
