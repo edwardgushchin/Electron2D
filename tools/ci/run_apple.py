@@ -56,8 +56,14 @@ def run(app, platform, timeout=120):
                     return
             time.sleep(.2)
         output = command("spawn", udid, "log", "show", "--last", "2m", "--style", "compact",
-                         "--predicate", 'process == "Electron2D.AppleTests"')
-        raise TimeoutError("Apple app did not report completion within the deadline:\n" + output[-4000:])
+                         "--predicate", 'process CONTAINS "Electron2D" OR eventMessage CONTAINS "org.electron2d.tests"')
+        started = report.with_name(report.name + ".started")
+        output += "\nStartup: " + (started.read_text() if started.is_file() else "managed entry point was not reached")
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            crashes = sorted((Path.home() / "Library/Logs/DiagnosticReports").glob("Electron2D.AppleTests*.ips"), key=lambda path: path.stat().st_mtime)
+            if crashes:
+                output += "\nCrash: " + crashes[-1].read_text()[:4000]
+        raise TimeoutError("Apple app did not report completion within the deadline:\n" + output[-8000:])
     finally:
         subprocess.run(["xcrun", "simctl", "shutdown", udid], capture_output=True, timeout=60)
         command("delete", udid)

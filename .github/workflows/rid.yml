@@ -127,7 +127,10 @@ jobs:
           script: python -B tools/ci/run_android.py "tests/Electron2D.AndroidTests/bin/Release/net10.0-android/$CI_RID/org.electron2d.tests-Signed.apk" "$CI_RID" --serial emulator-5554
       - name: Build Apple contract app
         if: inputs.tests && (inputs.suite == 'apple-simulator' || inputs.suite == 'apple-device')
-        run: dotnet build tests/Electron2D.AppleTests/Electron2D.AppleTests.csproj -c Release -r "$CI_RID" -p:EnableCodeSigning=false --nologo
+        run: |
+          signing=true
+          if [[ "$CI_SUITE" == apple-device ]]; then signing=false; fi
+          dotnet build tests/Electron2D.AppleTests/Electron2D.AppleTests.csproj -c Release -r "$CI_RID" -p:EnableCodeSigning="$signing" -p:CodesignKey=- --nologo
       - name: Check Apple bundle notices
         if: inputs.tests && (inputs.suite == 'apple-simulator' || inputs.suite == 'apple-device')
         run: |
