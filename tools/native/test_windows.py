@@ -1,7 +1,9 @@
 """Exercise PE rejection and import-library production against restored SDL DLLs."""
 
 from pathlib import Path
+import json
 import os
+import subprocess
 import tempfile
 import unittest
 
@@ -10,6 +12,15 @@ import package
 
 
 class WindowsNativeTests(unittest.TestCase):
+    def test_arm64_tls_keeps_the_default_stack_probe_threshold(self):
+        script = 'use JSON::PP; local $/; my $source = <>; my $targets = eval($source . "\\\\%targets"); die $@ if $@; print encode_json($targets);'
+        result = subprocess.run(["perl", "-e", script, str(package.ROOT / "tools/native/openssl-windows.conf")],
+                                check=True, capture_output=True, text=True)
+        targets = json.loads(result.stdout)
+        self.assertEqual(targets["electron2d-win-arm64"]["cflags"].split(), ["/GF", "/Gy", "/MT"])
+        for target in ("electron2d-win-x86", "electron2d-win-x64"):
+            self.assertEqual(targets[target]["cflags"].split(), ["/Gs0", "/GF", "/Gy", "/MT"])
+
     def test_restored_sdl_architectures_exports_and_import_libraries(self):
         packages = Path(os.environ.get("NUGET_PACKAGES", Path.home() / ".nuget/packages")) / "sdl3-cs.windows/3.4.18/runtimes"
         with tempfile.TemporaryDirectory() as directory:

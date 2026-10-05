@@ -22,6 +22,27 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_native_publish_layout_does_not_relocate_managed_dependencies(self):
+        with tempfile.TemporaryDirectory() as directory:
+            project = ET.Element("Project")
+            group = ET.SubElement(project, "ItemGroup")
+            for package in ("Electron2D.Android", "SDL3-CS.Android", "HarfBuzzSharp.NativeAssets.Win32", "MonoGame.Library.FreeType"):
+                for asset in ("native", "runtime"):
+                    item = ET.SubElement(group, "_ResolvedCopyLocalPublishAssets", Include=f"{package}/{asset}.fixture")
+                    ET.SubElement(item, "NuGetPackageId").text = package
+                    ET.SubElement(item, "AssetType").text = asset
+            ET.SubElement(project, "Import", Project=str(rids.ROOT / "tools/native/Electron2D.targets"))
+            fixture = Path(directory) / "fixture.proj"
+            ET.ElementTree(project).write(fixture, encoding="unicode")
+            result = subprocess.run(["dotnet", "msbuild", str(fixture), "-nologo",
+                                     "-p:RuntimeIdentifier=android-x64", "-t:Electron2DNativePublishLayout",
+                                     "-getItem:_ResolvedCopyLocalPublishAssets"],
+                                    check=True, capture_output=True, text=True)
+            for item in json.loads(result.stdout)["Items"]["_ResolvedCopyLocalPublishAssets"]:
+                with self.subTest(package=item["NuGetPackageId"], asset=item["AssetType"]):
+                    expected = "runtimes/android-x64/native/" if item["AssetType"] == "native" else None
+                    self.assertEqual(item.get("DestinationSubDirectory"), expected)
+
     def test_default_desktop_layout_keeps_universal_macos_native_assets(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

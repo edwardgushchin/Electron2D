@@ -8,7 +8,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" PrivateAssets="all" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" PrivateAssets="all" Publish="true" />
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../../editor/EditorScene.cs" Link="Editor/EditorScene.cs" />
     <Compile Include="../../examples/CharacterMovement/CharacterMovementScene.cs" Link="Examples/CharacterMovementScene.cs" />

@@ -106,7 +106,8 @@ jobs:
         run: |
           executable="$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"
           if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
-          "$executable"
+          "$executable" | tee "bin/ci/$CI_RID/full-runtime.log"
+          grep -Fx 'Electron2D checks passed.' "bin/ci/$CI_RID/full-runtime.log"
       - name: Diagnose an ARM64 native test crash without hiding the failure
         if: failure() && steps.full_suite.outcome == 'failure' && inputs.rid == 'win-arm64'
         continue-on-error: true
