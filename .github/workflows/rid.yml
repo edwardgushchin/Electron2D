@@ -76,6 +76,9 @@ jobs:
           echo "$(brew --prefix openssl@3)/bin" >> "$GITHUB_PATH"
       - name: Build runtime with trimming and AOT analysis
         run: dotnet build Electron2D.csproj -c Release -r "$CI_RID" -p:EnableTrimAnalyzer=true -p:EnableAotAnalyzer=true -o "bin/ci/$CI_RID" --nologo
+      - name: Verify public API architecture and coverage
+        if: inputs.rid == 'linux-x64' && !inputs.tests
+        run: tools/coverage/check.sh
       - name: Evaluate target profile
         if: inputs.tests
         run: dotnet msbuild Electron2D.csproj -p:RuntimeIdentifier="$CI_RID" -getProperty:RuntimeIdentifier,TargetFramework,Electron2DNativePlatform -getItem:PackageReference > "bin/ci/$CI_RID/profile.json"

@@ -83,7 +83,7 @@ A shorter-lived subscriber must unsubscribe from a longer-lived publisher as par
 <a id="adr-0004"></a>
 ## ADR 0004: Build a 2D-only scene-oriented engine in one assembly
 
-Last updated: 2026-10-03
+Last updated: 2026-10-05
 
 - Status: Accepted; managed-dependency packaging specified by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
 - Scope: Entire product architecture and packaging
@@ -97,6 +97,7 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 ### Decision
 
 - Electron2D supports only two-dimensional games.
+- Electron2D-owned public and protected type names omit redundant dimensional markers (`1D`, `2D`, `3D`), including markers before a role suffix such as `2DArray`. This default applies to every new class, struct, interface, delegate and enum, including query parameters, result values and supporting sibling types; the specific mappings below illustrate the rule rather than limit it. An exception requires an explicitly accepted ADR identifying a distinct data role. The current exceptions are `Curve2D` (spatial versus scalar curves under ADR 0013) and `AnimationNodeBlendSpace1D`/`AnimationNodeBlendSpace2D` (different blend-parameter domains under [ADR 0093](scene-animation.md#adr-0093)). Member names retain their owning semantic contract; the world accessor is `CanvasItem.GetWorld()` under [ADR 0063](physics.md#adr-0063). Internal native identifiers and pinned comparison identities retain their own spelling. The coverage validator checks actual exported type names before aliases or declaration pairing; agreeing snapshots and mappings do not override this policy.
 - Electron2D is agent-native: programmatic project/scene authoring, batch execution and observable verification are product requirements under [ADR 0090](agent-native.md#adr-0090). That decision preserves this complete applicable typed API and packaging boundary; its missing tooling remains implementation work.
 - Three-dimensional rendering, physics, transforms, cameras, assets, nodes, compatibility aliases, and speculative shared 2D/3D abstractions are outside scope.
 - Three-component numeric values are allowed for ordinary data and shader uniforms under ADR 0033; their component count does not add a three-dimensional scene domain.

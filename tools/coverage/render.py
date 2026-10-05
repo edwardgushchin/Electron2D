@@ -66,6 +66,20 @@ TEXTURE_NAMES = {
     "GradientTexture1D": "GradientRampTexture",
     "GradientTexture2D": "GradientTexture",
 }
+DIMENSIONAL_TYPE_EXCEPTIONS = {
+    "T:Electron2D.Curve2D": "ADRs 0004 and 0013: spatial curve distinct from scalar Curve",
+    "T:Electron2D.AnimationNodeBlendSpace1D": "ADR 0093: one-dimensional blend parameter domain",
+    "T:Electron2D.AnimationNodeBlendSpace2D": "ADR 0093: two-dimensional blend parameter domain",
+}
+
+
+def validate_public_type_names(engine):
+    invalid = [item["id"] for item in engine if item["kind"] == "type"
+               and re.search(r"(?<!\d)[123][dD](?:$|[A-Z_<`])", item["name"])
+               and item["id"] not in DIMENSIONAL_TYPE_EXCEPTIONS]
+    if invalid:
+        raise ValueError("ADR 0004: unapproved dimensional public type names: " + ", ".join(invalid)
+                         + ". Omit the dimension marker or follow an explicitly accepted ADR exception.")
 
 
 def coverage_target(name):
@@ -534,6 +548,7 @@ def choose(godot_type, member, candidates, used):
 def render():
     upstream = json.loads(UPSTREAM.read_text())
     engine = json.loads(ENGINE.read_text())
+    validate_public_type_names(engine)
     aliases = json.loads(ALIASES.read_text()) if ALIASES.exists() else {"classes": {}, "enums": {}}
     if upstream["godot_commit"] != COMMIT:
         raise ValueError("Unexpected upstream revision")

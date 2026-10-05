@@ -3,8 +3,36 @@
 
 import json
 import re
+from unittest.mock import Mock, patch
 
-from render import ALIASES, CLASS_PAGES, DATA, choose, coverage_target, engine_link, render
+from render import ALIASES, CLASS_PAGES, DATA, choose, coverage_target, engine_link, render, validate_public_type_names
+
+
+def check_public_type_names():
+    def declaration(name):
+        return {"kind": "type", "name": name, "id": f"T:Electron2D.{name}"}
+
+    validate_public_type_names([declaration(name) for name in (
+        "World", "PhysicsRayResult", "Curve2D", "AnimationNodeBlendSpace1D", "AnimationNodeBlendSpace2D",
+        "CustomResource<T>", "Filter12DB")])
+    invalid = [declaration(name) for name in (
+        "World2D", "NewQueryResult2D", "NewResource2D<T>", "NewResource2D`1", "Texture2DArray",
+        "NewNode3D", "NewType1D", "World2d")]
+    invalid.append({"kind": "type", "name": "Curve2D", "id": "T:Electron2D.Other.Curve2D"})
+    for item in invalid:
+        try:
+            validate_public_type_names([item])
+        except ValueError as error:
+            assert "ADR 0004" in str(error) and item["id"] in str(error)
+        else:
+            raise AssertionError(f"Unapproved dimensional type accepted: {item['id']}")
+    with patch("render.ENGINE", Mock(read_text=lambda: json.dumps([declaration("NewQueryResult2D")]))):
+        try:
+            render()
+        except ValueError as error:
+            assert "ADR 0004" in str(error) and "NewQueryResult2D" in str(error)
+        else:
+            raise AssertionError("Coverage rendering bypassed the public type naming check")
 
 
 def check_texture_pages(pages, upstream):
@@ -39,6 +67,7 @@ def check_texture_pages(pages, upstream):
 
 
 def main():
+    check_public_type_names()
     upstream = json.loads((DATA / "godot-4.7.2.json").read_text())
     engine = json.loads((DATA / "electron2d.json").read_text())
     assert all("`" not in item["signature"] for item in engine if item["kind"] == "constructor"), "Constructor syntax must omit CLR generic arity"
@@ -167,6 +196,8 @@ def main():
     ):
         assert f"../../classes/{target}.md" in pages[CLASS_PAGES / f"{source}.md"]
     world_rows = pages[CLASS_PAGES / "World2D.md"]
+    assert any(item["id"] == "method:Electron2D.CanvasItem.GetWorld()" for item in engine)
+    assert not any(item["name"] == "GetWorld2D" for item in engine)
     assert "| Implemented |" in next(row for row in world_rows.splitlines()
                                        if row.startswith("| [`property RID space"))
     direct_rows = pages[CLASS_PAGES / "PhysicsDirectSpaceState2D.md"]
