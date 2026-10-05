@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.Linux` dependency in ordinary builds. Full native compilation is explicit through `Electron2DBuildNativeFromSource=true`; [native delivery](../native-packaging.md) records CI production, source receipts, consumer verification and the pending first publication. This changes delivery only, not the public API or platform guards.
+Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -15,7 +15,7 @@ Internal FAudioContext owns engine/master/submix voices and native volume meters
 
 Native FAudio build and package entries use `runtimes/<RID>/native/libFAudio.so.0`, preserved in project-reference build/publish outputs. The [native resolver](../classes/NativeLibraries.md) loads the shared SDL3 core before FAudio and permits ordinary .NET resolution for flattened RID-specific NuGet deployments. Consumers require no backend dependency or loader configuration.
 
-Native audio output currently rejects platforms outside Linux. Target-specific FAudio builds with the engine-owned output bridge and shared SDL dependency, loading or static linking, transitive packaging and public audio/lifecycle checks are required deferred work for every accepted runtime RID under [ADR 0012](../decisions/product.md#adr-0012). The [native dependency backlog](../platform-verification.md#required-native-dependency-builds) records desktop, mobile/TV and Web prerequisites; copying the Linux binary or removing the platform guard alone does not implement them. Any target-specific backend replacement remains subject to ADR 0047.
+Native output selects the packaged Linux or macOS FAudio backend. Matching macOS dylib/SDL identity and package audits passed; its newly connected public consumer and full-suite execution remain pending. Other RID-specific FAudio closures, loading/static linking, transitive delivery and executable public audio/lifecycle checks remain required under [ADR 0012](../decisions/product.md#adr-0012). The [native backlog](../platform-verification.md#required-native-dependency-builds) retains Windows/mobile/TV/Web prerequisites. Backend replacement remains subject to ADR 0047.
 
 ## Runtime flow and invariants
 

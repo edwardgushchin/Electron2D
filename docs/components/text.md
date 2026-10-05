@@ -2,11 +2,11 @@
 
 Last updated: 2026-10-05
 
-Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.Linux` dependency in ordinary builds. Full native compilation is explicit through `Electron2DBuildNativeFromSource=true`; [native delivery](../native-packaging.md) records CI production, source receipts, consumer verification and the pending first publication. This changes delivery only, not the public API or platform guards.
+Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
 The text component owns dynamic font resources, Unicode paragraph layout and glyph textures. It consumes the existing Resource graph, theme lookup, ImageTexture and retained canvas rather than adding a second graphics stack. [ADR 0046](../decisions/rendering.md#adr-0046) records the precise native bridge and its executable reasons; [ADR 0012](../decisions/product.md#adr-0012) defines packaging and source ownership.
 
-The private native boundary library is built and packaged as `runtimes/<RID>/native/libElectron2DTextBreak.so`; project-reference builds/publishes preserve that directory. [NativeLibraries](../classes/NativeLibraries.md) resolves it independently of the working directory. ICU data stays embedded in the one managed engine assembly.
+The private native boundary library is packaged under `runtimes/<RID>/native` as a Linux `.so` or macOS `.dylib`; project references preserve that directory. [NativeLibraries](../classes/NativeLibraries.md) resolves it independently of the working directory. ICU data stays in the one managed assembly. Both macOS source/package audits passed; its newly enabled executable native text/full-suite run remains pending.
 
 ## Resources and runtime flow
 

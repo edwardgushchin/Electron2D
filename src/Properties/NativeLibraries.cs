@@ -5,7 +5,7 @@ namespace Electron2D;
 
 internal static class NativeLibraries
 {
-    private static readonly Lazy<nint> Sdl = new(() => NativeLibrary.Load("libSDL3.so.0", typeof(NativeLibraries).Assembly, null));
+    private static readonly Lazy<nint> Sdl = new(() => NativeLibrary.Load(OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null));
 
     [ModuleInitializer]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2255", Justification = "Register the assembly's native resolver before any SDL binding can load a second core library.")]
@@ -14,7 +14,19 @@ internal static class NativeLibraries
         NativeLibrary.SetDllImportResolver(typeof(NativeLibraries).Assembly, (name, assembly, path) =>
         {
             if (name == "HarfBuzzSharp") return NativeLibrary.Load("libHarfBuzzSharp", assembly, path);
+            if (OperatingSystem.IsMacOS())
+            {
+                if (name == "Electron2DCrypto") return LoadRuntime("libElectron2DCrypto.3.dylib", assembly, path);
+                if (name == "Electron2DSSL") return LoadRuntime("libElectron2DSSL.3.dylib", assembly, path);
+                if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.dylib", assembly, path);
+                if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.dylib", assembly, path);
+                if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
+                var macCore = Sdl.Value;
+                return name == "SDL3" ? macCore : name == "FAudio" ? LoadRuntime("libFAudio.0.dylib", assembly, path) : 0;
+            }
             if (!OperatingSystem.IsLinux()) return 0;
+            if (name == "Electron2DCrypto") return NativeLibrary.Load("libcrypto.so.3", assembly, path);
+            if (name == "Electron2DSSL") return NativeLibrary.Load("libssl.so.3", assembly, path);
             if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.so", assembly, path);
             if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.so", assembly, path);
             if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;

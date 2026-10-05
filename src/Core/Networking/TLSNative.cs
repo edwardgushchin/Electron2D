@@ -15,13 +15,13 @@ internal sealed class TLSHandle : SafeHandle
 
 internal static unsafe partial class TLSNative
 {
-    private const string SSL = "libssl.so.3", Crypto = "libcrypto.so.3";
+    private const string SSL = "Electron2DSSL", Crypto = "Electron2DCrypto";
     internal static void CheckBackend(bool datagram = false)
     {
-        if (!OperatingSystem.IsLinux() || IntPtr.Size != 8) throw new PlatformNotSupportedException("TLS currently requires the 64-bit Linux OpenSSL 3 backend.");
+        if ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) || IntPtr.Size != 8) throw new PlatformNotSupportedException("TLS requires the Linux or macOS 64-bit OpenSSL 3 backend.");
         try { if (datagram && BIO_s_dgram_pair() == 0) throw new PlatformNotSupportedException("OpenSSL datagram BIOs are unavailable."); if (TLS_method() == 0) throw new PlatformNotSupportedException("OpenSSL TLS is unavailable."); }
         catch (EntryPointNotFoundException error) { throw new PlatformNotSupportedException("DTLS requires OpenSSL 3.2 datagram BIO support.", error); }
-        catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires system OpenSSL 3 libraries.", error); }
+        catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires system Linux or packaged macOS OpenSSL 3 libraries.", error); }
     }
     internal static TLSHandle CreateContext(TLSOptions options, bool datagram = false)
     {
@@ -31,7 +31,11 @@ internal static unsafe partial class TLSNative
         {
             Require(SSL_CTX_ctrl(pointer, 123, datagram ? 0xfefd : 0x303, 0), datagram ? "DTLS 1.2 minimum configuration failed." : "TLS 1.2 minimum configuration failed.");
             SSL_CTX_set_verify(pointer, options.IsServer() || options.IsUnsafeClient() && options.GetTrustedCAChain() is null ? 0 : 1, 0);
-            if (!options.IsServer() && options.GetTrustedCAChain() is null && !options.IsUnsafeClient()) Require(SSL_CTX_set_default_verify_paths(pointer), "System TLS trust is unavailable.");
+            if (!options.IsServer() && options.GetTrustedCAChain() is null && !options.IsUnsafeClient())
+            {
+                if (OperatingSystem.IsMacOS()) ConfigureSystemTrust(pointer);
+                else Require(SSL_CTX_set_default_verify_paths(pointer), "System TLS trust is unavailable.");
+            }
             return context;
         }
         catch { context.Dispose(); throw; }

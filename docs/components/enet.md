@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.Linux` dependency in ordinary builds. Full native compilation is explicit through `Electron2DBuildNativeFromSource=true`; [native delivery](../native-packaging.md) records CI production, source receipts, consumer verification and the pending first publication. This changes delivery only, not the public API or platform guards.
+Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
 ## Scope and backend
 
@@ -10,7 +10,7 @@ Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.
 
 The Linux64 profile builds unchanged ENet 1.3.18 core sources at `5a9c537fd464b3c6d3c55e1d3bd47588faf71b42` and FastLZ 0.5.0 behind thirteen engine C exports. An engine-owned socket port supplies real .NET IPv4/IPv6 sockets. ENet's private address word is a routing token into prepared IP/scope/port endpoints; protocol packets do not serialize it. A separate stock Unix ENet executable verifies ordinary wire interoperability without this adapter. Vendored hashes and original licenses are preserved. Engine builds require CMake, Ninja, a C compiler and zlib/Zstandard development libraries; deployed hosts require `libz.so.1` and `libzstd.so.1`. The native payload stays under `runtimes/RID/native`, has its own SONAME and links no managed backend assembly. Linux ARM64 has build/toolchain selection but no execution claim; foreign profiles omit the Linux library and fail ENet setup explicitly.
 
-The source bridge now uses platform clock/RNG primitives and copies upstream buffers into a fixed engine pointer/length ABI before managed callbacks; Windows uses a different upstream field order. All managed imports explicitly use Cdecl. The Linux IPv4/IPv6, five-codec, channel/fragmentation and 64 warmed active/idle zero-managed-allocation regression passed with this adapter. macOS native source production and static Zstandard packaging are being integrated under [native delivery](../native-packaging.md); the runtime guard remains until target public execution is verified.
+The source bridge uses platform clock/RNG primitives and copies upstream buffers into a fixed engine pointer/length ABI before managed callbacks; Windows has different upstream field order. Imports explicitly use Cdecl. The Linux IPv4/IPv6, five-codec, channel/fragmentation and warmed zero-managed-allocation regression passed. Both macOS native producers and static Zstandard/package audits passed under [native delivery](../native-packaging.md); the runtime now resolves that payload and selects the full suite, with first target public execution still pending. Other platforms retain explicit native gates.
 
 ## Host and peer contract
 

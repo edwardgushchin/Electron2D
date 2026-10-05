@@ -6,10 +6,11 @@
     <Electron2DTextNativeRID Condition="'$(Electron2DTextNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</Electron2DTextNativeRID>
     <_Electron2DTextNativeName>libElectron2DTextBreak.so</_Electron2DTextNativeName>
     <_Electron2DTextNativeName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DTextBreak.dylib</_Electron2DTextNativeName>
-    <Electron2DTextNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DTextNativeLibrary)' == ''">$(PkgElectron2D_Native_Linux)/runtimes/$(Electron2DTextNativeRID)/native/libElectron2DTextBreak.so</Electron2DTextNativeLibrary>
+    <Electron2DTextNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DTextNativeLibrary)' == '' and '$(Electron2DNativePlatform)' != 'MacOS'">$(PkgElectron2D_Native_Linux)/runtimes/$(Electron2DTextNativeRID)/native/libElectron2DTextBreak.so</Electron2DTextNativeLibrary>
+    <Electron2DTextNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DTextNativeLibrary)' == '' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_Native_MacOS)/runtimes/$(Electron2DTextNativeRID)/native/libElectron2DTextBreak.dylib</Electron2DTextNativeLibrary>
     <_Electron2DTextNativeSupported>false</_Electron2DTextNativeSupported>
     <_Electron2DTextNativeSupported Condition="('$(Electron2DNativePlatform)' == '' or '$(Electron2DNativePlatform)' == 'Linux') and ('$(Electron2DTextNativeRID)' == 'linux-x64' or '$(Electron2DTextNativeRID)' == 'linux-arm64')">true</_Electron2DTextNativeSupported>
-    <_Electron2DTextNativeSupported Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativePlatform)' == 'MacOS' and ('$(Electron2DTextNativeRID)' == 'osx-x64' or '$(Electron2DTextNativeRID)' == 'osx-arm64')">true</_Electron2DTextNativeSupported>
+    <_Electron2DTextNativeSupported Condition="'$(Electron2DNativePlatform)' == 'MacOS' and ('$(Electron2DTextNativeRID)' == 'osx-x64' or '$(Electron2DTextNativeRID)' == 'osx-arm64')">true</_Electron2DTextNativeSupported>
     <Electron2DTextNativeEnabled Condition="'$(Electron2DTextNativeEnabled)' == '' and '$(_Electron2DTextNativeSupported)' == 'true'">true</Electron2DTextNativeEnabled>
     <Electron2DTextNativeEnabled Condition="'$(Electron2DTextNativeEnabled)' == ''">false</Electron2DTextNativeEnabled>
     <Electron2DTextNativeJobs Condition="'$(Electron2DTextNativeJobs)' == ''">8</Electron2DTextNativeJobs>
@@ -29,7 +30,7 @@
     <None Include="$(_Electron2DTextNativeLibrary)" Condition="'$(Electron2DTextNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DTextNativeRID)/native/$(_Electron2DTextNativeName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="$(Electron2DBuildNativeFromSource)" PackagePath="runtimes/$(Electron2DTextNativeRID)/native/" Visible="false" />
   </ItemGroup>
   <Target Name="ValidateElectron2DTextNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DTextNativeEnabled)' == 'true'">
-    <Error Condition="'$(_Electron2DTextNativeSupported)' != 'true'" Text="The private text build requires a supported native profile; MacOS source builds require Electron2DBuildNativeFromSource=true. A prebuilt library or toolchain does not override the platform gate." />
+    <Error Condition="'$(_Electron2DTextNativeSupported)' != 'true'" Text="The private text build requires a supported Linux or MacOS native profile. A prebuilt library or toolchain does not override the platform gate." />
     <Error Condition="'$(Electron2DTextNativeLibrary)' != '' and !Exists('$(_Electron2DTextNativeLibrary)')" Text="Electron2DTextNativeLibrary must name an existing library built for $(Electron2DTextNativeRID)." />
     <Error Condition="'$(Electron2DTextNativeLibrary)' == '' and '$(Electron2DTextNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)' and '$(Electron2DTextNativeToolchain)' == ''" Text="Cross-RID text builds require Electron2DTextNativeToolchain (CMake toolchain) or Electron2DTextNativeLibrary (prebuilt target library). The host compiler must not silently produce the wrong architecture." />
     <Error Condition="'$(Electron2DTextNativeLibrary)' == '' and '$(Electron2DTextNativeToolchain)' == '' and (('$(Electron2DNativePlatform)' == 'Linux' and !$([MSBuild]::IsOSPlatform('Linux'))) or ('$(Electron2DNativePlatform)' == 'MacOS' and !$([MSBuild]::IsOSPlatform('OSX'))))" Text="A foreign-OS native build requires an explicit target toolchain or prebuilt library." />

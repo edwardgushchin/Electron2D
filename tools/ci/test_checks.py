@@ -129,7 +129,7 @@ class Checks(unittest.TestCase):
                     rids.matrix()
 
     def test_artifacts_and_rejections(self):
-        for rid in ("linux-x64", "linux-arm64", "win-x86", "android-arm64", "ios-arm64", "browser-wasm"):
+        for rid in ("linux-x64", "linux-arm64", "osx-x64", "osx-arm64", "win-x86", "android-arm64", "ios-arm64", "browser-wasm"):
             row = next(item for item in rids.matrix() if item["rid"] == rid)
             with self.subTest(rid=rid), tempfile.TemporaryDirectory() as directory:
                 output = Path(directory)
@@ -137,6 +137,7 @@ class Checks(unittest.TestCase):
                 packages = [{"Identity": f"SDL3-CS.{platform}{suffix}"} for platform in platforms for suffix in ("", ".Image", ".Shadercross")] if row["platform"] != "Web" else []
                 if row["platform"] in {"Windows", "Linux", "MacOS"}:
                     packages.append({"Identity": "Electron2D.Native.Linux"})
+                    packages.append({"Identity": "Electron2D.Native.MacOS"})
                 profile = {"Properties": {"RuntimeIdentifier": rid, "TargetFramework": row["framework"], "Electron2DNativePlatform": row["platform"]}, "Items": {"PackageReference": packages}}
                 profile_file = output / "profile.json"
                 profile_file.write_text(json.dumps(profile))
@@ -149,6 +150,12 @@ class Checks(unittest.TestCase):
                     header[:6] = b"\x7fELF\x02\x01"
                     struct.pack_into("<H", header, 18, 62 if rid == "linux-x64" else 183)
                     for name in ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"):
+                        (native / name).write_bytes(header)
+                if row["platform"] == "MacOS":
+                    native = output / "runtimes" / rid / "native"
+                    native.mkdir(parents=True)
+                    header = struct.pack("<II", 0xfeedfacf, 0x01000007 if rid == "osx-x64" else 0x0100000c) + bytes(12)
+                    for name in ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib"):
                         (native / name).write_bytes(header)
                 with redirect_stdout(StringIO()):
                     check_rid.check(rid, output)
@@ -169,6 +176,10 @@ class Checks(unittest.TestCase):
                 (output / "libFAudio.so.0").unlink()
                 if row["platform"] == "Linux":
                     (native / "libFAudio.so.0").write_bytes(b"wrong ABI")
+                    with self.assertRaises(ValueError):
+                        check_rid.check(rid, output)
+                if row["platform"] == "MacOS":
+                    (native / "libFAudio.0.dylib").write_bytes(b"wrong ABI")
                     with self.assertRaises(ValueError):
                         check_rid.check(rid, output)
 

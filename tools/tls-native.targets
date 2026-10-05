@@ -2,8 +2,10 @@
   <PropertyGroup>
     <_Electron2DTLSBuild>$(MSBuildThisFileDirectory)../obj/tls-native/$(_Electron2DPrivateNativeRID)</_Electron2DTLSBuild>
   </PropertyGroup>
-  <ItemGroup Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'MacOS'">
     <_Electron2DTLSNative Include="$(_Electron2DTLSBuild)/libElectron2DCrypto.3.dylib;$(_Electron2DTLSBuild)/libElectron2DSSL.3.dylib" />
+    <_Electron2DTLSNative Remove="@(_Electron2DTLSNative)" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
+    <_Electron2DTLSNative Include="$(PkgElectron2D_Native_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/libElectron2DCrypto.3.dylib;$(PkgElectron2D_Native_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/libElectron2DSSL.3.dylib" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
     <None Include="@(_Electron2DTLSNative)" Link="runtimes/$(_Electron2DPrivateNativeRID)/native/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
   </ItemGroup>
   <Target Name="BuildElectron2DTLSNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativePlatform)' == 'MacOS'" Inputs="$(MSBuildThisFileDirectory)native/build_tls.py;$(MSBuildThisFileDirectory)native-package.props" Outputs="@(_Electron2DTLSNative)">

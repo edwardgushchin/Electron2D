@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Ordinary Electron2D source builds restore `Electron2D.Native.Linux` alongside the existing native dependencies. They do not compile the private text, audio or ENet libraries and do not require CMake, Ninja, C/C++ compilers or an installed SDL development package. The managed bindings and ICU data remain inside `Electron2D.dll`. [ADR 0012](decisions/product.md#adr-0012) owns this boundary.
+Ordinary desktop source builds restore `Electron2D.Native.Linux` and `Electron2D.Native.MacOS` alongside the existing native dependencies. They do not compile the private text, audio, ENet or macOS OpenSSL libraries and do not require CMake, Ninja, C/C++ compilers or an installed SDL development package. The managed bindings and ICU data remain inside `Electron2D.dll`. [ADR 0012](decisions/product.md#adr-0012) owns this boundary.
 
 The current development package version is `0.1.0-preview.2`, defined with the SDL version in `tools/native-package.props`; it bumps the native source/ABI adaptation and notice payload together. Its public publication remains a separate gate. Until publication, use the `private-native-package` CI artifact as a local NuGet feed, or prepare a local package with the commands below. Set `RestoreAdditionalProjectSources` to the feed's absolute directory when running `dotnet restore`, `build`, `pack` or `publish`; the normal nuget.org source remains available. A clean checkout cannot restore an unpublished package from nuget.org.
 
@@ -26,7 +26,9 @@ Build and Tests first prepare the package, then restore it from the workflow's l
 
 The same package project accepts `NativePackagePlatform=MacOS` and produces `Electron2D.Native.MacOS` with both `osx-x64` and `osx-arm64`. Matching macOS runners build private ICU, FAudio over the restored SDL core, ENet with statically linked pinned Zstandard, and private OpenSSL 3.6.4. Native assets retain the RID directory. Mach-O checks require the exact CPU, relocatable library identities, expected bridge exports, shared SDL identity, private crypto dependency and no build-machine RPATH. Source archive hashes and original licenses are pinned; OpenSSL loader identities are changed and the dylibs ad-hoc signed after relocation.
 
-This is the native production stage of the full foreign-platform task. Its first target CI run is still required. The runtime's macOS guards and portable CI profile remain until these binaries are connected to executable public text/audio/networking checks and the full suite. Source production or a `.nupkg` alone must not be reported as that integration.
+[Tests run 37281227270](https://github.com/edwardgushchin/Electron2D/actions/runs/37281227270), at `6e464e97e5db208dc4d181f6faf01da5ee238e94`, passed both matching macOS native producers and combined package audits. The runtime now selects these private libraries and the shared SDL core on macOS, and both macOS RID jobs select the full headless suite. The native workflow additionally exercises fresh ProjectReference/NuGet consumers and publishes on both architectures with native tools blocked. This executable integration run remains pending; the successful producer does not establish it.
+
+Private macOS OpenSSL uses OS certificate-chain validation through .NET/Keychain for system-trust clients, with certificate downloads and automatic revocation fetch disabled. OpenSSL then validates its TLS certificate policy and expected name/IP. Custom CA and unsafe-client contracts are unchanged. Linux continues to use its system OpenSSL and CA paths. [TLS](components/tls.md) records the owner-thread and cold-handshake boundary.
 
 The ENet bridge normalizes socket buffers into its engine-owned pointer/length ABI because upstream Windows and Unix structs use different field order. Clock/RNG primitives are selected by platform, and every managed ENet import explicitly uses Cdecl. The Linux wire/codec/fragmentation and warmed allocation regression passed after this change.
 
@@ -46,9 +48,9 @@ From the repository root, on the matching Linux host:
 dotnet restore Electron2D.csproj -r linux-x64 -p:Electron2DBuildNativeFromSource=true
 dotnet msbuild Electron2D.csproj -t:BuildElectron2DNativeAssets -p:RuntimeIdentifier=linux-x64 -p:Configuration=Release -p:Electron2DBuildNativeFromSource=true
 dotnet pack tools/native/Native.csproj -c Release -o bin/native-feed -p:NativePackageRIDs=linux-x64
-RestoreAdditionalProjectSources="$PWD/bin/native-feed" dotnet build Electron2D.csproj -c Release
-python3 -B tools/native/test_consumer.py bin/native-feed
 ```
+
+The current desktop consumer also needs the audited macOS package in the feed. Download both `private-native-package*` artifacts from one matching CI run before running `python3 -B tools/native/test_consumer.py bin/native-feed`; a Linux-only feed cannot restore the whole desktop dependency graph.
 
 The explicit one-RID pack is a local Linux x64 verification artifact. CI merges independently built x64 and ARM64 artifacts and packs both; the default pack rejects an incomplete two-RID bundle. Cross-compiling private source still requires target toolchains or audited prebuilt libraries under the existing per-component properties. `dotnet build -p:Electron2DBuildNativeFromSource=true` also retains the full runtime-plus-native source build.
 

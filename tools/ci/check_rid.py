@@ -50,7 +50,7 @@ def check(rid, output):
     if sdl != wanted:
         raise ValueError(f"Wrong SDL dependency selection: {sdl} != {wanted}")
     native_packages = {name for name in packages if name.startswith("Electron2D.Native.")}
-    expected_native = {"Electron2D.Native.Linux"} if row["platform"] in {"Windows", "Linux", "MacOS"} else set()
+    expected_native = {"Electron2D.Native.Linux", "Electron2D.Native.MacOS"} if row["platform"] in {"Windows", "Linux", "MacOS"} else set()
     if native_packages != expected_native:
         raise ValueError(f"Wrong private native dependency selection: {native_packages} != {expected_native}")
     with (output / "Electron2D.dll").open("rb") as assembly:
@@ -58,16 +58,23 @@ def check(rid, output):
             raise ValueError("Missing managed PE assembly")
     if ET.parse(output / "Electron2D.xml").findtext("./assembly/name") != "Electron2D":
         raise ValueError("Wrong XML documentation assembly")
-    private = {"libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"}
+    linux = {"libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"}
+    macos = {"libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib"}
+    private = linux | macos
     found = {path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file() and path.name in private}
-    wanted = {f"runtimes/{rid}/native/{name}" for name in private} if row["platform"] == "Linux" else set()
+    wanted = {f"runtimes/{rid}/native/{name}" for name in linux if row["platform"] == "Linux"} | {f"runtimes/{rid}/native/{name}" for name in macos if row["platform"] == "MacOS"}
     if found != wanted:
         raise ValueError(f"Wrong private native payload: {found} != {wanted}")
     for file in found:
         header = (output / file).read_bytes()[:20]
-        machine = 62 if rid == "linux-x64" else 183
-        if header[:6] != b"\x7fELF\x02\x01" or struct.unpack_from("<H", header, 18)[0] != machine:
-            raise ValueError(f"Wrong native architecture: {file}")
+        if row["platform"] == "MacOS":
+            machine = 0x01000007 if rid == "osx-x64" else 0x0100000c
+            if header[:4] != b"\xcf\xfa\xed\xfe" or struct.unpack_from("<I", header, 4)[0] != machine:
+                raise ValueError(f"Wrong native architecture: {file}")
+        else:
+            machine = 62 if rid == "linux-x64" else 183
+            if header[:6] != b"\x7fELF\x02\x01" or struct.unpack_from("<H", header, 18)[0] != machine:
+                raise ValueError(f"Wrong native architecture: {file}")
     print(f"{rid}: library, XML, target profile, SDL selection and private native payload passed; execution checked separately ({row['suite']}).")
 
 

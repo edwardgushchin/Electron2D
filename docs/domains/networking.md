@@ -16,6 +16,8 @@ The native Linux x64 low-level transport profile executes IPv4/IPv6 loopback and
 
 ## Verification
 
+macOS private ENet/OpenSSL producers and package audits have passed. The runtime selects those libraries and uses .NET/Keychain system-chain trust before OpenSSL name/purpose verification; full headless/native public consumer execution is now configured but pending. Linux regressions passed after the loader/ABI/trust changes. Windows/mobile/browser native integration remains required work, with no foreign acceptance inferred from this Linux run.
+
 [NetworkingTests](../../tests/Electron2D.Tests/NetworkingTests.cs) verifies real local sockets and wire/queue/lifecycle boundaries plus a public Node/SceneTree request/reply workflow. Prepared buffer/TCP/UDP repeated caller-span operations have 64-cycle managed allocation checks; the component defines what those checks include and exclude. Headless scene execution does not prove rendering, editor/agent-tool support or owner acceptance.
 
 Consumer-defined transports inherit StreamPeer or PacketPeer and override typed span, progress, availability and raw payload capacity hooks. NetworkingTests integrates a one-byte-at-a-time consumer stream with primitive reads/writes and PacketPeerStream, and verifies custom packet bounds without consuming undersized reads. GetMaxPacketSize reports 65507 bytes conservatively for UDP and the configured outgoing payload limit for framed streams.

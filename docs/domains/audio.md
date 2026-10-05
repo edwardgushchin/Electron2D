@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.Linux` dependency in ordinary builds. Full native compilation is explicit through `Electron2DBuildNativeFromSource=true`; [native delivery](../native-packaging.md) records CI production, source receipts, consumer verification and the pending first publication. This changes delivery only, not the public API or platform guards.
+Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -11,7 +11,7 @@ Owns audio resource decoding, independent playback state, non-spatial and spatia
 
 Concrete sources provide immutable prepared PCM; random pools provide borrowed-child selection/configuration and own independent child playback wrappers; playback holds cursors/history; scene nodes borrow streams and own playback/voices; AudioServer owns native output and bus configuration. The runtime embeds internal FAudio#, qoa-fu, NLayer and NVorbis source in Electron2D.dll and ships the pinned native FAudio library sharing SDL3. Private native build/package assets use `runtimes/<RID>/native`, preserved through project references and resolved by the engine under [ADR 0012](../decisions/product.md#adr-0012). Engine teardown closes output without disposing borrowed stream resources or the process singleton.
 
-Linux x64 output and packaging are checked locally. Other platform execution, multichannel speakers and physical listening remain unverified. Multichannel Vorbis decoding and remaining concrete effect resources/DSP, music/composite, loader and editor dependencies are explicit in [coverage](../coverage/index.md). The completed first mixer is no longer their blanket blocker. Recording input executes; no batch audio-export public capability is claimed under [ADR 0090](../decisions/agent-native.md#adr-0090).
+Linux x64 output and packaging are checked locally. Both macOS FAudio/SDL identity and package audits passed; its runtime loading/public consumer/full-suite execution is implemented with target execution pending. Other platforms, multichannel speakers and physical listening retain separate gates. Remaining concrete API dependencies stay explicit in [coverage](../coverage/index.md). Recording input executes; no batch audio-export public capability is claimed under [ADR 0090](../decisions/agent-native.md#adr-0090).
 
 Randomizer resources expose weighted/no-repeat/sequential choice and pitch/volume variation on the existing stream path. Player Play constructs one fresh playback per call using bounded lazy native slots; fresh capture, ownership and callback phases are checked through actual FAudio and the public Window host. Their broader inherited dependencies stay on base-class coverage.
 

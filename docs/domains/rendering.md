@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-05
 
-Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.Linux` dependency in ordinary builds. Full native compilation is explicit through `Electron2DBuildNativeFromSource=true`; [native delivery](../native-packaging.md) records CI production, source receipts, consumer verification and the pending first publication. This changes delivery only, not the public API or platform guards.
+Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
 ## Responsibility
 
@@ -12,7 +12,7 @@ Shader import retains logical bool and boolean vectors/arrays in validated SPIR-
 
 Rendering turns retained scene commands and typed resources into frames for the active root Window and independent offscreen canvases. Runtime source is in `src/Servers/Rendering/`; it compiles into Electron2D.dll. SDL3-CS and owned SDL handles remain internal. DisplayServer exposes supported borrowed operating-system context identities under ADR 0042.
 
-The text component's private native boundary library uses `runtimes/<RID>/native` in build/package assets and project-reference publishes, with engine-owned resolution under [ADR 0012](../decisions/product.md#adr-0012). Its ICU data remains embedded in `Electron2D.dll`; this layout does not widen the native text platform gate.
+The text boundary library uses `runtimes/<RID>/native` with engine-owned resolution under [ADR 0012](../decisions/product.md#adr-0012); ICU data remains embedded in `Electron2D.dll`. macOS native source/package audits passed and the runtime now selects its dylib. First public native execution remains pending; neither this package nor the full headless suite proves macOS rendering.
 
 ## Components and public surface
 

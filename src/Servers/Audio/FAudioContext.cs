@@ -89,7 +89,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal FAudioContext(uint deviceIndex = 0, object? gate = null)
     {
         Gate = gate ?? new();
-        if (!OperatingSystem.IsLinux()) throw new NotSupportedException("Native audio output is currently verified only by the Linux FAudio profile.");
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS()) throw new NotSupportedException("Native audio output requires the packaged Linux or macOS FAudio backend.");
         try
         {
             Check(Create(out _engine, 0, F.FAUDIO_DEFAULT_PROCESSOR, &Allocate, &Free, &Reallocate), "create engine");

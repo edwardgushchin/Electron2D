@@ -49,7 +49,8 @@ jobs:
           java-version: '21'
       - uses: actions/download-artifact@v4
         with:
-          name: private-native-package
+          pattern: private-native-package*
+          merge-multiple: true
           path: bin/native-feed/
       - name: Install target workload
         if: inputs.workload != ''
@@ -62,12 +63,17 @@ jobs:
         if: inputs.workload == 'ios' || inputs.workload == 'tvos'
         run: xcodebuild -version
       - name: Install Linux native prerequisites
-        if: inputs.suite == 'full'
+        if: inputs.suite == 'full' && startsWith(inputs.rid, 'linux-')
         run: |
           sudo apt-get update
           sudo apt-get install -y libzstd1 libssl-dev ffmpeg
           openssl version
           python -c 'import ctypes; ctypes.CDLL("libcrypto.so.3").BIO_s_dgram_pair'
+      - name: Install macOS test oracles
+        if: inputs.suite == 'full' && startsWith(inputs.rid, 'osx-')
+        run: |
+          brew install ffmpeg openssl@3
+          echo "$(brew --prefix openssl@3)/bin" >> "$GITHUB_PATH"
       - name: Build runtime with trimming and AOT analysis
         run: dotnet build Electron2D.csproj -c Release -r "$CI_RID" -p:EnableTrimAnalyzer=true -p:EnableAotAnalyzer=true -o "bin/ci/$CI_RID" --nologo
       - name: Evaluate target profile
@@ -83,7 +89,10 @@ jobs:
         if: inputs.tests && inputs.suite == 'full'
         env:
           DOTNET_TieredCompilation: '0'
-        run: '"$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"'
+        run: |
+          executable="$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"
+          if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
+          "$executable"
       - name: Run portable runtime suite
         if: inputs.tests && inputs.suite == 'portable'
         env:

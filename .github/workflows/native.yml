@@ -62,8 +62,6 @@ jobs:
         run: |
           python3 -B tools/native/test_package.py
           dotnet pack tools/native/Native.csproj -c Release -o bin/native-feed
-      - name: Verify the consumer build without native tools
-        run: python3 -B tools/native/test_consumer.py bin/native-feed
       - uses: actions/upload-artifact@v4
         with:
           name: private-native-package
@@ -121,3 +119,22 @@ jobs:
           name: private-native-package-macos
           path: bin/native-feed/*.nupkg
           if-no-files-found: error
+  consumer:
+    needs: [package, package_macos]
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, macos-26, macos-26-intel]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: private-native-package*
+          merge-multiple: true
+          path: bin/native-feed/
+      - name: Verify public native consumers with native tools blocked
+        run: python3 -B tools/native/test_consumer.py bin/native-feed

@@ -32,6 +32,7 @@
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' and '$(Electron2DNativePlatform)' != 'Web'">
     <PackageReference Include="Electron2D.Native.Linux" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
+    <PackageReference Include="Electron2D.Native.MacOS" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
     <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.1.201" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="14.2.1.201" />

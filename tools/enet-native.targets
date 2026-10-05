@@ -4,9 +4,10 @@
     <Electron2DENetNativeRID Condition="'$(Electron2DENetNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</Electron2DENetNativeRID>
     <_Electron2DENetName>libElectron2DENet.so</_Electron2DENetName>
     <_Electron2DENetName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DENet.dylib</_Electron2DENetName>
-    <Electron2DENetNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DENetNativeLibrary)' == ''">$(PkgElectron2D_Native_Linux)/runtimes/$(Electron2DENetNativeRID)/native/libElectron2DENet.so</Electron2DENetNativeLibrary>
+    <Electron2DENetNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DENetNativeLibrary)' == '' and '$(Electron2DNativePlatform)' != 'MacOS'">$(PkgElectron2D_Native_Linux)/runtimes/$(Electron2DENetNativeRID)/native/libElectron2DENet.so</Electron2DENetNativeLibrary>
+    <Electron2DENetNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DENetNativeLibrary)' == '' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_Native_MacOS)/runtimes/$(Electron2DENetNativeRID)/native/libElectron2DENet.dylib</Electron2DENetNativeLibrary>
     <Electron2DENetNativeEnabled Condition="'$(Electron2DENetNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'Linux' and ('$(Electron2DENetNativeRID)' == 'linux-x64' or '$(Electron2DENetNativeRID)' == 'linux-arm64')">true</Electron2DENetNativeEnabled>
-    <Electron2DENetNativeEnabled Condition="'$(Electron2DENetNativeEnabled)' == '' and '$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativePlatform)' == 'MacOS' and ('$(Electron2DENetNativeRID)' == 'osx-x64' or '$(Electron2DENetNativeRID)' == 'osx-arm64')">true</Electron2DENetNativeEnabled>
+    <Electron2DENetNativeEnabled Condition="'$(Electron2DENetNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'MacOS' and ('$(Electron2DENetNativeRID)' == 'osx-x64' or '$(Electron2DENetNativeRID)' == 'osx-arm64')">true</Electron2DENetNativeEnabled>
     <Electron2DENetNativeEnabled Condition="'$(Electron2DENetNativeEnabled)' == ''">false</Electron2DENetNativeEnabled>
     <Electron2DENetNativeJobs Condition="'$(Electron2DENetNativeJobs)' == ''">4</Electron2DENetNativeJobs>
     <_Electron2DENetSource>$(MSBuildThisFileDirectory)../src/Vendor/ENet</_Electron2DENetSource>
@@ -21,7 +22,7 @@
     <None Include="$(_Electron2DENetLibrary)" Condition="'$(Electron2DENetNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DENetNativeRID)/native/$(_Electron2DENetName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="$(Electron2DBuildNativeFromSource)" PackagePath="runtimes/$(Electron2DENetNativeRID)/native/" Visible="false" />
   </ItemGroup>
   <Target Name="ValidateElectron2DENetNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DENetNativeEnabled)' == 'true'">
-    <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and ('$(Electron2DNativePlatform)' != 'MacOS' or '$(Electron2DBuildNativeFromSource)' != 'true')" Text="Native ENet builds require Linux or an explicit MacOS source build; foreign profiles must not package host libraries." />
+    <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and '$(Electron2DNativePlatform)' != 'MacOS'" Text="Native ENet builds require Linux or MacOS; foreign profiles must not package host libraries." />
     <Error Condition="('$(Electron2DNativePlatform)' == 'Linux' and '$(Electron2DENetNativeRID)' != 'linux-x64' and '$(Electron2DENetNativeRID)' != 'linux-arm64') or ('$(Electron2DNativePlatform)' == 'MacOS' and '$(Electron2DENetNativeRID)' != 'osx-x64' and '$(Electron2DENetNativeRID)' != 'osx-arm64')" Text="The ENet RID must match its selected Linux or MacOS native profile." />
     <Error Condition="'$(Electron2DENetNativeLibrary)' != '' and !Exists('$(_Electron2DENetLibrary)')" Text="Electron2DENetNativeLibrary must name an existing target library." />
     <Error Condition="'$(Electron2DENetNativeLibrary)' == '' and '$(Electron2DENetNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)' and '$(Electron2DENetNativeToolchain)' == ''" Text="Cross-RID enet builds require a target CMake toolchain or prebuilt target library." />

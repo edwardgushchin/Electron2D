@@ -1,6 +1,7 @@
 """Exercise fresh project and NuGet consumers while every native compiler is blocked."""
 
 import os
+import platform
 import hashlib
 import json
 import uuid
@@ -43,17 +44,24 @@ def run(args, cwd, environment):
 
 
 def check(feed):
-    package, = feed.glob("Electron2D.Native.Linux.*.nupkg")
-    with ZipFile(package) as archive:
-        manifest = json.loads(archive.read("native-manifest.json"))
-        expected = {f"runtimes/{rid}/native/{name}" for rid, receipt in manifest.items() for name in receipt["files"]}
-        actual = {name for name in archive.namelist() if name.startswith("runtimes/")}
-        if actual != expected or any(name.endswith(".dll") for name in archive.namelist()):
-            raise RuntimeError("Native package contains wrong asset paths or a managed assembly")
-        for rid, receipt in manifest.items():
-            for name, digest in receipt["files"].items():
-                if hashlib.sha256(archive.read(f"runtimes/{rid}/native/{name}")).hexdigest() != digest:
-                    raise RuntimeError("Native package manifest does not match its binaries")
+    rid = ("osx-arm64" if platform.machine() == "arm64" else "osx-x64") if platform.system() == "Darwin" else "linux-x64"
+    manifests = {}
+    for package in feed.glob("Electron2D.Native.*.nupkg"):
+        with ZipFile(package) as archive:
+            manifest = json.loads(archive.read("native-manifest.json"))
+            expected = {f"runtimes/{target}/native/{name}" for target, receipt in manifest.items() for name in receipt["files"]}
+            actual = {name for name in archive.namelist() if name.startswith("runtimes/")}
+            if actual != expected or any(name.endswith(".dll") for name in archive.namelist()):
+                raise RuntimeError("Native package contains wrong asset paths or a managed assembly")
+            for target, receipt in manifest.items():
+                if target in manifests:
+                    raise RuntimeError("Native feed contains duplicate RID payloads")
+                manifests[target] = receipt
+                for name, digest in receipt["files"].items():
+                    if hashlib.sha256(archive.read(f"runtimes/{target}/native/{name}")).hexdigest() != digest:
+                        raise RuntimeError("Native package manifest does not match its binaries")
+    if rid not in manifests:
+        raise RuntimeError("The feed does not contain the current native consumer RID")
     version = "0.0.0-native-consumer-" + uuid.uuid4().hex[:8]
     dotnet = shutil.which("dotnet")
     with tempfile.TemporaryDirectory(prefix="electron2d-native-consumer-") as directory:
@@ -92,10 +100,10 @@ def check(feed):
             environment["RestoreAdditionalProjectSources"] = str(engine_feed)
             run([dotnet, "run", "-c", "Release", "--project", "Consumer.csproj"], app, environment)
             output = work / (kind + "-publish")
-            run([dotnet, "publish", "Consumer.csproj", "-c", "Release", "-r", "linux-x64",
+            run([dotnet, "publish", "Consumer.csproj", "-c", "Release", "-r", rid,
                  "--self-contained", "true", "-o", str(output), "--nologo"], app, environment)
-            for name in ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so"):
-                if (output / name).exists() or not (output / "runtimes/linux-x64/native" / name).is_file():
+            for name in manifests[rid]["files"]:
+                if (output / name).exists() or not (output / "runtimes" / rid / "native" / name).is_file():
                     raise RuntimeError(f"Private native directory lost: {kind}/{name}")
             run([str(output / "Consumer")], work, environment)
         print("Fresh source build, project/NuGet consumers and self-contained publishes passed with native tools blocked")

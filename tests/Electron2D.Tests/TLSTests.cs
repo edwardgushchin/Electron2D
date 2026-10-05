@@ -13,6 +13,7 @@ internal static class TLSTests
 {
     internal static void Run()
     {
+        TLSSystemTrustTests.Run();
         using var authorityKey = RSA.Create(2048);
         var authorityRequest = new CertificateRequest("CN=Electron2D test root", authorityKey, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         authorityRequest.CertificateExtensions.Add(new X509BasicConstraintsExtension(true, false, 0, true));

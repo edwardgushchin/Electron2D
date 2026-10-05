@@ -48,7 +48,7 @@ def check(publish: Path) -> None:
     runtime = [p for p in packages if p.startswith("runtimepack.Microsoft.NETCore.App.Runtime.")]
     assert runtime == ["runtimepack.Microsoft.NETCore.App.Runtime.linux-x64/10.0.1"], f"Unreviewed runtime pack: {runtime}"
     private_packages = {p for p in packages if p.startswith("Electron2D.Native.")}
-    assert not private_packages or private_packages == {"Electron2D.Native.Linux/0.1.0-preview.2"}, f"Unreviewed private native package: {private_packages}"
+    assert not private_packages or private_packages == {"Electron2D.Native.Linux/0.1.0-preview.2", "Electron2D.Native.MacOS/0.1.0-preview.2"}, f"Unreviewed private native package: {private_packages}"
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
     elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
