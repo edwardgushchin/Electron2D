@@ -68,10 +68,8 @@ Comece pelo exemplo «Janela e entrada». Estes comandos são para Linux x64 com
 ### Requisitos
 
 - [SDK do .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0) e Git.
-- CMake 3.20 ou mais recente, Ninja e compiladores C/C++ com suporte a C++17.
-- Um pacote de desenvolvimento do SDL3 que inclua os cabeçalhos e a configuração do SDL3 para o CMake.
 
-Os componentes nativos de texto e áudio são compilados junto com o motor.
+Os componentes nativos privados são restaurados como dependências do NuGet. Consulte a [distribuição dos pacotes nativos](docs/native-packaging.md) para a disponibilidade do primeiro pacote e as instruções de recompilação nativa completa.
 
 ### Compilar e executar
 

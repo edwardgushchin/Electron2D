@@ -1,6 +1,8 @@
 # NativeLibraries
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
+
+Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.Linux` dependency in ordinary builds. Full native compilation is explicit through `Electron2DBuildNativeFromSource=true`; [native delivery](../native-packaging.md) records CI production, source receipts, consumer verification and the pending first publication. This changes delivery only, not the public API or platform guards.
 
 - Declaration: `internal static class NativeLibraries`
 - Source: [NativeLibraries.cs](../../src/Properties/NativeLibraries.cs)
@@ -11,7 +13,7 @@ Last updated: 2026-10-04
 
 Installs Electron2D.dll's native import resolver on Linux before binding calls. The pinned packages contain aliases that can otherwise load two SDL core copies with inconsistent object ownership. A lazy process-lifetime core handle uses the canonical libSDL3.so.0 SONAME. There is intentionally no public setup or unload API.
 
-The private `libElectron2DTextBreak.so` and `libFAudio.so.0` live under `runtimes/<RID>/native` beside the engine assembly. Resolution uses the executing runtime identifier and the assembly directory, independently of the working directory. Ordinary .NET resolution remains available when NuGet has flattened RID-specific native assets. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
+The private `libElectron2DTextBreak.so`, `libFAudio.so.0` and `libElectron2DENet.so` live under `runtimes/<RID>/native` beneath the application base directory. Resolution uses the executing runtime identifier and `AppContext.BaseDirectory`, independently of the working directory and managed assembly location. The native package targets preserve this directory for project and package consumers; ordinary .NET resolution remains available as a fallback. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
 
 ## Member summary
 

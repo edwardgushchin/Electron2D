@@ -35,6 +35,8 @@ The license texts above are published together in `licence/`. The comparison dat
 
 ## Native files in the current self-contained Linux publish
 
+The private text/audio/ENet payload is delivered through `Electron2D.Native.Linux` 0.1.0-preview.1 in ordinary builds. Its source-rebuild profile uses the pinned SDL3-CS.Linux binary and official SDL 3.4.16 headers; no second SDL library is compiled or shipped. The private package includes the same applicable notices and publishes them under `licence/`. Initial public package publication is pending.
+
 This inventory comes from a self-contained `linux-x64` HostExample publish on 2026-10-04. It contains 68 ELF files, including the application host and `createdump`; versioned and unversioned `.so` names are separate delivered files. Every ELF name is covered by exactly one row below. The runtime pack is .NET 10.0.1, with SDL3-CS.Linux 3.4.16, Image 3.4.6.9, Shadercross 3.0.0.11, MonoGame.Library.FreeType 2.13.2.5 HarfBuzzSharp.NativeAssets.Linux 14.2.1.201 and the private ICU 78.3 text backend plus FAudio 26.10. Other application names replace `HostExample` in the first row.
 
 | Published native filenames, linux-x64 | Component and applicable license text |

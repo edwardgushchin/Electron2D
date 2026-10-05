@@ -68,10 +68,8 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 ### 所需工具
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) 和 Git。
-- CMake 3.20 或更高版本、Ninja，以及支持 C++17 的 C/C++ 编译器。
-- SDL3 开发包，包含头文件和 SDL3 的 CMake 配置。
 
-文本和音频的原生组件会随引擎一起构建。
+私有原生组件作为 NuGet 依赖项还原。首个包的可用性和完整原生重建说明见[原生包交付](docs/native-packaging.md)。
 
 ### 构建与运行
 

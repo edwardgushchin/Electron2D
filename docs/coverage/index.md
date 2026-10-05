@@ -1,6 +1,8 @@
 # API coverage register
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
+
+[Private native delivery](../native-packaging.md) now restores text/audio/ENet assets instead of compiling them during ordinary managed builds. Linux x64 fresh-source and ProjectReference/NuGet consumer smoke checks pass with native tools blocked; ARM64 execution, the new GitHub workflow and the first public package publication remain unverified. No API/member coverage state changes with this packaging slice.
 
 The [native ENet slice](../components/enet.md) closes all 92 own host/peer/multiplayer class/member rows, with real IPv4/IPv6 UDP/DTLS channels, five codecs, server/client/mesh routing and existing SceneMultiplayer consumers. Native tests cover delivery metadata, fragmentation/loss retry, bounded queues, ownership/refusal/tuning and a separate stock Unix ENet socket process. Prepared active/idle intervals allocate zero managed bytes; native allocations, routed/browser/foreign/human/rendered/editor acceptance remain separate.
 

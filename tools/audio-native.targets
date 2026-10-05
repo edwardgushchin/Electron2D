@@ -2,6 +2,7 @@
   <PropertyGroup>
     <Electron2DAudioNativeRID Condition="'$(Electron2DAudioNativeRID)' == '' and '$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</Electron2DAudioNativeRID>
     <Electron2DAudioNativeRID Condition="'$(Electron2DAudioNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</Electron2DAudioNativeRID>
+    <Electron2DAudioNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DAudioNativeLibrary)' == ''">$(PkgElectron2D_Native_Linux)/runtimes/$(Electron2DAudioNativeRID)/native/libFAudio.so.0</Electron2DAudioNativeLibrary>
     <Electron2DAudioNativeEnabled Condition="'$(Electron2DAudioNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'Linux' and ('$(Electron2DAudioNativeRID)' == 'linux-x64' or '$(Electron2DAudioNativeRID)' == 'linux-arm64')">true</Electron2DAudioNativeEnabled>
     <Electron2DAudioNativeEnabled Condition="'$(Electron2DAudioNativeEnabled)' == ''">false</Electron2DAudioNativeEnabled>
     <Electron2DAudioNativeJobs Condition="'$(Electron2DAudioNativeJobs)' == ''">4</Electron2DAudioNativeJobs>
@@ -13,8 +14,8 @@
     <_Electron2DAudioToolchainArg Condition="'$(Electron2DAudioNativeToolchain)' != ''">-DCMAKE_TOOLCHAIN_FILE=&quot;$(Electron2DAudioNativeToolchain)&quot;</_Electron2DAudioToolchainArg>
   </PropertyGroup>
   <ItemGroup>
-    <_Electron2DAudioInput Include="$(_Electron2DAudioSource)/**/*.c;$(_Electron2DAudioSource)/**/*.h;$(_Electron2DAudioSource)/**/CMakeLists.txt;$(_Electron2DAudioSource)/manifest.json;$(_Electron2DAudioWrapper)/**/*;$(MSBuildThisFileFullPath)" />
-    <None Include="$(_Electron2DAudioLibrary)" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DAudioNativeRID)/native/libFAudio.so.0" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="true" PackagePath="runtimes/$(Electron2DAudioNativeRID)/native/" Visible="false" />
+    <_Electron2DAudioInput Include="$(_Electron2DAudioSource)/**/*.c;$(_Electron2DAudioSource)/**/*.h;$(_Electron2DAudioSource)/**/CMakeLists.txt;$(_Electron2DAudioSource)/manifest.json;$(_Electron2DAudioWrapper)/**/*;$(MSBuildThisFileDirectory)native-package.props;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DAudioLibrary)" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DAudioNativeRID)/native/libFAudio.so.0" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="$(Electron2DBuildNativeFromSource)" PackagePath="runtimes/$(Electron2DAudioNativeRID)/native/" Visible="false" />
   </ItemGroup>
   <Target Name="ValidateElectron2DAudioNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'">
     <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' or ('$(Electron2DAudioNativeRID)' != 'linux-x64' and '$(Electron2DAudioNativeRID)' != 'linux-arm64')" Text="The current audio native profile requires Linux x64/ARM64; a foreign profile must not package a host library." />
@@ -23,7 +24,7 @@
     <Error Condition="'$(Electron2DAudioNativeLibrary)' == '' and !$([MSBuild]::IsOSPlatform('Linux')) and '$(Electron2DAudioNativeToolchain)' == ''" Text="Building Linux audio on another OS requires an explicit CMake toolchain or prebuilt target library." />
   </Target>
   <Target Name="BuildElectron2DAudioNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" DependsOnTargets="ValidateElectron2DAudioNative" Condition="'$(Electron2DAudioNativeEnabled)' == 'true' and '$(Electron2DAudioNativeLibrary)' == ''" Inputs="@(_Electron2DAudioInput);$(Electron2DAudioNativeToolchain)" Outputs="$(_Electron2DAudioLibrary)">
-    <Exec Command="cmake -S &quot;$(_Electron2DAudioWrapper)&quot; -B &quot;$(_Electron2DAudioBuild)-output&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SDL3=ON -DXNASONG=OFF -DBUILD_TESTS=OFF -DBUILD_UTILS=OFF $(_Electron2DAudioToolchainArg)" />
+    <Exec Command="cmake -S &quot;$(_Electron2DAudioWrapper)&quot; -B &quot;$(_Electron2DAudioBuild)-output&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SDL3=ON -DELECTRON2D_SDL_VERSION=$(Electron2DSDLVersion) -DSDL3_LIBRARIES=&quot;$(PkgSDL3-CS_Linux)/runtimes/$(Electron2DAudioNativeRID)/native/libSDL3.so.0&quot; -DXNASONG=OFF -DBUILD_TESTS=OFF -DBUILD_UTILS=OFF $(_Electron2DAudioToolchainArg)" />
     <Exec Command="cmake --build &quot;$(_Electron2DAudioBuild)-output&quot; --target FAudio-shared --config Release --parallel $(Electron2DAudioNativeJobs)" />
     <Copy SourceFiles="$(_Electron2DAudioBuild)-output/libFAudio.so.0" DestinationFiles="$(_Electron2DAudioLibrary)" />
   </Target>

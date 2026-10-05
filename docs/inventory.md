@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-05
 
+Private text/audio/ENet libraries are owned by the `Electron2D.Native.Linux` package in ordinary builds; [native delivery](native-packaging.md) documents the explicit source-build mode and its verification limits. This adds no runtime C# type or managed backend assembly.
+
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
 Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, Android TV, tvOS, and Web; its editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. All currently implemented production rows in this inventory are runtime types belonging to `Electron2D.dll`. Approved managed SDL3-CS bindings are internal source in that assembly under ADR 0012; native libraries remain platform deployment files. The future first-party editor is a separate executable consumer under ADR 0027 and has no implemented production rows yet.

@@ -1,0 +1,69 @@
+name: Private native package
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rid: linux-x64
+            runner: ubuntu-24.04
+          - rid: linux-arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    container: ubuntu:22.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Install native build prerequisites
+        run: |
+          apt-get update
+          apt-get install -y git python3 ca-certificates curl build-essential cmake ninja-build pkg-config zlib1g-dev libzstd-dev libicu70 libssl3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore the pinned native SDL package
+        run: dotnet restore Electron2D.csproj -r "${{ matrix.rid }}" -p:Electron2DBuildNativeFromSource=true
+      - name: Build and audit private native libraries
+        run: >-
+          dotnet msbuild Electron2D.csproj -t:BuildElectron2DNativeAssets
+          -p:RuntimeIdentifier=${{ matrix.rid }} -p:Configuration=Release
+          -p:Electron2DBuildNativeFromSource=true -p:Electron2DTextNativeJobs=2
+          -p:Electron2DAudioNativeJobs=2 -p:Electron2DENetNativeJobs=2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: private-native-${{ matrix.rid }}
+          path: bin/native-artifacts/
+          if-no-files-found: error
+  package:
+    needs: native
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: private-native-linux-*
+          merge-multiple: true
+          path: bin/native-artifacts/
+      - name: Pack both native architectures
+        run: dotnet pack tools/native/Native.csproj -c Release -o bin/native-feed
+      - name: Verify the consumer build without native tools
+        run: python3 -B tools/native/test_consumer.py bin/native-feed
+      - uses: actions/upload-artifact@v4
+        with:
+          name: private-native-package
+          path: bin/native-feed/*.nupkg
+          if-no-files-found: error

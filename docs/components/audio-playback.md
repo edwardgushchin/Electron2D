@@ -1,6 +1,8 @@
 # Audio playback and routed buses
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
+
+Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.Linux` dependency in ordinary builds. Full native compilation is explicit through `Electron2DBuildNativeFromSource=true`; [native delivery](../native-packaging.md) records CI production, source receipts, consumer verification and the pending first publication. This changes delivery only, not the public API or platform guards.
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

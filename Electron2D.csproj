@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="tools/native-package.props" />
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <TargetFramework Condition="'$(RuntimeIdentifier)' == 'android-arm' or '$(RuntimeIdentifier)' == 'android-arm64' or '$(RuntimeIdentifier)' == 'android-x86' or '$(RuntimeIdentifier)' == 'android-x64'">net10.0-android</TargetFramework>
@@ -30,22 +31,23 @@
     <EmbeddedResource Include="src/Scene/Theme/Icons/*.svg" LogicalName="Electron2D.Icons.%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' and '$(Electron2DNativePlatform)' != 'Web'">
+    <PackageReference Include="Electron2D.Native.Linux" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
     <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.1.201" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="14.2.1.201" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="14.2.1.201" />
-    <PackageReference Include="SDL3-CS.Windows" Version="3.4.16.0" />
+    <PackageReference Include="SDL3-CS.Windows" Version="$(Electron2DSDLVersion)" />
     <PackageReference Include="SDL3-CS.Windows.Image" Version="3.4.6.9" />
     <PackageReference Include="SDL3-CS.Windows.Shadercross" Version="3.0.0.11" />
-    <PackageReference Include="SDL3-CS.MacOS" Version="3.4.16.0" />
+    <PackageReference Include="SDL3-CS.MacOS" Version="$(Electron2DSDLVersion)" />
     <PackageReference Include="SDL3-CS.MacOS.Image" Version="3.4.6.9" />
     <PackageReference Include="SDL3-CS.MacOS.Shadercross" Version="3.0.0.11" />
-    <PackageReference Include="SDL3-CS.Linux" Version="3.4.16.0" />
+    <PackageReference Include="SDL3-CS.Linux" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" />
     <PackageReference Include="SDL3-CS.Linux.Image" Version="3.4.6.9" />
     <PackageReference Include="SDL3-CS.Linux.Shadercross" Version="3.0.0.11" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android' or '$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'">
-    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform)" Version="3.4.16.0" />
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform)" Version="$(Electron2DSDLVersion)" />
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.9" />
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.11" />
   </ItemGroup>
@@ -60,7 +62,7 @@
     <AndroidJavaSource Remove="**/obj/**/*.java" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="licence/*" CopyToPublishDirectory="Always" />
+    <None Update="licence/*" CopyToPublishDirectory="Always" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' or '$(Electron2DNativePlatform)' == 'Web' or '$(TargetFramework)' != 'net10.0'" />
     <None Update="licence/ReferenceData-LICENSE.txt" CopyToPublishDirectory="Never" />
   </ItemGroup>
   <Target Name="ValidateElectron2DNativeRID" BeforeTargets="Restore;Build;Publish" Condition="'$(Electron2DNativePlatform)' == ''">
@@ -69,4 +71,5 @@
   <Import Project="tools/text-native.targets" />
   <Import Project="tools/audio-native.targets" />
   <Import Project="tools/enet-native.targets" />
+  <Import Project="tools/native-package.targets" />
 </Project>

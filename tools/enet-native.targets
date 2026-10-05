@@ -2,6 +2,7 @@
   <PropertyGroup>
     <Electron2DENetNativeRID Condition="'$(Electron2DENetNativeRID)' == '' and '$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</Electron2DENetNativeRID>
     <Electron2DENetNativeRID Condition="'$(Electron2DENetNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</Electron2DENetNativeRID>
+    <Electron2DENetNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DENetNativeLibrary)' == ''">$(PkgElectron2D_Native_Linux)/runtimes/$(Electron2DENetNativeRID)/native/libElectron2DENet.so</Electron2DENetNativeLibrary>
     <Electron2DENetNativeEnabled Condition="'$(Electron2DENetNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'Linux' and ('$(Electron2DENetNativeRID)' == 'linux-x64' or '$(Electron2DENetNativeRID)' == 'linux-arm64')">true</Electron2DENetNativeEnabled>
     <Electron2DENetNativeEnabled Condition="'$(Electron2DENetNativeEnabled)' == ''">false</Electron2DENetNativeEnabled>
     <Electron2DENetNativeJobs Condition="'$(Electron2DENetNativeJobs)' == ''">4</Electron2DENetNativeJobs>
@@ -13,8 +14,8 @@
     <_Electron2DENetToolchainArg Condition="'$(Electron2DENetNativeToolchain)' != ''">-DCMAKE_TOOLCHAIN_FILE=&quot;$(Electron2DENetNativeToolchain)&quot;</_Electron2DENetToolchainArg>
   </PropertyGroup>
   <ItemGroup>
-    <_Electron2DENetInput Include="$(_Electron2DENetSource)/**/*.c;$(_Electron2DENetSource)/**/*.h;$(_Electron2DENetSource)/**/CMakeLists.txt;$(_Electron2DENetSource)/manifest.json;$(_Electron2DENetWrapper)/**/*;$(MSBuildThisFileDirectory)../src/Vendor/FastLZ/**/*;$(MSBuildThisFileFullPath)" />
-    <None Include="$(_Electron2DENetLibrary)" Condition="'$(Electron2DENetNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DENetNativeRID)/native/libElectron2DENet.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="true" PackagePath="runtimes/$(Electron2DENetNativeRID)/native/" Visible="false" />
+    <_Electron2DENetInput Include="$(_Electron2DENetSource)/**/*.c;$(_Electron2DENetSource)/**/*.h;$(_Electron2DENetSource)/**/CMakeLists.txt;$(_Electron2DENetSource)/manifest.json;$(_Electron2DENetWrapper)/**/*;$(MSBuildThisFileDirectory)../src/Vendor/FastLZ/**/*;$(MSBuildThisFileDirectory)native-package.props;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DENetLibrary)" Condition="'$(Electron2DENetNativeEnabled)' == 'true'" Link="runtimes/$(Electron2DENetNativeRID)/native/libElectron2DENet.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="$(Electron2DBuildNativeFromSource)" PackagePath="runtimes/$(Electron2DENetNativeRID)/native/" Visible="false" />
   </ItemGroup>
   <Target Name="ValidateElectron2DENetNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DENetNativeEnabled)' == 'true'">
     <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' or ('$(Electron2DENetNativeRID)' != 'linux-x64' and '$(Electron2DENetNativeRID)' != 'linux-arm64')" Text="The current enet native profile requires Linux x64/ARM64; a foreign profile must not package a host library." />

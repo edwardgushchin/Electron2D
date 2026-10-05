@@ -1,6 +1,8 @@
 # Text shaping and canvas fonts
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
+
+Private text/audio/ENet binaries now come from the versioned `Electron2D.Native.Linux` dependency in ordinary builds. Full native compilation is explicit through `Electron2DBuildNativeFromSource=true`; [native delivery](../native-packaging.md) records CI production, source receipts, consumer verification and the pending first publication. This changes delivery only, not the public API or platform guards.
 
 The text component owns dynamic font resources, Unicode paragraph layout and glyph textures. It consumes the existing Resource graph, theme lookup, ImageTexture and retained canvas rather than adding a second graphics stack. [ADR 0046](../decisions/rendering.md#adr-0046) records the precise native bridge and its executable reasons; [ADR 0012](../decisions/product.md#adr-0012) defines packaging and source ownership.
 

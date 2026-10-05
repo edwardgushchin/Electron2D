@@ -68,10 +68,8 @@ Empieza con el ejemplo «Ventana y entrada». Estos comandos son para Linux x64 
 ### Requisitos
 
 - [SDK de .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0) y Git.
-- CMake 3.20 o posterior, Ninja y compiladores C/C++ con soporte para C++17.
-- Un paquete de desarrollo de SDL3 que incluya las cabeceras y la configuración de SDL3 para CMake.
 
-Los componentes nativos de texto y audio se compilan junto con el motor.
+Los componentes nativos privados se restauran como dependencias de NuGet. Consulta la [distribución de paquetes nativos](docs/native-packaging.md) para conocer la disponibilidad del primer paquete y las instrucciones de recompilación nativa completa.
 
 ### Compilar y ejecutar
 

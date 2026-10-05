@@ -68,10 +68,8 @@ Start with the “Window and input” example. These commands are for Linux x64 
 ### Requirements
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) and Git.
-- CMake 3.20 or later, Ninja, and C/C++ compilers with C++17 support.
-- An SDL3 development package containing the headers and SDL3 CMake configuration.
 
-The native text and audio components are built along with the engine.
+Private native components are restored as NuGet dependencies. See [native package delivery](docs/native-packaging.md) for the initial package availability and full native rebuild instructions.
 
 ### Build and run
 

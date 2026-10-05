@@ -14,6 +14,10 @@ This matrix records execution on hosts and devices available during this audit. 
 | iOS/tvOS | Not run: [RID CI](../.github/workflows/build.yml) checks library compilation separately | Not run | Not run | Not run |
 | Windows/macOS | Not run: no native host in this environment | Not run | Not run | Not run |
 
+## Private native package delivery
+
+[Native delivery](native-packaging.md) now separates ordinary managed builds from full native compilation. Local Linux x64 fresh-source and ProjectReference/NuGet consumers restore the three private libraries, execute public text/audio/ENet smoke checks and publish self-contained applications with CMake/Ninja/C/C++ commands blocked. These are executable packaging checks, not renderer, hardware audio or foreign-host acceptance. The new CI producer builds x64/ARM64 artifacts and packs both; it has not yet run on GitHub, and the first public native package publication is pending. Other native-platform obligations below remain open.
+
 ## Required native dependency builds
 
 [ADR 0012](decisions/product.md#adr-0012) requires target-specific native dependency builds for every accepted runtime RID under [ADR 0021](decisions/product.md#adr-0021). This is deferred implementation work. The current Linux/Wayland release gate does not waive it, and the rendering/physics observations above do not establish text or audio support.
@@ -54,7 +58,7 @@ The Linux Wayland gate in [ADR 0021](decisions/product.md#adr-0021) remains the 
 | `ios-arm64`, `tvos-arm64` | Target library with trimming/AOT analysis | Unsigned test application build only. The owner has no physical devices; signing/device execution is not checked |
 | `browser-wasm` | WASM target library with trimming/AOT analysis | Reflection-disabled contract app publish and real WebAssembly execution in Chromium |
 
-Linux jobs use Ubuntu 26.04, whose system OpenSSL supports the datagram BIO needed by DTLS; an explicit symbol preflight prevents falling back to an older backend. The earlier Ubuntu 24.04 run [37241595991](https://github.com/edwardgushchin/Electron2D/actions/runs/37241595991) failed because system OpenSSL lacked `BIO_s_dgram_pair`. SDL 3.4.16 is built for headless checks, and zlib/Zstandard development packages support the private ENet build. These checks do not exercise Wayland/X11, rendering or hardware audio.
+Linux jobs use Ubuntu 26.04, whose system OpenSSL supports the datagram BIO needed by DTLS; an explicit symbol preflight prevents falling back to an older backend. The earlier Ubuntu 24.04 run [37241595991](https://github.com/edwardgushchin/Electron2D/actions/runs/37241595991) failed because system OpenSSL lacked `BIO_s_dgram_pair`. Linux runtime jobs now consume the private native NuGet artifact and the pinned SDL package; source compilation and zlib/Zstandard development prerequisites belong to the separate native producer. These checks do not exercise Wayland/X11, rendering or hardware audio.
 
 Trimming and AOT analyzers are enabled again, including Apple library builds. The earlier Apple run [37241418897](https://github.com/edwardgushchin/Electron2D/actions/runs/37241418897) reported IL2026 in ThemeDB and JSON/ConfigFile. ThemeDB now uses a generated compiled native-type catalog; typed JSON/configuration/settings use generated built-in schemas or explicit `JsonTypeInfo<T>` for application models when JSON reflection is disabled. The native resolver uses `AppContext.BaseDirectory`, including single-file NativeAOT apps. Successful analysis alone is not execution evidence.
 

@@ -53,6 +53,8 @@ class Checks(unittest.TestCase):
                 output = Path(directory)
                 platforms = {"Windows", "Linux", "MacOS"} if row["platform"] in {"Windows", "Linux", "MacOS"} else {row["platform"]}
                 packages = [{"Identity": f"SDL3-CS.{platform}{suffix}"} for platform in platforms for suffix in ("", ".Image", ".Shadercross")] if row["platform"] != "Web" else []
+                if row["platform"] in {"Windows", "Linux", "MacOS"}:
+                    packages.append({"Identity": "Electron2D.Native.Linux"})
                 profile = {"Properties": {"RuntimeIdentifier": rid, "TargetFramework": row["framework"], "Electron2DNativePlatform": row["platform"]}, "Items": {"PackageReference": packages}}
                 profile_file = output / "profile.json"
                 profile_file.write_text(json.dumps(profile))

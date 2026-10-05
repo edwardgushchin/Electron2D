@@ -1,0 +1,20 @@
+<Project>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)../licence/*" Link="licence/%(Filename)%(Extension)" CopyToPublishDirectory="Always" Pack="false" Visible="false" />
+  </ItemGroup>
+  <!-- Preserve the private library directory for project and package consumers. -->
+  <Target Name="Electron2DNativeBuildLayout" AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <NativeCopyLocalItems Update="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.NuGetPackageId)' == 'Electron2D.Native.Linux' and '$(RuntimeIdentifier)' != ''">
+        <DestinationSubDirectory>runtimes/$(RuntimeIdentifier)/native/</DestinationSubDirectory>
+      </NativeCopyLocalItems>
+    </ItemGroup>
+  </Target>
+  <Target Name="Electron2DNativePublishLayout" AfterTargets="_ResolveCopyLocalAssetsForPublish;_ComputeResolvedCopyLocalPublishAssets">
+    <ItemGroup>
+      <_ResolvedCopyLocalPublishAssets Update="@(_ResolvedCopyLocalPublishAssets)" Condition="'%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)' == 'Electron2D.Native.Linux' and '$(RuntimeIdentifier)' != ''">
+        <DestinationSubDirectory>runtimes/$(RuntimeIdentifier)/native/</DestinationSubDirectory>
+      </_ResolvedCopyLocalPublishAssets>
+    </ItemGroup>
+  </Target>
+</Project>

@@ -21,6 +21,10 @@ def check(rid, output):
     wanted = {f"SDL3-CS.{platform}{suffix}" for platform in platforms for suffix in ("", ".Image", ".Shadercross")} if row["platform"] != "Web" else set()
     if sdl != wanted:
         raise ValueError(f"Wrong SDL dependency selection: {sdl} != {wanted}")
+    native_packages = {name for name in packages if name.startswith("Electron2D.Native.")}
+    expected_native = {"Electron2D.Native.Linux"} if row["platform"] in {"Windows", "Linux", "MacOS"} else set()
+    if native_packages != expected_native:
+        raise ValueError(f"Wrong private native dependency selection: {native_packages} != {expected_native}")
     with (output / "Electron2D.dll").open("rb") as assembly:
         if assembly.read(2) != b"MZ":
             raise ValueError("Missing managed PE assembly")
