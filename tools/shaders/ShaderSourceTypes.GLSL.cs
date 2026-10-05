@@ -24,7 +24,7 @@ internal static unsafe partial class ShaderSourceTypes
                 if (end < 0) throw new ArgumentException("Malformed compiler reflection string.");
                 var value = Encoding.UTF8.GetString(bytes[..end]);
                 if (op == 7) strings.Add(instruction[1], value);
-                else if (value == "NonSemantic.Shader.DebugInfo.100") debugSet = instruction[1];
+                else if (value is "NonSemantic.Shader.DebugInfo.100" or "NonSemantic.Shader.DebugInfo.101" or "NonSemantic.Shader.DebugInfo.102") debugSet = instruction[1];
             }
             if (op == 43 && count == 4) constants[instruction[2]] = instruction[3];
             if (op == 59 && instruction[3] == 2) variables.Add(instruction[2]);

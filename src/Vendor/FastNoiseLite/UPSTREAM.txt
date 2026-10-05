@@ -1,6 +1,6 @@
-FastNoiseLite C# source, version 1.1.0
+FastNoiseLite C# source, version 1.1.1
 Repository: https://github.com/Auburn/FastNoiseLite
-Commit: f7af54b56518aa659e1cf9fb103c0b6e36a833d9
+Commit: 7ccfbc16eb1c932568f177d63a9ba51d89bbe516
 Source: CSharp/FastNoiseLite.cs
 License: MIT (see LICENSE)
 

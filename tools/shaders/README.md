@@ -9,7 +9,7 @@ SPIR-V material interface. Games load the resulting bytes through
 The packaged compiler toolchain currently targets Linux x64. Building it requires
 Python 3.12 or later, CMake, Ninja, a C++17 compiler and network access for the
 first download. Source revisions and archive SHA-256 hashes are pinned in
-`toolchain.lock.json`: glslang 16.4.0, SPIRV-Tools v2026.3 and their matching
+`toolchain.lock.json`: glslang 16.6.0, SPIRV-Tools v2026.4 and their matching
 SPIRV-Headers. These are build tools, outside the runtime project.
 
 ```sh
@@ -49,7 +49,7 @@ artifacts. The runtime never invokes this tool or starts source compilers.
 
 ## Verified source and bytecode profiles
 
-- HLSL uses the pinned `SDL3-CS.Linux.Shadercross` 3.0.0.11 package: DXC's effective
+- HLSL uses the pinned `SDL3-CS.Linux.Shadercross` 3.0.0.13 package: DXC's effective
   language version is HLSL 2021, with `ps_6_0` for fragments and `vs_6_0` for the
   internal vertex program, entry point `main`. The pinned native implementation
   enables SPIR-V output, flattened resource arrays, preserved bindings and
@@ -152,3 +152,5 @@ Verify a published importer and its build integration with:
 python3 -B tools/shaders/check.py --tool /path/to/published/importer/Electron2D.ShaderImport
 python3 -B tools/shaders/check_build.py --tool /path/to/published/importer/Electron2D.ShaderImport
 ```
+
+GLSL source-type reflection recognizes NonSemantic.Shader.DebugInfo 100, 101 and 102 emitted by the pinned glslang 16.6.0. The import checks cover boolean scalars, vectors and arrays as well as malformed artifact metadata and atomic replacement.

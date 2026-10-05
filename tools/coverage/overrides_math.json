@@ -2723,7 +2723,7 @@
         "class:Geometry2D"
       ],
       "state": "Implemented",
-      "reason": "All 24 applicable pure geometry methods and 15 enum declarations are implemented in the typed static Geometry API; polygon operations use internally compiled Clipper2 1.5.4. Managed Linux tests cover clipping, holes, open lines, offsets and boundaries; other-platform and exhaustive numeric parity remain unverified."
+      "reason": "All 24 applicable pure geometry methods and 15 enum declarations are implemented in the typed static Geometry API; polygon operations use internally compiled Clipper2 2.0.1. Managed Linux tests cover clipping, holes, open lines, offsets and boundaries; other-platform and exhaustive numeric parity remain unverified."
     },
     {
       "godot": [

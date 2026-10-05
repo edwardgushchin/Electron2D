@@ -5,19 +5,19 @@ include(FetchContent)
 
 FetchContent_Declare(Zlib
     GIT_REPOSITORY https://github.com/madler/zlib.git
-    GIT_TAG 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf)
+    GIT_TAG da607da739fa6047df13e66a2af6b8bec7c2a498)
 FetchContent_Declare(Png
     GIT_REPOSITORY https://github.com/pnggroup/libpng.git
-    GIT_TAG ed217e3e601d8e462f7fd1e04bed43ac42212429)
+    GIT_TAG cd952f49f95bb27154ae77dbb103032d95f6e580)
 FetchContent_Declare(Brotli
     GIT_REPOSITORY https://github.com/google/brotli.git
-    GIT_TAG ed738e842d2fbdf2d6459e39267a633c4a9b2f5d)
+    GIT_TAG 028fb5a23661f123017c060daa546b55cf4bde29)
 FetchContent_Declare(HarfBuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
-    GIT_TAG 4a1d891c6317d2c83e5f3c2607ec5f5ccedffcde)
+    GIT_TAG eb033319fc2ebe723597fa497d4bb4331bab8b6b)
 FetchContent_Declare(FreeType
     GIT_REPOSITORY https://github.com/freetype/freetype.git
-    GIT_TAG 42608f77f20749dd6ddc9e0536788eaad70ea4b5)
+    GIT_TAG 0a0221a1347e2f1e07c395263540026e9a0aa7c7)
 
 set(BUILD_SHARED_LIBS OFF)
 set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)

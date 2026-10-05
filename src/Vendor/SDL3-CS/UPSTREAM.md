@@ -1,8 +1,8 @@
 # SDL3-CS core, shadercross and image binding source
 
 Source: https://github.com/edwardgushchin/SDL3-CS
-Release: v3.4.16.1
-Commit: f2d8303906a1eb2591e77a155b37cab2171ee7d2
+Release: v3.4.18.0
+Commit: 8b89846448328879a15a4da7bd433a05001fa008
 
 The complete upstream SDL3-CS/SDL, SDL3-CS/ShaderCross and SDL3-CS/Image trees are compiled into Electron2D.dll.
 Local adaptation makes top-level binding types internal and suppresses CS0649 on

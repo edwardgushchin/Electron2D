@@ -8,7 +8,7 @@ The text component owns dynamic font resources, Unicode paragraph layout and gly
 
 The private native boundary library is packaged under `runtimes/<RID>/native` as a Linux `.so` or macOS `.dylib`; project references preserve that directory. [NativeLibraries](../classes/NativeLibraries.md) resolves it independently of the working directory. ICU data stays in the one managed assembly. Both macOS source/package audits passed; its newly enabled executable native text/full-suite run remains pending.
 
-macOS font imports select private FreeType 2.13.3 with pinned static Brotli/PNG/zlib and HarfBuzz auto-hinting dependencies. Its producer executes the actual embedded WOFF2 decoder check before staging. The preceding upstream macOS FreeType build disabled Brotli and failed the first public font consumer; the replacement still requires target runtime verification.
+macOS font imports select private FreeType 2.14.3 with pinned static Brotli/PNG/zlib and HarfBuzz auto-hinting dependencies. Its producer executes the actual embedded WOFF2 decoder check before staging. The preceding upstream macOS FreeType build disabled Brotli and failed the first public font consumer; the replacement still requires target runtime verification.
 
 ## Resources and runtime flow
 

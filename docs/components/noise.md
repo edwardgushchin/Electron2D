@@ -1,6 +1,6 @@
 # Noise component
 
-Last updated: 2026-09-23
+Last updated: 2026-10-05
 
 ## Scope and owned types
 
@@ -16,7 +16,7 @@ The component provides an executable abstract [Noise](../classes/Noise.md) resou
 
 ## Dependencies and invariants
 
-The base sampler uses managed `Resource`, `Vector2` and `Image`. FastNoiseLite compiles a pinned internal C# algorithm into Electron2D.dll; its public surface contains only Electron2D types. NoiseTexture uses the existing Texture snapshot/rendering path and managed Gradient/Image operations; it adds no backend dependency. Output images are caller-owned resources. Invalid dimensions or skirt values fail before sampling; nonfinite samples fail before publication. Derived state must coordinate concurrent mutations with image sampling. A derived type that supports Resource duplication supplies explicit copying hooks under ADR 0013. NoiseTexture borrows both sources, retries concurrent invalidation, and rejects recursive generation.
+The base sampler uses managed `Resource`, `Vector2` and `Image`. FastNoiseLite compiles the pinned 1.1.1 internal C# algorithm into Electron2D.dll; its public surface contains only Electron2D types. NoiseTexture uses the existing Texture snapshot/rendering path and managed Gradient/Image operations; it adds no backend dependency. Output images are caller-owned resources. Invalid dimensions or skirt values fail before sampling; nonfinite samples fail before publication. Derived state must coordinate concurrent mutations with image sampling. A derived type that supports Resource duplication supplies explicit copying hooks under ADR 0013. NoiseTexture borrows both sources, retries concurrent invalidation, and rejects recursive generation.
 
 ## Current limits and verification
 

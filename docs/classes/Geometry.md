@@ -1,6 +1,6 @@
 # Geometry
 
-Last updated: 2026-09-26
+Last updated: 2026-10-05
 
 **Inherits:** —
 
@@ -142,7 +142,7 @@ Returns three indices into the input contour per triangle, in counterclockwise o
 
 ## Dependencies and verification
 
-Only Core math, the .NET base library and internally compiled [Clipper2 1.5.4](../../src/Vendor/Clipper2/UPSTREAM.txt) are used; no scene, renderer, physics or native backend is required. `GeometryTests.Run` checks raster orientation/endpoints, integer extremes, projections, nearest pairs, circle boundaries, crossings, polygon interior/boundaries/winding, convex hull ordering and decomposition, atlas layout and limits, both triangulation methods, segment/circle contact, all polygon boolean operations, holes, open lines, offsets, caps and invalid inputs. `CanvasPolygonTests.Run` checks drawing reuse and zero-allocation redraw. These managed checks pass on Linux/.NET 8. Native canvas polygon pixel checks pass on Wayland for compatibility and GPU backends, including HLSL/GLSL fixtures; other platforms and exhaustive numeric parity with the reference remain unverified.
+Only Core math, the .NET base library and internally compiled [Clipper2 2.0.1](../../src/Vendor/Clipper2/UPSTREAM.txt) are used; no scene, renderer, physics or native backend is required. `GeometryTests.Run` checks raster orientation/endpoints, integer extremes, projections, nearest pairs, circle boundaries, crossings, polygon interior/boundaries/winding, convex hull ordering and decomposition, atlas layout and limits, both triangulation methods, segment/circle contact, all polygon boolean operations, holes, open lines, offsets, caps and invalid inputs. `CanvasPolygonTests.Run` checks drawing reuse and zero-allocation redraw. These managed checks pass on Linux/.NET 8. Native canvas polygon pixel checks pass on Wayland for compatibility and GPU backends, including HLSL/GLSL fixtures; other platforms and exhaustive numeric parity with the reference remain unverified.
 
 ## Decisions
 

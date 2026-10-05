@@ -73,7 +73,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 
 ## Dependency direction
 
-- Core depends on the .NET Base Class Library and internally compiled Clipper2 for polygon clipping and offsets; it calls the static Localization-domain `TranslationServer` from `ElectronObject.Tr`/`TrN`.
+- Core depends on the .NET Base Class Library and internally compiled Clipper2 2.0.1 for polygon clipping and offsets; it calls the static Localization-domain `TranslationServer` from `ElectronObject.Tr`/`TrN`.
 - JSON documents use `System.Text.Json` and the existing typed configuration converters; this does not make JSON nodes valid configuration values.
 - Configuration files use `System.Text.Json`, operating-system file APIs, PBKDF2-HMAC-SHA-256, and AES-256-GCM; they do not depend on an asset loader or platform host.
 - File access uses `ProjectSettings` path resolution/root snapshots, .NET file/directory/drive/compression/hash/cryptography primitives, native filesystem identity/case/capacity and volume metadata, native Linux/macOS xattrs, and Windows alternate data streams. It shares the internal atomic replacement helper with `ConfigFile` and does not depend on a pack/resource loader.

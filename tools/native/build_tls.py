@@ -11,8 +11,8 @@ import subprocess
 import tarfile
 import urllib.request
 
-VERSION = "3.6.4"
-SHA256 = "9bffaa1ad1e07b354c21bd3324ec02fa15579f45a7d0494b3e74bc449b7333ef"
+VERSION = "3.6.5"
+SHA256 = "a2157c2830efdec3788939b00c9b0638306d3f0bbb76dc4832ee503bb397df98"
 TARGETS = {"osx-x64": ("x86_64", "darwin64-x86_64-cc"),
            "osx-arm64": ("arm64", "darwin64-arm64-cc"),
            "win-x86": ("x86", "electron2d-win-x86"),

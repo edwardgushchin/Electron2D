@@ -34,23 +34,23 @@
     <PackageReference Include="Electron2D.Native.Linux" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
     <PackageReference Include="Electron2D.Native.MacOS" Version="[$(Electron2DNativePackageVersion)]" GeneratePathProperty="true" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
     <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.1.201" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="14.2.1.201" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="14.2.1.201" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.1.301" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="14.2.1.301" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="14.2.1.301" />
     <PackageReference Include="SDL3-CS.Windows" Version="$(Electron2DSDLVersion)" />
-    <PackageReference Include="SDL3-CS.Windows.Image" Version="3.4.6.9" />
-    <PackageReference Include="SDL3-CS.Windows.Shadercross" Version="3.0.0.11" />
+    <PackageReference Include="SDL3-CS.Windows.Image" Version="3.4.6.12" />
+    <PackageReference Include="SDL3-CS.Windows.Shadercross" Version="3.0.0.13" />
     <PackageReference Include="SDL3-CS.MacOS" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" />
-    <PackageReference Include="SDL3-CS.MacOS.Image" Version="3.4.6.9" />
-    <PackageReference Include="SDL3-CS.MacOS.Shadercross" Version="3.0.0.11" />
+    <PackageReference Include="SDL3-CS.MacOS.Image" Version="3.4.6.12" />
+    <PackageReference Include="SDL3-CS.MacOS.Shadercross" Version="3.0.0.13" />
     <PackageReference Include="SDL3-CS.Linux" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" />
-    <PackageReference Include="SDL3-CS.Linux.Image" Version="3.4.6.9" />
-    <PackageReference Include="SDL3-CS.Linux.Shadercross" Version="3.0.0.11" />
+    <PackageReference Include="SDL3-CS.Linux.Image" Version="3.4.6.12" />
+    <PackageReference Include="SDL3-CS.Linux.Shadercross" Version="3.0.0.13" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android' or '$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'">
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform)" Version="$(Electron2DSDLVersion)" />
-    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.9" />
-    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.11" />
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.12" />
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.13" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
     <!-- The AAR already supplies SDL JNI binaries; the RID payload is the same library. -->

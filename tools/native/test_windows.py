@@ -11,7 +11,7 @@ import package
 
 class WindowsNativeTests(unittest.TestCase):
     def test_restored_sdl_architectures_exports_and_import_libraries(self):
-        packages = Path(os.environ.get("NUGET_PACKAGES", Path.home() / ".nuget/packages")) / "sdl3-cs.windows/3.4.16/runtimes"
+        packages = Path(os.environ.get("NUGET_PACKAGES", Path.home() / ".nuget/packages")) / "sdl3-cs.windows/3.4.18/runtimes"
         with tempfile.TemporaryDirectory() as directory:
             for rid in windows.MACHINES:
                 path = packages / rid / "native/SDL3.dll"

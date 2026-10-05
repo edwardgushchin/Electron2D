@@ -306,7 +306,7 @@ void main() { gl_Position=vec4((position+uv)/frame.size,0,1); tint=color; data=c
         shutil.copytree(args.tool.resolve().parent, sandbox)
         validator = sandbox / 'toolchain/bin/spirv-val'
         previous = output.read_bytes()
-        for replacement, diagnostic in [('#!/bin/sh\nprintf "SPIRV-Tools v2026.30 fake\\n"\n', 'reported version'),
+        for replacement, diagnostic in [('#!/bin/sh\nprintf "SPIRV-Tools v2026.40 fake\\n"\n', 'reported version'),
                                          (None, 'is missing')]:
             validator.unlink()
             if replacement is not None:

@@ -1,6 +1,6 @@
 # Geometry values component
 
-Last updated: 2026-09-27
+Last updated: 2026-10-05
 
 ## Scope
 
@@ -37,7 +37,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 
 - Canonical scalar [`Mathf`](../classes/Mathf.md), plus .NET globalization, serialization, and interop-layout primitives.
 - Existing typed `ConfigFile`, property descriptor, packed-scene, and `Entity` integration boundaries.
-- No public external numerics dependency or native library. Clipper2 1.5.4 C# source is [compiled internally](../../src/Vendor/Clipper2/UPSTREAM.txt) into the single runtime assembly.
+- No public external numerics dependency or native library. Clipper2 2.0.1 C# source is [compiled internally](../../src/Vendor/Clipper2/UPSTREAM.txt) into the single runtime assembly.
 
 ## Invariants
 
@@ -61,7 +61,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 
 Core values are executable with type-specific semantic coverage. `Rect2`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2i` and `Rect2i` have audited value contracts. `Vector3` now has all 84 applicable members and its type row audited; `Vector3i` now has all 56 declared members and its type row audited; `Vector4` now has all 65 applicable members and its type row audited; `Vector4i` now has all 52 declared members and its type row audited, completing the applicable member audit for all six vector types. The `Vector3` length/movement and octahedral packing slice closed four method rows after fixing source-order rounding, the 1e-5 proximity threshold and out-of-square fold clamping. A core-value audit then closed 34 constructor/constant/component/operator rows with IEEE, copy, ordering and integer-to-float boundary checks. The componentwise scalar audit closed 22 more Vector3 rows, correcting NaN-sensitive MinAxisIndex branches while retaining Mathf rounding, clamp and approximate-equality adaptations. The final geometry/interpolation audit closed the remaining 19 methods and type row; internal matrix-row rotation avoids a public 3D Basis, and source-order reflection also corrects the Vector2 sibling. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms. The Vector2 reference audit covers all 82 members, including integer scalar conversion, the default length limit, the corrected 1e-5 MoveToward proximity boundary and the accepted midpoint-to-even rounding boundary under ADRs 0033/0034. The Transform reference audit covers all 43 declared members, including the zero target default for `LookingAt` and C# integer scalar conversion under ADR 0029.
 
-`Geometry` implements twenty-four pure raster, nearest-point, polygon, hull, decomposition, triangulation, atlas, intersection, clipping and offset methods. Its polygon triangulation also serves retained canvas drawing through caller-owned scratch buffers. Convex-part merging adapts PolyPartition ([notice and license](../../licence/PolyPartition-LICENSE.txt)). The declared geometry class is complete under the accepted typed C# projection; clipping and offsets use internally compiled Clipper2 1.5.4 with five decimal digits of internal precision.
+`Geometry` implements twenty-four pure raster, nearest-point, polygon, hull, decomposition, triangulation, atlas, intersection, clipping and offset methods. Its polygon triangulation also serves retained canvas drawing through caller-owned scratch buffers. Convex-part merging adapts PolyPartition ([notice and license](../../licence/PolyPartition-LICENSE.txt)). The declared geometry class is complete under the accepted typed C# projection; clipping and offsets use internally compiled Clipper2 2.0.1 with five decimal digits of internal precision.
 
 `Rect2` now has all 27 mapped members and its type row audited against the pinned floating-point rectangle and ADRs 0025/0029/0034. Source-order `Abs` and growth calculations preserve IEEE edge behavior; half-open containment and border-aware overlap preserve the source's rejection order when NaN is present. `Rect2i` now has all 23 mapped members and its type row audited against the pinned integer rectangle and ADRs 0033/0035. Its `Abs` selects the negative size before position addition, preserving wrapped positions and the explicit `int.MinValue` error. Both rectangle types have typed conversion, strict persistence, packed-scene and warmed allocation checks on Linux/.NET 8.
 

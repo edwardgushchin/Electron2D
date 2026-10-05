@@ -215,7 +215,7 @@ jobs:
         if: steps.native_cache.outputs.cache-hit != 'true'
         run: |
           $packages = if ($env:NUGET_PACKAGES) { $env:NUGET_PACKAGES } else { Join-Path $HOME '.nuget/packages' }
-          $sdl = Join-Path $packages 'sdl3-cs.windows/3.4.16/runtimes/${{ matrix.rid }}/native/SDL3.dll'
+          $sdl = Join-Path $packages 'sdl3-cs.windows/3.4.18/runtimes/${{ matrix.rid }}/native/SDL3.dll'
           python -B tools/native/build_windows.py '${{ matrix.rid }}' $sdl bin/native-artifacts
       - name: Validate current source receipts and binary identities
         run: python -B tools/native/package.py check bin/native-artifacts --rids "${{ matrix.rid }}" --platform Windows

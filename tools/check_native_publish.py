@@ -44,14 +44,14 @@ def check(rid: str, publish: Path) -> None:
     assert (publish / host).is_file() and (publish / "Electron2D.dll").is_file(), "Missing application host or engine"
     packages = json.loads((publish / "HostExample.deps.json").read_text())["libraries"]
     expected = {
-        f"SDL3-CS.{platform}/3.4.16",
-        f"SDL3-CS.{platform}.Image/3.4.6.9",
-        f"SDL3-CS.{platform}.Shadercross/3.0.0.11",
+        f"SDL3-CS.{platform}/3.4.18",
+        f"SDL3-CS.{platform}.Image/3.4.6.12",
+        f"SDL3-CS.{platform}.Shadercross/3.0.0.13",
     }
     actual = {name for name in packages if name.startswith("SDL3-CS.")}
     text_platform = {"Windows": "Win32", "MacOS": "macOS", "Linux": "Linux"}[platform]
     assert "MonoGame.Library.FreeType/2.13.2.5" in packages, "Missing pinned native FreeType package"
-    assert f"HarfBuzzSharp.NativeAssets.{text_platform}/14.2.1.201" in packages, "Missing pinned native HarfBuzz package"
+    assert f"HarfBuzzSharp.NativeAssets.{text_platform}/14.2.1.301" in packages, "Missing pinned native HarfBuzz package"
     assert actual == expected, f"Wrong SDL packages: {actual}"
     assert f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/10.0.1" in packages, "Missing self-contained runtime pack"
     assert all((publish / name).is_file() for name in names), f"Missing native render/text files: {names}"

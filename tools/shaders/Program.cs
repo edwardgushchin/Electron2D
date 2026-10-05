@@ -16,7 +16,7 @@ var debugTemporary = temporary + ".debug";
 try
 {
     Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null;
-    await RequireVersion("spirv-val", "SPIRV-Tools v2026.3");
+    await RequireVersion("spirv-val", "SPIRV-Tools v2026.4");
     switch (IOPath.GetExtension(input).ToLowerInvariant())
     {
         case ".hlsl":
@@ -28,7 +28,7 @@ try
             File.WriteAllBytes(temporary, code);
             break;
         case ".glsl":
-            await RequireVersion("glslangValidator", "Glslang Version: 11:16.4.0");
+            await RequireVersion("glslangValidator", "Glslang Version: 11:16.6.0");
             Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
                 args[1] == "fragment" ? "frag" : "vert", "-e", "main", "-o", temporary, input));
             Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",

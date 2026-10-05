@@ -1,6 +1,6 @@
 # FastNoiseLite
 
-Last updated: 2026-09-23
+Last updated: 2026-10-05
 
 **Inherits:** [Noise](Noise.md) → [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-`FastNoiseLite` is a concrete CPU noise generator for one- and two-dimensional sampling. It uses a pinned, internally compiled C# FastNoiseLite 1.1.0 implementation. No backend type enters the public API. Its samples feed inherited `GetImage`/`GetSeamlessImage` and a borrowed [NoiseTexture](NoiseTexture.md) directly. Each instance owns an independent base generator and domain-warp generator.
+`FastNoiseLite` is a concrete CPU noise generator for one- and two-dimensional sampling. It uses a pinned, internally compiled C# FastNoiseLite 1.1.1 implementation. No backend type enters the public API. Its samples feed inherited `GetImage`/`GetSeamlessImage` and a borrowed [NoiseTexture](NoiseTexture.md) directly. Each instance owns an independent base generator and domain-warp generator.
 
 ## Constructor and modes
 

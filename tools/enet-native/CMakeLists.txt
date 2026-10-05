@@ -7,7 +7,7 @@ if(APPLE OR WIN32 OR ANDROID OR EMSCRIPTEN)
   if(NOT TARGET ZLIB::ZLIB AND (WIN32 OR ANDROID OR EMSCRIPTEN))
     FetchContent_Declare(Zlib
       GIT_REPOSITORY https://github.com/madler/zlib.git
-      GIT_TAG 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf)
+      GIT_TAG da607da739fa6047df13e66a2af6b8bec7c2a498)
     set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(Zlib)
     add_library(ZLIB::ZLIB ALIAS zlibstatic)

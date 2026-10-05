@@ -10,11 +10,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGES = {
-    "SDL3-CS.Linux/3.4.16",
-    "SDL3-CS.Linux.Image/3.4.6.9",
-    "SDL3-CS.Linux.Shadercross/3.0.0.11",
+    "SDL3-CS.Linux/3.4.18",
+    "SDL3-CS.Linux.Image/3.4.6.12",
+    "SDL3-CS.Linux.Shadercross/3.0.0.13",
     "MonoGame.Library.FreeType/2.13.2.5",
-    "HarfBuzzSharp.NativeAssets.Linux/14.2.1.201",
+    "HarfBuzzSharp.NativeAssets.Linux/14.2.1.301",
 }
 NATIVE_GROUPS = {
     "dotnet": ("createdump", "libSystem.*.so", "libclrgc.so", "libclrjit.so",
@@ -48,7 +48,7 @@ def check(publish: Path) -> None:
     runtime = [p for p in packages if p.startswith("runtimepack.Microsoft.NETCore.App.Runtime.")]
     assert runtime == ["runtimepack.Microsoft.NETCore.App.Runtime.linux-x64/10.0.1"], f"Unreviewed runtime pack: {runtime}"
     private_packages = {p for p in packages if p.startswith("Electron2D.Native.")}
-    assert not private_packages or private_packages == {"Electron2D.Native.Linux/0.1.0-preview.3", "Electron2D.Native.MacOS/0.1.0-preview.3"}, f"Unreviewed private native package: {private_packages}"
+    assert not private_packages or private_packages == {"Electron2D.Native.Linux/0.1.0-preview.4", "Electron2D.Native.MacOS/0.1.0-preview.4"}, f"Unreviewed private native package: {private_packages}"
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
     elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
@@ -66,7 +66,7 @@ def check(publish: Path) -> None:
     source = ROOT / "licence"
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
-    assert len(expected) == 56, f"Expected 56 license and notice files, found {len(expected)}"
+    assert len(expected) == 65, f"Expected 65 license and notice files, found {len(expected)}"
     assert {p.name for p in delivered.iterdir() if p.is_file()} == expected, "Unexpected published license files"
     for name in expected:
         assert (delivered / name).read_bytes() == (source / name).read_bytes(), name

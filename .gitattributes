@@ -1,4 +1,5 @@
 src/Vendor/SDL3-CS/** -whitespace
+src/Vendor/Clipper2/** -whitespace
 src/Vendor/Box2D.NET/** -whitespace
 src/Vendor/UnicodeText/** -whitespace
 src/Vendor/ICU/** -whitespace
