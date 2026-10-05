@@ -14,7 +14,7 @@ internal sealed unsafe partial class FAudioContext
     [LibraryImport("FAudio", EntryPoint = "e2d_audio_select_output")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int SelectOutput(nint audio, uint device);
-    internal double BufferedOutputLatency => Volatile.Read(ref _outputLatency);
+    internal double BufferedOutputLatency => AtomicFloatingPoint.Read(ref _outputLatency);
     internal void SetOutput(string name)
     {
         EnsureOwner(); var id = SDL.AudioDeviceDefaultPlayback;
@@ -38,7 +38,7 @@ internal sealed unsafe partial class FAudioContext
                 throw new InvalidOperationException("Audio output selection failed: " + SDL.GetError());
             var latency = OutputLatency(_engine);
             if (!double.IsFinite(latency) || latency < 0) throw new InvalidOperationException("Audio output buffering is unavailable: " + SDL.GetError());
-            Volatile.Write(ref _outputLatency, latency);
+            AtomicFloatingPoint.Write(ref _outputLatency, latency);
         }
         finally
         {

@@ -12,4 +12,6 @@ Datagram construction raises native send/receive buffer sizes to at least 65536 
 
 ## Verification
 
+ReceiveDatagram restores the reusable SocketAddress.Size to the socket family's maximum before ReceiveFrom overwrites it with the native result. UDPServer, unconnected PacketPeerUDP and plain ENet receives share this path. NetworkingTests deliberately shrinks IPv4/IPv6 address sizes before two real receives and verifies payload/sender metadata; connected UDP reads use their retained remote endpoint instead.
+
 NetworkingTests exercises this helper through native loopback transports and caller-span packet cycles. See [ADR 0094](../decisions/networking.md#adr-0094) for limits and [the component](../components/networking.md) for measured boundaries.

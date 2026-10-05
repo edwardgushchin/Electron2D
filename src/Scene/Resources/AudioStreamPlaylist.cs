@@ -68,9 +68,10 @@ public sealed class AudioStreamPlaylist : AudioStream
     private bool _shuffle, _loop = true;
     /// <summary>Gets or sets the outgoing track fade duration in seconds.</summary>
     /// <value>0.3 initially; finite nonnegative seconds. Zero stops outgoing audio immediately.</value>
+    /// <remarks>Live scalar reads and writes remain atomic on 32-bit hosts.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Time is negative or nonfinite.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
-    public double FadeTime { get { ThrowIfDisposed(); return Volatile.Read(ref _fade); } set { ThrowIfDisposed(); if (!double.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value)); Volatile.Write(ref _fade, value); } }
+    public double FadeTime { get { ThrowIfDisposed(); return AtomicFloatingPoint.Read(ref _fade); } set { ThrowIfDisposed(); if (!double.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value)); AtomicFloatingPoint.Write(ref _fade, value); } }
     /// <summary>Gets or sets whether starts and cycle wraps generate a fresh track permutation.</summary>
     /// <value>False initially. A live edit affects the next order generation.</value>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>

@@ -33,7 +33,7 @@ internal static partial class RenderingRuntimeTests
             RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frame++;
-                if (frame == 1) File.WriteAllBytes($"/tmp/electron2d-nine-patch-{backend}.png", pixels.SavePNGToBuffer());
+                if (frame == 1) File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-nine-patch-{backend}.png"), pixels.SavePNGToBuffer());
                 for (var v = 0; v < 3; v++) for (var h = 0; h < 3; h++) for (var y = 0; y < 9; y++) for (var x = 0; x < 11; x++)
                             {
                                 var inCenter = x >= 1 && x < 10 && y >= 1 && y < 8;

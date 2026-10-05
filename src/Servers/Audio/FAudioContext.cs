@@ -41,7 +41,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
             if (context._closing || context._switchingOutput) new Span<float>(output, context.QuantumFrames * context.Channels).Clear();
             else
             {
-                var latency = OutputLatency(engine); if (double.IsFinite(latency) && latency >= 0) Volatile.Write(ref context._outputLatency, latency);
+                var latency = OutputLatency(engine); if (double.IsFinite(latency) && latency >= 0) AtomicFloatingPoint.Write(ref context._outputLatency, latency);
                 foreach (var bus in context._busEffects.Values) bus.Activity.Begin(context.QuantumFrames);
                 foreach (var source in context._sources) if (context._busInputs.TryGetValue(source.ActiveSend, out var bus)) source.MarkActivity(bus.Activity);
                 foreach (var sample in context._samples) { sample.CheckSource(); if (context._busInputs.TryGetValue(sample.ActiveSend, out var bus)) sample.MarkActivity(bus.Activity); }

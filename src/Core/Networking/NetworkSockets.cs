@@ -54,6 +54,12 @@ internal static partial class NetworkSockets
         if (socket.AddressFamily == AddressFamily.InterNetworkV6 && address.AddressFamily == AddressFamily.InterNetwork) address = address.MapToIPv6();
         return new(address, port);
     }
+    internal static int ReceiveDatagram(Socket socket, Span<byte> buffer, SocketAddress address)
+    {
+        // ReceiveFrom replaces Size with the native result; reuse must restore the socket family's capacity.
+        address.Size = SocketAddress.GetMaximumAddressSize(socket.AddressFamily);
+        return socket.ReceiveFrom(buffer, SocketFlags.None, address);
+    }
     internal static string Host(IPAddress address) => (address.IsIPv4MappedToIPv6 ? address.MapToIPv4() : address).ToString();
     internal static bool Busy(SocketError error) => error is SocketError.WouldBlock or SocketError.InProgress or SocketError.AlreadyInProgress;
 }

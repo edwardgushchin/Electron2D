@@ -59,7 +59,7 @@ internal static partial class RenderingRuntimeTests
                         default:
                             Check(h.Value == 25 && v.Value == 100, "Noneditable sliders ignore native wheel input while vertical clicks map the top edge to the upper endpoint.");
                             Pixel(pixels, 137, 12, Colors.Cyan); Pixel(pixels, 139, 100, Colors.Yellow);
-                            File.WriteAllBytes($"/tmp/electron2d-sliders-{backend}.png", pixels.SavePNGToBuffer()); window.Tree!.Quit(); break;
+                            File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-sliders-{backend}.png"), pixels.SavePNGToBuffer()); window.Tree!.Quit(); break;
                     }
                 }
                 catch (Exception error) { throw new InvalidOperationException($"Slider native {backend}, frame {frames}.", error); }

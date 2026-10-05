@@ -108,6 +108,9 @@ class Checks(unittest.TestCase):
         self.assertTrue(run_android.result("I/Electron2DTests: RESULT current PASS", "current"))
         with self.assertRaises(RuntimeError):
             run_android.result("E/Electron2DTests: RESULT current FAIL exception", "current")
+        with self.assertRaisesRegex(RuntimeError, "resampling fixture"):
+            run_android.result("RESULT old PASS\nE/Electron2DTests: RESULT current FAIL outer exception\n"
+                               "E/Electron2DTests: ---> resampling fixture", "current")
         with self.assertRaises(RuntimeError):
             run_apple.select({"runtimes": [], "devicetypes": []}, "iOS")
         profiles = {"runtimes": [{"name": "iOS 26", "version": "26.0", "identifier": "older", "isAvailable": True},

@@ -38,7 +38,7 @@ internal static class MeshRenderingTests
                 else if (frames == 1) { Pixel(image, 8, 8, Colors.Blue); Pixel(image, 22, 22, Colors.Blue); }
                 else if (frames == 2) { Pixel(image, 8, 8, Colors.Black); Pixel(image, 38, 8, Colors.Blue); }
                 else { Pixel(image, 38, 8, Colors.Black); window.Tree!.Quit(); }
-                image.SavePNG($"/tmp/e2d-mesh-{method}-{frames}.png"); frames++;
+                image.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-mesh-{method}-{frames}.png")); frames++;
                 if (frames == 1)
                 {
                     for (var i = 0; i < 4; i++) { attributes[i * 12 + 2] = 255; attributes[i * 12 + 3] = 255; }
@@ -87,7 +87,7 @@ internal static class MeshRenderingTests
                     for (var y = 5; y < 23; y++) for (var x = 3 + primitive * 18; x < 21 + primitive * 18; x++) if (frame.GetPixel(x, y).R > .5f) colored++;
                     Check(colored > 0, $"Topology {primitive} produces framebuffer geometry with its surface material override.");
                 }
-                frame.SavePNG($"/tmp/e2d-mesh-primitives-{method}.png"); frames++; window.Tree!.Quit();
+                frame.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-mesh-primitives-{method}.png")); frames++; window.Tree!.Quit();
             };
         };
         try { Engine.Run(window); Check(frames == 1, "All mesh primitive topologies render."); }

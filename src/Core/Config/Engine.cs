@@ -11,7 +11,8 @@ namespace Electron2D;
 /// </para>
 /// <para>
 /// Runtime lifecycle and frame execution have owner-thread affinity. Configuration properties, metric reads, and
-/// named-singleton operations are safe from other threads. Fixed-step and time-scale properties use the process-wide
+/// named-singleton operations are safe from other threads. Floating-point snapshots are atomic on 32-bit hosts too.
+/// Fixed-step and time-scale properties use the process-wide
 /// <see cref="ProjectSettings"/> registry, including active feature overrides. A frame uses one configuration snapshot.
 /// </para>
 /// </remarks>
@@ -126,13 +127,13 @@ public sealed partial class Engine : ElectronObject
 
     internal double TimeScaleCore
     {
-        get => Volatile.Read(ref _timeScale);
+        get => AtomicFloatingPoint.Read(ref _timeScale);
         set
         {
             if (!double.IsFinite(value) || value < 0d)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Time scale must be finite and non-negative.");
 
-            Volatile.Write(ref _timeScale, value);
+            AtomicFloatingPoint.Write(ref _timeScale, value);
         }
     }
 
@@ -140,9 +141,9 @@ public sealed partial class Engine : ElectronObject
 
     internal ulong PhysicsFramesCore => unchecked((ulong)Interlocked.Read(ref _physicsFrames));
 
-    internal double FramesPerSecondCore => Volatile.Read(ref _framesPerSecond);
+    internal double FramesPerSecondCore => AtomicFloatingPoint.Read(ref _framesPerSecond);
 
-    internal double PhysicsInterpolationFractionCore => Volatile.Read(ref _physicsInterpolationFraction);
+    internal double PhysicsInterpolationFractionCore => AtomicFloatingPoint.Read(ref _physicsInterpolationFraction);
 
     internal bool IsInPhysicsFrameCore => Volatile.Read(ref _inPhysicsFrame) != 0;
 
@@ -230,7 +231,7 @@ public sealed partial class Engine : ElectronObject
             if (!double.IsFinite(scaledPhysicsStep) || !double.IsFinite(scaledProcessStep))
                 throw new InvalidOperationException("The current time scale produces a non-finite callback delta.");
 
-            Volatile.Write(ref _physicsInterpolationFraction, Math.Clamp(timing.InterpolationFraction, 0d, 1d));
+            AtomicFloatingPoint.Write(ref _physicsInterpolationFraction, Math.Clamp(timing.InterpolationFraction, 0d, 1d));
 
             var stopRequested = false;
 
@@ -427,9 +428,9 @@ public sealed partial class Engine : ElectronObject
     private void ResetRunState()
     {
         _frameSynchronizer.Reset();
-        Volatile.Write(ref _physicsInterpolationFraction, 0d);
+        AtomicFloatingPoint.Write(ref _physicsInterpolationFraction, 0d);
         Volatile.Write(ref _inPhysicsFrame, 0);
-        Volatile.Write(ref _framesPerSecond, 0d);
+        AtomicFloatingPoint.Write(ref _framesPerSecond, 0d);
         _fpsElapsed = 0d;
         _fpsFrames = 0;
         _scheduledPhysicsTicksPerSecond = PhysicsTicksPerSecondCore;
@@ -443,7 +444,7 @@ public sealed partial class Engine : ElectronObject
         if (_fpsElapsed < 1d - 1e-12d)
             return;
 
-        Volatile.Write(ref _framesPerSecond, _fpsFrames / _fpsElapsed);
+        AtomicFloatingPoint.Write(ref _framesPerSecond, _fpsFrames / _fpsElapsed);
         _fpsElapsed %= 1d;
 
         if (_fpsElapsed > 1d - 1e-12d)

@@ -66,8 +66,8 @@ public sealed partial class AudioServer : ElectronObject
     }
     internal float PlaybackSpeedScaleCore
     {
-        get { ThrowIfDisposed(); return Volatile.Read(ref _speed); }
-        set { Check(); if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); var previous = _speed; Volatile.Write(ref _speed, value); try { foreach (var player in _players) player.RefreshPitch(); _native?.RefreshStandaloneSamplePitch(); } catch { Volatile.Write(ref _speed, previous); foreach (var player in _players) player.RefreshPitch(); _native?.RefreshStandaloneSamplePitch(); throw; } }
+        get { ThrowIfDisposed(); return AtomicFloatingPoint.Read(ref _speed); }
+        set { Check(); if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); var previous = _speed; AtomicFloatingPoint.Write(ref _speed, value); try { foreach (var player in _players) player.RefreshPitch(); _native?.RefreshStandaloneSamplePitch(); } catch { AtomicFloatingPoint.Write(ref _speed, previous); foreach (var player in _players) player.RefreshPitch(); _native?.RefreshStandaloneSamplePitch(); throw; } }
     }
     internal event Action? BusLayoutChangedCore;
     internal event Action<int, string, string>? BusRenamedCore;

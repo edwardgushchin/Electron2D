@@ -187,7 +187,7 @@ internal static partial class RenderingRuntimeTests
                     if (phase < 4)
                     {
                         var profile = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? $"{backend}-dummy" : backend;
-                        frame.SavePNG($"/tmp/e2d-texture-proxy-{profile}-{phase}.png");
+                        frame.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-texture-proxy-{profile}-{phase}.png"));
                     }
                     if (++phase == 5)
                     {

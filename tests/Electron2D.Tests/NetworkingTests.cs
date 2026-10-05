@@ -7,7 +7,7 @@ internal static class NetworkingTests
 {
     internal static void Run()
     {
-        Extensions(); Buffer(); TCP(); UDS(); UDP(); UDPConnections(); Multicast(); IPv6(); Scene(); FramedPackets();
+        Extensions(); Buffer(); TCP(); UDS(); UDP(); ReusableDatagramAddress(); UDPConnections(); Multicast(); IPv6(); Scene(); FramedPackets();
         Console.WriteLine("Native TCP/UDP/UDS, binary wire encoding, polling, queue/lifetime boundaries and warm transport checks passed.");
     }
     private sealed class FragmentStream : StreamPeer
@@ -154,6 +154,30 @@ internal static class NetworkingTests
         a.PutPacket(new byte[] { 5 }); Wait(() => accepted.GetAvailablePacketCount() > 0); Check(accepted.GetPacket().SequenceEqual(new byte[] { 5 }), "Accepted endpoints survive zero pending limit.");
         accepted.Close(); server.MaxPendingConnections = 1; a.PutPacket(new byte[] { 6 }); Wait(() => { server.Poll(); return server.IsConnectionAvailable(); }); using var again = server.TakeConnection()!; Check(again.GetPacket().SequenceEqual(new byte[] { 6 }), "Closed endpoint can be accepted again.");
         server.Stop(); Check(!server.IsListening() && !again.IsSocketConnected() && !again.IsBound(), "Stop detaches caller-owned UDP peer."); Reject<InvalidOperationException>(() => server.Poll());
+    }
+    private static void ReusableDatagramAddress()
+    {
+        Span<byte> received = stackalloc byte[8];
+        foreach (var family in Socket.OSSupportsIPv6 ? new[] { AddressFamily.InterNetwork, AddressFamily.InterNetworkV6 } : new[] { AddressFamily.InterNetwork })
+        {
+            var loopback = family == AddressFamily.InterNetwork ? IPAddress.Loopback : IPAddress.IPv6Loopback;
+            using var receiver = NetworkSockets.Create(family, SocketType.Dgram);
+            using var sender = NetworkSockets.Create(family, SocketType.Dgram);
+            receiver.Bind(new IPEndPoint(loopback, 0));
+            var destination = receiver.LocalEndPoint!;
+            var address = new SocketAddress(family);
+            for (var cycle = 0; cycle < 2; cycle++)
+            {
+                sender.SendTo(new byte[] { 23 }, destination);
+                Wait(() => receiver.Poll(0, SelectMode.SelectRead));
+                address.Size = 2;
+                Check(NetworkSockets.ReceiveDatagram(receiver, received, address) == 1 && received[0] == 23,
+                    "Reusable UDP addresses restore capacity after a short native address result.");
+                var endpoint = DatagramAddress.Capture(address);
+                Check(endpoint.Address().Equals(loopback) && endpoint.Port == ((IPEndPoint)sender.LocalEndPoint!).Port,
+                    "Reusable IPv4/IPv6 address preparation preserves sender metadata.");
+            }
+        }
     }
     private static void Multicast()
     {

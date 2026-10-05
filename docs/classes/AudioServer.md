@@ -171,6 +171,8 @@ Transactionally generates/replaces a cold sample snapshot; unsupported resources
 
 ## Verification and limits
 
+PlaybackSpeedScale and the callback-published output latency use bit-preserving integer atomics on 32-bit and 64-bit hosts. The shared portability checks verify rate configuration round trips; Android native checks require nonzero finite PCM, progressing playback and finite positive output latency in two engine lifecycles.
+
 [Audio verification](../components/audio-playback.md#verification) distinguishes CPU behavior, actual native mixed PCM, public static host lifecycle, packaging and physical listening. [ADR 0047](../decisions/audio.md#adr-0047) owns the backend/decoder boundary. Inherited members are documented on their declaring class.
 
 [Own reference coverage](../coverage/classes/AudioServer.md) retains missing and Partial members separately.

@@ -62,7 +62,7 @@ internal static partial class RenderingRuntimeTests
             RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
-                if (frames == 1) File.WriteAllBytes($"/tmp/electron2d-fonts-{backend}.png", pixels.SavePNGToBuffer());
+                if (frames == 1) File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-fonts-{backend}.png"), pixels.SavePNGToBuffer());
                 var offset = frames == 1 ? Vector2.Zero : new Vector2(1, 2);
                 var tint = frames == 1 ? Colors.White : new Color(1, .5f, .25f, 1);
                 FontRasterPixels(pixels, FontOracleA16, 11, 12, new Vector2(10, 12) + offset, 1, tint);

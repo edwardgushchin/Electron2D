@@ -1,6 +1,6 @@
 # AudioStreamPlaylist
 
-Last updated: 2026-10-03
+Last updated: 2026-10-05
 
 **Declaration:** `public sealed class Electron2D.AudioStreamPlaylist` · **Source:** [AudioStreamPlaylist.cs](../../src/Scene/Resources/AudioStreamPlaylist.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -139,5 +139,7 @@ Serializes with the audio gate and rejects resource disposal during factories, m
 Clears borrowed configuration/weak tracking only. Independently owned playbacks still need their caller/player cleanup and reject later source consumption after source disposal.
 
 ## Verification and limits
+
+FadeTime publishes and reads one atomic Int64 bit pattern, including on 32-bit hosts. The shared portability applications verify exact public fade-setting round trips without opening native output.
 
 [AudioPlaylistTests](../../tests/Electron2D.Tests/AudioPlaylistTests.cs) verifies metadata, configuration, copies/PackedScene and executable behavior. [Playlist playback](../components/audio-playback.md#playlist-playback) records native/host/allocation/platform boundaries. [ADR 0047](../decisions/audio.md#adr-0047) owns the capability; inherited usage/general-parameter/editor/file-authoring gaps remain in coverage.

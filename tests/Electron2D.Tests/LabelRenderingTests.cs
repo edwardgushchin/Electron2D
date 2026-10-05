@@ -49,7 +49,7 @@ internal static partial class RenderingRuntimeTests
             RenderingServer.FramePostDraw += () =>
             {
                 using var pixels = server.Readback(); frames++;
-                if (frames == 1) File.WriteAllBytes($"/tmp/electron2d-labels-{backend}.png", pixels.SavePNGToBuffer());
+                if (frames == 1) File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-labels-{backend}.png"), pixels.SavePNGToBuffer());
                 FontRasterPixels(pixels, FontOracleA16, 11, 12, new(34, 19), 1, Colors.White);
                 FontRasterPixels(pixels, FontOracleA16, 11, 12, new(149, 16), 1, Colors.White);
                 Check(wrapped.GetLineCount() == 3 && wrapped.GetVisibleLineCount() == 3, "The label wraps three real lines inside its available height.");

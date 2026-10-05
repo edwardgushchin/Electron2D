@@ -424,6 +424,8 @@ Lifecycle/frame entry is atomic and non-reentrant. `MainLoop` is visible during 
 
 ## Threading guarantees and non-guarantees
 
+TimeScale, FPS and interpolation snapshots use bit-preserving integer atomics, including on 32-bit hosts. Public timing configuration round trips are exercised by the shared portability application.
+
 The thread that successfully calls `Start()` owns runtime lifecycle and frames until `Stop()` completes. Wrong-thread frame and stop calls fail before changing runtime state. Timing configuration, metrics, `MainLoop` reads, and registry operations are cross-thread safe. User callbacks, event subscription, registered object state, and the attached loop are not made thread-safe by `Engine`.
 
 No background thread, clock, sleep, synchronization context, or native pump is created. Real cadence depends on the host that measures elapsed time and calls `AdvanceFrame()`.

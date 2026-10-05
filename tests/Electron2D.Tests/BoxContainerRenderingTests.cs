@@ -34,7 +34,7 @@ internal static partial class RenderingRuntimeTests
                 else
                 {
                     Check(a.Size.Y == 8 && a.Position.Y == 6, "Native cross-axis shrink."); Pixel(pixels, 5, 5, Colors.Black); Pixel(pixels, 5, 11, Colors.Red);
-                    File.WriteAllBytes($"/tmp/electron2d-box-layout-{backend}.png", pixels.SavePNGToBuffer()); window.Tree!.Quit();
+                    File.WriteAllBytes(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"electron2d-box-layout-{backend}.png"), pixels.SavePNGToBuffer()); window.Tree!.Quit();
                 }
             };
         };

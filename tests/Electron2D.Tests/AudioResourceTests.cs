@@ -50,14 +50,20 @@ internal static class AudioResourceTests
     }
     private static void VerifyImportAndSave()
     {
-        using var source = AudioRuntimeTests.Tone(44100); var path = "/tmp/e2d-audio-resource-test.wav"; source.SaveToWAV(path); using var loaded = AudioStreamWAV.LoadFromFile(path);
-        Check(loaded.SampleFormat == AudioStreamWAV.Format.PCM16 && loaded.Data.SequenceEqual(source.Data) && loaded.GetLength() == 1, "PCM WAVE fresh load preserves bytes and duration.");
-        var bytes = System.IO.File.ReadAllBytes(path);
-        using var normalized = AudioStreamWAV.LoadFromBuffer(bytes, new() { Normalize = true, Force8Bit = true }); Check(normalized.SampleFormat == AudioStreamWAV.Format.PCM8, "Typed normalize/force-width options execute.");
-        using var limited = AudioStreamWAV.LoadFromBuffer(bytes, new() { LimitRate = true, MaxRate = 22050, Compression = AudioStreamWAV.Format.QOA }); Check(limited.MixRate == 22050 && limited.SampleFormat == AudioStreamWAV.Format.QOA, "Cubic import resampling and compressed storage execute.");
-        using var pcm8 = new AudioStreamWAV { Data = [0, 127, 128, 255], MixRate = 44100 }; pcm8.SaveToWAV(path); using var loaded8 = AudioStreamWAV.LoadFromFile(path); Check(loaded8.Data.SequenceEqual(pcm8.Data), "Signed internal/unsigned RIFF eight-bit boundary round-trips.");
-        var before = System.IO.File.ReadAllBytes(path); using var compressed = new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.QOA }; Reject<NotSupportedException>(() => compressed.SaveToWAV(path)); Check(System.IO.File.ReadAllBytes(path).SequenceEqual(before), "Rejected save preserves existing data.");
-        Reject<FormatException>(() => AudioStreamWAV.LoadFromBuffer("not a WAVE file"u8)); Reject<ArgumentOutOfRangeException>(() => AudioStreamWAV.LoadFromBuffer(bytes, new() { LimitRate = true }));
+        using var source = AudioRuntimeTests.Tone(44100);
+        var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-audio-resource-" + Guid.NewGuid().ToString("N") + ".wav");
+        try
+        {
+            source.SaveToWAV(path); using var loaded = AudioStreamWAV.LoadFromFile(path);
+            Check(loaded.SampleFormat == AudioStreamWAV.Format.PCM16 && loaded.Data.SequenceEqual(source.Data) && loaded.GetLength() == 1, "PCM WAVE fresh load preserves bytes and duration.");
+            var bytes = System.IO.File.ReadAllBytes(path);
+            using var normalized = AudioStreamWAV.LoadFromBuffer(bytes, new() { Normalize = true, Force8Bit = true }); Check(normalized.SampleFormat == AudioStreamWAV.Format.PCM8, "Typed normalize/force-width options execute.");
+            using var limited = AudioStreamWAV.LoadFromBuffer(bytes, new() { LimitRate = true, MaxRate = 22050, Compression = AudioStreamWAV.Format.QOA }); Check(limited.MixRate == 22050 && limited.SampleFormat == AudioStreamWAV.Format.QOA, "Cubic import resampling and compressed storage execute.");
+            using var pcm8 = new AudioStreamWAV { Data = [0, 127, 128, 255], MixRate = 44100 }; pcm8.SaveToWAV(path); using var loaded8 = AudioStreamWAV.LoadFromFile(path); Check(loaded8.Data.SequenceEqual(pcm8.Data), "Signed internal/unsigned RIFF eight-bit boundary round-trips.");
+            var before = System.IO.File.ReadAllBytes(path); using var compressed = new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.QOA }; Reject<NotSupportedException>(() => compressed.SaveToWAV(path)); Check(System.IO.File.ReadAllBytes(path).SequenceEqual(before), "Rejected save preserves existing data.");
+            Reject<FormatException>(() => AudioStreamWAV.LoadFromBuffer("not a WAVE file"u8)); Reject<ArgumentOutOfRangeException>(() => AudioStreamWAV.LoadFromBuffer(bytes, new() { LimitRate = true }));
+        }
+        finally { System.IO.File.Delete(path); }
     }
     private static void VerifyLoopAndWarm()
     {

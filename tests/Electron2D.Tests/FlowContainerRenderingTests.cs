@@ -54,7 +54,7 @@ internal static partial class RenderingRuntimeTests
                     Pixel(pixels, 4, 4, Colors.Red); Pixel(pixels, 4, 17, Colors.Blue); Pixel(pixels, 4, 32, Colors.Green); window.Tree!.Quit();
                 }
                 var profile = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? $"{backend}-dummy" : backend;
-                pixels.SavePNG($"/tmp/e2d-flow-{profile}-{frames++}.png");
+                pixels.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-flow-{profile}-{frames++}.png"));
             };
         };
         Engine.Run(window); Released(window); Check(frames == 6, "Native flow completed all visual states.");
