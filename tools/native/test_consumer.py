@@ -101,8 +101,8 @@ def check(feed, rid):
                 f'<PackageReference Include="Electron2D" Version="[{version}]" />')
             (app / "Consumer.csproj").write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
                 '<OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>'
-                '<ImplicitUsings>enable</ImplicitUsings></PropertyGroup><ItemGroup>' + reference + '</ItemGroup></Project>')
-            (app / "Program.cs").write_text(PROGRAM)
+                '<ImplicitUsings>enable</ImplicitUsings></PropertyGroup><ItemGroup>' + reference + '</ItemGroup></Project>', encoding="utf-8")
+            (app / "Program.cs").write_text(PROGRAM, encoding="utf-8")
             environment["RestoreAdditionalProjectSources"] = str(engine_feed)
             if os.name != "nt":
                 run([dotnet, "run", "-c", "Release", "--project", "Consumer.csproj"], app, environment)
