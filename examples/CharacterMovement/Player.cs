@@ -5,6 +5,7 @@ internal sealed class Player : Sprite
 {
     private const float MovementSpeed = 160f;
     private const float DisplaySize = 96f;
+    private readonly Vector2 _baseScale;
     private Rect2 _movementBounds;
 
     /// <summary>Centers the character in the field and scales its borrowed texture to 96 pixels.</summary>
@@ -16,17 +17,19 @@ internal sealed class Player : Sprite
         Texture = texture;
         TextureFilter = TextureFilter.Nearest;
         Position = playArea.GetCenter();
-        Scale = new(DisplaySize / texture.GetWidth(), DisplaySize / texture.GetHeight());
+        _baseScale = new(DisplaySize / texture.GetWidth(), DisplaySize / texture.GetHeight());
 
         SetPlayArea(playArea);
     }
 
-    /// <summary>Updates the field after a resize, keeping the whole character inside it.</summary>
+    /// <summary>Scales the character after a resize and keeps it inside the current field.</summary>
     /// <param name="playArea">The current field rectangle in window pixels.</param>
-    internal void SetPlayArea(Rect2 playArea)
+    /// <param name="windowScale">Uniform size relative to the initial 800×600 window.</param>
+    internal void SetPlayArea(Rect2 playArea, float windowScale = 1f)
     {
+        Scale = _baseScale * windowScale;
         // The sprite is centered on Position, so leave half its size clear at each field edge.
-        _movementBounds = playArea.Grow(-DisplaySize / 2);
+        _movementBounds = playArea.Grow(-DisplaySize * windowScale / 2);
         Position = Position.Clamp(_movementBounds.Position, _movementBounds.End);
     }
 

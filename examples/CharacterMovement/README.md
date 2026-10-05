@@ -14,7 +14,7 @@ The example explicitly selects the Electron2D platform package for its target OS
 
 [Program.cs](Program.cs) loads the borrowed texture and font, limits the loop to 60 FPS, and passes [CharacterMovementScene](CharacterMovementScene.cs)'s window to `Engine.Run`. The scene starts at 800×600 and combines a retained grid, two live text labels and a nearest-filtered `Sprite`. Arrow keys move the sprite at 160 pixels per second, with normalized diagonal movement and a field boundary that follows the window size. Change `MovementSpeed` in [Player.cs](Player.cs) to try your first code edit.
 
-`Engine.Run` owns the window, event pump, frame timing and teardown. The entry point retains the texture and font until the host returns. Resize the window: the grid fills the available field, the instructions follow the bottom edge, and shrinking the field keeps the whole character inside. Text, grid spacing and sprite size stay constant. The minimum window size is 400×300.
+`Engine.Run` owns the window, event pump, frame timing and teardown. The entry point retains the texture and font until the host returns. Resize the window: the grid fills the available field, the instructions follow the bottom edge, and shrinking the field keeps the whole character inside. The character scales uniformly with the window: 96 pixels at 800×600, 128 at 1200×800 and 48 at 400×300. Its aspect ratio is preserved, and movement bounds account for its current size. Text and grid spacing stay constant. The minimum window size is 400×300.
 
 The layout demonstrates rendering and input; it has no collisions, project editing or public screenshot command.
 

@@ -7,6 +7,7 @@ internal static class CharacterMovementScene
     private const int Margin = 32;
     private const int HeaderHeight = 96;
     private const int FooterHeight = 72;
+    private static readonly Vector2i InitialSize = new(800, 600);
 
     /// <summary>Creates a grid, live labels and an arrow-key-controlled character.</summary>
     /// <param name="character">The borrowed texture, kept alive by the entry point.</param>
@@ -17,7 +18,7 @@ internal static class CharacterMovementScene
         var window = new Window
         {
             Title = "Electron2D: character movement",
-            Size = new(800, 600),
+            Size = InitialSize,
             MinSize = new(400, 300),
             SnapTransformsToPixel = true
         };
@@ -36,12 +37,13 @@ internal static class CharacterMovementScene
         window.AddChild(instructions);
         window.AddChild(player);
 
-        // Reflow only when the actual window size changes, keeping text and the sprite at their pixel sizes.
+        // Use one scale factor for both sprite axes, so resizing never stretches the character.
         window.SizeChanged += () =>
         {
             playArea = GetPlayArea(window.Size);
             instructions.Position = new(Margin, playArea.End.Y + 24);
-            player.SetPlayArea(playArea);
+            var scale = MathF.Min((float)window.Size.X / InitialSize.X, (float)window.Size.Y / InitialSize.Y);
+            player.SetPlayArea(playArea, scale);
             grid.QueueRedraw();
         };
         return window;

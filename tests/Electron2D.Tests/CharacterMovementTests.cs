@@ -65,13 +65,14 @@ internal static class CharacterMovementTests
                             Check(pixels.GetPixel(1080, 700).IsEqualApprox(Color.FromHTML("#2E2238")), "The grid expands into the new window area.");
                             Check(((Label)window.GetChild(2)).Position == new Vector2(32, 752), "Instructions follow the bottom edge.");
                             Check(player.Position == new Vector2(720, 480), "Growing the window preserves the character position.");
+                            Check(pixels.GetPixel(670, 480).R > .7f, "The enlarged character occupies pixels outside its initial size.");
                             pixels.SavePNG($"bin/character-movement/{backend}-wide.png");
                         }
-                        player.Position = new(1119.999f, 679.999f);
+                        player.Position = new(1103.999f, 663.999f);
                         KeyEvent(SDL.Scancode.Right, true); KeyEvent(SDL.Scancode.Down, true);
                         break;
                     case 9:
-                        Check(player.Position == new Vector2(1120, 680), "Movement uses the enlarged field boundary.");
+                        Check(player.Position == new Vector2(1104, 664), "Movement accounts for the enlarged character size.");
                         KeyEvent(SDL.Scancode.Right, false); KeyEvent(SDL.Scancode.Down, false);
                         window.Size = new(500, 400);
                         break;
@@ -79,7 +80,7 @@ internal static class CharacterMovementTests
                         using (var pixels = RenderingServer.Service!.Readback())
                         {
                             if (pixels.Size != new Vector2i(500, 400)) { step--; break; }
-                            Check(player.Position == new Vector2(420, 280), "Shrinking keeps the whole character inside the field.");
+                            Check(player.Position == new Vector2(438, 298), "Shrinking keeps the resized character inside the field.");
                             Check(((Label)window.GetChild(2)).Position == new Vector2(32, 352), "Instructions remain visible after shrinking.");
                         }
                         window.Size = window.MinSize;
@@ -88,7 +89,8 @@ internal static class CharacterMovementTests
                         using (var pixels = RenderingServer.Service!.Readback())
                         {
                             if (pixels.Size != new Vector2i(400, 300)) { step--; break; }
-                            Check(player.Position == new Vector2(320, 180), "Minimum size keeps valid character bounds.");
+                            Check(player.Position == new Vector2(344, 204), "Minimum size keeps valid scaled-character bounds.");
+                            Check(pixels.GetPixel(304, 204).IsEqualApprox(Color.FromHTML("#2E2238")), "Shrinking the character clears pixels outside its new size.");
                             Check(((Label)window.GetChild(2)).Position == new Vector2(32, 252), "Minimum size retains the instruction margin.");
                             Check(pixels.GetPixel(40, 100).IsEqualApprox(Color.FromHTML("#2E2238")), "Minimum-size grid is rendered.");
                             pixels.SavePNG($"bin/character-movement/{backend}-small.png");
@@ -99,7 +101,8 @@ internal static class CharacterMovementTests
                         using (var pixels = RenderingServer.Service!.Readback())
                         {
                             if (pixels.Size != new Vector2i(800, 600)) { step--; break; }
-                            Check(player.Position == new Vector2(320, 180), "Restoring the size preserves the clamped position.");
+                            Check(player.Position == new Vector2(344, 204), "Restoring the size preserves the clamped position.");
+                            Check(pixels.GetPixel(314, 204).R > .7f, "Restoring the window restores the character's initial visual size.");
                         }
                         if (backend == "gpu") KeyEvent(SDL.Scancode.Escape, true);
                         else
