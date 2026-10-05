@@ -84,9 +84,6 @@ jobs:
         run: |
           python -m pip install --require-hashes -r tools/native/requirements-windows.txt
           if (!(Get-Command ffmpeg -ErrorAction SilentlyContinue)) { choco install ffmpeg --yes --no-progress; if ($LASTEXITCODE) { exit $LASTEXITCODE } }
-          if (!(Get-Command openssl -ErrorAction SilentlyContinue)) { choco install openssl --yes --no-progress; if ($LASTEXITCODE) { exit $LASTEXITCODE } }
-          "C:\Program Files\OpenSSL-Win64\bin" >> $env:GITHUB_PATH
-          "C:\Program Files\OpenSSL\bin" >> $env:GITHUB_PATH
       - name: Build runtime with trimming and AOT analysis
         run: dotnet build Electron2D.csproj -c Release -r "$CI_RID" -p:EnableTrimAnalyzer=true -p:EnableAotAnalyzer=true -o "bin/ci/$CI_RID" --nologo
       - name: Verify public API architecture and coverage
@@ -102,6 +99,7 @@ jobs:
         if: inputs.tests && (inputs.suite == 'full' || inputs.suite == 'portable')
         run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r "$CI_RID" --self-contained true -o "bin/ci-tests/$CI_RID" --nologo
       - name: Run full headless runtime suite
+        id: full_suite
         if: inputs.tests && inputs.suite == 'full'
         env:
           DOTNET_TieredCompilation: '0'
@@ -109,6 +107,21 @@ jobs:
           executable="$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"
           if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
           "$executable"
+      - name: Diagnose an ARM64 native test crash without hiding the failure
+        if: failure() && steps.full_suite.outcome == 'failure' && inputs.rid == 'win-arm64'
+        continue-on-error: true
+        timeout-minutes: 10
+        shell: pwsh
+        env:
+          DOTNET_TieredCompilation: '0'
+          ELECTRON2D_TEST_DTLS: '1'
+        run: ./tools/ci/debug_windows.ps1 "bin/ci-tests/$env:CI_RID/Electron2D.Tests.exe" "bin/ci/$env:CI_RID/diagnostics"
+      - uses: actions/upload-artifact@v4
+        if: failure() && steps.full_suite.outcome == 'failure' && inputs.rid == 'win-arm64'
+        with:
+          name: native-crash-${{ inputs.rid }}
+          path: bin/ci/${{ inputs.rid }}/diagnostics/
+          if-no-files-found: error
       - name: Run portable runtime suite
         if: inputs.tests && inputs.suite == 'portable'
         env:

@@ -1,6 +1,6 @@
 # TLS streams and security resources
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 ## Surface and dependency direction
 
@@ -40,7 +40,7 @@ TLS and DTLS independent OpenSSL processes share the same bounded cleanup and st
 
 64 prepared active number/read/write/poll cycles and 64 idle status/availability/poll cycles measure zero managed allocated bytes on the owner thread. Native BIO capacity is fixed; OpenSSL internal native allocation totals, routed traffic/throughput, system CA variation, other platforms and owner acceptance are unverified. No renderer or unified editor/project tool acceptance is inferred from these network tests.
 
-Both independent SslStream roles force TLS 1.2; macOS SecureTransport cannot provide the TLS 1.3 oracle ([runtime issue](https://github.com/dotnet/runtime/issues/1979)). Independent OpenSSL processes force TLS 1.3 in both roles on every desktop test host, exchanging exact integer records, validating the client trust/name policy and checking close notifications. SslStream client teardown separately verifies explicit close notification and abrupt EOF, preserving the borrowed transport in both cases. Temporary private keys and owned oracle processes are released on every exit. These focused checks passed on Linux; target Windows/macOS reruns remain required.
+Both independent SslStream roles force TLS 1.2 and, outside macOS, TLS 1.3. The selected Windows Server 2025/Windows 11 runners provide TLS 1.3 through Schannel ([Microsoft protocol support](https://learn.microsoft.com/en-us/windows/win32/secauthn/protocols-in-tls-ssl--schannel-ssp-)). macOS SecureTransport cannot provide the TLS 1.3 oracle ([runtime issue](https://github.com/dotnet/runtime/issues/1979)), so Unix hosts additionally use independent OpenSSL processes for TLS 1.3 in both roles. All profiles exchange exact integer records, validate client trust/name policy and verify close notifications. SslStream client teardown also checks abrupt EOF, preserving the borrowed transport in both cases. Windows does not use the OpenSSL CLI's redirected-stdin polling, which can block before handshake. Temporary private keys and owned oracle processes are released on every exit. Forced SslStream TLS 1.2/1.3 and OpenSSL TLS 1.3 checks passed on Linux; current target Windows/macOS reruns remain required.
 
 A self-contained linux-x64 test application was published to `/tmp/e2d-tls-native-publish` and its TLS selector executed from `/tmp` with LD_LIBRARY_PATH unset. TLS 1.2/1.3 interoperability and all focused resource/lifetime/allocation checks passed using packaged .NET runtime files and host OpenSSL 3.6.4. This confirms the exercised local deployment profile, not other hosts or an external consumer application.
 

@@ -13,7 +13,10 @@ internal static class DTLSTests
     {
         Console.WriteLine("DTLS identity preparation.");
         using var crypto = new Crypto(); using var key = crypto.GenerateRSA(2048); using var cert = crypto.GenerateSelfSignedCertificate(key, "CN=localhost,O=Electron2D,C=RU"); using var serverOptions = TLSOptions.Server(key, cert); using var clientOptions = TLSOptions.Client(cert, "localhost");
-        Native(key, cert, serverOptions, clientOptions, false); Native(key, cert, serverOptions, clientOptions, true); Rejection(serverOptions, clientOptions, cert); Policies(serverOptions); Oracle(key, cert, serverOptions, clientOptions); Console.WriteLine("Native DTLS packet/cookie/handshake, retransmission, trust, ownership and allocation checks passed.");
+        Native(key, cert, serverOptions, clientOptions, false); Native(key, cert, serverOptions, clientOptions, true); Rejection(serverOptions, clientOptions, cert); Policies(serverOptions);
+        DTLSManagedOracle.Run(key, cert, serverOptions, clientOptions);
+        if (!OperatingSystem.IsWindows()) Oracle(key, cert, serverOptions, clientOptions);
+        Console.WriteLine("Native DTLS packet/cookie/handshake, retransmission, trust, ownership and allocation checks passed.");
     }
     private sealed class LossyUDP : PacketPeerUDP
     {

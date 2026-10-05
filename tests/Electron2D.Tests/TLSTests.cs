@@ -24,7 +24,10 @@ internal static class TLSTests
         using var key = new CryptoKey(); key.LoadFromString(leafKey.ExportRSAPrivateKeyPem());
         using var chain = new Certificate(); chain.LoadFromString(leaf.ExportCertificatePem() + "\n" + authority.ExportCertificatePem());
         using var trust = new Certificate(); trust.LoadFromString(authority.ExportCertificatePem());
-        Resources(key, chain, trust, leafKey, leaf); Fragments(key, chain, trust); Abandoned(key, chain, trust); TCP(key, chain, trust); Failures(key, chain, trust, leafKey, authority); Interop(leaf, leafKey, authority, trust, key, chain); OpenSSLInterop(trust, key, chain);
+        Resources(key, chain, trust, leafKey, leaf); Fragments(key, chain, trust); Abandoned(key, chain, trust); TCP(key, chain, trust); Failures(key, chain, trust, leafKey, authority);
+        Interop(leaf, leafKey, authority, trust, key, chain, SslProtocols.Tls12);
+        if (!OperatingSystem.IsMacOS()) Interop(leaf, leafKey, authority, trust, key, chain, SslProtocols.Tls13);
+        if (!OperatingSystem.IsWindows()) OpenSSLInterop(trust, key, chain);
         Console.WriteLine("TLS native handshake/trust/name/records, PEM/DER resources, fragmented streams, socket/oracle interoperability and lifetime checks passed.");
     }
     private static X509Certificate2 Leaf(RSA key, X509Certificate2 authority, DateTimeOffset start, DateTimeOffset end)
@@ -138,11 +141,13 @@ internal static class TLSTests
             Check(client.GetStatus() == expected, "TLS validation outcome: " + expected + ", actual " + client.GetStatus()); if (expected != TLSStatus.Connected) Check(client.GetStream() is null && !a.IsDisposed, "Failed TLS preserves borrowed transport.");
         }
     }
-    private static void Interop(X509Certificate2 leaf, RSA leafKey, X509Certificate2 authority, Certificate trust, CryptoKey key, Certificate chain)
+    private static void Interop(X509Certificate2 leaf, RSA leafKey, X509Certificate2 authority, Certificate trust, CryptoKey key, Certificate chain, SslProtocols protocol)
     {
         using var identity = leaf.CopyWithPrivateKey(leafKey); using var listener = new TcpListener(IPAddress.Loopback, 0); listener.Start(); var port = ((IPEndPoint)listener.LocalEndpoint).Port;
-        var oracle = Task.Run(async () => { using var accepted = await listener.AcceptTcpClientAsync(); using var ssl = new SslStream(accepted.GetStream(), false); await ssl.AuthenticateAsServerAsync(identity, false, SslProtocols.Tls12, false); Check(ssl.SslProtocol == SslProtocols.Tls12, "Independent forced TLS 1.2 negotiation."); var bytes = new byte[8]; await ssl.ReadExactlyAsync(bytes); Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 42, "Independent TLS server reads wire value."); System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 99); await ssl.WriteAsync(bytes); await ssl.ShutdownAsync(); });
+        var oracle = Task.Run(async () => { using var accepted = await listener.AcceptTcpClientAsync(); using var ssl = new SslStream(accepted.GetStream(), false); await ssl.AuthenticateAsServerAsync(identity, false, protocol, false); Check(ssl.SslProtocol == protocol, "Independent forced " + protocol + " negotiation."); var bytes = new byte[8]; await ssl.ReadExactlyAsync(bytes); Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 42, "Independent TLS server reads wire value."); System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 99); await ssl.WriteAsync(bytes); await ssl.ShutdownAsync(); });
         using var raw = new StreamPeerTCP(); raw.ConnectToHost("127.0.0.1", port); Wait(() => { raw.Poll(); return raw.GetStatus() == StreamSocketStatus.Connected; }); using var options = TLSOptions.Client(trust); using var peer = new StreamPeerTLS(); peer.ConnectToStream(raw, "localhost", options); Wait(() => { peer.Poll(); return peer.GetStatus() == TLSStatus.Connected; }); peer.PutU64(42); Wait(() => { peer.Poll(); return peer.GetAvailableBytes() >= 8; }); Check(peer.GetU64() == 99, "Independent SslStream server reply."); Wait(() => oracle.IsCompleted); oracle.GetAwaiter().GetResult();
+        Wait(() => { peer.Poll(); return peer.GetStatus() == TLSStatus.Disconnected; });
+        Check(!raw.IsDisposed && peer.GetStream() is null, "Independent server close notification preserves borrowed transport ownership.");
         foreach (var graceful in new[] { true, false })
         {
             using var engineListener = new TCPServer(); engineListener.Listen(0, "127.0.0.1"); var enginePort = engineListener.GetLocalPort();
@@ -150,9 +155,8 @@ internal static class TLSTests
             {
                 using var socket = new TcpClient(); await socket.ConnectAsync(IPAddress.Loopback, enginePort); using var ssl = new SslStream(socket.GetStream(), false);
                 var policy = new X509ChainPolicy { TrustMode = X509ChainTrustMode.CustomRootTrust, RevocationMode = X509RevocationMode.NoCheck }; policy.CustomTrustStore.Add(authority);
-                // Apple SecureTransport cannot negotiate TLS 1.3; the OpenSSL oracle below verifies it on every host.
-                await ssl.AuthenticateAsClientAsync(new SslClientAuthenticationOptions { TargetHost = "localhost", CertificateChainPolicy = policy, EnabledSslProtocols = SslProtocols.Tls12 });
-                Check(ssl.SslProtocol == SslProtocols.Tls12, "Independent forced TLS 1.2 client negotiation.");
+                await ssl.AuthenticateAsClientAsync(new SslClientAuthenticationOptions { TargetHost = "localhost", CertificateChainPolicy = policy, EnabledSslProtocols = protocol });
+                Check(ssl.SslProtocol == protocol, "Independent forced " + protocol + " client negotiation.");
                 var bytes = new byte[8]; System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 123); await ssl.WriteAsync(bytes); await ssl.ReadExactlyAsync(bytes);
                 Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 456, "Independent TLS client reply.");
                 if (graceful) await ssl.ShutdownAsync();
@@ -171,6 +175,7 @@ internal static class TLSTests
             }
             Check(!engineSocket.IsDisposed && server.GetStream() is null, "Both TLS closure paths preserve borrowed transport ownership.");
         }
+        Console.WriteLine("Independent SslStream " + protocol + " client/server records, trust and graceful/abrupt close checks passed.");
     }
     private static void OpenSSLInterop(Certificate trust, CryptoKey key, Certificate chain)
     {
