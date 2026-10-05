@@ -34,7 +34,7 @@
 
 <a id="about"></a>
 
-## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="24" align="absmiddle" alt=""> 关于项目
+## <img src="docs/design/assets/sprite/readme-about.svg" width="24" height="28" align="absmiddle" alt=""> 关于项目
 
 Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与 AI 智能体共同开发游戏**。
 
@@ -42,7 +42,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 <a id="features"></a>
 
-## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="24" align="absmiddle" alt=""> 功能
+## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="28" align="absmiddle" alt=""> 功能
 
 - [图形](docs/domains/rendering.md)。精灵、纹理图集、摄像机、视差，以及图形和文字绘制。支持为材质导入 HLSL 和 GLSL 着色器。
 - [场景与动画](docs/domains/scene.md)。可复用的对象和关卡、逐帧动画、属性动画和计时器。
@@ -59,7 +59,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 <a id="quick-start"></a>
 
-## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="24" align="absmiddle" alt=""> 快速开始
+## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> 快速开始
 
 先运行“角色移动”示例。你会看到一个角色，并能用方向键移动它。以下 .NET 命令适用于 Windows、Linux 和 macOS；已完成的运行验证见[平台表](#platforms)。
 
@@ -138,7 +138,7 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 <a id="platforms"></a>
 
-## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="24" align="absmiddle" alt=""> 平台
+## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="28" align="absmiddle" alt=""> 平台
 
 下表列出各游戏目标平台已完成的验证。可视化编辑器面向 Windows、Linux 和 macOS。
 
@@ -160,7 +160,7 @@ Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生
 
 <a id="development"></a>
 
-## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="24" align="absmiddle" alt=""> 引擎开发
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> 引擎开发
 
 场景可以保存到文件中重复使用，也可以在游戏下次启动时加载。这由 `PackedScene` 和[类型化资源及场景文件](docs/components/resource-files.md)提供。目前可视化编辑器仅显示启动画面，游戏项目编辑和项目管理命令尚未实现。
 
@@ -170,7 +170,7 @@ Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生
 
 <a id="documentation"></a>
 
-## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="24" align="absmiddle" alt=""> 文档
+## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="28" align="absmiddle" alt=""> 文档
 
 | 需求 | 文档 |
 | --- | --- |
@@ -186,7 +186,7 @@ Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生
 
 <a id="feedback-and-contributing"></a>
 
-## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="24" align="absmiddle" alt=""> 参与项目
+## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="28" align="absmiddle" alt=""> 参与项目
 
 [提问](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [报告问题](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [贡献指南](CONTRIBUTING.md) · [获取帮助](SUPPORT.md) · [行为准则](CODE_OF_CONDUCT.md) · [安全政策](SECURITY.md)
 
@@ -207,7 +207,7 @@ tools/coverage/check.sh
 
 <a id="license"></a>
 
-## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="24" align="absmiddle" alt=""> 许可证
+## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="28" align="absmiddle" alt=""> 许可证
 
 Electron2D 采用 [MIT 许可证](licence/Electron2D-LICENSE.txt)。可用于商业游戏，但须保留版权声明和许可证文本。
 
