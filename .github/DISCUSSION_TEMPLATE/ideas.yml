@@ -1,0 +1,18 @@
+body:
+- type: textarea
+  id: problem
+  attributes:
+    label: Use case
+    description: Describe the game or tooling problem.
+  validations:
+    required: true
+- type: textarea
+  id: idea
+  attributes:
+    label: Idea
+  validations:
+    required: true
+- type: textarea
+  id: tradeoffs
+  attributes:
+    label: Alternatives, tradeoffs and dependencies

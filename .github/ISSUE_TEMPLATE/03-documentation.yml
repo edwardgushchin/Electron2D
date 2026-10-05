@@ -1,0 +1,34 @@
+name: Documentation issue
+description: Report missing, misleading or broken documentation.
+labels:
+- documentation
+- 'status: needs triage'
+body:
+- type: markdown
+  attributes:
+    value: Check [existing issues](https://github.com/edwardgushchin/Electron2D/issues?q=is%3Aissue) first. Need
+      help using the engine? Use [Q&A](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a).
+      Report vulnerabilities [privately](https://github.com/edwardgushchin/Electron2D/security/advisories/new).
+      Remove secrets and personal data from attachments.
+- type: input
+  id: page
+  attributes:
+    label: Page or file
+    description: Link the README edition, Wiki page, API member or documentation file.
+  validations:
+    required: true
+- type: textarea
+  id: problem
+  attributes:
+    label: What needs correcting?
+  validations:
+    required: true
+- type: textarea
+  id: suggestion
+  attributes:
+    label: Suggested correction
+- type: input
+  id: version
+  attributes:
+    label: Engine commit or documentation version
+    description: Include it if the text concerns version-specific behavior.

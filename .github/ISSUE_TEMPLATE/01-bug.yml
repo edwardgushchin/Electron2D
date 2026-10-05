@@ -1,0 +1,71 @@
+name: Bug report
+description: Report reproducible incorrect behavior.
+labels:
+- bug
+- 'status: needs triage'
+body:
+- type: markdown
+  attributes:
+    value: Check [existing issues](https://github.com/edwardgushchin/Electron2D/issues?q=is%3Aissue) first. Need
+      help using the engine? Use [Q&A](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a).
+      Report vulnerabilities [privately](https://github.com/edwardgushchin/Electron2D/security/advisories/new).
+      Remove secrets and personal data from attachments.
+- type: input
+  id: version
+  attributes:
+    label: Engine commit or version
+    description: Use the full commit hash if building from source.
+    placeholder: git rev-parse HEAD
+  validations:
+    required: true
+- type: textarea
+  id: environment
+  attributes:
+    label: Environment
+    description: OS/version, CPU architecture, .NET SDK, renderer (GPU/compatibility/headless), and device or GPU
+      when relevant.
+    placeholder: Linux x64 / .NET 10 / Wayland / GPU renderer
+  validations:
+    required: true
+- type: dropdown
+  id: area
+  attributes:
+    label: Affected area
+    options:
+    - Core and I/O
+    - Scenes and animation
+    - Rendering and shaders
+    - Game UI and text
+    - Physics
+    - Audio
+    - Input and display
+    - Navigation
+    - Networking
+    - Resources and localization
+    - Build, packaging and CI
+    - Documentation
+    - Other / unsure
+- type: textarea
+  id: reproduction
+  attributes:
+    label: Minimal reproduction
+    description: Paste the smallest runnable example or link a public reproduction, and list exact steps.
+  validations:
+    required: true
+- type: textarea
+  id: expected
+  attributes:
+    label: Expected behavior
+  validations:
+    required: true
+- type: textarea
+  id: actual
+  attributes:
+    label: Actual behavior
+  validations:
+    required: true
+- type: textarea
+  id: logs
+  attributes:
+    label: Logs and screenshots
+    description: Include the complete relevant error and stack trace; redact private paths and credentials.

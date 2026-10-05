@@ -1,0 +1,11 @@
+body:
+- type: markdown
+  attributes:
+    value: Welcome! Discuss Electron2D and meet other developers. Use Q&A for help, Ideas for proposals and Issues
+      for reproducible defects.
+- type: textarea
+  id: topic
+  attributes:
+    label: Topic
+  validations:
+    required: true

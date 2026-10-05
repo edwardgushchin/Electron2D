@@ -179,6 +179,8 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 ## 💬 Участие в проекте
 
+[Задать вопрос](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Сообщить о проблеме](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Руководство для участников](CONTRIBUTING.md) · [Помощь](SUPPORT.md) · [Правила общения](CODE_OF_CONDUCT.md) · [Безопасность](SECURITY.md)
+
 Сообщайте об ошибках и предлагайте новые возможности в [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). Для ошибки укажите версию или коммит движка, операционную систему и рендерер. Приложите минимальный пример и вывод ошибки.
 
 Исправления присылайте через [пул-реквесты](https://github.com/edwardgushchin/Electron2D/pulls). Перед работой прочитайте [правила сопровождения](docs/maintaining.md) и архитектурные решения по выбранной теме. Код, тесты и документацию меняйте вместе.

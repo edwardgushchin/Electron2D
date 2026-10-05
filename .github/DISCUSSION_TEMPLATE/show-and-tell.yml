@@ -1,0 +1,23 @@
+body:
+- type: textarea
+  id: project
+  attributes:
+    label: What did you build?
+  validations:
+    required: true
+- type: input
+  id: link
+  attributes:
+    label: Project or demo link
+    description: Share a public link if available.
+- type: textarea
+  id: details
+  attributes:
+    label: How does it use Electron2D?
+    description: Include the engine commit, platforms and features used.
+  validations:
+    required: true
+- type: textarea
+  id: media
+  attributes:
+    label: Screenshots, video or lessons learned

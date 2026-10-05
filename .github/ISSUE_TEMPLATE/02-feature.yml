@@ -1,0 +1,51 @@
+name: Feature request
+description: Propose a concrete engine capability or improvement.
+labels:
+- enhancement
+- 'status: needs triage'
+body:
+- type: markdown
+  attributes:
+    value: For early ideas or architecture alternatives, start in [Ideas](https://github.com/edwardgushchin/Electron2D/discussions/categories/ideas).
+      Requests are proposals, not delivery commitments.
+- type: dropdown
+  id: area
+  attributes:
+    label: Affected area
+    options:
+    - Core and I/O
+    - Scenes and animation
+    - Rendering and shaders
+    - Game UI and text
+    - Physics
+    - Audio
+    - Input and display
+    - Navigation
+    - Networking
+    - Resources and localization
+    - Build, packaging and CI
+    - Documentation
+    - Other / unsure
+- type: textarea
+  id: problem
+  attributes:
+    label: Problem and use case
+    description: Explain what a game or tool needs to do and what currently prevents it.
+  validations:
+    required: true
+- type: textarea
+  id: proposal
+  attributes:
+    label: Proposed behavior
+    description: Describe the public behavior and an example of its use.
+  validations:
+    required: true
+- type: textarea
+  id: alternatives
+  attributes:
+    label: Alternatives and workarounds
+- type: textarea
+  id: scope
+  attributes:
+    label: Dependencies and verification
+    description: Which subsystems/platforms are involved? How would we know this works?

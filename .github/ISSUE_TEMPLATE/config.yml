@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+- name: Questions and troubleshooting
+  url: https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a
+  about: Get help with setup, public API usage and game development.
+- name: Ideas and architecture discussions
+  url: https://github.com/edwardgushchin/Electron2D/discussions/categories/ideas
+  about: Explore a proposal before opening a scoped feature request.
+- name: Report a security vulnerability privately
+  url: https://github.com/edwardgushchin/Electron2D/security/advisories/new
+  about: Use the private reporting form; never disclose an exploit in a public issue.
