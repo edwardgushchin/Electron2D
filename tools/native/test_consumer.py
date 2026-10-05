@@ -114,7 +114,7 @@ def check(feed, rid):
                 raise RuntimeError("Managed engine package selects native dependencies")
         environment["RestoreAdditionalProjectSources"] = str(engine_feed)
         # NuGet must refuse an explicitly pinned older managed engine.
-        older = "0.1.0-alpha.0"
+        older = "0.0.0"
         run([dotnet, "pack", "Electron2D.csproj", "-c", "Release", "--no-build",
              "-p:PackageVersion=" + older, "-o", str(engine_feed)], engine, environment)
         downgrade = work / "downgrade"
