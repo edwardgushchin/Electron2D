@@ -124,3 +124,7 @@ Server-only connections share the scene joint kernels and body-local anchors thr
 [Physics world activity](../classes/PhysicsServer.md#activity) is now independent of scene scheduling under [ADR 0089](../decisions/physics-activity.md#adr-0089). SceneTree activates its lazily created world; explicit SpaceCreate defaults inactive and requires SpaceSetActive(true). Global/local false skips simulation, force consumption and solver callbacks without clearing native state or accumulating elapsed time. Queries/configuration/cleanup and scene callbacks/timers continue. [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks the profile and warmed allocation on Linux/.NET 10.
 
 Prepared point/shape/contact query destinations and character slide snapshots can be reused without copied output allocation. Rigid contact limits prepare monitoring storage. Solver contact compaction and sleep/wake transitions reuse cached backend buffers; caches are released with their world. The PhysicsSandbox native performance gate checks owner-thread managed allocations with UI and debug drawing. Native/GPU allocation is not measured by that gate.
+
+## Backend throughput
+
+The internal world selects retained workers for large awake populations and eight-lane SIMD contact arithmetic. Public physics callback timing and four substeps remain unchanged. [The measured contract](../components/box2d-performance.md) separates raw backend throughput from scene synchronization, rendering and foreign-platform acceptance.

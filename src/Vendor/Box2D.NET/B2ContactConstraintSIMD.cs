@@ -11,8 +11,8 @@ namespace Box2D.NET
     // https://box2d.org/files/ErinCatto_SoftConstraints_GDC2011.pdf
     internal struct B2ContactConstraintSIMD
     {
-        public B2FixedArray4<int> indexA; // = new int[B2_SIMD_WIDTH];
-        public B2FixedArray4<int> indexB; // = new int[B2_SIMD_WIDTH];
+        public B2FixedArray8<int> indexA; // = new int[B2_SIMD_WIDTH];
+        public B2FixedArray8<int> indexB; // = new int[B2_SIMD_WIDTH];
 
         public B2FloatW invMassA, invMassB;
         public B2FloatW invIA, invIB;

@@ -32,7 +32,10 @@ namespace Box2D.NET
             stageCount = 0;
             enableWarmStarting = false;
             atomicSyncBits = default;
+            workerFailure = null;
         }
+
+        internal System.Exception workerFailure;
 
         // time step
         public float dt;

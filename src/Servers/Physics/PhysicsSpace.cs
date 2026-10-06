@@ -29,6 +29,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly Dictionary<(ulong, ulong), OneWayPair> _oneWayPairs = [];
     private readonly List<(ulong, ulong)> _staleOneWayPairs = [];
     private readonly B2WorldId _worldID;
+    private readonly PhysicsTaskScheduler _tasks;
     private readonly Vector2 _defaultGravity;
     private readonly int _ownerThreadID = Environment.CurrentManagedThreadId;
     internal PhysicsAreaFields DefaultAreaFields { get; }
@@ -61,7 +62,14 @@ internal sealed partial class PhysicsSpace : IDisposable
         definition.restitutionThreshold = 0;
         definition.frictionCallback = CombineFriction;
         definition.restitutionCallback = CombineBounce;
+        _tasks = new(OperatingSystem.IsBrowser() ? 1 : Math.Min(4, Environment.ProcessorCount));
+        definition.workerCount = _tasks.WorkerCount;
+        definition.enqueueTask = _tasks.Enqueue;
+        definition.finishTask = _tasks.Finish;
         _worldID = b2CreateWorld(definition);
+        var world = b2GetWorldFromId(_worldID);
+        _tasks.Bind(world);
+        world.workerCount = 1;
         b2World_SetPreSolveCallback(_worldID, PreSolveContact, this);
     }
 
@@ -332,6 +340,8 @@ internal sealed partial class PhysicsSpace : IDisposable
                 else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
             }
             _contactStep++;
+            var world = b2GetWorldFromId(_worldID);
+            world.workerCount = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks.WorkerCount : 1;
             StepKinematicPaths(delta);
             solverAdvanced = true;
             foreach (var body in _bodies)
@@ -367,6 +377,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
+        _tasks.Dispose();
         foreach (var joint in _joints) joint.DetachBackend();
         _joints.Clear();
         while (_jointRuntimes.Count > 0) _jointRuntimes[^1].DetachSpace();
@@ -408,19 +419,22 @@ internal sealed partial class PhysicsSpace : IDisposable
         var secondData = secondTag?.OneWay;
         if (firstData is null && secondData is null) return true;
 
-        var firstKey = PackShapeID(first);
-        var secondKey = PackShapeID(second);
-        var key = firstKey < secondKey ? (firstKey, secondKey) : (secondKey, firstKey);
-        if (_oneWayPairs.TryGetValue(key, out var previous))
+        lock (_oneWayPairs)
         {
-            _oneWayPairs[key] = previous with { SeenStep = _contactStep };
-            return previous.Allowed;
-        }
+            var firstKey = PackShapeID(first);
+            var secondKey = PackShapeID(second);
+            var key = firstKey < secondKey ? (firstKey, secondKey) : (secondKey, firstKey);
+            if (_oneWayPairs.TryGetValue(key, out var previous))
+            {
+                _oneWayPairs[key] = previous with { SeenStep = _contactStep };
+                return previous.Allowed;
+            }
 
-        var allowed = (firstData is null || FacesContact(first, firstData, normal, firstSurface: true)) &&
-            (secondData is null || FacesContact(second, secondData, normal, firstSurface: false));
-        _oneWayPairs.Add(key, new(allowed, _contactStep));
-        return allowed;
+            var allowed = (firstData is null || FacesContact(first, firstData, normal, firstSurface: true)) &&
+                (secondData is null || FacesContact(second, secondData, normal, firstSurface: false));
+            _oneWayPairs.Add(key, new(allowed, _contactStep));
+            return allowed;
+        }
     }
 
     private static bool FacesContact(B2ShapeId shape, OneWayContactData data, B2Vec2 normal, bool firstSurface)

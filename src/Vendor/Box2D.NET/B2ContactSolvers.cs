@@ -643,130 +643,92 @@ namespace Box2D.NET
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2ZeroW()
         {
-            return new B2FloatW(0.0f, 0.0f, 0.0f, 0.0f);
+            return new B2FloatW();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2SplatW(float scalar)
         {
-            return new B2FloatW(scalar, scalar, scalar, scalar);
+            return new B2FloatW(scalar, scalar, scalar, scalar, scalar, scalar, scalar, scalar);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2AddW(in B2FloatW a, in B2FloatW b)
         {
-            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) + Unsafe.BitCast<B2FloatW, Vector128<float>>(b));
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector256<float>>(a) + Unsafe.BitCast<B2FloatW, Vector256<float>>(b));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2SubW(in B2FloatW a, in B2FloatW b)
         {
-            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) - Unsafe.BitCast<B2FloatW, Vector128<float>>(b));
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector256<float>>(a) - Unsafe.BitCast<B2FloatW, Vector256<float>>(b));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2MulW(in B2FloatW a, in B2FloatW b)
         {
-            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) * Unsafe.BitCast<B2FloatW, Vector128<float>>(b));
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector256<float>>(a) * Unsafe.BitCast<B2FloatW, Vector256<float>>(b));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2MulAddW(in B2FloatW a, in B2FloatW b, in B2FloatW c)
         {
-            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) + Unsafe.BitCast<B2FloatW, Vector128<float>>(b) * Unsafe.BitCast<B2FloatW, Vector128<float>>(c));
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector256<float>>(a) + Unsafe.BitCast<B2FloatW, Vector256<float>>(b) * Unsafe.BitCast<B2FloatW, Vector256<float>>(c));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2MulSubW(in B2FloatW a, in B2FloatW b, in B2FloatW c)
         {
-            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) - Unsafe.BitCast<B2FloatW, Vector128<float>>(b) * Unsafe.BitCast<B2FloatW, Vector128<float>>(c));
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector256<float>>(a) - Unsafe.BitCast<B2FloatW, Vector256<float>>(b) * Unsafe.BitCast<B2FloatW, Vector256<float>>(c));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2MinW(in B2FloatW a, in B2FloatW b)
         {
-            return new B2FloatW(
-                a.X <= b.X ? a.X : b.X,
-                a.Y <= b.Y ? a.Y : b.Y,
-                a.Z <= b.Z ? a.Z : b.Z,
-                a.W <= b.W ? a.W : b.W
-            );
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Vector256.ConditionalSelect(Vector256.LessThanOrEqual(Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Unsafe.BitCast<B2FloatW, Vector256<float>>(b)), Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Unsafe.BitCast<B2FloatW, Vector256<float>>(b)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2MaxW(in B2FloatW a, in B2FloatW b)
         {
-            return new B2FloatW(
-                a.X >= b.X ? a.X : b.X,
-                a.Y >= b.Y ? a.Y : b.Y,
-                a.Z >= b.Z ? a.Z : b.Z,
-                a.W >= b.W ? a.W : b.W
-            );
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Vector256.ConditionalSelect(Vector256.GreaterThanOrEqual(Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Unsafe.BitCast<B2FloatW, Vector256<float>>(b)), Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Unsafe.BitCast<B2FloatW, Vector256<float>>(b)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2SymClampW(in B2FloatW a, in B2FloatW b)
         {
-            // a = clamp(a, -b, b)
-            return new B2FloatW(
-                b2ClampFloat(a.X, -b.X, b.X),
-                b2ClampFloat(a.Y, -b.Y, b.Y),
-                b2ClampFloat(a.Z, -b.Z, b.Z),
-                b2ClampFloat(a.W, -b.W, b.W)
-            );
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Vector256.ConditionalSelect(Vector256.LessThan(Unsafe.BitCast<B2FloatW, Vector256<float>>(a), -Unsafe.BitCast<B2FloatW, Vector256<float>>(b)), -Unsafe.BitCast<B2FloatW, Vector256<float>>(b),
+                Vector256.ConditionalSelect(Vector256.GreaterThan(Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Unsafe.BitCast<B2FloatW, Vector256<float>>(b)), Unsafe.BitCast<B2FloatW, Vector256<float>>(b), Unsafe.BitCast<B2FloatW, Vector256<float>>(a))));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2OrW(in B2FloatW a, in B2FloatW b)
         {
-            return new B2FloatW(
-                a.X != 0.0f || b.X != 0.0f ? 1.0f : 0.0f,
-                a.Y != 0.0f || b.Y != 0.0f ? 1.0f : 0.0f,
-                a.Z != 0.0f || b.Z != 0.0f ? 1.0f : 0.0f,
-                a.W != 0.0f || b.W != 0.0f ? 1.0f : 0.0f
-            );
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>((~Vector256.Equals(Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Vector256<float>.Zero) | ~Vector256.Equals(Unsafe.BitCast<B2FloatW, Vector256<float>>(b), Vector256<float>.Zero)) & Vector256<float>.One);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2GreaterThanW(in B2FloatW a, in B2FloatW b)
         {
-            return new B2FloatW(
-                a.X > b.X ? 1.0f : 0.0f,
-                a.Y > b.Y ? 1.0f : 0.0f,
-                a.Z > b.Z ? 1.0f : 0.0f,
-                a.W > b.W ? 1.0f : 0.0f
-            );
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Vector256.GreaterThan(Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Unsafe.BitCast<B2FloatW, Vector256<float>>(b)) & Vector256<float>.One);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2EqualsW(in B2FloatW a, in B2FloatW b)
         {
-            // TODO: @ikpil check float equal
-            return new B2FloatW(
-                a.X == b.X ? 1.0f : 0.0f,
-                a.Y == b.Y ? 1.0f : 0.0f,
-                a.Z == b.Z ? 1.0f : 0.0f,
-                a.W == b.W ? 1.0f : 0.0f
-            );
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Vector256.Equals(Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Unsafe.BitCast<B2FloatW, Vector256<float>>(b)) & Vector256<float>.One);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool b2AllZeroW(in B2FloatW a)
         {
-            return a.X == 0.0f && a.Y == 0.0f && a.Z == 0.0f && a.W == 0.0f;
+            return Vector256.EqualsAll(Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Vector256<float>.Zero);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2BlendW(in B2FloatW a, in B2FloatW b, in B2FloatW mask)
         {
-            // component-wise returns mask ? b : a
-            return new B2FloatW()
-            {
-                X = mask.X != 0.0f ? b.X : a.X,
-                Y = mask.Y != 0.0f ? b.Y : a.Y,
-                Z = mask.Z != 0.0f ? b.Z : a.Z,
-                W = mask.W != 0.0f ? b.W : a.W,
-            };
+            return Unsafe.BitCast<Vector256<float>, B2FloatW>(Vector256.ConditionalSelect(Vector256.Equals(Unsafe.BitCast<B2FloatW, Vector256<float>>(mask), Vector256<float>.Zero), Unsafe.BitCast<B2FloatW, Vector256<float>>(a), Unsafe.BitCast<B2FloatW, Vector256<float>>(b)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1127,15 +1089,20 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
             B2BodyState s3 = indices[2] == B2_NULL_INDEX ? identity : states[indices[2]];
             B2BodyState s4 = indices[3] == B2_NULL_INDEX ? identity : states[indices[3]];
 
+            B2BodyState s5 = indices[4] == B2_NULL_INDEX ? identity : states[indices[4]];
+            B2BodyState s6 = indices[5] == B2_NULL_INDEX ? identity : states[indices[5]];
+            B2BodyState s7 = indices[6] == B2_NULL_INDEX ? identity : states[indices[6]];
+            B2BodyState s8 = indices[7] == B2_NULL_INDEX ? identity : states[indices[7]];
+
             B2BodyStateW simdBody = new B2BodyStateW();
-            simdBody.v.X = new B2FloatW(s1.linearVelocity.X, s2.linearVelocity.X, s3.linearVelocity.X, s4.linearVelocity.X);
-            simdBody.v.Y = new B2FloatW(s1.linearVelocity.Y, s2.linearVelocity.Y, s3.linearVelocity.Y, s4.linearVelocity.Y);
-            simdBody.w = new B2FloatW(s1.angularVelocity, s2.angularVelocity, s3.angularVelocity, s4.angularVelocity);
-            simdBody.flags = new B2FloatW((float)s1.flags, (float)s2.flags, (float)s3.flags, (float)s4.flags);
-            simdBody.dp.X = new B2FloatW(s1.deltaPosition.X, s2.deltaPosition.X, s3.deltaPosition.X, s4.deltaPosition.X);
-            simdBody.dp.Y = new B2FloatW(s1.deltaPosition.Y, s2.deltaPosition.Y, s3.deltaPosition.Y, s4.deltaPosition.Y);
-            simdBody.dq.C = new B2FloatW(s1.deltaRotation.c, s2.deltaRotation.c, s3.deltaRotation.c, s4.deltaRotation.c);
-            simdBody.dq.S = new B2FloatW(s1.deltaRotation.s, s2.deltaRotation.s, s3.deltaRotation.s, s4.deltaRotation.s);
+            simdBody.v.X = new B2FloatW(s1.linearVelocity.X, s2.linearVelocity.X, s3.linearVelocity.X, s4.linearVelocity.X, s5.linearVelocity.X, s6.linearVelocity.X, s7.linearVelocity.X, s8.linearVelocity.X);
+            simdBody.v.Y = new B2FloatW(s1.linearVelocity.Y, s2.linearVelocity.Y, s3.linearVelocity.Y, s4.linearVelocity.Y, s5.linearVelocity.Y, s6.linearVelocity.Y, s7.linearVelocity.Y, s8.linearVelocity.Y);
+            simdBody.w = new B2FloatW(s1.angularVelocity, s2.angularVelocity, s3.angularVelocity, s4.angularVelocity, s5.angularVelocity, s6.angularVelocity, s7.angularVelocity, s8.angularVelocity);
+            simdBody.flags = new B2FloatW((float)s1.flags, (float)s2.flags, (float)s3.flags, (float)s4.flags, (float)s5.flags, (float)s6.flags, (float)s7.flags, (float)s8.flags);
+            simdBody.dp.X = new B2FloatW(s1.deltaPosition.X, s2.deltaPosition.X, s3.deltaPosition.X, s4.deltaPosition.X, s5.deltaPosition.X, s6.deltaPosition.X, s7.deltaPosition.X, s8.deltaPosition.X);
+            simdBody.dp.Y = new B2FloatW(s1.deltaPosition.Y, s2.deltaPosition.Y, s3.deltaPosition.Y, s4.deltaPosition.Y, s5.deltaPosition.Y, s6.deltaPosition.Y, s7.deltaPosition.Y, s8.deltaPosition.Y);
+            simdBody.dq.C = new B2FloatW(s1.deltaRotation.c, s2.deltaRotation.c, s3.deltaRotation.c, s4.deltaRotation.c, s5.deltaRotation.c, s6.deltaRotation.c, s7.deltaRotation.c, s8.deltaRotation.c);
+            simdBody.dq.S = new B2FloatW(s1.deltaRotation.s, s2.deltaRotation.s, s3.deltaRotation.s, s4.deltaRotation.s, s5.deltaRotation.s, s6.deltaRotation.s, s7.deltaRotation.s, s8.deltaRotation.s);
 
             return simdBody;
         }
@@ -1143,36 +1110,15 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
         // This writes only the velocities back to the solver bodies
         internal static void b2ScatterBodies(ReadOnlySpan<B2BodyState> states, ReadOnlySpan<int> indices, ref B2BodyStateW simdBody)
         {
-            if (indices[0] != B2_NULL_INDEX && (states[indices[0]].flags & (uint)B2BodyFlags.b2_dynamicFlag) != 0)
+            for (int lane = 0; lane < B2_SIMD_WIDTH; ++lane)
             {
-                B2BodyState state = states[indices[0]];
-                state.linearVelocity.X = simdBody.v.X.X;
-                state.linearVelocity.Y = simdBody.v.Y.X;
-                state.angularVelocity = simdBody.w.X;
-            }
-
-            if (indices[1] != B2_NULL_INDEX && (states[indices[1]].flags & (uint)B2BodyFlags.b2_dynamicFlag) != 0)
-            {
-                B2BodyState state = states[indices[1]];
-                state.linearVelocity.X = simdBody.v.X.Y;
-                state.linearVelocity.Y = simdBody.v.Y.Y;
-                state.angularVelocity = simdBody.w.Y;
-            }
-
-            if (indices[2] != B2_NULL_INDEX && (states[indices[2]].flags & (uint)B2BodyFlags.b2_dynamicFlag) != 0)
-            {
-                B2BodyState state = states[indices[2]];
-                state.linearVelocity.X = simdBody.v.X.Z;
-                state.linearVelocity.Y = simdBody.v.Y.Z;
-                state.angularVelocity = simdBody.w.Z;
-            }
-
-            if (indices[3] != B2_NULL_INDEX && (states[indices[3]].flags & (uint)B2BodyFlags.b2_dynamicFlag) != 0)
-            {
-                B2BodyState state = states[indices[3]];
-                state.linearVelocity.X = simdBody.v.X.W;
-                state.linearVelocity.Y = simdBody.v.Y.W;
-                state.angularVelocity = simdBody.w.W;
+                int index = indices[lane];
+                if (index == B2_NULL_INDEX) continue;
+                B2BodyState state = states[index];
+                if ((state.flags & (uint)B2BodyFlags.b2_dynamicFlag) == 0) continue;
+                state.linearVelocity.X = simdBody.v.X[lane];
+                state.linearVelocity.Y = simdBody.v.Y[lane];
+                state.angularVelocity = simdBody.w[lane];
             }
         }
 
@@ -1468,6 +1414,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                     c.totalNormalImpulse1 = b2AddW(c.totalNormalImpulse1, c.normalImpulse1);
                 }
 
+                if (!b2AllZeroW(c.normalMass2))
                 {
                     // fixed anchors
                     B2Vec2W rA = c.anchorA2;
@@ -1588,6 +1535,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                 }
 
                 // second point non-penetration constraint
+                if (!b2AllZeroW(c.normalMass2))
                 {
                     // moving anchors for current separation
                     B2Vec2W rsA = b2RotateVectorW(bA.dq, c.anchorA2);
@@ -1679,6 +1627,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                 }
 
                 // second point friction constraint
+                if (!b2AllZeroW(c.normalMass2))
                 {
                     // fixed anchors for Jacobians
                     B2Vec2W rA = c.anchorA2;
@@ -1801,6 +1750,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                 }
 
                 // second point non-penetration constraint
+                if (!b2AllZeroW(c.normalMass2))
                 {
                     // Set effective mass to zero if restitution should not be applied
                     B2FloatW mask1 = b2GreaterThanW(b2AddW(c.relativeVelocity2, threshold), zero);
