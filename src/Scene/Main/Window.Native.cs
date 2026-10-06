@@ -100,6 +100,7 @@ public partial class Window
         _display?.WindowSetFlagCore(flag, enabled);
         var bit = 1u << (int)flag;
         _flags = enabled ? _flags | bit : _flags & ~bit;
+        if (flag == WindowFlag.Borderless && (_keepTitleVisible || ClampToEmbedder)) UpdateEmbeddedContents();
         QueueEmbeddedRedraw();
     }
 

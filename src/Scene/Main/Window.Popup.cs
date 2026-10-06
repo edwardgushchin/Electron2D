@@ -135,7 +135,8 @@ public partial class Window
     internal virtual void AdjustPopup() { }
     internal void UpdateEmbeddedContents()
     {
-        if (WrapControls) { var min = GetContentsMinimumSize().Ceil(); var size = new Vector2i(Math.Max(_size.X, checked((int)min.X)), Math.Max(_size.Y, checked((int)min.Y))); size = new(Math.Max(size.X, MinSize.X), Math.Max(size.Y, MinSize.Y)); if (MaxSize.X > 0) size.X = Math.Min(size.X, MaxSize.X); if (MaxSize.Y > 0) size.Y = Math.Min(size.Y, MaxSize.Y); if (size != _size) CommitSize(size); }
+        if (WrapControls || _keepTitleVisible) { var min = WrapControls ? GetContentsMinimumSize().Ceil() : Vector2.Zero; var size = new Vector2i(Math.Max(_size.X, checked((int)min.X)), Math.Max(_size.Y, checked((int)min.Y))); size = size.Max(MinSize).Max(TitleMinimum()); if (MaxSize.X > 0) size.X = Math.Min(size.X, MaxSize.X); if (MaxSize.Y > 0) size.Y = Math.Min(size.Y, MaxSize.Y); if (size != _size) CommitSize(size); }
+        if (ClampToEmbedder && Embedder != null) Position = Position;
         _embeddedCanvas?.QueueRedraw();
     }
     internal void EmbeddedVisibilityChanged()
@@ -185,7 +186,7 @@ public partial class Window
             {
                 var titleHeight = window.GetThemeConstant("title_height", "Window");
                 var title = new Rect2(rect.Position - new Vector2(0, titleHeight), new Vector2(rect.Size.X, titleHeight));
-                DrawStyleBox(window.GetThemeStyleBox("embedded_border", "Window")!, new(title.Position, title.Size + rect.Size with { X = title.Size.X }));
+                DrawStyleBox(window.GetThemeStyleBox("embedded_border", "Window")!, new(title.Position, new Vector2(rect.Size.X, titleHeight + rect.Size.Y)));
                 if (window.GetThemeFont("title_font", "Window") is { } font) DrawString(font, title.Position + new Vector2(8, titleHeight - 10), window.Title, width: MathF.Max(0, rect.Size.X - 40), fontSize: window.GetThemeFontSize("title_font_size", "Window"), modulate: window.GetThemeColor("title_color", "Window"));
                 var close = title.Position + new Vector2(title.Size.X - 18, 18); DrawLine(close - new Vector2(4, 4), close + new Vector2(4, 4), Colors.White, 2); DrawLine(close + new Vector2(-4, 4), close + new Vector2(4, -4), Colors.White, 2);
             }
@@ -195,6 +196,7 @@ public partial class Window
     }
     private static readonly PropertyDescriptor[] PopupProperties =
     [
+        new PropertyDescriptor<Window,bool>(nameof(KeepTitleVisible),w=>w.KeepTitleVisible,(w,v)=>w.KeepTitleVisible=v,_=>false,stored:true),
         new PropertyDescriptor<Window,LayoutDirection>(nameof(LayoutDirection),w=>w.LayoutDirection,(w,v)=>w.LayoutDirection=v,_=>LayoutDirection.Inherited,stored:true),
         new PropertyDescriptor<Window,bool>(nameof(Transient),w=>w.Transient,(w,v)=>w.Transient=v,_=>false,stored:true),
         new PropertyDescriptor<Window,bool>(nameof(Exclusive),w=>w.Exclusive,(w,v)=>w.Exclusive=v,_=>false,stored:true),

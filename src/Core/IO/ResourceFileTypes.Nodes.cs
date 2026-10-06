@@ -2,6 +2,8 @@ namespace Electron2D;
 
 public static partial class ResourceFileTypes
 {
+    private static AcceptDialog CreateAcceptDialogFileNode() => new();
+    private static ConfirmationDialog CreateConfirmationDialogFileNode() => new();
     private static OptionButton CreateOptionButtonFileNode() => new();
     private static TabContainer CreateTabContainerFileNode() => new();
     private static PopupMenu CreatePopupMenuFileNode() => new();
@@ -9,6 +11,8 @@ public static partial class ResourceFileTypes
     private static PopupPanel CreatePopupPanelFileNode() => new PopupPanel();
     private static void RegisterBuiltInNodes()
     {
+        RegisterNode("AcceptDialog", CreateAcceptDialogFileNode);
+        RegisterNode("ConfirmationDialog", CreateConfirmationDialogFileNode);
         RegisterNode("AnimatableBody", CreateAnimatableBodyFileNode);
         RegisterNode("AnimatedSprite", CreateAnimatedSpriteFileNode);
         RegisterNode("AnimationMixer", CreateAnimationMixerFileNode);

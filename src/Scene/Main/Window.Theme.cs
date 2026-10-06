@@ -238,6 +238,7 @@ public partial class Window
         List<Exception>? errors = null;
         try { ThemeChanged?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThemeOwner.Invalidate();
+        try { UpdateEmbeddedContents(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Theme notification callbacks failed.", errors);
     }
     internal override void OnTreeMembershipChanged(bool entering)

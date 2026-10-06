@@ -45,7 +45,7 @@ public sealed partial class ThemeDB : ElectronObject
         _defaultTheme.SetColor("title_color", "Window", new(.875f, .875f, .875f)); _defaultTheme.SetFontSize("title_font_size", "Window", 16);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
-        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); AddLineEditDefaults(); AddTabDefaults(); AddMenuDefaults(); }
+        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); AddLineEditDefaults(); AddTabDefaults(); AddMenuDefaults(); AddDialogDefaults(); }
         catch
         {
             _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();

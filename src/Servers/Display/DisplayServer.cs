@@ -40,6 +40,8 @@ public sealed partial class DisplayServer : ElectronObject
     private readonly uint _sdlWindowId;
     private readonly bool _waylandWindowPosition;
     private readonly bool _pixelWindowCoordinates;
+    internal static bool PlatformSwapCancelOK => OperatingSystem.IsWindows();
+    internal bool GetSwapCancelOKCore() { EnsureOwner(); return PlatformSwapCancelOK; }
     private readonly bool _linuxPortalThemeDriver;
     private readonly bool _linuxPortalThemeSupported;
     private readonly nint _gtkScreen;

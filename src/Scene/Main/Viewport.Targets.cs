@@ -53,7 +53,7 @@ public abstract partial class Viewport
     internal void TextureSizeChanged()
     {
         List<Exception>? errors = null;
-        if (TextureSizeUpdated is { } handlers) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        if (TextureSizeUpdated is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         AnimationNode.ThrowCollected("Viewport texture notification failed.", errors);
     }
     internal void InvalidateViewportRecording() { if (RenderingOwner is { } renderer) renderer.InvalidateViewportRecordings(this); else InvalidateRecording(this); }

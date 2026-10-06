@@ -73,7 +73,7 @@ public abstract partial class Viewport : Node
     {
         List<Exception>? errors = null;
         try { TextureSizeChanged(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
-        if (SizeChanged is { } handlers) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        if (SizeChanged is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         AnimationNode.ThrowCollected("Viewport size notification failed.", errors);
     }
     internal void NotifyGUIFocusChanged(Control control) => GUIFocusChanged?.Invoke(control);

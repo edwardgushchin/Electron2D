@@ -2,6 +2,11 @@ namespace Electron2D;
 
 public sealed partial class DisplayServer
 {
+    /// <summary>Reports whether the platform convention places OK before Cancel.</summary>
+    /// <returns>True on Windows; false on the other supported platform profiles.</returns>
+    /// <exception cref="InvalidOperationException">The service is unavailable or accessed off-owner.</exception>
+    public static bool GetSwapCancelOK() => RequireService().GetSwapCancelOKCore();
+
     /// <summary>Gets whether a native service is currently available.</summary>
     /// <value>True while a service is published; this observation does not reserve its lifetime.</value>
     public static bool IsAvailable => Service is not null;

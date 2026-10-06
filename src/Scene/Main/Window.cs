@@ -60,6 +60,7 @@ public partial class Window : Viewport
                 return;
             _display?.WindowSetTitleCore(value);
             _title = value;
+            UpdateEmbeddedContents();
             QueueEmbeddedRedraw();
             UpdateConfigurationWarnings();
             TitleChanged?.Invoke();
@@ -86,7 +87,7 @@ public partial class Window : Viewport
             RenderingOwner?.EnsureViewportMutation();
             if (_display is null)
             {
-                var minimum = _minSize;
+                var minimum = _minSize.Max(TitleMinimum());
                 if (_wrapControls) { var content = GetContentsMinimumSize().Ceil(); minimum = minimum.Max(new Vector2i(checked((int)content.X), checked((int)content.Y))); }
                 value = value.Max(minimum);
                 if (_maxSize.X > 0) value.X = Math.Min(value.X, _maxSize.X);
@@ -110,7 +111,7 @@ public partial class Window : Viewport
     public Vector2i MinSize
     {
         get { ThrowIfDisposed(); return _display?.WindowGetMinSizeCore() ?? _minSize; }
-        set { EnsureMutable(); ValidateLimits(value, MaxSize); _display?.WindowSetMinSizeCore(value); _minSize = value; }
+        set { EnsureMutable(); ValidateLimits(value, MaxSize); _display?.WindowSetMinSizeCore(value); _minSize = value; if (_keepTitleVisible) UpdateEmbeddedContents(); }
     }
 
     /// <summary>Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis.</summary>
@@ -122,7 +123,7 @@ public partial class Window : Viewport
     public Vector2i MaxSize
     {
         get { ThrowIfDisposed(); return _display?.WindowGetMaxSizeCore() ?? _maxSize; }
-        set { EnsureMutable(); ValidateLimits(MinSize, value); _display?.WindowSetMaxSizeCore(value); _maxSize = value; }
+        set { EnsureMutable(); ValidateLimits(MinSize, value); _display?.WindowSetMaxSizeCore(value); _maxSize = value; if (_keepTitleVisible) UpdateEmbeddedContents(); }
     }
 
     /// <summary>Gets or requests the client origin in native desktop coordinates.</summary>
@@ -135,7 +136,7 @@ public partial class Window : Viewport
     public Vector2i Position
     {
         get { ThrowIfDisposed(); return _display?.WindowGetPositionCore() ?? _screenPosition ?? Vector2i.Zero; }
-        set { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); _display?.WindowSetPositionCore(value); _screenPosition = value; _embeddedCanvas?.QueueRedraw(); }
+        set { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); value = ClampEmbeddedPosition(value); _display?.WindowSetPositionCore(value); _screenPosition = value; _embeddedCanvas?.QueueRedraw(); }
     }
 
     /// <summary>Gets or sets native-root or embedded-child visibility.</summary>
@@ -268,6 +269,7 @@ public partial class Window : Viewport
 
     internal void OpenNative()
     {
+        if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible);
         if (OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser())
         {

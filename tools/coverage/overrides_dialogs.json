@@ -1,0 +1,318 @@
+{
+  "mappings": [
+    {
+      "godot": "class:AcceptDialog",
+      "electron2d": "T:Electron2D.AcceptDialog",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::method:add_button(String:,bool:,String:)",
+      "electron2d": "method:Electron2D.AcceptDialog.AddButton(System.String,System.Boolean,System.String)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::method:add_cancel_button(String:)",
+      "electron2d": "method:Electron2D.AcceptDialog.AddCancelButton(System.String)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::method:get_label()",
+      "electron2d": "method:Electron2D.AcceptDialog.GetLabel()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::method:get_ok_button()",
+      "electron2d": "method:Electron2D.AcceptDialog.GetOKButton()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::method:register_text_enter(LineEdit:)",
+      "electron2d": "method:Electron2D.AcceptDialog.RegisterTextEnter(Electron2D.LineEdit)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::method:remove_button(Button:)",
+      "electron2d": "method:Electron2D.AcceptDialog.RemoveButton(Electron2D.Button)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:dialog_autowrap",
+      "electron2d": "property:Electron2D.AcceptDialog.DialogAutowrap()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:dialog_close_on_escape",
+      "electron2d": "property:Electron2D.AcceptDialog.DialogCloseOnEscape()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:dialog_hide_on_ok",
+      "electron2d": "property:Electron2D.AcceptDialog.DialogHideOnOK()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:dialog_text",
+      "electron2d": "property:Electron2D.AcceptDialog.DialogText()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:exclusive",
+      "electron2d": "property:Electron2D.Window.Exclusive()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:keep_title_visible",
+      "electron2d": "property:Electron2D.Window.KeepTitleVisible()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:maximize_disabled",
+      "electron2d": "property:Electron2D.Window.MaximizeDisabled()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:minimize_disabled",
+      "electron2d": "property:Electron2D.Window.MinimizeDisabled()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:ok_button_text",
+      "electron2d": "property:Electron2D.AcceptDialog.OKButtonText()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:title",
+      "electron2d": "property:Electron2D.Window.Title()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:transient",
+      "electron2d": "property:Electron2D.Window.Transient()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:visible",
+      "electron2d": "property:Electron2D.Window.Visible()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::property:wrap_controls",
+      "electron2d": "property:Electron2D.Window.WrapControls()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::signal:canceled()",
+      "electron2d": "event:Electron2D.AcceptDialog.Canceled()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::signal:confirmed()",
+      "electron2d": "event:Electron2D.AcceptDialog.Confirmed()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::signal:custom_action(StringName:)",
+      "electron2d": "event:Electron2D.AcceptDialog.CustomAction()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::theme_item:buttons_min_height",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::theme_item:buttons_min_width",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::theme_item:buttons_separation",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "AcceptDialog::theme_item:panel",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "class:ConfirmationDialog",
+      "electron2d": "T:Electron2D.ConfirmationDialog",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "ConfirmationDialog::method:get_cancel_button()",
+      "electron2d": "method:Electron2D.ConfirmationDialog.GetCancelButton()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "ConfirmationDialog::property:cancel_button_text",
+      "electron2d": "property:Electron2D.ConfirmationDialog.CancelButtonText()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "ConfirmationDialog::property:min_size",
+      "electron2d": "property:Electron2D.Window.MinSize()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "ConfirmationDialog::property:size",
+      "electron2d": "property:Electron2D.Window.Size()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "ConfirmationDialog::property:title",
+      "electron2d": "property:Electron2D.Window.Title()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "Window::property:keep_title_visible",
+      "electron2d": "property:Electron2D.Window.KeepTitleVisible()",
+      "reason": "ADR 0040: embedded windows expand their width using the actual title font and close-button allowance, bounded by MaxSize. Independent native title metrics are unavailable; enabled native roots fail explicitly before acquiring resources."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_close_dialog",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUICloseDialog()",
+      "reason": "ADRs 0031/0038: permanent independently rebindable dialog-close action; Escape default and Command-W on macOS use the actual typed InputMap loader and domain validation."
+    },
+    {
+      "godot": "ProjectSettings::property:gui/common/swap_cancel_ok",
+      "electron2d": "property:Electron2D.ProjectSettings.SwapCancelOK()",
+      "reason": "ADRs 0031/0038/0040: validated typed Auto/Cancel First/OK First project definition drives newly added dialog cancel buttons, with platform order available before native startup."
+    },
+    {
+      "godot": "DisplayServer::method:get_swap_cancel_ok()",
+      "electron2d": "method:Electron2D.DisplayServer.GetSwapCancelOK()",
+      "reason": "ADRs 0040/0095: active retained display service returns the executable platform dialog order (Windows OK-first, other accepted profiles Cancel-first); owner-thread and unavailable-service guards execute. Dialog authoring uses the same internal platform policy before startup; foreign-platform acceptance remains ADR 0021 scoped."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.AcceptDialog..ctor()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ConfirmationDialog..ctor()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.CreateSceneInstanceFactory()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.Dispose(System.Boolean)",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.GetPropertyDescriptors()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.OnCancelPressed()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.OnCustomAction(System.String)",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.OnGetContentsMinimumSize()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.OnInput(Electron2D.InputEvent)",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.OnNotification(System.Int32)",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.OnOKPressed()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.AcceptDialog.SetDefaultOKText(System.String)",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.ConfirmationDialog.CreateSceneInstanceFactory()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.ConfirmationDialog.GetPropertyDescriptors()",
+      "reason": "Typed C# owned-control construction, subclass confirmation/cancel/custom hooks, default-caption hook and inherited layout/lifetime/scene descriptor projection for executable dialogs. Internal callback names are not public runtime commands.",
+      "adr": "ADRs 0008/0023/0040"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "AcceptDialog::method:add_button(String:,bool:,String:)",
+        "AcceptDialog::method:add_cancel_button(String:)",
+        "AcceptDialog::method:get_label()",
+        "AcceptDialog::method:get_ok_button()",
+        "AcceptDialog::method:register_text_enter(LineEdit:)",
+        "AcceptDialog::method:remove_button(Button:)",
+        "AcceptDialog::property:dialog_autowrap",
+        "AcceptDialog::property:dialog_close_on_escape",
+        "AcceptDialog::property:dialog_hide_on_ok",
+        "AcceptDialog::property:dialog_text",
+        "AcceptDialog::property:exclusive",
+        "AcceptDialog::property:keep_title_visible",
+        "AcceptDialog::property:maximize_disabled",
+        "AcceptDialog::property:minimize_disabled",
+        "AcceptDialog::property:ok_button_text",
+        "AcceptDialog::property:title",
+        "AcceptDialog::property:transient",
+        "AcceptDialog::property:visible",
+        "AcceptDialog::property:wrap_controls",
+        "AcceptDialog::signal:canceled()",
+        "AcceptDialog::signal:confirmed()",
+        "AcceptDialog::signal:custom_action(StringName:)",
+        "AcceptDialog::theme_item:buttons_min_height",
+        "AcceptDialog::theme_item:buttons_min_width",
+        "AcceptDialog::theme_item:buttons_separation",
+        "AcceptDialog::theme_item:panel",
+        "ConfirmationDialog::method:get_cancel_button()",
+        "ConfirmationDialog::property:cancel_button_text",
+        "ConfirmationDialog::property:min_size",
+        "ConfirmationDialog::property:size",
+        "ConfirmationDialog::property:title",
+        "ProjectSettings::property:input/ui_close_dialog",
+        "ProjectSettings::property:gui/common/swap_cancel_ok",
+        "DisplayServer::method:get_swap_cancel_ok()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded message/confirmation dialogs with owned label, panel and button row, custom/cancel ownership transfer, registered text submission, independently mapped non-echo close action, ordered hooks/events, deferred cancellation with reopen protection, themed minimum/layout and fresh typed scenes. Own contracts execute on existing GPU/compatibility targets; inherited native children, accessibility and other platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": [
+        "Window::property:keep_title_visible"
+      ],
+      "state": "Partial",
+      "reason": "Embedded title-width policy executes, updates changed titles and rejects native roots before resource acquisition. Trigger: native title measurement supported by the DisplayServer backend, then physical/compositor acceptance."
+    },
+    {
+      "godot": [
+        "class:AcceptDialog",
+        "class:ConfirmationDialog"
+      ],
+      "state": "Partial",
+      "reason": "Complete own dialog API runs with embedded Window, Label, Button/HBoxContainer and LineEdit. Trigger for full class correspondence: independent native child Window hosting and the inherited Window/Viewport policy, scaling and accessibility capabilities recorded on their declaring owners; other-platform acceptance remains separately required."
+    }
+  ]
+}

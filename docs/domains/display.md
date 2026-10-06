@@ -85,3 +85,5 @@ The X11 smoke also verified a normal-window transfer between two XWayland displa
 [ADR 0040](../decisions/display.md#adr-0040), [ADR 0041](../decisions/display.md#adr-0041), [ADR 0042](../decisions/display.md#adr-0042), [ADR 0043](../decisions/display.md#adr-0043), [ADR 0044](../decisions/display.md#adr-0044), [ADR 0038](../decisions/input.md#adr-0038), [ADR 0028](../decisions/rendering.md#adr-0028), and [ADR 0021](../decisions/product.md#adr-0021).
 
 Graphics handle verification uses `ELECTRON2D_TEST_RENDER_HANDLES=1`: Wayland EGL/GL and EGL/GLES, XWayland GLX, native identity checks, a foreign context/config, unchanged pixel output, thread/ID/disposal rejection and reopen. A forced X11/EGL GLES probe failed native surface creation before handle queries. Other platforms remain unverified.
+
+GetSwapCancelOK exposes the retained DisplayServer platform dialog-order convention with active-service/owner guards. [Embedded dialogs](../components/dialogs.md) use the same internal policy for pre-startup authoring and combine it with the typed project override. Other-platform acceptance remains separately gated.

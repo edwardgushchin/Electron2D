@@ -1,0 +1,29 @@
+# Embedded acceptance and confirmation dialogs
+
+Last updated: 2026-10-06
+
+AcceptDialog : Window owns a Panel, message Label and HBoxContainer with an OK Button. ConfirmationDialog : AcceptDialog adds Cancel. Attach these windows under a viewport with GUIEmbedSubwindows and use the existing Window.Popup methods. No new backend or native child-window service is introduced. This foundation supplies messages, confirmation, validation, custom actions and registered text entry for future file workflows.
+
+## Runtime contracts
+
+The dialog starts hidden, exclusive and transient, with WrapControls, KeepTitleVisible, MinimizeDisabled and MaximizeDisabled enabled. It retains normal decorations and resizing. Its title starts at Alert!; ConfirmationDialog uses Please Confirm..., MinSize (200, 70) and Size (200, 100). Normal child enumeration and scene packing omit the three internal nodes; each scene instance recreates independent controls.
+
+GetLabel/GetOKButton/GetCancelButton return stable borrowed controls. The message and explicit/default OK caption use the existing Label/Button translation domain. RegisterTextEnter connects a borrowed LineEdit once, disconnects on disposal and prevents submission while OK is disabled. Custom buttons own paired expanding spacers. AddButton prepends or appends relative to existing buttons before RTL mirroring; a nonempty action emits CustomAction before OnCustomAction without hiding. AddCancelButton uses Cancel for an empty caption. ProjectSettings.SwapCancelOK supplies Auto (0), Cancel First (1) or OK First (2); a new cancel button samples the effective setting. Auto uses the shared DisplayServer platform policy, placing OK first on Windows and Cancel first on other supported profiles. This also executes during scene authoring before a native service opens. RemoveButton disconnects dialog callbacks, disposes the paired spacer and detaches the live button without disposing it. Callers then own that button. Required label and OK controls must remain owned and alive.
+
+Confirmation hides first when DialogHideOnOK is true, calls OnOKPressed, then emits Confirmed. Cancellation schedules hiding, emits Canceled while still visible, then calls OnCancelPressed. The independently rebindable ui_close_dialog action defaults to non-echo Escape and additionally Command-W on macOS; ui_cancel does not cancel a dialog. CloseRequested and cancel buttons use the same cancellation path. Reopening from a callback supersedes stale deferred hides. Required hook/event delivery continues after failures and errors are aggregated after state commits. Hiding restores the shared embedded-window focus. Nonexclusive windows with PopupWindow enabled also cancel on parent focus.
+
+## Layout, theme and storage
+
+The panel fills the client rectangle. Direct non-top-level content controls, including the message, share the padded content area above the bottom button row. Minimum content is their component-wise maximum plus row height, separation and panel margins. The owned row follows standard HBoxContainer layout and logical direction. Own theme items are panel, buttons_separation (10), buttons_min_width (0), buttons_min_height (0); minima apply to all row buttons. Resources stay borrowed. Theme and child minimum changes update the existing controls and wrapped window size.
+
+KeepTitleVisible expands embedded width using the actual title font and close-button allowance, bounded by MaxSize. It updates on title/theme changes. Independent native title measurement remains unavailable: an enabled native root rejects startup before resources are acquired. AcceptDialog separately clamps its decorated rectangle into the embedding viewport when possible; oversized content retains its minimum and pins the accessible title to the host.
+
+Stored descriptors cover dialog text, wrapping, OK/cancel captions, hide/close policies and concrete inherited defaults. Internal controls are reconstructed by exact built-in file factories. Custom buttons, text registrations, delegate subscribers and transient focus/cancel state are runtime configuration. PackedScene, ResourceSaver and ResourceLoader tests execute confirmation and cancellation after fresh-process reconstruction.
+
+## Verification and boundaries
+
+DialogTests exercises defaults, hooks/event order, keep-open validation, independent close action and echo filtering, button order/removal/disposal, registered text and disabled acceptance, theme minima/content layout, title width/position, owner guards, throwing observers, reentrant reopening and fresh scenes. DialogRenderingTests exercises real SDL pointer/keyboard actions and reads back title/message/button pixels on current Linux Wayland GPU and compatibility backends. The measured hot path varies message and label layout at a fixed render-target size after 32 warmup frames. Render-target recreation, cold structural changes, readback and native allocations are outside that steady-state measurement. Viewport size and texture notification loops use allocation-free delegate enumeration while retaining failure continuation. Native pixel inspection also corrected the shared embedded decoration rectangle: the border now uses one client width, rather than adding the title and client widths. A pixel assertion outside the window protects this boundary.
+
+Independent native child windows and inherited Window/Viewport scaling, migration and accessibility gaps remain on their declaring coverage owners. Other target platforms and physical owner acceptance remain separate gates under ADR 0021. The current implementation supplies no file chooser, editor dialog or native accessibility service.
+
+Decisions: [0008](../decisions/scene.md#adr-0008), [0038](../decisions/input.md#adr-0038), [0040](../decisions/display.md#adr-0040), [0083](../decisions/rendering.md#adr-0083). Owned types: [AcceptDialog](../classes/AcceptDialog.md), [ConfirmationDialog](../classes/ConfirmationDialog.md).

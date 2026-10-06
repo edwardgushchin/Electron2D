@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1357,3 +1357,5 @@ The complete coverage and exact implementation triggers for absent services are 
 - [ADR 0038: typed input and native adapter trigger](../decisions/input.md#adr-0038)
 - [ADR 0028: renderer boundary](../decisions/rendering.md#adr-0028)
 - [ADR 0021: runtime target matrix](../decisions/product.md#adr-0021)
+
+`public static System.Boolean GetSwapCancelOK()` returns the active platform dialog-order convention: true on Windows, false on other supported profiles. It uses the retained service and owner guards, throwing InvalidOperationException when unavailable or off-owner. Dialog authoring uses the same internal platform policy before native startup; no OS preference callback or mutable native-theme override is implied.

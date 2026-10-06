@@ -4,7 +4,7 @@ Last updated: 2026-10-06
 
 **Inherits:** [Viewport](Viewport.md)
 
-**Inherited By:** —
+**Inherited By:** [Popup](Popup.md), [AcceptDialog](AcceptDialog.md)
 
 - **Source:** [`Window.cs`](../../src/Scene/Main/Window.cs), [`Window.Native.cs`](../../src/Scene/Main/Window.Native.cs)
 - **Namespace:** `Electron2D`
@@ -672,3 +672,7 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 | `public System.Boolean WrapControls { get; set; }` | Gets or sets whether child control minimums constrain this window's size. |
 
 The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu theme keys, inherited Window popup hooks and an exact built-in scene/file factory. Internal item/search controls receive focus after visibility propagation; public runtime signatures of these owners are unchanged.
+
+## Embedded title width
+
+`public System.Boolean KeepTitleVisible { get; set; }` defaults to false and expands embedded width from its actual themed title font and close-button allowance, bounded by MaxSize. Title and theme changes recompute the minimum. AcceptDialog defaults to true. Native roots reject this enabled policy before acquiring resources; native title metrics remain a backend prerequisite. The policy is stored; it does not clamp the window position.

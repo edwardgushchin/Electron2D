@@ -415,6 +415,19 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
         ]
     });
 
+    /// <summary>Defines cancellation/acceptance button order for newly added dialog cancellation buttons.</summary>
+    /// <value>Zero chooses the platform order; one places Cancel first and two places OK first.</value>
+    public static ProjectSetting<int> SwapCancelOK { get; } = new("gui/common/swap_cancel_ok", 0, value => value is >= 0 and <= 2);
+
+    /// <summary>Defines Escape for closing a dialog, and Command-W additionally on macOS.</summary>
+    /// <value>The permanent typed input/ui_close_dialog setting, independent of ui_cancel.</value>
+    public static ProjectSetting<InputActionSettings> InputUICloseDialog { get; } = new("input/ui_close_dialog", new InputActionSettings
+    {
+        Bindings = OperatingSystem.IsMacOS()
+            ? [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Escape }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.W, Modifiers = KeyModifierMask.Meta }]
+            : [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Escape }]
+    });
+
     /// <summary>Defines the shortcut feedback highlight duration sampled when a button first activates a shortcut.</summary>
     /// <value>A finite positive duration in seconds; 0.2 initially.</value>
     public static ProjectSetting<double> ButtonShortcutFeedbackHighlightTime { get; } =

@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tabs", "popup", "menu", "layout_containers", "gui_drag", "text_delivery", "audio", "mesh", "networking")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tabs", "popup", "menu", "dialogs", "layout_containers", "gui_drag", "text_delivery", "audio", "mesh", "networking")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -644,6 +644,8 @@ def render():
             updated = "2026-09-25"
         if name in {"Area2D", "CharacterBody2D", "PhysicsBody2D", "PhysicsServer2D", "PhysicsDirectSpaceState2D", "Shape2D", "SeparationRayShape2D", "PhysicsTestMotionParameters2D", "Geometry2D", "PhysicsDirectBodyState2D", "RigidBody2D", "CollisionObject2D", "CollisionShape2D", "CollisionPolygon2D"}:
             updated = "2026-09-26"
+        if name in {"AcceptDialog", "ConfirmationDialog"}:
+            updated = "2026-10-06"
         if name in {"Node", "Control", "ProjectSettings", "ScrollBar", "HScrollBar", "VScrollBar", "ScrollContainer", "Joint2D", "PinJoint2D", "DampedSpringJoint2D", "GrooveJoint2D"}:
             updated = "2026-09-30"
         if name in {"RenderingServer", "CanvasItem", "Resource", "Texture", "Texture2D", "PhysicsServer2D", "FlowContainer", "HFlowContainer", "VFlowContainer", "Script", "CSharpScript", "AudioServer", "AudioStream", "AudioStreamWAV", "AudioStreamPlayer", "AudioStreamPlayback", "AudioStreamPlaybackResampled"}:

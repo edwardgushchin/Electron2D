@@ -9480,7 +9480,6 @@
         "Window::property:exclude_from_capture",
         "Window::property:extend_to_title",
         "Window::property:initial_position",
-        "Window::property:keep_title_visible",
         "Window::property:mouse_passthrough",
         "Window::property:mouse_passthrough_polygon",
         "Window::property:nonclient_area",

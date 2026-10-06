@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Inherits:** [Node](Node.md)
 
@@ -529,3 +529,5 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 | `public Electron2D.Viewport.DefaultCanvasItemTextureRepeat CanvasItemDefaultTextureRepeat { get; set; }` | Gets or sets addressing used when no canvas ancestor selects explicit repeat behavior. |
 | `public System.Boolean GUIEmbedSubwindows { get; set; }` | Gets or sets whether child windows are composed into this viewport. |
 | `public System.Boolean TransparentBG { get; set; }` | Gets or sets whether this viewport clears to transparent black instead of opaque clear color. |
+
+SizeChanged and owned viewport texture-size callbacks use allocation-free delegate enumeration. Each callback is attempted before failures are aggregated, retaining committed geometry. This removes invocation-array allocation during active embedded dialog sizing; recreation of native render targets remains a cold resource transition.

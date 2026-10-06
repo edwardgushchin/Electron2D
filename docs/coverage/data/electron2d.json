@@ -117,6 +117,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AcceptDialog",
+    "kind": "type",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "AcceptDialog",
+    "signature": "public class Electron2D.AcceptDialog",
+    "visibility": "public",
+    "baseType": "Electron2D.Window",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnchorMode",
     "kind": "type",
     "declaringType": "Electron2D.AnchorMode",
@@ -2826,6 +2841,21 @@
     "visibility": "public",
     "baseType": "System.Object",
     "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ConfirmationDialog",
+    "kind": "type",
+    "declaringType": "Electron2D.ConfirmationDialog",
+    "name": "ConfirmationDialog",
+    "signature": "public class Electron2D.ConfirmationDialog",
+    "visibility": "public",
+    "baseType": "Electron2D.AcceptDialog",
+    "interfaces": [
+      "System.IDisposable"
+    ],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -10553,6 +10583,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AcceptDialog..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": ".ctor",
+    "signature": "public AcceptDialog()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AnimatableBody..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AnimatableBody",
@@ -12362,6 +12405,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ConfirmationDialog..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ConfirmationDialog",
+    "name": ".ctor",
+    "signature": "public ConfirmationDialog()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -32952,6 +33008,45 @@
     "value": "6"
   },
   {
+    "id": "event:Electron2D.AcceptDialog.Canceled()",
+    "kind": "event",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "Canceled",
+    "signature": "public event System.Action Canceled",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AcceptDialog.Confirmed()",
+    "kind": "event",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "Confirmed",
+    "signature": "public event System.Action Confirmed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AcceptDialog.CustomAction()",
+    "kind": "event",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "CustomAction",
+    "signature": "public event System.Action\u003CSystem.String\u003E CustomAction",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.AnimatedSprite.AnimationChanged()",
     "kind": "event",
     "declaringType": "Electron2D.AnimatedSprite",
@@ -37467,6 +37562,278 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.AddButton(System.String,System.Boolean,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "AddButton",
+    "signature": "public Electron2D.Button AddButton(System.String text, System.Boolean right = false, System.String action = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "action",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.Button",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.AddCancelButton(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "AddCancelButton",
+    "signature": "public Electron2D.Button AddCancelButton(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Button",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.GetLabel()",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "GetLabel",
+    "signature": "public Electron2D.Label GetLabel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Label",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.GetOKButton()",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "GetOKButton",
+    "signature": "public Electron2D.Button GetOKButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Button",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.OnCancelPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "OnCancelPressed",
+    "signature": "protected virtual System.Void OnCancelPressed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.OnCustomAction(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "OnCustomAction",
+    "signature": "protected virtual System.Void OnCustomAction(System.String action)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "action",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.OnGetContentsMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "OnGetContentsMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetContentsMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.OnInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "OnInput",
+    "signature": "protected override System.Void OnInput(Electron2D.InputEvent input)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.OnOKPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "OnOKPressed",
+    "signature": "protected virtual System.Void OnOKPressed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.RegisterTextEnter(Electron2D.LineEdit)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "RegisterTextEnter",
+    "signature": "public System.Void RegisterTextEnter(Electron2D.LineEdit lineEdit)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "lineEdit",
+        "type": "Electron2D.LineEdit",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.RemoveButton(Electron2D.Button)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "RemoveButton",
+    "signature": "public System.Void RemoveButton(Electron2D.Button button)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "button",
+        "type": "Electron2D.Button",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AcceptDialog.SetDefaultOKText(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "SetDefaultOKText",
+    "signature": "protected System.Void SetDefaultOKText(System.String text)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -59962,6 +60329,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ConfirmationDialog.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConfirmationDialog",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ConfirmationDialog.GetCancelButton()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConfirmationDialog",
+    "name": "GetCancelButton",
+    "signature": "public Electron2D.Button GetCancelButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Button",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ConfirmationDialog.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConfirmationDialog",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Container.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Container",
@@ -65033,6 +65439,19 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.GetSwapCancelOK()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetSwapCancelOK",
+    "signature": "public static System.Boolean GetSwapCancelOK()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -128049,6 +128468,71 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AcceptDialog.DialogAutowrap()",
+    "kind": "property",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "DialogAutowrap",
+    "signature": "public System.Boolean DialogAutowrap { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AcceptDialog.DialogCloseOnEscape()",
+    "kind": "property",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "DialogCloseOnEscape",
+    "signature": "public System.Boolean DialogCloseOnEscape { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AcceptDialog.DialogHideOnOK()",
+    "kind": "property",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "DialogHideOnOK",
+    "signature": "public System.Boolean DialogHideOnOK { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AcceptDialog.DialogText()",
+    "kind": "property",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "DialogText",
+    "signature": "public System.String DialogText { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AcceptDialog.OKButtonText()",
+    "kind": "property",
+    "declaringType": "Electron2D.AcceptDialog",
+    "name": "OKButtonText",
+    "signature": "public System.String OKButtonText { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AnimatableBody.SyncToPhysics()",
     "kind": "property",
     "declaringType": "Electron2D.AnimatableBody",
@@ -135503,6 +135987,19 @@
     "declaringType": "Electron2D.ConfigKey\u003CT\u003E",
     "name": "Section",
     "signature": "public System.String Section { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ConfirmationDialog.CancelButtonText()",
+    "kind": "property",
+    "declaringType": "Electron2D.ConfirmationDialog",
+    "name": "CancelButtonText",
+    "signature": "public System.String CancelButtonText { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -143818,6 +144315,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.InputUICloseDialog()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUICloseDialog",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUICloseDialog { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.InputUICopy()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -144660,6 +145170,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.SwapCancelOK()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "SwapCancelOK",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E SwapCancelOK { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {
@@ -150128,6 +150651,19 @@
     "declaringType": "Electron2D.Window",
     "name": "Exclusive",
     "signature": "public System.Boolean Exclusive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.KeepTitleVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "KeepTitleVisible",
+    "signature": "public System.Boolean KeepTitleVisible { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

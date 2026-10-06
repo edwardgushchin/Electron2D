@@ -105,6 +105,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(InputUIMenu, isBasic: false);
         RegisterInternal(InputUIAccept, isBasic: false);
         RegisterInternal(InputUICancel, isBasic: false);
+        RegisterInternal(InputUICloseDialog, isBasic: false);
+        RegisterInternal(SwapCancelOK, isBasic: false);
         RegisterInternal(TCPConnectTimeoutSeconds, isBasic: false);
         RegisterInternal(UDSConnectTimeoutSeconds, isBasic: false);
         RegisterInternal(InputUITextSubmit, isBasic: false);
@@ -1161,6 +1163,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, InputUIMenu) ||
         ReferenceEquals(setting, InputUIAccept) ||
         ReferenceEquals(setting, InputUICancel) ||
+        ReferenceEquals(setting, InputUICloseDialog) ||
+        ReferenceEquals(setting, SwapCancelOK) ||
         ReferenceEquals(setting, TCPConnectTimeoutSeconds) ||
         ReferenceEquals(setting, UDSConnectTimeoutSeconds) ||
         ReferenceEquals(setting, InputUITextSubmit) ||

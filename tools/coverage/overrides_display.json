@@ -922,7 +922,6 @@
         "DisplayServer::method:color_picker(Callable:)",
         "DisplayServer::method:get_accent_color()",
         "DisplayServer::method:get_base_color()",
-        "DisplayServer::method:get_swap_cancel_ok()",
         "DisplayServer::method:help_set_search_callbacks(Callable:,Callable:)",
         "DisplayServer::method:show_emoji_and_symbol_picker()"
       ]

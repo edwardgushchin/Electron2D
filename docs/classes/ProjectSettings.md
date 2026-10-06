@@ -1290,3 +1290,7 @@ The `InputUIText*`, `InputUICopy`, `InputUICut`, `InputUIPaste`, `InputUIUndo`, 
 ## Default audio bus layout
 
 `public static ProjectSetting<string> AudioBusesDefaultBusLayout { get; }` defines audio/buses/default_bus_layout, initially `res://default_bus_layout.e2dres`. The retained registry registers it as a built-in basic setting. Empty or missing paths preserve existing buses; Engine.Start/Run apply a valid typed AudioBusLayout archive before initialization/autoplay, including active feature overrides. Invalid/corrupt files report startup failure. File-owned effects remain retained by the applied configuration. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).
+
+`public static ProjectSetting<InputActionSettings> InputUICloseDialog { get; }` permanently defines input/ui_close_dialog independently of input/ui_cancel. Its typed InputMap definition defaults to Escape and adds Command-W on macOS; project reload and feature overrides follow the existing input-action contracts. AcceptDialog uses exact, non-echo activation.
+
+`public static ProjectSetting<System.Int32> SwapCancelOK { get; }` defines gui/common/swap_cancel_ok with validated values Auto (0, default), Cancel First (1) and OK First (2). AddCancelButton samples the effective definition when creating each button; explicit settings override the DisplayServer platform convention.
