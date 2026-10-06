@@ -1,0 +1,519 @@
+{
+  "mappings": [
+    {
+      "godot": "class:Popup",
+      "electron2d": "T:Electron2D.Popup",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:borderless",
+      "electron2d": "property:Electron2D.Window.Borderless()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:maximize_disabled",
+      "electron2d": "property:Electron2D.Window.MaximizeDisabled()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:minimize_disabled",
+      "electron2d": "property:Electron2D.Window.MinimizeDisabled()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:popup_window",
+      "electron2d": "property:Electron2D.Window.PopupWindow()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:popup_wm_hint",
+      "electron2d": "property:Electron2D.Window.PopupWMHint()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:transient",
+      "electron2d": "property:Electron2D.Window.Transient()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:unresizable",
+      "electron2d": "property:Electron2D.Window.Unresizable()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:visible",
+      "electron2d": "property:Electron2D.Window.Visible()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::property:wrap_controls",
+      "electron2d": "property:Electron2D.Window.WrapControls()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Popup::signal:popup_hide()",
+      "electron2d": "event:Electron2D.Popup.PopupHide()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "class:PopupPanel",
+      "electron2d": "T:Electron2D.PopupPanel",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "PopupPanel::property:canvas_item_default_texture_filter",
+      "electron2d": "property:Electron2D.Viewport.CanvasItemDefaultTextureFilter()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "PopupPanel::property:canvas_item_default_texture_repeat",
+      "electron2d": "property:Electron2D.Viewport.CanvasItemDefaultTextureRepeat()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "PopupPanel::property:transparent",
+      "electron2d": "property:Electron2D.Window.Transparent()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "PopupPanel::property:transparent_bg",
+      "electron2d": "property:Electron2D.Viewport.TransparentBG()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "PopupPanel::theme_item:panel",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:_get_contents_minimum_size()",
+      "electron2d": "method:Electron2D.Window.OnGetContentsMinimumSize()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:get_contents_minimum_size()",
+      "electron2d": "method:Electron2D.Window.GetContentsMinimumSize()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:is_embedded()",
+      "electron2d": "method:Electron2D.Window.IsEmbedded()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup(Rect2i:)",
+      "electron2d": "method:Electron2D.Window.Popup(Electron2D.Rect2i)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_centered(Vector2i:)",
+      "electron2d": "method:Electron2D.Window.PopupCentered(Electron2D.Vector2i)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_centered_clamped(Vector2i:,float:)",
+      "electron2d": "method:Electron2D.Window.PopupCenteredClamped(Electron2D.Vector2i,System.Single)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_centered_ratio(float:)",
+      "electron2d": "method:Electron2D.Window.PopupCenteredRatio(System.Single)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_exclusive(Node:,Rect2i:)",
+      "electron2d": "method:Electron2D.Window.PopupExclusive(Electron2D.Node,Electron2D.Rect2i)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_exclusive_centered(Node:,Vector2i:)",
+      "electron2d": "method:Electron2D.Window.PopupExclusiveCentered(Electron2D.Node,Electron2D.Vector2i)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_exclusive_centered_clamped(Node:,Vector2i:,float:)",
+      "electron2d": "method:Electron2D.Window.PopupExclusiveCenteredClamped(Electron2D.Node,Electron2D.Vector2i,System.Single)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_exclusive_centered_ratio(Node:,float:)",
+      "electron2d": "method:Electron2D.Window.PopupExclusiveCenteredRatio(Electron2D.Node,System.Single)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_exclusive_on_parent(Node:,Rect2i:)",
+      "electron2d": "method:Electron2D.Window.PopupExclusiveOnParent(Electron2D.Node,Electron2D.Rect2i)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:popup_on_parent(Rect2i:)",
+      "electron2d": "method:Electron2D.Window.PopupOnParent(Electron2D.Rect2i)",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::property:exclusive",
+      "electron2d": "property:Electron2D.Window.Exclusive()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::property:maximize_disabled",
+      "electron2d": "property:Electron2D.Window.MaximizeDisabled()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::property:minimize_disabled",
+      "electron2d": "property:Electron2D.Window.MinimizeDisabled()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::property:popup_window",
+      "electron2d": "property:Electron2D.Window.PopupWindow()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::property:popup_wm_hint",
+      "electron2d": "property:Electron2D.Window.PopupWMHint()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::property:transient",
+      "electron2d": "property:Electron2D.Window.Transient()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::property:transparent",
+      "electron2d": "property:Electron2D.Window.Transparent()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::property:wrap_controls",
+      "electron2d": "property:Electron2D.Window.WrapControls()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::signal:about_to_popup()",
+      "electron2d": "event:Electron2D.Window.AboutToPopup()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:get_layout_direction()",
+      "electron2d": "property:Electron2D.Window.LayoutDirection()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:set_layout_direction(int:Window.LayoutDirection)",
+      "electron2d": "property:Electron2D.Window.LayoutDirection()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::method:is_layout_rtl()",
+      "electron2d": "method:Electron2D.Window.IsLayoutRTL()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::enum:LayoutDirection",
+      "electron2d": "T:Electron2D.LayoutDirection",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE",
+      "electron2d": "enumValue:Electron2D.LayoutDirection.ApplicationLocale()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_INHERITED",
+      "electron2d": "enumValue:Electron2D.LayoutDirection.Inherited()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LOCALE",
+      "electron2d": "enumValue:Electron2D.LayoutDirection.Locale()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LTR",
+      "electron2d": "enumValue:Electron2D.LayoutDirection.LTR()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_MAX",
+      "electron2d": "enumValue:Electron2D.LayoutDirection.Max()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_RTL",
+      "electron2d": "enumValue:Electron2D.LayoutDirection.RTL()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_SYSTEM_LOCALE",
+      "electron2d": "enumValue:Electron2D.LayoutDirection.SystemLocale()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Viewport::method:get_embedded_subwindows()",
+      "electron2d": "method:Electron2D.Viewport.GetEmbeddedSubwindows()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    },
+    {
+      "godot": "Viewport::property:gui_embed_subwindows",
+      "electron2d": "property:Electron2D.Viewport.GUIEmbedSubwindows()",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.Popup..ctor()",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PopupPanel..ctor()",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.Popup.CreateSceneInstanceFactory()",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.Popup.Dispose(System.Boolean)",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.Popup.GetPropertyDescriptors()",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.Popup.OnNotification(System.Int32)",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupPanel.CreateSceneInstanceFactory()",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupPanel.GetPropertyDescriptors()",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupPanel.OnGetContentsMinimumSize()",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupPanel.OnNotification(System.Int32)",
+      "reason": "Typed constructors and protected scene factory, property storage, minimum-size, notification and deterministic disposal hooks project Popup/PopupPanel and inherited Window/Node contracts under ADRs 0008/0038/0083."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states.",
+      "godot": [
+        "Popup::property:borderless",
+        "Popup::property:maximize_disabled",
+        "Popup::property:minimize_disabled",
+        "Popup::property:popup_window",
+        "Popup::property:popup_wm_hint",
+        "Popup::property:transient",
+        "Popup::property:unresizable",
+        "Popup::property:visible",
+        "Popup::property:wrap_controls",
+        "Popup::signal:popup_hide()",
+        "PopupPanel::property:canvas_item_default_texture_filter",
+        "PopupPanel::property:canvas_item_default_texture_repeat",
+        "PopupPanel::property:transparent",
+        "PopupPanel::property:transparent_bg",
+        "PopupPanel::theme_item:panel",
+        "Window::method:_get_contents_minimum_size()",
+        "Window::method:get_contents_minimum_size()",
+        "Window::method:is_embedded()",
+        "Window::property:wrap_controls",
+        "Window::signal:about_to_popup()",
+        "Window::enum:LayoutDirection",
+        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE",
+        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_INHERITED",
+        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LOCALE",
+        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LTR",
+        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_MAX",
+        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_RTL",
+        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_SYSTEM_LOCALE",
+        "Viewport::method:get_embedded_subwindows()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states.",
+      "godot": [
+        "class:Popup",
+        "class:PopupPanel",
+        "Window::method:popup(Rect2i:)",
+        "Window::method:popup_centered(Vector2i:)",
+        "Window::method:popup_centered_clamped(Vector2i:,float:)",
+        "Window::method:popup_centered_ratio(float:)",
+        "Window::method:popup_exclusive(Node:,Rect2i:)",
+        "Window::method:popup_exclusive_centered(Node:,Vector2i:)",
+        "Window::method:popup_exclusive_centered_clamped(Node:,Vector2i:,float:)",
+        "Window::method:popup_exclusive_centered_ratio(Node:,float:)",
+        "Window::method:popup_exclusive_on_parent(Node:,Rect2i:)",
+        "Window::method:popup_on_parent(Rect2i:)",
+        "Window::property:exclusive",
+        "Window::property:maximize_disabled",
+        "Window::property:minimize_disabled",
+        "Window::property:popup_window",
+        "Window::property:popup_wm_hint",
+        "Window::property:transient",
+        "Window::property:transparent",
+        "Window::method:get_layout_direction()",
+        "Window::method:set_layout_direction(int:Window.LayoutDirection)",
+        "Window::method:is_layout_rtl()",
+        "Viewport::property:gui_embed_subwindows"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "PopupMenu consumer requires its typed menu/item model, theme, keyboard/pointer/submenu and lifecycle integration atop the now executable embedded Popup host. Independent native popup menus additionally require multiwindow presentation, SDL popup lifetime and per-native-window input/capture. ADR 0041 keeps native-menu service signatures decision-gated.",
+      "godot": [
+        "class:PopupMenu",
+        "PopupMenu::method:activate_item_by_event(InputEvent:,bool:)",
+        "PopupMenu::method:add_check_item(String:,int:,int:Key)",
+        "PopupMenu::method:add_check_shortcut(Shortcut:,int:,bool:)",
+        "PopupMenu::method:add_icon_check_item(Texture2D:,String:,int:,int:Key)",
+        "PopupMenu::method:add_icon_check_shortcut(Texture2D:,Shortcut:,int:,bool:)",
+        "PopupMenu::method:add_icon_item(Texture2D:,String:,int:,int:Key)",
+        "PopupMenu::method:add_icon_radio_check_item(Texture2D:,String:,int:,int:Key)",
+        "PopupMenu::method:add_icon_radio_check_shortcut(Texture2D:,Shortcut:,int:,bool:)",
+        "PopupMenu::method:add_icon_shortcut(Texture2D:,Shortcut:,int:,bool:,bool:)",
+        "PopupMenu::method:add_item(String:,int:,int:Key)",
+        "PopupMenu::method:add_multistate_item(String:,int:,int:,int:,int:Key)",
+        "PopupMenu::method:add_radio_check_item(String:,int:,int:Key)",
+        "PopupMenu::method:add_radio_check_shortcut(Shortcut:,int:,bool:)",
+        "PopupMenu::method:add_separator(String:,int:)",
+        "PopupMenu::method:add_shortcut(Shortcut:,int:,bool:,bool:)",
+        "PopupMenu::method:add_submenu_item(String:,String:,int:)",
+        "PopupMenu::method:add_submenu_node_item(String:,PopupMenu:,int:)",
+        "PopupMenu::method:clear(bool:)",
+        "PopupMenu::method:get_focused_item()",
+        "PopupMenu::method:get_item_accelerator(int:)",
+        "PopupMenu::method:get_item_auto_translate_mode(int:)",
+        "PopupMenu::method:get_item_icon(int:)",
+        "PopupMenu::method:get_item_icon_max_width(int:)",
+        "PopupMenu::method:get_item_icon_modulate(int:)",
+        "PopupMenu::method:get_item_id(int:)",
+        "PopupMenu::method:get_item_indent(int:)",
+        "PopupMenu::method:get_item_index(int:)",
+        "PopupMenu::method:get_item_language(int:)",
+        "PopupMenu::method:get_item_metadata(int:)",
+        "PopupMenu::method:get_item_multistate(int:)",
+        "PopupMenu::method:get_item_multistate_max(int:)",
+        "PopupMenu::method:get_item_shortcut(int:)",
+        "PopupMenu::method:get_item_submenu(int:)",
+        "PopupMenu::method:get_item_submenu_node(int:)",
+        "PopupMenu::method:get_item_text(int:)",
+        "PopupMenu::method:get_item_text_direction(int:)",
+        "PopupMenu::method:get_item_tooltip(int:)",
+        "PopupMenu::method:is_item_checkable(int:)",
+        "PopupMenu::method:is_item_checked(int:)",
+        "PopupMenu::method:is_item_disabled(int:)",
+        "PopupMenu::method:is_item_radio_checkable(int:)",
+        "PopupMenu::method:is_item_separator(int:)",
+        "PopupMenu::method:is_item_shortcut_disabled(int:)",
+        "PopupMenu::method:is_native_menu()",
+        "PopupMenu::method:is_system_menu()",
+        "PopupMenu::method:remove_item(int:)",
+        "PopupMenu::method:scroll_to_item(int:)",
+        "PopupMenu::method:set_focused_item(int:)",
+        "PopupMenu::method:set_item_accelerator(int:,int:Key)",
+        "PopupMenu::method:set_item_as_checkable(int:,bool:)",
+        "PopupMenu::method:set_item_as_radio_checkable(int:,bool:)",
+        "PopupMenu::method:set_item_as_separator(int:,bool:)",
+        "PopupMenu::method:set_item_auto_translate_mode(int:,int:Node.AutoTranslateMode)",
+        "PopupMenu::method:set_item_checked(int:,bool:)",
+        "PopupMenu::method:set_item_disabled(int:,bool:)",
+        "PopupMenu::method:set_item_icon(int:,Texture2D:)",
+        "PopupMenu::method:set_item_icon_max_width(int:,int:)",
+        "PopupMenu::method:set_item_icon_modulate(int:,Color:)",
+        "PopupMenu::method:set_item_id(int:,int:)",
+        "PopupMenu::method:set_item_indent(int:,int:)",
+        "PopupMenu::method:set_item_index(int:,int:)",
+        "PopupMenu::method:set_item_language(int:,String:)",
+        "PopupMenu::method:set_item_metadata(int:,Variant:)",
+        "PopupMenu::method:set_item_multistate(int:,int:)",
+        "PopupMenu::method:set_item_multistate_max(int:,int:)",
+        "PopupMenu::method:set_item_shortcut(int:,Shortcut:,bool:)",
+        "PopupMenu::method:set_item_shortcut_disabled(int:,bool:)",
+        "PopupMenu::method:set_item_submenu(int:,String:)",
+        "PopupMenu::method:set_item_submenu_node(int:,PopupMenu:)",
+        "PopupMenu::method:set_item_text(int:,String:)",
+        "PopupMenu::method:set_item_text_direction(int:,int:Control.TextDirection)",
+        "PopupMenu::method:set_item_tooltip(int:,String:)",
+        "PopupMenu::method:toggle_item_checked(int:)",
+        "PopupMenu::method:toggle_item_multistate(int:)",
+        "PopupMenu::property:allow_search",
+        "PopupMenu::property:canvas_item_default_texture_filter",
+        "PopupMenu::property:canvas_item_default_texture_repeat",
+        "PopupMenu::property:hide_on_checkable_item_selection",
+        "PopupMenu::property:hide_on_item_selection",
+        "PopupMenu::property:hide_on_state_item_selection",
+        "PopupMenu::property:item_count",
+        "PopupMenu::property:item_{index}/checkable",
+        "PopupMenu::property:item_{index}/checked",
+        "PopupMenu::property:item_{index}/disabled",
+        "PopupMenu::property:item_{index}/icon",
+        "PopupMenu::property:item_{index}/id",
+        "PopupMenu::property:item_{index}/separator",
+        "PopupMenu::property:item_{index}/text",
+        "PopupMenu::property:prefer_native_menu",
+        "PopupMenu::property:search_bar_enabled",
+        "PopupMenu::property:search_bar_fuzzy_search_enabled",
+        "PopupMenu::property:search_bar_fuzzy_search_max_misses",
+        "PopupMenu::property:search_bar_min_item_count",
+        "PopupMenu::property:shrink_height",
+        "PopupMenu::property:shrink_width",
+        "PopupMenu::property:submenu_popup_delay",
+        "PopupMenu::property:system_menu_id",
+        "PopupMenu::property:transparent",
+        "PopupMenu::property:transparent_bg",
+        "PopupMenu::signal:id_focused(int:)",
+        "PopupMenu::signal:id_pressed(int:)",
+        "PopupMenu::signal:index_pressed(int:)",
+        "PopupMenu::signal:menu_changed()",
+        "PopupMenu::theme_item:checked",
+        "PopupMenu::theme_item:checked_disabled",
+        "PopupMenu::theme_item:font",
+        "PopupMenu::theme_item:font_accelerator_color",
+        "PopupMenu::theme_item:font_color",
+        "PopupMenu::theme_item:font_disabled_color",
+        "PopupMenu::theme_item:font_hover_color",
+        "PopupMenu::theme_item:font_outline_color",
+        "PopupMenu::theme_item:font_separator",
+        "PopupMenu::theme_item:font_separator_color",
+        "PopupMenu::theme_item:font_separator_outline_color",
+        "PopupMenu::theme_item:font_separator_size",
+        "PopupMenu::theme_item:font_size",
+        "PopupMenu::theme_item:gutter_compact",
+        "PopupMenu::theme_item:h_separation",
+        "PopupMenu::theme_item:hover",
+        "PopupMenu::theme_item:icon_max_width",
+        "PopupMenu::theme_item:indent",
+        "PopupMenu::theme_item:item_end_padding",
+        "PopupMenu::theme_item:item_start_padding",
+        "PopupMenu::theme_item:labeled_separator_left",
+        "PopupMenu::theme_item:labeled_separator_right",
+        "PopupMenu::theme_item:outline_size",
+        "PopupMenu::theme_item:panel",
+        "PopupMenu::theme_item:radio_checked",
+        "PopupMenu::theme_item:radio_checked_disabled",
+        "PopupMenu::theme_item:radio_unchecked",
+        "PopupMenu::theme_item:radio_unchecked_disabled",
+        "PopupMenu::theme_item:search",
+        "PopupMenu::theme_item:search_bar_separation",
+        "PopupMenu::theme_item:separator",
+        "PopupMenu::theme_item:separator_outline_size",
+        "PopupMenu::theme_item:submenu",
+        "PopupMenu::theme_item:submenu_mirrored",
+        "PopupMenu::theme_item:unchecked",
+        "PopupMenu::theme_item:unchecked_disabled",
+        "PopupMenu::theme_item:v_separation"
+      ]
+    }
+  ]
+}

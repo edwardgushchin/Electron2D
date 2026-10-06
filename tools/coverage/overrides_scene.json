@@ -9403,8 +9403,6 @@
       "state": "Blocked",
       "reason": "First typed GUI, text-input and embedded-viewport integration after rendering (ADRs 0008 and 0028).",
       "godot": [
-        "Viewport::method:get_embedded_subwindows()",
-        "Viewport::property:gui_embed_subwindows",
         "Viewport::property:gui_snap_controls_to_pixels"
       ]
     },
@@ -9452,23 +9450,11 @@
       "state": "Blocked",
       "reason": "First typed GUI, text and theme integration with Window after the renderer (ADRs 0008 and 0028).",
       "godot": [
-        "Window::enum:LayoutDirection",
-        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE",
-        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_INHERITED",
-        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LOCALE",
-        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LTR",
-        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_MAX",
-        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_RTL",
-        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_SYSTEM_LOCALE",
         "Window::method:child_controls_changed()",
-        "Window::method:get_layout_direction()",
-        "Window::method:is_layout_rtl()",
         "Window::method:is_using_font_oversampling()",
-        "Window::method:set_layout_direction(int:Window.LayoutDirection)",
         "Window::method:set_use_font_oversampling(bool:)",
         "Window::property:accessibility_description",
         "Window::property:accessibility_name",
-        "Window::property:wrap_controls",
         "Window::theme_item:title_font",
         "Window::theme_item:title_font_size"
       ]
@@ -9488,8 +9474,6 @@
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_PRIMARY_SCREEN",
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS",
         "Window::enum_value:WindowInitialPosition.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS",
-        "Window::method:_get_contents_minimum_size()",
-        "Window::method:get_contents_minimum_size()",
         "Window::method:move_to_foreground()",
         "Window::method:reset_size()",
         "Window::property:auto_translate",
@@ -9497,8 +9481,6 @@
         "Window::property:extend_to_title",
         "Window::property:initial_position",
         "Window::property:keep_title_visible",
-        "Window::property:maximize_disabled",
-        "Window::property:minimize_disabled",
         "Window::property:mouse_passthrough",
         "Window::property:mouse_passthrough_polygon",
         "Window::property:nonclient_area",
@@ -9541,7 +9523,6 @@
         "Window::property:content_scale_size",
         "Window::property:content_scale_stretch",
         "Window::property:hdr_output_requested",
-        "Window::property:transparent",
         "Window::signal:output_max_linear_value_changed(float:)"
       ]
     },
@@ -9550,25 +9531,9 @@
       "reason": "First native multiwindow and embedded/popup viewport ownership slice after rendering; one root window exists today (ADRs 0008 and 0040).",
       "godot": [
         "Window::method:get_focused_window()",
-        "Window::method:is_embedded()",
-        "Window::method:popup(Rect2i:)",
-        "Window::method:popup_centered(Vector2i:)",
-        "Window::method:popup_centered_clamped(Vector2i:,float:)",
-        "Window::method:popup_centered_ratio(float:)",
-        "Window::method:popup_exclusive(Node:,Rect2i:)",
-        "Window::method:popup_exclusive_centered(Node:,Vector2i:)",
-        "Window::method:popup_exclusive_centered_clamped(Node:,Vector2i:,float:)",
-        "Window::method:popup_exclusive_centered_ratio(Node:,float:)",
-        "Window::method:popup_exclusive_on_parent(Node:,Rect2i:)",
-        "Window::method:popup_on_parent(Rect2i:)",
         "Window::method:set_unparent_when_invisible(bool:)",
-        "Window::property:exclusive",
         "Window::property:force_native",
-        "Window::property:popup_window",
-        "Window::property:popup_wm_hint",
-        "Window::property:transient",
         "Window::property:transient_to_focused",
-        "Window::signal:about_to_popup()",
         "Window::theme_item:embedded_border",
         "Window::theme_item:embedded_unfocused_border"
       ]

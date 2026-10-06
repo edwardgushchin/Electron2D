@@ -1,9 +1,9 @@
 namespace Electron2D;
 
-/// <summary>Chooses the horizontal direction used to resolve a control's layout rectangle.</summary>
+/// <summary>Chooses the horizontal direction used to resolve a control or window's layout rectangle.</summary>
 public enum LayoutDirection
 {
-    /// <summary>Inherit from the nearest control in the same translation domain.</summary>
+    /// <summary>Inherit from the nearest control or window in the same translation domain.</summary>
     Inherited = 0,
     /// <summary>Use the active application translation locale.</summary>
     ApplicationLocale = 1,

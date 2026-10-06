@@ -242,8 +242,10 @@ public partial class Window
     }
     internal override void OnTreeMembershipChanged(bool entering)
     {
+        if (!entering) UpdateEmbeddedMembership(false);
         ThemeOwner.Membership(entering);
         base.OnTreeMembershipChanged(entering);
+        if (entering) UpdateEmbeddedMembership(true);
     }
     /// <inheritdoc />
     protected override void OnNotification(int what)

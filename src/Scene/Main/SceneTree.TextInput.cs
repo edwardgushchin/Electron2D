@@ -43,8 +43,8 @@ public sealed partial class SceneTree
     private void EnsureTextDeliveryAvailable(Viewport viewport)
     {
         ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); EnsureExecutionAvailable();
-        if (!ReferenceEquals(Root, viewport) || !ReferenceEquals(viewport.Tree, this))
-            throw new InvalidOperationException("Text delivery requires the root viewport of this tree.");
+        if (!ReferenceEquals(viewport.Tree, this) || !ReferenceEquals(Root, viewport) && viewport is not Window { Embedder: not null })
+            throw new InvalidOperationException("Text delivery requires the root viewport or an embedded window of this tree.");
     }
 
     private Control? EligibleTextFocus(Viewport viewport, ref List<Exception>? errors)

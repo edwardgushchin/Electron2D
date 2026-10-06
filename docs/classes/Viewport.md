@@ -517,3 +517,15 @@ System.InvalidOperationException: The scene is accessed off-owner.
 System.ObjectDisposedException: This viewport is disposed.
 
 GetGUIDragDescription reads the connected section root; SetGUIDragDescription stores on its receiving viewport, matching the distinct source roles. Drag completion clears the section root description. Standalone viewport sections remain independent; native subwindow sharing/routing retains its own prerequisite.
+
+## Embedded popup integration
+
+See [the component](../components/popup-windows.md) for input/target ownership, geometry, persistence and exact remaining dependencies.
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public Electron2D.Window[] GetEmbeddedSubwindows()` | Returns the visible embedded child windows in back-to-front order. |
+| `public Electron2D.Viewport.DefaultCanvasItemTextureFilter CanvasItemDefaultTextureFilter { get; set; }` | Gets or sets filtering used when no canvas ancestor selects an explicit filter. |
+| `public Electron2D.Viewport.DefaultCanvasItemTextureRepeat CanvasItemDefaultTextureRepeat { get; set; }` | Gets or sets addressing used when no canvas ancestor selects explicit repeat behavior. |
+| `public System.Boolean GUIEmbedSubwindows { get; set; }` | Gets or sets whether child windows are composed into this viewport. |
+| `public System.Boolean TransparentBG { get; set; }` | Gets or sets whether this viewport clears to transparent black instead of opaque clear color. |

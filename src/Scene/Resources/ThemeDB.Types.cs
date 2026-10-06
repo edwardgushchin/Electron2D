@@ -231,6 +231,8 @@ public sealed partial class ThemeDB
         ["PhysicsTestMotionResult"] = ["PhysicsTestMotionResult", "ElectronObject"],
         ["PinJoint"] = ["PinJoint", "Joint", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Polygon"] = ["Polygon", "Entity", "CanvasItem", "Node", "ElectronObject"],
+        ["Popup"] = ["Popup", "Window", "Viewport", "Node", "ElectronObject"],
+        ["PopupPanel"] = ["PopupPanel", "Popup", "Window", "Viewport", "Node", "ElectronObject"],
         ["ProjectSettings"] = ["ProjectSettings", "ProjectSettingsRegistry", "ElectronObject"],
         ["ProjectSettingsRegistry"] = ["ProjectSettingsRegistry", "ElectronObject"],
         ["RandomNumberGenerator"] = ["RandomNumberGenerator", "ElectronObject"],

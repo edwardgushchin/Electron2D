@@ -818,3 +818,6 @@ The existing AnimationMixer/AnimationPlayer also use [AnimationBlendValue.cs](..
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`ClipChildrenMode`](classes/ClipChildrenMode.md) | [`ClipChildrenMode.cs`](../src/Scene/Main/ClipChildrenMode.cs) | Current | Typed Disabled/Only/AndDraw alpha-mask composition, shared native storage and explicit nested/software gates. |
 
 CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [CanvasMesh.cs](../src/Servers/Rendering/CanvasMesh.cs) preserves draw-only coalescing across the shared mesh/canvas stream.
+
+| [Scene](domains/scene.md) | [Embedded popup windows](components/popup-windows.md) | [Popup](classes/Popup.md) | [Popup.cs](../src/Scene/GUI/Popup.cs) | Current | Transient embedded window, deferred cancellation and hide event; independent native children pending |
+| [Scene](domains/scene.md) | [Embedded popup windows](components/popup-windows.md) | [PopupPanel](classes/PopupPanel.md) | [PopupPanel.cs](../src/Scene/GUI/PopupPanel.cs) | Current | Transparent styled content/shadow layout, RTL, own scene factory |

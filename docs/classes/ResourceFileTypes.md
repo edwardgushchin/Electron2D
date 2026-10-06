@@ -81,3 +81,5 @@ ResourceArchiveTests exercises registered public formats, graph/scene persistenc
 Built-in direct resource factories now include AudioBusLayout and all 27 concrete AudioEffect resources. Their typed stored controls and indexed schemas persist independently of processing state; custom effects still require explicit compiled registration.
 
 The built-in direct node factory list now also includes TabBar, recreating its typed count/indexed scene state and independent internal timer. TabBarTests exercises e2dscene save plus fresh-process load/run.
+
+The embedded popup slice adds Popup/PopupPanel theme/type and exact file-factory integration; focused LineEdit text/IME now resolves the containing native root while retaining popup-local control focus. See [the component](../components/popup-windows.md) for the applicable portion and limits.

@@ -32,6 +32,7 @@ public sealed partial class SceneTree
         if (ReferenceEquals(_gui.Section, _gui))
             try { CancelGUIDrag(viewport); } catch (Exception error) { CollectException(ref errors, error); }
         _gui.InputTraversal.Clear(); _gui.GuiTouchCapture.Clear(); _gui.GuiTouchSlots.Clear();
+        ReleaseEmbeddedHost(viewport);
         _guiStates.Remove(viewport);
         ThrowCollected("Viewport GUI cleanup callbacks failed.", errors);
     }

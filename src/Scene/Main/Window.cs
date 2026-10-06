@@ -2,14 +2,15 @@ namespace Electron2D;
 
 /// <summary>A configurable native root window that owns scene children.</summary>
 /// <remarks>Pass a detached window to <see cref="Engine.Run"/> or <see cref="Engine.RunAsync"/>. The runtime opens its native window before
-/// scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels
+/// scene entry and releases it after scene teardown. One native root window is supported. The client size uses pixels
 /// on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. The root canvas renders after scene processing;
-/// embedded windows are not implemented.</remarks>
+/// embedded child windows use a containing viewport configured with GUIEmbedSubwindows.</remarks>
 public partial class Window : Viewport
 {
     private static readonly PropertyDescriptor[] WindowProperties =
     [
         new PropertyDescriptor<Window, bool>(nameof(Visible), w => w.Visible, (w, v) => w.Visible = v, _ => true, stored: true),
+        new PropertyDescriptor<Window, Vector2i>(nameof(Position), w => w.Position, (w, v) => w.Position = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, string>(nameof(Title), w => w.Title, (w, v) => w.Title = v, _ => "", stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2i.Zero, stored: true),
@@ -59,6 +60,7 @@ public partial class Window : Viewport
                 return;
             _display?.WindowSetTitleCore(value);
             _title = value;
+            QueueEmbeddedRedraw();
             UpdateConfigurationWarnings();
             TitleChanged?.Invoke();
         }
@@ -81,6 +83,15 @@ public partial class Window : Viewport
             EnsureMutable();
             if (value.X <= 0 || value.Y <= 0)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Client dimensions must be positive.");
+            RenderingOwner?.EnsureViewportMutation();
+            if (_display is null)
+            {
+                var minimum = _minSize;
+                if (_wrapControls) { var content = GetContentsMinimumSize().Ceil(); minimum = minimum.Max(new Vector2i(checked((int)content.X), checked((int)content.Y))); }
+                value = value.Max(minimum);
+                if (_maxSize.X > 0) value.X = Math.Min(value.X, _maxSize.X);
+                if (_maxSize.Y > 0) value.Y = Math.Min(value.Y, _maxSize.Y);
+            }
             if (_display is not null)
             {
                 _display.WindowSetSizeCore(value);
@@ -124,10 +135,10 @@ public partial class Window : Viewport
     public Vector2i Position
     {
         get { ThrowIfDisposed(); return _display?.WindowGetPositionCore() ?? _screenPosition ?? Vector2i.Zero; }
-        set { EnsureMutable(); _display?.WindowSetPositionCore(value); _screenPosition = value; }
+        set { EnsureMutable(); RenderingOwner?.EnsureViewportMutation(); _display?.WindowSetPositionCore(value); _screenPosition = value; _embeddedCanvas?.QueueRedraw(); }
     }
 
-    /// <summary>Gets or sets the root window's native visibility.</summary>
+    /// <summary>Gets or sets native-root or embedded-child visibility.</summary>
     /// <value>True by default. A native failure leaves managed visibility unchanged.</value>
     /// <remarks>GPU work drains and root swapchain storage releases before hiding. Showing reclaims
     /// presentation storage; independent offscreen targets remain live. The current Wayland Vulkan
@@ -143,6 +154,7 @@ public partial class Window : Viewport
         {
             EnsureMutable();
             if (_visible == value) return;
+            if (value && IsInsideTree && Parent is not null && Embedder is null) throw new NotSupportedException("Native child windows are unavailable.");
             if (_display is { } display)
             {
                 if (_renderer is { } renderer) renderer.SetWindowVisible(display, value);
@@ -150,6 +162,7 @@ public partial class Window : Viewport
             }
             _visible = value;
             List<Exception>? errors = null;
+            try { EmbeddedVisibilityChanged(); } catch (Exception error) { CollectException(ref errors, error); }
             try { VisibilityChanged?.Invoke(); }
             catch (Exception error) { CollectException(ref errors, error); }
             foreach (var node in EnumerateDepthFirst())
@@ -179,7 +192,7 @@ public partial class Window : Viewport
     /// <remarks>Runs on the owner thread before canvas visibility propagation. Callback failures are aggregated after canvas roots are attempted.</remarks>
     public event Action? VisibilityChanged;
 
-    /// <summary>Occurs when the system requests closure of this root window.</summary>
+    /// <summary>Occurs when the native system or embedded host requests window closure.</summary>
     /// <remarks>Handlers may disable SceneTree.AutoAcceptQuit to keep running, or call SceneTree.Quit with an exit code.
     /// The default quit decision follows the signal. Handler failures terminate Engine.Run with cleanup.</remarks>
     public event Action? CloseRequested;
@@ -194,7 +207,7 @@ public partial class Window : Viewport
     public event Action? FocusExited;
 
     /// <summary>Gets the native window identity while running.</summary>
-    /// <returns>Zero for the active root window; minus one while detached.</returns>
+    /// <returns>Zero for the active native root window; minus one while detached or embedded.</returns>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public int GetWindowID() { ThrowIfDisposed(); return _display is null ? DisplayServer.InvalidWindowId : DisplayServer.MainWindowId; }
 
@@ -202,14 +215,14 @@ public partial class Window : Viewport
     /// <returns>The platform's current focus observation.</returns>
     /// <exception cref="InvalidOperationException">The window is inactive or accessed off-thread.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public bool HasFocus() => GetDisplay().WindowIsFocusedCore();
+    public bool HasFocus() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return Embedder is not null ? Tree!.HasEmbeddedWindowFocus(this) : GetDisplay().WindowIsFocusedCore(); }
 
     /// <summary>Requests keyboard focus and foreground placement from the native system.</summary>
     /// <remarks>The operating system may deny focus. Wayland submits no foreground activation request through this
     /// operation. Inspect HasFocus for the observed result.</remarks>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void GrabFocus() => GetDisplay().WindowMoveToForegroundCore();
+    public void GrabFocus() { EnsureMutable(); if (Embedder is not null) Tree!.FocusEmbeddedWindow(this); else GetDisplay().WindowMoveToForegroundCore(); }
 
     /// <summary>Requests a platform attention indication until this window is focused.</summary>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the native request fails.</exception>
@@ -224,7 +237,7 @@ public partial class Window : Viewport
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(PopupProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Window)
@@ -238,6 +251,7 @@ public partial class Window : Viewport
         if (disposing)
         {
             _themeOwner?.Dispose(); ThemeChanged = null;
+            AboutToPopup = null;
             CloseRequested = null;
             VisibilityChanged = null;
             TitleChanged = null;
@@ -265,7 +279,7 @@ public partial class Window : Viewport
             _display.WindowSetMaxSizeCore(_maxSize);
             _display.WindowSetSizeCore(_size);
         }
-        foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus })
+        foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus, WindowFlag.Popup, WindowFlag.Transparent, WindowFlag.PopupWmHint, WindowFlag.MinimizeDisabled, WindowFlag.MaximizeDisabled })
             if (GetFlag(flag))
                 _display.WindowSetFlagCore(flag, true);
         if (_currentScreen is { } screen)
@@ -289,7 +303,7 @@ public partial class Window : Viewport
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
     }
 
-    internal Vector2 GetClientMousePosition() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); return _display!.GetClientMousePosition(); }
+    internal Vector2 GetClientMousePosition() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); if (Embedder is { } embedder) return embedder.GetWindow()!.GetClientMousePosition(); EnsureNativeOpen(); return _display!.GetClientMousePosition(); }
     internal void WarpClientMouse(Vector2i position) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); _display!.WarpMouseCore(position); }
 
     internal void EnsureNativeOpen()
@@ -358,8 +372,8 @@ public partial class Window : Viewport
         ThrowCollected("Window pointer-exit callbacks failed.", errors);
     }
     private void HandleDPIChanged() => DpiChanged?.Invoke();
-    private void HandleTextInput(string text) => Tree?.DispatchCommittedText(this, text);
-    private void HandleTextEditing(string text, Vector2i selection) => Tree?.DispatchIMEComposition(this, text, selection);
+    private void HandleTextInput(string text) => Tree?.DispatchCommittedText(Tree.GetEmbeddedTextWindow(this), text);
+    private void HandleTextEditing(string text, Vector2i selection) => Tree?.DispatchIMEComposition(Tree.GetEmbeddedTextWindow(this), text, selection);
     private void HandleFilesDropped(IReadOnlyList<string> paths) => FilesDropped?.Invoke(paths);
 
     private void CommitSize(Vector2i size)
@@ -367,6 +381,7 @@ public partial class Window : Viewport
         if (_size == size)
             return;
         _size = size;
+        InvalidateViewportRecording(); _embeddedCanvas?.QueueRedraw();
         NotifySizeChanged();
     }
 

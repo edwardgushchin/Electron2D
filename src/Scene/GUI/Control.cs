@@ -170,6 +170,7 @@ public partial class Control : CanvasItem
         {
             if (ancestor.TranslationDomain != domain) break;
             if (ancestor is Control control) return control.IsLayoutRTL();
+            if (ancestor is Window window) return window.IsLayoutRTL();
         }
         return IsLocaleRTL(GetApplicationCulture());
     }

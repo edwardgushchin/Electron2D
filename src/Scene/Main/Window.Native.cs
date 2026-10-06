@@ -96,16 +96,18 @@ public partial class Window
         EnsureMutable();
         if (GetFlag(flag) == enabled)
             return;
+        if (flag == WindowFlag.Popup && IsInsideTree && Visible) throw new InvalidOperationException("Popup policy cannot change while visible.");
         _display?.WindowSetFlagCore(flag, enabled);
         var bit = 1u << (int)flag;
         _flags = enabled ? _flags | bit : _flags & ~bit;
+        QueueEmbeddedRedraw();
     }
 
     /// <summary>Reports whether the current resize policy permits native maximization.</summary>
     /// <returns>Whether resizing is allowed; the compositor may impose further restrictions.</returns>
     /// <exception cref="InvalidOperationException">An active window is accessed off-thread.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowedCore() ?? !Unresizable; }
+    public bool IsMaximizeAllowed() { ThrowIfDisposed(); return _display?.WindowIsMaximizeAllowedCore() ?? (!Unresizable && !MaximizeDisabled); }
 
     /// <summary>Gets the outer window origin, including native borders when visible and active.</summary>
     /// <returns>Desktop coordinates; Position while hidden or detached.</returns>
@@ -145,7 +147,7 @@ public partial class Window
     /// control owns its own preedit cleanup when focus or native window focus changes.</remarks>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetIMEActive(bool active) { EnsureMutable(); GetDisplay().WindowSetIMEActiveCore(active); }
+    public void SetIMEActive(bool active) { EnsureMutable(); if (Embedder is { } host) host.GetWindow()!.SetIMEActive(active); else GetDisplay().WindowSetIMEActiveCore(active); }
 
     /// <summary>Requests native IME candidate placement at a client-coordinate caret.</summary>
     /// <param name="position">Caret position in client pixels on Wayland and native window units elsewhere.</param>
@@ -154,7 +156,7 @@ public partial class Window
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="OverflowException">The position cannot be represented in native coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetIMEPosition(Vector2i position) { EnsureMutable(); GetDisplay().WindowSetIMEPositionCore(position); }
+    public void SetIMEPosition(Vector2i position) { EnsureMutable(); if (Embedder is { } host) host.GetWindow()!.SetIMEPosition((Vector2i)(GetScreenTransform() * (Vector2)position)); else GetDisplay().WindowSetIMEPositionCore(position); }
 
     /// <summary>Requests a native taskbar progress indication for the active window.</summary>
     /// <param name="state">The progress indication to show.</param>
@@ -173,11 +175,11 @@ public partial class Window
     public void SetTaskbarProgressValue(float value) { EnsureMutable(); GetDisplay().WindowSetTaskbarProgressValueCore(value); }
 
     /// <summary>Occurs on an effective native pointer entry before subsequent frame callbacks.</summary>
-    /// <remarks>Delivered synchronously on the owner thread. GUI occlusion and embedded viewports are absent.</remarks>
+    /// <remarks>Delivered synchronously on the owner thread. Root delivery is native. Embedded pointer entry/exit signaling retains its separate coverage gap.</remarks>
     public event Action? MouseEntered;
 
     /// <summary>Occurs on an effective native pointer exit before subsequent frame callbacks.</summary>
-    /// <remarks>Delivered synchronously on the owner thread. GUI occlusion and embedded viewports are absent.</remarks>
+    /// <remarks>Delivered synchronously on the owner thread. Root delivery is native. Embedded pointer entry/exit signaling retains its separate coverage gap.</remarks>
     public event Action? MouseExited;
 
     /// <summary>Occurs when the native window's display content scale changes.</summary>
@@ -190,10 +192,11 @@ public partial class Window
     /// callback failures and releases its resources after the queue drains.</remarks>
     public event Action<IReadOnlyList<string>>? FilesDropped;
 
-    private static void ValidateFlag(WindowFlag flag)
+    private void ValidateFlag(WindowFlag flag)
     {
         if (flag < WindowFlag.ResizeDisabled || flag >= WindowFlag.Max)
             throw new ArgumentOutOfRangeException(nameof(flag), flag, "Unknown window flag.");
+        if (flag is WindowFlag.Transparent or WindowFlag.Popup or WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled) return;
         if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
             throw new NotSupportedException($"Window flag {flag} requires a native capability that is not integrated.");
     }

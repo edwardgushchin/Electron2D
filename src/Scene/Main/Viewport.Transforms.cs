@@ -59,6 +59,7 @@ public abstract partial class Viewport
     public Transform GetScreenTransform()
     {
         CheckTransformQuery();
+        if (this is Window { Embedder: { } embedder } embeddedWindow) return embedder.GetScreenTransform() * new Transform(0, embeddedWindow.Position) * GetFinalTransform();
         return Parent is SubViewportContainer container && container.GetViewport() is { } parent
             ? parent.GetScreenTransform() * container.GetGlobalTransformWithCanvas() * container.ViewportScale * GetFinalTransform()
             : GetFinalTransform();

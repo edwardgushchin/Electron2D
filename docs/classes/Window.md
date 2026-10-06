@@ -14,7 +14,7 @@ Last updated: 2026-10-06
 
 A configurable native root window that owns scene children.
 
-Pass a detached window to `Engine.Run(Window)` or `Engine.RunAsync(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. On mobile/TV/browser targets the actual native surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded windows are not implemented.
+Pass a detached window to `Engine.Run(Window)` or `Engine.RunAsync(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One native root window is supported. The client size uses pixels on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. On mobile/TV/browser targets the actual native surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded child windows execute beneath a viewport configured with GUIEmbedSubwindows; independent native children remain absent.
 
 Native lifetime belongs to Engine.Run or Engine.RunAsync. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
 
@@ -635,3 +635,38 @@ GetTexture/GetViewportRID supply stable borrowed identities for native root outp
 Native GPU visibility changes drain work and release the swapchain before hiding; supported showing recreates it; previously presented Wayland Vulkan surfaces reject remapping until native unmap acknowledgement is implemented. Independent offscreen targets stay available while root presentation is hidden. The dependency host verifies this on Linux Wayland.
 
 On the current Linux Wayland Vulkan profile, remapping a previously presented root surface rejects with NotSupportedException before native/managed visibility changes. Wayland protocol traces show buffer state retained at xdg_surface recreation even after GPU idle, swapchain release and SDL.SyncWindow; trigger: an SDL-owned native presentation-completion/unmap acknowledgement bridge or verified backend/compositor correction. Hiding succeeds, offscreen targets continue, compatibility remapping executes. This is an explicit platform capability gap, not a completed Show path.
+
+## Embedded popup integration
+
+See [the component](../components/popup-windows.md) for input/target ownership, geometry, persistence and exact remaining dependencies.
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public event System.Action AboutToPopup` | Occurs before popup positioning, sizing and visibility changes. |
+| `public Electron2D.Vector2 GetContentsMinimumSize()` | Returns the maximum extent of direct child controls and their minimum sizes. |
+| `public Electron2D.StyleBox GetThemeStyleBox(System.String name, System.String themeType = "")` | Gets a typed theme style box using local override, branch themes, native defaults and universal fallback. |
+| `public System.Boolean IsEmbedded()` | Reports whether this window uses an attached viewport's embedded host. |
+| `public System.Boolean IsLayoutRTL()` | Reports whether the resolved window layout direction is right to left. |
+| `protected virtual Electron2D.Vector2 OnGetContentsMinimumSize()` | Computes the minimum dimensions required by direct child controls. |
+| `public System.Void Popup(Electron2D.Rect2i rect = default)` | Shows this child window, applying an optional host-coordinate rectangle. |
+| `public System.Void PopupCentered(Electron2D.Vector2i minSize = default)` | Shows this window centered in its embedding viewport. |
+| `public System.Void PopupCenteredClamped(Electron2D.Vector2i minSize = default, System.Single fallbackRatio = 0.75f)` | Shows this window centered, limiting requested dimensions to a host-size ratio. |
+| `public System.Void PopupCenteredRatio(System.Single ratio = 0.8f)` | Shows this window centered with dimensions proportional to its host. |
+| `public System.Void PopupExclusive(Electron2D.Node fromNode, Electron2D.Rect2i rect = default)` | Parents a detached dialog to the last exclusive window and shows it with an optional host-coordinate rectangle. |
+| `public System.Void PopupExclusiveCentered(Electron2D.Node fromNode, Electron2D.Vector2i minSize = default)` | Parents a detached dialog to the last exclusive window and shows it with centered dimensions. |
+| `public System.Void PopupExclusiveCenteredClamped(Electron2D.Node fromNode, Electron2D.Vector2i minSize = default, System.Single fallbackRatio = 0.75f)` | Parents a detached dialog to the last exclusive window and shows it with clamped centered dimensions. |
+| `public System.Void PopupExclusiveCenteredRatio(Electron2D.Node fromNode, System.Single ratio = 0.8f)` | Parents a detached dialog to the last exclusive window and shows it with a proportional host size. |
+| `public System.Void PopupExclusiveOnParent(Electron2D.Node fromNode, Electron2D.Rect2i parentRect)` | Parents a detached dialog to the last exclusive window and shows it with a parent-relative rectangle. |
+| `public System.Void PopupOnParent(Electron2D.Rect2i parentRect)` | Shows this window at a rectangle relative to its parent window. |
+| `public System.Boolean Borderless { get; set; }` | Gets or sets the policy removing native window borders and title bar. |
+| `public System.Boolean Exclusive { get; set; }` | Gets or sets whether input outside this window is blocked while visible. |
+| `public Electron2D.LayoutDirection LayoutDirection { get; set; }` | Gets or sets the direction inherited by this window's controls. |
+| `public System.Boolean MaximizeDisabled { get; set; }` | Gets or sets whether user maximization is disabled. |
+| `public System.Boolean MinimizeDisabled { get; set; }` | Gets or sets whether user minimization is disabled. |
+| `public System.Boolean PopupWMHint { get; set; }` | Gets or sets the popup window-manager hint, retained by the embedded host. |
+| `public System.Boolean PopupWindow { get; set; }` | Gets or sets the popup input and outside-click close-request policy. |
+| `public System.Boolean Transient { get; set; }` | Gets or sets whether this window returns focus to its parent when hidden. |
+| `public System.Boolean Transparent { get; set; }` | Gets or sets transparent embedded window composition. |
+| `public System.Boolean Unresizable { get; set; }` | Gets or sets the policy preventing user border resizing. |
+| `public System.Boolean Visible { get; set; }` | Gets or sets native-root or embedded-child visibility. |
+| `public System.Boolean WrapControls { get; set; }` | Gets or sets whether child control minimums constrain this window's size. |

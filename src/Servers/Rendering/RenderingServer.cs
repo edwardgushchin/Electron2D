@@ -122,11 +122,11 @@ public sealed partial class RenderingServer : ElectronObject
     private Color FrameClear(Viewport viewport) => viewport.TransparentBG ? default : _clearColor with { A = 1 };
     private void CaptureViewports(Node node)
     {
-        if (node is Viewport viewport && (ReferenceEquals(viewport, _window) || viewport is SubViewport))
+        if (node is Viewport viewport && (ReferenceEquals(viewport, _window) || viewport is SubViewport || viewport is Window { Embedder: not null }))
         {
             if (!_canvasFrames.TryGetValue(viewport, out var frame)) _canvasFrames.Add(viewport, frame = new(viewport));
             viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = false; _activeFrames.Add(frame);
-            var size = ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : ((SubViewport)viewport).Size;
+            var size = ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : viewport is SubViewport sub ? sub.Size : ((Window)viewport).Size;
             if (size.X > 0 && size.Y > 0) _backend.Target(viewport, size, FrameClear(viewport));
         }
         for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) CaptureViewports(node.GetChild(i, includeInternal: true));
@@ -138,7 +138,7 @@ public sealed partial class RenderingServer : ElectronObject
     internal void SetWindowVisible(DisplayServer display, bool visible) { EnsureViewportMutation(); _backend.SetWindowVisible(display, visible); }
     internal void EnsureViewportMutation() { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot mutate during native submission."); }
     internal void ReleaseViewport(Viewport viewport) { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot be released during native submission."); _backend.ReleaseTarget(viewport); _canvasFrames.Remove(viewport); viewport.RenderingOwner = null; }
-    internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : ((SubViewport)viewport).Size; }
+    internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : viewport is SubViewport sub ? sub.Size : ((Window)viewport).Size; }
     internal Image? ReadbackViewport(Viewport viewport)
     { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
     internal void Render(SceneTree tree, double step)
@@ -174,13 +174,13 @@ public sealed partial class RenderingServer : ElectronObject
     {
         while (texture is AtlasTexture atlas) texture = atlas.RenderingTexture;
         if (texture is not ViewportTexture view || view.Bound is not { } viewport || !_canvasFrames.TryGetValue(viewport, out var frame) || !ReferenceEquals(viewport.Tree, tree)) return;
-        if (viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled }) return;
+        if (viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled } || viewport is Window { Visible: false }) return;
         frame.Wanted = true; SubmitFrame(frame, tree);
     }
     private void SubmitFrame(CanvasFrame frame, SceneTree tree)
     {
         if (frame.State != 0 || !frame.Wanted || frame.Viewport.IsDisposed || !ReferenceEquals(frame.Viewport.Tree, tree)) return;
-        if (frame.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled }) return;
+        if (frame.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled } || frame.Viewport is Window { Visible: false }) return;
         frame.State = 1; BuildFrame(frame, tree);
         foreach (var batch in frame.Batches)
         {

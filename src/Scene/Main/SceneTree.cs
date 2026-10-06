@@ -860,8 +860,10 @@ public sealed partial class SceneTree : MainLoop
         ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); EnsureExecutionAvailable();
         if (!ReferenceEquals(viewport.Tree, this)) throw new InvalidOperationException("Viewport is not attached to this tree.");
         var localized = inLocalCoordinates ? inputEvent : viewport.MakeViewportInputLocal(inputEvent);
-        try { DispatchLocalInputEvent(localized, viewport); }
-        finally { if (!ReferenceEquals(localized, inputEvent)) localized.Dispose(); }
+        InputEvent? routed = null;
+        BeginExecution();
+        try { routed = RouteEmbeddedInput(viewport, localized, out var target); if (routed is not null) DispatchLocalInputEvent(routed, target, executionOwned: true); }
+        finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (!ReferenceEquals(localized, inputEvent)) localized.Dispose(); EndExecution(); }
     }
 
     internal void DispatchEmbeddedViewportInput(SubViewportContainer container, SubViewport viewport, InputEvent input)
@@ -869,12 +871,12 @@ public sealed partial class SceneTree : MainLoop
         if (!_isDispatchingInput || !ReferenceEquals(container.GetViewport(), _inputViewport) || !ReferenceEquals(viewport.Parent, container) || !ReferenceEquals(viewport.Tree, this))
             throw new InvalidOperationException("Embedded input forwarding requires its active parent viewport dispatch.");
         if (viewport.GUIDisableInput) return;
-        var localized = viewport.MakeViewportInputLocal(input);
-        try { DispatchLocalInputEvent(localized, viewport, embedded: true); }
-        finally { if (!ReferenceEquals(localized, input)) localized.Dispose(); }
+        var localized = viewport.MakeViewportInputLocal(input); InputEvent? routed = null;
+        try { routed = RouteEmbeddedInput(viewport, localized, out var target); if (routed is not null) DispatchLocalInputEvent(routed, target, embedded: true); }
+        finally { if (routed is not null && !ReferenceEquals(routed, localized)) routed.Dispose(); if (!ReferenceEquals(localized, input)) localized.Dispose(); }
     }
     private Viewport? _inputViewport;
-    private void DispatchLocalInputEvent(InputEvent @event, Viewport? inputViewport = null, bool embedded = false)
+    private void DispatchLocalInputEvent(InputEvent @event, Viewport? inputViewport = null, bool embedded = false, bool executionOwned = false)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(@event);
@@ -884,7 +886,7 @@ public sealed partial class SceneTree : MainLoop
         if (inputViewport?.GUIDisableInput == true) return;
         var previousViewport = _inputViewport; var previousDispatch = _isDispatchingInput;
         using var guiScope = SelectGUI(inputViewport);
-        if (!embedded) BeginExecution();
+        if (!embedded && !executionOwned) BeginExecution();
         _isDispatchingInput = true;
         var inputOwner = InputGUI(inputViewport);
         _gui.InputHandled = false;
@@ -925,7 +927,7 @@ public sealed partial class SceneTree : MainLoop
             _inputViewport = previousViewport;
             _gui.InputHandled = false;
             _isDispatchingInput = previousDispatch;
-            if (!embedded) EndExecution();
+            if (!embedded && !executionOwned) EndExecution();
         }
 
         ThrowCollected("One or more scene input callbacks failed.", errors);

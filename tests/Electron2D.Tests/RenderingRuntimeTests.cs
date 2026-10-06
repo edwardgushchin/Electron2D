@@ -23,6 +23,11 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POPUP_NATIVE") == "1")
+            {
+                foreach (var backend in new[] { "gpu", "compatibility" }) { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyPopupRendering(backend); }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TABS_NATIVE") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })

@@ -163,7 +163,8 @@ public partial class LineEdit
     private void UpdateIMEPosition()
     {
         if (DisplayServer.Service is not { } display || !display.HasFeatureCore(DisplayServer.Feature.Ime)) return;
-        var window = GetWindow(); if (window is null || window.GetWindowID() == DisplayServer.InvalidWindowId) return;
+        var window = GetWindow();
+        while (window?.Embedder is { } host) window = host.GetWindow(); if (window is null || window.GetWindowID() == DisplayServer.InvalidWindowId) return;
         EnsureLayout(); var content = ContentRect(); var local = new Vector2(TextOrigin(content) + _layout.CaretX(DisplayCaret, _inputDirection), (Size.Y + _font!.GetHeight(_fontSize)) / 2);
         var position = GetViewport()!.GetScreenTransform() * GetGlobalTransformWithCanvas() * local; display.WindowSetIMEActiveCore(true, window.GetWindowID()); display.WindowSetIMEPositionCore(new((int)position.X, (int)position.Y), window.GetWindowID());
     }

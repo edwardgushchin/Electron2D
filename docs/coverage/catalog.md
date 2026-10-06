@@ -653,9 +653,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Polygon2D](classes/Polygon2D.md) | Node2D | Partial | 23 |
 | [PolygonOccluder3D](classes/PolygonOccluder3D.md) | Occluder3D | Excluded | 1 |
 | [PolygonPathFinder](classes/PolygonPathFinder.md) | Resource | Blocked | 8 |
-| [Popup](classes/Popup.md) | Window | Blocked | 10 |
+| [Popup](classes/Popup.md) | Window | Partial | 10 |
 | [PopupMenu](classes/PopupMenu.md) | Popup | Blocked | 140 |
-| [PopupPanel](classes/PopupPanel.md) | Popup | Blocked | 5 |
+| [PopupPanel](classes/PopupPanel.md) | Popup | Partial | 5 |
 | [PortableCompressedTexture2D](classes/PortableCompressedTexture2D.md) | Texture2D | Blocked | 16 |
 | [PrimitiveMesh](classes/PrimitiveMesh.md) | Mesh | Blocked | 8 |
 | [PrismMesh](classes/PrismMesh.md) | PrimitiveMesh | Excluded | 5 |

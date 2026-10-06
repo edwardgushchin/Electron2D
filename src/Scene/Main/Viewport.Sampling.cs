@@ -183,5 +183,5 @@ public abstract partial class Viewport
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GUIProperties).Concat(TargetProperties).Concat(ViewportSamplingProperties).Concat(CanvasRenderingProperties).Concat(CanvasTransformProperties).Concat(ViewportDragProperties).Concat(ViewportAudioProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GUIProperties).Concat(EmbeddedProperties).Concat(TargetProperties).Concat(ViewportSamplingProperties).Concat(CanvasRenderingProperties).Concat(CanvasTransformProperties).Concat(ViewportDragProperties).Concat(ViewportAudioProperties);
 }

@@ -2411,13 +2411,16 @@ public partial class Node : ElectronObject
         ThrowCollected("One or more child-insertion callbacks failed.", errors);
     }
 
+    private bool EnumerateAncestorsForEmbedding()
+    { for (Node? node = this; node is not null; node = node.Parent) if (node is Viewport { GUIEmbedSubwindows: true }) return true; return false; }
+
     private void ValidateChildForInsertion(Node child, bool allowExistingParent)
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
         child.EnsureNotSceneCapture();
-        if (child is Viewport and not SubViewport)
-            throw new NotSupportedException("Child native windows require multiwindow rendering support.");
+        if (child is Window { Visible: true } && Tree is not null && !EnumerateAncestorsForEmbedding())
+            throw new NotSupportedException("Visible child windows require an embedding viewport.");
         Tree?.EnsureOwnerThread();
 
         if (ReferenceEquals(child, this))

@@ -40,8 +40,9 @@ internal static class WindowRuntimeTests
                 Reject<InvalidOperationException>(() => new SceneTree(detached));
                 Check(!detached.IsDisposed && detached.Tree is null, "Rejected manual activation keeps caller ownership.");
                 using var parent = new Entity();
-                Reject<NotSupportedException>(() => parent.AddChild(detached));
-                Check(parent.ChildCount == 0 && detached.Parent is null, "Unsupported child viewport rejects before mutation.");
+                parent.AddChild(detached);
+                Check(parent.ChildCount == 1 && detached.Parent == parent, "Detached child windows retain their hierarchy before activation.");
+                parent.RemoveChild(detached);
                 var captured = detached.BeginSceneCapture();
                 try
                 {
@@ -256,7 +257,7 @@ internal static class WindowRuntimeTests
                 {
                     if (flag == WindowFlag.Max)
                         Reject<ArgumentOutOfRangeException>(() => template.SetFlag(flag, true));
-                    else if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
+                    else if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus or WindowFlag.Popup or WindowFlag.Transparent or WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled))
                     {
                         Reject<NotSupportedException>(() => template.GetFlag(flag));
                         Reject<NotSupportedException>(() => template.SetFlag(flag, false));

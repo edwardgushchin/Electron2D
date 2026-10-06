@@ -2,6 +2,8 @@ namespace Electron2D;
 
 public static partial class ResourceFileTypes
 {
+    private static Popup CreatePopupFileNode() => new Popup();
+    private static PopupPanel CreatePopupPanelFileNode() => new PopupPanel();
     private static void RegisterBuiltInNodes()
     {
         RegisterNode("AnimatableBody", CreateAnimatableBodyFileNode);
@@ -48,6 +50,8 @@ public static partial class ResourceFileTypes
         RegisterNode("MultiplayerSpawner", CreateMultiplayerSpawnerFileNode);
         RegisterNode("MultiplayerSynchronizer", CreateMultiplayerSynchronizerFileNode);
         RegisterNode("NinePatchRect", CreateNinePatchRectFileNode);
+        RegisterNode("Popup", CreatePopupFileNode);
+        RegisterNode("PopupPanel", CreatePopupPanelFileNode);
         RegisterNode("Panel", CreatePanelFileNode);
         RegisterNode("PanelContainer", CreatePanelContainerFileNode);
         RegisterNode("Parallax", CreateParallaxFileNode);

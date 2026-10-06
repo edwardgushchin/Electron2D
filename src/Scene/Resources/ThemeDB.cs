@@ -29,7 +29,7 @@ public sealed partial class ThemeDB : ElectronObject
     private ThemeDB()
     {
         _defaultTheme = new Theme { DefaultBaseScale = 1, DefaultFontSize = 16 };
-        foreach (var name in new[] { "Panel", "PanelContainer" })
+        foreach (var name in new[] { "Panel", "PanelContainer", "PopupPanel" })
         {
             var style = new StyleBoxFlat { BGColor = new(.1f, .1f, .1f, .6f), CornerDetail = 5 };
             style.SetContentMarginAll(0); style.SetCornerRadiusAll(3); _owned.Add(style);
@@ -39,6 +39,10 @@ public sealed partial class ThemeDB : ElectronObject
         foreach (var name in new[] { "GridContainer", "FlowContainer", "HFlowContainer", "VFlowContainer" })
         { _defaultTheme.SetConstant("h_separation", name, 4); _defaultTheme.SetConstant("v_separation", name, 4); }
         foreach (var side in new[] { "left", "top", "right", "bottom" }) _defaultTheme.SetConstant("margin_" + side, "MarginContainer", 0);
+        var windowBorder = new StyleBoxFlat { BGColor = new(.13f, .13f, .13f) }; windowBorder.SetContentMarginAll(4); _owned.Add(windowBorder);
+        _defaultTheme.SetStyleBox("embedded_border", "Window", windowBorder);
+        _defaultTheme.SetConstant("title_height", "Window", 36); _defaultTheme.SetConstant("resize_margin", "Window", 4);
+        _defaultTheme.SetColor("title_color", "Window", new(.875f, .875f, .875f)); _defaultTheme.SetFontSize("title_font_size", "Window", 16);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
         try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); AddLineEditDefaults(); AddTabDefaults(); }
