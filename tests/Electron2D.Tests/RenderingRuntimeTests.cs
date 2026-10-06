@@ -23,6 +23,7 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION_NATIVE") == "1") { foreach (var backend in new[] { "gpu", "compatibility" }) { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyOptionRendering(backend); } return; }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER_NATIVE") == "1") { foreach (var backend in new[] { "gpu", "compatibility" }) { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyTabContainerRendering(backend); } return; }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_NATIVE") == "1") { foreach (var backend in new[] { "gpu", "compatibility" }) { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyPopupMenuRendering(backend); } return; }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POPUP_NATIVE") == "1")

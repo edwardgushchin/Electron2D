@@ -2,6 +2,7 @@ namespace Electron2D;
 
 public static partial class ResourceFileTypes
 {
+    private static OptionButton CreateOptionButtonFileNode() => new();
     private static TabContainer CreateTabContainerFileNode() => new();
     private static PopupMenu CreatePopupMenuFileNode() => new();
     private static Popup CreatePopupFileNode() => new Popup();
@@ -20,6 +21,7 @@ public static partial class ResourceFileTypes
         RegisterNode("AudioStreamPlayer", CreateAudioStreamPlayerFileNode);
         RegisterNode("BackBufferCopy", CreateBackBufferCopyFileNode);
         RegisterNode("BoxContainer", CreateBoxContainerFileNode);
+        RegisterNode("OptionButton", CreateOptionButtonFileNode);
         RegisterNode("Button", CreateButtonFileNode);
         RegisterNode("Camera", CreateCameraFileNode);
         RegisterNode("CanvasGroup", CreateCanvasGroupFileNode);

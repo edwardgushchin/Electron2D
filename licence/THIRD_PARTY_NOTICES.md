@@ -23,6 +23,8 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | Full Unicode uppercase data and locale casing rules | Unicode-3.0 and retained ICU terms | [Unicode and ICU notice](TextCase-LICENSE.txt) |
 | Embedded Open Sans SemiBold font | SIL Open Font License 1.1 | [Open Sans](OpenSans.txt) |
 
+Dropdown selection, arrow/minimum layout and item persistence adapt the [pinned option_button.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/option_button.cpp) contract through existing Button/PopupMenu and exact generic metadata. The published CanvasStyleGeometry notice covers this runtime adaptation.
+
 Tab panel layout, indexed settings, title/visibility coordination and popup positioning adapt the [pinned tab_container.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/tab_container.cpp) contract, using existing typed controls and identity-stable scene-page drags. The published CanvasStyleGeometry notice also covers this runtime adaptation.
 
 Popup menu layout, input and search adapt the [pinned popup_menu.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/popup_menu.cpp) and [fuzzy_search.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/string/fuzzy_search.cpp) algorithms. The published CanvasStyleGeometry runtime notice covers these adaptations; the menu SVG glyphs are Electron2D-authored.

@@ -165,6 +165,7 @@ internal static class ButtonTests
         Check(button.GetMinimumSize().X == 21, "Background icon changes marshal invalidation onto the owner thread.");
         root.RemoveChild(button); Task.Run(() => background.SetImage(larger)).GetAwaiter().GetResult(); root.AddChild(button); tree.ProcessFrame(0);
         button.Icon = null; background.Dispose(); Check(button.GetMinimumSize() == Vector2.Zero, "Replacing an icon detaches subscriptions and never owns the old resource.");
+        using var disposed = Texture(3, 3); button.Icon = disposed; Task.Run(disposed.Dispose).GetAwaiter().GetResult(); tree.ProcessFrame(0); Check(button.Icon == null && button.GetMinimumSize() == Vector2.Zero, "Worker disposal clears a borrowed button icon before internal processing.");
         using var atlasPixels = Texture(8, 4); using var inner = new AtlasTexture { Atlas = atlasPixels, Region = new(0, 0, 4, 4) };
         inner.Changed += _ => throw new ApplicationException("earlier inner atlas observer");
         using var outer = new AtlasTexture { Atlas = inner, Region = new(0, 0, 2, 2) }; button.Icon = outer;

@@ -83,7 +83,6 @@ PopupMenuTests verifies creation families, typed null metadata, strict/end-relat
 | `public System.Void AddRadioCheckShortcut(Electron2D.Shortcut shortcut, System.Int32 id = -1, System.Boolean global = false)` | Adds a radio item titled from a borrowed shortcut; ID -1 derives from its new index. |
 | `public System.Void AddSeparator(System.String label = "", System.Int32 id = -1)` | Adds a separator with an optional title; ID -1 derives from its new index. |
 | `public System.Void AddShortcut(Electron2D.Shortcut shortcut, System.Int32 id = -1, System.Boolean global = false, System.Boolean allowEcho = false)` | Adds an item titled from a borrowed shortcut; ID -1 derives from its new index. |
-| `public System.Void AddSubmenuItem(System.String label, System.String submenu, System.Int32 id = -1)` | Adds an item resolving an existing direct child submenu by name. |
 | `public System.Void AddSubmenuNodeItem(System.String label, Electron2D.PopupMenu submenu, System.Int32 id = -1)` | Adds a submenu record, parenting a detached submenu when needed. |
 | `public System.Void Clear(System.Boolean freeSubmenus = false)` | Clears items, optionally disposing their distinct submenu nodes. |
 | `protected override System.Func<Electron2D.Node> CreateSceneInstanceFactory()` | Projects the inherited lifecycle/scene contract onto the menu owner. |
@@ -102,7 +101,6 @@ PopupMenuTests verifies creation families, typed null metadata, strict/end-relat
 | `public System.Int32 GetItemMultistate(System.Int32 index)` | Gets an item's Multistate value. |
 | `public System.Int32 GetItemMultistateMax(System.Int32 index)` | Gets an item's MultistateMax value. |
 | `public Electron2D.Shortcut GetItemShortcut(System.Int32 index)` | Gets the item's borrowed shortcut. |
-| `public System.String GetItemSubmenu(System.Int32 index)` | Gets the stored submenu name. |
 | `public Electron2D.PopupMenu GetItemSubmenuNode(System.Int32 index)` | Gets a live borrowed submenu. |
 | `public System.String GetItemText(System.Int32 index)` | Gets an item's Text value. |
 | `public Electron2D.TextDirection GetItemTextDirection(System.Int32 index)` | Gets an item's TextDirection value. |
@@ -139,7 +137,6 @@ PopupMenuTests verifies creation families, typed null metadata, strict/end-relat
 | `public System.Void SetItemMultistateMax(System.Int32 index, System.Int32 value)` | Sets an item's MultistateMax value after validation; negative indices count from the end. |
 | `public System.Void SetItemShortcut(System.Int32 index, Electron2D.Shortcut shortcut, System.Boolean global = false)` | Replaces a borrowed shortcut and its global matching policy. |
 | `public System.Void SetItemShortcutDisabled(System.Int32 index, System.Boolean value)` | Changes an item's ShortcutDisabled flag. |
-| `public System.Void SetItemSubmenu(System.Int32 index, System.String submenu)` | Changes the submenu using a direct child name. |
 | `public System.Void SetItemSubmenuNode(System.Int32 index, Electron2D.PopupMenu submenu)` | Changes the submenu identity, parenting a detached child. |
 | `public System.Void SetItemText(System.Int32 index, System.String value)` | Sets an item's Text value after validation; negative indices count from the end. |
 | `public System.Void SetItemTextDirection(System.Int32 index, Electron2D.TextDirection value)` | Sets an item's TextDirection value after validation; negative indices count from the end. |
@@ -499,18 +496,6 @@ Adds an item titled from a borrowed shortcut; ID -1 derives from its new index.
 - `global`: The typed item global value.
 - `allowEcho`: The typed item allowEcho value.
 
-### AddSubmenuItem
-
-```csharp
-public System.Void AddSubmenuItem(System.String label, System.String submenu, System.Int32 id = -1)
-```
-
-Adds an item resolving an existing direct child submenu by name.
-
-- `label`: The title.
-- `submenu`: The child node name or path.
-- `id`: An ID, or -1 for automatic.
-
 ### AddSubmenuNodeItem
 
 ```csharp
@@ -716,18 +701,6 @@ public Electron2D.Shortcut GetItemShortcut(System.Int32 index)
 Gets the item's borrowed shortcut.
 
 The shortcut or null.
-
-- `index`: An index.
-
-### GetItemSubmenu
-
-```csharp
-public System.String GetItemSubmenu(System.Int32 index)
-```
-
-Gets the stored submenu name.
-
-The stored name or empty.
 
 - `index`: An index.
 
@@ -1124,17 +1097,6 @@ Changes an item's ShortcutDisabled flag.
 - `index`: An index, optionally negative.
 - `value`: The desired state.
 
-### SetItemSubmenu
-
-```csharp
-public System.Void SetItemSubmenu(System.Int32 index, System.String submenu)
-```
-
-Changes the submenu using a direct child name.
-
-- `index`: An index, optionally negative.
-- `submenu`: A child name, or empty to clear.
-
 ### SetItemSubmenuNode
 
 ```csharp
@@ -1236,3 +1198,7 @@ public event System.Action MenuChanged
 
 Occurs after an item mutation commits.
 
+
+[Dropdown choices](../components/dropdown-choices.md) add OptionButton as an executable Button/PopupMenu consumer with three arrow theme keys and an exact scene/file factory. Selected item translation uses the shared Button text path. Disposed borrowed button icons read as null and clear on owner processing, avoiding the internal-process/deferred-cleanup race. Public shared-owner signatures remain unchanged.
+
+The string-path submenu declarations were removed under ADR 0004 because their pinned source metadata is deprecated. Use the node-based AddSubmenuNodeItem/GetItemSubmenuNode/SetItemSubmenuNode family; coverage retains those three source rows as Excluded.

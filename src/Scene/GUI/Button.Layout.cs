@@ -37,7 +37,7 @@ public partial class Button
     }
     internal virtual void RefreshButtonIndicator() { _internalLeft = _internalRight = 0; }
     internal void SetButtonInternalMargins(float left, float right) { _internalLeft = left; _internalRight = right; }
-    private Texture? EffectiveIcon() => _icon ?? (HasThemeIcon("icon") ? GetThemeIcon("icon") : null);
+    private Texture? EffectiveIcon() => _icon is { IsDisposed: false } icon ? icon : HasThemeIcon("icon") ? GetThemeIcon("icon") : null;
     private void CheckFont()
     {
         var font = GetThemeFont("font") ?? throw new InvalidOperationException("A button requires its theme font.");
@@ -52,13 +52,14 @@ public partial class Button
     }
     private void PollIcon()
     {
+        if (_icon?.IsDisposed == true) Icon = null;
         var changed = false; var count = 0;
         try { PollButtonTextures(ref count, ref changed); }
         catch { ReleaseButtonTextureResidency(); throw; }
         if (count < _textureStates.Count) { _textureStates.RemoveRange(count, _textureStates.Count - count); changed = true; }
         try { SyncButtonTextureResidency(); } catch { ReleaseButtonTextureResidency(); throw; }
         if (changed) MarkPolledResourceChange();
-        if (_icon?.IsDisposed == true) throw new ObjectDisposedException(nameof(Icon));
+        if (_icon?.IsDisposed == true) Icon = null;
     }
     internal virtual void PollButtonTextures(ref int count, ref bool changed)
     {
@@ -294,7 +295,7 @@ public partial class Button
             if (IsDisposed || !ReferenceEquals(Tree, tree) || _entryGeneration != generation) return;
             Interlocked.Exchange(ref _resourcePending, 0); ReleaseButtonTextureResidency(); Invalidate();
         };
-        _translatedText = Atr(_text); SetButtonResourceProcessing(true); _themeDirty = true; Invalidate();
+        _translatedText = TranslateButtonText(_text); SetButtonResourceProcessing(true); _themeDirty = true; Invalidate();
     }
     /// <inheritdoc />
     /// <exception cref="Exception">A resource, layout, drawing or inherited notification callback fails.</exception>
@@ -316,7 +317,7 @@ public partial class Button
                     case NotificationThemeChanged:
                     case NotificationLayoutDirectionChanged:
                         ReleaseButtonTextureResidency(); _themeDirty = true; Invalidate(); break;
-                    case NotificationTranslationChanged: _translatedText = Atr(_text); Invalidate(); break;
+                    case NotificationTranslationChanged: _translatedText = TranslateButtonText(_text); Invalidate(); break;
                     case NotificationResized: if (_autowrapMode != TextAutowrapMode.Off) Invalidate(); break;
                     case NotificationInternalProcess:
                         ReadTheme(); CheckFont(); PollIcon();

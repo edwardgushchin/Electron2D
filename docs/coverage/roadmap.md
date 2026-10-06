@@ -90,7 +90,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 38 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 37 |
 | Navigation2D: trigger is the first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052). | 10 |
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 8 |

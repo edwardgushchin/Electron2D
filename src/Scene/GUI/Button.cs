@@ -50,6 +50,7 @@ public partial class Button : BaseButton
         Text = text;
     }
 
+    internal virtual string TranslateButtonText(string text) => Atr(text);
     /// <summary>Gets or sets untranslated button text.</summary>
     /// <value>Empty initially. Equal writes refresh a changed translation but otherwise remain silent.</value>
     /// <exception cref="ArgumentNullException">The text is null.</exception>
@@ -60,18 +61,18 @@ public partial class Button : BaseButton
         get { CheckButton(); return _text; }
         set
         {
-            EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var translated = Atr(value);
+            EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var translated = TranslateButtonText(value);
             if (_text == value && _translatedText == translated) return;
             _text = value; _translatedText = translated; Invalidate();
         }
     }
     /// <summary>Gets or sets the borrowed icon override.</summary>
-    /// <value>Null initially, using the optional theme icon. Equal identities are silent.</value>
+    /// <value>Null initially, using the optional theme icon. Equal identities are silent. Disposed borrowed icons read as null and are cleared during owner processing.</value>
     /// <exception cref="ObjectDisposedException">The button or assigned icon is disposed.</exception>
     /// <exception cref="InvalidOperationException">An attached mutation is off its owner thread or occurs during capture.</exception>
     public Texture? Icon
     {
-        get { CheckButton(); return _icon; }
+        get { CheckButton(); return _icon is { IsDisposed: false } ? _icon : null; }
         set
         {
             EnsureMutable(); if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));

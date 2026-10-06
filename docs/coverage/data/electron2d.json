@@ -5715,6 +5715,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.OptionButton",
+    "kind": "type",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "OptionButton",
+    "signature": "public class Electron2D.OptionButton",
+    "visibility": "public",
+    "baseType": "Electron2D.Button",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PackedScene",
     "kind": "type",
     "declaringType": "Electron2D.PackedScene",
@@ -13541,6 +13556,38 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.OptionButton..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.OptionButton",
+    "name": ".ctor",
+    "signature": "public OptionButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.OptionButton..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.OptionButton",
+    "name": ".ctor",
+    "signature": "public OptionButton(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -34462,6 +34509,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.OptionButton.ItemFocused()",
+    "kind": "event",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "ItemFocused",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E ItemFocused",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.OptionButton.ItemSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "ItemSelected",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E ItemSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
     "value": null
   },
   {
@@ -88184,6 +88257,680 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OptionButton.AddIconItem(Electron2D.Texture,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "AddIconItem",
+    "signature": "public System.Void AddIconItem(Electron2D.Texture icon, System.String label, System.Int32 id = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.AddItem(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "AddItem",
+    "signature": "public System.Void AddItem(System.String label, System.Int32 id = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.AddSeparator(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "AddSeparator",
+    "signature": "public System.Void AddSeparator(System.String text = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetItemAutoTranslateMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetItemAutoTranslateMode",
+    "signature": "public Electron2D.NodeAutoTranslateMode GetItemAutoTranslateMode(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetItemID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetItemID",
+    "signature": "public System.Int32 GetItemID(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetItemIcon(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetItemIcon",
+    "signature": "public Electron2D.Texture GetItemIcon(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetItemIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetItemIndex",
+    "signature": "public System.Int32 GetItemIndex(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetItemMetadata\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetItemMetadata",
+    "signature": "public T GetItemMetadata\u003CT\u003E(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetItemText(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetItemText",
+    "signature": "public System.String GetItemText(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetItemTooltip(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetItemTooltip",
+    "signature": "public System.String GetItemTooltip(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetPopup()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetPopup",
+    "signature": "public Electron2D.PopupMenu GetPopup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PopupMenu",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetSelectableItem(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetSelectableItem",
+    "signature": "public System.Int32 GetSelectableItem(System.Boolean fromLast = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromLast",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetSelectedID()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetSelectedID",
+    "signature": "public System.Int32 GetSelectedID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.GetSelectedMetadata\u00601()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "GetSelectedMetadata",
+    "signature": "public T GetSelectedMetadata\u003CT\u003E()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.HasSelectableItems()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "HasSelectableItems",
+    "signature": "public System.Boolean HasSelectableItems()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.IsItemDisabled(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "IsItemDisabled",
+    "signature": "public System.Boolean IsItemDisabled(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.IsItemSeparator(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "IsItemSeparator",
+    "signature": "public System.Boolean IsItemSeparator(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.OnPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "OnPressed",
+    "signature": "protected override System.Void OnPressed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.OnShortcutInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "OnShortcutInput",
+    "signature": "protected override System.Void OnShortcutInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.RemoveItem(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "RemoveItem",
+    "signature": "public System.Void RemoveItem(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.Select(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "Select",
+    "signature": "public System.Void Select(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.SetDisableShortcuts(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SetDisableShortcuts",
+    "signature": "public System.Void SetDisableShortcuts(System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.SetItemAutoTranslateMode(System.Int32,Electron2D.NodeAutoTranslateMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SetItemAutoTranslateMode",
+    "signature": "public System.Void SetItemAutoTranslateMode(System.Int32 index, Electron2D.NodeAutoTranslateMode value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.NodeAutoTranslateMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.SetItemDisabled(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SetItemDisabled",
+    "signature": "public System.Void SetItemDisabled(System.Int32 index, System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.SetItemID(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SetItemID",
+    "signature": "public System.Void SetItemID(System.Int32 index, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.SetItemIcon(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SetItemIcon",
+    "signature": "public System.Void SetItemIcon(System.Int32 index, Electron2D.Texture value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.SetItemMetadata\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SetItemMetadata",
+    "signature": "public System.Void SetItemMetadata\u003CT\u003E(System.Int32 index, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.SetItemText(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SetItemText",
+    "signature": "public System.Void SetItemText(System.Int32 index, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.SetItemTooltip(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SetItemTooltip",
+    "signature": "public System.Void SetItemTooltip(System.Int32 index, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OptionButton.ShowPopup()",
+    "kind": "method",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "ShowPopup",
+    "signature": "public System.Void ShowPopup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PackedScene.CanInstantiate()",
     "kind": "method",
     "declaringType": "Electron2D.PackedScene",
@@ -94487,35 +95234,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.PopupMenu.AddSubmenuItem(System.String,System.String,System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.PopupMenu",
-    "name": "AddSubmenuItem",
-    "signature": "public System.Void AddSubmenuItem(System.String label, System.String submenu, System.Int32 id = -1)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "label",
-        "type": "System.String",
-        "default": null
-      },
-      {
-        "name": "submenu",
-        "type": "System.String",
-        "default": null
-      },
-      {
-        "name": "id",
-        "type": "System.Int32",
-        "default": "-1"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.PopupMenu.AddSubmenuNodeItem(System.String,Electron2D.PopupMenu,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.PopupMenu",
@@ -94853,25 +95571,6 @@
       }
     ],
     "returnType": "Electron2D.Shortcut",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PopupMenu.GetItemSubmenu(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.PopupMenu",
-    "name": "GetItemSubmenu",
-    "signature": "public System.String GetItemSubmenu(System.Int32 index)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "System.String",
     "value": null
   },
   {
@@ -95640,30 +96339,6 @@
       {
         "name": "value",
         "type": "System.Boolean",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PopupMenu.SetItemSubmenu(System.Int32,System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.PopupMenu",
-    "name": "SetItemSubmenu",
-    "signature": "public System.Void SetItemSubmenu(System.Int32 index, System.String submenu)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      },
-      {
-        "name": "submenu",
-        "type": "System.String",
         "default": null
       }
     ],
@@ -141086,6 +141761,110 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OptionButton.AllowReselect()",
+    "kind": "property",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "AllowReselect",
+    "signature": "public System.Boolean AllowReselect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OptionButton.FitToLongestItem()",
+    "kind": "property",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "FitToLongestItem",
+    "signature": "public System.Boolean FitToLongestItem { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OptionButton.ItemCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "ItemCount",
+    "signature": "public System.Int32 ItemCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OptionButton.SearchBarEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SearchBarEnabled",
+    "signature": "public System.Boolean SearchBarEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OptionButton.SearchBarFuzzySearchEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SearchBarFuzzySearchEnabled",
+    "signature": "public System.Boolean SearchBarFuzzySearchEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OptionButton.SearchBarFuzzySearchMaxMisses()",
+    "kind": "property",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SearchBarFuzzySearchMaxMisses",
+    "signature": "public System.Int32 SearchBarFuzzySearchMaxMisses { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OptionButton.SearchBarMinItemCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "SearchBarMinItemCount",
+    "signature": "public System.Int32 SearchBarMinItemCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OptionButton.Selected()",
+    "kind": "property",
+    "declaringType": "Electron2D.OptionButton",
+    "name": "Selected",
+    "signature": "public System.Int32 Selected { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

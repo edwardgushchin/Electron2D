@@ -1,8 +1,8 @@
 # Button
 
-Last updated: 2026-09-27
+Last updated: 2026-10-06
 
-**Inherits:** [BaseButton](BaseButton.md) · **Inherited By:** [CheckBox](CheckBox.md), [CheckButton](CheckButton.md)
+**Inherits:** [BaseButton](BaseButton.md) · **Inherited By:** [OptionButton](OptionButton.md), [CheckBox](CheckBox.md), [CheckButton](CheckButton.md)
 
 **Declaration:** `public partial class Button : BaseButton` · **Source:** [Button.cs](../../src/Scene/GUI/Button.cs), [Button.Layout.cs](../../src/Scene/GUI/Button.Layout.cs) · **Component:** [GUI controls](../components/canvas-rendering.md)
 
@@ -266,3 +266,5 @@ Implements the inherited [BaseButton](BaseButton.md), [Control](Control.md) and 
 State styles are `normal`, `pressed`, `hover`, `disabled`, optional `hover_pressed`, their optional `_mirrored` variants, and `focus`. Font/color/outline, icon modulation and sizing constants resolve through the ordinary typed theme owner. Built-in Button styles use four-unit margins; the `FlatButton` variation provides an empty normal/hover/disabled style with pressed feedback.
 
 [ButtonTests](../../tests/Electron2D.Tests/ButtonTests.cs) passes defaults, typed scene storage, geometry, text clipping/wrapping, fill paragraph defaults, theme indicators, callback failures, nested atlas changes, balanced residency and 64 warmed active plus idle cycles at zero managed bytes. [ButtonRenderingTests](../../tests/Electron2D.Tests/ButtonRenderingTests.cs) passes ten native state/focus/pointer/keyboard/RTL/text phases on Linux Wayland GPU and compatibility, followed by 64 measured active frames after 64 warmup frames at zero managed bytes from ProcessFrameStarted through FramePostDraw. The final images match pixel-for-pixel. These checks do not imply native allocator counts, accessibility-service or other-platform support. See [coverage](../coverage/classes/Button.md).
+
+[Dropdown choices](../components/dropdown-choices.md) add OptionButton as an executable Button/PopupMenu consumer with three arrow theme keys and an exact scene/file factory. Selected item translation uses the shared Button text path. Disposed borrowed button icons read as null and clear on owner processing, avoiding the internal-process/deferred-cleanup race. Public shared-owner signatures remain unchanged.

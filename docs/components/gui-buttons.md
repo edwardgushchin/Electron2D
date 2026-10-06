@@ -31,3 +31,5 @@ Embedded Controls now reuse the same button/focus/tooltip hooks in independent v
 ## Text-field interaction
 
 [LineEdit](../classes/LineEdit.md) integrates Control focus, GUIInput, TextInput, IMECompositionChanged and drag hooks for a real single-line editor. Its editing/display tests cover managed authoring and native X11 GPU/compatibility hosts. Popup menus, native virtual keyboards and native symbol-picker presentation retain their exact separate services; the LineEdit coverage class remains Partial.
+
+[Dropdown choices](dropdown-choices.md) add OptionButton as a concrete Button/PopupMenu consumer. The shared Button text path respects selected item translation, and owner polling clears disposed borrowed icons before internal processing can access them. ButtonTests and the new choice tests cover worker disposal; the shared public API is unchanged.

@@ -115,3 +115,5 @@ The embedded popup slice adds Popup/PopupPanel theme/type and exact file-factory
 The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu theme keys, inherited Window popup hooks and an exact built-in scene/file factory. Internal item/search controls receive focus after visibility propagation; public runtime signatures of these owners are unchanged.
 
 [Tab panels](../components/tab-panels.md) add TabContainer as an executable consumer with all 31 declared theme keys, Container fitting/maximum propagation and exact scene/file factories. Indexed restore uses a private typed schema count before owned child construction. Public signatures of these shared owners are unchanged.
+
+[Dropdown choices](../components/dropdown-choices.md) add OptionButton as an executable Button/PopupMenu consumer with three arrow theme keys and an exact scene/file factory. Selected item translation uses the shared Button text path. Disposed borrowed button icons read as null and clear on owner processing, avoiding the internal-process/deferred-cleanup race. Public shared-owner signatures remain unchanged.

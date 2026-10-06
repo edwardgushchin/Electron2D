@@ -39,4 +39,6 @@ The exact built-in PackedScene/file factory recreates the item count before seve
 
 PopupMenuTests verifies creation families, typed null metadata, strict/end-relative indices, identity IDs, shortcut/global activation, routed pointer/touch, hover timing, long-menu scrolling, scalar/exact/fuzzy search, controller repeat/release, worker resource disposal, callback failure, scene packing and fresh-process execution. PopupMenuRenderingTests exercises native SDL keyboard input, shaped text/icon/check/radio/separator/selection and submenu composition on current Linux Wayland GPU and compatibility backends. Diagnostic images were visually inspected. Each backend measures zero managed bytes over 64 warmed check/radio focus/layout/render frames after 32 warmup frames; cold search/model edits and native allocations are outside that interval. Physical device input, other platforms and user acceptance remain unverified.
 
-[TabContainer](tab-panels.md) now consumes the menu prerequisite through its header button. MenuButton, OptionButton and LineEdit context actions remain separate executable consumers.
+[TabContainer](tab-panels.md) now consumes the menu prerequisite through its header button. [OptionButton](dropdown-choices.md) now consumes menu items, selection, search and shortcuts. MenuButton and LineEdit context actions remain separate executable consumers.
+
+Submenu binding now exposes only the node-based family. Three deprecated string-path declarations are removed under the current ADR 0004; their reference rows remain Excluded with the exact replacement.

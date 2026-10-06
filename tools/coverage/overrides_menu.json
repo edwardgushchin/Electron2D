@@ -81,11 +81,6 @@
       "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
     },
     {
-      "godot": "PopupMenu::method:add_submenu_item(String:,String:,int:)",
-      "electron2d": "method:Electron2D.PopupMenu.AddSubmenuItem(System.String,System.String,System.Int32)",
-      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
-    },
-    {
       "godot": "PopupMenu::method:add_submenu_node_item(String:,PopupMenu:,int:)",
       "electron2d": "method:Electron2D.PopupMenu.AddSubmenuNodeItem(System.String,Electron2D.PopupMenu,System.Int32)",
       "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
@@ -163,11 +158,6 @@
     {
       "godot": "PopupMenu::method:get_item_shortcut(int:)",
       "electron2d": "method:Electron2D.PopupMenu.GetItemShortcut(System.Int32)",
-      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
-    },
-    {
-      "godot": "PopupMenu::method:get_item_submenu(int:)",
-      "electron2d": "method:Electron2D.PopupMenu.GetItemSubmenu(System.Int32)",
       "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
     },
     {
@@ -328,11 +318,6 @@
     {
       "godot": "PopupMenu::method:set_item_shortcut_disabled(int:,bool:)",
       "electron2d": "method:Electron2D.PopupMenu.SetItemShortcutDisabled(System.Int32,System.Boolean)",
-      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
-    },
-    {
-      "godot": "PopupMenu::method:set_item_submenu(int:,String:)",
-      "electron2d": "method:Electron2D.PopupMenu.SetItemSubmenu(System.Int32,System.String)",
       "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
     },
     {
@@ -736,7 +721,6 @@
         "PopupMenu::method:add_radio_check_shortcut(Shortcut:,int:,bool:)",
         "PopupMenu::method:add_separator(String:,int:)",
         "PopupMenu::method:add_shortcut(Shortcut:,int:,bool:,bool:)",
-        "PopupMenu::method:add_submenu_item(String:,String:,int:)",
         "PopupMenu::method:add_submenu_node_item(String:,PopupMenu:,int:)",
         "PopupMenu::method:clear(bool:)",
         "PopupMenu::method:get_focused_item()",
@@ -753,7 +737,6 @@
         "PopupMenu::method:get_item_multistate(int:)",
         "PopupMenu::method:get_item_multistate_max(int:)",
         "PopupMenu::method:get_item_shortcut(int:)",
-        "PopupMenu::method:get_item_submenu(int:)",
         "PopupMenu::method:get_item_submenu_node(int:)",
         "PopupMenu::method:get_item_text(int:)",
         "PopupMenu::method:get_item_text_direction(int:)",
@@ -786,7 +769,6 @@
         "PopupMenu::method:set_item_multistate_max(int:,int:)",
         "PopupMenu::method:set_item_shortcut(int:,Shortcut:,bool:)",
         "PopupMenu::method:set_item_shortcut_disabled(int:,bool:)",
-        "PopupMenu::method:set_item_submenu(int:,String:)",
         "PopupMenu::method:set_item_submenu_node(int:,PopupMenu:)",
         "PopupMenu::method:set_item_text(int:,String:)",
         "PopupMenu::method:set_item_text_direction(int:,int:Control.TextDirection)",
@@ -874,6 +856,15 @@
         "PopupMenu::method:is_system_menu()",
         "PopupMenu::property:prefer_native_menu",
         "PopupMenu::property:system_menu_id"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: the pinned declaration has deprecated metadata and explicitly prefers the corresponding node-based submenu method. Use AddSubmenuNodeItem/GetItemSubmenuNode/SetItemSubmenuNode; no string-path compatibility alias or implementation trigger remains.",
+      "godot": [
+        "PopupMenu::method:add_submenu_item(String:,String:,int:)",
+        "PopupMenu::method:get_item_submenu(int:)",
+        "PopupMenu::method:set_item_submenu(int:,String:)"
       ]
     }
   ]

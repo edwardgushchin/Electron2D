@@ -5,9 +5,9 @@ namespace Electron2D;
 /// Metadata uses exact generic types and remains runtime-only. The embedded host owns presentation and input.</remarks>
 public partial class PopupMenu : Popup
 {
-    private sealed class Item
+    internal sealed class Item
     {
-        internal string Text = "", Language = "", Tooltip = "", SubmenuName = "";
+        internal string Text = "", Language = "", Tooltip = "";
         internal Texture? Icon;
         internal Shortcut? Shortcut;
         internal PopupMenu? Submenu;
@@ -69,6 +69,8 @@ public partial class PopupMenu : Popup
     }
     private void CheckMenu() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     private int Index(int index, bool negative = false) { if (negative && index < 0) index += _items.Count; if ((uint)index >= (uint)_items.Count) throw new ArgumentOutOfRangeException(nameof(index)); return index; }
+    internal Item BorrowMenuItem(int index) => Get(index);
+    internal int FindMenuItem(Item item) { CheckMenu(); return _items.IndexOf(item); }
     private Item Get(int index, bool negative = false) { CheckMenu(); return _items[Index(index, negative)]; }
     private static void Text(string text) { ArgumentNullException.ThrowIfNull(text); }
     private void Changed() { _dirty = true; _view?.QueueRedraw(); if (IsInsideTree) Arrange(); MenuChanged?.Invoke(); }
@@ -98,7 +100,7 @@ public partial class PopupMenu : Popup
     private void Add(string label, int id, Key accelerator, Texture? icon = null, int checkable = 0, int maxStates = 0, int state = 0, Shortcut? shortcut = null, bool global = false, bool allowEcho = false, bool separator = false, PopupMenu? submenu = null)
     {
         EnsureMutable(); Text(label); if (_items.Count == 65536) throw new InvalidOperationException("Menu item capacity exceeded."); if (icon?.IsDisposed == true || shortcut?.IsDisposed == true) throw new ObjectDisposedException(nameof(icon));
-        var item = new Item { Text = label, ID = id == -1 ? _items.Count : id, Accelerator = accelerator, Icon = icon, Checkable = checkable, MaxStates = maxStates, State = state, Shortcut = shortcut, Global = global, AllowEcho = allowEcho, Separator = separator, Submenu = submenu, SubmenuName = submenu?.Name ?? "" };
+        var item = new Item { Text = label, ID = id == -1 ? _items.Count : id, Accelerator = accelerator, Icon = icon, Checkable = checkable, MaxStates = maxStates, State = state, Shortcut = shortcut, Global = global, AllowEcho = allowEcho, Separator = separator, Submenu = submenu };
         Watch(icon); Watch(shortcut); _items.Add(item); ChangedStructure();
     }
     /// <summary>Adds a text item; ID -1 derives from its new index.</summary>
@@ -273,19 +275,13 @@ public partial class PopupMenu : Popup
     public void SetItemMetadata<T>(int index, T value) { EnsureMutable(); Get(index, true).Metadata = new MetadataValue<T>(value); }
     /// <summary>Gets metadata stored with the same exact generic type.</summary><typeparam name="T">The stored type.</typeparam><param name="index">A nonnegative index.</param><returns>The retained value.</returns><exception cref="KeyNotFoundException">No value of this exact type was stored.</exception>
     public T GetItemMetadata<T>(int index) => Get(index).Metadata is MetadataValue<T> typed ? typed.Value : throw new KeyNotFoundException("No metadata of the requested exact type.");
-    /// <summary>Adds an item resolving an existing direct child submenu by name.</summary><param name="label">The title.</param><param name="submenu">The child node name or path.</param><param name="id">An ID, or -1 for automatic.</param>
-    public void AddSubmenuItem(string label, string submenu, int id = -1) { EnsureMutable(); Text(submenu); var child = GetNode<PopupMenu>(submenu); AddSubmenuNodeItem(label, child, id); }
     /// <summary>Adds a submenu record, parenting a detached submenu when needed.</summary><param name="label">The title.</param><param name="submenu">A direct child or detached menu.</param><param name="id">An ID, or -1 for automatic.</param>
     public void AddSubmenuNodeItem(string label, PopupMenu submenu, int id = -1) { EnsureMutable(); ArgumentNullException.ThrowIfNull(submenu); ValidateSubmenu(submenu); Text(label); if (_items.Count == 65536) throw new InvalidOperationException("Menu capacity exceeded."); if (submenu.Parent is null) AddChild(submenu); Add(label, id, Key.None, submenu: submenu); }
     private void ValidateSubmenu(PopupMenu? submenu) { if (submenu is null) return; if (submenu.IsDisposed) throw new ObjectDisposedException(nameof(submenu)); if (submenu == this || submenu.IsAncestorOf(this)) throw new InvalidOperationException("Submenu cycle."); if (submenu.Parent is not null && submenu.Parent != this) throw new InvalidOperationException("Submenu belongs to another parent."); }
-    /// <summary>Gets the stored submenu name.</summary><param name="index">An index.</param><returns>The stored name or empty.</returns>
-    public string GetItemSubmenu(int index) => Get(index).SubmenuName;
     /// <summary>Gets a live borrowed submenu.</summary><param name="index">An index.</param><returns>A direct submenu, or null.</returns>
     public PopupMenu? GetItemSubmenuNode(int index) { var child = Get(index).Submenu; return child is { IsDisposed: false } && child.Parent == this ? child : null; }
-    /// <summary>Changes the submenu using a direct child name.</summary><param name="index">An index, optionally negative.</param><param name="submenu">A child name, or empty to clear.</param>
-    public void SetItemSubmenu(int index, string submenu) { EnsureMutable(); Text(submenu); var item = Get(index, true); var child = submenu.Length == 0 ? null : GetNode<PopupMenu>(submenu); ValidateSubmenu(child); if (item.Submenu == _activeSubmenu) CloseSubmenu(); item.Submenu = child; item.SubmenuName = submenu; Changed(); }
     /// <summary>Changes the submenu identity, parenting a detached child.</summary><param name="index">An index, optionally negative.</param><param name="submenu">A direct or detached menu, or null.</param>
-    public void SetItemSubmenuNode(int index, PopupMenu? submenu) { EnsureMutable(); var item = Get(index, true); ValidateSubmenu(submenu); if (submenu?.Parent is null && submenu is not null) AddChild(submenu); if (item.Submenu == submenu) return; if (item.Submenu == _activeSubmenu) CloseSubmenu(); item.Submenu = submenu; item.SubmenuName = submenu?.Name ?? ""; Changed(); }
+    public void SetItemSubmenuNode(int index, PopupMenu? submenu) { EnsureMutable(); var item = Get(index, true); ValidateSubmenu(submenu); if (submenu?.Parent is null && submenu is not null) AddChild(submenu); if (item.Submenu == submenu) return; if (item.Submenu == _activeSubmenu) CloseSubmenu(); item.Submenu = submenu; Changed(); }
     /// <summary>Removes one record without freeing its submenu.</summary><param name="index">A nonnegative index.</param>
     public void RemoveItem(int index) { EnsureMutable(); Index(index); List<Exception>? errors = null; RemoveCore(index, ref errors); ChangedStructure(errors); }
     private void RemoveCore(int index, ref List<Exception>? errors) { var item = _items[index]; if (item.Submenu == _activeSubmenu) try { CloseSubmenu(); } catch (Exception error) { CollectException(ref errors, error); } Unwatch(item.Icon); Unwatch(item.Shortcut); _items.RemoveAt(index); if (_focused >= _items.Count) _focused = -1; }
