@@ -5,8 +5,10 @@ using EngineJSON = Electron2D.JSON;
 
 internal static class ContractChecks
 {
-    internal static void Run()
+    internal static void Run(Action<string>? report = null)
     {
+        report ??= Console.WriteLine;
+        report("PORTABILITY CHECK: atomic floating-point settings.");
         var timeScale = Engine.TimeScale;
         var playbackScale = AudioServer.PlaybackSpeedScale;
         try
@@ -24,6 +26,7 @@ internal static class ContractChecks
         }
         finally { Engine.TimeScale = timeScale; AudioServer.PlaybackSpeedScale = playbackScale; }
 
+        report("PORTABILITY CHECK: compiled JSON metadata.");
         var model = new Model { Number = 17, Values = [3, 5] };
         var metadata = TestJSONContext.Default.Model;
         var json = EngineJSON.FromNative(model, metadata)!;
@@ -41,6 +44,7 @@ internal static class ContractChecks
         Reject<ArgumentException>(() => new ConfigKey<Model>("custom", "model", indented.Model));
         Reject<ArgumentException>(() => new ProjectSetting<Model>("custom/model", model, null, indented.Model));
 
+        report("PORTABILITY CHECK: compiled configuration metadata.");
         using var config = new ConfigFile();
         var key = new ConfigKey<Model>("custom", "model", metadata);
         config.SetValue(key, decoded);
@@ -54,6 +58,7 @@ internal static class ContractChecks
         config.SetValue(bounds, new Rect2i(1, 2, 3, 4));
         Check(config.GetValue(bounds) == new Rect2i(1, 2, 3, 4), "Nested integer rectangle converters.");
 
+        report("PORTABILITY CHECK: compiled setting metadata.");
         var setting = new ProjectSetting<Model>("custom/model", new Model { Number = 5, Values = [1] },
             value => value.Number >= 0, metadata);
         using var settings = new ProjectSettingsRegistry(Environment.CurrentDirectory,
@@ -66,12 +71,14 @@ internal static class ContractChecks
         Reject<ArgumentOutOfRangeException>(() => settings.Set(setting, new Model { Number = -1 }));
         Check(settings.Get(setting).Number == 8, "Compiled validation rollback.");
 
+        report("PORTABILITY CHECK: compiled theme catalog.");
         using var theme = new Theme();
         foreach (var name in new[] { "Label", "Control", "AudioEffectNotchFilter", "Window", "HTTPClient" })
             Reject<ArgumentException>(() => theme.SetTypeVariation(name, "Control"));
         theme.SetTypeVariation("CustomLabel", "Label");
         Check(theme.GetTypeVariationBase("CustomLabel") == "Label", "Compiled native theme catalog.");
 
+        report("PORTABILITY CHECK: headless scene physics.");
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var bodyShape = new RectangleShape { Size = new(20, 20) };
         var root = new Node();
@@ -84,7 +91,7 @@ internal static class ContractChecks
         using var tree = new SceneTree(root);
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 75 and < 85 && MathF.Abs(body.LinearVelocity.Y) < 2, "Public scene physics lifecycle.");
-        Console.WriteLine("PORTABILITY PASS: atomic floating-point settings, JSON, configuration, settings, theme catalog and headless scene physics.");
+        report("PORTABILITY PASS: atomic floating-point settings, JSON, configuration, settings, theme catalog and headless scene physics.");
     }
 
     private static void Check(bool value, string message)

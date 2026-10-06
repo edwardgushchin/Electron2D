@@ -30,7 +30,7 @@ public sealed class MainActivity : SDLActivity
             if (RuntimeInformation.ProcessArchitecture != expected)
                 throw new InvalidOperationException("The app did not execute the requested runtime architecture.");
             Log.Info("Electron2DTests", "CHECK managed contracts");
-            ContractChecks.Run();
+            ContractChecks.Run(message => Log.Info("Electron2DTests", message));
             Log.Info("Electron2DTests", "CHECK native font precision");
             NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
             // Match the desktop headless PCM profile; emulator hardware output is a separate gate.
