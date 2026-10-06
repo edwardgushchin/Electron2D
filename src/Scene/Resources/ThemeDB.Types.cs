@@ -285,6 +285,7 @@ public sealed partial class ThemeDB
         ["SubtweenTweener"] = ["SubtweenTweener", "Tweener", "ElectronObject"],
         ["TCPServer"] = ["TCPServer", "SocketServer", "ElectronObject"],
         ["TLSOptions"] = ["TLSOptions", "ElectronObject"],
+        ["TabBar"] = ["TabBar", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Texture"] = ["Texture", "Resource", "ElectronObject"],
         ["TextureButton"] = ["TextureButton", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["TextureProgressBar"] = ["TextureProgressBar", "Range", "Control", "CanvasItem", "Node", "ElectronObject"],

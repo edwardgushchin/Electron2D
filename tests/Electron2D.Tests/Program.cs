@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TABS_CHILD") is { } tabsPath) { TabBarTests.RunChild(tabsPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TABS_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TABS") == "1") { TabBarTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUS_LAYOUT_HOST") == "1") { AudioBusLayoutTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUS_LAYOUT_CHILD") is { } busLayoutPath) { AudioBusLayoutTests.RunChild(busLayoutPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUS_LAYOUT") == "1") { AudioBusLayoutTests.Run(native: true); return; }
@@ -595,6 +598,7 @@ ScrollBarTests.Run();
 ScrollContainerTests.Run();
 ScrollThemeTests.Run();
 ItemListTests.Run();
+TabBarTests.Run();
 LayoutContainersTests.Run();
 GUIDragTests.Run();
 TextDeliveryTests.Run();

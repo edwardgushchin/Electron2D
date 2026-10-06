@@ -41,7 +41,7 @@ public sealed partial class ThemeDB : ElectronObject
         foreach (var side in new[] { "left", "top", "right", "bottom" }) _defaultTheme.SetConstant("margin_" + side, "MarginContainer", 0);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
-        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); AddLineEditDefaults(); }
+        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); AddLineEditDefaults(); AddTabDefaults(); }
         catch
         {
             _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();

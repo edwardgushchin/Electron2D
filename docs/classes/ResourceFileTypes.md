@@ -79,3 +79,5 @@ Permanent service objects cannot be disposed or unregistered; format extensions 
 ResourceArchiveTests exercises registered public formats, graph/scene persistence, separate-process lifecycle, UID/dependency rewrite, cache replacement, font/theme/pixel/geometry consumers and rollback/lifetime edges on Linux x64. It does not establish editor, rendered archive scenes, foreign-host/AOT, all-resource payloads, unmeasured native allocations or human acceptance.
 
 Built-in direct resource factories now include AudioBusLayout and all 27 concrete AudioEffect resources. Their typed stored controls and indexed schemas persist independently of processing state; custom effects still require explicit compiled registration.
+
+The built-in direct node factory list now also includes TabBar, recreating its typed count/indexed scene state and independent internal timer. TabBarTests exercises e2dscene save plus fresh-process load/run.

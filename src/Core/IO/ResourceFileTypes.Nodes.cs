@@ -66,6 +66,7 @@ public static partial class ResourceFileTypes
         RegisterNode("StaticBody", CreateStaticBodyFileNode);
         RegisterNode("SubViewport", CreateSubViewportFileNode);
         RegisterNode("SubViewportContainer", CreateSubViewportContainerFileNode);
+        RegisterNode("TabBar", CreateTabBarFileNode);
         RegisterNode("TextureButton", CreateTextureButtonFileNode);
         RegisterNode("TextureProgressBar", CreateTextureProgressBarFileNode);
         RegisterNode("TextureRect", CreateTextureRectFileNode);
@@ -141,6 +142,7 @@ public static partial class ResourceFileTypes
     private static StaticBody CreateStaticBodyFileNode() => new();
     private static SubViewport CreateSubViewportFileNode() => new();
     private static SubViewportContainer CreateSubViewportContainerFileNode() => new();
+    private static TabBar CreateTabBarFileNode() => new();
     private static TextureButton CreateTextureButtonFileNode() => new();
     private static TextureProgressBar CreateTextureProgressBarFileNode() => new();
     private static TextureRect CreateTextureRectFileNode() => new();

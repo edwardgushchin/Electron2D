@@ -1,0 +1,670 @@
+{
+  "mappings": [
+    {
+      "godot": "class:TabBar",
+      "electron2d": "T:Electron2D.TabBar",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum:AlignmentMode",
+      "electron2d": "T:Electron2D.TabBar.AlignmentMode",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum:CloseButtonDisplayPolicy",
+      "electron2d": "T:Electron2D.TabBar.CloseButtonDisplayPolicy",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum_value:AlignmentMode.ALIGNMENT_CENTER",
+      "electron2d": "enumValue:Electron2D.TabBar.AlignmentMode.Center()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum_value:AlignmentMode.ALIGNMENT_LEFT",
+      "electron2d": "enumValue:Electron2D.TabBar.AlignmentMode.Left()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum_value:AlignmentMode.ALIGNMENT_MAX",
+      "electron2d": "enumValue:Electron2D.TabBar.AlignmentMode.Max()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum_value:AlignmentMode.ALIGNMENT_RIGHT",
+      "electron2d": "enumValue:Electron2D.TabBar.AlignmentMode.Right()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum_value:CloseButtonDisplayPolicy.CLOSE_BUTTON_MAX",
+      "electron2d": "enumValue:Electron2D.TabBar.AlignmentMode.Max()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum_value:CloseButtonDisplayPolicy.CLOSE_BUTTON_SHOW_ACTIVE_ONLY",
+      "electron2d": "enumValue:Electron2D.TabBar.CloseButtonDisplayPolicy.ShowActiveOnly()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum_value:CloseButtonDisplayPolicy.CLOSE_BUTTON_SHOW_ALWAYS",
+      "electron2d": "enumValue:Electron2D.TabBar.CloseButtonDisplayPolicy.ShowAlways()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::enum_value:CloseButtonDisplayPolicy.CLOSE_BUTTON_SHOW_NEVER",
+      "electron2d": "enumValue:Electron2D.TabBar.CloseButtonDisplayPolicy.ShowNever()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:add_tab(String:,Texture2D:)",
+      "electron2d": "method:Electron2D.TabBar.AddTab(System.String,Electron2D.Texture)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:clear_tabs()",
+      "electron2d": "method:Electron2D.TabBar.ClearTabs()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:ensure_tab_visible(int:)",
+      "electron2d": "method:Electron2D.TabBar.EnsureTabVisible(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_offset_buttons_visible()",
+      "electron2d": "method:Electron2D.TabBar.GetOffsetButtonsVisible()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_previous_tab()",
+      "electron2d": "method:Electron2D.TabBar.GetPreviousTab()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_button_icon(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabButtonIcon(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_icon(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabIcon(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_icon_max_width(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabIconMaxWidth(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_idx_at_point(Vector2:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabIdxAtPoint(Electron2D.Vector2)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_language(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabLanguage(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_metadata(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabMetadata`1(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_offset()",
+      "electron2d": "method:Electron2D.TabBar.GetTabOffset()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_rect(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabRect(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_text_direction(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabTextDirection(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_title(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabTitle(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:get_tab_tooltip(int:)",
+      "electron2d": "method:Electron2D.TabBar.GetTabTooltip(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:is_tab_disabled(int:)",
+      "electron2d": "method:Electron2D.TabBar.IsTabDisabled(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:is_tab_hidden(int:)",
+      "electron2d": "method:Electron2D.TabBar.IsTabHidden(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:move_tab(int:,int:)",
+      "electron2d": "method:Electron2D.TabBar.MoveTab(System.Int32,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:remove_tab(int:)",
+      "electron2d": "method:Electron2D.TabBar.RemoveTab(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:select_next_available()",
+      "electron2d": "method:Electron2D.TabBar.SelectNextAvailable()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:select_previous_available()",
+      "electron2d": "method:Electron2D.TabBar.SelectPreviousAvailable()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_button_icon(int:,Texture2D:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabButtonIcon(System.Int32,Electron2D.Texture)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_disabled(int:,bool:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabDisabled(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_hidden(int:,bool:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabHidden(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_icon(int:,Texture2D:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabIcon(System.Int32,Electron2D.Texture)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_icon_max_width(int:,int:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabIconMaxWidth(System.Int32,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_language(int:,String:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabLanguage(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_metadata(int:,Variant:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabMetadata`1(System.Int32,T)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_text_direction(int:,int:Control.TextDirection)",
+      "electron2d": "method:Electron2D.TabBar.SetTabTextDirection(System.Int32,Electron2D.TextDirection)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_title(int:,String:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabTitle(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::method:set_tab_tooltip(int:,String:)",
+      "electron2d": "method:Electron2D.TabBar.SetTabTooltip(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:clip_tabs",
+      "electron2d": "property:Electron2D.TabBar.ClipTabs()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:close_with_middle_mouse",
+      "electron2d": "property:Electron2D.TabBar.CloseWithMiddleMouse()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:current_tab",
+      "electron2d": "property:Electron2D.TabBar.CurrentTab()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:deselect_enabled",
+      "electron2d": "property:Electron2D.TabBar.DeselectEnabled()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:drag_to_rearrange_enabled",
+      "electron2d": "property:Electron2D.TabBar.DragToRearrangeEnabled()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:max_tab_width",
+      "electron2d": "property:Electron2D.TabBar.MaxTabWidth()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:scroll_to_selected",
+      "electron2d": "property:Electron2D.TabBar.ScrollToSelected()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:scrolling_enabled",
+      "electron2d": "property:Electron2D.TabBar.ScrollingEnabled()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:select_with_rmb",
+      "electron2d": "property:Electron2D.TabBar.SelectWithRMB()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:switch_on_drag_hover",
+      "electron2d": "property:Electron2D.TabBar.SwitchOnDragHover()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:tab_alignment",
+      "electron2d": "property:Electron2D.TabBar.TabAlignment()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:tab_close_display_policy",
+      "electron2d": "property:Electron2D.TabBar.TabCloseDisplayPolicy()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:tab_count",
+      "electron2d": "property:Electron2D.TabBar.TabCount()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:tab_{index}/disabled",
+      "electron2d": "method:Electron2D.TabBar.SetTabDisabled(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:tab_{index}/icon",
+      "electron2d": "method:Electron2D.TabBar.SetTabIcon(System.Int32,Electron2D.Texture)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:tab_{index}/title",
+      "electron2d": "method:Electron2D.TabBar.SetTabTitle(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:tab_{index}/tooltip",
+      "electron2d": "method:Electron2D.TabBar.SetTabTooltip(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::property:tabs_rearrange_group",
+      "electron2d": "property:Electron2D.TabBar.TabsRearrangeGroup()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::signal:active_tab_rearranged(int:)",
+      "electron2d": "event:Electron2D.TabBar.ActiveTabRearranged()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::signal:tab_button_pressed(int:)",
+      "electron2d": "event:Electron2D.TabBar.TabButtonPressed()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::signal:tab_changed(int:)",
+      "electron2d": "event:Electron2D.TabBar.TabChanged()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::signal:tab_clicked(int:)",
+      "electron2d": "event:Electron2D.TabBar.TabClicked()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::signal:tab_close_pressed(int:)",
+      "electron2d": "event:Electron2D.TabBar.TabClosePressed()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::signal:tab_hovered(int:)",
+      "electron2d": "event:Electron2D.TabBar.TabHovered()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::signal:tab_rmb_clicked(int:)",
+      "electron2d": "event:Electron2D.TabBar.TabRMBClicked()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::signal:tab_selected(int:)",
+      "electron2d": "event:Electron2D.TabBar.TabSelected()",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:button_highlight",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:button_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:close",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:decrement",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:decrement_highlight",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:drop_mark",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:drop_mark_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:font_disabled_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:font_hovered_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:font_selected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:font_unselected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:h_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:hover_switch_wait_msec",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:icon_disabled_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:icon_hovered_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:icon_max_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:icon_selected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:icon_unselected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:increment",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:increment_highlight",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:tab_disabled",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:tab_focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:tab_hovered",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:tab_selected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:tab_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "TabBar::theme_item:tab_unselected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.TabBar..ctor()",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.TabBar.CloseButtonDisplayPolicy.Max()",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.CreateSceneInstanceFactory()",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.Dispose(System.Boolean)",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.GetPropertyDescriptors()",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.OnCanDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.OnDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.OnGetDragData(Electron2D.Vector2)",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.OnGetMinimumSize()",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.OnGetTooltip(Electron2D.Vector2)",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.OnNotification(System.Int32)",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.ValidateDisposal()",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    },
+    {
+      "electron2d": "method:Electron2D.TabBar.ValidateMutation()",
+      "reason": "Concrete typed constructor and protected scene/input/drag/layout/storage/disposal hooks project the TabBar and inherited Control/Node lifecycle under ADRs 0008/0038/0083. No generic dynamic dispatch or new game capability is exposed."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0083: executable typed tabs, separate selected/changed timing, borrowed icon/title/button resources, language/direction shaping, measured cap/ellipsis, mirrored RTL, page/arrows/wheel/keyboard/controller repeat, typed identity-stable drags/group transfer, foreign-drag hover timer and complete declared theme keys. Count/indexed stored scene schemas and real internal timer execute. TabBarTests and current Linux Wayland GPU/compatibility pixel/visual checks verify the slice; 64 warmed active selection/layout/record/render frames allocate zero measured managed bytes per backend. Callback, disabled-hover, wrong-release and stale-drag defects are corrected explicitly; accessibility service, editor, native allocation and other-platform acceptance remain separate.",
+      "godot": [
+        "class:TabBar",
+        "TabBar::enum:AlignmentMode",
+        "TabBar::enum:CloseButtonDisplayPolicy",
+        "TabBar::enum_value:AlignmentMode.ALIGNMENT_CENTER",
+        "TabBar::enum_value:AlignmentMode.ALIGNMENT_LEFT",
+        "TabBar::enum_value:AlignmentMode.ALIGNMENT_MAX",
+        "TabBar::enum_value:AlignmentMode.ALIGNMENT_RIGHT",
+        "TabBar::enum_value:CloseButtonDisplayPolicy.CLOSE_BUTTON_MAX",
+        "TabBar::enum_value:CloseButtonDisplayPolicy.CLOSE_BUTTON_SHOW_ACTIVE_ONLY",
+        "TabBar::enum_value:CloseButtonDisplayPolicy.CLOSE_BUTTON_SHOW_ALWAYS",
+        "TabBar::enum_value:CloseButtonDisplayPolicy.CLOSE_BUTTON_SHOW_NEVER",
+        "TabBar::method:add_tab(String:,Texture2D:)",
+        "TabBar::method:clear_tabs()",
+        "TabBar::method:ensure_tab_visible(int:)",
+        "TabBar::method:get_offset_buttons_visible()",
+        "TabBar::method:get_previous_tab()",
+        "TabBar::method:get_tab_button_icon(int:)",
+        "TabBar::method:get_tab_icon(int:)",
+        "TabBar::method:get_tab_icon_max_width(int:)",
+        "TabBar::method:get_tab_idx_at_point(Vector2:)",
+        "TabBar::method:get_tab_language(int:)",
+        "TabBar::method:get_tab_metadata(int:)",
+        "TabBar::method:get_tab_offset()",
+        "TabBar::method:get_tab_rect(int:)",
+        "TabBar::method:get_tab_text_direction(int:)",
+        "TabBar::method:get_tab_title(int:)",
+        "TabBar::method:get_tab_tooltip(int:)",
+        "TabBar::method:is_tab_disabled(int:)",
+        "TabBar::method:is_tab_hidden(int:)",
+        "TabBar::method:move_tab(int:,int:)",
+        "TabBar::method:remove_tab(int:)",
+        "TabBar::method:select_next_available()",
+        "TabBar::method:select_previous_available()",
+        "TabBar::method:set_tab_button_icon(int:,Texture2D:)",
+        "TabBar::method:set_tab_disabled(int:,bool:)",
+        "TabBar::method:set_tab_hidden(int:,bool:)",
+        "TabBar::method:set_tab_icon(int:,Texture2D:)",
+        "TabBar::method:set_tab_icon_max_width(int:,int:)",
+        "TabBar::method:set_tab_language(int:,String:)",
+        "TabBar::method:set_tab_metadata(int:,Variant:)",
+        "TabBar::method:set_tab_text_direction(int:,int:Control.TextDirection)",
+        "TabBar::method:set_tab_title(int:,String:)",
+        "TabBar::method:set_tab_tooltip(int:,String:)",
+        "TabBar::property:clip_tabs",
+        "TabBar::property:close_with_middle_mouse",
+        "TabBar::property:current_tab",
+        "TabBar::property:deselect_enabled",
+        "TabBar::property:drag_to_rearrange_enabled",
+        "TabBar::property:focus_mode",
+        "TabBar::property:max_tab_width",
+        "TabBar::property:scroll_to_selected",
+        "TabBar::property:scrolling_enabled",
+        "TabBar::property:select_with_rmb",
+        "TabBar::property:switch_on_drag_hover",
+        "TabBar::property:tab_alignment",
+        "TabBar::property:tab_close_display_policy",
+        "TabBar::property:tab_count",
+        "TabBar::property:tab_{index}/disabled",
+        "TabBar::property:tab_{index}/icon",
+        "TabBar::property:tab_{index}/title",
+        "TabBar::property:tab_{index}/tooltip",
+        "TabBar::property:tabs_rearrange_group",
+        "TabBar::signal:active_tab_rearranged(int:)",
+        "TabBar::signal:tab_button_pressed(int:)",
+        "TabBar::signal:tab_changed(int:)",
+        "TabBar::signal:tab_clicked(int:)",
+        "TabBar::signal:tab_close_pressed(int:)",
+        "TabBar::signal:tab_hovered(int:)",
+        "TabBar::signal:tab_rmb_clicked(int:)",
+        "TabBar::signal:tab_selected(int:)",
+        "TabBar::theme_item:button_highlight",
+        "TabBar::theme_item:button_pressed",
+        "TabBar::theme_item:close",
+        "TabBar::theme_item:decrement",
+        "TabBar::theme_item:decrement_highlight",
+        "TabBar::theme_item:drop_mark",
+        "TabBar::theme_item:drop_mark_color",
+        "TabBar::theme_item:font",
+        "TabBar::theme_item:font_disabled_color",
+        "TabBar::theme_item:font_hovered_color",
+        "TabBar::theme_item:font_outline_color",
+        "TabBar::theme_item:font_selected_color",
+        "TabBar::theme_item:font_size",
+        "TabBar::theme_item:font_unselected_color",
+        "TabBar::theme_item:h_separation",
+        "TabBar::theme_item:hover_switch_wait_msec",
+        "TabBar::theme_item:icon_disabled_color",
+        "TabBar::theme_item:icon_hovered_color",
+        "TabBar::theme_item:icon_max_width",
+        "TabBar::theme_item:icon_selected_color",
+        "TabBar::theme_item:icon_unselected_color",
+        "TabBar::theme_item:increment",
+        "TabBar::theme_item:increment_highlight",
+        "TabBar::theme_item:outline_size",
+        "TabBar::theme_item:tab_disabled",
+        "TabBar::theme_item:tab_focus",
+        "TabBar::theme_item:tab_hovered",
+        "TabBar::theme_item:tab_selected",
+        "TabBar::theme_item:tab_separation",
+        "TabBar::theme_item:tab_unselected"
+      ]
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-06
 
+The executable TabBar slice adds shaped/theme-rendered tabs, selection/scroll/RTL/close behavior, typed identity-stable group drags, a real hover timer and fresh-process scene persistence. CPU and current Linux Wayland GPU/compatibility pixel/visual checks pass; 64 warmed active selection/layout/record/render frames measure zero managed bytes per backend. TabContainer, native accessibility and editor authoring remain separate dependencies.
+
 Saved AudioBusLayout resources now execute generate/apply, all 27 effect archive schemas and project-default startup before initialization/autoplay. Fresh-process, native Stream/Sample replacement, factory/lifetime/failure and current public GPU/compatibility checks verify the slice; physical and other-target gates remain separate. Usage tagging/editor integration retains its exact dependency.
 
 Desktop DTLS oracle portability now avoids console-banner readiness and platform newline translation, with stderr-preserving process failures and native DTLS/ENet stage diagnostics. Linux focused checks passed; target Windows/macOS reruns remain required. These test-only changes do not alter production declarations or coverage states.

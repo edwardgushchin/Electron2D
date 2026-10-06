@@ -842,7 +842,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SystemFont](classes/SystemFont.md) | Font | Blocked | 17 |
 | [TCPServer](classes/TCPServer.md) | SocketServer | Implemented | 3 |
 | [TLSOptions](classes/TLSOptions.md) | RefCounted | Implemented | 9 |
-| [TabBar](classes/TabBar.md) | Control | Blocked | 99 |
+| [TabBar](classes/TabBar.md) | Control | Implemented | 99 |
 | [TabContainer](classes/TabContainer.md) | Container | Blocked | 85 |
 | [TextEdit](classes/TextEdit.md) | Control | Blocked | 299 |
 | [TextLine](classes/TextLine.md) | RefCounted | Blocked | 30 |

@@ -1,6 +1,6 @@
 # ThemeDB
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
@@ -107,3 +107,5 @@ The built-in theme now supplies SplitContainer/HSplitContainer/VSplitContainer s
 ## LineEdit defaults
 
 [ThemeDB.LineEdit.cs](../../src/Scene/Resources/ThemeDB.LineEdit.cs) supplies normal/read-only/focus styles, the borrowed built-in font, font/placeholder/selection/caret/outline colors, minimum-character/caret/outline constants and a real SVG clear icon for [LineEdit](LineEdit.md). Right-icon and clear-button modulation use typed theme color lookup. LineEditTests verifies executable rendering; no popup or virtual-keyboard theme facade is created.
+
+Built-in TabBar entries now include all declared styles/icons/colors, fallback font/size, separation, icon cap, outline and hover-delay controls. They use existing theme ownership and retained consumers; see [tab strips](../components/tab-strips.md).

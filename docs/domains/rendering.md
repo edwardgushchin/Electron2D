@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
@@ -130,3 +130,5 @@ On the current Linux Wayland Vulkan profile, remapping a previously presented ro
 ## Single-line text fields
 
 [LineEdit](../classes/LineEdit.md) executes themed shaped text editing, scalar limits, BiDi carets/selection, IME, clipboard/history, Unicode-control command dispatch and text drag/drop through existing font and canvas backends. LineEditTests verifies Linux x64 X11 GPU/compatibility pixels and native text input plus 64 warmed caret/selection render-mutation frames with zero managed allocation. Popup/native keyboard/picker integration and other platform/owner acceptance remain separate.
+
+[TabBar](../classes/TabBar.md) now adds real themed tab strips on the existing retained pipeline, with intrinsic/clipped shaped text, logical RTL alignment, icon/button resources, clipped overflow, navigation and drop markers. Current GPU/compatibility pixel and visual checks pass, with 64 warmed active selection/layout/record/render frames at zero measured managed bytes. See [tab strips](../components/tab-strips.md); native accessibility/editor, external allocations and other platforms remain separate.
