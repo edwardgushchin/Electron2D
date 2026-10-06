@@ -273,6 +273,7 @@ public sealed partial class ThemeDB
         ["Shortcut"] = ["Shortcut", "Resource", "ElectronObject"],
         ["Slider"] = ["Slider", "Range", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["SocketServer"] = ["SocketServer", "ElectronObject"],
+        ["SpinBox"] = ["SpinBox", "Range", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["SplitContainer"] = ["SplitContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Sprite"] = ["Sprite", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["SpriteFrames"] = ["SpriteFrames", "Resource", "ElectronObject"],

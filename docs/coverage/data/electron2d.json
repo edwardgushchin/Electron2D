@@ -7509,6 +7509,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SpinBox",
+    "kind": "type",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "SpinBox",
+    "signature": "public class Electron2D.SpinBox",
+    "visibility": "public",
+    "baseType": "Electron2D.Range",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SplitContainer",
     "kind": "type",
     "declaringType": "Electron2D.SplitContainer",
@@ -15203,6 +15218,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SpinBox..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SpinBox",
+    "name": ".ctor",
+    "signature": "public SpinBox()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -108522,6 +108550,147 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SpinBox.Apply()",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "Apply",
+    "signature": "public System.Void Apply()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpinBox.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpinBox.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpinBox.GetLineEdit()",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "GetLineEdit",
+    "signature": "public Electron2D.LineEdit GetLineEdit()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LineEdit",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpinBox.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpinBox.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent input)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpinBox.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpinBox.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpinBox.OnValueChanged(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "OnValueChanged",
+    "signature": "protected override System.Void OnValueChanged(System.Double newValue)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "newValue",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SplitContainer.ClampSplitOffset(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.SplitContainer",
@@ -117039,6 +117208,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TranslationServer.FormatNumber(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "FormatNumber",
+    "signature": "public static System.String FormatNumber(System.String number, System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "number",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TranslationServer.GetLoadedLocales()",
     "kind": "method",
     "declaringType": "Electron2D.TranslationServer",
@@ -117068,6 +117261,25 @@
       }
     ],
     "returnType": "Electron2D.TranslationDomain",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetPercentSign(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetPercentSign",
+    "signature": "public static System.String GetPercentSign(System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -117175,6 +117387,30 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.ParseNumber(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "ParseNumber",
+    "signature": "public static System.String ParseNumber(System.String number, System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "number",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -137561,6 +137797,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.LocalizeNumeralSystem()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "LocalizeNumeralSystem",
+    "signature": "public System.Boolean LocalizeNumeralSystem { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.MouseBehaviorRecursive()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -148881,6 +149130,110 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpinBox.Alignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "Alignment",
+    "signature": "public Electron2D.HorizontalAlignment Alignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HorizontalAlignment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpinBox.CustomArrowRound()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "CustomArrowRound",
+    "signature": "public System.Boolean CustomArrowRound { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpinBox.CustomArrowStep()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "CustomArrowStep",
+    "signature": "public System.Double CustomArrowStep { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpinBox.Editable()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "Editable",
+    "signature": "public System.Boolean Editable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpinBox.Prefix()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "Prefix",
+    "signature": "public System.String Prefix { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpinBox.SelectAllOnFocus()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "SelectAllOnFocus",
+    "signature": "public System.Boolean SelectAllOnFocus { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpinBox.Suffix()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "Suffix",
+    "signature": "public System.String Suffix { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SpinBox.UpdateOnTextChanged()",
+    "kind": "property",
+    "declaringType": "Electron2D.SpinBox",
+    "name": "UpdateOnTextChanged",
+    "signature": "public System.Boolean UpdateOnTextChanged { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

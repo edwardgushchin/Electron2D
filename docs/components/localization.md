@@ -1,6 +1,6 @@
 # Translation component
 
-Last updated: 2026-09-24
+Last updated: 2026-10-06
 
 ## Scope
 
@@ -37,3 +37,5 @@ The component does not load catalog files, format parameters, infer plural rules
 ## Verification
 
 Tests cover parent-culture lookup, source fallback, scored regional selection, project fallback, domain selection, direct and resource plural selectors, contextual edits, optimized compressed lookup and key hiding, independent duplication, removal, disposal, per-object disabling, domain locale override, singular pseudolocalization, typed project-setting persistence, startup sampling and transform reload. SDL dummy `WindowRuntimeTests` verifies startup sampling before scene ready. A warmed 1,024-call direct optimized lookup check measured 0 managed allocated bytes on Linux/.NET 8. Native or external allocations, the complete server lookup route, total catalog memory use, and reference locale-alias/default-script parity remain unmeasured or unaudited.
+
+Generated numeric input now uses TranslationServer.FormatNumber/ParseNumber/GetPercentSign with exact rune/decimal/exponent data for nine systems and 92 locale identities. The SpinBox first consumer respects Control.LocalizeNumeralSystem; ordinary text is unchanged. Independent locale vectors include supplementary-plane digits, unknown-locale identity and hyphen spellings. Global locale notifications and broader CLDR/alias negotiation remain separate prerequisites.

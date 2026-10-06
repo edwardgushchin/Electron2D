@@ -30,6 +30,7 @@ public partial class Control : CanvasItem
     private Vector2 _lastMaximumSize = new(-1, -1);
     private bool _propagateMaximumSize;
     private bool _clipContents;
+    private bool _localizeNumeralSystem = true;
     private GrowDirection _growHorizontal = GrowDirection.End;
     private GrowDirection _growVertical = GrowDirection.End;
     private bool _minimumSizeUpdatePending;
@@ -56,6 +57,11 @@ public partial class Control : CanvasItem
 
     /// <summary>Occurs after a changed maximum size has been applied in the scene tree.</summary>
     public event Action? MaximumSizeChanged;
+
+    /// <summary>Gets or sets using the locale's numeral system for generated numeric control text.</summary>
+    /// <value>True initially. Ordinary caller-authored text is not converted.</value>
+    /// <remarks>Numeric producers consume this policy; changing it refreshes translation-dependent presentation.</remarks>
+    public bool LocalizeNumeralSystem { get { ThrowIfDisposed(); return _localizeNumeralSystem; } set { EnsureMutable(); if (_localizeNumeralSystem == value) return; _localizeNumeralSystem = value; DispatchNotification(NotificationTranslationChanged); } }
 
     /// <summary>Gets or sets the local rectangle's upper-left point.</summary>
     /// <value>The position before pivot, rotation and scale.</value>
@@ -892,6 +898,7 @@ public partial class Control : CanvasItem
 
     private static readonly PropertyDescriptor[] ControlProperties =
     [
+        new PropertyDescriptor<Control, bool>(nameof(LocalizeNumeralSystem), c => c.LocalizeNumeralSystem, (c, v) => c.LocalizeNumeralSystem = v, _ => true, stored: true),
         new PropertyDescriptor<Control, bool>(nameof(ClipContents), node => node.ClipContents, (node, value) => node.ClipContents = value, _ => false, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(Position), node => node.Position, (node, value) => node.Position = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(Size), node => node.Size, (node, value) => node.Size = value, _ => Vector2.Zero, stored: true),

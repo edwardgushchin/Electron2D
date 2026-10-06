@@ -1,0 +1,351 @@
+{
+  "mappings": [
+    {
+      "godot": "class:SpinBox",
+      "electron2d": "T:Electron2D.SpinBox",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::method:apply()",
+      "electron2d": "method:Electron2D.SpinBox.Apply()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::method:get_line_edit()",
+      "electron2d": "method:Electron2D.SpinBox.GetLineEdit()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:alignment",
+      "electron2d": "property:Electron2D.SpinBox.Alignment()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:custom_arrow_round",
+      "electron2d": "property:Electron2D.SpinBox.CustomArrowRound()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:custom_arrow_step",
+      "electron2d": "property:Electron2D.SpinBox.CustomArrowStep()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:editable",
+      "electron2d": "property:Electron2D.SpinBox.Editable()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:prefix",
+      "electron2d": "property:Electron2D.SpinBox.Prefix()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:select_all_on_focus",
+      "electron2d": "property:Electron2D.SpinBox.SelectAllOnFocus()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:size_flags_vertical",
+      "electron2d": "property:Electron2D.Control.SizeFlagsVertical()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:step",
+      "electron2d": "property:Electron2D.Range.Step()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:suffix",
+      "electron2d": "property:Electron2D.SpinBox.Suffix()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::property:update_on_text_changed",
+      "electron2d": "property:Electron2D.SpinBox.UpdateOnTextChanged()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:buttons_vertical_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:buttons_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_background",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_background_disabled",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_background_hovered",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_background_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_disabled",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_disabled_icon_modulate",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_hover",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_hover_icon_modulate",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_icon_modulate",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:down_pressed_icon_modulate",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:field_and_buttons_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:field_and_buttons_separator",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_background",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_background_disabled",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_background_hovered",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_background_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_disabled",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_disabled_icon_modulate",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_down_buttons_separator",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_hover",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_hover_icon_modulate",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_icon_modulate",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "SpinBox::theme_item:up_pressed_icon_modulate",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "Control::property:localize_numeral_system",
+      "electron2d": "property:Electron2D.Control.LocalizeNumeralSystem()",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "TranslationServer::method:format_number(String:,String:)",
+      "electron2d": "method:Electron2D.TranslationServer.FormatNumber(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "TranslationServer::method:parse_number(String:,String:)",
+      "electron2d": "method:Electron2D.TranslationServer.ParseNumber(System.String,System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": "TranslationServer::method:get_percent_sign(String:)",
+      "electron2d": "method:Electron2D.TranslationServer.GetPercentSign(System.String)",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.SpinBox..ctor()",
+      "reason": "Typed numeric field constructor or inherited scene/input/render/value lifecycle extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.SpinBox.CreateSceneInstanceFactory()",
+      "reason": "Typed numeric field constructor or inherited scene/input/render/value lifecycle extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.SpinBox.Dispose(System.Boolean)",
+      "reason": "Typed numeric field constructor or inherited scene/input/render/value lifecycle extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.SpinBox.GetPropertyDescriptors()",
+      "reason": "Typed numeric field constructor or inherited scene/input/render/value lifecycle extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.SpinBox.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Typed numeric field constructor or inherited scene/input/render/value lifecycle extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.SpinBox.OnGetMinimumSize()",
+      "reason": "Typed numeric field constructor or inherited scene/input/render/value lifecycle extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.SpinBox.OnNotification(System.Int32)",
+      "reason": "Typed numeric field constructor or inherited scene/input/render/value lifecycle extension point.",
+      "adr": "ADR 0004/0080/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.SpinBox.OnValueChanged(System.Double)",
+      "reason": "Typed numeric field constructor or inherited scene/input/render/value lifecycle extension point.",
+      "adr": "ADR 0004/0080/0083"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "SpinBox::method:apply()",
+        "SpinBox::method:get_line_edit()",
+        "SpinBox::property:alignment",
+        "SpinBox::property:custom_arrow_round",
+        "SpinBox::property:custom_arrow_step",
+        "SpinBox::property:editable",
+        "SpinBox::property:prefix",
+        "SpinBox::property:select_all_on_focus",
+        "SpinBox::property:size_flags_vertical",
+        "SpinBox::property:step",
+        "SpinBox::property:suffix",
+        "SpinBox::property:update_on_text_changed",
+        "SpinBox::theme_item:buttons_vertical_separation",
+        "SpinBox::theme_item:buttons_width",
+        "SpinBox::theme_item:down",
+        "SpinBox::theme_item:down_background",
+        "SpinBox::theme_item:down_background_disabled",
+        "SpinBox::theme_item:down_background_hovered",
+        "SpinBox::theme_item:down_background_pressed",
+        "SpinBox::theme_item:down_disabled",
+        "SpinBox::theme_item:down_disabled_icon_modulate",
+        "SpinBox::theme_item:down_hover",
+        "SpinBox::theme_item:down_hover_icon_modulate",
+        "SpinBox::theme_item:down_icon_modulate",
+        "SpinBox::theme_item:down_pressed",
+        "SpinBox::theme_item:down_pressed_icon_modulate",
+        "SpinBox::theme_item:field_and_buttons_separation",
+        "SpinBox::theme_item:field_and_buttons_separator",
+        "SpinBox::theme_item:up",
+        "SpinBox::theme_item:up_background",
+        "SpinBox::theme_item:up_background_disabled",
+        "SpinBox::theme_item:up_background_hovered",
+        "SpinBox::theme_item:up_background_pressed",
+        "SpinBox::theme_item:up_disabled",
+        "SpinBox::theme_item:up_disabled_icon_modulate",
+        "SpinBox::theme_item:up_down_buttons_separator",
+        "SpinBox::theme_item:up_hover",
+        "SpinBox::theme_item:up_hover_icon_modulate",
+        "SpinBox::theme_item:up_icon_modulate",
+        "SpinBox::theme_item:up_pressed",
+        "SpinBox::theme_item:up_pressed_icon_modulate",
+        "Control::property:localize_numeral_system",
+        "TranslationServer::method:format_number(String:,String:)",
+        "TranslationServer::method:parse_number(String:,String:)",
+        "TranslationServer::method:get_percent_sign(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0001/0004/0038/0040/0046/0080/0083: executable numeric field via owned LineEdit and shared Range; typed numeric math, deferred editing/change/submission, affixes, exact arrow-grid snapping, repeat, native relative dragging/mode restoration, complete current themes, locale numerals and fresh scenes. GPU/compatibility UI and prepared active render checks verify current Linux profile; generic object scripting and native semantic/warp/foreign-target gates remain distinct."
+    },
+    {
+      "godot": [
+        "class:SpinBox"
+      ],
+      "state": "Partial",
+      "reason": "Full current numeric field API and scalar math workflow executes. Inherited Control semantic/editor/text capabilities and native pointer warp retain owner gates. Wayland relative dragging and restoration of the previous pointer mode execute; exact cursor reposition needs advertised MouseWarp/compositor protocol support. General object/string/collection Expression scripting is outside this scalar field projection under ADR 0001 and needs an accepted typed expression-host boundary."
+    },
+    {
+      "godot": [
+        "SpinBox::theme_item:set_min_buttons_width_from_icons",
+        "SpinBox::theme_item:updown"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned SpinBox.xml declares updown and set_min_buttons_width_from_icons deprecated. Use up/down state icons and negative buttons_width instead; no aliases or obsolete theme keys shipped."
+    },
+    {
+      "godot": [
+        "class:ColorPicker"
+      ],
+      "state": "Blocked",
+      "reason": "First complete color authoring consumer: Range/LineEdit/SpinBox, sliders, themes, PopupPanel/MenuButton/FileDialog and Color math now execute. Remaining connected prerequisites are ColorPalette resource/files, picker-shape and RGB/HSV/OKHSL/raw/linear controls, preset/palette workflow and actual rendered-viewport legacy sampler. Native external screen capture/color picker require DisplayServer capabilities; they do not block the supported application-window sampler."
+    }
+  ]
+}

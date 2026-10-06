@@ -1,6 +1,6 @@
 # Localization domain
 
-Last updated: 2026-09-25
+Last updated: 2026-10-06
 
 ## Responsibility
 
@@ -54,3 +54,5 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 - [0007: Typed localization](../decisions/localization.md#adr-0007)
 - [0017: Source-tree module layout](../decisions/product.md#adr-0017)
 - [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
+
+[Numeric input](../components/numeric-input.md) adds SpinBox formula/text/arrow/repeat/relative-drag authoring through shared Range and LineEdit, fresh scene factories and generated numeral localization. Current Wayland GPU/compatibility capture/input/pixels and prepared active rendering are exercised; precise pointer warp, inherited semantic/editor and foreign target gates remain separate.

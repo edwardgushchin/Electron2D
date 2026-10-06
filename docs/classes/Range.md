@@ -1,6 +1,6 @@
 # Range
 
-Last updated: 2026-09-27
+Last updated: 2026-10-06
 
 **Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [Slider](Slider.md), [TextureProgressBar](TextureProgressBar.md)
 
@@ -74,3 +74,5 @@ second.Unshare();
 Groups store weak owners and release links on disposal; snapshots retain owners only during delivery. PackedScene stores config independently, with snapping policies restored before Value, and omits sharing links. Finite config guard errors occur before mutation; disposed/capture/off-owner errors remain authoritative. [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) verifies timing/values/errors/reentry/packing and zero bytes for 64 warmed shared updates. Inherited SizeFlagsVertical defaults to ShrinkBegin, with a matching stored descriptor and actual Container consumption under [ADR 0081](../decisions/rendering.md#adr-0081). [Coverage](../coverage/classes/Range.md) marks this dependency Implemented. Native/platform/accessibility/owner limits are recorded in [ADR 0080](../decisions/rendering.md#adr-0080).
 
 [Slider](Slider.md) uses an internal two-pass interaction operation: a changed click preserves source hook/redraw with only its local signal suppressed while peers receive ordinary delivery, followed by forced shared delivery after drag state activation. Forced nested gesture delivery temporarily removes that local suppression and restores it in finally, preserving the inner gesture's own notification without exposing a new public Range operation. Ordinary recursive value notification suppression remains unchanged.
+
+SpinBox uses the same internal min-offset/step/rounded/Page/bounds calculation for its custom arrow grid, then writes through the ordinary shared value pass. Range sharing/event/lifetime semantics remain the numeric source of truth. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.

@@ -202,3 +202,5 @@ The [embedded popup window slice](../components/popup-windows.md) composes Windo
 [Command menu buttons](../components/command-menu-buttons.md) execute commands and related hover switching through owned PopupMenu windows. Nested embedded input descends to the final target and choice/menu anchors use their actual embedder.
 
 [File dialogs](../components/file-dialogs.md) now execute scoped browsing, five selection modes, typed custom options, filters, menus, overwrite/folder workflows and recoverable desktop Linux trash. The shared FileDialogMode identity spans the custom browser and DisplayServer; native-file-extra and foreign platform gates remain explicit. Six permanent ui_filedialog actions use the existing InputMap settings loader.
+
+[Numeric input](../components/numeric-input.md) adds SpinBox formula/text/arrow/repeat/relative-drag authoring through shared Range and LineEdit, fresh scene factories and generated numeral localization. Current Wayland GPU/compatibility capture/input/pixels and prepared active rendering are exercised; precise pointer warp, inherited semantic/editor and foreign target gates remain separate.

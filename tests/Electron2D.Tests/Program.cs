@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX_CHILD") is { } numericPath) { SpinBoxTests.RunChild(numericPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX") == "1") { SpinBoxTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_DIALOG") == "1") { DisplayServerDialogTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_CHILD") is { } fileDialogPath) { FileDialogTests.RunChild(fileDialogPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_TRASH") is { } trashPath) { FileDialogTests.RunTrashChild(trashPath); return; }
@@ -626,6 +629,7 @@ ScrollThemeTests.Run();
 ItemListTests.Run();
 TabBarTests.Run();
 TabContainerTests.Run();
+SpinBoxTests.Run();
 FileDialogTests.Run();
 MenuButtonTests.Run();
 DialogTests.Run();

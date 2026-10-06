@@ -35,7 +35,7 @@ Godot `Object` provides per-object translation enablement, a domain, and `tr`/`t
 ### Consequences
 
 - The current runtime supports deterministic direct and resource-backed translation lookup without `Variant` or another package. Typed resource copying preserves independent message containers.
-- Catalog loading, locale negotiation, formatting, and CLDR rules remain separate future concerns.
+- Catalog loading, locale negotiation and CLDR rules remain separate future concerns. The numeric-input consumer now implements FormatNumber/ParseNumber/GetPercentSign using the pinned numeral-system table; this current formatting capability does not imply broader locale negotiation.
 - Direct plural selectors run during locked lookup and should be short; resource selectors run after snapshotting state. Recursive selector logic remains the caller's responsibility.
 - Global catalog state must be restored or cleared by isolated tests and applications that replace languages.
 

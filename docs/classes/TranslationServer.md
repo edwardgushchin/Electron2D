@@ -1,6 +1,6 @@
 # TranslationServer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Inherits:** —
 
@@ -225,3 +225,13 @@ One process-wide lock protects direct catalogs, the domain registry, and `Cultur
 Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, per-object disabling, domain lifecycle and pseudolocalization. `LocalizationProjectSettingsTests` checks typed startup settings, managed locale scoring, regional catalog selection, project fallback for singular/plural lookup, and runtime transform reload. `WindowRuntimeTests` checks startup sampling with SDL dummy.
 
 No catalog file loader, CLDR plural rules, message formatting, full Unicode bidirectional text support, or per-thread culture override is implemented. The managed score does not include the pinned locale alias/default-script tables; exact locale-score and Unicode pseudolocalization parity remain partial.
+
+FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric localization through nine immutable rune/exponent/percent systems and 92 exact locale identities. Managed hyphen spelling is normalized to underscore. Unknown identifiers preserve text/default percent, while empty locale arguments fail validation. This does not implement CLDR negotiation, broad locale aliases or global locale-change notification. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.
+
+## Numeric locale operations
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static System.String FormatNumber(System.String number, System.String locale)` | FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric localization through nine immutable rune/exponent/percent systems and 92 exact locale identities. Managed hyphen spelling is normalized to underscore. Unknown identifiers preserve text/default percent, while empty locale arguments fail validation. This does not implement CLDR negotiation, broad locale aliases or global locale-change notification. |
+| `public static System.String GetPercentSign(System.String locale)` | FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric localization through nine immutable rune/exponent/percent systems and 92 exact locale identities. Managed hyphen spelling is normalized to underscore. Unknown identifiers preserve text/default percent, while empty locale arguments fail validation. This does not implement CLDR negotiation, broad locale aliases or global locale-change notification. |
+| `public static System.String ParseNumber(System.String number, System.String locale)` | FormatNumber, ParseNumber and GetPercentSign now execute generated-numeric localization through nine immutable rune/exponent/percent systems and 92 exact locale identities. Managed hyphen spelling is normalized to underscore. Unknown identifiers preserve text/default percent, while empty locale arguments fail validation. This does not implement CLDR negotiation, broad locale aliases or global locale-change notification. |

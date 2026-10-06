@@ -801,7 +801,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SphereMesh](classes/SphereMesh.md) | PrimitiveMesh | Excluded | 5 |
 | [SphereOccluder3D](classes/SphereOccluder3D.md) | Occluder3D | Excluded | 1 |
 | [SphereShape3D](classes/SphereShape3D.md) | Shape3D | Excluded | 1 |
-| [SpinBox](classes/SpinBox.md) | Range | Blocked | 43 |
+| [SpinBox](classes/SpinBox.md) | Range | Partial | 43 |
 | [SplineIK3D](classes/SplineIK3D.md) | ChainIK3D | Excluded | 9 |
 | [SplitContainer](classes/SplitContainer.md) | Container | Partial | 35 |
 | [SpotLight3D](classes/SpotLight3D.md) | Light3D | Excluded | 7 |
