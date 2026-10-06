@@ -14,6 +14,8 @@ These instructions apply to the whole repository. Keep this file about how to wo
 
 ## Make a change
 
+- Exclude deprecated reference API under [ADR 0004](docs/decisions/product.md#adr-0004). Before copying a public/protected declaration, inspect its pinned `deprecated` metadata and owning type, and use the current replacement where applicable. Do not add deprecated aliases, `[Obsolete]` public mirrors or inert compatibility switches, including `TabContainer.AllTabsInFront`. Keep the reference row in coverage as `Excluded` with exact deprecation evidence and no implementation trigger. Remove already exposed deprecated API together with its affected consumers, storage/schema, XML and docs in the owning slice; existing code is not an exception.
+
 - Preserve the accepted reference API and behavior under all existing ADRs. Godot `Node` maps to Electron2D `Node` with the same applicable API; `Node2D` maps to `Entity` with the same applicable API. Follow [ADR 0008](docs/decisions/scene.md#adr-0008) for inheritance and role-based type substitutions. Keep `CanvasItem` separate and apply the mapping across consumers, parameters, return types, events, factories and coverage; a rename does not authorize missing members or merged responsibilities.
 
 - Process-wide service operations use static public access under [ADR 0095](docs/decisions/singleton-services.md#adr-0095), backed by retained internal objects. Preserve lifetime, identity, property descriptors and native ownership; do not expose public `Instance` accessors.
