@@ -81,7 +81,7 @@ internal static class WebSocketTests
     }
     private static X509Certificate2 Identity(RSA key)
     {
-        var request = new CertificateRequest("CN=localhost", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1); request.CertificateExtensions.Add(new X509BasicConstraintsExtension(true, false, 0, true)); var names = new SubjectAlternativeNameBuilder(); names.AddDnsName("localhost"); request.CertificateExtensions.Add(names.Build()); return request.CreateSelfSigned(DateTimeOffset.UtcNow.AddHours(-1), DateTimeOffset.UtcNow.AddHours(1));
+        var request = new CertificateRequest("CN=localhost", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1); request.CertificateExtensions.Add(new X509BasicConstraintsExtension(true, false, 0, true)); var names = new SubjectAlternativeNameBuilder(); names.AddDnsName("localhost"); request.CertificateExtensions.Add(names.Build()); return TLSOracleIdentity.ForServer(request.CreateSelfSigned(DateTimeOffset.UtcNow.AddHours(-1), DateTimeOffset.UtcNow.AddHours(1)));
     }
     private static void NativeClient(bool secure)
     {

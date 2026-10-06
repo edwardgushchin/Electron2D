@@ -40,6 +40,13 @@ internal static class TLSTests
     }
     private static void Resources(CryptoKey key, Certificate chain, Certificate trust, RSA source, X509Certificate2 leaf)
     {
+        using (var identity = TLSOracleIdentity.ForServer(leaf.CopyWithPrivateKey(source)))
+        {
+            Check(identity.HasPrivateKey && identity.RawData.AsSpan().SequenceEqual(leaf.RawData), "Oracle identity preserves the leaf certificate and private key.");
+            using var privateKey = identity.GetRSAPrivateKey()!; using var verifier = leaf.GetRSAPublicKey()!;
+            var signature = privateKey.SignData("TLS oracle identity"u8, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            Check(verifier.VerifyData("TLS oracle identity"u8, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1), "Oracle provider key matches the original certificate.");
+        }
         Check(!key.IsPublicOnly() && chain.SaveToString().Split("BEGIN CERTIFICATE").Length == 3, "Private key and chain identity.");
         using var publicKey = new CryptoKey(); publicKey.LoadFromString(key.SaveToString(true), true); Check(publicKey.IsPublicOnly(), "Public-only key."); Reject<CryptographicException>(() => publicKey.SaveToString()); Reject<CryptographicException>(() => publicKey.LoadFromString(key.SaveToString(), true));
         using var copy = (CryptoKey)key.Duplicate(); Check(copy.SaveToString(true) == key.SaveToString(true), "Key resource copy.");
@@ -143,7 +150,7 @@ internal static class TLSTests
     }
     private static void Interop(X509Certificate2 leaf, RSA leafKey, X509Certificate2 authority, Certificate trust, CryptoKey key, Certificate chain, SslProtocols protocol)
     {
-        using var identity = leaf.CopyWithPrivateKey(leafKey); using var listener = new TcpListener(IPAddress.Loopback, 0); listener.Start(); var port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        using var identity = TLSOracleIdentity.ForServer(leaf.CopyWithPrivateKey(leafKey)); using var listener = new TcpListener(IPAddress.Loopback, 0); listener.Start(); var port = ((IPEndPoint)listener.LocalEndpoint).Port;
         Console.WriteLine("Independent SslStream " + protocol + " server handshake.");
         var oracle = Task.Run(async () =>
         {
