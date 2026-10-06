@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>CharacterMovement</title>
+  <link rel="icon" href="app-icon.svg" type="image/svg+xml">
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #241b2c; }
+    canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+    button { position: fixed; right: 12px; top: 12px; width: 44px; height: 44px; font-size: 24px; border: 0; color: white; background: #3d2749; cursor: pointer; }
+    #error { color: white; font: 16px sans-serif; position: absolute; inset: 16px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" tabindex="0" aria-label="CharacterMovement"></canvas>
+  <button id="fullscreen" type="button" aria-label="Full screen" title="Full screen">&#x26F6;</button>
+  <pre id="error" hidden></pre>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "info": {
+    "author": "org.electron2d.charactermovement",
+    "version": 1
+  },
+  "images": [
+    {
+      "idiom": "universal",
+      "platform": "ios",
+      "size": "1024x1024",
+      "filename": "app-icon.png"
+    }
+  ]
+}

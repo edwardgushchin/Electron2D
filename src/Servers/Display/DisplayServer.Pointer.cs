@@ -46,7 +46,7 @@ public sealed partial class DisplayServer
     internal Vector2i MouseGetPositionCore()
     {
         EnsureOwner();
-        if (_waylandWindowPosition)
+        if (_pixelWindowCoordinates)
         {
             SDL.GetMouseState(out var windowX, out var windowY);
             var scale = GetMousePixelScale();
@@ -86,7 +86,7 @@ public sealed partial class DisplayServer
 
     private float GetMousePixelScale()
     {
-        if (!_waylandWindowPosition)
+        if (!_pixelWindowCoordinates)
             return 1f;
         var scale = SDL.GetWindowPixelDensity(_window.DangerousGetHandle());
         if (!float.IsFinite(scale) || scale <= 0f)

@@ -1,0 +1,14 @@
+{
+  "info": {
+    "author": "org.electron2d.charactermovement",
+    "version": 1
+  },
+  "layers": [
+    {
+      "filename": "Foreground.imagestacklayer"
+    },
+    {
+      "filename": "Background.imagestacklayer"
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Check the audited Linux native inventory and bundled notices in a publish."""
 
+import argparse
 import fnmatch
 import json
 import re
-import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -41,7 +41,7 @@ NATIVE_GROUPS = {
 }
 
 
-def check(publish: Path) -> None:
+def check(publish: Path, application_licenses=()) -> None:
     deps_files = list(publish.glob("*.deps.json"))
     assert len(deps_files) == 1, "Expected one application deps.json"
     app = deps_files[0].name.removesuffix(".deps.json")
@@ -69,18 +69,24 @@ def check(publish: Path) -> None:
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
     assert len(expected) == 67, f"Expected 67 license and notice files, found {len(expected)}"
-    assert {p.name for p in delivered.iterdir() if p.is_file()} == expected, "Unexpected published license files"
+    extra = {p.name: p for p in application_licenses}
+    assert len(extra) == len(application_licenses) and not expected.intersection(extra), "Duplicate application notice names"
+    assert {p.name for p in delivered.iterdir() if p.is_file()} == expected | extra.keys(), "Unexpected published license files"
     for name in expected:
         assert (delivered / name).read_bytes() == (source / name).read_bytes(), name
+    for name, path in extra.items():
+        assert (delivered / name).read_bytes() == path.read_bytes(), name
     for stale in ("LICENSE", "THIRD_PARTY_NOTICES.md", "docs/licenses", "docs/coverage/ReferenceData-LICENSE.txt", "src/Vendor"):
         assert not (publish / stale).exists(), f"License outside licence/: {stale}"
     for link in re.findall(r"\]\(([^)]+)\)", (delivered / "THIRD_PARTY_NOTICES.md").read_text()):
         if not link.startswith(("http:", "https:")):
             assert (delivered / link.split("#", 1)[0]).exists(), f"Broken published notice link: {link}"
-    print(f"{runtime[0]}: {len(elf)} audited ELF files, {len(expected)} matching notices")
+    print(f"{runtime[0]}: {len(elf)} audited ELF files, {len(expected)} matching engine notices, {len(extra)} matching application notices")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("Usage: python3 tools/licenses/check_publish.py PUBLISH_DIRECTORY")
-    check(Path(sys.argv[1]))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("publish", type=Path)
+    parser.add_argument("--application-license", type=Path, action="append", default=[])
+    args = parser.parse_args()
+    check(args.publish, args.application_license)

@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -14,9 +14,9 @@ Last updated: 2026-10-04
 
 A configurable native root window that owns scene children.
 
-Pass a detached window to `Engine.Run(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland and native window units elsewhere. On Android the actual fullscreen surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded windows are not implemented.
+Pass a detached window to `Engine.Run(Window)` or `Engine.RunAsync(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. On mobile/TV/browser targets the actual native surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded windows are not implemented.
 
-Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
+Native lifetime belongs to Engine.Run or Engine.RunAsync. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
 
 `SetIMEActive(true)` enables native committed-text and preedit events for this root window. During Engine.Run, Window forwards those already-committed DisplayServer updates into its SceneTree: the currently focused, visible and processing Control receives a whole committed string or typed preedit, while every live node receives `NotificationOsImeUpdate` for a composition change. A derived text control activates/deactivates native input with its focus lifecycle and manages its own caret and preedit state. This bridge does not fabricate `InputEventKey.Unicode` or support nested/cross-window text routing.
 
@@ -122,7 +122,7 @@ Zero by default.
 
 **ArgumentOutOfRangeException:** A component is negative or a nonzero maximum is below the minimum.
 
-**NotSupportedException:** A nonzero Android limit is configured before Engine.Run.
+**NotSupportedException:** A nonzero Android, iOS, tvOS or browser limit is configured at native startup.
 
 **InvalidOperationException:** The caller is not the owner or the native request fails.
 
@@ -137,7 +137,7 @@ Zero by default.
 
 **ArgumentOutOfRangeException:** A component is negative or exceeds a nonzero maximum.
 
-**NotSupportedException:** A nonzero Android limit is configured before Engine.Run.
+**NotSupportedException:** A nonzero Android, iOS, tvOS or browser limit is configured at native startup.
 
 **InvalidOperationException:** The caller is not the owner or the native request fails.
 
@@ -165,7 +165,7 @@ Gets the observed client size or requests a positive client size.
 
 100 by 100 before configuration or native activation.
 
-Native changes may be asynchronous or constrained by the compositor and size limits. SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size. On Android the fullscreen surface determines the initial observed size, regardless of the requested size.
+Native changes may be asynchronous or constrained by the compositor and size limits. SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size. On Android, iOS, tvOS and browsers the native surface determines the initial observed pixel size, regardless of the requested size.
 
 **ArgumentOutOfRangeException:** Either component is nonpositive.
 

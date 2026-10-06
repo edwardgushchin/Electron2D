@@ -65,6 +65,7 @@ int exitCode = Engine.Run(window);
 | Member | Description |
 | --- | --- |
 | [`public static int Run(Window window)`](#m-electron2d-engine-run-electron2d-window) | Consumes a validated detached root Window after reserving the idle engine. |
+| [`public static Task<int> RunAsync(Window window)`](#m-electron2d-engine-runasync-electron2d-window) | Owns a yielding root-window lifecycle on the platform application thread. |
 | [`public static void Start(MainLoop mainLoop)`](#m-electron2d-engine-start-electron2d-mainloop) | Attaches and, when necessary, initializes one application loop. |
 | [`public static bool AdvanceFrame(double elapsedSeconds)`](#m-electron2d-engine-advanceframe-system-double) | Advances fixed-step callbacks followed by one process callback. |
 | [`public static void Stop()`](#m-electron2d-engine-stop) | Finalizes and detaches the current application loop. |
@@ -208,7 +209,29 @@ Gets immutable version information for the loaded Electron2D assembly.
 <a id="m-electron2d-engine-run-electron2d-window"></a>
 ### `public static int Run(Window window)`
 
+Browser, iOS and tvOS hosts use `RunAsync` instead; a blocking run throws `NotSupportedException` on those platforms.
+
 Consumes a validated detached root Window after reserving the idle engine. Samples active project locale, fallback and pseudolocalization settings before opening the native window and activating the scene. Opens the native window and renderer, creates and publishes SceneTree before ready, pumps events before frames and renders after scene processing. Cleanup disposes the scene, renderer and native window in that order. Returns SceneTree.Quit's code, zero for default close. Rejected null/disposed/attached roots and a busy engine retain caller ownership. Once reserved, failed native startup and callback failures still dispose transferred scene state. Cleanup failures are aggregated. The engine stays reserved until cleanup completes. Runs on the native main thread; no console handlers are installed. Rendering failures propagate through the same cleanup path as scene failures. Native services opened directly through DisplayServer must finish before teardown; pending asynchronous dialogs can reject disposal and leave DisplayServer alive for completion/release. Start, AdvanceFrame, Stop and manual tree finalization/disposal cannot interfere with the active Run. Reuse requires a new Window.
+
+<a id="m-electron2d-engine-runasync-electron2d-window"></a>
+### `public static Task<int> RunAsync(Window window)`
+
+Runs the same owned scene/window lifecycle as `Run`, yielding to the platform application event loop between frames. The task returns the `SceneTree.Quit` code after cleanup. Keep borrowed textures and fonts alive until it completes.
+
+**Parameters**
+
+- `window`: A live, detached, parentless root that is not queued for deletion.
+
+**Remarks:** Browser applications call this on the browser thread. iOS/tvOS call it on the UIKit main thread with its synchronization context. Android applications queue it from `Application.OnCreate` before the internal `org.electron2d.GameActivity` launcher enters the native video thread. Reservation occurs when queued, so another run or manual lifecycle cannot start in between. Activity destruction before native startup cancels the task, disposes the transferred root and releases the reservation. Other native hosts must supply a synchronization context that retains the opening thread; ordinary desktop consoles use `Run`. A reusable timer yields at least once per frame, including an unlimited `MaxFPS`; its async scheduling is not part of the warmed manual-frame zero-allocation claim.
+
+**Exceptions**
+
+- `ArgumentNullException` / `ObjectDisposedException`: The root is null or disposed.
+- `InvalidOperationException`: The root is attached, another lifecycle is reserved, the required context is absent, or a continuation leaves the native owner thread.
+- `Exception`: Startup, frame or platform work fails; owned cleanup is attempted before the error is reported.
+- `AggregateException`: Multiple callbacks or cleanup stages fail.
+
+The [CharacterMovement entry points](../../examples/CharacterMovement/README.md) show each platform's bootstrap and borrowed-resource lifetime.
 
 <a id="m-electron2d-engine-start-electron2d-mainloop"></a>
 ### `public static void Start(MainLoop mainLoop)`

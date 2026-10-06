@@ -1,0 +1,9 @@
+<metadata>
+  <attr path="/api/package[@name='org.libsdl.app']" name="managedName">Electron2D.Platform.Android</attr>
+  <remove-node path="/api/package[@name='org.libsdl.app']/class[not(@name='SDLActivity')]" />
+  <remove-node path="/api/package[@name='org.libsdl.app']/interface" />
+  <remove-node path="/api/package[@name='org.libsdl.app']/class[@name='SDLActivity']/field" />
+  <remove-node path="/api/package[@name='org.libsdl.app']/class[@name='SDLActivity']/implements" />
+  <remove-node path="/api/package[@name='org.libsdl.app']/class[@name='SDLActivity']/method[not(@name='main' or @name='getLibraries')]" />
+  <attr path="/api/package[@name='org.libsdl.app']/class[@name='SDLActivity']" name="visibility">internal</attr>
+</metadata>

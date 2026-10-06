@@ -1,6 +1,6 @@
 # Display domain
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 ## Responsibility
 
@@ -22,7 +22,7 @@ The existing `TextInput` and `TextEditing` events remain the native full-string/
 
 ## Dependency direction
 
-Display depends on Core object/math, Input, Image, and internally compiled SDL3-CS. On Linux Wayland and X11, the internal Settings capability probe also depends on system `libdbus-1.so.3`; it adds no managed package. On Wayland, optional GTK 3 supplies themed libdecor decoration and a temporary title-bar background correction for themes with a bottom border. Engine's host-driven scheduling remains independent; a consumer calls the display pump before advancing Engine. The future rendering domain may use internal native window ownership but keeps SDL window and renderer handles private. The explicitly borrowed operating-system display/window and supported graphics-context identities in `DisplayServer` do not transfer SDL or renderer ownership.
+Display depends on Core object/math, Input, Image, and internally compiled SDL3-CS. On Linux Wayland and X11, the internal Settings capability probe also depends on system `libdbus-1.so.3`; it adds no managed package. On Wayland, optional GTK 3 supplies themed libdecor decoration and a temporary title-bar background correction for themes with a bottom border. Engine's scheduler owns neither display nor rendering logic. Run/RunAsync call the display pump before advancing the scene; manual consumers perform that ordering explicitly. The future rendering domain may use internal native window ownership but keeps SDL window and renderer handles private. The explicitly borrowed operating-system display/window and supported graphics-context identities in `DisplayServer` do not transfer SDL or renderer ownership.
 
 ## Domain-wide invariants
 
@@ -36,7 +36,7 @@ Wayland `WindowMoveToForeground` validates its window ID and does not submit an 
 
 Main-window display-content-scale notifications retain native queue order; events for other windows are ignored. A failing handler is reported after later queued events. Both axes of one wheel event are attempted even if an earlier axis callback fails, and both failures are retained. Refresh rate uses the current mode's precise numerator and denominator when available; an unavailable, nonpositive, or nonfinite rate is reported as `-1`.
 
-`WindowRectChanged` commits a complete client rectangle before calling handlers on the opening thread, preserving native move/resize queue order. The rectangle's size is in physical pixels on Wayland and platform-native client units elsewhere. Its position uses platform-native desktop coordinates, except that Wayland reports the conventional `(0, 0)` because no reliable global top-level position is available. Unchanged rectangles and foreign-window events do not notify; callback failures follow the pump's aggregate policy.
+`WindowRectChanged` commits a complete client rectangle before calling handlers on the opening thread, preserving native move/resize queue order. The rectangle's size is in physical pixels on Wayland, Android, iOS, tvOS and browsers, and platform-native client units elsewhere. Mouse and touch use this same native surface, with viewport transforms mapping input to game coordinates. Its position uses platform-native desktop coordinates, except that Wayland reports the conventional `(0, 0)` because no reliable global top-level position is available. Unchanged rectangles and foreign-window events do not notify; callback failures follow the pump's aggregate policy.
 
 Desktop point hit testing ignores hidden/minimized windows. X11 uses half-open client bounds, excluding title and border; other supported desktop drivers use decorated bounds. Wayland rejects the query because it has no reliable global window position. SDL keyboard events supply logical, physical, and unmodified layout-label identities independently. Physical brackets, grave/ISO positions, modifiers, and keypad scancodes use explicit reference-aligned identities. The eight left/right control, shift, alt, and GUI scancodes set the matching key `Location`; other keys use `Unspecified`. SDL's Wayland keypad lookup ignores Num Lock and Shift for these conversion methods, so a native keymap/state bridge is required for complete logical-key and label parity. Committed text is delivered separately. SDL key events contain no produced text scalar, and text-input events can carry multiple scalars or an IME commit without a key-event identifier. Populating key-event `Unicode` requires a native per-key Unicode source with verified IME/composition semantics in the first native keyboard/text adapter slice.
 

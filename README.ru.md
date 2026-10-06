@@ -30,7 +30,7 @@
   <a href="#feedback-and-contributing">Участие</a>
 </p>
 
-<p align="center">⭐ <a href="https://github.com/edwardgushchin/Electron2D">Поставьте нам звезду на GitHub</a> - это очень мотивирует!</p>
+<p align="center">⭐ <a href="https://github.com/edwardgushchin/Electron2D">Поставьте нам звезду на GitHub</a> - это мотивирует!</p>
 
 <a id="about"></a>
 
@@ -55,7 +55,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 - [Поиск пути](docs/domains/navigation.md). Маршруты по сетке и между заданными точками с учётом препятствий и стоимости перемещения.
 - [Ресурсы](docs/domains/resources.md). Загрузка изображений, шрифтов и аудио. Градиенты, кривые и процедурные текстуры.
 - [Локализация](docs/domains/localization.md). Переводы, выбор языка и формы множественного числа по заданным правилам.
-- [Сеть](docs/domains/networking.md). TCP, UDP и локальные сокеты, защищённые соединения TLS и DTLS, HTTP/HTTPS, WebSocket и многопользовательские соединения через ENet.
+- [Сеть](docs/domains/networking.md). TCP, UDP и локальные сокеты, защищённые соединения TLS и DTLS, HTTP/HTTPS, WebSocket и многопользовательские соединения.
 
 Шейдерные материалы требуют GPU-рендерера. Совместимый рендерер поддерживает базовую 2D-графику. Подробности и ограничения описаны в документации по ссылкам выше.
 
@@ -63,7 +63,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> Быстрый старт
 
-Начните с примера «Управление персонажем». Вы увидите персонажа и сможете перемещать его стрелками. Команды .NET ниже используются на Windows, Linux и macOS; результаты проверки запуска приведены в [таблице платформ](#platforms).
+Начните с [CharacterMovement](examples/CharacterMovement/README.md). На компьютере персонаж перемещается стрелками, на телефоне его можно перетаскивать пальцем, на телевизоре работают кнопки направления на пульте. Один пример предназначен для всех целевых платформ движка.
 
 <a id="installation"></a>
 
@@ -87,15 +87,17 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-Запустите пример:
+Запустите пример на компьютере:
 
 ```bash
 dotnet run --project examples/CharacterMovement
 ```
 
-Откроется сцена с розовым персонажем на сетке. Стрелки перемещают его в пределах поля, Escape или закрытие окна завершают приложение. Попробуйте изменить скорость в `Player.cs` и запустить пример снова.
+Откроется окно 800 на 600 с персонажем на сетке. Размер окна и персонажа на настольных платформах фиксирован. Стрелки перемещают его в пределах поля, Escape или закрытие окна завершают приложение. Попробуйте изменить скорость в `Player.cs` и запустить пример снова.
 
-![Управление персонажем Electron2D: персонаж на сетке и подсказки управления](docs/images/character-movement.png)
+Для macOS откройте собранный бандл приложения, как показано в [инструкции](examples/CharacterMovement/README.md#macos). Запуск на [Android](examples/CharacterMovement/README.md#android-phone-or-tablet), [Android TV](examples/CharacterMovement/README.md#android-tv), [iOS](examples/CharacterMovement/README.md#ios), [Apple TV](examples/CharacterMovement/README.md#apple-tv-tvos) и в [браузере](examples/CharacterMovement/README.md#web) описан в README примера.
+
+![CharacterMovement: персонаж на сетке](docs/images/character-movement.png)
 
 [Исходный код примера](examples/CharacterMovement/CharacterMovementScene.cs) · [Подробности запуска](examples/CharacterMovement/README.md)
 
@@ -131,7 +133,7 @@ cd ../MyGame
 | iOS | `dotnet add package Electron2D.iOS --prerelease` |
 | Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-Для нескольких целевых платформ добавьте каждый нужный пакет. Для Web, Android, iOS и tvOS понадобятся соответствующие наборы инструментов .NET (workloads) и отдельный проект приложения для выбранной платформы. Готовые проекты приложений в платформенные пакеты не входят. Консольный пример ниже предназначен для Windows, Linux и macOS.
+Для нескольких целевых платформ добавьте каждый нужный пакет. Для Web, Android, iOS и tvOS понадобятся соответствующие наборы инструментов .NET (workloads) и платформенные точки входа приложения. Готовые проекты приложений в платформенные пакеты не входят. Консольный пример ниже предназначен для Windows, Linux и macOS.
 
 Замените содержимое `Program.cs` следующим кодом:
 
@@ -158,6 +160,24 @@ dotnet run -c Release
 
 Сборка движка создаёт `Electron2D.dll`. При публикации игры .NET включает библиотеку движка и нативные зависимости; автономная публикация также включает среду .NET.
 
+#### Телефоны, телевизоры и браузер
+
+Для этих целей возьмите за основу проект [CharacterMovement](examples/CharacterMovement/README.md#start-your-own-project). Скопируйте его исходники и платформенные файлы в `examples/MyGame`, переименуйте проект в `MyGame.csproj` и задайте свой идентификатор приложения. В README примера приведены команды копирования, настройки иконки и установки на устройство.
+
+После создания проекта выберите цель:
+
+| Цель | Команда из корня репозитория | Установка и запуск |
+| --- | --- | --- |
+| Android, телефон или планшет ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm64` | [USB, APK и тач](examples/CharacterMovement/README.md#android-phone-or-tablet) |
+| Android TV, ARM 32-bit | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm` | [ADB по сети и пульт](examples/CharacterMovement/README.md#android-tv) |
+| Web | `dotnet publish examples/MyGame/MyGame.csproj -c Release -r browser-wasm -o bin/my-game/web` | [HTTP-сервер и Chrome](examples/CharacterMovement/README.md#web) |
+| iOS, симулятор на Mac ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [Симулятор и подписанное приложение](examples/CharacterMovement/README.md#ios) |
+| Apple TV, симулятор на Mac ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [Симулятор и устройство tvOS](examples/CharacterMovement/README.md#apple-tv-tvos) |
+
+У телефонов и телевизоров бывают другие архитектуры; все варианты перечислены в README примера. Сборка iOS и tvOS требует macOS и Xcode. Эти проекты используют новые исходники движка: нужного им `Engine.RunAsync` пока нет в опубликованном пакете `0.1.0-alpha`.
+
+На телефоне и телевизоре приложение занимает весь экран. В браузере доступна кнопка полноэкранного режима. Поле подстраивается под соотношение сторон, а персонаж, текст и сетка масштабируются вместе.
+
 <a id="platforms"></a>
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="28" align="absmiddle" alt=""> Платформы
@@ -169,12 +189,12 @@ dotnet run -c Release
 | Windows, x86 / x64 / ARM64 | Все тесты движка без окна и доступные проверки trimming и AOT завершились успешно в CI. Отрисовка ещё не проверена |
 | Linux, x64 / ARM64 | Все тесты движка без окна и проверки trimming и AOT завершились успешно на обеих архитектурах. На x64 проверены окно, ввод и отрисовка через Wayland, а также отрисовка через XWayland. Отрисовка на ARM64 ещё не проверена |
 | macOS, x64 / ARM64 | Все тесты движка без окна и проверки trimming и AOT завершились успешно в CI. Отрисовка ещё не проверена |
-| Android, телефоны и планшеты | На одном телефоне ARM64 проверены отрисовка, шейдерные материалы и физика |
-| Android TV | На одном 32-битном телевизоре проверены совместимый рендерер и физика |
+| Android, телефоны и планшеты | На одном телефоне ARM64 проверены запуск CharacterMovement, полноэкранная сцена и перетаскивание тачем. Шейдерные материалы и физика проверены отдельно |
+| Android TV | На одном 32-битном телевизоре проверены запуск CharacterMovement и управление пультом. Совместимый рендерер и физика проверены отдельно |
 | iOS и tvOS, устройства и симуляторы | Проверки с нативными библиотеками завершились успешно во всех четырёх профилях симуляторов. Приложения для устройств собираются без подписи; запуск на реальных устройствах и отрисовка ещё не проверены |
-| Браузеры | Отрисовка и физика проверены в отдельном тестовом приложении. Запуск игры в браузере ещё не реализован |
+| Браузеры | В локальном Chrome проверены CharacterMovement, адаптивная сцена и ввод. Портретный размер и тач дополнительно проверены в эмуляции; физический мобильный браузер не проверялся |
 
-Проверки Android и браузера пока относятся к отдельным сценариям. Доступность нативных библиотек для выбранной платформы описана в [инструкциях по их доставке](docs/native-packaging.md).
+Проверки CharacterMovement относятся к указанным устройствам и Chrome. Доступность нативных библиотек для выбранной платформы описана в [инструкциях по их доставке](docs/native-packaging.md).
 
 Бейджи сборки и тестов показывают состояние автоматических проверок кода и тестовых приложений. Запуск на реальных устройствах проверяется отдельно. [Подробности автоматических проверок](docs/platform-verification.md#automated-rid-checks).
 

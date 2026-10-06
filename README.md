@@ -55,7 +55,7 @@ This is an overview of the main features already implemented in the engine. Indi
 - [Pathfinding](docs/domains/navigation.md). Routes on a grid or between specified points, accounting for obstacles and movement costs.
 - [Resources](docs/domains/resources.md). Image, font and audio loading. Gradients, curves and procedural textures.
 - [Localization](docs/domains/localization.md). Translations, language selection and plural forms with caller-supplied rules.
-- [Networking](docs/domains/networking.md). TCP, UDP and local sockets, secure TLS and DTLS connections, HTTP/HTTPS, WebSocket and multiplayer connections through ENet.
+- [Networking](docs/domains/networking.md). TCP, UDP and local sockets, secure TLS and DTLS connections, HTTP/HTTPS, WebSocket and multiplayer connections.
 
 Shader materials require the GPU renderer. The compatibility renderer supports basic 2D graphics. See the documentation linked above for details and limitations.
 
@@ -63,7 +63,7 @@ Shader materials require the GPU renderer. The compatibility renderer supports b
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> Quick start
 
-Start with the “Character movement” example. You will see a character and move it with the arrow keys. The .NET commands below are used on Windows, Linux and macOS; see the [platform table](#platforms) for completed run checks.
+Start with [CharacterMovement](examples/CharacterMovement/README.md). Move the character with arrow keys on a computer, drag it with your finger on a phone, or use the remote's direction buttons on a TV. The same example targets all engine platforms.
 
 <a id="installation"></a>
 
@@ -87,15 +87,17 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-Run the example:
+Run the example on a computer:
 
 ```bash
 dotnet run --project examples/CharacterMovement
 ```
 
-A scene opens with a pink character on a grid. The arrow keys move it within the field; Escape or closing the window exits. Try changing the movement speed in `Player.cs` and run the example again.
+A fixed 800 × 600 window opens with a pink character on a grid. Arrow keys move it within the field; Escape or closing the window exits. The window and character do not resize. Try changing the movement speed in `Player.cs` and run the example again.
 
-![Electron2D first scene: a character on a grid with keyboard instructions](docs/images/character-movement.png)
+For macOS, use the [application bundle](examples/CharacterMovement/README.md#macos). Instructions for [Android](examples/CharacterMovement/README.md#android-phone-or-tablet), [Android TV](examples/CharacterMovement/README.md#android-tv), [Web](examples/CharacterMovement/README.md#web), [iOS](examples/CharacterMovement/README.md#ios) and [Apple TV](examples/CharacterMovement/README.md#apple-tv-tvos) are in the example README.
+
+![CharacterMovement: a character on a grid](docs/images/character-movement.png)
 
 [Example source](examples/CharacterMovement/CharacterMovementScene.cs) · [Run instructions](examples/CharacterMovement/README.md)
 
@@ -131,7 +133,7 @@ Then install the package for your target platform:
 | iOS | `dotnet add package Electron2D.iOS --prerelease` |
 | Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-For several game targets, add each required platform package. Web, Android, iOS and tvOS need the corresponding .NET workloads and a separate application project for the chosen platform. Platform packages do not include ready-made application projects. The console example below is for Windows, Linux and macOS.
+For several game targets, add each required platform package. Web, Android, iOS and tvOS need the corresponding .NET workloads and platform application entry points. Platform packages do not include ready-made application projects. The console example below is for Windows, Linux and macOS.
 
 Replace the contents of `Program.cs` with this code:
 
@@ -158,6 +160,24 @@ Add game objects to the window with `AddChild`. The example above shows frame up
 
 Building the engine produces `Electron2D.dll`. Publishing a game includes the engine library and native dependencies; a self-contained publish also includes the .NET runtime.
 
+#### Phones, TVs and browsers
+
+Use [CharacterMovement](examples/CharacterMovement/README.md#start-your-own-project) as the starting project. Copy its source and platform files to `examples/MyGame`, rename the project to `MyGame.csproj` and set your own application identifier. The example README covers copying, app icons and installation on a device.
+
+Then choose a target:
+
+| Target | Command from the repository root | Install and run |
+| --- | --- | --- |
+| Android, ARM64 phone or tablet | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm64` | [USB, APK and touch](examples/CharacterMovement/README.md#android-phone-or-tablet) |
+| Android TV, 32-bit ARM | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm` | [Network ADB and remote](examples/CharacterMovement/README.md#android-tv) |
+| Web | `dotnet publish examples/MyGame/MyGame.csproj -c Release -r browser-wasm -o bin/my-game/web` | [HTTP server and Chrome](examples/CharacterMovement/README.md#web) |
+| iOS, simulator on an ARM64 Mac | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [Simulator and signed app](examples/CharacterMovement/README.md#ios) |
+| Apple TV, simulator on an ARM64 Mac | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [tvOS simulator and device](examples/CharacterMovement/README.md#apple-tv-tvos) |
+
+Phones and TVs also use other architectures; the example README lists every option. iOS and tvOS builds require macOS and Xcode. These projects use the current engine source: the `Engine.RunAsync` they require is not yet in the published `0.1.0-alpha` package.
+
+The app fills the screen on phones and TVs. The browser has a fullscreen button. The field adapts to the aspect ratio, while the character, text and grid scale together.
+
 <a id="platforms"></a>
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="28" align="absmiddle" alt=""> Platforms
@@ -169,12 +189,12 @@ The table lists what has been checked on each game target. The visual editor tar
 | Windows, x86 / x64 / ARM64 | Full headless suites and available trimmed/AOT checks passed in CI. Rendering has not been checked |
 | Linux, x64 / ARM64 | Full headless suites and trimmed/AOT checks passed on both architectures. On x64, windowing, input and rendering have been checked under Wayland, and rendering under XWayland. ARM64 rendering has not been checked |
 | macOS, x64 / ARM64 | Full headless suites and trimmed/AOT checks passed in CI. Rendering has not been checked |
-| Android, phones and tablets | Rendering, shader materials and physics have been checked on one ARM64 phone |
-| Android TV | The compatibility renderer and physics have been checked on one 32-bit TV |
+| Android, phones and tablets | CharacterMovement startup, fullscreen layout and touch dragging have been checked on one ARM64 phone. Shader materials and physics were checked separately |
+| Android TV | CharacterMovement and remote direction buttons have been checked on one 32-bit TV. The compatibility renderer and physics were checked separately |
 | iOS and tvOS, devices and simulators | Native contracts passed in all four simulator profiles. Device bundles build without signing; physical-device execution and rendering have not been checked |
-| Browsers | Rendering and physics have been checked in a separate test application. Running a game in the browser is not implemented yet |
+| Browsers | CharacterMovement, adaptive layout and arrow keys have been checked in Chrome. Portrait layout and touch dragging were checked with phone emulation; a physical mobile browser has not been checked. Rendering and physics were checked separately |
 
-Android and browser checks currently cover individual scenarios. See [native library delivery](docs/native-packaging.md) for library availability on your target platform.
+The Android and browser checks cover the example on specific devices and in Chrome. See [native library delivery](docs/native-packaging.md) for availability on your target.
 
 The Build and Tests badges show the status of automated code checks and test applications. Running on real devices is checked separately. [Automated check details](docs/platform-verification.md#automated-rid-checks).
 

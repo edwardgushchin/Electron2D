@@ -55,7 +55,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 - [寻路](docs/domains/navigation.md)。在网格或指定点之间寻找路径，并考虑障碍物与移动代价。
 - [资源](docs/domains/resources.md)。加载图像、字体和音频。支持渐变、曲线和程序化纹理。
 - [本地化](docs/domains/localization.md)。翻译、语言选择，以及按应用提供的规则选择复数形式。
-- [网络](docs/domains/networking.md)。TCP、UDP 和本地套接字、TLS 与 DTLS 安全连接、HTTP/HTTPS、WebSocket，以及 ENet 多人连接。
+- [网络](docs/domains/networking.md)。TCP、UDP 和本地套接字、TLS 与 DTLS 安全连接、HTTP/HTTPS、WebSocket，以及多人连接。
 
 着色器材质需要 GPU 渲染器。兼容渲染器支持基础 2D 图形。详细说明和限制请参阅上方链接中的文档。
 
@@ -63,7 +63,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> 快速开始
 
-先运行“角色移动”示例。你会看到一个角色，并能用方向键移动它。以下 .NET 命令适用于 Windows、Linux 和 macOS；已完成的运行验证见[平台表](#platforms)。
+从 [CharacterMovement](examples/CharacterMovement/README.md) 开始。在电脑上用方向键移动角色，在手机上用手指拖动，在电视上用遥控器的方向按钮。同一个示例面向引擎的所有目标平台。
 
 <a id="installation"></a>
 
@@ -87,15 +87,17 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-运行示例：
+在电脑上运行示例：
 
 ```bash
 dotnet run --project examples/CharacterMovement
 ```
 
-程序会打开一个场景，网格上有一个粉色角色。方向键让角色在区域内移动，按 Escape 或关闭窗口可退出。试着修改 `Player.cs` 中的移动速度，然后重新运行示例。
+程序会打开一个固定为 800 × 600 的窗口，网格上有一个粉色角色。方向键让角色在区域内移动，按 Escape 或关闭窗口可退出。窗口和角色的大小保持不变。试着修改 `Player.cs` 中的移动速度，然后重新运行示例。
 
-![Electron2D 角色移动：网格上的角色和键盘操作提示](docs/images/character-movement.png)
+macOS 请使用[应用包](examples/CharacterMovement/README.md#macos)。示例 README 中提供了 [Android](examples/CharacterMovement/README.md#android-phone-or-tablet)、[Android TV](examples/CharacterMovement/README.md#android-tv)、[Web](examples/CharacterMovement/README.md#web)、[iOS](examples/CharacterMovement/README.md#ios) 和 [Apple TV](examples/CharacterMovement/README.md#apple-tv-tvos) 的操作步骤。
+
+![CharacterMovement：网格上的角色](docs/images/character-movement.png)
 
 [示例源码](examples/CharacterMovement/CharacterMovementScene.cs) · [运行说明](examples/CharacterMovement/README.md)
 
@@ -131,7 +133,7 @@ cd ../MyGame
 | iOS | `dotnet add package Electron2D.iOS --prerelease` |
 | Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-面向多个平台时，请添加每个所需的平台包。Web、Android、iOS 和 tvOS 需要对应的 .NET 工作负载，以及面向所选平台的独立应用项目。平台包不包含现成的应用项目。下方控制台示例适用于 Windows、Linux 和 macOS。
+面向多个平台时，请添加每个所需的平台包。Web、Android、iOS 和 tvOS 需要对应的 .NET 工作负载和平台应用入口。平台包不包含现成的应用项目。下方控制台示例适用于 Windows、Linux 和 macOS。
 
 将 `Program.cs` 的内容替换为以下代码：
 
@@ -158,6 +160,24 @@ dotnet run -c Release
 
 构建引擎会生成 `Electron2D.dll`。发布游戏时会包含引擎库和原生依赖；自包含发布还会包含 .NET 运行时。
 
+#### 手机、电视和浏览器
+
+以 [CharacterMovement](examples/CharacterMovement/README.md#start-your-own-project) 为起点。将其源码和平台文件复制到 `examples/MyGame`，将项目重命名为 `MyGame.csproj`，并设置自己的应用标识符。示例 README 说明了复制步骤、应用图标和设备安装方法。
+
+然后选择目标：
+
+| 目标 | 在仓库根目录执行的命令 | 安装与运行 |
+| --- | --- | --- |
+| Android，ARM64 手机或平板 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm64` | [USB、APK 和触摸](examples/CharacterMovement/README.md#android-phone-or-tablet) |
+| Android TV，32 位 ARM | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm` | [网络 ADB 和遥控器](examples/CharacterMovement/README.md#android-tv) |
+| Web | `dotnet publish examples/MyGame/MyGame.csproj -c Release -r browser-wasm -o bin/my-game/web` | [HTTP 服务器和 Chrome](examples/CharacterMovement/README.md#web) |
+| iOS，ARM64 Mac 上的模拟器 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [模拟器和已签名应用](examples/CharacterMovement/README.md#ios) |
+| Apple TV，ARM64 Mac 上的模拟器 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [tvOS 模拟器和设备](examples/CharacterMovement/README.md#apple-tv-tvos) |
+
+手机和电视也有其他架构，示例 README 列出了全部选项。构建 iOS 和 tvOS 需要 macOS 和 Xcode。这些项目使用当前引擎源码：所需的 `Engine.RunAsync` 尚未包含在已发布的 `0.1.0-alpha` 包中。
+
+手机和电视上的应用占满屏幕。浏览器提供全屏按钮。游戏区域适应屏幕宽高比，角色、文字和网格统一缩放。
+
 <a id="platforms"></a>
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="28" align="absmiddle" alt=""> 平台
@@ -169,12 +189,12 @@ dotnet run -c Release
 | Windows，x86 / x64 / ARM64 | 完整无界面测试及可用的裁剪/AOT 检查已通过 CI。尚未验证渲染 |
 | Linux，x64 / ARM64 | 两种架构的完整无界面测试和裁剪/AOT 检查均已通过。已在 x64 上验证 Wayland 窗口、输入和渲染，也验证了 XWayland 渲染。尚未验证 ARM64 渲染 |
 | macOS，x64 / ARM64 | 完整无界面测试和裁剪/AOT 检查已通过 CI。尚未验证渲染 |
-| Android，手机和平板 | 已在一台 ARM64 手机上验证渲染、着色器材质和物理 |
-| Android TV | 已在一台 32 位电视上验证兼容渲染器和物理 |
+| Android，手机和平板 | 已在一台 ARM64 手机上验证 CharacterMovement 启动、全屏布局和触摸拖动。着色器材质和物理已单独验证 |
+| Android TV | 已在一台 32 位电视上验证 CharacterMovement 和遥控器方向按钮。兼容渲染器和物理已单独验证 |
 | iOS 和 tvOS，设备与模拟器 | 四种模拟器配置的原生契约检查均已通过。设备应用包可进行未签名构建；尚未验证真机运行或渲染 |
-| 浏览器 | 已在独立测试程序中验证渲染和物理。尚未实现浏览器游戏运行支持 |
+| 浏览器 | 已在 Chrome 中验证 CharacterMovement、自适应布局和方向键。竖屏布局和触摸拖动通过手机模拟验证，尚未在真实移动浏览器中验证。渲染和物理已单独验证 |
 
-Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生库可用情况见[原生库交付说明](docs/native-packaging.md)。
+Android 和浏览器验证涵盖指定设备及 Chrome 中的示例。各目标平台的原生库可用情况见[原生库交付说明](docs/native-packaging.md)。
 
 构建和测试徽章显示代码自动检查及测试应用的状态。真实设备上的运行需要单独验证。[自动检查详情](docs/platform-verification.md#automated-rid-checks)。
 

@@ -1,0 +1,32 @@
+{
+  "info": {
+    "author": "org.electron2d.charactermovement",
+    "version": 1
+  },
+  "assets": [
+    {
+      "idiom": "tv",
+      "size": "400x240",
+      "role": "primary-app-icon",
+      "filename": "Small.imagestack"
+    },
+    {
+      "idiom": "tv",
+      "size": "1280x768",
+      "role": "primary-app-icon",
+      "filename": "Large.imagestack"
+    },
+    {
+      "idiom": "tv",
+      "size": "1920x720",
+      "role": "top-shelf-image",
+      "filename": "TopShelf.imageset"
+    },
+    {
+      "idiom": "tv",
+      "size": "2320x720",
+      "role": "top-shelf-image-wide",
+      "filename": "TopShelfWide.imageset"
+    }
+  ]
+}

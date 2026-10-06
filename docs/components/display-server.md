@@ -1,6 +1,6 @@
 # Display server component
 
-Last updated: 2026-09-30
+Last updated: 2026-10-06
 
 ## Scope
 
@@ -22,7 +22,7 @@ The scene Window now consumes the existing `TextInput` and `TextEditing` events 
 
 ## Dependencies and interactions
 
-Vendored SDL3-CS source supplies internal managed native bindings in `Electron2D.dll`; a target-specific SDL3 library is supplied transitively by the runtime project on Linux. On Linux Wayland and X11, `LinuxPortalThemeSupport` also calls system `libdbus-1.so.3` for a bounded capability probe without an external command or managed package. `DisplayServer` depends on `ElectronObject`, `Input`, `Image`, `Vector2`/`Vector2i`, `Rect2`, and `Rect2i`. `Engine` depends on a host-supplied clock and is called separately. RenderingServer owns the active renderer under Engine.Run; Window registers its borrowed native-context query with DisplayServer and removes it at shutdown.
+Vendored SDL3-CS source supplies internal managed native bindings in `Electron2D.dll`; a target-specific SDL3 library is supplied transitively by the runtime project on Linux. On Linux Wayland and X11, `LinuxPortalThemeSupport` also calls system `libdbus-1.so.3` for a bounded capability probe without an external command or managed package. `DisplayServer` depends on `ElectronObject`, `Input`, `Image`, `Vector2`/`Vector2i`, `Rect2`, and `Rect2i`. `Engine.Run`/`RunAsync` own the ordinary application clock; manual embedding can supply its own elapsed time. RenderingServer owns the active renderer under Engine.Run; Window registers its borrowed native-context query with DisplayServer and removes it at shutdown.
 
 On GNOME Wayland, native-looking client-side title bars require libdecor with its GTK plugin and a GTK backend matching the selected video driver. An inherited `GDK_BACKEND=x11` made `libdecor-gtk` fail initialization and fall back to Cairo. `Open` now updates both native and managed environment values before SDL video initialization and restores the inherited value if startup fails or selects another driver; other driver/backend combinations are unchanged. A process-local GTK style provider extends the selected title-bar background through its border box; it is removed with the window. In a visible Stillglass-Dark session, this removed a transparent one-pixel seam while keeping the themed controls. GTK is optional; without it libdecor may use its fallback decoration.
 
@@ -44,7 +44,7 @@ Wayland output positions can be logical desktop coordinates while the reported s
 
 For one native wheel event, vertical and horizontal input are each attempted even if a callback on the first axis throws. Failures from both axes are retained in the pump's aggregate error. `ScreenGetRefreshRate` uses the current mode's precise rational rate when available and returns `-1` for an invalid screen or unavailable, nonpositive, or nonfinite rate; a valid result is in hertz.
 
-The client rectangle is initialized from the created window and updated from each native move or resize payload before `WindowRectChanged` runs. Its size uses client pixels on Wayland, from SDL's pixel-size event, and native window units elsewhere. Its position uses platform-native desktop coordinates except on Wayland, where it is conventionally `(0, 0)` because the compositor has no reliable global top-level position. `WindowGetPosition` and `WindowSetPosition` still reject Wayland. The callback runs on the opening thread during either event pump, and handler failures are aggregated after later native events are delivered. Wayland minimum, maximum, and requested window sizes use public client pixels; zero leaves a limit axis unbounded, minimums round upward, maximums round downward, and native SDL logical limits are reapplied after a scale change.
+The client rectangle is initialized from the created window and updated from each native move or resize payload before `WindowRectChanged` runs. Its size uses client pixels on Wayland, Android, iOS, tvOS and browsers, from SDL's pixel-size event, and native window units elsewhere. Mouse and touch positions use the same pixel surface; scene viewport transforms convert them to game coordinates. Its position uses platform-native desktop coordinates except on Wayland, where it is conventionally `(0, 0)` because the compositor has no reliable global top-level position. `WindowGetPosition` and `WindowSetPosition` still reject Wayland. The callback runs on the opening thread during either event pump, and handler failures are aggregated after later native events are delivered. Wayland minimum, maximum, and requested window sizes use public client pixels; zero leaves a limit axis unbounded, minimums round upward, maximums round downward, and native SDL logical limits are reapplied after a scale change.
 
 `GetWindowAtScreenPosition` rejects hidden and minimized windows. On X11 it tests half-open client bounds and excludes the native title bar and border; other supported desktop drivers test decorated bounds. Wayland cannot supply the global top-level coordinates needed for this query and is rejected.
 

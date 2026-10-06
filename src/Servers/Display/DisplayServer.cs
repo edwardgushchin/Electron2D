@@ -39,6 +39,7 @@ public sealed partial class DisplayServer : ElectronObject
     private bool _renderingAttached;
     private readonly uint _sdlWindowId;
     private readonly bool _waylandWindowPosition;
+    private readonly bool _pixelWindowCoordinates;
     private readonly bool _linuxPortalThemeDriver;
     private readonly bool _linuxPortalThemeSupported;
     private readonly nint _gtkScreen;
@@ -59,11 +60,13 @@ public sealed partial class DisplayServer : ElectronObject
             throw SDLFailure("identify the main window");
         var videoDriver = SDL.GetCurrentVideoDriver();
         _waylandWindowPosition = videoDriver == "wayland";
+        _pixelWindowCoordinates = _waylandWindowPosition || OperatingSystem.IsAndroid() ||
+            OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser();
         _linuxPortalThemeDriver = videoDriver is "wayland" or "x11";
         _linuxPortalThemeSupported = _linuxPortalThemeDriver && LinuxPortalThemeSupport.Query();
         int width;
         int height;
-        var sizeRead = _waylandWindowPosition
+        var sizeRead = _pixelWindowCoordinates
             ? SDL.GetWindowSizeInPixels(window, out width, out height)
             : SDL.GetWindowSize(window, out width, out height);
         if (!sizeRead)
@@ -90,7 +93,7 @@ public sealed partial class DisplayServer : ElectronObject
     /// <param name="size">Positive initial dimensions in native window coordinates, which are logical on Wayland; Android uses its fullscreen surface size.</param>
     /// <param name="hidden">Whether the window starts hidden.</param>
     /// <returns>The process's active display server.</returns>
-    /// <remarks>The caller owns and must dispose the returned server on the opening thread. It owns the SDL video and gamepad subsystems and restores the prior background-controller hint on close. Desktop windows start with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere; Android uses the fullscreen surface and has no minimum-size request. Android SDLActivity establishes the SDL video thread during video initialization. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar.</remarks>
+    /// <remarks>The caller owns and must dispose the returned server on the opening thread. It owns the SDL video and gamepad subsystems and restores the prior background-controller hint on close. Desktop windows start with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere. Android, iOS, tvOS and browser surfaces have no minimum-size request; client sizes and input coordinates use physical pixels. Browser startup fills the document. Android SDLActivity establishes the SDL video thread during video initialization. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> has a nonpositive component.</exception>
     /// <exception cref="InvalidOperationException">Another server is active, the call is off SDL's main thread, or SDL fails to open video or create the window.</exception>
@@ -165,6 +168,11 @@ public sealed partial class DisplayServer : ElectronObject
                 var window = SDL.CreateWindow(title, size.X, size.Y, flags);
                 if (window == 0)
                     throw SDLFailure("create the main window");
+                if (OperatingSystem.IsBrowser() && !SDL.SetWindowFillDocument(window, true))
+                {
+                    SDL.DestroyWindow(window);
+                    throw SDLFailure("fill the browser document");
+                }
 
                 DisplayServer? server = null;
                 try
@@ -172,7 +180,8 @@ public sealed partial class DisplayServer : ElectronObject
                     var minimumSize = SDL.GetCurrentVideoDriver() == "wayland"
                         ? WaylandLogicalWindowLimit(new Vector2i(64, 64), window, minimum: true)
                         : new Vector2i(64, 64);
-                    if (!OperatingSystem.IsAndroid() && !SDL.SetWindowMinimumSize(window, minimumSize.X, minimumSize.Y))
+                    if (!OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() &&
+                        !OperatingSystem.IsBrowser() && !SDL.SetWindowMinimumSize(window, minimumSize.X, minimumSize.Y))
                         throw SDLFailure("set the main window's minimum size");
                     if (presentBlank && !hidden && SDL.GetCurrentVideoDriver() == "wayland")
                         PresentBlankWindowSurface(window);
@@ -390,7 +399,7 @@ public sealed partial class DisplayServer : ElectronObject
         var window = GetWindow(windowId);
         int width;
         int height;
-        var sizeRead = _waylandWindowPosition
+        var sizeRead = _pixelWindowCoordinates
             ? SDL.GetWindowSizeInPixels(window, out width, out height)
             : SDL.GetWindowSize(window, out width, out height);
         if (!sizeRead)
@@ -407,7 +416,7 @@ public sealed partial class DisplayServer : ElectronObject
         if (requestedSize.X <= 0 || requestedSize.Y <= 0)
             throw new ArgumentOutOfRangeException(nameof(size), size, "Both window dimensions must be positive.");
         var window = GetWindow(windowId);
-        if (_waylandWindowPosition)
+        if (_pixelWindowCoordinates)
         {
             requestedSize = WaylandLogicalWindowSize(requestedSize, window);
             requestedSize = new Vector2i(Math.Max(1, requestedSize.X), Math.Max(1, requestedSize.Y));

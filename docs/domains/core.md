@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 ## Responsibility
 
@@ -102,8 +102,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - Disposal is explicit and idempotent.
 - Starting disposal makes the object unavailable to other threads immediately; the winning disposal thread may inspect guarded state while running teardown callbacks.
 - Dynamic Godot facilities are not recreated with `dynamic` or broad `object` containers.
-- Main-loop lifecycle and frames are one-shot/non-reentrant owner-thread operations; effective/original deltas are finite, non-negative, and frame-scoped; no hidden game thread exists; Engine.Run measures monotonic time on the calling thread.
-- Engine is process-wide and non-disposable; it schedules only from host-supplied elapsed time, bounds catch-up, carries original time independently of scaling, permanently registers Input/InputMap, and never takes disposal ownership of the active loop or user-registered singletons.
+- Main-loop lifecycle and frames are one-shot/non-reentrant owner-thread operations; effective/original deltas are finite, non-negative, and frame-scoped; Engine.Run measures monotonic time on the calling thread, while RunAsync yields on the application thread or Android's required native video thread.
+- Engine is process-wide and non-disposable; it schedules from host-supplied or owned monotonic elapsed time, bounds catch-up, carries original time independently of scaling, permanently registers Input/InputMap, and never takes disposal ownership of the active loop or user-registered singletons.
 - JSON documents expose mutable syntax trees only within the JSON API; caller edits need their own synchronization and native conversion rejects untyped or engine-object members.
 - Configuration keys reject universal-value and engine-object types. Parsing is transactional, mutation is lock-serialized, and saves replace through flushed same-directory temporary files. Encrypted files are authenticated before parsing.
 - Project settings require exact typed definition identities, validate a complete candidate before load replacement, preserve unknown persisted entries, and lexically confine directory-backed virtual paths.
@@ -125,7 +125,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - User C# Node subclasses execute ordinary callbacks, but script assets/attachment, editor application and general scene-file serialization are absent. [ADR 0091](../decisions/scripting.md#adr-0091) selects one future concrete `Script : Resource` for C# and merges the reference Script/CSharpScript identities; no separate production CSharpScript exists. `ScriptChanged` remains a reserved typed notification, not an implemented binding service.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
 - Engine.Run now owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. Root-window canvas rendering runs after scene processing. Permission requests and remaining mobile/browser integrations are absent.
-- No complete target build/package/test matrix, Android host/package, iOS host/bundle, Web browser host/build/storage integration, signing pipeline, or complete native/browser verification exists yet. Current native verification is Linux-only: the root host and canvas have Wayland checks, with narrower XWayland display/context probes. This does not establish complete X11 or other-target acceptance.
+- The repository has an 18-RID automated build/package/test matrix and RID-selected CharacterMovement desktop, Android/Android TV, UIKit and browser hosts. CharacterMovement was executed on Linux Wayland, one Android phone, one Android TV and Chrome; Windows/macOS/iOS/tvOS execution and store signing remain unverified for this example. Browser storage and complete production lifecycle acceptance remain separate work. See the platform report for exact scope.
 - No resource-pack mount, exported/archive-backed virtual filesystem, platform-pipe backend exists. ResourceUID supplies registered identity resolution. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` resolves registered file identities and unknown identities fail; `pipe://` still fails explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard are not implemented. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
 - No renderer draw count, logging-output controls, generated author/license manifest, script backtrace/language registry, movie writer, or editor hints; the Engine coverage inventory records each dependency boundary.
 
@@ -179,7 +179,7 @@ The same harness verifies project-setting registration, value snapshots, validat
 
 ## Windowed lifecycle
 
-Engine.Run(Window) is the ordinary application entry point, with MaxFPS, monotonic timing, event pumping and deterministic scene/native teardown. This adds a narrow in-assembly dependency on SceneTree and Window; manual Start/AdvanceFrame/Stop remain available for embedding.
+Engine.Run(Window) and yielding Engine.RunAsync(Window) are the ordinary application entry points, with MaxFPS, monotonic timing, event pumping and deterministic scene/native teardown. This adds a narrow in-assembly dependency on SceneTree and Window; manual Start/AdvanceFrame/Stop remain available for embedding.
 
 Pixel-snapping integration is described by [the canvas component](../components/canvas-rendering.md#pixel-snapping). Viewport owns independent transform/vertex policies; rendering preserves logical node transforms, while Sprite local queries honor attached transform snapping. Project defaults initialize the explicit root Window at construction.
 

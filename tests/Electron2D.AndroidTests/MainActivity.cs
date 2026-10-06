@@ -1,13 +1,13 @@
 using Android.App;
 using Android.Content.PM;
 using Android.Util;
-using Org.Libsdl.App;
+using Electron2D.Platform.Android;
 using System.Runtime.InteropServices;
 
 namespace Electron2DAndroidTests;
 
 [Activity(Name = "org.electron2d.tests.MainActivity")]
-public sealed class MainActivity : SDLActivity
+internal sealed class MainActivity : SDLActivity
 {
     protected override string[] GetLibraries() => ["SDL3"];
 

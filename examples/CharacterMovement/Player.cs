@@ -1,12 +1,13 @@
 namespace Electron2D.Examples;
 
-/// <summary>A visible character controlled by the arrow keys.</summary>
+/// <summary>A fixed-size character controlled by directional input and touch dragging.</summary>
 internal sealed class Player : Sprite
 {
     private const float MovementSpeed = 160f;
     private const float DisplaySize = 96f;
-    private readonly Vector2 _baseScale;
     private Rect2 _movementBounds;
+    private int? _dragContact;
+    private Vector2 _dragOffset;
 
     /// <summary>Centers the character in the field and scales its borrowed texture to 96 pixels.</summary>
     /// <param name="texture">The character texture, kept alive by the entry point.</param>
@@ -17,19 +18,17 @@ internal sealed class Player : Sprite
         Texture = texture;
         TextureFilter = TextureFilter.Nearest;
         Position = playArea.GetCenter();
-        _baseScale = new(DisplaySize / texture.GetWidth(), DisplaySize / texture.GetHeight());
+        Scale = new(DisplaySize / texture.GetWidth(), DisplaySize / texture.GetHeight());
 
         SetPlayArea(playArea);
     }
 
-    /// <summary>Scales the character after a resize and keeps it inside the current field.</summary>
-    /// <param name="playArea">The current field rectangle in window pixels.</param>
-    /// <param name="windowScale">Uniform size relative to the initial 800×600 window.</param>
-    internal void SetPlayArea(Rect2 playArea, float windowScale = 1f)
+    /// <summary>Keeps the character within the available logical field.</summary>
+    /// <param name="playArea">The current field rectangle before the uniform canvas scale.</param>
+    internal void SetPlayArea(Rect2 playArea)
     {
-        Scale = _baseScale * windowScale;
         // The sprite is centered on Position, so leave half its size clear at each field edge.
-        _movementBounds = playArea.Grow(-DisplaySize * windowScale / 2);
+        _movementBounds = playArea.Grow(-DisplaySize / 2);
         Position = Position.Clamp(_movementBounds.Position, _movementBounds.End);
     }
 
@@ -45,14 +44,33 @@ internal sealed class Player : Sprite
     {
         if (@event is InputEventKey { Pressed: true, Echo: false, Keycode: Key.Escape })
             Tree!.Quit();
+        if (@event is InputEventScreenTouch touch)
+        {
+            if (touch.Pressed && _dragContact is null &&
+                new Rect2(Position - new Vector2(DisplaySize / 2, DisplaySize / 2), new(DisplaySize, DisplaySize)).HasPoint(touch.Position))
+            {
+                _dragContact = touch.Index;
+                _dragOffset = Position - touch.Position;
+                GetViewport()!.SetInputAsHandled();
+            }
+            else if (!touch.Pressed && _dragContact == touch.Index)
+                CancelDrag();
+        }
+        else if (@event is InputEventScreenDrag drag && _dragContact == drag.Index)
+        {
+            Position = (drag.Position + _dragOffset).Clamp(_movementBounds.Position, _movementBounds.End);
+            GetViewport()!.SetInputAsHandled();
+        }
     }
+
+    internal void CancelDrag() => _dragContact = null;
 
     /// <summary>Moves at a fixed speed and keeps the character inside the field.</summary>
     protected override void OnProcess(double delta)
     {
-        var direction = new Vector2(
-            (Input.IsKeyPressed(Key.Right) ? 1 : 0) - (Input.IsKeyPressed(Key.Left) ? 1 : 0),
-            (Input.IsKeyPressed(Key.Down) ? 1 : 0) - (Input.IsKeyPressed(Key.Up) ? 1 : 0));
+        if (_dragContact is not null)
+            return;
+        var direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 
         // Normalize to keep diagonal movement at the same speed; delta is elapsed time in seconds.
         var displacement = direction.Normalized() * MovementSpeed * (float)delta;

@@ -1,6 +1,6 @@
 # Engine runtime component
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 ## Scope
 
@@ -8,7 +8,7 @@ Floating-point timing snapshots use [integer-backed atomics](../classes/AtomicFl
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
-This Core component coordinates one process-wide engine runtime: project-backed timing settings, fixed-step synchronization, time scaling, `MainLoop` attachment/finalization, frame metrics, architecture/version reporting, and a typed named-singleton registry. Engine.Run(Window) owns the ordinary windowed clock, event pump, frame limit, and cleanup on the calling main thread. Manual embedding can still supply elapsed time.
+This Core component coordinates one process-wide engine runtime: project-backed timing settings, fixed-step synchronization, time scaling, `MainLoop` attachment/finalization, frame metrics, architecture/version reporting, and a typed named-singleton registry. Engine.Run(Window) owns the ordinary windowed clock, event pump, frame limit, and cleanup on the calling main thread. Engine.RunAsync shares that owned lifecycle while yielding to the browser or UIKit event loop; Android queues the same lifecycle to its internal native video entry thread. Manual embedding can still supply elapsed time.
 
 The accepted [agent-native contract](../decisions/agent-native.md#adr-0090) uses this lifecycle/scheduling foundation for future batch execution. A batch host must preserve ordinary activation/Ready, input, process/physics, failure and teardown semantics while supplying its explicit clock and execution budget. Current manual entry points are implemented; a unified project runner, headless Window/viewport host and public capture workflow are not. Authoring without UI, no-render simulation and rendered batch remain separate capability profiles.
 
@@ -31,7 +31,7 @@ Callback exceptions restore Engine's running state. Initialization/finalization 
 
 ## Dependencies
 
-The component depends on Core object lifecycle, MainLoop, ProjectSettings, TranslationServer startup configuration, and the permanent Input/InputMap/AudioServer service registrations plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. Manual loops are accepted through MainLoop. Engine.Run has a deliberate in-assembly dependency on SceneTree and Window for native scene orchestration; it does not reference SDL types.
+The component depends on Core object lifecycle, MainLoop, ProjectSettings, TranslationServer startup configuration, and the permanent Input/InputMap/AudioServer service registrations plus ordinary .NET synchronization, runtime architecture reporting, and assembly metadata. Manual loops are accepted through MainLoop. Engine.Run has a deliberate in-assembly dependency on SceneTree and Window for native scene orchestration; platform entry readiness and Android bootstrap use internal SDL bindings without exposing backend types to consumers.
 
 ## Invariants
 
@@ -44,11 +44,11 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, Trans
 - Original frame deltas and the original process step remain finite/non-negative, are scoped to one callback, and are never reconstructed by dividing through `TimeScale`.
 - Process/physics counters are process-lifetime totals; the synchronizer, interpolation, and FPS window reset only after successful loop preparation.
 - Registry names are unique ordinal strings; built-in `Engine`, `ProjectSettings`, `Input`, and `InputMap` entries are permanent, and user registry ownership never implies object disposal.
-- Warmed empty frame scheduling has no steady-state managed allocation.
+- Warmed empty manual frame scheduling has no steady-state managed allocation. RunAsync timer/context scheduling has a separate allocation boundary.
 
 ## Current implementation status and exclusions
 
-Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run now supplies the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../coverage/classes/Engine.md).
+Managed scheduling, lifecycle integration, timing properties, metrics, architecture/version reporting, and registry behavior are implemented and verified. Engine.Run and Engine.RunAsync supply the monotonic clock, event pumping through Window, MaxFPS waiting and complete scene/window lifetime. Rendering/draw counts, logging flags, generated attribution/license data, script debugging/languages, movie writing, and editor hints remain absent. Their exact reference-API disposition is in the [`Engine` class inventory](../coverage/classes/Engine.md).
 
 ## Verification
 

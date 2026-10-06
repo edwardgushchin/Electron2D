@@ -16,5 +16,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Electron2D.$(Electron2DConsumerPlatform)" Version="[$(Electron2DNativePackageVersion)]" />
+    <PackageReference Include="SDL3-CS.Android" Version="$(Electron2DSDLVersion)" ExcludeAssets="compile;runtime;native" Condition="'$(Electron2DConsumerPlatform)' == 'Android'" />
   </ItemGroup>
 </Project>

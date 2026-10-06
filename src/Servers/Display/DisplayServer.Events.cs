@@ -240,8 +240,8 @@ public sealed partial class DisplayServer
                 _pendingDroppedFiles = null;
                 CloseRequestedCore?.Invoke();
                 break;
-            case SDL.EventType.WindowResized when !_waylandWindowPosition:
-            case SDL.EventType.WindowPixelSizeChanged when _waylandWindowPosition:
+            case SDL.EventType.WindowResized when !_pixelWindowCoordinates:
+            case SDL.EventType.WindowPixelSizeChanged when _pixelWindowCoordinates:
                 if (_waylandWindowPosition)
                     RefreshBlankWindowSurface();
                 var resizedRect = new Rect2i(_windowRect.Position,

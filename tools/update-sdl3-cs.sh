@@ -24,6 +24,7 @@ sed -i -E 's/(private static partial|private delegate) ulong (SDL_(Read|Write)IO
 sed -i '1s/^\xEF\xBB\xBF/#pragma warning disable CS0649 \/\/ Native SDL initializes this callback table.\n/' \
     "$scratch/SDL/File and IO Abstractions/storage/StorageInterface.cs"
 mv "$scratch/LICENSE" "$scratch/SDL3-CS-LICENSE.txt"
+git -C "$scratch" apply --unidiff-zero "$root/tools/sdl3-window-flags.patch"
 cat > "$scratch/UPSTREAM.md" <<EOF
 # SDL3-CS core, shadercross and image binding source
 
@@ -40,6 +41,8 @@ Application-owned entry-point delegates are lazy so unrelated SDL calls do not
 retain nonexistent host exports during static application linking.
 Native SDL IO read/write results use pointer-sized size_t on both 32-bit and
 64-bit hosts; the managed binding convenience result remains ulong.
+Window flag imports use primitive ulong at the native boundary to preserve the
+64-bit ABI in the WebAssembly interpreter. Managed wrappers keep WindowFlags.
 The upstream license is retained.
 Refresh with tools/update-sdl3-cs.sh and a release tag, then inspect the diff and
 run the engine, test, coverage, and native example checks.

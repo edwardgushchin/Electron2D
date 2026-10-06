@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Electron2D;
 using Electron2D.Examples;
 using SDL = SDL3.SDL;
@@ -7,22 +8,38 @@ internal static class CharacterMovementTests
 {
     internal static void Run()
     {
+        foreach (var invalid in new[] { new Vector2i(0, 600), new(800, 0), new(-1, 600) })
+        {
+            try { CharacterMovementScene.GetSurfaceLayout(invalid); throw new Exception("An empty surface was accepted."); }
+            catch (ArgumentOutOfRangeException) { }
+        }
+        foreach (var size in new[] { new Vector2i(800, 600), new(1080, 2340), new(1920, 1080), new(3840, 2160), new(390, 844) })
+        {
+            var (scale, canvas) = CharacterMovementScene.GetSurfaceLayout(size);
+            Check(Math.Abs(Math.Min(canvas.X, canvas.Y) - 600) < .001f, "The short canvas side retains the reference size.");
+            Check((canvas * scale).IsEqualApprox(new(size.X, size.Y)), "The canvas fills every surface without bars or cropping.");
+            Check(Math.Abs(canvas.Aspect() - (float)size.X / size.Y) < .001f, "The field preserves the surface aspect ratio.");
+        }
         using var texture = ResourceLoader.Load<ImageTexture>(IOPath.Combine(AppContext.BaseDirectory, "Assets", "mark-dark.svg"));
         using var font = new FontFile();
         font.LoadDynamicFont(IOPath.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
         Engine.MaxFPS = 60;
         ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-        foreach (var backend in new[] { "gpu", "compatibility" })
+        foreach (var (backend, asynchronous) in new[] { ("gpu", false), ("compatibility", false), ("compatibility", true) })
         {
             ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
             var window = CharacterMovementScene.CreateWindow(texture, font);
             var player = (Sprite)window.GetChild(3);
+            var scale = player.Scale;
             var previous = player.Position;
             var frames = 0;
             var step = 0;
             window.Ready += _ => RenderingServer.FramePostDraw += () =>
             {
-                Check(++frames < 120, "Resize and close complete within the frame budget.");
+                Check(++frames < 120, "Input and close complete within the frame budget.");
+                Check(window.Size == new Vector2i(800, 600) && window.Unresizable &&
+                    window.MinSize == window.Size && window.MaxSize == window.Size, "The desktop window is fixed at 800 by 600.");
+                Check(player.Scale == scale, "Input never resizes the character.");
                 switch (++step)
                 {
                     case 1:
@@ -55,55 +72,25 @@ internal static class CharacterMovementTests
                     case 7:
                         Check(player.Position == new Vector2(720, 480), "Diagonal movement stays inside the grid.");
                         KeyEvent(SDL.Scancode.Right, false); KeyEvent(SDL.Scancode.Down, false);
-                        window.Size = new(1200, 800);
+                        Touch(SDL.EventType.FingerDown, player.Position + new Vector2(10, 0));
+                        Touch(SDL.EventType.FingerMotion, new(200, 180));
                         break;
                     case 8:
-                        using (var pixels = RenderingServer.Service!.Readback())
-                        {
-                            // The compositor commits resize requests asynchronously.
-                            if (pixels.Size != new Vector2i(1200, 800)) { step--; break; }
-                            Check(pixels.GetPixel(1080, 700).IsEqualApprox(Color.FromHTML("#2E2238")), "The grid expands into the new window area.");
-                            Check(((Label)window.GetChild(2)).Position == new Vector2(32, 752), "Instructions follow the bottom edge.");
-                            Check(player.Position == new Vector2(720, 480), "Growing the window preserves the character position.");
-                            Check(pixels.GetPixel(670, 480).R > .7f, "The enlarged character occupies pixels outside its initial size.");
-                            pixels.SavePNG($"bin/character-movement/{backend}-wide.png");
-                        }
-                        player.Position = new(1103.999f, 663.999f);
-                        KeyEvent(SDL.Scancode.Right, true); KeyEvent(SDL.Scancode.Down, true);
-                        break;
+                        Check(player.Position.IsEqualApprox(new Vector2(190, 180)), "Touch drag preserves the grab offset.");
+                        Touch(SDL.EventType.FingerMotion, new(-100, -100)); break;
                     case 9:
-                        Check(player.Position == new Vector2(1104, 664), "Movement accounts for the enlarged character size.");
-                        KeyEvent(SDL.Scancode.Right, false); KeyEvent(SDL.Scancode.Down, false);
-                        window.Size = new(500, 400);
-                        break;
+                        Check(player.Position == new Vector2(80, 144), "Dragging retains the whole character inside the grid.");
+                        Touch(SDL.EventType.FingerUp, new(-100, -100));
+                        using (var press = new InputEventJoypadButton { ButtonIndex = JoyButton.DpadRight, Pressed = true })
+                            Check(press.IsAction("ui_right"), "The built-in directional action accepts the D-pad.");
+                        Input.ActionPress("ui_right");
+                        previous = player.Position; break;
                     case 10:
-                        using (var pixels = RenderingServer.Service!.Readback())
-                        {
-                            if (pixels.Size != new Vector2i(500, 400)) { step--; break; }
-                            Check(player.Position == new Vector2(438, 298), "Shrinking keeps the resized character inside the field.");
-                            Check(((Label)window.GetChild(2)).Position == new Vector2(32, 352), "Instructions remain visible after shrinking.");
-                        }
-                        window.Size = window.MinSize;
-                        break;
+                        Check(player.Position.X > previous.X, "Remote/controller directional action moves the character.");
+                        Input.ActionRelease("ui_right");
+                        previous = player.Position; break;
                     case 11:
-                        using (var pixels = RenderingServer.Service!.Readback())
-                        {
-                            if (pixels.Size != new Vector2i(400, 300)) { step--; break; }
-                            Check(player.Position == new Vector2(344, 204), "Minimum size keeps valid scaled-character bounds.");
-                            Check(pixels.GetPixel(304, 204).IsEqualApprox(Color.FromHTML("#2E2238")), "Shrinking the character clears pixels outside its new size.");
-                            Check(((Label)window.GetChild(2)).Position == new Vector2(32, 252), "Minimum size retains the instruction margin.");
-                            Check(pixels.GetPixel(40, 100).IsEqualApprox(Color.FromHTML("#2E2238")), "Minimum-size grid is rendered.");
-                            pixels.SavePNG($"bin/character-movement/{backend}-small.png");
-                        }
-                        window.Size = new(800, 600);
-                        break;
-                    case 12:
-                        using (var pixels = RenderingServer.Service!.Readback())
-                        {
-                            if (pixels.Size != new Vector2i(800, 600)) { step--; break; }
-                            Check(player.Position == new Vector2(344, 204), "Restoring the size preserves the clamped position.");
-                            Check(pixels.GetPixel(314, 204).R > .7f, "Restoring the window restores the character's initial visual size.");
-                        }
+                        Check(player.Position == previous, "Releasing a remote button stops movement.");
                         if (backend == "gpu") KeyEvent(SDL.Scancode.Escape, true);
                         else
                         {
@@ -115,11 +102,88 @@ internal static class CharacterMovementTests
                         break;
                 }
             };
-            Check(Engine.Run(window) == 0 && step >= 12, "Scene exits successfully after resize checks.");
+            var code = asynchronous ? RunOnContext(() => Engine.RunAsync(window)) : Engine.Run(window);
+            Check(code == 0 && step >= 11, "Scene exits successfully after input checks.");
             Check(window.IsDisposed && player.IsDisposed && !texture.IsDisposed && !font.IsDisposed &&
                 Engine.MainLoop is null && !RenderingServer.IsAvailable && !DisplayServer.IsAvailable, "Cleanup preserves borrowed assets.");
         }
-        Console.WriteLine("Character movement passed: real GPU/compatibility images, native grow/shrink/minimum/restore, movement bounds, Escape/native close and cleanup.");
+        CheckAsyncErrors();
+        Console.WriteLine("CharacterMovement passed: fixed desktop pixels, arrows, native touch, D-pad actions, synchronous/asynchronous exit and cleanup.");
+    }
+
+    private static void CheckAsyncErrors()
+    {
+        var pending = new Window();
+        using var blocked = new Window();
+        using var manual = new PendingLoop();
+        Engine.Service.ReserveWindowRun();
+        try { Engine.Run(blocked); throw new Exception("Pending startup accepted another window."); }
+        catch (InvalidOperationException) { }
+        try { Engine.Start(manual); throw new Exception("Pending startup accepted a manual loop."); }
+        catch (InvalidOperationException) { }
+        Check(!blocked.IsDisposed && Engine.MainLoop is null, "Pending startup rejection retains caller ownership.");
+        Engine.Service.CancelReservedWindowCore(pending);
+        Check(pending.IsDisposed && Engine.MainLoop is null, "Cancelling pending startup disposes its root and releases the engine.");
+        using var callerOwned = new Window();
+        var rejected = false;
+        try { Engine.RunAsync(callerOwned); }
+        catch (InvalidOperationException) { rejected = true; }
+        Check(rejected && !callerOwned.IsDisposed && Engine.MainLoop is null, "Context rejection retains caller ownership.");
+        var failing = new Window { Size = new(100, 100) };
+        var expected = new InvalidOperationException("async ready failure");
+        failing.Ready += _ => throw expected;
+        try { RunOnContext(() => Engine.RunAsync(failing)); throw new InvalidOperationException("A ready failure was swallowed."); }
+        catch (Exception error) when (ReferenceEquals(error, expected)) { }
+        catch (AggregateException error) when (error.Flatten().InnerExceptions.Any(e => ReferenceEquals(e, expected))) { }
+        Check(failing.IsDisposed && Engine.MainLoop is null && !DisplayServer.IsAvailable, "Async startup failure cleans up.");
+    }
+
+    private static int RunOnContext(Func<Task<int>> start)
+    {
+        var previous = SynchronizationContext.Current;
+        using var context = new MainThreadContext();
+        SynchronizationContext.SetSynchronizationContext(context);
+        try
+        {
+            var task = start();
+            while (!task.IsCompleted) context.Pump();
+            return task.GetAwaiter().GetResult();
+        }
+        finally { SynchronizationContext.SetSynchronizationContext(previous); }
+    }
+
+    private sealed class PendingLoop : MainLoop { }
+
+    private sealed class MainThreadContext : SynchronizationContext, IDisposable
+    {
+        private readonly BlockingCollection<(SendOrPostCallback Callback, object? State)> _queue = new();
+        public override void Post(SendOrPostCallback callback, object? state) => _queue.Add((callback, state));
+        internal void Pump()
+        {
+            if (!_queue.TryTake(out var work, TimeSpan.FromSeconds(10)))
+                throw new TimeoutException("No main-thread frame continuation.");
+            work.Callback(work.State);
+        }
+        public void Dispose() => _queue.Dispose();
+    }
+
+    private static void Touch(SDL.EventType type, Vector2 position)
+    {
+        var windows = SDL.GetWindows(out var count);
+        Check(count == 1, "One native window for touch delivery.");
+        var touch = new SDL.Event
+        {
+            TFinger = new SDL.TouchFingerEvent
+            {
+                Type = type,
+                WindowID = SDL.GetWindowID(windows![0]),
+                TouchID = 1,
+                FingerID = 1,
+                X = position.X / 800f,
+                Y = position.Y / 600f
+            }
+        };
+        Check(SDL.PushEvent(ref touch), "Native touch event accepted.");
     }
 
     private static void KeyEvent(SDL.Scancode scancode, bool pressed)
@@ -139,5 +203,6 @@ internal static class CharacterMovementTests
         };
         Check(SDL.PushEvent(ref key), "Native key event accepted.");
     }
+
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
 }

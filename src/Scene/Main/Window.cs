@@ -1,9 +1,9 @@
 namespace Electron2D;
 
 /// <summary>A configurable native root window that owns scene children.</summary>
-/// <remarks>Pass a detached window to <see cref="Engine.Run"/>. The runtime opens its native window before
+/// <remarks>Pass a detached window to <see cref="Engine.Run"/> or <see cref="Engine.RunAsync"/>. The runtime opens its native window before
 /// scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels
-/// on Wayland and native window units elsewhere. The root canvas renders after scene processing;
+/// on Wayland, Android, iOS, tvOS and browsers, and native window units elsewhere. The root canvas renders after scene processing;
 /// embedded windows are not implemented.</remarks>
 public partial class Window : Viewport
 {
@@ -68,7 +68,8 @@ public partial class Window : Viewport
     /// <value>100 by 100 before configuration or native activation.</value>
     /// <remarks>Native changes may be asynchronous or constrained by the compositor and size limits.
     /// SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size.
-    /// On Android the fullscreen surface determines the initial observed size, regardless of the requested size.</remarks>
+    /// On Android, iOS, tvOS and browsers the native surface determines the initial observed size,
+    /// regardless of the requested size. These profiles and Wayland expose physical client pixels.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Either component is nonpositive.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
@@ -92,7 +93,7 @@ public partial class Window : Viewport
     /// <summary>Gets or sets nonnegative minimum client dimensions; zero means no limit on that axis.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is negative or exceeds a nonzero maximum.</exception>
-    /// <exception cref="NotSupportedException">A nonzero Android window limit is configured before Engine.Run.</exception>
+    /// <exception cref="NotSupportedException">A nonzero Android, iOS, tvOS or browser limit is configured at native startup.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public Vector2i MinSize
@@ -104,7 +105,7 @@ public partial class Window : Viewport
     /// <summary>Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is negative or a nonzero maximum is below the minimum.</exception>
-    /// <exception cref="NotSupportedException">A nonzero Android window limit is configured before Engine.Run.</exception>
+    /// <exception cref="NotSupportedException">A nonzero Android, iOS, tvOS or browser limit is configured at native startup.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public Vector2i MaxSize
@@ -253,10 +254,10 @@ public partial class Window : Viewport
     internal void OpenNative()
     {
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible);
-        if (OperatingSystem.IsAndroid())
+        if (OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser())
         {
             if (_minSize.X != 0 || _minSize.Y != 0 || _maxSize.X != 0 || _maxSize.Y != 0)
-                throw new NotSupportedException("Android does not support window size limits.");
+                throw new NotSupportedException("Mobile, TV and browser surfaces do not support window size limits.");
         }
         else
         {

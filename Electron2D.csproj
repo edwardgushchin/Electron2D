@@ -59,8 +59,11 @@
     <PackageReference PrivateAssets="all" Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.13" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
+    <PackageReference Include="SDL3-CS.Android" Version="$(Electron2DSDLVersion)" PrivateAssets="all" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
     <!-- The AAR already supplies SDL JNI binaries; the RID payload is the same library. -->
-    <PackageReference Update="SDL3-CS.Android" ExcludeAssets="runtime;native" />
+    <PackageReference Update="SDL3-CS.Android" ExcludeAssets="compile;runtime;native" GeneratePathProperty="true" />
+    <AndroidLibrary Include="$(PkgSDL3-CS_Android)/lib/net10.0-android36.0/SDL3-CS.Android.aar" Bind="true" Pack="false" />
+    <TransformFile Include="src/Core/Config/AndroidMetadata.xml" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
     <!-- The Android SDK scans this root project recursively; nested app outputs are not engine assets. -->

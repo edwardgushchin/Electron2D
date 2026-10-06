@@ -55,7 +55,7 @@ Este é um resumo dos principais recursos já implementados no motor. As APIs do
 - [Busca de caminhos](docs/domains/navigation.md). Rotas em uma grade ou entre pontos definidos, considerando obstáculos e custos de deslocamento.
 - [Recursos](docs/domains/resources.md). Carregamento de imagens, fontes e áudio. Gradientes, curvas e texturas procedurais.
 - [Localização](docs/domains/localization.md). Traduções, seleção de idioma e formas de plural com regras definidas pelo aplicativo.
-- [Rede](docs/domains/networking.md). TCP, UDP e sockets locais, conexões seguras com TLS e DTLS, HTTP/HTTPS, WebSocket e conexões multijogador por ENet.
+- [Rede](docs/domains/networking.md). TCP, UDP e sockets locais, conexões seguras com TLS e DTLS, HTTP/HTTPS, WebSocket e conexões multijogador.
 
 Materiais com shaders exigem o renderizador GPU. O renderizador de compatibilidade oferece gráficos 2D básicos. Consulte os links acima para ver os detalhes e as limitações.
 
@@ -63,7 +63,7 @@ Materiais com shaders exigem o renderizador GPU. O renderizador de compatibilida
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> Primeiros passos
 
-Comece pelo exemplo «Movimentação do personagem». Você verá um personagem que pode mover com as setas. Os comandos do .NET abaixo são usados no Windows, Linux e macOS; veja as verificações de execução na [tabela de plataformas](#platforms).
+Comece por [CharacterMovement](examples/CharacterMovement/README.md). Mova o personagem com as setas no computador, arraste-o com o dedo no celular ou use os botões de direção do controle remoto na TV. O mesmo exemplo é destinado a todas as plataformas do motor.
 
 <a id="installation"></a>
 
@@ -87,15 +87,17 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-Execute o exemplo:
+Execute o exemplo no computador:
 
 ```bash
 dotnet run --project examples/CharacterMovement
 ```
 
-Uma cena será aberta com um personagem rosa sobre uma grade. As setas o movem dentro do campo; Escape ou fechar a janela encerra o aplicativo. Experimente alterar a velocidade em `Player.cs` e executar o exemplo novamente.
+Uma janela fixa de 800 × 600 será aberta com um personagem rosa sobre uma grade. As setas o movem dentro do campo; Escape ou fechar a janela encerra o aplicativo. A janela e o personagem mantêm seu tamanho. Experimente alterar a velocidade em `Player.cs` e executar o exemplo novamente.
 
-![Movimentação do personagem do Electron2D: personagem sobre uma grade e instruções de teclado](docs/images/character-movement.png)
+No macOS, use o [pacote de aplicativo](examples/CharacterMovement/README.md#macos). O README do exemplo inclui instruções para [Android](examples/CharacterMovement/README.md#android-phone-or-tablet), [Android TV](examples/CharacterMovement/README.md#android-tv), [Web](examples/CharacterMovement/README.md#web), [iOS](examples/CharacterMovement/README.md#ios) e [Apple TV](examples/CharacterMovement/README.md#apple-tv-tvos).
+
+![CharacterMovement: personagem sobre uma grade](docs/images/character-movement.png)
 
 [Código do exemplo](examples/CharacterMovement/CharacterMovementScene.cs) · [Instruções de execução](examples/CharacterMovement/README.md)
 
@@ -131,7 +133,7 @@ Em seguida, instale o pacote da plataforma de destino:
 | iOS | `dotnet add package Electron2D.iOS --prerelease` |
 | Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-Para vários destinos, adicione cada pacote de plataforma necessário. Web, Android, iOS e tvOS precisam das cargas de trabalho do .NET correspondentes e de um projeto de aplicativo específico para a plataforma escolhida. Os pacotes de plataforma não incluem projetos de aplicativo prontos. O exemplo de console abaixo é para Windows, Linux e macOS.
+Para vários destinos, adicione cada pacote de plataforma necessário. Web, Android, iOS e tvOS precisam das cargas de trabalho do .NET correspondentes e de pontos de entrada do aplicativo para cada plataforma. Os pacotes de plataforma não incluem projetos de aplicativo prontos. O exemplo de console abaixo é para Windows, Linux e macOS.
 
 Substitua o conteúdo de `Program.cs` por este código:
 
@@ -158,6 +160,24 @@ Adicione objetos do jogo à janela com `AddChild`. O exemplo acima mostra a atua
 
 A compilação do motor gera `Electron2D.dll`. A publicação do jogo inclui a biblioteca do motor e as dependências nativas; uma publicação autocontida também inclui o runtime do .NET.
 
+#### Celulares, TVs e navegadores
+
+Use [CharacterMovement](examples/CharacterMovement/README.md#start-your-own-project) como projeto inicial. Copie seus arquivos de código e de plataforma para `examples/MyGame`, renomeie o projeto para `MyGame.csproj` e defina seu próprio identificador de aplicativo. O README do exemplo explica a cópia, a configuração do ícone e a instalação no dispositivo.
+
+Depois, escolha um destino:
+
+| Destino | Comando a partir da raiz do repositório | Instalação e execução |
+| --- | --- | --- |
+| Android, celular ou tablet ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm64` | [USB, APK e toque](examples/CharacterMovement/README.md#android-phone-or-tablet) |
+| Android TV, ARM de 32 bits | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm` | [ADB pela rede e controle remoto](examples/CharacterMovement/README.md#android-tv) |
+| Web | `dotnet publish examples/MyGame/MyGame.csproj -c Release -r browser-wasm -o bin/my-game/web` | [Servidor HTTP e Chrome](examples/CharacterMovement/README.md#web) |
+| iOS, simulador em um Mac ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [Simulador e aplicativo assinado](examples/CharacterMovement/README.md#ios) |
+| Apple TV, simulador em um Mac ARM64 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [Simulador e dispositivo tvOS](examples/CharacterMovement/README.md#apple-tv-tvos) |
+
+Celulares e TVs também usam outras arquiteturas; o README do exemplo lista todas as opções. Compilar iOS e tvOS exige macOS e Xcode. Esses projetos usam o código-fonte atual do motor: o `Engine.RunAsync` de que precisam ainda não está no pacote publicado `0.1.0-alpha`.
+
+O aplicativo ocupa a tela inteira em celulares e TVs. O navegador oferece um botão de tela cheia. O campo se adapta à proporção da tela, enquanto o personagem, o texto e a grade são escalados juntos.
+
 <a id="platforms"></a>
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="28" align="absmiddle" alt=""> Plataformas
@@ -169,12 +189,12 @@ A tabela mostra o que foi verificado em cada plataforma do jogo. O editor visual
 | Windows, x86 / x64 / ARM64 | As suítes completas sem interface e as verificações disponíveis de trimming/AOT passaram no CI. A renderização ainda não foi verificada |
 | Linux, x64 / ARM64 | As suítes completas sem interface e as verificações de trimming/AOT passaram em ambas as arquiteturas. Em x64, janelas, entrada e renderização foram verificadas com Wayland, assim como a renderização com XWayland. A renderização em ARM64 ainda não foi verificada |
 | macOS, x64 / ARM64 | As suítes completas sem interface e as verificações de trimming/AOT passaram no CI. A renderização ainda não foi verificada |
-| Android, celulares e tablets | Renderização, materiais com shaders e física foram verificados em um celular ARM64 |
-| Android TV | O renderizador de compatibilidade e a física foram verificados em uma TV de 32 bits |
+| Android, celulares e tablets | A inicialização do CharacterMovement, a tela cheia e o arraste por toque foram verificados em um celular ARM64. Materiais com shaders e física foram verificados separadamente |
+| Android TV | CharacterMovement e os botões de direção do controle remoto foram verificados em uma TV de 32 bits. O renderizador de compatibilidade e a física foram verificados separadamente |
 | iOS e tvOS, dispositivos e simuladores | Os contratos nativos passaram nos quatro perfis de simulador. Os aplicativos para dispositivos são compilados sem assinatura; a execução em dispositivos físicos e a renderização ainda não foram verificadas |
-| Navegadores | Renderização e física foram verificadas em um aplicativo de teste separado. A execução de jogos no navegador ainda não foi implementada |
+| Navegadores | CharacterMovement, layout adaptável e setas foram verificados no Chrome. O layout vertical e o arraste por toque foram verificados com emulação de celular; um navegador móvel físico não foi verificado. Renderização e física foram verificadas separadamente |
 
-As verificações de Android e navegador cobrem cenários específicos. Consulte a [distribuição de bibliotecas nativas](docs/native-packaging.md) para saber quais estão disponíveis na sua plataforma.
+As verificações de Android e navegador cobrem o exemplo em dispositivos específicos e no Chrome. Consulte a [distribuição de bibliotecas nativas](docs/native-packaging.md) para saber quais estão disponíveis na sua plataforma.
 
 Os indicadores de compilação e testes mostram o estado das verificações automáticas do código e dos aplicativos de teste. A execução em dispositivos reais é verificada separadamente. [Detalhes das verificações automáticas](docs/platform-verification.md#automated-rid-checks).
 

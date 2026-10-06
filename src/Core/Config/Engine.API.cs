@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class Engine
 {
-    /// <summary>Gets or sets the maximum process cadence used by Run.</summary>
+    /// <summary>Gets or sets the maximum process cadence used by Run and RunAsync.</summary>
     /// <value>Zero, meaning unlimited, by default; otherwise a positive number of frames per second.</value>
     /// <remarks>May change from any thread. Manual AdvanceFrame calls do not wait. Waiting uses monotonic,
     /// unscaled time and continues to pump window events at intervals of at most ten milliseconds.</remarks>
@@ -26,9 +26,30 @@ public sealed partial class Engine
     /// <exception cref="ArgumentNullException"><paramref name="window"/> is null.</exception>
     /// <exception cref="ObjectDisposedException">The supplied window is disposed.</exception>
     /// <exception cref="InvalidOperationException">The window is not detached, another lifecycle is active, the caller is not the native main thread, or startup fails.</exception>
+    /// <exception cref="NotSupportedException">Browser, iOS and tvOS applications require RunAsync.</exception>
     /// <exception cref="AggregateException">Several callbacks or cleanup operations fail; all owned cleanup is attempted.</exception>
     /// <exception cref="Exception">A callback or platform operation fails. All owned cleanup stages are attempted before the error escapes.</exception>
     public static int Run(Window window) => Service.RunCore(window);
+
+    /// <summary>Runs a root window while yielding to the platform application event loop.</summary>
+    /// <param name="window">A live detached root, whose scene and native resources the runtime owns after startup reservation.</param>
+    /// <returns>A task containing the SceneTree quit code after all owned cleanup completes.</returns>
+    /// <remarks>Use this entry point on browser, iOS and tvOS main threads. Browser scheduling retains the opening
+    /// thread; UIKit applications must resume every frame through their main-thread synchronization context.
+    /// Android applications call it from Application.OnCreate before
+    /// the runtime's org.electron2d.GameActivity launcher starts; that internal activity runs the scene on its native video thread.
+    /// Other platforms require a main-thread application synchronization context; console applications use Run instead.
+    /// Borrowed textures and fonts must remain alive until the task completes. No background game thread is created
+    /// except the Android platform's required native video entry thread. MaxFPS also applies to asynchronous runs.
+    /// Manual lifecycle operations cannot interfere with an active run, including pending Android startup.
+    /// If the Android activity is destroyed before native startup, the task is cancelled after its root is disposed
+    /// and the engine reservation is released. Asynchronous scheduling yields at least once per frame even when MaxFPS is zero.</remarks>
+    /// <exception cref="ArgumentNullException">The window is null.</exception>
+    /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The window is attached, another run is active, or the application context cannot preserve the native thread.</exception>
+    /// <exception cref="AggregateException">Several callbacks or cleanup stages fail.</exception>
+    /// <exception cref="Exception">A startup, frame or platform operation fails after owned cleanup.</exception>
+    public static Task<int> RunAsync(Window window) => Service.RunAsyncCore(window);
 
     /// <summary>Gets or sets the fixed-step callback frequency.</summary>
     /// <value>The number of physics callback opportunities per unscaled second. The default is <c>60</c>.</value>

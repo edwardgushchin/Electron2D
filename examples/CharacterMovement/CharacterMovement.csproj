@@ -1,16 +1,79 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk.WebAssembly" Condition="'$(RuntimeIdentifier)' == 'browser-wasm'" />
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition="'$(RuntimeIdentifier)' != 'browser-wasm'" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('android-'))">net10.0-android</TargetFramework>
+    <TargetFramework Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('ios'))">net10.0-ios</TargetFramework>
+    <TargetFramework Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('tvos'))">net10.0-tvos</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ApplicationId>org.electron2d.charactermovement</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+    <ApplicationIcon Condition="'$(TargetFramework)' == 'net10.0'">../../editor/Assets/Electron2D.ico</ApplicationIcon>
+    <GameMacBundle Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('osx-')) or ('$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('OSX')))">true</GameMacBundle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+    <AndroidManifest>Platforms/Android/AndroidManifest.xml</AndroidManifest>
+    <AndroidPackageFormats>apk</AndroidPackageFormats>
+    <SupportedOSPlatformVersion>23.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-ios' or '$(TargetFramework)' == 'net10.0-tvos'">
+    <ApplicationManifest>Platforms/Apple/Info.plist</ApplicationManifest>
+    <AppIcon>AppIcon</AppIcon>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+    <DynamicCodeSupport>false</DynamicCodeSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'browser-wasm'">
+    <WasmMainJSPath>wwwroot/main.js</WasmMainJSPath>
+    <WasmMainHTMLPath>wwwroot/index.html</WasmMainHTMLPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TrimMode>full</TrimMode>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
-    <Content Include="../../docs/design/assets/sprite/mark-dark.svg" Link="Assets/mark-dark.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="../../editor/Assets/IBMPlexSans-Regular.ttf" Link="Assets/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="../../editor/Assets/IBMPlexSans-OFL.txt" Link="Assets/IBMPlexSans-OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Compile Include="CharacterMovementGame.cs;CharacterMovementScene.cs;Player.cs" />
+    <Compile Include="Program.cs" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <Compile Include="Platforms/Android/GameApplication.cs" Condition="'$(TargetFramework)' == 'net10.0-android'" />
+    <Compile Include="Platforms/Apple/Program.cs" Condition="'$(TargetFramework)' == 'net10.0-ios' or '$(TargetFramework)' == 'net10.0-tvos'" />
+    <EmbeddedResource Include="../../docs/design/assets/sprite/mark-dark.svg" LogicalName="CharacterMovement.mark-dark.svg" />
+    <EmbeddedResource Include="../../docs/design/assets/sprite/app-icon.svg" LogicalName="CharacterMovement.app-icon.svg" />
+    <EmbeddedResource Include="../../editor/Assets/Electron2D.png" LogicalName="CharacterMovement.app-icon.png" />
+    <EmbeddedResource Include="../../editor/Assets/IBMPlexSans-Regular.ttf" LogicalName="CharacterMovement.IBMPlexSans-Regular.ttf" />
+    <Content Include="../../editor/Assets/IBMPlexSans-OFL.txt" Link="licence/IBMPlexSans-OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <AndroidAsset Include="../../editor/Assets/IBMPlexSans-OFL.txt" Link="licence/IBMPlexSans-OFL.txt" Condition="'$(TargetFramework)' == 'net10.0-android'" />
+    <AndroidResource Include="../../editor/Assets/Electron2D.png" Link="Resources/drawable/app_icon.png" Condition="'$(TargetFramework)' == 'net10.0-android'" />
+    <AndroidResource Include="Platforms/Android/Resources/drawable/tv_banner.png" Link="Resources/drawable/tv_banner.png" Condition="'$(TargetFramework)' == 'net10.0-android'" />
+    <ImageAsset Remove="Platforms/Apple/**/*.xcassets/**" />
+    <ImageAsset Include="Platforms/Apple/iOS/Assets.xcassets/**" Condition="'$(TargetFramework)' == 'net10.0-ios'" />
+    <ImageAsset Include="Platforms/Apple/tvOS/Assets.xcassets/**" Condition="'$(TargetFramework)' == 'net10.0-tvos'" />
+    <BundleResource Include="../../editor/Assets/IBMPlexSans-OFL.txt" Link="licence/IBMPlexSans-OFL.txt" Condition="'$(TargetFramework)' == 'net10.0-ios' or '$(TargetFramework)' == 'net10.0-tvos'" />
+    <Content Update="wwwroot/main.js;wwwroot/index.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="'$(RuntimeIdentifier)' == 'browser-wasm'" />
+    <Content Include="../../docs/design/assets/sprite/app-icon.svg" Link="wwwroot/app-icon.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="'$(RuntimeIdentifier)' == 'browser-wasm'" />
   </ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk.WebAssembly" Condition="'$(RuntimeIdentifier)' == 'browser-wasm'" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition="'$(RuntimeIdentifier)' != 'browser-wasm'" />
+  <Target Name="BundleGameBuild" AfterTargets="Build" Condition="'$(GameMacBundle)' == 'true'">
+    <ItemGroup>
+      <GameBundleFiles Include="$(TargetDir)**/*" Exclude="$(TargetDir)$(AssemblyName).app/**" />
+    </ItemGroup>
+    <Copy SourceFiles="@(GameBundleFiles)" DestinationFiles="@(GameBundleFiles->'$(TargetDir)$(AssemblyName).app/Contents/MacOS/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="Platforms/MacOS/Info.plist" DestinationFolder="$(TargetDir)$(AssemblyName).app/Contents" />
+    <Copy SourceFiles="../../editor/Assets/Electron2D.icns" DestinationFolder="$(TargetDir)$(AssemblyName).app/Contents/Resources" />
+  </Target>
+  <Target Name="BundleGamePublish" AfterTargets="Publish" Condition="'$(GameMacBundle)' == 'true'">
+    <ItemGroup>
+      <GamePublishFiles Include="$(PublishDir)**/*" Exclude="$(PublishDir)$(AssemblyName).app/**" />
+    </ItemGroup>
+    <Copy SourceFiles="@(GamePublishFiles)" DestinationFiles="@(GamePublishFiles->'$(PublishDir)$(AssemblyName).app/Contents/MacOS/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="Platforms/MacOS/Info.plist" DestinationFolder="$(PublishDir)$(AssemblyName).app/Contents" />
+    <Copy SourceFiles="../../editor/Assets/Electron2D.icns" DestinationFolder="$(PublishDir)$(AssemblyName).app/Contents/Resources" />
+  </Target>
 </Project>

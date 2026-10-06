@@ -813,9 +813,10 @@ internal static partial class SDL
 
     [ExcludeFromCodeCoverage]
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_CreateWindow"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    private static partial IntPtr SDL_CreateWindow([MarshalAs(UnmanagedType.LPUTF8Str)] string title, int w, int h, WindowFlags flags);
+    // Keep the native boundary primitive: WASM interprets a 64-bit enum as a mismatched icall signature.
+    private static partial IntPtr SDL_CreateWindow([MarshalAs(UnmanagedType.LPUTF8Str)] string title, int w, int h, ulong flags);
     private delegate IntPtr CreateWindowNativeDelegate(string title, int w, int h, WindowFlags flags);
-    private static CreateWindowNativeDelegate CreateWindowNativeFunction = SDL_CreateWindow;
+    private static CreateWindowNativeDelegate CreateWindowNativeFunction = (title, w, h, flags) => SDL_CreateWindow(title, w, h, (ulong)flags);
 
     /// <code>extern SDL_DECLSPEC SDL_Window * SDLCALL SDL_CreateWindow(const char *title, int w, int h, SDL_WindowFlags flags);</code>
     /// <summary>
@@ -900,9 +901,9 @@ internal static partial class SDL
 
     [ExcludeFromCodeCoverage]
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_CreatePopupWindow"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    private static partial IntPtr SDL_CreatePopupWindow(IntPtr parent, int offsetX, int offsetY, int w, int h, WindowFlags flags);
+    private static partial IntPtr SDL_CreatePopupWindow(IntPtr parent, int offsetX, int offsetY, int w, int h, ulong flags);
     private delegate IntPtr CreatePopupWindowNativeDelegate(IntPtr parent, int offsetX, int offsetY, int w, int h, WindowFlags flags);
-    private static CreatePopupWindowNativeDelegate CreatePopupWindowNativeFunction = SDL_CreatePopupWindow;
+    private static CreatePopupWindowNativeDelegate CreatePopupWindowNativeFunction = (parent, x, y, w, h, flags) => SDL_CreatePopupWindow(parent, x, y, w, h, (ulong)flags);
 
     /// <code>extern SDL_DECLSPEC SDL_Window * SDLCALL SDL_CreatePopupWindow(SDL_Window *parent, int offset_x, int offset_y, int w, int h, SDL_WindowFlags flags);</code>
     /// <summary>
@@ -1352,9 +1353,9 @@ internal static partial class SDL
 
     [ExcludeFromCodeCoverage]
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_GetWindowFlags"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    private static partial WindowFlags SDL_GetWindowFlags(IntPtr window);
+    private static partial ulong SDL_GetWindowFlags(IntPtr window);
     private delegate WindowFlags GetWindowFlagsNativeDelegate(IntPtr window);
-    private static GetWindowFlagsNativeDelegate GetWindowFlagsNativeFunction = SDL_GetWindowFlags;
+    private static GetWindowFlagsNativeDelegate GetWindowFlagsNativeFunction = window => (WindowFlags)SDL_GetWindowFlags(window);
 
     /// <code>extern SDL_DECLSPEC SDL_WindowFlags SDLCALL SDL_GetWindowFlags(SDL_Window *window);</code>
     /// <summary>

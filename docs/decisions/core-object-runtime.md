@@ -213,7 +213,7 @@ Managed executable checks cover state transitions, ordering preconditions, callb
 <a id="adr-0016"></a>
 ## ADR 0016: Process-wide Engine runtime and host-driven scheduling
 
-Last updated: 2026-09-22
+Last updated: 2026-10-06
 
 ### Status
 
@@ -236,6 +236,8 @@ Runtime lifecycle is one atomic owner-thread state machine. Callback exceptions 
 The reference singleton registry is adapted to ordinal string names and `ElectronObject`, with a generic typed lookup. It starts with a permanent self-registration named `Engine`; ADR 0019 adds the permanent `ProjectSettings` entry and project-backed timing values. The registry is thread-safe and treats user entries as explicitly non-owning. Untyped dictionaries are not introduced: assembly version data uses immutable `EngineVersionInfo`.
 
 APIs that cannot act without an absent domain are not exposed as stored-but-unused state. MaxFPS now controls Run waiting (zero means unlimited), with no effect on manual AdvanceFrame; persistent project-backed maximum-FPS configuration remains unimplemented; draw counts to rendering; output flags to logging; author/license maps to generated distribution metadata; script backtraces/languages to scripting; movie paths to capture; and editor hints to an editor runtime.
+
+`Engine.RunAsync(Window)` is the nonblocking projection of that same owned window lifecycle. The browser's single-threaded scheduler and UIKit's native main-thread synchronization context retain window ownership while the runtime yields between frames through one reusable periodic timer. Console callers continue to use Run; non-browser asynchronous startup without a main-thread context fails before ownership. Android's internal GameActivity receives a root queued by RunAsync from Application.OnCreate and invokes the same synchronous video-thread lifecycle. The host binding remains internal; examples use platform SDK entry points and public Electron2D operations, not backend bindings. Borrowed resources stay alive until the returned task completes. This adds no separate game loop, renderer or divergent public platform type set.
 
 ### Consequences
 

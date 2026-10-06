@@ -6019,6 +6019,12 @@
       "adr": "docs/decisions/product.md#adr-0004"
     },
     {
+      "electron2d": "method:Electron2D.Engine.RunAsync(Electron2D.Window)",
+      "state": "Implemented",
+      "reason": "Nonblocking typed library-host projection of the same native main iteration and owned Window/SceneTree lifecycle; browser/UIKit yield on the native synchronization context, while internal Android startup hands off to its video entry thread. Borrowed resources survive until task completion. Target build and rendered acceptance remain separate.",
+      "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
       "electron2d": "method:Electron2D.Window.CreateSceneInstanceFactory()",
       "state": "Implemented",
       "reason": "Typed packed-scene factory reconstructs a detached Window; derived types explicitly opt in.",

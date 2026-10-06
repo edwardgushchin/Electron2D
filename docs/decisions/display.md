@@ -1,6 +1,6 @@
 # Display decisions
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -10,7 +10,7 @@ This bounded log owns native display connection, window, and event-pump decision
 <a id="adr-0040"></a>
 ## ADR 0040: One SDL display server and typed main-window host
 
-Last updated: 2026-09-22
+Last updated: 2026-10-06
 
 ### Status
 
@@ -23,8 +23,8 @@ Electron2D previously had no native display host. Engine accepted elapsed time f
 ### Decision
 
 - `DisplayServer` is one process-owned, explicitly disposed `ElectronObject` in the runtime assembly. It owns SDL video and gamepad initialization, one high-density resizable main window, cursor and controller handles, and the native event pump. Public IDs use zero for the main window; native SDL handles stay private.
-- `Open` is the explicit typed-C# library bootstrap for the reference display service; `Instance` exposes the active singleton. Normal application orchestration belongs to Engine.Run through Window; a consumer may explicitly embed the lower-level display and manual engine lifecycle. These entry points are limited to making the existing display and scene lifecycle usable from a separate assembly, under the semantic public-API boundary in ADR 0004.
-- `Open` and all instance operations, including disposal, require SDL's main thread and the managed opening thread. A singleton read may occur from another thread. Disposal is rejected during event dispatch.
+- `Open` is the explicit typed-C# library bootstrap for the reference display service; static operations address the retained active server, with `IsAvailable` exposing its presence under ADR 0095. Normal application orchestration belongs to Engine.Run through Window; a consumer may explicitly embed the lower-level display and manual engine lifecycle. These entry points are limited to making the existing display and scene lifecycle usable from a separate assembly, under the semantic public-API boundary in ADR 0004.
+- `Open` and all native service operations, including disposal, require SDL's main thread and the managed opening thread. A singleton read may occur from another thread. Disposal is rejected during event dispatch.
 - A visible Wayland window commits a neutral blank surface at creation so the compositor maps it before the rendering vertical slice. Pixel-size and display-scale events refresh that surface until a renderer replaces it. Hidden windows do not present. The surface remains window-owned; a future renderer must release it before creating its rendering context.
 - When a Linux Wayland session or explicit Wayland video driver inherits `GDK_BACKEND=x11`, `Open` changes the native and managed environment to `wayland` before initializing video so libdecor's GTK plugin can provide native desktop decorations. Failed startup or a different selected video driver restores the previous value. The override stays process-wide after successful startup so later GTK use matches the selected display driver; other backend settings and video drivers are left alone.
 - When GTK 3 is available for Wayland decorations, the display server installs a process-local style provider for default title bars before creating the window and removes it after destroying the window. It lets the title-bar background cover its border box. This preserves the selected GTK theme while preventing a transparent one-pixel seam with themes whose default title bar has a bottom border. Missing GTK leaves libdecor's fallback available; the engine never edits the user's theme or requires theme-specific launch settings.
@@ -33,7 +33,7 @@ Electron2D previously had no native display host. Engine accepted elapsed time f
 - Screen wakefulness is a process-wide native request through SDL. On the verified Wayland host, toggling it emitted matching `org.freedesktop.ScreenSaver` inhibition and release calls; actual monitor power policy remains owned by the desktop.
 - The keyboard-focus screen query uses the focused main window where the backend can identify it. Wayland cannot expose process-wide keyboard focus or a primary display, so the primary, keyboard-focus, and mouse-focus selectors use screen index zero.
 - The native keyboard adapter maps SDL scancodes to the reference physical identities explicitly where enum names differ: US bracket positions are `BraceLeft`/`BraceRight`, the grave position is `Section`, and the ISO key beside left Shift is `QuoteLeft`. Control-valued keys such as Escape resolve to special key identities before Unicode conversion; SDL's unknown key resolves to `None`. Modifier and keypad aliases use explicit maps. SDL 3.4.16 returns fixed keypad keycodes across Num Lock and Shift in a native Wayland probe, while the reference reads the live XKB symbol state. Complete keypad conversion, uncommon F25-F35 identities, and live Latin/non-Latin layout changes require a native Wayland keymap/state bridge and executable layout-switch test; a fixed US-layout table would give false results for custom layouts.
-- Desktop and window coordinates use the platform's native units, which vary with DPI policy. Wayland does not supply global top-level window coordinates or programmatic top-level positioning, so operations requiring those coordinates reject use instead of returning SDL's synthetic positions. This is an accepted behavior difference from the pinned Wayland reference, which returns a conventional `(0, 0)` top-level position and silently ignores positioning requests. A native Wayland test verifies the explicit failures and same-screen no-op. Wayland client sizes and pointer coordinates are exposed in pixels; size requests and bounds are converted to SDL logical units using the current window pixel density. A visible Wayland test consumer verified window size and limit conversion through user-driven 1.25-to-1-to-1.25 output transfers; macOS pixel-space parity remains unverified.
+- Desktop and window coordinates use the platform's native units, which vary with DPI policy. Wayland does not supply global top-level window coordinates or programmatic top-level positioning, so operations requiring those coordinates reject use instead of returning SDL's synthetic positions. This is an accepted behavior difference from the pinned Wayland reference, which returns a conventional `(0, 0)` top-level position and silently ignores positioning requests. A native Wayland test verifies the explicit failures and same-screen no-op. Wayland, Android, iOS, tvOS and browser client sizes and pointer coordinates are exposed in pixels; size requests and bounds are converted to SDL logical units using the current window pixel density. A visible Wayland test consumer verified window size and limit conversion through user-driven 1.25-to-1-to-1.25 output transfers; macOS pixel-space parity remains unverified.
 - On Wayland, SDL display bounds are logical while the reference's screen size is the output's physical mode. `ScreenGetSize` and the size of `ScreenGetUsableRect` multiply logical bounds by the current mode's pixel density; the position remains the native output position. `ScreenGetScale` uses the main window's current scale for its default selector and rounds the current mode's pixel density upward for an explicit index. The indexed result is two for a 1.25-scale output, matching the observed `wl_output.scale` value; `ScreenGetMaxScale` uses those indexed values. A new or hidden window can have a provisional scale until the compositor assigns a preferred fractional scale; the pinned reference also waits only for the initial xdg configure before returning from window creation. SDL `SyncWindow` is a window-state barrier, not a guarantee that the preferred scale or first buffer is ready. `ScreenGetRefreshRate` uses SDL's precise mode numerator and denominator where present; its rounded float would report 144 instead of the protocol's 143.997 Hz on two outputs of the verified host.
 - Wayland output origins and physical mode sizes can produce overlapping public rectangles at mixed scale. The pinned reference backend uses the same combination and selects the greatest overlap directly; do not invent a per-output coordinate conversion. On this three-monitor host, a Wayland protocol trace confirmed that all SDL `xdg-output logical_position` values equal the corresponding `wl_output.geometry` positions, and the native smoke verified the physical mode sizes. Other compositors may report different position sources; this is a documented backend limit rather than a different geometry contract.
 - `GetScreenFromRect` uses those public screen positions and physical sizes, truncates each overlap area to whole pixels, and keeps the first display on a tie. Public backend names use `Wayland` and `X11` rather than SDL's lowercase driver tokens. A repeated `MouseSetMode` request for the active mode does not submit a second native grab or cursor operation.
@@ -63,7 +63,7 @@ The normal game-facing owner is now Window, opened and closed by Engine.Run. Dis
 
 ### Consequences
 
-The runtime can open a native SDL window and translate SDL keyboard, mouse, wheel, touch, window, file-drop, and text events, including a headless Linux dummy-driver verification path. The first executable example owns a monotonic clock, event/frame loop, exit request, and teardown using the public engine API. Scene rendering remains separate work; the Wayland bootstrap surface only makes the blank window visible. The native Input adapter satisfies ADR 0038's mouse/touch emulation policy. Pointer warping uses main-window client coordinates; defined but unavailable window flags reject requests explicitly. On Wayland, AlwaysOnTop has no SDL top-level hook and NoFocus is supported only for popup-menu windows; both are rejected before SDL changes any internal flag. Exclusive fullscreen selects a native display mode where supported and reports native refusal or missing modes. Wayland maps it to ordinary compositor fullscreen. The Wayland protocol cannot reliably restore a minimized window programmatically; SDL can retain its minimized flag until focus returns.
+The runtime can open a native SDL window and translate SDL keyboard, mouse, wheel, touch, window, file-drop, and text events, including a headless Linux dummy-driver verification path. Engine.Run and Engine.RunAsync own the example's monotonic clock, event/frame loop, exit request and teardown. The shared CharacterMovement scene executes through the retained canvas renderer. Mobile/TV/browser startup takes the actual native surface size and skips unsupported size limits; an explicit browser gesture enters document fullscreen. The native Input adapter satisfies ADR 0038's mouse/touch emulation policy. Pointer warping uses main-window client coordinates; defined but unavailable window flags reject requests explicitly. On Wayland, AlwaysOnTop has no SDL top-level hook and NoFocus is supported only for popup-menu windows; both are rejected before SDL changes any internal flag. Exclusive fullscreen selects a native display mode where supported and reports native refusal or missing modes. Wayland maps it to ordinary compositor fullscreen. The Wayland protocol cannot reliably restore a minimized window programmatically; SDL can retain its minimized flag until focus returns.
 
 ### Rejected alternatives
 
@@ -82,7 +82,7 @@ The runtime can open a native SDL window and translate SDL keyboard, mouse, whee
 <a id="adr-0041"></a>
 ## ADR 0041: Keep retired service APIs out of DisplayServer
 
-Last updated: 2026-09-22
+Last updated: 2026-10-06
 
 ### Status
 
@@ -118,7 +118,7 @@ The coverage register separates 225 permanently excluded legacy declarations fro
 <a id="adr-0042"></a>
 ## ADR 0042: Borrowed native window handles for external integration
 
-Last updated: 2026-09-22
+Last updated: 2026-10-06
 
 ### Status
 
@@ -160,7 +160,7 @@ The desktop display/window interop path is executable and tested on this machine
 <a id="adr-0043"></a>
 ## ADR 0043: System theme queries and typed change notification
 
-Last updated: 2026-09-22
+Last updated: 2026-10-06
 
 ### Status
 
@@ -190,7 +190,7 @@ Applications can observe SDL's reported light/dark preference and react to repor
 <a id="adr-0044"></a>
 ## ADR 0044: Window notifications and event failure completeness
 
-Last updated: 2026-09-22
+Last updated: 2026-10-06
 
 ### Status
 

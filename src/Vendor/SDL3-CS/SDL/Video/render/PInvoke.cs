@@ -86,10 +86,10 @@ internal static partial class SDL
     [ExcludeFromCodeCoverage]
     [LibraryImport(SDLLibrary, EntryPoint = "SDL_CreateWindowAndRenderer"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalAs(UnmanagedType.I1)]
-    private static partial bool SDL_CreateWindowAndRenderer([MarshalAs(UnmanagedType.LPUTF8Str)] string title, int width, int height, WindowFlags windowFlags,
+    private static partial bool SDL_CreateWindowAndRenderer([MarshalAs(UnmanagedType.LPUTF8Str)] string title, int width, int height, ulong windowFlags,
         out IntPtr window, out IntPtr renderer);
     private delegate bool CreateWindowAndRendererNativeDelegate(string title, int width, int height, WindowFlags windowFlags, out IntPtr window, out IntPtr renderer);
-    private static CreateWindowAndRendererNativeDelegate CreateWindowAndRendererNativeFunction = SDL_CreateWindowAndRenderer;
+    private static CreateWindowAndRendererNativeDelegate CreateWindowAndRendererNativeFunction = (string title, int width, int height, WindowFlags flags, out IntPtr window, out IntPtr renderer) => SDL_CreateWindowAndRenderer(title, width, height, (ulong)flags, out window, out renderer);
 
     /// <code>extern SDL_DECLSPEC bool SDLCALL SDL_CreateWindowAndRenderer(const char *title, int width, int height, SDL_WindowFlags window_flags, SDL_Window **window, SDL_Renderer **renderer);</code>
     /// <summary>

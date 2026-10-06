@@ -67111,6 +67111,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Engine.RunAsync(Electron2D.Window)",
+    "kind": "method",
+    "declaringType": "Electron2D.Engine",
+    "name": "RunAsync",
+    "signature": "public static System.Threading.Tasks.Task\u003CSystem.Int32\u003E RunAsync(Electron2D.Window window)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "window",
+        "type": "Electron2D.Window",
+        "default": null
+      }
+    ],
+    "returnType": "System.Threading.Tasks.Task\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Engine.Start(Electron2D.MainLoop)",
     "kind": "method",
     "declaringType": "Electron2D.Engine",

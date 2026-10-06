@@ -120,7 +120,7 @@ public sealed partial class DisplayServer
     }
 
     /// <summary>Occurs when the main window's observed client rectangle changes.</summary>
-    /// <remarks>Receives the full rectangle in pixel coordinates on Wayland and platform-native window coordinates elsewhere, after the changed position or size has been committed and in native event order during <see cref="ProcessEvents"/>. On Wayland, the position is conventionally zero because the compositor does not disclose a reliable global position. Unchanged rectangles and events from other windows do not notify. Delivery is confined to the opening thread; a failing handler does not prevent later queued events from being delivered.</remarks>
+    /// <remarks>Receives the full rectangle with client-pixel dimensions on Wayland, Android, iOS, tvOS and browsers, and platform-native window dimensions elsewhere, after the changed position or size has been committed and in native event order during <see cref="ProcessEvents"/>. On Wayland, the position is conventionally zero because the compositor does not disclose a reliable global position. Unchanged rectangles and events from other windows do not notify. Delivery is confined to the opening thread; a failing handler does not prevent later queued events from being delivered.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static event Action<Rect2i>? WindowRectChanged
     {
@@ -245,9 +245,9 @@ public sealed partial class DisplayServer
     public static void MouseSetMode(MouseMode mode) => RequireService().MouseSetModeCore(mode);
 
     /// <summary>Gets the last reported mouse cursor position.</summary>
-    /// <returns>Desktop coordinates where available; on Wayland, the last position in physical pixels relative to the main window.</returns>
-    /// <remarks>Wayland does not expose global pointer coordinates. Its window-relative SDL position is scaled to the physical client pixels used by <see cref="WindowGetSize(int)"/> and truncated toward zero.</remarks>
-    /// <exception cref="InvalidOperationException">The native Wayland window pixel density cannot be read.</exception>
+    /// <returns>Desktop coordinates on other desktop profiles; on Wayland, Android, iOS, tvOS and browsers, the last position in physical pixels relative to the main window.</returns>
+    /// <remarks>Pixel-surface profiles do not use a global desktop pointer position. The window-relative SDL position is scaled to the physical client pixels used by <see cref="WindowGetSize(int)"/> and truncated toward zero.</remarks>
+    /// <exception cref="InvalidOperationException">The native window pixel density cannot be read.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i MouseGetPosition() => RequireService().MouseGetPositionCore();
 
@@ -637,12 +637,12 @@ public sealed partial class DisplayServer
 
     /// <summary>Gets the main window's client size.</summary>
     /// <param name="windowId">The main-window ID, zero.</param>
-    /// <returns>Pixel dimensions on Wayland and platform-native window dimensions elsewhere.</returns>
+    /// <returns>Pixel dimensions on Wayland, Android, iOS, tvOS and browsers; platform-native window dimensions elsewhere.</returns>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static Vector2i WindowGetSize(int windowId = MainWindowId) => RequireService().WindowGetSizeCore(windowId);
 
     /// <summary>Requests a new main-window client size.</summary>
-    /// <param name="size">Requested pixel dimensions on Wayland or platform-native window dimensions elsewhere.</param>
+    /// <param name="size">Requested pixel dimensions on Wayland, Android, iOS, tvOS and browsers; platform-native window dimensions elsewhere.</param>
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <remarks>Wayland clamps each requested component below one to one before applying native minimum-size constraints. Other video drivers require positive dimensions.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A dimension is not positive on a non-Wayland video driver.</exception>
