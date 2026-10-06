@@ -294,7 +294,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [FBXState](classes/FBXState.md) | GLTFState | Excluded | 1 |
 | [FastNoiseLite](classes/FastNoiseLite.md) | Noise | Implemented | 54 |
 | [FileAccess](classes/FileAccess.md) | RefCounted | Partial | 91 |
-| [FileDialog](classes/FileDialog.md) | ConfirmationDialog | Blocked | 106 |
+| [FileDialog](classes/FileDialog.md) | ConfirmationDialog | Partial | 106 |
 | [FileSystemDock](classes/FileSystemDock.md) | EditorDock | Blocked | 13 |
 | [FlowContainer](classes/FlowContainer.md) | Container | Implemented | 16 |
 | [FogMaterial](classes/FogMaterial.md) | Material | Excluded | 6 |
@@ -499,7 +499,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [NoiseTexture2D](classes/NoiseTexture2D.md) | Texture2D | Partial | 13 |
 | [NoiseTexture3D](classes/NoiseTexture3D.md) | Texture3D | Excluded | 9 |
 | [ORMMaterial3D](classes/ORMMaterial3D.md) | BaseMaterial3D | Excluded | 0 |
-| [OS](classes/OS.md) | Object | Blocked | 100 |
+| [OS](classes/OS.md) | Object | Partial | 100 |
 | [Object](classes/Object.md) | — | Partial | 73 |
 | [Occluder3D](classes/Occluder3D.md) | Resource | Excluded | 2 |
 | [OccluderInstance3D](classes/OccluderInstance3D.md) | VisualInstance3D | Excluded | 5 |

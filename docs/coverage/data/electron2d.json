@@ -3182,24 +3182,6 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.DisplayServer.FileDialogMode",
-    "kind": "type",
-    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
-    "name": "FileDialogMode",
-    "signature": "public enum Electron2D.DisplayServer.FileDialogMode",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
     "id": "T:Electron2D.DisplayServer.HandleType",
     "kind": "type",
     "declaringType": "Electron2D.DisplayServer.HandleType",
@@ -3600,6 +3582,106 @@
       "System.IFormattable",
       "System.ISpanFormattable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FileDialog",
+    "kind": "type",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FileDialog",
+    "signature": "public class Electron2D.FileDialog",
+    "visibility": "public",
+    "baseType": "Electron2D.ConfirmationDialog",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FileDialog.Customization",
+    "kind": "type",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "Customization",
+    "signature": "public enum Electron2D.FileDialog.Customization",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FileDialog.DisplayModeType",
+    "kind": "type",
+    "declaringType": "Electron2D.FileDialog.DisplayModeType",
+    "name": "DisplayModeType",
+    "signature": "public enum Electron2D.FileDialog.DisplayModeType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FileDialogAccess",
+    "kind": "type",
+    "declaringType": "Electron2D.FileDialogAccess",
+    "name": "FileDialogAccess",
+    "signature": "public enum Electron2D.FileDialogAccess",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FileDialogMode",
+    "kind": "type",
+    "declaringType": "Electron2D.FileDialogMode",
+    "name": "FileDialogMode",
+    "signature": "public enum Electron2D.FileDialogMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FileDialogOptionValue",
+    "kind": "type",
+    "declaringType": "Electron2D.FileDialogOptionValue",
+    "name": "FileDialogOptionValue",
+    "signature": "public struct Electron2D.FileDialogOptionValue",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -5694,6 +5776,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.OS",
+    "kind": "type",
+    "declaringType": "Electron2D.OS",
+    "name": "OS",
+    "signature": "public sealed class Electron2D.OS",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -12711,6 +12808,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.FileDialog..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FileDialog",
+    "name": ".ctor",
+    "signature": "public FileDialog()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.FlowContainer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.FlowContainer",
@@ -19626,71 +19736,6 @@
     "value": "11"
   },
   {
-    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenAny()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
-    "name": "OpenAny",
-    "signature": "public const Electron2D.DisplayServer.FileDialogMode OpenAny = 3",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.DisplayServer.FileDialogMode",
-    "value": "3"
-  },
-  {
-    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenDirectory()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
-    "name": "OpenDirectory",
-    "signature": "public const Electron2D.DisplayServer.FileDialogMode OpenDirectory = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.DisplayServer.FileDialogMode",
-    "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenFile()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
-    "name": "OpenFile",
-    "signature": "public const Electron2D.DisplayServer.FileDialogMode OpenFile = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.DisplayServer.FileDialogMode",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenFiles()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
-    "name": "OpenFiles",
-    "signature": "public const Electron2D.DisplayServer.FileDialogMode OpenFiles = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.DisplayServer.FileDialogMode",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.DisplayServer.FileDialogMode.SaveFile()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.DisplayServer.FileDialogMode",
-    "name": "SaveFile",
-    "signature": "public const Electron2D.DisplayServer.FileDialogMode SaveFile = 4",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.DisplayServer.FileDialogMode",
-    "value": "4"
-  },
-  {
     "id": "enumValue:Electron2D.DisplayServer.HandleType.DisplayHandle()",
     "kind": "enumValue",
     "declaringType": "Electron2D.DisplayServer.HandleType",
@@ -20586,6 +20631,253 @@
     "parameters": [],
     "returnType": "Electron2D.FileCompressionMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.CreateFolder()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "CreateFolder",
+    "signature": "public const Electron2D.FileDialog.Customization CreateFolder = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.Delete()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "Delete",
+    "signature": "public const Electron2D.FileDialog.Customization Delete = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.Favorites()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "Favorites",
+    "signature": "public const Electron2D.FileDialog.Customization Favorites = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.FileFilter()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "FileFilter",
+    "signature": "public const Electron2D.FileDialog.Customization FileFilter = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.FileSort()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "FileSort",
+    "signature": "public const Electron2D.FileDialog.Customization FileSort = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.HiddenFiles()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "HiddenFiles",
+    "signature": "public const Electron2D.FileDialog.Customization HiddenFiles = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.Layout()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "Layout",
+    "signature": "public const Electron2D.FileDialog.Customization Layout = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.OverwriteWarning()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "OverwriteWarning",
+    "signature": "public const Electron2D.FileDialog.Customization OverwriteWarning = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.Customization.Recent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.Customization",
+    "name": "Recent",
+    "signature": "public const Electron2D.FileDialog.Customization Recent = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.Customization",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.DisplayModeType.List()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.DisplayModeType",
+    "name": "List",
+    "signature": "public const Electron2D.FileDialog.DisplayModeType List = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.DisplayModeType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialog.DisplayModeType.Thumbnails()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialog.DisplayModeType",
+    "name": "Thumbnails",
+    "signature": "public const Electron2D.FileDialog.DisplayModeType Thumbnails = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.DisplayModeType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialogAccess.FileSystem()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialogAccess",
+    "name": "FileSystem",
+    "signature": "public const Electron2D.FileDialogAccess FileSystem = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogAccess",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialogAccess.Resources()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialogAccess",
+    "name": "Resources",
+    "signature": "public const Electron2D.FileDialogAccess Resources = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogAccess",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialogAccess.UserData()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialogAccess",
+    "name": "UserData",
+    "signature": "public const Electron2D.FileDialogAccess UserData = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogAccess",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialogMode.OpenAny()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialogMode",
+    "name": "OpenAny",
+    "signature": "public const Electron2D.FileDialogMode OpenAny = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialogMode.OpenDirectory()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialogMode",
+    "name": "OpenDirectory",
+    "signature": "public const Electron2D.FileDialogMode OpenDirectory = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialogMode.OpenFile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialogMode",
+    "name": "OpenFile",
+    "signature": "public const Electron2D.FileDialogMode OpenFile = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialogMode.OpenFiles()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialogMode",
+    "name": "OpenFiles",
+    "signature": "public const Electron2D.FileDialogMode OpenFiles = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FileDialogMode.SaveFile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FileDialogMode",
+    "name": "SaveFile",
+    "signature": "public const Electron2D.FileDialogMode SaveFile = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogMode",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.FillEnum.Conic()",
@@ -34144,6 +34436,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.ElectronObject\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.FileDialog.DirSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "DirSelected",
+    "signature": "public event System.Action\u003CSystem.String\u003E DirSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.FileDialog.FileSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FileSelected",
+    "signature": "public event System.Action\u003CSystem.String\u003E FileSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.FileDialog.FilenameFilterChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FilenameFilterChanged",
+    "signature": "public event System.Action\u003CSystem.String\u003E FilenameFilterChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.FileDialog.FilesSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FilesSelected",
+    "signature": "public event System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E FilesSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E",
     "value": null
   },
   {
@@ -65364,11 +65708,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.FileDialogShow(System.String,System.String,System.String,System.Boolean,Electron2D.DisplayServer.FileDialogMode,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32\u003E,System.Int32)",
+    "id": "method:Electron2D.DisplayServer.FileDialogShow(System.String,System.String,System.String,System.Boolean,Electron2D.FileDialogMode,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32\u003E,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "FileDialogShow",
-    "signature": "public static System.Void FileDialogShow(System.String title, System.String currentDirectory, System.String filename, System.Boolean showHidden, Electron2D.DisplayServer.FileDialogMode mode, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E filters, System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32\u003E callback, System.Int32 parentWindowId = 0)",
+    "signature": "public static System.Void FileDialogShow(System.String title, System.String currentDirectory, System.String filename, System.Boolean showHidden, Electron2D.FileDialogMode mode, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E filters, System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32\u003E callback, System.Int32 parentWindowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -65395,7 +65739,7 @@
       },
       {
         "name": "mode",
-        "type": "Electron2D.DisplayServer.FileDialogMode",
+        "type": "Electron2D.FileDialogMode",
         "default": null
       },
       {
@@ -70115,6 +70459,564 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.AddFilter(System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "AddFilter",
+    "signature": "public System.Void AddFilter(System.String filter, System.String description = \u0022\u0022, System.String mimeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filter",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "mimeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.AddOption(System.String,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "AddOption",
+    "signature": "public System.Void AddOption(System.String name, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E values, System.Int32 defaultValueIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "values",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "defaultValueIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.ClearFilenameFilter()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "ClearFilenameFilter",
+    "signature": "public System.Void ClearFilenameFilter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.ClearFilters()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "ClearFilters",
+    "signature": "public System.Void ClearFilters()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.DeselectAll()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "DeselectAll",
+    "signature": "public System.Void DeselectAll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetFavoriteList()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetFavoriteList",
+    "signature": "public static System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E GetFavoriteList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetLineEdit()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetLineEdit",
+    "signature": "public Electron2D.LineEdit GetLineEdit()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.LineEdit",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetOptionDefault(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetOptionDefault",
+    "signature": "public System.Int32 GetOptionDefault(System.Int32 option)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "option",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetOptionName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetOptionName",
+    "signature": "public System.String GetOptionName(System.Int32 option)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "option",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetOptionValues(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetOptionValues",
+    "signature": "public System.String[] GetOptionValues(System.Int32 option)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "option",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetRecentList()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetRecentList",
+    "signature": "public static System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E GetRecentList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetSelectedOptions()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetSelectedOptions",
+    "signature": "public System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, Electron2D.FileDialogOptionValue\u003E GetSelectedOptions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, Electron2D.FileDialogOptionValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.GetVBox()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "GetVBox",
+    "signature": "public Electron2D.VBoxContainer GetVBox()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VBoxContainer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.Invalidate()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "Invalidate",
+    "signature": "public System.Void Invalidate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.IsCustomizationFlagEnabled(Electron2D.FileDialog.Customization)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "IsCustomizationFlagEnabled",
+    "signature": "public System.Boolean IsCustomizationFlagEnabled(Electron2D.FileDialog.Customization flag)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "flag",
+        "type": "Electron2D.FileDialog.Customization",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.OnCancelPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "OnCancelPressed",
+    "signature": "protected override System.Void OnCancelPressed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.OnOKPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "OnOKPressed",
+    "signature": "protected override System.Void OnOKPressed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.OnShortcutInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "OnShortcutInput",
+    "signature": "protected override System.Void OnShortcutInput(Electron2D.InputEvent input)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.PopupFileDialog()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "PopupFileDialog",
+    "signature": "public System.Void PopupFileDialog()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.SetCustomizationFlagEnabled(Electron2D.FileDialog.Customization,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "SetCustomizationFlagEnabled",
+    "signature": "public System.Void SetCustomizationFlagEnabled(Electron2D.FileDialog.Customization flag, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "flag",
+        "type": "Electron2D.FileDialog.Customization",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.SetFavoriteList(System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "SetFavoriteList",
+    "signature": "public static System.Void SetFavoriteList(System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E favorites)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "favorites",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.SetGetIconCallback(System.Func\u003CSystem.String, Electron2D.Texture\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "SetGetIconCallback",
+    "signature": "public static System.Void SetGetIconCallback(System.Func\u003CSystem.String, Electron2D.Texture\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callback",
+        "type": "System.Func\u003CSystem.String, Electron2D.Texture\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.SetGetThumbnailCallback(System.Func\u003CSystem.String, Electron2D.Texture\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "SetGetThumbnailCallback",
+    "signature": "public static System.Void SetGetThumbnailCallback(System.Func\u003CSystem.String, Electron2D.Texture\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callback",
+        "type": "System.Func\u003CSystem.String, Electron2D.Texture\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.SetOptionDefault(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "SetOptionDefault",
+    "signature": "public System.Void SetOptionDefault(System.Int32 option, System.Int32 defaultValueIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "option",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "defaultValueIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.SetOptionName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "SetOptionName",
+    "signature": "public System.Void SetOptionName(System.Int32 option, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "option",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.SetOptionValues(System.Int32,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "SetOptionValues",
+    "signature": "public System.Void SetOptionValues(System.Int32 option, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E values)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "option",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "values",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.SetRecentList(System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "SetRecentList",
+    "signature": "public static System.Void SetRecentList(System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E recents)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "recents",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialog.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -88360,6 +89262,81 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.MoveToTrash(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "MoveToTrash",
+    "signature": "public static System.Void MoveToTrash(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.ShellOpen(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "ShellOpen",
+    "signature": "public static System.Void ShellOpen(System.String uri)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "uri",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.ShellShowInFileManager(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "ShellShowInFileManager",
+    "signature": "public static System.Void ShellShowInFileManager(System.String fileOrDirPath, System.Boolean openFolder = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fileOrDirPath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "openFolder",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -138107,6 +139084,331 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.FileDialog.Access()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "Access",
+    "signature": "public Electron2D.FileDialogAccess Access { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogAccess",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.CurrentDir()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "CurrentDir",
+    "signature": "public System.String CurrentDir { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.CurrentFile()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "CurrentFile",
+    "signature": "public System.String CurrentFile { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.CurrentPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "CurrentPath",
+    "signature": "public System.String CurrentPath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.DeletingEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "DeletingEnabled",
+    "signature": "public System.Boolean DeletingEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.DisplayMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "DisplayMode",
+    "signature": "public Electron2D.FileDialog.DisplayModeType DisplayMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialog.DisplayModeType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.FavoritesEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FavoritesEnabled",
+    "signature": "public System.Boolean FavoritesEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.FileFilterToggleEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FileFilterToggleEnabled",
+    "signature": "public System.Boolean FileFilterToggleEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.FileMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FileMode",
+    "signature": "public Electron2D.FileDialogMode FileMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FileDialogMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.FileSortOptionsEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FileSortOptionsEnabled",
+    "signature": "public System.Boolean FileSortOptionsEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.FilenameFilter()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FilenameFilter",
+    "signature": "public System.String FilenameFilter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.Filters()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "Filters",
+    "signature": "public System.String[] Filters { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.FolderCreationEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "FolderCreationEnabled",
+    "signature": "public System.Boolean FolderCreationEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.HiddenFilesToggleEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "HiddenFilesToggleEnabled",
+    "signature": "public System.Boolean HiddenFilesToggleEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.LayoutToggleEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "LayoutToggleEnabled",
+    "signature": "public System.Boolean LayoutToggleEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.ModeOverridesTitle()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "ModeOverridesTitle",
+    "signature": "public System.Boolean ModeOverridesTitle { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.OptionCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "OptionCount",
+    "signature": "public System.Int32 OptionCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.OverwriteWarningEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "OverwriteWarningEnabled",
+    "signature": "public System.Boolean OverwriteWarningEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.RecentListEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "RecentListEnabled",
+    "signature": "public System.Boolean RecentListEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.RootSubfolder()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "RootSubfolder",
+    "signature": "public System.String RootSubfolder { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.ShowHiddenFiles()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "ShowHiddenFiles",
+    "signature": "public System.Boolean ShowHiddenFiles { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialog.UseNativeDialog()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialog",
+    "name": "UseNativeDialog",
+    "signature": "public System.Boolean UseNativeDialog { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialogOptionValue.Checked()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialogOptionValue",
+    "name": "Checked",
+    "signature": "public System.Boolean Checked { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialogOptionValue.IsCheckbox()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialogOptionValue",
+    "name": "IsCheckbox",
+    "signature": "public System.Boolean IsCheckbox { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialogOptionValue.SelectedIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialogOptionValue",
+    "name": "SelectedIndex",
+    "signature": "public System.Int32 SelectedIndex { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.FlowContainer.Alignment()",
     "kind": "property",
     "declaringType": "Electron2D.FlowContainer",
@@ -144612,6 +145914,84 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "InputUIEnd",
     "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIEnd { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIFileDialogDelete()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIFileDialogDelete",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIFileDialogDelete { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIFileDialogFind()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIFileDialogFind",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIFileDialogFind { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIFileDialogFocusPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIFileDialogFocusPath",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIFileDialogFocusPath { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIFileDialogRefresh()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIFileDialogRefresh",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIFileDialogRefresh { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIFileDialogShowHidden()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIFileDialogShowHidden",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIFileDialogShowHidden { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIFileDialogUpOneLevel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIFileDialogUpOneLevel",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIFileDialogUpOneLevel { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

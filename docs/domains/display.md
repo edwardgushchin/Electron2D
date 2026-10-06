@@ -87,3 +87,5 @@ The X11 smoke also verified a normal-window transfer between two XWayland displa
 Graphics handle verification uses `ELECTRON2D_TEST_RENDER_HANDLES=1`: Wayland EGL/GL and EGL/GLES, XWayland GLX, native identity checks, a foreign context/config, unchanged pixel output, thread/ID/disposal rejection and reopen. A forced X11/EGL GLES probe failed native surface creation before handle queries. Other platforms remain unverified.
 
 GetSwapCancelOK exposes the retained DisplayServer platform dialog-order convention with active-service/owner guards. [Embedded dialogs](../components/dialogs.md) use the same internal policy for pre-startup authoring and combine it with the typed project override. Other-platform acceptance remains separately gated.
+
+[File dialogs](../components/file-dialogs.md) now execute scoped browsing, five selection modes, typed custom options, filters, menus, overwrite/folder workflows and recoverable desktop Linux trash. The shared FileDialogMode identity spans the custom browser and DisplayServer; native-file-extra and foreign platform gates remain explicit. Six permanent ui_filedialog actions use the existing InputMap settings loader.

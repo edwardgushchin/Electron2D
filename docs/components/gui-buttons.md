@@ -35,3 +35,5 @@ Embedded Controls now reuse the same button/focus/tooltip hooks in independent v
 [Dropdown choices](dropdown-choices.md) add OptionButton as a concrete Button/PopupMenu consumer. The shared Button text path respects selected item translation, and owner polling clears disposed borrowed icons before internal processing can access them. ButtonTests and the new choice tests cover worker disposal; the shared public API is unchanged.
 
 [Command menu buttons](command-menu-buttons.md) add a concrete MenuButton consumer for command menus and FileDialog drive/sort prerequisites. It uses the existing PopupMenu model and themes with related hover switching, exact indexed scenes and preserved accessibility-focus defaults.
+
+FileDialog exercises tooltip ownership under embedded Window GUI sections. Once SceneTree closes its work queues, CancelTooltip clears presenter state and leaves attached layers to recursive root disposal instead of requesting deferred deletion; detached layers still dispose directly. Context-pointer and active-tooltip teardown regressions cover both embedding policies.

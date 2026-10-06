@@ -186,32 +186,32 @@
       "reason": "Typed composition event extends the text callback. Synthetic Wayland delivery verifies Unicode-codepoint selection and state-before-callback ordering; a real input method remains unverified."
     },
     {
-      "electron2d": "T:Electron2D.DisplayServer.FileDialogMode",
+      "electron2d": "T:Electron2D.FileDialogMode",
       "godot": "DisplayServer::enum:FileDialogMode",
       "reason": "Typed C# file-dialog mode has matching numeric values; OpenAny is explicitly unavailable in the current SDL dialog backend (ADR 0040)."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenAny()",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.OpenAny()",
       "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_OPEN_ANY",
       "reason": "Numeric mode identity matches; the current SDL file-dialog method rejects this mode explicitly."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenDirectory()",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.OpenDirectory()",
       "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_OPEN_DIR",
       "reason": "OpenDirectory is the typed C# name for upstream Open Dir; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenFile()",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.OpenFile()",
       "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_OPEN_FILE",
       "reason": "Compiled numeric mode identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.OpenFiles()",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.OpenFiles()",
       "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_OPEN_FILES",
       "reason": "Compiled numeric mode identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.FileDialogMode.SaveFile()",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.SaveFile()",
       "godot": "DisplayServer::enum_value:FileDialogMode.FILE_DIALOG_MODE_SAVE_FILE",
       "reason": "Compiled numeric mode identity matches."
     },
@@ -221,7 +221,7 @@
       "reason": "Button choices and selection use typed C# collections and callback; the upstream Error return is adapted to exceptions. SDL also offers a Linux Wayland message box although the pinned Wayland backend does not advertise FEATURE_NATIVE_DIALOG. A physical Wayland check verified button index one and owner-thread callback before return. A one-button dialog closed through its title bar reported zero; the pinned reference does not specify unselected-close behavior (ADR 0040)."
     },
     {
-      "electron2d": "method:Electron2D.DisplayServer.FileDialogShow(System.String,System.String,System.String,System.Boolean,Electron2D.DisplayServer.FileDialogMode,System.Collections.Generic.IReadOnlyList<System.String>,System.Action<System.Boolean, System.Collections.Generic.IReadOnlyList<System.String>, System.Int32>,System.Int32)",
+      "electron2d": "method:Electron2D.DisplayServer.FileDialogShow(System.String,System.String,System.String,System.Boolean,Electron2D.FileDialogMode,System.Collections.Generic.IReadOnlyList<System.String>,System.Action<System.Boolean, System.Collections.Generic.IReadOnlyList<System.String>, System.Int32>,System.Int32)",
       "godot": "DisplayServer::method:file_dialog_show(String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Callable:,int:)",
       "reason": "The SDL path implements basic asynchronous file/folder selection with a typed callback, and adapts the Error return to exceptions. Linux ignores showHidden as the reference does. The pinned Wayland FileChooser uses MIME terms, while SDL filters are extension-only; MIME-only filters and OpenAny reject explicitly. The remaining contract is blocked by a native Linux portal chooser bridge with MIME filters in its first vertical slice, plus a separately approved file-or-directory chooser capability for OpenAny. Native selection, cancellation, and selected-filter behavior still need executable Wayland checks (ADR 0040)."
     },

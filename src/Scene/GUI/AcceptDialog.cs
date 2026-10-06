@@ -168,6 +168,13 @@ public partial class AcceptDialog : Window
         try { if (tree == null && !IsDisposed && version == _visibilityVersion) { _cancelPending = false; Hide(); } } catch (Exception e) { CollectException(ref errors, e); }
         HandleInput(); ThrowCollected("Dialog cancellation callbacks failed.", errors);
     }
+    internal void RaiseNativeCanceled()
+    {
+        List<Exception>? errors = null;
+        try { Canceled?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { if (!IsDisposed) OnCancelPressed(); } catch (Exception e) { CollectException(ref errors, e); }
+        ThrowCollected("Native dialog cancellation callbacks failed.", errors);
+    }
     private void InvokeCustom(string action)
     {
         List<Exception>? errors = null; try { CustomAction?.Invoke(action); } catch (Exception e) { CollectException(ref errors, e); }

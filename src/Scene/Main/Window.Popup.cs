@@ -77,7 +77,7 @@ public partial class Window
     }
     private void PopupAt(Rect2i rect, bool centered)
     {
-        CheckPopup(); AboutToPopup?.Invoke(); if (IsDisposed || !IsInsideTree) return;
+        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); AboutToPopup?.Invoke(); if (IsDisposed || !IsInsideTree) return;
         if (rect != default) { Size = rect.Size; Position = rect.Position; }
         PreparePopup();
         UpdateEmbeddedContents(); if (centered) { var area = GetUsableParentRect(); Position = area.Position + (area.Size - Size) / 2; }
@@ -88,14 +88,14 @@ public partial class Window
     public void PopupOnParent(Rect2i parentRect) => Popup(parentRect);
     /// <summary>Shows this window centered in its embedding viewport.</summary>
     /// <param name="minSize">Requested dimensions, or zero to retain the current size.</param>
-    public void PopupCentered(Vector2i minSize = default) { CheckPopup(); if (minSize == default) minSize = Size; var area = GetUsableParentRect(); PopupAt(new(area.Position + (area.Size - minSize) / 2, minSize), true); }
+    public void PopupCentered(Vector2i minSize = default) { EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); if (minSize == default) minSize = Size; var area = GetUsableParentRect(); PopupAt(new(area.Position + (area.Size - minSize) / 2, minSize), true); }
     /// <summary>Shows this window centered with dimensions proportional to its host.</summary>
     /// <param name="ratio">A finite ratio greater than zero and at most one.</param>
-    public void PopupCenteredRatio(float ratio = .8f) { EnsureMutable(); CheckRatio(ratio); CheckPopup(); PopupCentered((Vector2i)((Vector2)GetUsableParentRect().Size * ratio)); }
+    public void PopupCenteredRatio(float ratio = .8f) { EnsureMutable(); CheckRatio(ratio); if (TryNativePopup()) return; CheckPopup(); PopupCentered((Vector2i)((Vector2)GetUsableParentRect().Size * ratio)); }
     /// <summary>Shows this window centered, limiting requested dimensions to a host-size ratio.</summary>
     /// <param name="minSize">Requested dimensions, or zero to retain current dimensions.</param>
     /// <param name="fallbackRatio">A finite ratio greater than zero and at most one.</param>
-    public void PopupCenteredClamped(Vector2i minSize = default, float fallbackRatio = .75f) { EnsureMutable(); CheckRatio(fallbackRatio); CheckPopup(); if (minSize == default) minSize = Size; var limit = (Vector2i)((Vector2)GetUsableParentRect().Size * fallbackRatio); PopupCentered(new(Math.Min(minSize.X, limit.X), Math.Min(minSize.Y, limit.Y))); }
+    public void PopupCenteredClamped(Vector2i minSize = default, float fallbackRatio = .75f) { EnsureMutable(); CheckRatio(fallbackRatio); if (TryNativePopup()) return; CheckPopup(); if (minSize == default) minSize = Size; var limit = (Vector2i)((Vector2)GetUsableParentRect().Size * fallbackRatio); PopupCentered(new(Math.Min(minSize.X, limit.X), Math.Min(minSize.Y, limit.Y))); }
     /// <summary>Parents a detached dialog to the last exclusive window and shows it with an optional host-coordinate rectangle.</summary>
     /// <param name="fromNode">An attached node identifying the owning window.</param>
     /// <param name="rect">The popup geometry argument passed to Popup.</param>
@@ -129,6 +129,8 @@ public partial class Window
     }
     private static void CheckRatio(float ratio) { if (!float.IsFinite(ratio) || ratio <= 0 || ratio > 1) throw new ArgumentOutOfRangeException(nameof(ratio)); }
     private void CheckPopup() { EnsureMutable(); if (!IsInsideTree || Parent is null) throw new InvalidOperationException("Popup requires an attached child window."); if (Embedder is null) throw new NotSupportedException("Enable GUIEmbedSubwindows on a containing viewport; independent native child windows are unavailable."); }
+    internal virtual bool TryNativeVisibility(bool visible) => false;
+    internal virtual bool TryNativePopup() => false;
     internal virtual void AfterVisibilityChanged(bool visible) { }
     internal virtual bool AcceptEmbeddedPointer(Vector2 point, InputEvent input) => true;
     internal virtual void PreparePopup() { }

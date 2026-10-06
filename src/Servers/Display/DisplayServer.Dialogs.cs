@@ -7,21 +7,6 @@ namespace Electron2D;
 
 public sealed partial class DisplayServer
 {
-    /// <summary>Selects the kind of native file chooser.</summary>
-    public enum FileDialogMode
-    {
-        /// <summary>Selects one existing file.</summary>
-        OpenFile = 0,
-        /// <summary>Selects multiple existing files.</summary>
-        OpenFiles = 1,
-        /// <summary>Selects one directory.</summary>
-        OpenDirectory = 2,
-        /// <summary>Selects either a file or a directory; unavailable in the current native backend.</summary>
-        OpenAny = 3,
-        /// <summary>Selects a destination file, which need not already exist.</summary>
-        SaveFile = 4,
-    }
-
     private static readonly ConcurrentDictionary<nint, DialogRequest> DialogRequests = new();
     private static readonly SDL.DialogFileCallback NativeDialogCallback = OnNativeDialogCompleted;
     private static int _nextDialogRequestId;

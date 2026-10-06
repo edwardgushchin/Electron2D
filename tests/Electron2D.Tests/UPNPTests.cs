@@ -53,7 +53,7 @@ internal static class UPNPTests
         private void SSDP()
         {
             var bytes = new byte[4096]; EndPoint peer = new IPEndPoint(IPAddress.Any, 0);
-            while (!_stop) try { var n = _udp!.ReceiveFrom(bytes, ref peer); var search = Encoding.ASCII.GetString(bytes, 0, n); Check(search.StartsWith("M-SEARCH * HTTP/1.1\r\n") && search.Contains("MAN: \"ssdp:discover\"") && search.Contains("MX: 1"), "Independent SSDP request."); if (Silent) continue; var reply = Encoding.ASCII.GetBytes("HTTP/1.1 200 OK\r\nlocation: " + URL + "desc.xml\r\nST: urn:schemas-upnp-org:device:InternetGatewayDevice:1\r\nUSN: uuid:independent\r\n\r\n"); _udp.SendTo("bad\r\n"u8, peer); _udp.SendTo(reply, peer); _udp.SendTo(reply, peer); }
+            while (!_stop) try { var n = _udp!.ReceiveFrom(bytes, ref peer); if (peer is not IPEndPoint endpoint || !IPAddress.IsLoopback(endpoint.Address)) continue; var search = Encoding.ASCII.GetString(bytes, 0, n); Check(search.StartsWith("M-SEARCH * HTTP/1.1\r\n") && search.Contains("MAN: \"ssdp:discover\"") && search.Contains("MX: 1"), "Independent SSDP request."); if (Silent) continue; var reply = Encoding.ASCII.GetBytes("HTTP/1.1 200 OK\r\nlocation: " + URL + "desc.xml\r\nST: urn:schemas-upnp-org:device:InternetGatewayDevice:1\r\nUSN: uuid:independent\r\n\r\n"); _udp.SendTo("bad\r\n"u8, peer); _udp.SendTo(reply, peer); _udp.SendTo(reply, peer); }
                 catch (SocketException e) when (e.SocketErrorCode == SocketError.TimedOut || _stop) { }
                 catch (ObjectDisposedException) when (_stop) { }
                 catch (Exception e) { _errors.Enqueue(e); break; }

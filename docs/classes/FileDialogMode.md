@@ -1,26 +1,26 @@
-# DisplayServer.FileDialogMode
+# FileDialogMode
 
-Last updated: 2026-09-22
+Last updated: 2026-10-06
 
 **Inherits:** `System.Enum`
 
 **Inherited By:** —
 
-**Source:** [`src/Servers/Display/DisplayServer.Dialogs.cs`](../../src/Servers/Display/DisplayServer.Dialogs.cs)
+**Source:** [`src/Scene/GUI/FileDialogMode.cs`](../../src/Scene/GUI/FileDialogMode.cs)
 
-**Declaration:** `public enum FileDialogMode` nested in [`DisplayServer`](DisplayServer.md)
+**Declaration:** `public enum FileDialogMode` in the `Electron2D` namespace, shared by [FileDialog](FileDialog.md) and [DisplayServer](DisplayServer.md)
 
 ## Description
 
-Selects the kind of native file chooser requested by `DisplayServer.FileDialogShow`. The values are stable public identities. The server translates them to SDL chooser operations, copies selected paths from native callback memory, and delivers the typed result on the opening thread during `ProcessEvents`. Native choosers can ignore requested title, location, or filters. The enum itself owns no native state.
+Selects the file or directory operation for custom FileDialog and the native chooser requested by `DisplayServer.FileDialogShow`. The values are stable public identities. The server translates them to SDL chooser operations, copies selected paths from native callback memory, and delivers the typed result on the opening thread during `ProcessEvents`. Native choosers can ignore requested title, location, or filters. The enum itself owns no native state.
 
 ## Example
 
-The following snippet assumes an open `DisplayServer display` and a host loop that continues to call `display.ProcessEvents()` until the chooser completes:
+The following snippet assumes an active DisplayServer session and a host loop that continues to call `DisplayServer.ProcessEvents()` until the chooser completes:
 
 ```csharp
-display.FileDialogShow("Open", "", "", false,
-    DisplayServer.FileDialogMode.OpenFile, ["*.png;PNG images"],
+DisplayServer.FileDialogShow("Open", "", "", false,
+    FileDialogMode.OpenFile, ["*.png;PNG images"],
     (accepted, paths, selectedFilter) =>
     {
         if (accepted)

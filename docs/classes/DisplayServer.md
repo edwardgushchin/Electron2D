@@ -57,11 +57,11 @@ finally
 
 The first executable example supplies elapsed time, runs this cycle until exit, and leaves presentation for the rendering slice.
 
-To request a native file, keep pumping while the chooser is open (the snippet uses the `display` variable from the preceding example):
+To request a native file, keep calling DisplayServer.ProcessEvents while the chooser is open in an active display session:
 
 ```csharp
-display.FileDialogShow("Open image", "", "", false,
-    DisplayServer.FileDialogMode.OpenFile,
+DisplayServer.FileDialogShow("Open image", "", "", false,
+    FileDialogMode.OpenFile,
     ["*.png;PNG images"],
     (accepted, paths, filterIndex) =>
     {
@@ -188,7 +188,7 @@ display.FileDialogShow("Open image", "", "", false,
 | --- | --- |
 | [`public enum Feature`](#enum-feature) | Identifies a display-server capability for `HasFeature`. |
 | [`public enum HandleType`](#enum-handletype) | Selects a borrowed native display or window identity; see the [enum reference](DisplayServer.HandleType.md). |
-| [`public enum FileDialogMode`](#enum-filedialogmode) | Selects a native file chooser mode; see the [enum reference](DisplayServer.FileDialogMode.md). |
+| [`FileDialogMode` (shared namespace type)](../classes/FileDialogMode.md) | Selects a native file chooser mode; see the [enum reference](FileDialogMode.md). |
 | [MouseMode](MouseMode.md) | Defines cursor visibility and window confinement. |
 | [CursorShape](CursorShape.md) | Identifies standard pointer shapes supported by the native cursor theme. |
 | [WindowFlag](WindowFlag.md) | Selects a main-window policy by its stable display-server ID. |
@@ -1161,7 +1161,7 @@ Selects the native chooser operation. The stable numeric values match the public
 | `OpenAny = 3` | Select a file or directory; currently unsupported by SDL. |
 | `SaveFile = 4` | Select a destination file that need not exist. |
 
-**Source:** `src/Servers/Display/DisplayServer.Dialogs.cs`.
+**Source:** `src/Scene/GUI/FileDialogMode.cs`; namespace-level shared identity, not a nested DisplayServer declaration.
 
 <a id="enum-feature"></a>
 #### `public enum Feature`

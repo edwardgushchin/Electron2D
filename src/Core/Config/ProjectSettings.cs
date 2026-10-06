@@ -419,6 +419,24 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>Zero chooses the platform order; one places Cancel first and two places OK first.</value>
     public static ProjectSetting<int> SwapCancelOK { get; } = new("gui/common/swap_cancel_ok", 0, value => value is >= 0 and <= 2);
 
+    /// <summary>Defines Delete for the file browser's recoverable trash command.</summary><value>The permanent input/ui_filedialog_delete definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUIFileDialogDelete { get; } = CreateDefaultKeyAction("ui_filedialog_delete", Key.Delete);
+    /// <summary>Defines Backspace for file-browser parent navigation.</summary><value>The permanent input/ui_filedialog_up_one_level definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUIFileDialogUpOneLevel { get; } = CreateDefaultKeyAction("ui_filedialog_up_one_level", Key.Backspace);
+    /// <summary>Defines F5 for file-browser refresh.</summary><value>The permanent input/ui_filedialog_refresh definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUIFileDialogRefresh { get; } = CreateDefaultKeyAction("ui_filedialog_refresh", Key.F5);
+    /// <summary>Defines H for toggling hidden files.</summary><value>The permanent input/ui_filedialog_show_hidden definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUIFileDialogShowHidden { get; } = CreateDefaultKeyAction("ui_filedialog_show_hidden", Key.H);
+    /// <summary>Defines Command/Control-F for the filename filter.</summary><value>The permanent input/ui_filedialog_find definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUIFileDialogFind { get; } = CreateDefaultKeyAction("ui_filedialog_find", Key.F, KeyModifierMask.CommandOrControl);
+    /// <summary>Defines Command/Control-L for the current path field.</summary><value>The permanent input/ui_filedialog_focus_path definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUIFileDialogFocusPath { get; } = new("input/ui_filedialog_focus_path", new InputActionSettings
+    {
+        Bindings = OperatingSystem.IsMacOS()
+            ? [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.G, Modifiers = KeyModifierMask.CommandOrControl }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.L, Modifiers = KeyModifierMask.Meta }]
+            : [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.L, Modifiers = KeyModifierMask.CommandOrControl }]
+    });
+
     /// <summary>Defines Escape for closing a dialog, and Command-W additionally on macOS.</summary>
     /// <value>The permanent typed input/ui_close_dialog setting, independent of ui_cancel.</value>
     public static ProjectSetting<InputActionSettings> InputUICloseDialog { get; } = new("input/ui_close_dialog", new InputActionSettings

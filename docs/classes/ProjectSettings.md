@@ -1294,3 +1294,16 @@ The `InputUIText*`, `InputUICopy`, `InputUICut`, `InputUIPaste`, `InputUIUndo`, 
 `public static ProjectSetting<InputActionSettings> InputUICloseDialog { get; }` permanently defines input/ui_close_dialog independently of input/ui_cancel. Its typed InputMap definition defaults to Escape and adds Command-W on macOS; project reload and feature overrides follow the existing input-action contracts. AcceptDialog uses exact, non-echo activation.
 
 `public static ProjectSetting<System.Int32> SwapCancelOK { get; }` defines gui/common/swap_cancel_ok with validated values Auto (0, default), Cancel First (1) and OK First (2). AddCancelButton samples the effective definition when creating each button; explicit settings override the DisplayServer platform convention.
+
+Six typed InputUIFileDialog definitions supply independently rebindable file browser actions through the existing runtime registry and InputMap builtin loader. See the [file-dialog component](../components/file-dialogs.md) for its exercised flow and limits.
+
+## File-browser input definitions
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogDelete { get;  }` | Defines Delete for the file browser's recoverable trash command. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogFind { get;  }` | Defines Command/Control-F for the filename filter. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogFocusPath { get;  }` | Defines Command/Control-L for the current path field. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogRefresh { get;  }` | Defines F5 for file-browser refresh. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogShowHidden { get;  }` | Defines H for toggling hidden files. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogUpOneLevel { get;  }` | Defines Backspace for file-browser parent navigation. |

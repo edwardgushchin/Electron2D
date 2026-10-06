@@ -163,13 +163,6 @@
       ],
       "state": "Partial",
       "reason": "Full own command MenuButton API executes through embedded PopupMenu, including hover routing, indexed scenes and tested shortcut/pointer/key paths. Trigger for full class correspondence: inherited Control accessibility/editor facilities and PopupMenu native/system menu plus independent native child Window hosting on their exact owners."
-    },
-    {
-      "godot": [
-        "class:FileDialog"
-      ],
-      "state": "Blocked",
-      "reason": "Next connected runtime file chooser: accepted ConfirmationDialog/MenuButton/OptionButton/ItemList prerequisites now execute. Implement scoped DirAccess browsing/filtering, shared FileDialogMode identity under ADR 0051, filesystem/open/save validation, native chooser/options callback lifecycle and OS.move_to_trash for the enabled deletion command. Native resource/user/options chooser needs DisplayServer native-file-extra; ordinary filesystem chooser can use the existing SDL request. No substitution of permanent deletion for trash."
     }
   ]
 }

@@ -19,7 +19,7 @@ public sealed partial class SceneTree
         _gui.ShownTooltipText = string.Empty;
         var layer = _gui.TooltipLayer; _gui.TooltipLayer = null; _gui.TooltipPanel = null;
         if (layer is not { IsDisposed: false }) return;
-        if (!rootDisposing) QueueDelete(layer);
+        if (!rootDisposing && !IsClosing) QueueDelete(layer);
         else if (!Root.IsAncestorOf(layer)) layer.Dispose();
     }
 

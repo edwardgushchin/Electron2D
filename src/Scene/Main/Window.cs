@@ -154,6 +154,7 @@ public partial class Window : Viewport
         set
         {
             EnsureMutable();
+            if (TryNativeVisibility(value)) return;
             if (_visible == value) return;
             if (value && IsInsideTree && Parent is not null && Embedder is null) throw new NotSupportedException("Native child windows are unavailable.");
             if (_display is { } display)

@@ -200,3 +200,5 @@ The [embedded popup window slice](../components/popup-windows.md) composes Windo
 [Embedded acceptance and confirmation dialogs](../components/dialogs.md) compose Window, Label, Button and HBoxContainer with registered LineEdit input. Own public operations, event/hook order, deferred cancel/reopen protection, panel/button themes and fresh scenes execute. Independent native children and inherited accessibility/scaling retain separate prerequisites.
 
 [Command menu buttons](../components/command-menu-buttons.md) execute commands and related hover switching through owned PopupMenu windows. Nested embedded input descends to the final target and choice/menu anchors use their actual embedder.
+
+[File dialogs](../components/file-dialogs.md) now execute scoped browsing, five selection modes, typed custom options, filters, menus, overwrite/folder workflows and recoverable desktop Linux trash. The shared FileDialogMode identity spans the custom browser and DisplayServer; native-file-extra and foreign platform gates remain explicit. Six permanent ui_filedialog actions use the existing InputMap settings loader.

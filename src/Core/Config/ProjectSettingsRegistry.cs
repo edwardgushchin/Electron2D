@@ -106,6 +106,13 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(InputUIAccept, isBasic: false);
         RegisterInternal(InputUICancel, isBasic: false);
         RegisterInternal(InputUICloseDialog, isBasic: false);
+        RegisterInternal(InputUIFileDialogDelete, isBasic: false);
+        RegisterInternal(InputUIFileDialogUpOneLevel, isBasic: false);
+        RegisterInternal(InputUIFileDialogRefresh, isBasic: false);
+        RegisterInternal(InputUIFileDialogShowHidden, isBasic: false);
+        RegisterInternal(InputUIFileDialogFind, isBasic: false);
+        RegisterInternal(InputUIFileDialogFocusPath, isBasic: false);
+
         RegisterInternal(SwapCancelOK, isBasic: false);
         RegisterInternal(TCPConnectTimeoutSeconds, isBasic: false);
         RegisterInternal(UDSConnectTimeoutSeconds, isBasic: false);
@@ -1164,6 +1171,13 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, InputUIAccept) ||
         ReferenceEquals(setting, InputUICancel) ||
         ReferenceEquals(setting, InputUICloseDialog) ||
+        ReferenceEquals(setting, InputUIFileDialogDelete) ||
+        ReferenceEquals(setting, InputUIFileDialogUpOneLevel) ||
+        ReferenceEquals(setting, InputUIFileDialogRefresh) ||
+        ReferenceEquals(setting, InputUIFileDialogShowHidden) ||
+        ReferenceEquals(setting, InputUIFileDialogFind) ||
+        ReferenceEquals(setting, InputUIFileDialogFocusPath) ||
+
         ReferenceEquals(setting, SwapCancelOK) ||
         ReferenceEquals(setting, TCPConnectTimeoutSeconds) ||
         ReferenceEquals(setting, UDSConnectTimeoutSeconds) ||

@@ -1,0 +1,810 @@
+{
+  "mappings": [
+    {
+      "godot": "class:FileDialog",
+      "electron2d": "T:Electron2D.FileDialog",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum:Access",
+      "electron2d": "T:Electron2D.FileDialogAccess",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum:Customization",
+      "electron2d": "T:Electron2D.FileDialog.Customization",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum:DisplayMode",
+      "electron2d": "T:Electron2D.FileDialog.DisplayModeType",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum:FileMode",
+      "electron2d": "T:Electron2D.FileDialogMode",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Access.ACCESS_FILESYSTEM",
+      "electron2d": "enumValue:Electron2D.FileDialogAccess.FileSystem()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Access.ACCESS_RESOURCES",
+      "electron2d": "enumValue:Electron2D.FileDialogAccess.Resources()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Access.ACCESS_USERDATA",
+      "electron2d": "enumValue:Electron2D.FileDialogAccess.UserData()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_CREATE_FOLDER",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.CreateFolder()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_DELETE",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.Delete()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_FAVORITES",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.Favorites()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_FILE_FILTER",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.FileFilter()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_FILE_SORT",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.FileSort()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_HIDDEN_FILES",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.HiddenFiles()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_LAYOUT",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.Layout()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_OVERWRITE_WARNING",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.OverwriteWarning()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:Customization.CUSTOMIZATION_RECENT",
+      "electron2d": "enumValue:Electron2D.FileDialog.Customization.Recent()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:DisplayMode.DISPLAY_LIST",
+      "electron2d": "enumValue:Electron2D.FileDialog.DisplayModeType.List()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:DisplayMode.DISPLAY_THUMBNAILS",
+      "electron2d": "enumValue:Electron2D.FileDialog.DisplayModeType.Thumbnails()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:FileMode.FILE_MODE_OPEN_ANY",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.OpenAny()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:FileMode.FILE_MODE_OPEN_DIR",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.OpenDirectory()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:FileMode.FILE_MODE_OPEN_FILE",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.OpenFile()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:FileMode.FILE_MODE_OPEN_FILES",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.OpenFiles()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::enum_value:FileMode.FILE_MODE_SAVE_FILE",
+      "electron2d": "enumValue:Electron2D.FileDialogMode.SaveFile()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:add_filter(String:,String:,String:)",
+      "electron2d": "method:Electron2D.FileDialog.AddFilter(System.String,System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:add_option(String:,PackedStringArray:,int:)",
+      "electron2d": "method:Electron2D.FileDialog.AddOption(System.String,System.Collections.Generic.IReadOnlyList<System.String>,System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:clear_filename_filter()",
+      "electron2d": "method:Electron2D.FileDialog.ClearFilenameFilter()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:clear_filters()",
+      "electron2d": "method:Electron2D.FileDialog.ClearFilters()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:deselect_all()",
+      "electron2d": "method:Electron2D.FileDialog.DeselectAll()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:get_favorite_list()",
+      "electron2d": "method:Electron2D.FileDialog.GetFavoriteList()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:get_line_edit()",
+      "electron2d": "method:Electron2D.FileDialog.GetLineEdit()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:get_option_default(int:)",
+      "electron2d": "method:Electron2D.FileDialog.GetOptionDefault(System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:get_option_name(int:)",
+      "electron2d": "method:Electron2D.FileDialog.GetOptionName(System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:get_option_values(int:)",
+      "electron2d": "method:Electron2D.FileDialog.GetOptionValues(System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:get_recent_list()",
+      "electron2d": "method:Electron2D.FileDialog.GetRecentList()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:get_selected_options()",
+      "electron2d": "method:Electron2D.FileDialog.GetSelectedOptions()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:get_vbox()",
+      "electron2d": "method:Electron2D.FileDialog.GetVBox()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:invalidate()",
+      "electron2d": "method:Electron2D.FileDialog.Invalidate()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:is_customization_flag_enabled(int:FileDialog.Customization)",
+      "electron2d": "method:Electron2D.FileDialog.IsCustomizationFlagEnabled(Electron2D.FileDialog.Customization)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:popup_file_dialog()",
+      "electron2d": "method:Electron2D.FileDialog.PopupFileDialog()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:set_customization_flag_enabled(int:FileDialog.Customization,bool:)",
+      "electron2d": "method:Electron2D.FileDialog.SetCustomizationFlagEnabled(Electron2D.FileDialog.Customization,System.Boolean)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:set_favorite_list(PackedStringArray:)",
+      "electron2d": "method:Electron2D.FileDialog.SetFavoriteList(System.Collections.Generic.IReadOnlyList<System.String>)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:set_get_icon_callback(Callable:)",
+      "electron2d": "method:Electron2D.FileDialog.SetGetIconCallback(System.Func<System.String, Electron2D.Texture>)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:set_get_thumbnail_callback(Callable:)",
+      "electron2d": "method:Electron2D.FileDialog.SetGetThumbnailCallback(System.Func<System.String, Electron2D.Texture>)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:set_option_default(int:,int:)",
+      "electron2d": "method:Electron2D.FileDialog.SetOptionDefault(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:set_option_name(int:,String:)",
+      "electron2d": "method:Electron2D.FileDialog.SetOptionName(System.Int32,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:set_option_values(int:,PackedStringArray:)",
+      "electron2d": "method:Electron2D.FileDialog.SetOptionValues(System.Int32,System.Collections.Generic.IReadOnlyList<System.String>)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::method:set_recent_list(PackedStringArray:)",
+      "electron2d": "method:Electron2D.FileDialog.SetRecentList(System.Collections.Generic.IReadOnlyList<System.String>)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:access",
+      "electron2d": "property:Electron2D.FileDialog.Access()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:current_dir",
+      "electron2d": "property:Electron2D.FileDialog.CurrentDir()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:current_file",
+      "electron2d": "property:Electron2D.FileDialog.CurrentFile()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:current_path",
+      "electron2d": "property:Electron2D.FileDialog.CurrentPath()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:deleting_enabled",
+      "electron2d": "property:Electron2D.FileDialog.DeletingEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:dialog_hide_on_ok",
+      "electron2d": "property:Electron2D.AcceptDialog.DialogHideOnOK()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:display_mode",
+      "electron2d": "property:Electron2D.FileDialog.DisplayMode()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:favorites_enabled",
+      "electron2d": "property:Electron2D.FileDialog.FavoritesEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:file_filter_toggle_enabled",
+      "electron2d": "property:Electron2D.FileDialog.FileFilterToggleEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:file_mode",
+      "electron2d": "property:Electron2D.FileDialog.FileMode()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:file_sort_options_enabled",
+      "electron2d": "property:Electron2D.FileDialog.FileSortOptionsEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:filename_filter",
+      "electron2d": "property:Electron2D.FileDialog.FilenameFilter()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:filters",
+      "electron2d": "property:Electron2D.FileDialog.Filters()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:folder_creation_enabled",
+      "electron2d": "property:Electron2D.FileDialog.FolderCreationEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:hidden_files_toggle_enabled",
+      "electron2d": "property:Electron2D.FileDialog.HiddenFilesToggleEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:layout_toggle_enabled",
+      "electron2d": "property:Electron2D.FileDialog.LayoutToggleEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:mode_overrides_title",
+      "electron2d": "property:Electron2D.FileDialog.ModeOverridesTitle()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:option_count",
+      "electron2d": "method:Electron2D.FileDialog.GetPropertyDescriptors()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:option_{index}/default",
+      "electron2d": "method:Electron2D.FileDialog.GetPropertyDescriptors()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:option_{index}/name",
+      "electron2d": "method:Electron2D.FileDialog.GetPropertyDescriptors()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:option_{index}/values",
+      "electron2d": "method:Electron2D.FileDialog.GetPropertyDescriptors()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:overwrite_warning_enabled",
+      "electron2d": "property:Electron2D.FileDialog.OverwriteWarningEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:recent_list_enabled",
+      "electron2d": "property:Electron2D.FileDialog.RecentListEnabled()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:root_subfolder",
+      "electron2d": "property:Electron2D.FileDialog.RootSubfolder()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:show_hidden_files",
+      "electron2d": "property:Electron2D.FileDialog.ShowHiddenFiles()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:size",
+      "electron2d": "property:Electron2D.Window.Size()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:title",
+      "electron2d": "property:Electron2D.Window.Title()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::property:use_native_dialog",
+      "electron2d": "property:Electron2D.FileDialog.UseNativeDialog()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::signal:dir_selected(String:)",
+      "electron2d": "event:Electron2D.FileDialog.DirSelected()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::signal:file_selected(String:)",
+      "electron2d": "event:Electron2D.FileDialog.FileSelected()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::signal:filename_filter_changed(String:)",
+      "electron2d": "event:Electron2D.FileDialog.FilenameFilterChanged()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::signal:files_selected(PackedStringArray:)",
+      "electron2d": "event:Electron2D.FileDialog.FilesSelected()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:back_folder",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:create_folder",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:favorite",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:favorite_down",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:favorite_up",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:file",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:file_disabled_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:file_icon_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:file_thumbnail",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:folder",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:folder_icon_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:folder_thumbnail",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:forward_folder",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:list_mode",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:menu_copy_path",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:menu_delete",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:menu_new_folder",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:menu_open_bundle",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:menu_refresh",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:menu_show_in_file_manager",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:parent_folder",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:reload",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:sort",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:thumbnail_mode",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:thumbnail_size",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:toggle_filename_filter",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "FileDialog::theme_item:toggle_hidden",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_filedialog_delete",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIFileDialogDelete()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_filedialog_find",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIFileDialogFind()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_filedialog_focus_path",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIFileDialogFocusPath()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_filedialog_refresh",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIFileDialogRefresh()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_filedialog_show_hidden",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIFileDialogShowHidden()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_filedialog_up_one_level",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIFileDialogUpOneLevel()",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "OS::method:move_to_trash(String:)",
+      "electron2d": "method:Electron2D.OS.MoveToTrash(System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "OS::method:shell_open(String:)",
+      "electron2d": "method:Electron2D.OS.ShellOpen(System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "OS::method:shell_show_in_file_manager(String:,bool:)",
+      "electron2d": "method:Electron2D.OS.ShellShowInFileManager(System.String,System.Boolean)",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": "class:OS",
+      "electron2d": "T:Electron2D.OS",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.FileDialogOptionValue",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.FileDialog..ctor()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.FileDialog.CreateSceneInstanceFactory()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.FileDialog.Dispose(System.Boolean)",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.FileDialog.OnCancelPressed()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.FileDialog.OnNotification(System.Int32)",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.FileDialog.OnOKPressed()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.FileDialog.OnShortcutInput(Electron2D.InputEvent)",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.FileDialog.ValidateDisposal()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.FileDialog.OptionCount()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.FileDialogOptionValue.Checked()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.FileDialogOptionValue.IsCheckbox()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.FileDialogOptionValue.SelectedIndex()",
+      "reason": "Typed dialog factory/lifecycle or checkbox/index result projection; ordered values and callbacks are copied or borrowed as documented.",
+      "adr": "ADR 0004/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.OS.ValidateDisposal()",
+      "reason": "Retained permanent service rejects external disposal under ADR 0095.",
+      "adr": "ADR 0095"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "FileDialog::enum:Access",
+        "FileDialog::enum:Customization",
+        "FileDialog::enum:DisplayMode",
+        "FileDialog::enum:FileMode",
+        "FileDialog::enum_value:Access.ACCESS_FILESYSTEM",
+        "FileDialog::enum_value:Access.ACCESS_RESOURCES",
+        "FileDialog::enum_value:Access.ACCESS_USERDATA",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_CREATE_FOLDER",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_DELETE",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_FAVORITES",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_FILE_FILTER",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_FILE_SORT",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_HIDDEN_FILES",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_LAYOUT",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_OVERWRITE_WARNING",
+        "FileDialog::enum_value:Customization.CUSTOMIZATION_RECENT",
+        "FileDialog::enum_value:DisplayMode.DISPLAY_LIST",
+        "FileDialog::enum_value:DisplayMode.DISPLAY_THUMBNAILS",
+        "FileDialog::enum_value:FileMode.FILE_MODE_OPEN_ANY",
+        "FileDialog::enum_value:FileMode.FILE_MODE_OPEN_DIR",
+        "FileDialog::enum_value:FileMode.FILE_MODE_OPEN_FILE",
+        "FileDialog::enum_value:FileMode.FILE_MODE_OPEN_FILES",
+        "FileDialog::enum_value:FileMode.FILE_MODE_SAVE_FILE",
+        "FileDialog::method:add_filter(String:,String:,String:)",
+        "FileDialog::method:add_option(String:,PackedStringArray:,int:)",
+        "FileDialog::method:clear_filename_filter()",
+        "FileDialog::method:clear_filters()",
+        "FileDialog::method:deselect_all()",
+        "FileDialog::method:get_favorite_list()",
+        "FileDialog::method:get_line_edit()",
+        "FileDialog::method:get_option_default(int:)",
+        "FileDialog::method:get_option_name(int:)",
+        "FileDialog::method:get_option_values(int:)",
+        "FileDialog::method:get_recent_list()",
+        "FileDialog::method:get_selected_options()",
+        "FileDialog::method:get_vbox()",
+        "FileDialog::method:invalidate()",
+        "FileDialog::method:is_customization_flag_enabled(int:FileDialog.Customization)",
+        "FileDialog::method:popup_file_dialog()",
+        "FileDialog::method:set_customization_flag_enabled(int:FileDialog.Customization,bool:)",
+        "FileDialog::method:set_favorite_list(PackedStringArray:)",
+        "FileDialog::method:set_get_icon_callback(Callable:)",
+        "FileDialog::method:set_get_thumbnail_callback(Callable:)",
+        "FileDialog::method:set_option_default(int:,int:)",
+        "FileDialog::method:set_option_name(int:,String:)",
+        "FileDialog::method:set_option_values(int:,PackedStringArray:)",
+        "FileDialog::method:set_recent_list(PackedStringArray:)",
+        "FileDialog::property:access",
+        "FileDialog::property:current_dir",
+        "FileDialog::property:current_file",
+        "FileDialog::property:current_path",
+        "FileDialog::property:deleting_enabled",
+        "FileDialog::property:dialog_hide_on_ok",
+        "FileDialog::property:display_mode",
+        "FileDialog::property:favorites_enabled",
+        "FileDialog::property:file_filter_toggle_enabled",
+        "FileDialog::property:file_mode",
+        "FileDialog::property:file_sort_options_enabled",
+        "FileDialog::property:filename_filter",
+        "FileDialog::property:filters",
+        "FileDialog::property:folder_creation_enabled",
+        "FileDialog::property:hidden_files_toggle_enabled",
+        "FileDialog::property:layout_toggle_enabled",
+        "FileDialog::property:mode_overrides_title",
+        "FileDialog::property:option_count",
+        "FileDialog::property:option_{index}/default",
+        "FileDialog::property:option_{index}/name",
+        "FileDialog::property:option_{index}/values",
+        "FileDialog::property:overwrite_warning_enabled",
+        "FileDialog::property:recent_list_enabled",
+        "FileDialog::property:root_subfolder",
+        "FileDialog::property:show_hidden_files",
+        "FileDialog::property:size",
+        "FileDialog::property:title",
+        "FileDialog::signal:dir_selected(String:)",
+        "FileDialog::signal:file_selected(String:)",
+        "FileDialog::signal:filename_filter_changed(String:)",
+        "FileDialog::signal:files_selected(PackedStringArray:)",
+        "FileDialog::theme_item:back_folder",
+        "FileDialog::theme_item:create_folder",
+        "FileDialog::theme_item:favorite",
+        "FileDialog::theme_item:favorite_down",
+        "FileDialog::theme_item:favorite_up",
+        "FileDialog::theme_item:file",
+        "FileDialog::theme_item:file_disabled_color",
+        "FileDialog::theme_item:file_icon_color",
+        "FileDialog::theme_item:file_thumbnail",
+        "FileDialog::theme_item:folder",
+        "FileDialog::theme_item:folder_icon_color",
+        "FileDialog::theme_item:folder_thumbnail",
+        "FileDialog::theme_item:forward_folder",
+        "FileDialog::theme_item:list_mode",
+        "FileDialog::theme_item:menu_copy_path",
+        "FileDialog::theme_item:menu_delete",
+        "FileDialog::theme_item:menu_new_folder",
+        "FileDialog::theme_item:menu_open_bundle",
+        "FileDialog::theme_item:menu_refresh",
+        "FileDialog::theme_item:menu_show_in_file_manager",
+        "FileDialog::theme_item:parent_folder",
+        "FileDialog::theme_item:reload",
+        "FileDialog::theme_item:sort",
+        "FileDialog::theme_item:thumbnail_mode",
+        "FileDialog::theme_item:thumbnail_size",
+        "FileDialog::theme_item:toggle_filename_filter",
+        "FileDialog::theme_item:toggle_hidden",
+        "ProjectSettings::property:input/ui_filedialog_delete",
+        "ProjectSettings::property:input/ui_filedialog_find",
+        "ProjectSettings::property:input/ui_filedialog_focus_path",
+        "ProjectSettings::property:input/ui_filedialog_refresh",
+        "ProjectSettings::property:input/ui_filedialog_show_hidden",
+        "ProjectSettings::property:input/ui_filedialog_up_one_level"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; native-file-extra and foreign platform acceptance retain exact owner prerequisites."
+    },
+    {
+      "godot": [
+        "class:FileDialog"
+      ],
+      "state": "Partial",
+      "reason": "Full custom browser own API executes. Native scoped resources/user/options/root boundary needs DisplayServer native-file-extra; basic native combined file/directory selection needs a backend supporting OpenAny. Inherited independent native child Window, accessibility/scaling and foreign profiles retain their owner gates. Native chooser callback lifecycle is covered by owner-queue injection, not physical chooser acceptance."
+    },
+    {
+      "godot": [
+        "FileDialog::property:use_native_dialog"
+      ],
+      "state": "Partial",
+      "reason": "Basic filesystem chooser routes every presentation entry through DisplayServer on supported modes; unsupported basic flags/filter patterns/combined OpenAny fail explicitly. Resource/user/custom-option/root-boundary requests use the working embedded browser until native-file-extra exists. Physical native chooser acceptance and Windows/macOS/mobile/browser remain target gates."
+    },
+    {
+      "godot": [
+        "class:OS"
+      ],
+      "state": "Partial",
+      "reason": "Retained permanent static service implements recoverable desktop Linux trash and URI/file-manager launch. The rest of the operating-system API remains in its existing owner-specific rows."
+    },
+    {
+      "godot": [
+        "OS::method:move_to_trash(String:)",
+        "OS::method:shell_open(String:)",
+        "OS::method:shell_show_in_file_manager(String:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "Linux desktop MoveToTrash delegates to system GIO with recoverable metadata and link policy, verified in an isolated XDG child process. ShellOpen delegates SDL; Linux file manager uses folder URI fallback. Windows/macOS recoverable trash/item-selection backends and mobile/browser equivalent capabilities require target implementation. External application launch is not exercised during automated fixtures."
+    }
+  ]
+}

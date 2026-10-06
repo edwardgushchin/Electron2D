@@ -8,7 +8,7 @@ This component owns the native SDL video connection, one main window, display an
 
 ## Owned types
 
-[`DisplayServer`](../classes/DisplayServer.md) owns the public display API. Internal [`LinuxPortalThemeSupport`](../classes/LinuxPortalThemeSupport.md) probes the Settings portal at server creation. DisplayServer's public nested enums describe feature capabilities, window mode and flags, pointer mode and shape, taskbar progress state, [file-dialog modes](../classes/DisplayServer.FileDialogMode.md), and [native handle kinds](../classes/DisplayServer.HandleType.md). The SDL window pointer, cursor handles, and renderer resources remain private; `WindowGetNativeHandle` exposes borrowed operating-system display/window and supported graphics-context identities.
+[`DisplayServer`](../classes/DisplayServer.md) owns the public display API. Internal [`LinuxPortalThemeSupport`](../classes/LinuxPortalThemeSupport.md) probes the Settings portal at server creation. DisplayServer's public nested enums and the shared FileDialogMode describe feature capabilities, window mode and flags, pointer mode and shape, taskbar progress state, [file-dialog modes](../classes/FileDialogMode.md), and [native handle kinds](../classes/DisplayServer.HandleType.md). The SDL window pointer, cursor handles, and renderer resources remain private; `WindowGetNativeHandle` exposes borrowed operating-system display/window and supported graphics-context identities.
 
 ## Runtime flow
 

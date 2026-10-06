@@ -676,3 +676,5 @@ The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu
 ## Embedded title width
 
 `public System.Boolean KeepTitleVisible { get; set; }` defaults to false and expands embedded width from its actual themed title font and close-button allowance, bounded by MaxSize. Title and theme changes recompute the minimum. AcceptDialog defaults to true. Native roots reject this enabled policy before acquiring resources; native title metrics remain a backend prerequisite. The policy is stored; it does not clamp the window position.
+
+Internal native presentation interception lets FileDialog route Visible/Show/Popup and centered variants to an asynchronous chooser before custom visibility or geometry commit. Ordinary Window behavior keeps its existing embedded host. See the [file-dialog component](../components/file-dialogs.md) for its exercised flow and limits.

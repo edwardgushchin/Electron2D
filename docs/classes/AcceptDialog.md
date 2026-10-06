@@ -334,3 +334,5 @@ An empty string initially, displaying OK.
 | --- | --- |
 | `System.ArgumentNullException` | The caption is null. |
 
+
+FileDialog uses the ordered native cancellation hook to emit Canceled and run OnCancelPressed without fabricating embedded visibility; callback failures remain aggregated. See the [file-dialog component](../components/file-dialogs.md) for its exercised flow and limits.
