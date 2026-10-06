@@ -1,6 +1,6 @@
 # Editor startup component
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 The separate [editor executable](../../editor/Electron2D.Editor.csproj) starts Electron2D through its public API. [Program.cs](../../editor/Program.cs) loads the current [character](../design/assets/sprite/mark-dark.svg), [open pixel sparkle](../design/assets/sprite/sparkle.svg), [app icon](../design/assets/sprite/app-icon.svg) and two bundled IBM Plex Sans fonts from Assets. It limits the loop to 60 FPS and passes [EditorScene](../classes/EditorScene.md)'s root to Engine.Run.
 
@@ -25,10 +25,10 @@ All desktop entry points use the editor's own apphost. Launching the DLL through
 
 ICO contains 16, 32, 48, 64, 128 and 256 px representations; ICNS contains 16 through 1024 px PNG representations. Each is rasterized from the current app-icon.svg at its target size, preserving its rounded background. Build uses these committed assets without an image conversion dependency. macOS bundle copying preserves executable permissions and relative asset/native paths. Signing, notarization and public distribution are outside this startup slice.
 
-Open the repository root in VS Code and press F5. [launch.json](../../.vscode/launch.json) selects `Electron2D Editor`; [its prelaunch task](../../.vscode/tasks.json) builds Debug using the native source-build mode required by the current unpublished development packages. The Microsoft C# extension and existing CMake/Ninja/C/C++ prerequisites are required. The debugger launches the Linux apphost, Windows EXE or macOS bundle apphost, with no outline argument.
+Open the repository root in VS Code and press F5. [launch.json](../../.vscode/launch.json) offers `Electron2D Editor` and `CharacterMovement`; [their prelaunch tasks](../../.vscode/tasks.json) build Debug with the SDK host RID and restored platform packages. The Microsoft C# extension is required; native compiler tools and a local NuGet feed are not. `AppendRuntimeIdentifierToOutputPath=false` keeps debugger paths stable across desktop architectures without changing RID asset selection. The debugger launches the native apphost, Windows EXE or macOS bundle apphost, with no outline argument.
 
 ```bash
-dotnet run --project editor/Electron2D.Editor.csproj -p:Electron2DBuildNativeFromSource=true
+dotnet run --project editor/Electron2D.Editor.csproj -p:AppendRuntimeIdentifierToOutputPath=false
 ```
 
 For desktop publishing, choose the target RID and its native prerequisites from [native packaging](../native-packaging.md). The macOS bundle includes the target's normal publish contents; identity metadata alone does not supply missing target backends.
@@ -38,7 +38,7 @@ For desktop publishing, choose the target RID and its native prerequisites from 
 [EditorSceneTests](../../tests/Electron2D.Tests/EditorSceneTests.cs) uses the actual source and real Engine.Run hosts. It checks the initial title/client area, live Label content and font identity, descriptor fit/rendering, character/highlight/name/sparkle pixels, center anchors after resize to 1281×901, native close delivery, zero exit and borrowed texture/font lifetime. Readback is internal to tests.
 
 ```bash
-env -u LD_LIBRARY_PATH ELECTRON2D_TEST_EDITOR=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -p:Electron2DBuildNativeFromSource=true
+env -u LD_LIBRARY_PATH ELECTRON2D_TEST_EDITOR=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release
 python3 -B tools/editor/check_desktop.py editor/bin/Debug/net10.0/Electron2D.Editor
 ```
 

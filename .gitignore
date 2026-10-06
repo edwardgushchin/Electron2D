@@ -4,3 +4,4 @@ obj/
 **/bin/
 **/obj/
 __pycache__/
+**/*.SdkResolver.*.proj.Backup.tmp

@@ -5,7 +5,26 @@
             "label": "build-editor",
             "type": "process",
             "command": "dotnet",
-            "args": ["build", "${workspaceFolder}/editor/Electron2D.Editor.csproj", "-c", "Debug", "-p:Electron2DBuildNativeFromSource=true"],
+            "args": [
+                "build",
+                "${workspaceFolder}/editor/Electron2D.Editor.csproj",
+                "-c",
+                "Debug",
+                "-p:AppendRuntimeIdentifierToOutputPath=false"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-character-movement",
+            "type": "process",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/examples/CharacterMovement/CharacterMovement.csproj",
+                "-c",
+                "Debug",
+                "-p:AppendRuntimeIdentifierToOutputPath=false"
+            ],
             "problemMatcher": "$msCompile"
         }
     ]
