@@ -6,7 +6,7 @@ using Org.Libsdl.App;
 
 namespace Electron2DAndroidProbe;
 
-[Activity(Name = "org.electron2d.probe.MainActivity", Label = "Electron2D probe", MainLauncher = true, Exported = true)]
+[Activity(Name = "org.electron2d.probe.MainActivity")]
 public sealed class MainActivity : SDLActivity
 {
     protected override string[] GetLibraries() => ["SDL3"];
@@ -21,6 +21,9 @@ public sealed class MainActivity : SDLActivity
             // AssetsPaths is the sign bit even on Android versions before its public SDK constant.
             if ((int)activity.ConfigChanges >= 0)
                 throw new InvalidOperationException("The installed SDL activity must handle resource overlay changes without recreation.");
+            using var launcher = PackageManager!.GetLaunchIntentForPackage(PackageName!);
+            if (!activity.Exported || launcher?.Component?.ClassName != ComponentName!.ClassName)
+                throw new InvalidOperationException("The installed SDL activity must be an exported launcher entry point.");
             if (scenario == "physics") VerifyPhysics();
             else if (scenario == "gles_shader") Gles2Probe.Run();
             else VerifyCanvas(scenario);

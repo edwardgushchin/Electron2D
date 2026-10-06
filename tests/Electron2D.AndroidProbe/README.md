@@ -2,7 +2,7 @@
 
 This test-only SDLActivity exercises Electron2D through five engine scenarios and one standalone GLES2 shader probe selected by the Android intent extra `scenario`. It is not a production application host.
 
-The host handles Android resource-overlay (`assetsPaths`) configuration changes without Activity recreation and checks that flag in its installed ActivityInfo before running a scenario. This preserves the native SDL thread when overlays update; it does not establish production-host lifecycle acceptance.
+The native manifest owns the exported MAIN/LAUNCHER entry and Android resource-overlay (`assetsPaths`) configuration handling. The host checks its installed ActivityInfo and launcher intent before running a scenario. These checks do not establish production-host lifecycle acceptance.
 
 | Scenario | Check |
 | --- | --- |

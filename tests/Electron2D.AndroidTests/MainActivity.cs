@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2DAndroidTests;
 
-[Activity(Name = "org.electron2d.tests.MainActivity", Label = "Electron2D tests", MainLauncher = true, Exported = true)]
+[Activity(Name = "org.electron2d.tests.MainActivity")]
 public sealed class MainActivity : SDLActivity
 {
     protected override string[] GetLibraries() => ["SDL3"];
@@ -20,6 +20,9 @@ public sealed class MainActivity : SDLActivity
             // AssetsPaths is the sign bit even on Android versions before its public SDK constant.
             if ((int)activity.ConfigChanges >= 0)
                 throw new InvalidOperationException("The installed SDL activity must handle resource overlay changes without recreation.");
+            using var launcher = PackageManager!.GetLaunchIntentForPackage(PackageName!);
+            if (!activity.Exported || launcher?.Component?.ClassName != ComponentName!.ClassName)
+                throw new InvalidOperationException("The installed SDL activity must be an exported launcher entry point.");
             var expected = Intent?.GetStringExtra("rid") switch
             {
                 "android-arm" => Architecture.Arm,

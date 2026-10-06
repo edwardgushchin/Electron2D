@@ -22,6 +22,21 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_android_sdl_manifests_keep_exported_launcher_and_assets_contract(self):
+        root = Path(__file__).resolve().parents[2]
+        android = "{http://schemas.android.com/apk/res/android}"
+        for manifest, name in (("tests/Electron2D.AndroidTests/Properties/AndroidManifest.xml", "org.electron2d.tests.MainActivity"),
+                               ("tests/Electron2D.AndroidProbe/AndroidManifest.xml", "org.electron2d.probe.MainActivity")):
+            with self.subTest(manifest=manifest):
+                activity = next(item for item in ET.parse(root / manifest).getroot().findall("application/activity")
+                                if item.get(android + "name") == name)
+                self.assertEqual(activity.get(android + "exported"), "true")
+                self.assertEqual(set(activity.get(android + "configChanges", "").split("|")),
+                                 {"keyboard", "keyboardHidden", "navigation", "orientation", "screenSize", "assetsPaths"})
+                self.assertTrue(any("android.intent.action.MAIN" in {item.get(android + "name") for item in intent.findall("action")} and
+                                    "android.intent.category.LAUNCHER" in {item.get(android + "name") for item in intent.findall("category")}
+                                    for intent in activity.findall("intent-filter")))
+
     def test_runtime_svg_bytes_survive_crlf_checkout(self):
         root = Path(__file__).resolve().parents[2]
         paths = sorted((root / "src/Scene/Theme/Icons").glob("*.svg"))

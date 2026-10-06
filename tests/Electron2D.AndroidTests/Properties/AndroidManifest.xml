@@ -3,6 +3,12 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <application android:allowBackup="false" android:label="Electron2D tests">
     <activity android:name="org.electron2d.tests.MainActivity"
-              android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|assetsPaths" />
+              android:label="Electron2D tests" android:exported="true"
+              android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|assetsPaths">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
   </application>
 </manifest>
