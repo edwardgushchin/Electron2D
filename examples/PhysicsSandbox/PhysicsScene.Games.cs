@@ -37,13 +37,12 @@ internal sealed partial class PhysicsScene
         SetPopulation(512);
         Actions = ["Add 128 particles [B]", "Stir the tank [N]", "Gravity / float [F]"];
         Help = "Population slider: 64–1,024 active bodies · sleeping stays disabled · click a particle to edit it · drag to stir";
-        Observation = "Real solver particles. Octagonal visual dots keep drawing cheap; debug shows contacts, normals and velocity.";
+        Observation = "Real solver particles. Octagonal visual dots keep drawing cheap; contact events come from the solver.";
     }
 
     private void SetPopulation(int count)
     {
         count = Math.Clamp(count, 64, 1024);
-        if (count != _particles.Count) _debugPrepared = false;
         var shape = _particles.Count == 0 ? Circle(ParticleRadius) : _particles[0].ShapeOwnerGetShape(_particles[0].GetShapeOwners()[0], 0);
         while (_particles.Count < count)
         {
@@ -56,7 +55,7 @@ internal sealed partial class PhysicsScene
         while (_particles.Count > count)
         {
             var body = _particles[^1]; _particles.RemoveAt(_particles.Count - 1);
-            _numbers.Remove(body); Bodies.Remove(body); Colliders.Remove(body); _colors.Remove(body); _shapeOwners.Remove(body); _flashes.Remove(body); _views.Remove(body.GetRID());
+            _numbers.Remove(body); Bodies.Remove(body); Colliders.Remove(body); _colors.Remove(body); _shapeOwners.Remove(body); _flashes.Remove(body);
             RemoveChild(body); body.Dispose();
         }
         if (SelectedBody is { IsDisposed: true }) { SelectedBody = null; _selected = null; _grab = default; }
@@ -88,8 +87,6 @@ internal sealed partial class PhysicsScene
             _wheels.Add(wheel);
             var guide = Connect(new GrooveJoint { Length = 50, InitialOffset = 32 }, _chassis, wheel, new(x, 504));
             var suspension = Connect(new DampedSpringJoint { Length = 32, RestLength = 32, Stiffness = 95, Damping = 9 }, _chassis, wheel, new(x, 504));
-            guide.Draw += c => { if (DebugEnabled) DrawJoint(c, guide, _chassis, wheel); };
-            suspension.Draw += c => { if (DebugEnabled) DrawJoint(c, suspension, _chassis, wheel, true); };
         }
         var finish = Sensor(Box(42, 85), new(1070, 527), Apricot);
         finish.BodyEntered += body => { if (body == _chassis && Score == 0) { Score = 1; Observation = "Finish! Reset the motorcycle or try another gravity and suspension load."; } };

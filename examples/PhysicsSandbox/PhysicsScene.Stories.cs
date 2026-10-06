@@ -230,7 +230,7 @@ internal sealed partial class PhysicsScene
         robot.Name = "Compound";
         robot.AddChild(compound);
         Colliders.Add(robot); Bodies.Add(robot); _colors[robot] = Apricot;
-        robot.Draw += c => DrawCollider(c, robot, Apricot, false);
+        robot.Draw += c => DrawCollider(c, robot, Apricot);
         AddChild(robot);
         // This independent world demonstrates explicit RID lifetime and manual stepping.
         _independentSpace = PhysicsServer.SpaceCreate();
@@ -342,7 +342,7 @@ internal sealed partial class PhysicsScene
                     PhysicsServer.BodySetShape(rid, 1, replacement.GetRID());
                     PhysicsServer.BodySetShapeTransform(rid, 1, new Transform(_editIndex * .25f, new Vector2(38, 0)));
                     _creature.QueueRedraw();
-                    Observation = "The live server slot was replaced without adding a scene child. The debug outline follows its real geometry.";
+                    Observation = "The live server slot was replaced without adding a scene child. The visible body follows its real geometry.";
                 }
                 else if (action == 1) { _mode = !_mode; _creature.ShapeOwnerSetDisabled(_creatureOwner, _mode); _creature.QueueRedraw(); Actions[1] = $"Slots: {(_mode ? "off" : "on")} [N]"; }
                 else foreach (var (body, _, _) in _serverBodies.Skip(3)) PhysicsServer.BodyApplyCentralImpulse(body, new Vector2(-100, -420) * _impulseScale);

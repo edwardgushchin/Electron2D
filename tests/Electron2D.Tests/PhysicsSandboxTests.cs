@@ -31,6 +31,7 @@ internal static partial class PhysicsSandboxTests
             var scene = current!;
             var initial = scene.BodyCount;
             Check(scene.SelectedBody is null, "Every new story starts without selection: " + index);
+            Check(scene.GetChildren().All(n => n.Name != "PhysicsDebug"), "Stories have no diagnostic collision layer.");
             Check(PhysicsServer.AreaGetGravity(scene.GetWorld()!.Space) == scene.WorldGravity &&
                 PhysicsServer.AreaGetLinearDamp(scene.GetWorld()!.Space) == scene.WorldLinearDamp &&
                 PhysicsServer.AreaGetAngularDamp(scene.GetWorld()!.Space) == scene.WorldAngularDamp, "Story parameters configure actual world defaults.");
@@ -44,7 +45,6 @@ internal static partial class PhysicsSandboxTests
             }
             Check(scene.SelectedBody is null, "Story actions do not select objects: " + index);
             if (index == 0) Check(scene.BodyCount == 74, "Crate and projectile actions create real bodies.");
-            scene.DebugEnabled = true;
             tree.ProcessFrame(1d / 60);
             scene.Running = false;
             var steps = scene.PhysicsSteps;
@@ -224,7 +224,7 @@ internal static partial class PhysicsSandboxTests
             var scene = (frame - 1) / 80;
             var phase = (frame - 1) % 80;
             if (scene >= SandboxWindow.SceneNames.Length) { window.Tree!.Quit(); return; }
-            if (phase == 0) { window.SwitchScene(scene); Check(window.Scene.SelectedBody is null, "New native story has no selection."); if (window.Scene.DebugEnabled) NativeClick(UI("Debug")); }
+            if (phase == 0) { window.SwitchScene(scene); Check(window.Scene.SelectedBody is null, "New native story has no selection."); }
             if (scene == 0 && phase == 2) NativeClick(UI("SceneSelector"));
             if (scene == 0 && phase == 3)
             {
@@ -255,14 +255,12 @@ internal static partial class PhysicsSandboxTests
                 NativeClick(UI("Pause"));
             }
             if (scene == 0 && phase == 11) Check(window.Scene.Running, "Play resumes physics.");
-            if (phase == 12) NativeClick(UI("Debug"));
-            if (phase == 13)
+            if (phase == 12) NativeKey(SDL.Scancode.F3);
+            if (phase == 14)
             {
-                Check(window.GetNode<CanvasLayer>("Interface").GetNode<Button>("Debug").Text == "Collisions ON", "Enabled debug is explicitly labelled.");
-                Check(window.Scene.DebugEnabled, "The debug toolbar button toggles geometry.");
-                NativeClick(UI("Debug"));
+                Check(window.GetNode<CanvasLayer>("Interface").GetChildren().All(n => n.Name != "Debug"), "The sandbox has no debug control.");
+                Check(window.Scene.GetChildren().All(n => n.Name != "PhysicsDebug"), "F3 does not create a collision overlay.");
             }
-            if (phase == 14) Check(!window.Scene.DebugEnabled && window.GetNode<CanvasLayer>("Interface").GetNode<Button>("Debug").Text == "Collisions OFF", "Debug state has an explicit caption.");
             if (scene == 0 && phase == 15) NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.Bodies[0].GlobalPosition);
             if (scene == 0 && phase == 16)
             {
@@ -296,7 +294,6 @@ internal static partial class PhysicsSandboxTests
                 Check(pixels.GetPixel(10, 100).IsEqualApprox(PhysicsScene.Paper), "The actual paper background is drawn.");
                 pixels.SavePNG(System.IO.Path.Combine(directory, $"{scene + 1:00}.png"));
             }
-            if (phase == 22) NativeClick(UI("Debug"));
             if (scene == 0 && phase == 23)
             {
                 grabbedBody = window.Scene.Bodies[17]; grabSteps = window.Scene.PhysicsSteps; grabbedStart = grabbedBody.Position;
@@ -306,14 +303,14 @@ internal static partial class PhysicsSandboxTests
             if (scene == 0 && phase is >= 24 and <= 34) NativeMotion(window.Scene.GetGlobalTransformWithCanvas() * (grabbedStart + new Vector2(80, -50)));
             if (scene == 0 && phase == 35)
             {
-                Check(grabbedBody!.Position.DistanceTo(grabbedStart) > 3, $"Native drag moves real geometry while the debug layer is visible: start={grabbedStart}, now={grabbedBody.Position}, selected={window.Scene.SelectedBody?.Name}, target={grabbedBody.Name}, ticks={window.Scene.PhysicsSteps - grabSteps}, screen={window.Scene.GetGlobalTransformWithCanvas() * grabbedStart}.");
-                NativeMotion(UI("Debug")); NativeButton(UI("Debug"), false);
+                Check(grabbedBody!.Position.DistanceTo(grabbedStart) > 3, $"Native drag moves real geometry without diagnostic geometry: start={grabbedStart}, now={grabbedBody.Position}, selected={window.Scene.SelectedBody?.Name}, target={grabbedBody.Name}, ticks={window.Scene.PhysicsSteps - grabSteps}, screen={window.Scene.GetGlobalTransformWithCanvas() * grabbedStart}.");
+                NativeMotion(UI("Pause")); NativeButton(UI("Pause"), false);
             }
             if (phase == 36)
             {
                 using var pixels = RenderingServer.Service!.Readback();
-                for (var x = 28; x < 860; x += 16) Check(pixels.GetPixel(x, 699).IsEqualApprox(PhysicsScene.Paper), "Debug vectors also stay inside the field.");
-                pixels.SavePNG(System.IO.Path.Combine(directory, $"{scene + 1:00}-debug.png"));
+                for (var x = 28; x < 860; x += 16) Check(pixels.GetPixel(x, 699).IsEqualApprox(PhysicsScene.Paper), "Dragged geometry stays inside the field.");
+                pixels.SavePNG(System.IO.Path.Combine(directory, $"{scene + 1:00}-actions.png"));
                 window.Scene.Act(0); window.Scene.Act(1); window.Scene.Act(2);
             }
             if (phase == 40) NativeClick(UI("Inspector0"));
@@ -367,7 +364,7 @@ internal static partial class PhysicsSandboxTests
         window.Ready += _ => RenderingServer.FramePostDraw += post;
         try { var code = Engine.Run(window); Check(code == 0 && frame >= SandboxWindow.SceneNames.Length * 80 - 2, $"All native scenes finish: code={code}, frame={frame}."); }
         finally { if (RenderingServer.IsAvailable) RenderingServer.FramePostDraw -= post; }
-        Console.WriteLine($"PhysicsSandbox native {backend} passed: 1152x800, eleven scenes, normal/debug captures and rendered actions. {directory}");
+        Console.WriteLine($"PhysicsSandbox native {backend} passed: 1152x800, eleven scenes, scene captures and rendered actions. {directory}");
     }
 
     private static void PhysicsTick(SceneTree tree)

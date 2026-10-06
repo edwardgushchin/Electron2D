@@ -82,9 +82,9 @@ internal static partial class PhysicsSandboxTests
             var trial = frame / trialFrames; var phase = frame % trialFrames;
             if (phase == 0)
             {
-                if (trial == indices.Length * 2) { window.Tree!.Quit(); return; }
-                window.SwitchScene(indices[trial / 2]);
-                if (window.Scene.Index == 8) window.Scene.SetStoryParameter(stressCount); window.Scene.DebugEnabled = trial % 2 != 0;
+                if (trial == indices.Length) { window.Tree!.Quit(); return; }
+                window.SwitchScene(indices[trial]);
+                if (window.Scene.Index == 8) window.Scene.SetStoryParameter(stressCount);
                 Exercise(window.Scene, 0);
                 ClearProfileHover();
             }
@@ -99,12 +99,12 @@ internal static partial class PhysicsSandboxTests
                 var mean = times.Average();
                 if (bytes.Max() != 0) failures.Add($"Native {trial}: max {bytes.Max()} bytes/frame, render max {renderBytes.Max()}.");
                 Console.WriteLine($"Profile {trial}: {1000 / mean:0.0} FPS, {bytes.Average():0.0} B/frame, max {bytes.Max()}, render {renderBytes.Average():0.0}");
-                native.Add(new { scene = SandboxWindow.SceneNames[indices[trial / 2]], debug = trial % 2 != 0, bodies = window.Scene.BodyCount, fps = 1000 / mean, frameMS = mean, frameP95MS = Percentile(times), renderMS = renders.Average(), renderP95MS = Percentile(renders), bytesPerFrame = bytes.Average(), renderBytesPerFrame = renderBytes.Average(), maxBytesPerFrame = bytes.Max(), maxRenderBytesPerFrame = renderBytes.Max() });
+                native.Add(new { scene = SandboxWindow.SceneNames[indices[trial]], bodies = window.Scene.BodyCount, fps = 1000 / mean, frameMS = mean, frameP95MS = Percentile(times), renderMS = renders.Average(), renderP95MS = Percentile(renders), bytesPerFrame = bytes.Average(), renderBytesPerFrame = renderBytes.Average(), maxBytesPerFrame = bytes.Max(), maxRenderBytesPerFrame = renderBytes.Max() });
             }
             frame++; previous = Stopwatch.GetTimestamp(); previousBytes = GC.GetAllocatedBytesForCurrentThread();
         };
         window.Ready += _ => { nativeInput = SuppressProfileInput(); RenderingServer.FramePreDraw += pre; RenderingServer.FramePostDraw += post; };
-        try { Check(RunProfileWindow(window) == 0 && frame >= indices.Length * 2 * trialFrames, "Complete native performance profile."); }
+        try { Check(RunProfileWindow(window) == 0 && frame >= indices.Length * trialFrames, "Complete native performance profile."); }
         finally { RestoreProfileInput(nativeInput); if (RenderingServer.IsAvailable) { RenderingServer.FramePreDraw -= pre; RenderingServer.FramePostDraw -= post; } }
         File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, optimized, platform = System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier, backend = "gpu", maxFPS = 60, warmupPhysics = warmup, physicsSamples = 256, warmupNative = nativeWarmup, nativeSamples, thread = "scene/render owner", physics, native }, new JsonSerializerOptions { WriteIndented = true }));
         Console.WriteLine("PhysicsSandbox performance profile: " + path);
@@ -140,7 +140,7 @@ internal static partial class PhysicsSandboxTests
         window.Ready += _ =>
         {
             nativeInput = SuppressProfileInput();
-            window.SwitchScene(8); window.Scene.SetStoryParameter(1024); window.Scene.DebugEnabled = true;
+            window.SwitchScene(8); window.Scene.SetStoryParameter(1024);
             ClearProfileHover(); watch.Start(); interval.Start();
             RenderingServer.FramePreDraw += pre; RenderingServer.FramePostDraw += post;
         };
@@ -148,7 +148,7 @@ internal static partial class PhysicsSandboxTests
         finally { RestoreProfileInput(nativeInput); if (RenderingServer.IsAvailable) { RenderingServer.FramePreDraw -= pre; RenderingServer.FramePostDraw -= post; } }
         var path = System.IO.Path.GetFullPath($"bin/physics-sandbox/long-stress-{configuration}.json");
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
-        File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, bodies = 1024, debug = true, durationSeconds = 180, rows }, new JsonSerializerOptions { WriteIndented = true }));
+        File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, bodies = 1024, durationSeconds = 180, rows }, new JsonSerializerOptions { WriteIndented = true }));
         var settled = cadence.Skip(3).Take(3).Average();
         var final = cadence.TakeLast(3).Average();
         Check(final >= settled * .8, $"Settled stress cadence does not decay: {settled:0.0} to {final:0.0} FPS.");

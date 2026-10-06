@@ -2,13 +2,19 @@
 
 Last updated: 2026-10-07
 
+The sandbox has no collision-debug mode. The current profiler runs one native trial per scene. Historical results below retain the normal/debug modes that existed when those reports were produced.
+
 ## Measurement contract
 
-The test-only [profiler](../../tests/Electron2D.Tests/PhysicsSandboxTests.Profile.cs) measures actual public-API stories and a native 1152×800 Wayland GPU window on Linux x64/.NET 10. `DOTNET_TieredCompilation=0` stabilizes the allocation checks. Each story has 1,600 fixed warmup ticks and 256 measured ticks; every native normal/debug trial has 768 warmup frames and 192 measured frames. A moving scene pointer and periodic impulses keep queries and contacts active. Motorcycle demo drive and a bird shot start each corresponding trial. The final full run uses 1,024 stress bodies. The 60 FPS cap, presentation and scheduling waits remain enabled; this is observed window cadence rather than uncapped renderer throughput.
+The test-only [profiler](../../tests/Electron2D.Tests/PhysicsSandboxTests.Profile.cs) measures actual public-API stories and a native 1152×800 Wayland GPU window on Linux x64/.NET 10. `DOTNET_TieredCompilation=0` stabilizes the allocation checks. Each story has 1,600 fixed warmup ticks and 256 measured ticks; every native trial has 768 warmup frames and 192 measured frames. A moving scene pointer and periodic impulses keep queries and contacts active. Motorcycle demo drive and a bird shot start each corresponding trial. The final full run uses 1,024 stress bodies. The 60 FPS cap, presentation and scheduling waits remain enabled; this is observed window cadence rather than uncapped renderer throughput.
 
-`GC.GetAllocatedBytesForCurrentThread()` brackets every measured fixed step and full scene/render-owner frame. Render callbacks are bracketed separately. The maximum on every frame, rather than a rounded mean, must be exactly zero. Report serialization, test instrumentation and scene transitions are outside those intervals. The test-only profile window requests no activation when shown; native mouse/keyboard events are disabled during measurement and their previous states are restored afterwards. Native GUI hover is cleared with queued native motion before warmup; pointer queries are moved through the scene API. Construction, new bodies, configuration edits, fresh native input-event construction, tooltips, readback and native/GPU allocations are not covered by the zero-byte result. Mouse-event creation remains an allocating runtime path. This result is a prepared simulation/UI/debug budget, not a global zero-allocation guarantee for all interactions.
+`GC.GetAllocatedBytesForCurrentThread()` brackets every measured fixed step and full scene/render-owner frame. Render callbacks are bracketed separately. The maximum on every frame, rather than a rounded mean, must be exactly zero. Report serialization, test instrumentation and scene transitions are outside those intervals. The test-only profile window requests no activation when shown; native mouse/keyboard events are disabled during measurement and their previous states are restored afterwards. Native GUI hover is cleared with queued native motion before warmup; pointer queries are moved through the scene API. Construction, new bodies, configuration edits, fresh native input-event construction, tooltips, readback and native/GPU allocations are not covered by the zero-byte result. Mouse-event creation remains an allocating runtime path. This result is a prepared simulation/UI budget, not a global zero-allocation guarantee for all interactions.
 
-## Interface revision result
+## Current scene drawing
+
+After removing the diagnostic layer, a focused Release run on runtime `92dab95f` measured the warehouse at 0.109 ms per fixed tick and 58.8 FPS, and 1,024 active stress particles at 1.801 ms per fixed tick and 49.5 FPS. Both cases passed 256 fixed ticks and 192 native frames with exactly zero maximum managed frame and render bytes after the standard warmup. Evidence: `bin/physics-sandbox/profile-Release-no-debug.json`. This checks the revised single-trial profiler and the current scene/UI drawing; the other nine native performance profiles and the long settling gate were not rerun for this removal. All eleven scenes passed interactive capture checks in both renderers.
+
+## Historical interface revision result
 
 The revised field, inspector, selection labels and clipped scene/debug drawing passed all eleven fixed profiles and all 22 normal/debug native trials, with exactly zero maximum prepared owner-thread frame bytes. This full run uses tracked runtime `39f16075`, Release, tiered compilation disabled, 1,024 stress particles and the standard warmup/sample counts above. Evidence: `bin/physics-sandbox/profile-Release-ui-acceptance.json`. Native mouse/keyboard input is suppressed only by the profiler; the interactive native suite still exercises dropdown, tabs, sliders, dragging, pause/step and slingshot release in both renderers.
 
@@ -32,7 +38,7 @@ After integrating tracked runtime `458a0f74`, a focused 1,024-body follow-up mea
 
 Numeric readouts prepare the same integer-aligned glyph path used by their changing values. The selection label counter-scales only its draw commands to retain a clear 13-pixel font; physical transforms retain unit scale. An earlier run was rejected after real input added four garden bodies during measurement. The profiler now suppresses that external input and restores its prior event states.
 
-## Previous Release result
+## Historical Release result
 
 All 11 fixed-step cases and all 22 normal/debug trials passed the zero-byte gate. Raw local evidence: `bin/physics-sandbox/profile-Release-final.json` (ignored/generated, not shipped in the runtime).
 
@@ -52,7 +58,7 @@ All 11 fixed-step cases and all 22 normal/debug trials passed the zero-byte gate
 
 The final stress row uses 1,024 always-awake real circles. The preceding 512-body full run measured 3.689 ms/tick and 57.9 FPS with debug off/on, also at zero frame bytes. Construction allocates deliberately: contact caps, graph/overlap storage and dormant solver sets are prepared and retained until world disposal. Four contacts per rounded body-capacity slot is the prepared graph ceiling; denser unprepared topology can grow buffers. Dormant storage follows bodies that can sleep; the stress particles disable automatic sleeping. Larger sleepable populations increase startup/storage cost, so this table also reports construction bytes.
 
-## Reported low FPS and changes
+## Historical low FPS investigation
 
 The user's 1,024-body screenshot reported roughly 2–6 FPS with debug off. Ordinary unoptimized Debug measured 54.4 ms per fixed tick even after the first arithmetic changes. The example now opts into compiler/JIT optimization for its consumer and runtime reference in both configurations; Debug symbols and backend assertions remain enabled. Other projects retain their own build configuration.
 

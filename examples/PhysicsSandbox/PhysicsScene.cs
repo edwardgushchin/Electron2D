@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Globalization;
 
 namespace Electron2D.Examples.PhysicsSandbox;
@@ -18,7 +17,6 @@ internal sealed partial class PhysicsScene : Entity
     internal static readonly Color Pink = Color.FromHTML("#FD9ECA");
     internal static readonly Color Berry = Color.FromHTML("#A93B71");
     internal static readonly Color Apricot = Color.FromHTML("#F09776");
-    internal static readonly Color DebugColor = Color.FromHTML("#FCCCDD");
     internal static readonly Rect2 Stage = new(24, 184, 1104, 510);
     internal readonly List<RigidBody> Bodies = [];
     internal readonly List<CollisionObject> Colliders = [];
@@ -36,7 +34,6 @@ internal sealed partial class PhysicsScene : Entity
     internal float WorldLinearDamp { get => _worldLinearDamp; set { _worldLinearDamp = value; ApplyWorldParameters(); } }
     internal float WorldAngularDamp { get => _worldAngularDamp; set { _worldAngularDamp = value; ApplyWorldParameters(); } }
     internal int BodyLimit => Index == 8 ? 1024 : 160;
-    private readonly Entity _overlay;
     private readonly Entity _selection;
     private readonly HashSet<CollisionObject> _boundaries = [];
     private readonly Dictionary<CollisionObject, int> _numbers = [];
@@ -71,19 +68,14 @@ internal sealed partial class PhysicsScene : Entity
     private readonly Entity _storyVisual;
     private readonly Dictionary<CollisionObject, uint[]> _shapeOwners = [];
     private readonly Dictionary<Shape, Vector2[]> _contours = [];
-    private readonly Dictionary<RID, PhysicsDirectBodyState> _views = [];
-    private readonly KinematicCollision _slideContact;
     private readonly PhysicsPointQueryParameters _pick;
     private readonly PhysicsPointResult[] _pickHits = new PhysicsPointResult[64];
-    private readonly List<Vector2> _debugVectors = [], _debugNormals = [], _debugPoints = [];
     private static readonly Vector2[] DotContour = Enumerable.Range(0, 9).Select(i => new Vector2(MathF.Cos(i * Mathf.Tau / 8), MathF.Sin(i * Mathf.Tau / 8))).ToArray();
     private readonly Dictionary<RigidBody, double> _flashes = new(160);
     private RID _grab;
     private Vector2 _grabLocal;
     private Vector2 _pointer = new(570, 380);
     private bool _singleStep;
-    private bool _debugEnabled;
-    private bool _debugPrepared;
     private double _time;
     private double _spawnClock;
     private int _serial;
@@ -96,7 +88,6 @@ internal sealed partial class PhysicsScene : Entity
     internal int Score { get; private set; }
     internal int PhysicsSteps { get; private set; }
     internal bool Running { get; set; } = true;
-    internal bool DebugEnabled { get => _debugEnabled; set { _debugEnabled = value; _overlay.Visible = value; _overlay.QueueRedraw(); } }
     internal string[] Actions { get; private set; } = ["", "", ""];
     internal string Help { get; private set; } = "";
     internal string Observation { get; private set; } = "Drag a body to inspect it. K: freeze · Z: sleep · L: lock rotation · Q / E: torque";
@@ -105,13 +96,9 @@ internal sealed partial class PhysicsScene : Entity
     {
         Index = index;
         _flashes.EnsureCapacity(BodyLimit);
-        _debugVectors.EnsureCapacity(BodyLimit * 22);
-        _debugNormals.EnsureCapacity(BodyLimit * 16);
-        _debugPoints.EnsureCapacity(BodyLimit * 16);
         _font = font;
         Name = "Story";
         PhysicsProcessEnabled = ProcessEnabled = UnhandledInputEnabled = true;
-        _slideContact = Own(new KinematicCollision());
         _pick = Own(new PhysicsPointQueryParameters { CollisionMask = 1 });
         Draw += DrawStage;
         _storyVisual = new Entity { Name = "StoryIllustration", ZIndex = 10 };
@@ -132,9 +119,6 @@ internal sealed partial class PhysicsScene : Entity
             case 10: BuildBirds(); break;
             default: throw new ArgumentOutOfRangeException(nameof(index));
         }
-        _overlay = new Entity { Name = "PhysicsDebug", ZIndex = 20, Visible = false };
-        _overlay.Draw += DrawDebug;
-        AddChild(_overlay);
         _selection = new Entity { Name = "SelectedObject", ZIndex = 30 };
         _selection.Draw += DrawSelection; AddChild(_selection);
     }
@@ -165,11 +149,10 @@ internal sealed partial class PhysicsScene : Entity
         body.AddChild(new CollisionShape { Name = "Geometry", Shape = shape });
         Colliders.Add(body);
         _colors[body] = color;
-        body.Draw += c => DrawCollider(c, body, _colors[body], false);
+        body.Draw += c => DrawCollider(c, body, _colors[body]);
         AddChild(body);
         if (body is RigidBody rigid)
         {
-            _debugPrepared = false;
             Bodies.Add(rigid);
             rigid.ContactMonitor = true;
             rigid.MaxContactsReported = 8;
@@ -266,7 +249,6 @@ internal sealed partial class PhysicsScene : Entity
 
     protected override void OnProcess(double delta)
     {
-        if (_debugEnabled) _overlay.QueueRedraw();
         foreach (var body in Bodies)
         {
             if (body.IsDisposed) continue;
@@ -324,7 +306,6 @@ internal sealed partial class PhysicsScene : Entity
                 if (_selected is not null)
                 {
                     ReleaseGrab();
-                    _views.Remove(_selected.GetRID());
                     if (_selected.ProcessMode != ProcessMode.Disabled) { _selected.DisableMode = CollisionDisableMode.Remove; _selected.ProcessMode = ProcessMode.Disabled; }
                     else if (_selected.DisableMode != CollisionDisableMode.KeepActive) _selected.DisableMode = (CollisionDisableMode)((int)_selected.DisableMode + 1);
                     else _selected.ProcessMode = ProcessMode.Inherit;
@@ -406,11 +387,11 @@ internal sealed partial class PhysicsScene : Entity
         c.DrawLine(new(36, 629), new(1116, 629), Muted, 2);
     }
 
-    private void DrawCollider(CanvasItem c, CollisionObject body, Color color, bool debug)
+    private void DrawCollider(CanvasItem c, CollisionObject body, Color color)
     {
         if (_boundaries.Contains(body)) return;
-        if (Index == 9 && !debug && (body == _chassis || body is RigidBody wheel && _wheels.Contains(wheel))) return;
-        if (body is RigidBody rigid && !debug)
+        if (Index == 9 && (body == _chassis || body is RigidBody wheel && _wheels.Contains(wheel))) return;
+        if (body is RigidBody rigid)
         {
             if (_flashes.ContainsKey(rigid)) color = color.Lerp(Ink, .18f);
             else if (rigid.Sleeping) color = color.Lerp(Paper, .35f);
@@ -418,14 +399,13 @@ internal sealed partial class PhysicsScene : Entity
         if (!_shapeOwners.TryGetValue(body, out var owners)) _shapeOwners.Add(body, owners = body.GetShapeOwners());
         foreach (var owner in owners)
         {
-            var disabled = body.IsShapeOwnerDisabled(owner);
-            if (disabled && !debug) continue;
+            if (body.IsShapeOwnerDisabled(owner)) continue;
             for (var i = 0; i < body.ShapeOwnerGetShapeCount(owner); i++)
             {
                 var index = body.ShapeOwnerGetShapeIndex(owner, i);
                 var local = body is PhysicsBody ? PhysicsServer.BodyGetShapeTransform(body.GetRID(), index) : PhysicsServer.AreaGetShapeTransform(body.GetRID(), index);
-                c.DrawSetTransformMatrix((debug ? body.GlobalTransform : Transform.Identity) * local);
-                DrawShape(c, body.ShapeOwnerGetShape(owner, i), disabled ? Muted : color, debug || body is Area);
+                c.DrawSetTransformMatrix(local);
+                DrawShape(c, body.ShapeOwnerGetShape(owner, i), color, body is Area);
             }
         }
         c.DrawSetTransformMatrix(Transform.Identity);
@@ -478,84 +458,6 @@ internal sealed partial class PhysicsScene : Entity
             case SegmentShape segment: c.DrawLine(segment.A, segment.B, color, outline ? 1.5f : 8); break;
             case SeparationRayShape ray: c.DrawLine(Vector2.Zero, new(0, ray.Length), color, 2); break;
         }
-    }
-
-    private void DrawDebug(CanvasItem c)
-    {
-        _debugVectors.Clear(); _debugNormals.Clear(); _debugPoints.Clear();
-        foreach (var body in Colliders)
-        {
-            if (body.IsDisposed || _boundaries.Contains(body)) continue;
-            if (Index == 8 && body is RigidBody)
-            {
-                var pose = body.GlobalTransform;
-                for (var i = 0; i < 8; i++)
-                {
-                    _debugVectors.Add(pose * (DotContour[i] * ParticleRadius));
-                    _debugVectors.Add(pose * (DotContour[i + 1] * ParticleRadius));
-                }
-            }
-            else
-            {
-                DrawCollider(c, body, DebugColor, true);
-                c.DrawSetTransformMatrix(Transform.Identity);
-            }
-            if (body is not RigidBody rigid) continue;
-            var rid = rigid.GetRID();
-            if (!_views.TryGetValue(rid, out var state) || state.IsDisposed)
-            {
-                state = PhysicsServer.BodyGetDirectState(rid);
-                if (state is not null) _views[rid] = state;
-            }
-            if (state is null) continue;
-            var center = rigid.GlobalPosition + state.CenterOfMass;
-            if (rigid == SelectedBody)
-            {
-                _debugVectors.Add(center - new Vector2(5, 0)); _debugVectors.Add(center + new Vector2(5, 0));
-                _debugVectors.Add(center - new Vector2(0, 5)); _debugVectors.Add(center + new Vector2(0, 5));
-                _debugVectors.Add(center); _debugVectors.Add(center + rigid.LinearVelocity * .08f);
-            }
-            var contacts = state.GetContactCount();
-            for (var i = 0; i < contacts; i++)
-            {
-                // A pair reported by both dynamic bodies needs one marker and normal.
-                if (state.GetContactColliderObject(i) is RigidBody other && rid > other.GetRID()) continue;
-                var p = state.GetContactLocalPosition(i);
-                if (Index != 8 || rigid == SelectedBody) { _debugPoints.Add(p - new Vector2(2, 0)); _debugPoints.Add(p + new Vector2(2, 0)); }
-                _debugNormals.Add(p); _debugNormals.Add(p + state.GetContactLocalNormal(i) * (Index == 8 && rigid != SelectedBody ? 5 : 20));
-            }
-        }
-        if (!_debugPrepared)
-        {
-            // Prepare the configured contact ceiling once; spare segments lie outside the viewport.
-            var maximum = 0;
-            foreach (var body in Bodies) maximum += body.MaxContactsReported * 2;
-            Pad(_debugVectors, Math.Max(2, Bodies.Count * 22));
-            Pad(_debugNormals, Math.Max(2, maximum)); Pad(_debugPoints, Math.Max(2, maximum));
-            for (var i = 0; i < _debugVectors.Count; i += 2)
-                if (_debugVectors[i] == _debugVectors[i + 1])
-                { _debugVectors[i] = new(-10000, -10000); _debugVectors[i + 1] = new(-10000, -9999); }
-            _debugPrepared = true;
-        }
-        if (_debugVectors.Count > 0) c.DrawMultiline(CollectionsMarshal.AsSpan(_debugVectors), new Color(DebugColor.R, DebugColor.G, DebugColor.B, .55f), 1);
-        c.DrawMultiline(_debugNormals.Count == 0 ? [Vector2.Zero, Vector2.Zero] : CollectionsMarshal.AsSpan(_debugNormals), new Color(Ink.R, Ink.G, Ink.B, .4f), 1);
-        c.DrawMultiline(_debugPoints.Count == 0 ? [Vector2.Zero, Vector2.Zero] : CollectionsMarshal.AsSpan(_debugPoints), Pink, 4);
-        foreach (var (rid, _, shape) in _serverBodies)
-        {
-            c.DrawSetTransformMatrix(PhysicsServer.BodyGetTransform(rid));
-            DrawShape(c, shape, DebugColor, true);
-        }
-        c.DrawSetTransformMatrix(Transform.Identity);
-        foreach (var joint in Joints) c.DrawCircle(joint.GlobalPosition, 6, DebugColor, false, 2);
-        if (_grab.IsValid() && PhysicsServer.BodyGetDirectState(_grab) is { } grabbed) c.DrawLine(grabbed.Transform * _grabLocal, _pointer, Ink, 2);
-        if (_character is not null && _character.GetLastSlideCollision(_slideContact))
-            c.DrawLine(_slideContact.GetPosition(), _slideContact.GetPosition() + _slideContact.GetNormal() * 32, DebugColor, 2);
-    }
-
-    private static void Pad(List<Vector2> segments, int count)
-    {
-        while (segments.Count < count)
-        { segments.Add(new(-10000, -10000)); segments.Add(new(-10000, -9999)); }
     }
 
     // Numeric HUD uses existing glyph draws: changing a number does not create a string or a text layout.

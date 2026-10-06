@@ -18,7 +18,7 @@ internal sealed partial class SandboxWindow : Window
         "Guide the probe to the beacon. Inspect ray and wide-sweep clearance.",
         "Tow the cargo into the blush dock with thrust and a spring cable.",
         "Morph a live compound shape and explore the independent physics world.",
-        "Stir real particles. Compare normal and collision drawing at up to 1,024 bodies.",
+        "Stir up to 1,024 real particles and tune the physical world.",
         "Ride over ramps and gaps. Balance the motorcycle and reach the flag.",
         "Pull the bird back, aim and release. Knock three blush targets off the towers."
     ];
@@ -28,11 +28,11 @@ internal sealed partial class SandboxWindow : Window
     private readonly Label _help;
     private readonly Entity _telemetry;
     private readonly OptionButton _selector;
-    private readonly Button _debug, _pause;
+    private readonly Button _pause;
     private readonly Button[] _actions;
     private readonly string[] _actionCaptions = ["", "", ""];
     private readonly Control _stageClip;
-    private bool _debugEnabled, _paused;
+    private bool _paused;
     private double _readoutTime;
     internal PhysicsScene Scene { get; private set; } = null!;
     internal int SceneIndex { get; private set; }
@@ -75,10 +75,6 @@ internal sealed partial class SandboxWindow : Window
         step.Pressed += () => { SetPaused(true); Scene.StepOnce(); };
         var reset = MakeButton("Reset", new(558, 64), 94, regular, "Reset"); reset.TooltipText = "Restore this experiment · R";
         reset.Pressed += () => SwitchScene(SceneIndex);
-        _debug = MakeButton("Collisions OFF", new(676, 64), 184, regular, "Debug"); _debug.ToggleMode = true;
-        _debug.TooltipText = "Collider shapes and contact normals · F3";
-        _debug.Toggled += enabled => { _debugEnabled = enabled; Scene.DebugEnabled = enabled; UpdateDebug(); };
-        _debug.Draw += c => c.DrawCircle(new(18, 22), 4, _debugEnabled ? PhysicsScene.Blush : PhysicsScene.Muted, _debugEnabled, 1.5f);
         _story = MakeLabel("", new(24, 124), 15, regular, PhysicsScene.Muted);
         _help = MakeLabel("", new(24, 776), 13, regular, PhysicsScene.Muted);
         _actions = [MakeButton("", new(24, 712), 266, semibold), MakeButton("", new(306, 712), 266, regular), MakeButton("", new(588, 712), 272, regular)];
@@ -113,17 +109,16 @@ internal sealed partial class SandboxWindow : Window
     }
 
     private int ActionIndex(int slot) => SceneIndex switch { 0 => slot switch { 0 => 1, 1 => 0, _ => 2 }, 9 => slot switch { 0 => 1, 1 => 2, _ => 0 }, _ => slot };
-    private void UpdateDebug() { _debug.Text = _debugEnabled ? "Collisions ON" : "Collisions OFF"; _debug.SetPressedNoSignal(_debugEnabled); }
 
     internal void SwitchScene(int index)
     {
         if ((uint)index >= SceneNames.Length) throw new ArgumentOutOfRangeException(nameof(index));
         if (Scene is not null) { _stageClip.RemoveChild(Scene); Scene.Dispose(); }
-        SceneIndex = index; Scene = new PhysicsScene(index, _regular) { DebugEnabled = _debugEnabled, Running = !_paused, PhysicsInterpolationMode = PhysicsInterpolationMode.Off, InputBounds = Playfield };
+        SceneIndex = index; Scene = new PhysicsScene(index, _regular) { Running = !_paused, PhysicsInterpolationMode = PhysicsInterpolationMode.Off, InputBounds = Playfield };
         _stageClip.AddChild(Scene); FrameScene(); Engine.TimeScale = 1;
         _selectionRevision = Scene.SelectionRevision; CaptureDefaults(); SyncParameters(); ShowParameters(0);
         _story.Text = Stories[index]; _help.Text = Scene.Help;
-        _selector.Select(index); _selector.ReleaseFocus(); UpdateActions(); UpdateDebug();
+        _selector.Select(index); _selector.ReleaseFocus(); UpdateActions();
     }
 
     private void FrameScene()
@@ -155,7 +150,6 @@ internal sealed partial class SandboxWindow : Window
     {
         if (SceneIndex is 4 or 5 or 6 or 9) FrameScene();
         RefreshSelection();
-        if (_debugEnabled != Scene.DebugEnabled) { _debugEnabled = Scene.DebugEnabled; UpdateDebug(); }
         _readoutTime += delta;
         if (_readoutTime >= .1) { _readoutTime = 0; _telemetry.QueueRedraw(); SyncParameters(); }
         UpdateActions();
@@ -176,7 +170,6 @@ internal sealed partial class SandboxWindow : Window
         switch (key.Keycode)
         {
             case Key.Escape: Tree!.Quit(); break;
-            case Key.F3: _debug.ButtonPressed = !_debug.ButtonPressed; break;
             case Key.P: SetPaused(!_paused); break;
             case Key.R: SwitchScene(SceneIndex); break;
             case Key.Period: SetPaused(true); Scene.StepOnce(); break;
