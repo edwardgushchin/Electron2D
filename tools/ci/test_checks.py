@@ -22,6 +22,16 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_runtime_svg_bytes_survive_crlf_checkout(self):
+        root = Path(__file__).resolve().parents[2]
+        paths = sorted((root / "src/Scene/Theme/Icons").glob("*.svg"))
+        self.assertTrue(paths)
+        with tempfile.TemporaryDirectory() as directory:
+            subprocess.run(["git", "-c", "core.autocrlf=true", "checkout-index", "--prefix=" + directory + "/",
+                            *[path.relative_to(root).as_posix() for path in paths]], cwd=root, check=True)
+            for path in paths:
+                self.assertEqual((Path(directory) / path.relative_to(root)).read_bytes(), path.read_bytes(), str(path))
+
     def test_native_publish_layout_does_not_relocate_managed_dependencies(self):
         with tempfile.TemporaryDirectory() as directory:
             project = ET.Element("Project")

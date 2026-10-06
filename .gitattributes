@@ -7,3 +7,4 @@ licence/** -whitespace
 tests/Electron2D.Tests/Fixtures/Fonts/LICENSE.* -whitespace
 src/Vendor/FAudio/** -whitespace
 src/Vendor/QOA/** -whitespace
+src/Scene/Theme/Icons/*.svg text eol=lf

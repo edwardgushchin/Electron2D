@@ -1,6 +1,6 @@
 # WebSocket messages
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 ## Scope and owners
 
@@ -31,5 +31,7 @@ Connection preparation allocates an incoming message accumulator plus its separa
 ## Verification and remaining integrations
 
 [WebSocketTests](../../tests/Electron2D.Tests/WebSocketTests.cs) checks the RFC accept vector, fragmented wire input/UTF-8 with interleaved ping, exact pong, empty and canonical 7/16/64-bit messages, input/output/control pressure, invalid flags/masks/continuations/text/close/lengths, close/EOF/heartbeat, configuration copies, malformed upgrades and owner/disposal guards. Native Linux WS and WSS run in both roles against independent .NET WebSocket/ClientWebSocket peers; client connections also run through public Node/SceneTree polling. Each WS/WSS client measures 64 warmed mask/text/poll/span echo cycles at zero managed bytes; a fragmented custom server measures 64 active and 64 idle cycles at zero managed bytes.
+
+Windows x64 in [run 37402225776](https://github.com/edwardgushchin/Electron2D/actions/runs/37402225776) passed corrected TLS and HTTPS, then exposed the scripted heartbeat fixture's assumption that each 5 ms sleep advances the monotonic clock. Windows .NET 10 TickCount64 has a [documented 10-16 ms cadence](https://learn.microsoft.com/en-us/dotnet/api/system.environment.tickcount64#remarks). The fixture now polls through the existing ten-second progress guard for the first exact ping, a pong-confirmed second exact ping and an unanswered-ping abort, retaining the 3 ms interval, unclean-close code and borrowed-stream ownership checks. Runtime timer and protocol behavior are unchanged. Windows x86/ARM64 already passed WS/WSS in that run and stopped later in the theme asset audit; current full-suite confirmation is still required.
 
 The self-contained Linux packaging check is recorded in [platform verification](../platform-verification.md). Routed networks, browser WebSocket host integration, foreign native TLS/backend packaging, external native allocation totals and human acceptance remain separate. [WebSocketMultiplayerPeer](../classes/WebSocketMultiplayerPeer.md) now integrates the typed MultiplayerPeer contract and owned peer cohort; scene replication and unified editor/project/agent tools are separate. Handshake/frame rules use [RFC 6455](https://www.rfc-editor.org/rfc/rfc6455).
