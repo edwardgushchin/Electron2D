@@ -4951,11 +4951,18 @@ static void VerifyDirAccess()
         var alphaPath = IOPath.Combine(root, "alpha.txt");
         var zetaPath = IOPath.Combine(root, "zeta.txt");
         var hiddenPath = IOPath.Combine(root, ".hidden.txt");
+        var hiddenDirectoryPath = IOPath.Combine(root, ".hidden-dir");
         File.WriteAllText(zetaPath, "zeta");
         File.WriteAllText(alphaPath, "alpha");
         File.WriteAllText(hiddenPath, "hidden");
         Directory.CreateDirectory(IOPath.Combine(root, "visible-dir"));
-        Directory.CreateDirectory(IOPath.Combine(root, ".hidden-dir"));
+        Directory.CreateDirectory(hiddenDirectoryPath);
+        if (OperatingSystem.IsWindows())
+            foreach (var path in new[] { hiddenPath, hiddenDirectoryPath })
+                File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Hidden);
+        Require((File.GetAttributes(hiddenPath) & FileAttributes.Hidden) != 0 &&
+                (File.GetAttributes(hiddenDirectoryPath) & FileAttributes.Hidden) != 0,
+            "Hidden file and directory fixtures must use the host filesystem's hidden state.");
 
         using (var directory = DirAccess.Open(root))
         {

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-permission android:name="android.permission.INTERNET" />
-  <application android:allowBackup="false" android:label="Electron2D tests" />
+  <application android:allowBackup="false" android:label="Electron2D tests">
+    <activity android:name="org.electron2d.tests.MainActivity"
+              android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|assetsPaths" />
+  </application>
 </manifest>

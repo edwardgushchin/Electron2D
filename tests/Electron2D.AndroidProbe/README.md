@@ -2,6 +2,8 @@
 
 This test-only SDLActivity exercises Electron2D through five engine scenarios and one standalone GLES2 shader probe selected by the Android intent extra `scenario`. It is not a production application host.
 
+The host handles Android resource-overlay (`assetsPaths`) configuration changes without Activity recreation and checks that flag in its installed ActivityInfo before running a scenario. This preserves the native SDL thread when overlays update; it does not establish production-host lifecycle acceptance.
+
 | Scenario | Check |
 | --- | --- |
 | `compatibility` (default) | Force SDL_Renderer, draw a red rectangle, read back pixel `(4, 4)`, and quit. |

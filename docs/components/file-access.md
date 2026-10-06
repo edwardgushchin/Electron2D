@@ -1,6 +1,6 @@
 # File and directory access component
 
-Last updated: 2026-09-22
+Last updated: 2026-10-06
 
 ## Scope
 
@@ -55,6 +55,8 @@ Implemented for raw access, scoped directory navigation/enumeration/mutation, di
 FastLZ and Zstandard require codec providers that are not integrated. Packed/exported archive filesystems, import remapping, `uid://` identities, and `pipe://` streams require absent pack, resource-loader, resource-UID, and platform-pipe domains. Exact Android storage-volume discovery requires its future host integration. Universal-value storage and shared numeric/thread-local error slots are permanent typed-C# exclusions. No empty compatibility methods exist for these gaps.
 
 ## Verification
+
+The hidden-entry fixtures use the actual filesystem policy: dot-prefixed file and directory names on Unix, explicit `FileAttributes.Hidden` on Windows. Both fixture attributes are asserted before testing default/opt-in snapshots and streaming/concurrent filters. The Windows full suite in [run 37407321875](https://github.com/edwardgushchin/Electron2D/actions/runs/37407321875) passed configuration/file checks and exposed the previous dot-name-only fixture assumption on all three architectures. Runtime hidden-entry policy is unchanged; corrected target execution remains required.
 
 The single executable harness covers file and directory success, invalid input, malformed/truncated data, wrong credentials/modes, tampering, scope/traversal rejection, listing state/filtering/concurrency, directory creation/copy/rename/removal, link target safety, filesystem identity/case/capacity/type, temporary ownership, close/disposal, concurrent independent operations, and commit failure. Platform-specific verification currently covers Linux only; transformed files are deliberately whole-file and are not stress-tested near managed array limits.
 

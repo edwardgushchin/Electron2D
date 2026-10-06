@@ -6,9 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2DAndroidTests;
 
-[Activity(Name = "org.electron2d.tests.MainActivity", Label = "Electron2D tests", MainLauncher = true, Exported = true,
-    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize |
-        ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.Navigation)]
+[Activity(Name = "org.electron2d.tests.MainActivity", Label = "Electron2D tests", MainLauncher = true, Exported = true)]
 public sealed class MainActivity : SDLActivity
 {
     protected override string[] GetLibraries() => ["SDL3"];
@@ -18,6 +16,10 @@ public sealed class MainActivity : SDLActivity
         var run = Intent?.GetStringExtra("run") ?? "manual";
         try
         {
+            using var activity = PackageManager!.GetActivityInfo(ComponentName!, PackageInfoFlags.MetaData)!;
+            // AssetsPaths is the sign bit even on Android versions before its public SDK constant.
+            if ((int)activity.ConfigChanges >= 0)
+                throw new InvalidOperationException("The installed SDL activity must handle resource overlay changes without recreation.");
             var expected = Intent?.GetStringExtra("rid") switch
             {
                 "android-arm" => Architecture.Arm,

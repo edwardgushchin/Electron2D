@@ -2,5 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
   <uses-feature android:name="android.hardware.gamepad" android:required="false" />
-  <application android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:hardwareAccelerated="true" />
+  <application android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:hardwareAccelerated="true">
+    <activity android:name="org.electron2d.probe.MainActivity"
+              android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|assetsPaths" />
+  </application>
 </manifest>
