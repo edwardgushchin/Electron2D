@@ -7808,6 +7808,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TabContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabContainer",
+    "signature": "public class Electron2D.TabContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TabContainer.TabPosition",
+    "kind": "type",
+    "declaringType": "Electron2D.TabContainer.TabPosition",
+    "name": "TabPosition",
+    "signature": "public enum Electron2D.TabContainer.TabPosition",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextAutowrapMode",
     "kind": "type",
     "declaringType": "Electron2D.TextAutowrapMode",
@@ -15185,6 +15218,19 @@
     "declaringType": "Electron2D.TabBar",
     "name": ".ctor",
     "signature": "public TabBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TabContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TabContainer",
+    "name": ".ctor",
+    "signature": "public TabContainer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -29908,6 +29954,45 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.TabContainer.TabPosition.Bottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TabContainer.TabPosition",
+    "name": "Bottom",
+    "signature": "public const Electron2D.TabContainer.TabPosition Bottom = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TabContainer.TabPosition",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TabContainer.TabPosition.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TabContainer.TabPosition",
+    "name": "Max",
+    "signature": "public const Electron2D.TabContainer.TabPosition Max = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TabContainer.TabPosition",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TabContainer.TabPosition.Top()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TabContainer.TabPosition",
+    "name": "Top",
+    "signature": "public const Electron2D.TabContainer.TabPosition Top = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TabContainer.TabPosition",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.TextAutowrapMode.Arbitrary()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TextAutowrapMode",
@@ -34994,6 +35079,97 @@
     "id": "event:Electron2D.TabBar.TabSelected()",
     "kind": "event",
     "declaringType": "Electron2D.TabBar",
+    "name": "TabSelected",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E TabSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TabContainer.ActiveTabRearranged()",
+    "kind": "event",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "ActiveTabRearranged",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E ActiveTabRearranged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TabContainer.PrePopupPressed()",
+    "kind": "event",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "PrePopupPressed",
+    "signature": "public event System.Action PrePopupPressed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TabContainer.TabButtonPressed()",
+    "kind": "event",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabButtonPressed",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E TabButtonPressed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TabContainer.TabChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabChanged",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E TabChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TabContainer.TabClicked()",
+    "kind": "event",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabClicked",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E TabClicked",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TabContainer.TabHovered()",
+    "kind": "event",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabHovered",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E TabHovered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TabContainer.TabSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.TabContainer",
     "name": "TabSelected",
     "signature": "public event System.Action\u003CSystem.Int32\u003E TabSelected",
     "visibility": "public",
@@ -110486,6 +110662,620 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TabContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetAllowedSizeFlagsHorizontal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetAllowedSizeFlagsHorizontal",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsHorizontal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetAllowedSizeFlagsVertical()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetAllowedSizeFlagsVertical",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsVertical()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetCurrentTabControl()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetCurrentTabControl",
+    "signature": "public Electron2D.Control GetCurrentTabControl()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetPopup()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetPopup",
+    "signature": "public Electron2D.Popup GetPopup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Popup",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetPreviousTab()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetPreviousTab",
+    "signature": "public System.Int32 GetPreviousTab()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabBar()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabBar",
+    "signature": "public Electron2D.TabBar GetTabBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TabBar",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabButtonIcon(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabButtonIcon",
+    "signature": "public Electron2D.Texture GetTabButtonIcon(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabControl(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabControl",
+    "signature": "public Electron2D.Control GetTabControl(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabCount",
+    "signature": "public System.Int32 GetTabCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabIcon(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabIcon",
+    "signature": "public Electron2D.Texture GetTabIcon(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabIconMaxWidth(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabIconMaxWidth",
+    "signature": "public System.Int32 GetTabIconMaxWidth(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabIdxAtPoint(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabIdxAtPoint",
+    "signature": "public System.Int32 GetTabIdxAtPoint(Electron2D.Vector2 point)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabIdxFromControl(Electron2D.Control)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabIdxFromControl",
+    "signature": "public System.Int32 GetTabIdxFromControl(Electron2D.Control control)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "control",
+        "type": "Electron2D.Control",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabMetadata\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabMetadata",
+    "signature": "public T GetTabMetadata\u003CT\u003E(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabTitle(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabTitle",
+    "signature": "public System.String GetTabTitle(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.GetTabTooltip(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "GetTabTooltip",
+    "signature": "public System.String GetTabTooltip(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.IsTabDisabled(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "IsTabDisabled",
+    "signature": "public System.Boolean IsTabDisabled(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.IsTabHidden(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "IsTabHidden",
+    "signature": "public System.Boolean IsTabHidden(System.Int32 tabIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SelectNextAvailable()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SelectNextAvailable",
+    "signature": "public System.Boolean SelectNextAvailable()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SelectPreviousAvailable()",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SelectPreviousAvailable",
+    "signature": "public System.Boolean SelectPreviousAvailable()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetPopup(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetPopup",
+    "signature": "public System.Void SetPopup(Electron2D.Node popup)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "popup",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetTabButtonIcon(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetTabButtonIcon",
+    "signature": "public System.Void SetTabButtonIcon(System.Int32 tabIndex, Electron2D.Texture value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetTabDisabled(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetTabDisabled",
+    "signature": "public System.Void SetTabDisabled(System.Int32 tabIndex, System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetTabHidden(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetTabHidden",
+    "signature": "public System.Void SetTabHidden(System.Int32 tabIndex, System.Boolean hidden)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "hidden",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetTabIcon(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetTabIcon",
+    "signature": "public System.Void SetTabIcon(System.Int32 tabIndex, Electron2D.Texture icon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetTabIconMaxWidth(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetTabIconMaxWidth",
+    "signature": "public System.Void SetTabIconMaxWidth(System.Int32 tabIndex, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetTabMetadata\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetTabMetadata",
+    "signature": "public System.Void SetTabMetadata\u003CT\u003E(System.Int32 tabIndex, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetTabTitle(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetTabTitle",
+    "signature": "public System.Void SetTabTitle(System.Int32 tabIndex, System.String title)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TabContainer.SetTabTooltip(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SetTabTooltip",
+    "signature": "public System.Void SetTabTooltip(System.Int32 tabIndex, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "tabIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextBIDIRange.Deconstruct(ref System.Int32,ref System.Int32,ref Electron2D.TextDirection)",
     "kind": "method",
     "declaringType": "Electron2D.TextBIDIRange",
@@ -146289,6 +147079,162 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.AllTabsInFront()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "AllTabsInFront",
+    "signature": "public System.Boolean AllTabsInFront { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.ClipTabs()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "ClipTabs",
+    "signature": "public System.Boolean ClipTabs { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.CurrentTab()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "CurrentTab",
+    "signature": "public System.Int32 CurrentTab { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.DeselectEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "DeselectEnabled",
+    "signature": "public System.Boolean DeselectEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.DragToRearrangeEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "DragToRearrangeEnabled",
+    "signature": "public System.Boolean DragToRearrangeEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.SwitchOnDragHover()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "SwitchOnDragHover",
+    "signature": "public System.Boolean SwitchOnDragHover { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.TabAlignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabAlignment",
+    "signature": "public Electron2D.TabBar.AlignmentMode TabAlignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TabBar.AlignmentMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.TabFocusMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabFocusMode",
+    "signature": "public Electron2D.FocusMode TabFocusMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FocusMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.TabsPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabsPosition",
+    "signature": "public Electron2D.TabContainer.TabPosition TabsPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TabContainer.TabPosition",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.TabsRearrangeGroup()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabsRearrangeGroup",
+    "signature": "public System.Int32 TabsRearrangeGroup { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.TabsVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "TabsVisible",
+    "signature": "public System.Boolean TabsVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TabContainer.UseHiddenTabsForMinSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.TabContainer",
+    "name": "UseHiddenTabsForMinSize",
+    "signature": "public System.Boolean UseHiddenTabsForMinSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

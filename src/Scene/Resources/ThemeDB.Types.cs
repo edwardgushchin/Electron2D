@@ -289,6 +289,7 @@ public sealed partial class ThemeDB
         ["TCPServer"] = ["TCPServer", "SocketServer", "ElectronObject"],
         ["TLSOptions"] = ["TLSOptions", "ElectronObject"],
         ["TabBar"] = ["TabBar", "Control", "CanvasItem", "Node", "ElectronObject"],
+        ["TabContainer"] = ["TabContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Texture"] = ["Texture", "Resource", "ElectronObject"],
         ["TextureButton"] = ["TextureButton", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["TextureProgressBar"] = ["TextureProgressBar", "Range", "Control", "CanvasItem", "Node", "ElectronObject"],

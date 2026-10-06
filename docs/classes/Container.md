@@ -1,8 +1,8 @@
 # Container
 
-Last updated: 2026-10-01
+Last updated: 2026-10-06
 
-**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md), [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md), [AspectRatioContainer](AspectRatioContainer.md), [FlowContainer](FlowContainer.md), [SplitContainer](SplitContainer.md)
+**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md), [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md), [AspectRatioContainer](AspectRatioContainer.md), [FlowContainer](FlowContainer.md), [SplitContainer](SplitContainer.md), [TabContainer](TabContainer.md)
 
 **Declaration:** `public class Container : Control` · **Source:** [Container.cs](../../src/Scene/GUI/Container.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
 
@@ -64,3 +64,5 @@ AccessibilityRegion remains Blocked: native semantic landmark publication/update
 [FlowContainer](FlowContainer.md) and its fixed HFlow/VFlow subclasses consume the same deferred sort/lifecycle/final-fit hooks for wrapping layout, alongside box/grid containers.
 
 The shared FitChildInRect path now attempts rotation and scale reset after a committed rectangle resize callback fails, collecting errors after required stages. It skips further mutation if the child was disposed or reparented during a callback. SplitContainerTests verifies a failing first-panel resize still resets its visual transform and fits later panels. This applies to every current layout consumer.
+
+[Tab panels](../components/tab-panels.md) add TabContainer as an executable consumer with all 31 declared theme keys, Container fitting/maximum propagation and exact scene/file factories. Indexed restore uses a private typed schema count before owned child construction. Public signatures of these shared owners are unchanged.

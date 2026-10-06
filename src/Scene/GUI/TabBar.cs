@@ -30,7 +30,7 @@ public partial class TabBar : Control
         /// <summary>Exclusive upper bound.</summary>
         Max = 3
     }
-    private sealed class Tab
+    internal sealed class Tab
     {
         internal string Title = "", Tooltip = "", Language = "";
         internal Texture? Icon, ButtonIcon;
@@ -162,6 +162,13 @@ public partial class TabBar : Control
     public event Action<int>? TabRMBClicked;
     /// <summary>Occurs for every valid CurrentTab assignment, including equal assignments.</summary>
     public event Action<int>? TabSelected;
+    internal Tab BorrowTabRecord(int index) => Item(index);
+    internal void ReplaceTabRecord(int index, Tab record)
+    {
+        EnsureMutable(); var previous = Item(index); if (record.Icon?.IsDisposed == true) record.Icon = null; if (record.ButtonIcon?.IsDisposed == true) record.ButtonIcon = null;
+        WatchIcon(record.Icon); try { WatchIcon(record.ButtonIcon); } catch { UnwatchIcon(record.Icon); throw; }
+        UnwatchIcon(previous.Icon); UnwatchIcon(previous.ButtonIcon); _tabs[index] = record; InvalidateTabs();
+    }
     private Tab Item(int index) { Index(index); return _tabs[index]; }
     private void Index(int index) { if ((uint)index >= (uint)_tabs.Count) throw new ArgumentOutOfRangeException(nameof(index)); }
     private bool CanDeselect() { if (_deselectEnabled) return true; foreach (var tab in _tabs) if (!tab.Disabled && !tab.Hidden) return false; return true; }

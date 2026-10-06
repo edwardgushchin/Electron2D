@@ -129,6 +129,8 @@ public partial class TabBar
         for (var i = _offset; i <= _lastDrawn; i++) if (!_tabs[i].Hidden) { var delta = Math.Abs(_tabs[i].Rect.GetCenter().X - point.X); if (delta < distance) { found = i; distance = delta; } }
         return found;
     }
+    internal int DropInsertionIndex(Vector2 point)
+    { var target = ClosestTab(point); var before = target < 0 || IsLayoutRTL() ^ (point.X <= _tabs[target].Rect.GetCenter().X); return target < 0 ? 0 : target + (before ? 0 : 1); }
     /// <inheritdoc />
     protected override void OnDropData(Vector2 atPosition, DragPayload payload)
     {

@@ -22,7 +22,7 @@ The slice corrects concrete interaction failures: release over another button do
 
 ## Persistence and integration
 
-PackedScene captures count/configuration/current and the declared indexed title/tooltip/icon/disabled fields. Current restores after indexed data. Other per-tab runtime fields and metadata are absent from that stored schema; public setters still execute them. The built-in TabBar file factory supports actual e2dscene load/instantiate. Internal timer/processing state does not enter the file. TabBarTests saves a file and loads/runs it in a fresh process with ordinary public factories and navigation. TabContainer remains the independent content-panel consumer; popup menus/windows and editor authoring retain separate dependencies.
+PackedScene captures count/configuration/current and the declared indexed title/tooltip/icon/disabled fields. Current restores after indexed data. Other per-tab runtime fields and metadata are absent from that stored schema; public setters still execute them. The built-in TabBar file factory supports actual e2dscene load/instantiate. Internal timer/processing state does not enter the file. TabBarTests saves a file and loads/runs it in a fresh process with ordinary public factories and navigation. [TabContainer](tab-panels.md) now supplies the independent executable content-panel consumer; popup menus/windows and editor authoring retain separate dependencies.
 
 ## Verification
 
@@ -31,3 +31,5 @@ PackedScene captures count/configuration/current and the declared indexed title/
 `ELECTRON2D_TEST_TABS_NATIVE=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` executes current GPU and compatibility Window/Engine.Run hosts, verifies pixels for style/title/icon/close, mirrored overflow/reveal and clipped own output, then measures 64 warmed active selection/layout/record/render frames. Both backends passed with zero measured managed bytes. The native PNGs were inspected visually. Readback itself, cold shaping/structural edits and source changes allocate; native/external allocations, real controller hardware, other platforms and owner acceptance remain unverified. Native accessibility roles/actions require the absent accessibility service.
 
 Dependencies and decisions: shared Control/Node scene/input/focus/drag, ThemeOwner/ThemeDB, Font/TextLayout and retained CanvasItem under ADRs 0008, 0038, 0046 and 0083. No architecture decision or vendored algorithm changes were needed.
+
+Tab panels share strip theme resources and private tab-record identity to transfer complete state with actual Control page ownership. These helpers remain internal; the TabBar public surface is unchanged. Container drags reuse existing insertion, preview and acceptance behavior, while the container commits scene hierarchy changes.

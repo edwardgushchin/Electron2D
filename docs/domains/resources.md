@@ -143,3 +143,5 @@ See [resource-file contracts](../components/resource-files.md) for registered ty
 AudioBusLayout and all 27 concrete audio-effect schemas now use the existing typed archive producer/loader. Ordered controls and effect aliases persist; private file graph retention protects applied bus configuration and derived snapshots. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).
 
 [Popup menus](../components/popup-menus.md) add the typed item/submenu consumer atop embedded Window presentation, shaped themed drawing, shared scroll/search controls and scene/file factories. Native/system menu services and dependent MenuButton/OptionButton/TabContainer/context-action consumers retain separate coverage.
+
+[Tab panels](../components/tab-panels.md) combine TabContainer/TabBar selection with actual child Control visibility/layout, typed themes, popup input, group page drags and fresh scene factories. Warm selection/layout/visibility and native render checks pass on current Linux Wayland GPU/compatibility; inherited semantic-service/editor and other-platform acceptance remain separate.

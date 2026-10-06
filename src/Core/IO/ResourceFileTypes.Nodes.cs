@@ -2,6 +2,7 @@ namespace Electron2D;
 
 public static partial class ResourceFileTypes
 {
+    private static TabContainer CreateTabContainerFileNode() => new();
     private static PopupMenu CreatePopupMenuFileNode() => new();
     private static Popup CreatePopupFileNode() => new Popup();
     private static PopupPanel CreatePopupPanelFileNode() => new PopupPanel();
@@ -72,6 +73,7 @@ public static partial class ResourceFileTypes
         RegisterNode("StaticBody", CreateStaticBodyFileNode);
         RegisterNode("SubViewport", CreateSubViewportFileNode);
         RegisterNode("SubViewportContainer", CreateSubViewportContainerFileNode);
+        RegisterNode("TabContainer", CreateTabContainerFileNode);
         RegisterNode("TabBar", CreateTabBarFileNode);
         RegisterNode("TextureButton", CreateTextureButtonFileNode);
         RegisterNode("TextureProgressBar", CreateTextureProgressBarFileNode);

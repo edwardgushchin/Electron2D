@@ -1,0 +1,56 @@
+using Electron2D;
+
+internal static class TabContainerTests
+{
+    internal static void Run()
+    {
+        var root = new SubViewport { Size = new(650, 360), GUIEmbedSubwindows = true }; var tabs = new TabContainer { Name = "Tabs", Size = new(300, 200) }; root.AddChild(tabs);
+        Check(tabs.GetTabCount() == 0 && tabs.CurrentTab == -1 && tabs.ClipTabs && tabs.TabsVisible && !tabs.DeselectEnabled && tabs.SwitchOnDragHover && tabs.TabFocusMode == FocusMode.All && !tabs.AllTabsInFront, "Container defaults.");
+        var first = new Control { Name = "First", CustomMinimumSize = new(50, 30) }; var second = new Control { Name = "Second", CustomMinimumSize = new(100, 60) }; var neutral = new Node { Name = "Neutral" }; var top = new Control { Name = "Top", TopLevel = true }; tabs.AddChild(first); tabs.AddChild(neutral); tabs.AddChild(second); tabs.AddChild(top);
+        Check(tabs.GetTabCount() == 2 && tabs.GetTabControl(0) == first && tabs.GetTabControl(-1) == null && tabs.GetTabControl(9) == null && tabs.GetTabIdxFromControl(top) == -1 && first.Visible && !second.Visible, "Only ordinary non-top-level controls become pages.");
+        tabs.SetTabTitle(0, "Custom"); second.Name = "Renamed"; tabs.CurrentTab = 1; Check(tabs.CurrentTab == 0, "Detached selection queues."); using var tree = new SceneTree(root); tree.ProcessFrame(.01);
+        Check(tabs.CurrentTab == 1 && !first.Visible && second.Visible && tabs.GetTabTitle(0) == "Custom" && tabs.GetTabTitle(1) == "Renamed", "Tree entry applies pending selection and name defaults.");
+        var events = new List<string>(); tabs.TabSelected += i => events.Add("selected:" + i); tabs.TabChanged += i => events.Add("changed:" + i); tabs.CurrentTab = 0; Check(events.SequenceEqual(new[] { "selected:0", "changed:0" }) && first.Visible && !second.Visible, "Selection commits pages before ordered events."); events.Clear(); tabs.CurrentTab = 0; Check(events.SequenceEqual(new[] { "selected:0" }) && tabs.GetPreviousTab() == 0, "Equal selection only reports selected.");
+        second.Show(); Check(tabs.CurrentTab == 1 && !first.Visible, "Manual page Show selects it."); second.Hide(); Check(tabs.CurrentTab == 0 && first.Visible, "Manual Hide chooses another available page."); tabs.DeselectEnabled = true; first.Hide(); Check(tabs.CurrentTab == -1 && tabs.GetCurrentTabControl() == null, "Manual hide may deselect."); tabs.DeselectEnabled = false; Check(tabs.CurrentTab == 0, "Disabling deselection finds an available page.");
+        tabs.SetTabHidden(0, true); Check(tabs.CurrentTab == 1 && !first.Visible, "Hiding active tab selects replacement."); tabs.SetTabHidden(0, false); tabs.SetTabDisabled(0, true); Check(!tabs.SelectPreviousAvailable(), "Available navigation skips disabled pages."); tabs.SetTabDisabled(0, false); Check(tabs.SelectPreviousAvailable() && tabs.CurrentTab == 0, "Available navigation returns to enabled page.");
+        tabs.SetTabMetadata<string?>(0, null); Check(tabs.GetTabMetadata<string?>(0) == null, "Exact typed null metadata."); Reject<KeyNotFoundException>(() => tabs.GetTabMetadata<int>(0));
+        tabs.MoveChild(second, 0); Check(tabs.GetTabControl(0) == second && tabs.CurrentTab == 1 && tabs.GetTabTitle(1) == "Custom", "Child moves preserve selected data identity."); first.Name = "NewName"; Check(tabs.GetTabTitle(1) == "Custom", "Custom title survives rename."); tabs.SetTabTitle(1, first.Name); first.Name = "Automatic"; Check(tabs.GetTabTitle(1) == "Automatic", "Setting title to name restores automatic naming.");
+        tabs.TabsPosition = TabContainer.TabPosition.Bottom; tree.ProcessFrame(.01); Check(tabs.GetTabBar().Position.Y > first.Position.Y && first.Size.Y < tabs.Size.Y, "Bottom header reduces page area."); tabs.TabsVisible = false; tree.ProcessFrame(.01); Check(!tabs.GetTabBar().Visible && first.Position.Y == tabs.GetThemeStyleBox("panel")!.GetMargin(Side.Top), "Hidden header leaves only panel margins."); tabs.TabsVisible = true;
+        var small = tabs.GetCombinedMinimumSize(); tabs.UseHiddenTabsForMinSize = true; var all = tabs.GetCombinedMinimumSize(); Check(all.Y >= small.Y, "Hidden pages contribute only when requested.");
+        var menu = new PopupMenu { Name = "Menu" }; menu.AddItem("Command"); root.AddChild(menu); tabs.SetPopup(menu); var pre = 0; tabs.PrePopupPressed += () => pre++; tree.ProcessFrame(.01); var button = (Button)tabs.GetChild(1, true); Click(root, button.GetGlobalRect().GetCenter()); tree.ProcessFrame(.01); Check(menu.Visible && pre == 1 && tabs.GetPopup() == menu, "Header button opens borrowed popup through real GUI."); menu.Hide(); menu.Dispose(); tree.ProcessFrame(.01); Check(tabs.GetPopup() == null && !button.Visible, "Popup disposal clears binding and affordance."); tabs.SetPopup(neutral); Check(tabs.GetPopup() == null, "Non-popup node clears typed binding.");
+        Reject<ArgumentOutOfRangeException>(() => tabs.TabsPosition = TabContainer.TabPosition.Max); Reject<ArgumentOutOfRangeException>(() => tabs.TabFocusMode = (FocusMode)99); Reject<InvalidOperationException>(() => Task.Run(() => tabs.SetTabTitle(0, "worker")).GetAwaiter().GetResult());
+        Reentrancy(); Transfers(); Packing(); Console.WriteLine("TabContainer hierarchy, selection, visibility, layout, title, metadata, popup, drag and fresh scene checks passed.");
+    }
+    private static void Reentrancy()
+    {
+        var root = new SubViewport { Size = new(350, 200) }; var tabs = new TabContainer { Size = new(300, 160) }; root.AddChild(tabs); using var tree = new SceneTree(root); var added = false;
+        tabs.TabSelected += _ => { if (!added) { added = true; tabs.AddChild(new Control { Name = "Nested" }); } };
+        tabs.AddChild(new Control { Name = "First" }); Check(tabs.GetTabBar().TabCount == 2 && tabs.GetTabControl(1)!.Name == "Nested", "Reentrant page addition settles the strip before return.");
+        var delivered = false; var page = tabs.GetTabControl(0)!; Action<CanvasItem> fail = _ => throw new InvalidOperationException("visibility observer"); page.VisibilityChanged += fail; tabs.TabChanged += _ => delivered = true;
+        Reject<AggregateException>(() => tabs.CurrentTab = 1); Check(delivered && tabs.CurrentTab == 1 && !page.Visible && tabs.GetTabControl(1)!.Visible, "Visibility observer failure preserves required selection delivery and pages."); page.VisibilityChanged -= fail;
+        tabs.GetTabControl(1)!.Dispose(); Check(tabs.GetTabBar().TabCount == 1 && tabs.GetCurrentTabControl() == page && page.Visible, "Selected-page disposal removes its record and restores a page.");
+    }
+    private static void Transfers()
+    {
+        using var source = new TabContainer { Size = new(350, 140), DragToRearrangeEnabled = true, TabsRearrangeGroup = 7 }; using var target = new TabContainer { Size = new(350, 140), DragToRearrangeEnabled = true, TabsRearrangeGroup = 7 };
+        var a = new Control { Name = "A" }; var b = new Control { Name = "B" }; source.AddChild(a); source.AddChild(b); target.AddChild(new Control { Name = "Target" }); source.SetTabMetadata(0, 42); source.SetTabTooltip(0, "tip");
+        var bar = source.GetTabBar(); var payload = bar.GetDragData(bar.GetTabRect(0).GetCenter())!; source.MoveChild(a, 1); Check(target.GetTabBar().CanDropData(Vector2.Zero, payload), "Page payload follows identity after reorder."); target.GetTabBar().DropData(Vector2.Zero, payload); Check(a.Parent == target && source.GetTabCount() == 1 && target.GetTabControl(0) == a && target.GetTabMetadata<int>(0) == 42 && target.GetTabTooltip(0) == "tip" && target.CurrentTab == 0, "Cross-container transfer moves page and exact typed tab state.");
+        Check(!target.GetTabBar().CanDropData(Vector2.Zero, payload), "Consumed/stale source rejects."); payload = target.GetTabBar().GetDragData(target.GetTabBar().GetTabRect(0).GetCenter())!; var rearranged = -1; target.ActiveTabRearranged += i => rearranged = i; target.GetTabBar().DropData(target.GetTabBar().GetTabRect(1).End, payload); Check(target.GetTabControl(1) == a && target.CurrentTab == 1 && rearranged == 1, "Same-container drop moves the scene child and selection.");
+    }
+    private static void Packing()
+    {
+        using var source = new TabContainer { Name = "Stored", Size = new(320, 180), CurrentTab = 1, TabsPosition = TabContainer.TabPosition.Bottom }; var a = new Control { Name = "One" }; var b = new Control { Name = "Two" }; source.AddChild(a); source.AddChild(b); a.Owner = source; b.Owner = source; source.SetTabTitle(0, "Saved"); source.SetTabDisabled(0, true); source.SetTabMetadata(0, 9); using var packed = new PackedScene(); packed.Pack(source);
+        using var copy = (TabContainer)packed.Instantiate(); Check(copy.GetTabCount() == 2 && copy.GetTabTitle(0) == "Saved" && copy.IsTabDisabled(0) && copy.GetChildCount(true) == 4, "Indexed scene fields restore before owned child construction."); Reject<KeyNotFoundException>(() => copy.GetTabMetadata<int>(0));
+        var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "electron2d-tab-panels-" + Guid.NewGuid() + ".e2dscene"); try { ResourceSaver.Save(packed, path); FreshProcess(path); } finally { File.Delete(path); }
+    }
+    private static void FreshProcess(string path)
+    {
+        var start = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(typeof(TabContainerTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TAB_CONTAINER"); start.Environment["ELECTRON2D_TEST_TAB_CONTAINER_CHILD"] = path; using var process = System.Diagnostics.Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var error = process.StandardError.ReadToEndAsync(); if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Tab panel scene process."); }
+        Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh tab panel scene passed"), "Fresh tab panels: " + error.GetAwaiter().GetResult());
+    }
+    internal static void RunChild(string path)
+    { using var scene = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); var tabs = (TabContainer)scene.Instantiate(); using var tree = new SceneTree(tabs); tree.ProcessFrame(.01); Check(tabs.CurrentTab == 1 && tabs.GetTabControl(1)!.Visible && !tabs.GetTabControl(0)!.Visible && tabs.GetTabTitle(0) == "Saved" && tabs.TabsPosition == TabContainer.TabPosition.Bottom, "Fresh scene runs selected page and indexed policies."); Console.WriteLine("Fresh tab panel scene passed"); }
+    private static void Click(Viewport root, Vector2 point) { using var down = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left, Pressed = true }; using var up = new InputEventMouseButton { Position = point, ButtonIndex = MouseButton.Left }; root.PushInput(down, true); root.PushInput(up, true); }
+    private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
+    private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
+}

@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-06
 
-The executable TabBar slice adds shaped/theme-rendered tabs, selection/scroll/RTL/close behavior, typed identity-stable group drags, a real hover timer and fresh-process scene persistence. CPU and current Linux Wayland GPU/compatibility pixel/visual checks pass; 64 warmed active selection/layout/record/render frames measure zero managed bytes per backend. TabContainer, native accessibility and editor authoring remain separate dependencies.
+The executable TabBar slice adds shaped/theme-rendered tabs, selection/scroll/RTL/close behavior, typed identity-stable group drags, a real hover timer and fresh-process scene persistence. CPU and current Linux Wayland GPU/compatibility pixel/visual checks pass; 64 warmed active selection/layout/record/render frames measure zero managed bytes per backend. TabContainer now executes through the tab-panel consumer; native accessibility and editor authoring remain separate dependencies.
 
 Saved AudioBusLayout resources now execute generate/apply, all 27 effect archive schemas and project-default startup before initialization/autoplay. Fresh-process, native Stream/Sample replacement, factory/lifetime/failure and current public GPU/compatibility checks verify the slice; physical and other-target gates remain separate. Usage tagging/editor integration retains its exact dependency.
 
@@ -473,3 +473,10 @@ Before this slice, PopupMenu (141 own rows) was selected over TabContainer (86) 
 [PopupMenu](../components/popup-menus.md) adds 96 compiled declarations and pairs the 136 applicable own member/theme rows. The class stays Partial for independent native/system menu and inherited window integration; four native declarations remain Blocked on the ADR 0041 native-menu decision, service/backend and system registration/callback ownership. Metadata is exact generic runtime state. Seven indexed scene fields and scalar policies execute through fresh-process loading. Managed edge checks and Linux Wayland GPU/compatibility native input/render tests cover the stated embedded profile, including 64 warmed zero-managed-allocation focus/render frames per backend. Other platforms, physical input, native allocation totals and user acceptance remain unverified.
 
 After this slice, compare MenuButton, OptionButton and TabContainer again before choosing the next executable consumer. A usable PopupMenu prerequisite does not by itself implement their rows or LineEdit's context command integration.
+
+
+## Tab panel capability slice
+
+At the next selection point, TabContainer (86 own rows), OptionButton (51) and MenuButton (18) are all reachable on existing TabBar/Button/Popup backends. Each adds one concrete runtime type; their method/property/signal types have no direct external reference rows in the pinned catalog. TabContainer also adds its position enum and integrates real pages, header selection, container fitting, popup and scene-child drag ownership, providing the broadest immediate game/editor panel capability. OptionButton and MenuButton are narrower selection/menu consumers and remain next candidates.
+
+[TabContainer](../components/tab-panels.md) now pairs all 86 own rows, adding 59 compiled declarations. Actual pages, visibility/name coordination, pending indexed schema, top/bottom/RTL, maximum/minimum layout, weak popup binding and identity-stable group page transfers execute. AllTabsInFront preserves the pinned obsolete false/no-op contract. Typed metadata stays runtime-only. Required layout/selection delivery continues after observer errors and reentrant additions settle with a bounded pass loop under the pre-release correctness contract. Managed/fresh-process and native renderer/input checks pass; 64 warm active selection/layout/visibility/render frames per backend measure zero managed bytes. Inherited accessibility/semantic services, editor authoring, native allocation totals and other-platform/owner acceptance remain distinct.

@@ -25,5 +25,17 @@ public sealed partial class ThemeDB
         var mark = CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="8" height="24"><path d="M1 1L7 1L4 5L4 23" fill="none" stroke="#fff" stroke-width="2"/></svg>"""u8);
         _defaultTheme.SetIcon("close", type, close); _defaultTheme.SetIcon("decrement", type, left); _defaultTheme.SetIcon("decrement_highlight", type, left);
         _defaultTheme.SetIcon("increment", type, right); _defaultTheme.SetIcon("increment_highlight", type, right); _defaultTheme.SetIcon("drop_mark", type, mark);
+        const string container = "TabContainer";
+        foreach (var key in new[] { "tab_selected", "tab_unselected", "tab_hovered", "tab_disabled", "tab_focus" }) _defaultTheme.SetStyleBox(key, container, _defaultTheme.GetStyleBox(key, type));
+        foreach (var key in new[] { "decrement", "decrement_highlight", "increment", "increment_highlight", "drop_mark" }) _defaultTheme.SetIcon(key, container, _defaultTheme.GetIcon(key, type));
+        foreach (var key in new[] { "font_selected_color", "font_unselected_color", "font_disabled_color", "font_hovered_color", "font_outline_color", "icon_selected_color", "icon_unselected_color", "icon_disabled_color", "icon_hovered_color", "drop_mark_color" }) _defaultTheme.SetColor(key, container, _defaultTheme.GetColor(key, type));
+        _defaultTheme.SetFont("font", container, null); _defaultTheme.SetFontSize("font_size", container, -1);
+        foreach (var key in new[] { "tab_separation", "icon_max_width", "outline_size" }) _defaultTheme.SetConstant(key, container, _defaultTheme.GetConstant(key, type));
+        _defaultTheme.SetConstant("icon_separation", container, 4); _defaultTheme.SetConstant("side_margin", container, 8);
+        _defaultTheme.SetStyleBox("panel", container, CreateButtonStyle(new(.18f, .18f, .18f), 4, 4, 4, 4));
+        var header = new StyleBoxEmpty(); _owned.Add(header); _defaultTheme.SetStyleBox("tabbar_background", container, header);
+        var menu = CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M4 5L12 5M4 8L12 8M4 11L12 11" stroke="#ddd" stroke-width="2"/></svg>"""u8);
+        _defaultTheme.SetIcon("menu", container, menu); _defaultTheme.SetIcon("menu_highlight", container, menu);
+
     }
 }

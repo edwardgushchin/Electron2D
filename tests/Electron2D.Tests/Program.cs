@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER_CHILD") is { } tabContainerPath) { TabContainerTests.RunChild(tabContainerPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER") == "1") { TabContainerTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_CHILD") is { } menuPath) { PopupMenuTests.RunChild(menuPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU") == "1") { PopupMenuTests.Run(); return; }
@@ -605,6 +608,7 @@ ScrollContainerTests.Run();
 ScrollThemeTests.Run();
 ItemListTests.Run();
 TabBarTests.Run();
+TabContainerTests.Run();
 PopupTests.Run();
 PopupMenuTests.Run();
 LayoutContainersTests.Run();

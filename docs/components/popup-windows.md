@@ -33,4 +33,4 @@ window.Ready += _ => popup.PopupCentered();
 Engine.Run(window);
 ```
 
-The [PopupMenu consumer](popup-menus.md) now executes with item, shortcut, submenu, scroll and search behavior. MenuButton, OptionButton, TabContainer and LineEdit context actions remain dependent consumers. Native popup-menu hints do not imply a NativeMenu service or platform menu integration; ADR 0041 retains their separate decision gate.
+The [PopupMenu consumer](popup-menus.md) now executes with item, shortcut, submenu, scroll and search behavior. [TabContainer](tab-panels.md) now consumes the popup host; MenuButton, OptionButton and LineEdit context actions remain dependent consumers. Native popup-menu hints do not imply a NativeMenu service or platform menu integration; ADR 0041 retains their separate decision gate.
