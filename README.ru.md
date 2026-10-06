@@ -67,15 +67,17 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 ### Что понадобится
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) и Git.
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). Git нужен только для сборки из исходников.
 
-Подключайте движок через NuGet: пакет `Electron2D` и пакеты нужных платформ, например `Electron2D.Windows`, `Electron2D.Linux` или `Electron2D.MacOS`. Нативные зависимости восстанавливаются автоматически. [Платформенные пакеты и правила версий](docs/native-packaging.md).
+Подключайте движок через NuGet: пакет `Electron2D` и пакеты нужных платформ: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` или `Electron2D.tvOS`. Для Android TV используется `Electron2D.Android`, для Apple TV используется `Electron2D.tvOS`. Нативные зависимости восстанавливаются автоматически. [Платформенные пакеты и правила версий](docs/native-packaging.md).
 
-Пакеты текущей версии `0.1.0-alpha` ещё готовятся к публикации.
+Для предварительных версий добавляйте `--prerelease`. Используйте совпадающие версии движка и платформенных пакетов. Публикация текущих пакетов `0.1.0-alpha` на nuget.org ещё не завершена.
 
 ### Сборка и запуск
 
-Клонируйте репозиторий и соберите библиотеку:
+Для сборки и запуска своей игры через NuGet выполните команды из раздела [Подключение к своей игре](#use-electron2d-in-your-game) ниже. Исходники движка и нативный компилятор не нужны.
+
+Для сборки из исходников клонируйте репозиторий и соберите библиотеку:
 
 ```bash
 git clone https://github.com/edwardgushchin/Electron2D.git
@@ -95,24 +97,42 @@ dotnet run --project examples/CharacterMovement
 
 [Исходный код примера](examples/CharacterMovement/CharacterMovementScene.cs) · [Подробности запуска](examples/CharacterMovement/README.md)
 
+<a id="use-electron2d-in-your-game"></a>
+
 ### Подключение к своей игре
 
-Создайте консольный проект .NET 10 рядом с каталогом `Electron2D` и добавьте ссылку на движок. Команды выполняются из корня репозитория:
+Для настольной игры с NuGet создайте консольный проект .NET 10 и установите движок:
+
+```bash
+dotnet new console -n MyGame --framework net10.0
+cd MyGame
+dotnet add package Electron2D --prerelease
+```
+
+Можно вместо этого использовать исходники движка. В таком случае выполните следующие команды из корня репозитория:
 
 ```bash
 dotnet new console -n MyGame -o ../MyGame --framework net10.0
 dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
+cd ../MyGame
 ```
 
 Добавьте пакет своей платформы через NuGet. Выберите одну команду:
 
 | Платформа | Команда |
 | --- | --- |
-| Windows | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Windows --prerelease` |
-| Linux | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Linux --prerelease` |
-| macOS | `dotnet add ../MyGame/MyGame.csproj package Electron2D.MacOS --prerelease` |
+| Windows | `dotnet add package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add package Electron2D.MacOS --prerelease` |
+| Web | `dotnet add package Electron2D.Web --prerelease` |
+| Android | `dotnet add package Electron2D.Android --prerelease` |
+| iOS | `dotnet add package Electron2D.iOS --prerelease` |
+| Android TV | `dotnet add package Electron2D.Android --prerelease` |
+| Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-Замените содержимое `MyGame/Program.cs` следующим кодом:
+Для нескольких целевых платформ добавьте каждый нужный пакет. Для Web, Android/Android TV и iOS/tvOS нужны соответствующая рабочая нагрузка .NET и платформенный хост приложения; платформенный пакет не содержит такого хоста. Консольный пример ниже предназначен только для настольных платформ.
+
+Замените содержимое `Program.cs` следующим кодом:
 
 ```csharp
 using Electron2D;
@@ -129,7 +149,8 @@ return Engine.Run(window);
 Запустите приложение:
 
 ```bash
-dotnet run --project ../MyGame/MyGame.csproj -c Release
+dotnet build -c Release
+dotnet run -c Release
 ```
 
 Игровые объекты добавляются в окно через `AddChild`. Обработка кадров и клавиатуры показана в примере выше.
@@ -144,12 +165,12 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 | Целевая платформа игры | Проверено в репозитории |
 | --- | --- |
-| Windows, x86 / x64 / ARM64 | Запуск ещё не проверен |
-| Linux, x64 / ARM64 | На x64 проверены окно, ввод и отрисовка через Wayland. Отрисовка также проверена через XWayland. ARM64 ещё не проверен |
-| macOS, x64 / ARM64 | Запуск ещё не проверен |
+| Windows, x86 / x64 / ARM64 | Полные headless-наборы и доступные trimmed/AOT-проверки прошли в CI. Отрисовка ещё не проверена |
+| Linux, x64 / ARM64 | Полные headless-наборы и trimmed/AOT-проверки прошли на обеих архитектурах. На x64 проверены окно, ввод и отрисовка через Wayland, а также отрисовка через XWayland. Отрисовка на ARM64 ещё не проверена |
+| macOS, x64 / ARM64 | Полные headless-наборы и trimmed/AOT-проверки прошли в CI. Отрисовка ещё не проверена |
 | Android, телефоны и планшеты | На одном телефоне ARM64 проверены отрисовка, шейдерные материалы и физика |
 | Android TV | На одном 32-битном телевизоре проверены совместимый рендерер и физика |
-| iOS и tvOS, устройства и симуляторы | Подготовлена автоматическая сборка библиотеки. Проверки на устройствах ещё не проводились |
+| iOS и tvOS, устройства и симуляторы | Нативные контракты прошли во всех четырёх профилях симуляторов. Приложения для устройств собираются без подписи; запуск на реальных устройствах и отрисовка ещё не проверены |
 | Браузеры | Отрисовка и физика проверены в отдельном тестовом приложении. Запуск игры в браузере ещё не реализован |
 
 Проверки Android и браузера пока относятся к отдельным сценариям. Доступность нативных библиотек для выбранной платформы описана в [инструкциях по их доставке](docs/native-packaging.md).

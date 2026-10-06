@@ -67,15 +67,17 @@ Empieza con el ejemplo «Movimiento del personaje». Verás un personaje que pue
 
 ### Requisitos
 
-- [SDK de .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0) y Git.
+- [SDK de .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0). Git solo es necesario para compilar desde el código fuente.
 
-Instala mediante NuGet `Electron2D` y los paquetes de las plataformas de tu juego, como `Electron2D.Windows`, `Electron2D.Linux` o `Electron2D.MacOS`. Las dependencias nativas se restauran automáticamente. [Paquetes de plataforma y reglas de versiones](docs/native-packaging.md).
+Instala mediante NuGet `Electron2D` y los paquetes de las plataformas de tu juego: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` o `Electron2D.tvOS`. Android TV usa `Electron2D.Android`; Apple TV usa `Electron2D.tvOS`. Las dependencias nativas se restauran automáticamente. [Paquetes de plataforma y reglas de versiones](docs/native-packaging.md).
 
-Los paquetes actuales `0.1.0-alpha` aún se están preparando para su publicación.
+Los paquetes preliminares requieren `--prerelease`. Usa versiones coincidentes del motor y los paquetes de plataforma. La publicación de los paquetes actuales `0.1.0-alpha` en nuget.org todavía no ha terminado.
 
 ### Compilar y ejecutar
 
-Clona el repositorio y compila la biblioteca:
+Para compilar y ejecutar tu juego con NuGet, sigue las instrucciones de [Usar Electron2D en tu juego](#use-electron2d-in-your-game) más abajo. No necesitas el código fuente del motor ni un compilador nativo.
+
+Para compilar desde el código fuente, clona el repositorio y compila la biblioteca:
 
 ```bash
 git clone https://github.com/edwardgushchin/Electron2D.git
@@ -95,24 +97,42 @@ Se abrirá una escena con un personaje rosa sobre una cuadrícula. Las flechas l
 
 [Código del ejemplo](examples/CharacterMovement/CharacterMovementScene.cs) · [Instrucciones de ejecución](examples/CharacterMovement/README.md)
 
+<a id="use-electron2d-in-your-game"></a>
+
 ### Usar Electron2D en tu juego
 
-Crea un proyecto de consola de .NET 10 junto al directorio `Electron2D` y añade una referencia al proyecto del motor. Ejecuta estos comandos desde la raíz del repositorio:
+Para un juego de escritorio con NuGet, crea un proyecto de consola de .NET 10 e instala el motor:
+
+```bash
+dotnet new console -n MyGame --framework net10.0
+cd MyGame
+dotnet add package Electron2D --prerelease
+```
+
+También puedes usar el código fuente del motor. En ese caso, ejecuta estos comandos desde la raíz del repositorio:
 
 ```bash
 dotnet new console -n MyGame -o ../MyGame --framework net10.0
 dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
+cd ../MyGame
 ```
 
 Añade el paquete de tu plataforma mediante NuGet. Elige un comando:
 
 | Plataforma | Comando |
 | --- | --- |
-| Windows | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Windows --prerelease` |
-| Linux | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Linux --prerelease` |
-| macOS | `dotnet add ../MyGame/MyGame.csproj package Electron2D.MacOS --prerelease` |
+| Windows | `dotnet add package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add package Electron2D.MacOS --prerelease` |
+| Web | `dotnet add package Electron2D.Web --prerelease` |
+| Android | `dotnet add package Electron2D.Android --prerelease` |
+| iOS | `dotnet add package Electron2D.iOS --prerelease` |
+| Android TV | `dotnet add package Electron2D.Android --prerelease` |
+| Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-Sustituye el contenido de `MyGame/Program.cs` por este código:
+Para varios destinos, añade cada paquete de plataforma necesario. Web, Android/Android TV e iOS/tvOS requieren la carga de trabajo de .NET y el host de aplicación correspondientes; el paquete de plataforma no proporciona ese host. El ejemplo de consola siguiente es solo para escritorio.
+
+Sustituye el contenido de `Program.cs` por este código:
 
 ```csharp
 using Electron2D;
@@ -129,7 +149,8 @@ return Engine.Run(window);
 Ejecuta la aplicación:
 
 ```bash
-dotnet run --project ../MyGame/MyGame.csproj -c Release
+dotnet build -c Release
+dotnet run -c Release
 ```
 
 Añade objetos del juego a la ventana con `AddChild`. El ejemplo anterior muestra la actualización por fotogramas y el manejo del teclado.
@@ -144,12 +165,12 @@ La tabla indica qué se ha comprobado en cada plataforma del juego. El editor vi
 
 | Plataforma objetivo del juego | Comprobado en este repositorio |
 | --- | --- |
-| Windows, x86 / x64 / ARM64 | Todavía no se ha comprobado la ejecución |
-| Linux, x64 / ARM64 | En x64 se han comprobado ventanas, entrada y renderizado con Wayland. También se ha comprobado el renderizado con XWayland. ARM64 aún no se ha comprobado |
-| macOS, x64 / ARM64 | Todavía no se ha comprobado la ejecución |
+| Windows, x86 / x64 / ARM64 | Las suites completas sin interfaz y las comprobaciones disponibles de recorte/AOT pasaron en CI. El renderizado no se ha comprobado |
+| Linux, x64 / ARM64 | Las suites completas sin interfaz y las comprobaciones de recorte/AOT pasaron en ambas arquitecturas. En x64 se comprobaron ventanas, entrada y renderizado con Wayland, y renderizado con XWayland. El renderizado en ARM64 no se ha comprobado |
+| macOS, x64 / ARM64 | Las suites completas sin interfaz y las comprobaciones de recorte/AOT pasaron en CI. El renderizado no se ha comprobado |
 | Android, teléfonos y tabletas | Se han comprobado el renderizado, los materiales con shaders y la física en un teléfono ARM64 |
 | Android TV | Se han comprobado el renderizador de compatibilidad y la física en un televisor de 32 bits |
-| iOS y tvOS, dispositivos y simuladores | Se ha preparado la compilación automática de la biblioteca. Todavía no se han realizado comprobaciones en dispositivos |
+| iOS y tvOS, dispositivos y simuladores | Los contratos nativos pasaron en los cuatro perfiles de simulador. Las aplicaciones para dispositivos se compilan sin firma; no se han comprobado la ejecución en dispositivos físicos ni el renderizado |
 | Navegadores | Se han comprobado el renderizado y la física en una aplicación de prueba independiente. Todavía no se ha implementado la ejecución de juegos en el navegador |
 
 Las comprobaciones de Android y navegador cubren escenarios concretos. Consulta la [distribución de bibliotecas nativas](docs/native-packaging.md) para saber cuáles están disponibles en tu plataforma.

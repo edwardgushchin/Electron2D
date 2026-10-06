@@ -67,15 +67,17 @@ Start with the “Character movement” example. You will see a character and mo
 
 ### Requirements
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) and Git.
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). Git is needed only to build from source.
 
-Use NuGet to install `Electron2D` and the packages for your game targets, such as `Electron2D.Windows`, `Electron2D.Linux` or `Electron2D.MacOS`. Native dependencies restore automatically. [Platform packages and version rules](docs/native-packaging.md).
+Use NuGet to install `Electron2D` and the packages for your game targets: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` or `Electron2D.tvOS`. Android TV uses `Electron2D.Android`; Apple TV uses `Electron2D.tvOS`. Native dependencies restore automatically. [Platform packages and version rules](docs/native-packaging.md).
 
-The current `0.1.0-alpha` packages are still being prepared for publication.
+Prerelease packages require `--prerelease`. Use matching engine and platform package versions. Publication of the current `0.1.0-alpha` packages to nuget.org is not complete yet.
 
 ### Build and run
 
-Clone the repository and build the library:
+To build and run your game with NuGet, follow [Use Electron2D in your game](#use-electron2d-in-your-game) below. No engine checkout or native compiler is needed.
+
+To build from source, clone the repository and build the library:
 
 ```bash
 git clone https://github.com/edwardgushchin/Electron2D.git
@@ -95,24 +97,42 @@ A scene opens with a pink character on a grid. The arrow keys move it within the
 
 [Example source](examples/CharacterMovement/CharacterMovementScene.cs) · [Run instructions](examples/CharacterMovement/README.md)
 
+<a id="use-electron2d-in-your-game"></a>
+
 ### Use Electron2D in your game
 
-Create a .NET 10 console project alongside the `Electron2D` directory and add a project reference to the engine. Run these commands from the repository root:
+For a desktop game using NuGet, create a .NET 10 console project and install the engine:
+
+```bash
+dotnet new console -n MyGame --framework net10.0
+cd MyGame
+dotnet add package Electron2D --prerelease
+```
+
+Alternatively, use the engine source. Run these commands from the repository root instead:
 
 ```bash
 dotnet new console -n MyGame -o ../MyGame --framework net10.0
 dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
+cd ../MyGame
 ```
 
 Add your platform package through NuGet. Choose one command:
 
 | Platform | Command |
 | --- | --- |
-| Windows | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Windows --prerelease` |
-| Linux | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Linux --prerelease` |
-| macOS | `dotnet add ../MyGame/MyGame.csproj package Electron2D.MacOS --prerelease` |
+| Windows | `dotnet add package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add package Electron2D.MacOS --prerelease` |
+| Web | `dotnet add package Electron2D.Web --prerelease` |
+| Android | `dotnet add package Electron2D.Android --prerelease` |
+| iOS | `dotnet add package Electron2D.iOS --prerelease` |
+| Android TV | `dotnet add package Electron2D.Android --prerelease` |
+| Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-Replace the contents of `MyGame/Program.cs` with this code:
+For several game targets, add each required platform package. Web, Android/Android TV and iOS/tvOS require the matching .NET workload and platform application host; a platform package does not supply that host. The console example below is for desktop targets only.
+
+Replace the contents of `Program.cs` with this code:
 
 ```csharp
 using Electron2D;
@@ -129,7 +149,8 @@ return Engine.Run(window);
 Run the application:
 
 ```bash
-dotnet run --project ../MyGame/MyGame.csproj -c Release
+dotnet build -c Release
+dotnet run -c Release
 ```
 
 Add game objects to the window with `AddChild`. The example above shows frame updates and keyboard handling.
@@ -144,12 +165,12 @@ The table lists what has been checked on each game target. The visual editor tar
 
 | Game target | Checked in this repository |
 | --- | --- |
-| Windows, x86 / x64 / ARM64 | Execution has not been checked yet |
-| Linux, x64 / ARM64 | On x64, windowing, input and rendering have been checked under Wayland. Rendering has also been checked under XWayland. ARM64 has not been checked yet |
-| macOS, x64 / ARM64 | Execution has not been checked yet |
+| Windows, x86 / x64 / ARM64 | Full headless suites and available trimmed/AOT checks passed in CI. Rendering has not been checked |
+| Linux, x64 / ARM64 | Full headless suites and trimmed/AOT checks passed on both architectures. On x64, windowing, input and rendering have been checked under Wayland, and rendering under XWayland. ARM64 rendering has not been checked |
+| macOS, x64 / ARM64 | Full headless suites and trimmed/AOT checks passed in CI. Rendering has not been checked |
 | Android, phones and tablets | Rendering, shader materials and physics have been checked on one ARM64 phone |
 | Android TV | The compatibility renderer and physics have been checked on one 32-bit TV |
-| iOS and tvOS, devices and simulators | Automated library builds have been prepared. Device checks have not been run yet |
+| iOS and tvOS, devices and simulators | Native contracts passed in all four simulator profiles. Device bundles build without signing; physical-device execution and rendering have not been checked |
 | Browsers | Rendering and physics have been checked in a separate test application. Running a game in the browser is not implemented yet |
 
 Android and browser checks currently cover individual scenarios. See [native library delivery](docs/native-packaging.md) for library availability on your target platform.

@@ -67,15 +67,17 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 ### 所需工具
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) 和 Git。
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)。仅从源码构建时需要 Git。
 
-通过 NuGet 安装 `Electron2D` 以及游戏目标平台的包，例如 `Electron2D.Windows`、`Electron2D.Linux` 或 `Electron2D.MacOS`。原生依赖会自动还原。[平台包及版本规则](docs/native-packaging.md)。
+通过 NuGet 安装 `Electron2D` 以及游戏目标平台的包：`Electron2D.Windows`、`Electron2D.Linux`、`Electron2D.MacOS`、`Electron2D.Web`、`Electron2D.Android`、`Electron2D.iOS` 或 `Electron2D.tvOS`。Android TV 使用 `Electron2D.Android`，Apple TV 使用 `Electron2D.tvOS`。原生依赖会自动还原。[平台包及版本规则](docs/native-packaging.md)。
 
-当前的 `0.1.0-alpha` 包仍在准备发布。
+安装预发布包时需要 `--prerelease`。请使用版本匹配的引擎包和平台包。当前 `0.1.0-alpha` 包尚未完成在 nuget.org 上的发布。
 
 ### 构建与运行
 
-克隆仓库并构建库：
+通过 NuGet 构建和运行自己的游戏，请执行下方[在自己的游戏中使用 Electron2D](#use-electron2d-in-your-game)中的命令。无需引擎源码或原生编译器。
+
+从源码构建时，克隆仓库并构建库：
 
 ```bash
 git clone https://github.com/edwardgushchin/Electron2D.git
@@ -95,24 +97,42 @@ dotnet run --project examples/CharacterMovement
 
 [示例源码](examples/CharacterMovement/CharacterMovementScene.cs) · [运行说明](examples/CharacterMovement/README.md)
 
+<a id="use-electron2d-in-your-game"></a>
+
 ### 在自己的游戏中使用 Electron2D
 
-在 `Electron2D` 目录旁创建一个 .NET 10 控制台项目，并添加引擎项目引用。在仓库根目录执行以下命令：
+使用 NuGet 开发桌面游戏时，创建一个 .NET 10 控制台项目并安装引擎：
+
+```bash
+dotnet new console -n MyGame --framework net10.0
+cd MyGame
+dotnet add package Electron2D --prerelease
+```
+
+也可以使用引擎源码。此时改为在仓库根目录执行以下命令：
 
 ```bash
 dotnet new console -n MyGame -o ../MyGame --framework net10.0
 dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
+cd ../MyGame
 ```
 
 通过 NuGet 添加目标平台的包，选择以下一条命令：
 
 | 平台 | 命令 |
 | --- | --- |
-| Windows | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Windows --prerelease` |
-| Linux | `dotnet add ../MyGame/MyGame.csproj package Electron2D.Linux --prerelease` |
-| macOS | `dotnet add ../MyGame/MyGame.csproj package Electron2D.MacOS --prerelease` |
+| Windows | `dotnet add package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add package Electron2D.MacOS --prerelease` |
+| Web | `dotnet add package Electron2D.Web --prerelease` |
+| Android | `dotnet add package Electron2D.Android --prerelease` |
+| iOS | `dotnet add package Electron2D.iOS --prerelease` |
+| Android TV | `dotnet add package Electron2D.Android --prerelease` |
+| Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-将 `MyGame/Program.cs` 的内容替换为以下代码：
+面向多个平台时，请添加每个所需的平台包。Web、Android/Android TV 和 iOS/tvOS 需要对应的 .NET 工作负载和平台应用宿主；平台包本身不提供宿主。下方控制台示例仅适用于桌面平台。
+
+将 `Program.cs` 的内容替换为以下代码：
 
 ```csharp
 using Electron2D;
@@ -129,7 +149,8 @@ return Engine.Run(window);
 运行程序：
 
 ```bash
-dotnet run --project ../MyGame/MyGame.csproj -c Release
+dotnet build -c Release
+dotnet run -c Release
 ```
 
 使用 `AddChild` 将游戏对象添加到窗口。上方示例展示了帧更新和键盘输入处理。
@@ -144,12 +165,12 @@ dotnet run --project ../MyGame/MyGame.csproj -c Release
 
 | 游戏目标平台 | 本仓库已完成的验证 |
 | --- | --- |
-| Windows，x86 / x64 / ARM64 | 尚未验证运行 |
-| Linux，x64 / ARM64 | 已在 x64 上验证 Wayland 窗口、输入和渲染，也验证了 XWayland 渲染。尚未验证 ARM64 |
-| macOS，x64 / ARM64 | 尚未验证运行 |
+| Windows，x86 / x64 / ARM64 | 完整无界面测试及可用的裁剪/AOT 检查已通过 CI。尚未验证渲染 |
+| Linux，x64 / ARM64 | 两种架构的完整无界面测试和裁剪/AOT 检查均已通过。已在 x64 上验证 Wayland 窗口、输入和渲染，也验证了 XWayland 渲染。尚未验证 ARM64 渲染 |
+| macOS，x64 / ARM64 | 完整无界面测试和裁剪/AOT 检查已通过 CI。尚未验证渲染 |
 | Android，手机和平板 | 已在一台 ARM64 手机上验证渲染、着色器材质和物理 |
 | Android TV | 已在一台 32 位电视上验证兼容渲染器和物理 |
-| iOS 和 tvOS，设备与模拟器 | 已准备自动化库构建，尚未进行设备验证 |
+| iOS 和 tvOS，设备与模拟器 | 四种模拟器配置的原生契约检查均已通过。设备应用包可进行未签名构建；尚未验证真机运行或渲染 |
 | 浏览器 | 已在独立测试程序中验证渲染和物理。尚未实现浏览器游戏运行支持 |
 
 Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生库可用情况见[原生库交付说明](docs/native-packaging.md)。
