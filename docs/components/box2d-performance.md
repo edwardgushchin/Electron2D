@@ -1,6 +1,6 @@
 # Box2D backend performance
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 ## Fixed workload and comparison
 
@@ -50,4 +50,28 @@ sha256sum /tmp/box2d-native-state.bin
 
 The full Release runtime tests and focused optimized Debug lane/parallel tests pass. PhysicsParallelTests covers uneven ranges, task reuse/error/cancellation, actual 288-body one-way contacts, owner integration/events, freeze/unfreeze and serial/parallel transitions. The benchmark with `DOTNET_EnableAVX=0` also preserves the final state and zero all-thread managed allocation; this is a local fallback check, not execution on a foreign CPU.
 
-The actual PhysicsSandbox 1,024-body scene was measured separately at 60 Hz through SceneTree and native Wayland GPU presentation, with normal/debug trials and zero sampled owner-thread managed frame bytes. The final isolated headless run measured 5.610 ms fixed mean/6.593 ms p95, of which 0.913 ms was the backend step (`bin/physics-sandbox/profile-Release-box2d-final-isolated.json`). Synchronization, contact reports, queries and scene/UI callbacks remain a material cost. The native normal/debug trial recorded 57.1/45.6 FPS under desktop load, with exactly zero maximum sampled owner frame bytes (`profile-Release-box2d-final.json`); its fixed sample overlapped a deliberately slow no-intrinsics check and is not used as a steady throughput result. These raw kernel gains do not establish 144 rendered FPS. Foreign platforms, native heaps, physical interaction and owner visual acceptance remain unverified.
+Before the contact-pipeline optimization below, the actual PhysicsSandbox 1,024-body scene was measured separately at 60 Hz through SceneTree and native Wayland GPU presentation, with normal/debug trials and zero sampled owner-thread managed frame bytes. The final isolated headless run measured 5.610 ms fixed mean/6.593 ms p95, of which 0.913 ms was the backend step (`bin/physics-sandbox/profile-Release-box2d-final-isolated.json`). That profile identified contact reporting and solved-state capture as a material cost; the section below measures their optimized path. The native normal/debug trial recorded 57.1/45.6 FPS under desktop load, with exactly zero maximum sampled owner frame bytes (`profile-Release-box2d-final.json`); its fixed sample overlapped a deliberately slow no-intrinsics check and is not used as a steady throughput result. These raw kernel gains do not establish 144 rendered FPS. Foreign platforms, native heaps, physical interaction and owner visual acceptance remain unverified.
+
+## Full SceneTree contact pipeline
+
+The follow-up [runtime benchmark](../../tests/Electron2D.Tests/PhysicsPipelinePerformance.cs) measures the complete `SceneTree.PhysicsFrame` with 1,536 always-awake circles at 144 Hz, four substeps, `ContactMonitor=true`, eight reported points per body and physics interpolation enabled. It includes body preparation, fields, solver work, scene synchronization, contact snapshots/events and interpolation traversal; it performs no rendering. World damping follows the runtime's project defaults in addition to each body's settings, so its trajectory and times are separate from the raw native-comparison workload above.
+
+Three fresh-process trials use Release/.NET 10.0.1 with default tiered compilation on the same Ryzen 7 5700X. The baseline runtime assembly is the verified tracked `39f16075` tree. Trials ran sequentially under uncontrolled desktop load; medians below are medians of trial means/p99, not pooled percentiles. Baseline and four-worker collection trials alternated; the owner-participating candidate followed. Raw trials are retained in ignored `bin/physics-pipeline-performance/results.json`.
+
+| Full SceneTree configuration | Mean ms | p99 ms | All-thread managed bytes |
+| --- | ---: | ---: | ---: |
+| Previous contact pipeline | 9.604 | 15.985 | 0 |
+| Shared snapshots, four background collectors | 3.671 | 7.233 | 0 |
+| Shared snapshots, owner plus three collectors | 4.070 | 6.367 | 0 |
+
+The selected policy gives about 2.36 times lower mean and 2.51 times lower median p99 than the previous complete pipeline. The owner handles one range and always joins the remaining ranges before shared events or game callbacks. The background-only candidate had a lower mean but a higher median p99; the owner-participating candidate had a maximum trial p99 of 7.330 ms. Desktop scheduling and the unmeasured renderer prevent claiming a reliable 144 FPS game from these figures.
+
+Rigid monitoring and direct state now read each body's linked touching pairs together, without copying whole manifolds or resolving each scene collider through the server registry. Weak fixture tags preserve scene lifetime. A reusable per-world awake-motion snapshot supplies both point velocities. Each collector owns its receiver's sets and value storage; the owner queues transitions in body order. Small worlds and browsers collect serially. Contact caps, immutable values after callback fixture edits and the owner thread for every user callback are unchanged.
+
+Every trial retains 7,691 reported points, 10,586 object entries and 2,895 exits. Complete final body state SHA-256 is `8744770BAFC84C3C5F482707C3775EA52066741700FF0B4E9883A64D7208539C`; all reported contact identities, shape indices, points, normals, velocities and impulses have SHA-256 `4B292985924810E9EB4F27DAA9201927EE9993F2D9D43D5E2223A2E51F9A1DC5`. The ordered object-event stream has the same rolling hash `9994587605110593315`. The benchmark checks finite state and both owner/all-thread managed allocation brackets; construction, checksums and JSON serialization occur outside them.
+
+```bash
+ELECTRON2D_TEST_PHYSICS_PERFORMANCE=1 dotnet run --project tests/Electron2D.Tests -c Release
+```
+
+`ELECTRON2D_PHYSICS_PERFORMANCE_COUNT` optionally selects the test population (default 1,536). Ordinary runtime checks cover contact-cap changes, monitoring disabled, callback fixture edits and 288-body parallel/serial transitions with owner integration observing complete contact snapshots. This follow-up changes engine-owned integration; the measured raw solver and native oracle above remain unchanged. Foreign execution, rendering and owner gameplay acceptance require their own checks.

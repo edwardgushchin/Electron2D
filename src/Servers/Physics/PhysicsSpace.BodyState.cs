@@ -1,5 +1,7 @@
 using Box2D.NET;
 using static Box2D.NET.B2Bodies;
+using static Box2D.NET.B2Worlds;
+using static Box2D.NET.B2MathFunction;
 
 namespace Electron2D;
 
@@ -7,9 +9,30 @@ internal sealed partial class PhysicsSpace
 {
     internal RID RID { get; set; }
     internal float LastStep { get; private set; }
+    private BodyMotion[] _bodyMotions = [];
+    private readonly record struct BodyMotion(B2Vec2 Center, B2Vec2 Velocity, float Angular, bool Active);
     private bool _dispatchingBodyStates;
     private readonly List<CallbackBody> _callbackBodies = [];
     private readonly record struct CallbackBody(PhysicsBodyRuntime Runtime, B2BodyId ID);
+
+    private void CaptureBodyMotions()
+    {
+        Array.Clear(_bodyMotions);
+        var world = b2GetWorldFromId(_worldID);
+        var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
+        for (var i = 0; i < awake.bodySims.count; i++)
+        {
+            var sim = awake.bodySims.data[i];
+            var state = awake.bodyStates.data[i];
+            _bodyMotions[sim.bodyId] = new(sim.center, state.linearVelocity, state.angularVelocity, true);
+        }
+    }
+
+    internal B2Vec2 SolvedPointVelocity(B2BodyId id, B2Vec2 point)
+    {
+        ref readonly var motion = ref _bodyMotions[id.index1 - 1];
+        return motion.Active ? b2Add(motion.Velocity, b2CrossSV(motion.Angular, b2Sub(point, motion.Center))) : default;
+    }
 
     private void PrepareBodyStates(double delta)
     {
@@ -17,7 +40,7 @@ internal sealed partial class PhysicsSpace
         _callbackBodies.Clear();
         foreach (var body in _bodies)
         {
-            var runtime = PhysicsServer.Service.BodyRuntime(body.GetRID());
+            var runtime = body.Runtime;
             runtime.ApplyBeforeStep();
             runtime.GetView(this, body.BackendID);
             _callbackBodies.Add(new(runtime, body.BackendID));
@@ -46,7 +69,10 @@ internal sealed partial class PhysicsSpace
     private void CaptureBodyStates()
     {
         foreach (var body in _callbackBodies)
-            if (Current(body)) body.Runtime.GetView(this, body.ID).CaptureContacts();
+        {
+            if (Current(body) && body.Runtime.Owners.Scene is not RigidBody)
+                body.Runtime.GetView(this, body.ID).CaptureContacts();
+        }
     }
 
     private void DispatchBodyStates()

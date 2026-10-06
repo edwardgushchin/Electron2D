@@ -41,6 +41,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON") == "1") { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_CHILD") is { } dialogPath) { DialogTests.RunChild(dialogPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG") == "1") { DialogTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PERFORMANCE") == "1") { PhysicsPipelinePerformance.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SANDBOX_PROFILE") == "1") { PhysicsSandboxTests.RunProfile(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION_CHILD") is { } optionPath) { OptionButtonTests.RunChild(optionPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }

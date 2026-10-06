@@ -23,6 +23,7 @@ public sealed partial class Area : CollisionObject
             (area, value) => area.AudioBusName = value, _ => "Master", stored: true)
     ];
 
+    private WeakReference<CollisionObject>? _fixtureOwner;
     private readonly List<B2ShapeId> _backendShapes = [];
     private readonly List<ulong> _appliedShapeRevisions = [];
     private HashSet<CollisionObject> _overlaps = new(ReferenceEqualityComparer.Instance);
@@ -367,7 +368,7 @@ public sealed partial class Area : CollisionObject
         {
             var node = ShapeSlots[index];
             if (!node.Active) continue;
-            definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, null));
+            definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, null) { SceneOwner = _fixtureOwner ??= new(this) });
             node.Shape.AppendToBody(_bodyID, node.Transform.Origin, node.Transform.Rotation, definition, _backendShapes);
         }
         _appliedShapeRevisions.Clear();

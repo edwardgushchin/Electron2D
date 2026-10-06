@@ -1,6 +1,6 @@
 # Scene physics bodies component
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 ## Scope and owned types
 
@@ -93,3 +93,5 @@ The sandbox performance slice resolves monitored contact owners through the exis
 ## Backend throughput
 
 Large worlds use up to four retained internal workers at 256 awake bodies; smaller worlds and browser hosts stay serial. Eight-lane contact math uses hardware SIMD where available, preserving separate multiply/add and scalar comparison choices. Public callbacks stay on the world owner. The [reproducible backend report](box2d-performance.md) records paired serial/parallel/native results, managed allocation and verification limits.
+
+Rigid-body monitoring and direct-state contact values share one traversal of the finished solver. Each world captures awake body motion once for contact-point velocities. Weak fixture owner tags avoid registry lookups during collection. Large worlds collect private per-body snapshots on retained workers, then queue changes in body order and invoke all user callbacks on the scene owner. Pair order, contact caps, retained values after fixture edits and zero-allocation warm steps are preserved. See the [performance measurements](box2d-performance.md) for the full SceneTree benchmark and its limits.

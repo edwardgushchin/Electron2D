@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 ## Responsibility
 
@@ -128,3 +128,5 @@ Prepared point/shape/contact query destinations and character slide snapshots ca
 ## Backend throughput
 
 The internal world selects retained workers for large awake populations and eight-lane SIMD contact arithmetic. Public physics callback timing and four substeps remain unchanged. [The measured contract](../components/box2d-performance.md) separates raw backend throughput from scene synchronization, rendering and foreign-platform acceptance.
+
+Rigid-body monitoring and direct-state contact values share one traversal of the finished solver. Each world captures awake body motion once for contact-point velocities. Weak fixture owner tags avoid registry lookups during collection. Large worlds collect private per-body snapshots on retained workers, then queue changes in body order and invoke all user callbacks on the scene owner. Pair order, contact caps, retained values after fixture edits and zero-allocation warm steps are preserved. See the [performance measurements](../components/box2d-performance.md) for the full SceneTree benchmark and its limits.

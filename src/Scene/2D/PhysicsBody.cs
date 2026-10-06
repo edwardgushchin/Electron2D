@@ -9,6 +9,7 @@ namespace Electron2D;
 /// <summary>A spatial collision object that participates in a scene tree's physics world.</summary>
 public abstract class PhysicsBody : CollisionObject
 {
+    private WeakReference<CollisionObject>? _fixtureOwner;
     private readonly List<B2ShapeId> _backendShapes = [];
     private readonly List<ulong> _appliedShapeRevisions = [];
     private PhysicsSpace? _space;
@@ -22,6 +23,8 @@ public abstract class PhysicsBody : CollisionObject
     /// <summary>Creates a detached body with no collision shapes.</summary>
     protected PhysicsBody() { }
 
+    private PhysicsBodyRuntime? _runtime;
+    internal PhysicsBodyRuntime Runtime => _runtime ??= PhysicsServer.Service.BodyRuntime(PhysicsRID);
     internal B2BodyId BackendID => _bodyID;
     internal PhysicsSpace? Space => _space;
     internal bool HasBackend => _space is not null;
@@ -319,7 +322,7 @@ public abstract class PhysicsBody : CollisionObject
             var node = ShapeSlots[index];
             if (!node.Active) continue;
             var contact = node.OneWay;
-            definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact));
+            definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact) { SceneOwner = _fixtureOwner ??= new(this) });
             definition.enablePreSolveEvents = contact is not null ||
                 PhysicsServer.Service.HasBodyCollisionExceptions(GetRID());
             node.Shape.AppendToBody(_bodyID, node.Transform.Origin, node.Transform.Rotation, definition, _backendShapes);

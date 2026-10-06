@@ -27,6 +27,7 @@ internal static class PhysicsParallelTests
         for (var i = 0; i < 256; i++) tree.PhysicsFrame(1d / 144);
         var world = b2GetWorldFromId(bodies[0].Space!.WorldID);
         Check(world.workerCount == (OperatingSystem.IsBrowser() ? 1 : Math.Min(4, Environment.ProcessorCount)), "Large world selects retained workers.");
+        Check(bodies.Any(body => body.ContactSamples > 0), "Parallel collectors publish contacts before owner integration.");
         Check(bodies.All(body => body.Position.IsFinite() && body.Position.Y < 610 && body.Calls == 256), "Parallel contacts and owner integration remain valid.");
         for (var i = bodies.Count - 1; i >= 32; i--) bodies[i].Freeze = true;
         tree.PhysicsFrame(1d / 144);
@@ -63,11 +64,17 @@ internal static class PhysicsParallelTests
 
     private sealed class ProbeBody(int owner) : RigidBody
     {
-        internal int Calls;
+        internal int Calls, ContactSamples;
         protected override void IntegrateForces(PhysicsDirectBodyState state)
         {
             if (Environment.CurrentManagedThreadId != owner) throw new Exception("Force integration left its owner thread.");
             Calls++;
+            Check(state.GetContactCount() == GetContactCount(), "Owner integration sees the complete shared contact snapshot.");
+            if (state.GetContactCount() > 0)
+            {
+                ContactSamples++;
+                Check(state.GetContactLocalNormal(0).IsFinite(), "Parallel contact normal is finite.");
+            }
         }
     }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }

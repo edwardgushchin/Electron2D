@@ -10,7 +10,8 @@ namespace Electron2D;
 /// disposal invalidates access; a later attachment receives a new view. Access is permitted outside native
 /// solver execution, including post-solver integration callbacks. Contact positions, normals and velocities
 /// use global axes; the word local identifies this body rather than the collider. Caller disposal affects only the view
-/// and is rejected inside a borrowed callback. Whole-step tangential contact impulse aggregation remains incomplete.</remarks>
+/// and is rejected inside a borrowed callback. Solved contacts are fully captured before user callbacks and remain
+/// unchanged by subsequent body or fixture edits. Whole-step tangential contact impulse aggregation remains incomplete.</remarks>
 public sealed class PhysicsDirectBodyState : ElectronObject
 {
     private readonly PhysicsBodyRuntime _runtime;
@@ -313,30 +314,45 @@ public sealed class PhysicsDirectBodyState : ElectronObject
         var limit = _runtime.ContactLimit;
         if (limit == 0) return;
         var pairs = b2Body_GetContactData(_id, _rawContacts, limit);
-        for (var index = 0; index < pairs && _contactCount < limit; index++)
+        CaptureContacts(_rawContacts.AsSpan(0, pairs));
+    }
+
+    internal void BeginContactSnapshot() => _contactCount = 0;
+
+    private void CaptureContacts(Span<B2ContactData> contacts)
+    {
+        _contactCount = 0;
+        var limit = _runtime.ContactLimit;
+        for (var index = 0; index < contacts.Length && _contactCount < limit; index++)
         {
-            ref readonly var contact = ref _rawContacts[index];
+            ref var contact = ref contacts[index];
             var first = b2Shape_GetBody(contact.shapeIdA) == _id;
             var own = b2Shape_GetUserData(first ? contact.shapeIdA : contact.shapeIdB).GetRef<PhysicsFixtureTag>();
             var other = b2Shape_GetUserData(first ? contact.shapeIdB : contact.shapeIdA).GetRef<PhysicsFixtureTag>();
-            if (own is null || other is null) continue;
-            var collider = b2Shape_GetBody(first ? contact.shapeIdB : contact.shapeIdA);
-            var normal = contact.manifold.normal;
-            for (var pointIndex = 0; pointIndex < contact.manifold.pointCount && _contactCount < limit; pointIndex++)
-            {
-                var point = contact.manifold.points[pointIndex];
-                var a = point.point - normal * (point.separation * 0.5f);
-                var b = point.point + normal * (point.separation * 0.5f);
-                var local = first ? a : b;
-                var remote = first ? b : a;
-                var impulse = normal * point.totalNormalImpulse + b2RightPerp(normal) * point.tangentImpulse;
-                _contacts[_contactCount++] = new(other.ColliderRID,
-                    PhysicsServer.Service.ResolveSceneObject(other.ColliderRID)?.InstanceID ?? 0,
-                    own.ShapeIndex, other.ShapeIndex, ToScene(local), ToScene(remote),
-                    new(first ? -normal.X : normal.X, first ? -normal.Y : normal.Y),
-                    ToScene(b2Body_GetWorldPointVelocity(_id, local)), ToScene(b2Body_GetWorldPointVelocity(collider, remote)),
-                    ToScene(first ? -impulse : impulse));
-            }
+            if (own is not null && other is not null)
+                CaptureContact(ref contact.manifold, b2Shape_GetBody(first ? contact.shapeIdB : contact.shapeIdA),
+                    first, own, other, other.SceneObject, limit);
+        }
+    }
+
+    internal void CaptureContact(ref B2Manifold manifold, B2BodyId collider, bool first, PhysicsFixtureTag own,
+        PhysicsFixtureTag other, CollisionObject? otherObject, int limit)
+    {
+        if (_contactCount >= limit) return;
+        var normal = manifold.normal;
+        for (var pointIndex = 0; pointIndex < manifold.pointCount && _contactCount < limit; pointIndex++)
+        {
+            ref readonly var point = ref manifold.points[pointIndex];
+            var a = point.point - normal * (point.separation * 0.5f);
+            var b = point.point + normal * (point.separation * 0.5f);
+            var local = first ? a : b;
+            var remote = first ? b : a;
+            var impulse = normal * point.totalNormalImpulse + b2RightPerp(normal) * point.tangentImpulse;
+            _contacts[_contactCount++] = new(other.ColliderRID, otherObject?.InstanceID ?? 0,
+                own.ShapeIndex, other.ShapeIndex, ToScene(local), ToScene(remote),
+                new(first ? -normal.X : normal.X, first ? -normal.Y : normal.Y),
+                ToScene(_space.SolvedPointVelocity(_id, local)), ToScene(_space.SolvedPointVelocity(collider, remote)),
+                ToScene(first ? -impulse : impulse));
         }
     }
 }

@@ -38,7 +38,7 @@ Commit pair/object snapshots before callbacks and never replay transitions after
 <a id="adr-0058"></a>
 ## ADR 0058: Rigid-body contact and sleep snapshots
 
-Last updated: 2026-09-25
+Last updated: 2026-10-07
 
 - Status: Accepted
 - Scope: Object-level RigidBody contact reports, point counts and solver sleep events
@@ -51,7 +51,7 @@ Rigid bodies respond to contact but had no typed way to observe the other bodies
 ### Decision
 
 - Add `RigidBody.ContactMonitor`, nonnegative `MaxContactsReported`, `GetContactCount()`, typed `GetCollidingBodies()`, object-level `BodyEntered`/`BodyExited` and `SleepingStateChanged`. Zero reported contacts is the default. Count points up to the configured cap after each step, while the object snapshot and entry/exit events also require monitoring. Disabling monitoring clears its object snapshot without synthesizing exits; disabling from inside its contact callback is rejected before mutation.
-- Read current backend touching pairs and manifold point counts through a reusable per-body buffer after solver/body synchronization. Resolve other bodies through current backend body IDs, deduplicate shape pairs by scene body, then commit snapshots before callbacks. Emit sleep transitions before contact transitions; explicit `Sleeping` assignments update stored state without a solver event. Scene-body removal clears peers' snapshots and delivers exits without another step. Callback exceptions are aggregated while later queued contact and area events continue.
+- Read current backend touching pairs and manifold point counts after solver/body synchronization, preserving backend linked-pair order and the configured point cap. Share that traversal with the direct-state value snapshot, reading manifolds by reference and resolving scene identity through weak fixture tags. Large worlds collect independent receiver snapshots on retained workers; join every range before committing the shared event queue in body order. Resolve other bodies through current backend body IDs, deduplicate shape pairs by scene body, then commit snapshots before callbacks. Emit sleep transitions before contact transitions; explicit `Sleeping` assignments update stored state without a solver event. Scene-body removal clears peers' snapshots and delivers exits without another step. Callback exceptions are aggregated while later queued contact and area events continue.
 - Use current touching-pair data rather than transient backend end-event shape IDs, which may already be destroyed after shape, filter or body edits. Reuse buffers and sets so warmed resting, active-contact and no-contact fixed frames allocate zero managed bytes on the checked Linux/.NET 8 path. The backend source is unchanged.
 - Shape-index contact signals now use typed RID/global logical owner indices through deduplicated contact-pair snapshots. Body-level results/signals remain Partial until tile-map virtual collision bodies are integrated; the exact reference priority for selecting manifold points when a cap is lower than simultaneous contacts and its upper cap still require a dedicated audit.
 

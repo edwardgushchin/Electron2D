@@ -27,6 +27,7 @@ internal sealed class PhysicsShapePairTracker
 
     internal void Commit(List<PhysicsShapePairChange> changes)
     {
+        if (_next.SetEquals(_current)) { (_current, _next) = (_next, _current); return; }
         _counts.Clear();
         foreach (var pair in _current)
             _counts[pair.RID] = _counts.GetValueOrDefault(pair.RID) + 1;

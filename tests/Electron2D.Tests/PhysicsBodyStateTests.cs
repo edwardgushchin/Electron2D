@@ -137,6 +137,20 @@ internal static class PhysicsBodyStateTests
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
         Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed solved-contact snapshots and callbacks allocate no managed bytes.");
+        body.ContactMonitor = true;
+        body.MaxContactsReported = 1;
+        tree.PhysicsFrame(1d / 60);
+        Check(body.GetContactCount() == 1 && state.GetContactCount() == 1 &&
+            body.GetCollidingBodies().Length == 1, "The monitor and direct view share the capped solved contact.");
+        body.MaxContactsReported = 0;
+        tree.PhysicsFrame(1d / 60);
+        Check(body.GetContactCount() == 0 && state.GetContactCount() == 0,
+            "A zero contact cap clears both snapshots on the next solved step.");
+        body.ContactMonitor = false;
+        body.MaxContactsReported = 4;
+        tree.PhysicsFrame(1d / 60);
+        Check(body.GetContactCount() == state.GetContactCount() && state.GetContactCount() > 0 &&
+            body.GetCollidingBodies().Length == 0, "Direct contact fields remain available without object monitoring.");
         body.Update = view =>
         {
             view.CollisionMask = 0;

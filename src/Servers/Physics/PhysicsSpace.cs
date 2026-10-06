@@ -164,6 +164,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _preparedBodyCapacity = Math.Max(_preparedBodyCapacity, capacity);
         _preparedSleepCapacity = Math.Max(_preparedSleepCapacity, sleepCapacity);
         capacity = _preparedBodyCapacity; sleepCapacity = _preparedSleepCapacity;
+        if (_bodyMotions.Length < capacity) Array.Resize(ref _bodyMotions, capacity);
         // Dormant island storage follows bodies that can sleep; active stress particles need no dormant copies.
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSets, sleepCapacity + 3);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSetIdPool.freeArray, sleepCapacity + 3);
@@ -354,11 +355,21 @@ internal sealed partial class PhysicsSpace : IDisposable
                 }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
+            CaptureBodyMotions();
+            if (world.workerCount == 1 || _bodies.Count < 256)
+                CollectBodyContactRange(0, _bodies.Count, 0, this);
+            else
+            {
+                var end = _bodies.Count * (world.workerCount - 1) / world.workerCount;
+                var contactTask = _tasks.Enqueue(CollectBodyContacts, end, end / (world.workerCount - 1), this, this);
+                try { CollectBodyContactRange(end, _bodies.Count, 0, this); }
+                finally { if (contactTask is not null) _tasks.Finish(contactTask, this); }
+            }
             foreach (var body in _bodies)
             {
                 if (body is not RigidBody rigid) continue;
                 if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid);
-                rigid.CollectContacts(_contactEvents);
+                rigid.QueueContactChanges(_contactEvents);
             }
             ScanAreas();
             ScanAreaMonitors();
@@ -371,6 +382,16 @@ internal sealed partial class PhysicsSpace : IDisposable
         try { DispatchEvents(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Physics-world step failed.", errors);
+    }
+
+    private static readonly b2TaskCallback CollectBodyContacts = CollectBodyContactRange;
+
+    private static void CollectBodyContactRange(int start, int end, uint worker, object context)
+    {
+        var space = (PhysicsSpace)context;
+        for (var i = start; i < end; i++)
+            if (space._bodies[i] is RigidBody rigid)
+                rigid.CollectContacts(rigid.Runtime.GetView(space, rigid.BackendID));
     }
 
     public void Dispose()
