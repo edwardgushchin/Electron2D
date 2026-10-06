@@ -35,6 +35,36 @@ def check_public_type_names():
             raise AssertionError("Coverage rendering bypassed the public type naming check")
 
 
+def check_alignment_enum_owners():
+    def declaration(name):
+        return {"kind": "type", "name": name.rsplit(".", 1)[-1], "id": f"T:Electron2D.{name}"}
+
+    valid = [declaration(name) for name in (
+        "BoxContainer.AlignmentMode", "AspectRatioContainer.AlignmentMode", "FlowContainer.AlignmentMode",
+        "TabBar.AlignmentMode", "FlowContainer.LastWrapAlignmentMode", "HorizontalAlignment",
+        "VerticalAlignment", "InlineAlignment", "RenderingServer.ParticlesTransformAlign",
+        "RenderingServer.ParticlesTransformAlignAxis", "RenderingServer.ParticlesTransformAlignCustomSrc")]
+    validate_public_type_names(valid)
+    for name in ("AlignmentMode", "Label.AlignmentMode", "BoxContainer.HorizontalAlignment",
+                 "FlowContainer.VerticalAlignment", "LastWrapAlignmentMode", "BoxContainer.LastWrapAlignmentMode",
+                 "Label.InlineAlignment", "ParticlesTransformAlign", "ParticlesTransformAlignAxis",
+                 "ParticlesTransformAlignCustomSrc"):
+        item = declaration(name)
+        try:
+            validate_public_type_names([item])
+        except ValueError as error:
+            assert "ADR 0051" in str(error) and item["id"] in str(error)
+        else:
+            raise AssertionError(f"Unapproved alignment enum owner accepted: {item['id']}")
+    with patch("render.ENGINE", Mock(read_text=lambda: json.dumps([declaration("AlignmentMode")]))):
+        try:
+            render()
+        except ValueError as error:
+            assert "ADR 0051" in str(error) and "T:Electron2D.AlignmentMode" in str(error)
+        else:
+            raise AssertionError("Coverage rendering bypassed the alignment owner check")
+
+
 def check_texture_pages(pages, upstream):
     names = {"Texture": "Texture", "Texture2D": "Texture", "Texture2DArray": "TextureArray",
              "Texture2DArrayRD": "TextureArrayRD", "Texture2DRD": "TextureRD",
@@ -68,6 +98,7 @@ def check_texture_pages(pages, upstream):
 
 def main():
     check_public_type_names()
+    check_alignment_enum_owners()
     upstream = json.loads((DATA / "godot-4.7.2.json").read_text())
     engine = json.loads((DATA / "electron2d.json").read_text())
     assert all("`" not in item["signature"] for item in engine if item["kind"] == "constructor"), "Constructor syntax must omit CLR generic arity"

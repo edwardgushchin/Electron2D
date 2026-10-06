@@ -2959,63 +2959,63 @@
     },
     {
       "godot": "AspectRatioContainer::enum:AlignmentMode",
-      "electron2d": "T:Electron2D.AlignmentMode",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "T:Electron2D.AspectRatioContainer.AlignmentMode",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.Begin()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.AspectRatioContainer.AlignmentMode.Begin()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.Center()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.AspectRatioContainer.AlignmentMode.Center()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_END",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.End()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.AspectRatioContainer.AlignmentMode.End()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "BoxContainer::enum:AlignmentMode",
-      "electron2d": "T:Electron2D.AlignmentMode",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "T:Electron2D.BoxContainer.AlignmentMode",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.Begin()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.BoxContainer.AlignmentMode.Begin()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.Center()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.BoxContainer.AlignmentMode.Center()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_END",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.End()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.BoxContainer.AlignmentMode.End()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "FlowContainer::enum:AlignmentMode",
-      "electron2d": "T:Electron2D.AlignmentMode",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "T:Electron2D.FlowContainer.AlignmentMode",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.Begin()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.FlowContainer.AlignmentMode.Begin()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.Center()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.FlowContainer.AlignmentMode.Center()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_END",
-      "electron2d": "enumValue:Electron2D.AlignmentMode.End()",
-      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+      "electron2d": "enumValue:Electron2D.FlowContainer.AlignmentMode.End()",
+      "reason": "Owner-scoped alignment identity under ADR 0051; declaring type, numeric identity and member meaning are retained."
     },
     {
       "godot": "NinePatchRect::enum:AxisStretchMode",

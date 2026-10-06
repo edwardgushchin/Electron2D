@@ -192,6 +192,16 @@ public class CenterContainer : Container
 /// <summary>Fits direct child controls inside a configurable width-to-height aspect ratio.</summary>
 public class AspectRatioContainer : Container
 {
+    /// <summary>Aligns the aspect rectangle along either container axis.</summary>
+    public enum AlignmentMode
+    {
+        /// <summary>Aligns to the leading edge, mirrored horizontally in RTL layout.</summary>
+        Begin = 0,
+        /// <summary>Centers the child group.</summary>
+        Center = 1,
+        /// <summary>Aligns to the trailing edge, mirrored horizontally in RTL layout.</summary>
+        End = 2
+    }
     /// <summary>Chooses how the aspect rectangle is sized against the container.</summary>
     public enum StretchMode
     {

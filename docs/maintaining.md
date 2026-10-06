@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -34,7 +34,7 @@ Before implementing a public/protected API change, read ADR 0004 and the owning 
 
 The coverage renderer validates exported type names before pairing declarations. Redundant dimensional markers fail under ADR 0004, including previously unseen parameter/result types, generics and names such as `Texture2DArray`. Its three explicit exceptions are `Curve2D` and the two blend-space parameter-domain types. Change that exception registry only after an accepted architectural decision and update the ADR and regression check together. `test_render.py` exercises accepted and rejected names and preserves the `CanvasItem.GetWorld()` member contract. The Linux x64 CI Build job runs `tools/coverage/check.sh` against the current compiled surface and rejects stale snapshots as well as naming violations. This check establishes the enforced naming rule; semantic and lifecycle obligations still require the owning ADR audit.
 
-Public enum identity follows [ADR 0051](decisions/product.md#adr-0051): one semantic value contract has one type, shared across owners when meanings and valid values agree. Review new enum declarations against existing public types; matching numeric values with different semantics remain distinct. Update all consumers, XML, class pages and coverage when a type moves.
+Public enum identity follows [ADR 0051](decisions/product.md#adr-0051): one semantic value contract normally has one type, shared across owners when meanings and valid values agree. Alignment enums are the explicit exception: preserve their reference declaring owners, including separate nested container AlignmentMode types and namespace-level horizontal/vertical/inline types. The coverage validator checks these owners before alias pairing. Review new enum declarations against existing public types; matching numeric values with different semantics remain distinct. Update all consumers, XML, class pages and coverage when a type moves.
 
 Process-wide service operations use static public access under [ADR 0095](decisions/singleton-services.md#adr-0095), backed by retained internal objects. Preserve lifetime, identity, property descriptors and native ownership; do not expose public `Instance` accessors.
 

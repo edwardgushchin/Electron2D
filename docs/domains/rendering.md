@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
@@ -78,6 +78,8 @@ Retained screen regions now sample the same actual render transforms, layer/mask
 [Range](../classes/Range.md) and [TextureProgressBar](../classes/TextureProgressBar.md) now execute shared double value policy and textured linear/centered/radial fills. Nine-patch partial progress reuses the real retained geometry/tint path. Their inherited vertical size flags now execute through [Container](../classes/Container.md) and [BoxContainer](../classes/BoxContainer.md), with Range ShrinkBegin and progress Fill defaults under [ADR 0081](../decisions/rendering.md#adr-0081). [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) and [native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) verify the current scope and allocation/platform limits under [ADR 0080](../decisions/rendering.md#adr-0080).
 
 ## Box and grid container layout
+
+Container alignment uses separate nested [BoxContainer.AlignmentMode](../classes/BoxContainer.AlignmentMode.md), [AspectRatioContainer.AlignmentMode](../classes/AspectRatioContainer.AlignmentMode.md) and [FlowContainer.AlignmentMode](../classes/FlowContainer.AlignmentMode.md). Each retains Begin=0, Center=1 and End=2; properties and scene storage retain the declaring owner under ADR 0051.
 
 [Container](../classes/Container.md) owns direct-control listeners and deferred pre/sort phases; [BoxContainer](../classes/BoxContainer.md), [HBoxContainer](../classes/HBoxContainer.md) and [VBoxContainer](../classes/VBoxContainer.md) arrange weighted primary allocations and cross-axis fill/shrink before retained drawing. Min/max refit, RTL, local signed separation and actual spacers consume [Control.SizeFlags](../classes/Control.SizeFlags.md). Typed storage preserves exact defaults/factories. Two synchronized SceneTree action queues recycle prepared captured-batch capacity; per-box scratch slots are reused. Managed and native tests verify small warmed layouts with zero managed allocation; larger GUI/native allocator/platform/owner guarantees remain unverified. Container semantic accessibility retains its precise separate dependency in [ADR 0081](../decisions/rendering.md#adr-0081).
 
