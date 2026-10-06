@@ -32,18 +32,44 @@ internal sealed partial class PhysicsScene : Entity
     private RID _worldSpace;
     private float _worldGravity = 980, _worldLinearDamp = .1f, _worldAngularDamp = 1;
     internal PhysicsBody? SelectedBody { get; private set; }
+    internal int SelectionRevision { get; private set; }
     internal float WorldGravity { get => _worldGravity; set { _worldGravity = value; ApplyWorldParameters(); } }
     internal float WorldLinearDamp { get => _worldLinearDamp; set { _worldLinearDamp = value; ApplyWorldParameters(); } }
     internal float WorldAngularDamp { get => _worldAngularDamp; set { _worldAngularDamp = value; ApplyWorldParameters(); } }
     internal int BodyLimit => Index == 8 ? 1024 : 160;
     private readonly Entity _overlay;
-    private readonly Entity _observations;
+    private readonly Entity _selection;
+    private readonly HashSet<CollisionObject> _boundaries = [];
+    private readonly Dictionary<CollisionObject, int> _numbers = [];
+    internal Rect2? InputBounds { get; set; }
+    internal Vector2 CameraTarget => (_chassis ?? (PhysicsBody?)_character ?? _probe ?? _tug)?.GlobalPosition ?? new Vector2(576, 400);
+    internal float PresentationZoom { get; set; } = 1;
+    internal int SelectedNumber => SelectedBody is { } body ? _numbers.GetValueOrDefault(body) : 0;
+    internal string SelectedState => SelectedBody is RigidBody b ? b.Freeze ? "frozen" : b.Sleeping ? "sleeping" : "awake" : "static / character";
+    internal string SelectedRole
+    {
+        get
+        {
+            if (SelectedBody is not { } body) return "Select an object";
+            if (body == _bird) return "Projectile";
+            if (body == _chassis) return "Motorcycle frame";
+            if (body is RigidBody wheel && _wheels.Contains(wheel)) return "Driven wheel";
+            if (body == _character) return "Courier";
+            if (body == _tug) return "Tug";
+            if (body == _cargo) return "Cargo";
+            foreach (var target in _targets) if (body == target.Body) return "Mint target";
+            return Index switch
+            {
+                0 => _shapeOwners.TryGetValue(body, out var owners) && owners.Length > 0 && body.ShapeOwnerGetShape(owners[0], 0) is CircleShape ? "Heavy ball" : "Warehouse crate",
+                1 => "Marble", 8 => "Particle", 10 => "Tower beam", _ => "Physical object"
+            };
+        }
+    }
+
     private readonly Entity _storyVisual;
     private readonly Dictionary<CollisionObject, uint[]> _shapeOwners = [];
     private readonly Dictionary<Shape, Vector2[]> _contours = [];
     private readonly Dictionary<RID, PhysicsDirectBodyState> _views = [];
-    private string _recordedObservation = "";
-    private double _readoutTime;
     private readonly KinematicCollision _slideContact;
     private readonly PhysicsPointQueryParameters _pick;
     private readonly PhysicsPointResult[] _pickHits = new PhysicsPointResult[64];
@@ -86,7 +112,7 @@ internal sealed partial class PhysicsScene : Entity
         _slideContact = Own(new KinematicCollision());
         _pick = Own(new PhysicsPointQueryParameters { CollisionMask = 1 });
         Draw += DrawStage;
-        _storyVisual = new Entity { Name = "StoryIllustration" };
+        _storyVisual = new Entity { Name = "StoryIllustration", ZIndex = 10 };
         _storyVisual.Draw += DrawStory;
         AddChild(_storyVisual);
         switch (index)
@@ -108,21 +134,15 @@ internal sealed partial class PhysicsScene : Entity
         _overlay = new Entity { Name = "PhysicsDebug", ZIndex = 20, Visible = false };
         _overlay.Draw += DrawDebug;
         AddChild(_overlay);
-        var observations = _observations = new Entity { Name = "Observations", ZIndex = 30 };
-        observations.Draw += c =>
-        {
-            c.DrawRect(new(24, 651, 848, 27), new Color(Paper.R, Paper.G, Paper.B, .93f));
-            DrawObservation(c);
-        };
-        var readoutLayer = new CanvasLayer { Name = "Readouts", Layer = 9 };
-        readoutLayer.AddChild(observations); AddChild(readoutLayer);
+        _selection = new Entity { Name = "SelectedObject", ZIndex = 30 };
+        _selection.Draw += DrawSelection; AddChild(_selection);
     }
 
     internal void StepOnce() => _singleStep = true;
     internal void SetPointer(Vector2 position)
     {
         var local = IsInsideTree ? GetGlobalTransformWithCanvas().AffineInverse() * position : position;
-        if (new Rect2(48, 204, 1056, 430).HasPoint(local)) _pointer = local;
+        if (InputBounds is { } bounds ? bounds.HasPoint(position) : Stage.HasPoint(local)) _pointer = local;
     }
     internal void ReleaseGrab(bool shoot = true)
     {
@@ -138,6 +158,8 @@ internal sealed partial class PhysicsScene : Entity
     private T Place<T>(T body, Shape shape, Vector2 position, Color color) where T : CollisionObject
     {
         body.Name = "Body" + ++_serial;
+        _numbers[body] = _serial;
+        body.PhysicsInterpolationMode = PhysicsInterpolationMode.On;
         body.Position = position;
         body.AddChild(new CollisionShape { Name = "Geometry", Shape = shape });
         Colliders.Add(body);
@@ -150,7 +172,7 @@ internal sealed partial class PhysicsScene : Entity
             Bodies.Add(rigid);
             rigid.ContactMonitor = true;
             rigid.MaxContactsReported = 8;
-            rigid.BodyShapeEntered += (_, _, _, _) => { ContactEvents++; _flashes[rigid] = _time + .16; rigid.QueueRedraw(); };
+            rigid.BodyShapeEntered += (_, _, _, _) => { ContactEvents++; if (Index != 8) { _flashes[rigid] = _time + .12; rigid.QueueRedraw(); } };
             rigid.SleepingStateChanged += _ => rigid.QueueRedraw();
         }
         return body;
@@ -171,10 +193,11 @@ internal sealed partial class PhysicsScene : Entity
 
     private void Enclose()
     {
-        Solid(Box(1080, 18), new(576, 638), Mint);
-        Solid(Box(18, 432), new(38, 420), Mint);
-        Solid(Box(18, 432), new(1114, 420), Mint);
-        Solid(Box(1080, 12), new(576, 190), Mint);
+        var half = Index == 8 ? 420 : 540;
+        _boundaries.Add(Solid(Box(half * 2, 18), new(576, 638), Border));
+        _boundaries.Add(Solid(Box(18, 432), new(576 - half + 2, 420), Border));
+        _boundaries.Add(Solid(Box(18, 432), new(576 + half - 2, 420), Border));
+        _boundaries.Add(Solid(Box(half * 2, 12), new(576, Index == 0 ? 90 : 190), Border));
     }
 
     private Area Sensor(Shape shape, Vector2 position, Color color)
@@ -248,13 +271,7 @@ internal sealed partial class PhysicsScene : Entity
             if (body.IsDisposed) continue;
             if (_flashes.TryGetValue(body, out var until) && _time > until) { _flashes.Remove(body); body.QueueRedraw(); }
         }
-        _readoutTime += delta;
-        if (_readoutTime >= .1)
-        {
-            _readoutTime = 0;
-            if (_selected is not null || Index is 5 or 7) _observations.QueueRedraw();
-        }
-        if (Observation != _recordedObservation) { _recordedObservation = Observation; _observations.QueueRedraw(); }
+        _selection.QueueRedraw();
         if (Index is 3 or 5 or 6 or 7 or 9 or 10) _storyVisual.QueueRedraw();
         foreach (var (rid, visual, _) in _serverBodies) visual.Transform = PhysicsServer.BodyGetTransform(rid);
     }
@@ -267,7 +284,8 @@ internal sealed partial class PhysicsScene : Entity
             var point = GetGlobalTransformWithCanvas().AffineInverse() * click.Position;
             SetPointer(click.Position);
             if (click.ButtonIndex == MouseButton.Left && !click.Pressed) { ReleaseGrab(); return; }
-            if (!Stage.HasPoint(point) || !click.Pressed) return;
+            if (InputBounds is { } bounds && !bounds.HasPoint(click.Position)) return;
+            if ((InputBounds is null && !Stage.HasPoint(point)) || !click.Pressed) return;
             if (Index == 3 && click.ButtonIndex == MouseButton.Left && Input.IsPhysicalKeyPressed(Key.Shift))
             {
                 _stars[0].Position = point;
@@ -323,6 +341,7 @@ internal sealed partial class PhysicsScene : Entity
 
     private void Pick(Vector2 point)
     {
+        SelectionRevision = unchecked(SelectionRevision + 1);
         _pick.Position = point;
         _selected = null;
         _grab = default;
@@ -381,18 +400,17 @@ internal sealed partial class PhysicsScene : Entity
 
     private void DrawStage(CanvasItem c)
     {
-        c.DrawRect(Stage, Color.FromHTML("#2E2238"));
-        var grid = Color.FromHTML("#403049");
-        for (var x = 56; x < 1128; x += 32)
-            for (var y = 216; y < 638; y += 32) c.DrawRect(new(x, y, 2, 2), grid);
-        c.DrawRect(Stage, Border, false, 1);
+        c.DrawRect(new(-2000, -2000, 6000, 5000), Paper);
+        c.DrawLine(new(36, 629), new(1116, 629), Muted, 2);
     }
 
     private void DrawCollider(CanvasItem c, CollisionObject body, Color color, bool debug)
     {
+        if (_boundaries.Contains(body)) return;
+        if (Index == 9 && !debug && (body == _chassis || body is RigidBody wheel && _wheels.Contains(wheel))) return;
         if (body is RigidBody rigid && !debug)
         {
-            if (_flashes.ContainsKey(rigid)) color = Yellow;
+            if (_flashes.ContainsKey(rigid)) color = color.Lerp(Ink, .18f);
             else if (rigid.Sleeping) color = color.Lerp(Paper, .35f);
         }
         if (!_shapeOwners.TryGetValue(body, out var owners)) _shapeOwners.Add(body, owners = body.GetShapeOwners());
@@ -421,7 +439,7 @@ internal sealed partial class PhysicsScene : Entity
                 for (var i = 0; i < 8; i++) dots[i] = DotContour[i] * circle.Radius;
                 dots[8] = dots[0];
                 if (!outline) c.DrawColoredPolygon(dots[..8], color);
-                c.DrawPolyline(dots, stroke, outline ? 1 : 1.5f);
+                if (outline) c.DrawPolyline(dots, stroke, 1);
                 break;
             case CircleShape circle:
                 c.DrawCircle(Vector2.Zero, circle.Radius, color, !outline);
@@ -431,12 +449,6 @@ internal sealed partial class PhysicsScene : Entity
             case RectangleShape rect:
                 c.DrawRect(rect.GetRect(), color, !outline, 1.5f);
                 c.DrawRect(rect.GetRect(), stroke, false, outline ? 1.5f : 2);
-                if (!outline && rect.Size.X < 85 && rect.Size.Y < 85)
-                {
-                    var a = rect.Size * .28f;
-                    c.DrawLine(-a, a, new Color(Ink.R, Ink.G, Ink.B, .35f), 1);
-                    c.DrawLine(new(-a.X, a.Y), new(a.X, -a.Y), new Color(Ink.R, Ink.G, Ink.B, .35f), 1);
-                }
                 break;
             case CapsuleShape capsule:
                 var half = capsule.MidHeight / 2;
@@ -471,14 +483,14 @@ internal sealed partial class PhysicsScene : Entity
         _debugVectors.Clear(); _debugNormals.Clear(); _debugPoints.Clear();
         foreach (var body in Colliders)
         {
-            if (body.IsDisposed) continue;
+            if (body.IsDisposed || _boundaries.Contains(body)) continue;
             if (Index == 8 && body is RigidBody)
             {
                 var pose = body.GlobalTransform;
                 for (var i = 0; i < 8; i++)
                 {
-                    _debugVectors.Add(pose * (DotContour[i] * 6));
-                    _debugVectors.Add(pose * (DotContour[i + 1] * 6));
+                    _debugVectors.Add(pose * (DotContour[i] * ParticleRadius));
+                    _debugVectors.Add(pose * (DotContour[i + 1] * ParticleRadius));
                 }
             }
             else
@@ -495,17 +507,20 @@ internal sealed partial class PhysicsScene : Entity
             }
             if (state is null) continue;
             var center = rigid.GlobalPosition + state.CenterOfMass;
-            _debugVectors.Add(center - new Vector2(5, 0)); _debugVectors.Add(center + new Vector2(5, 0));
-            _debugVectors.Add(center - new Vector2(0, 5)); _debugVectors.Add(center + new Vector2(0, 5));
-            _debugVectors.Add(center); _debugVectors.Add(center + rigid.LinearVelocity * .08f);
+            if (rigid == SelectedBody)
+            {
+                _debugVectors.Add(center - new Vector2(5, 0)); _debugVectors.Add(center + new Vector2(5, 0));
+                _debugVectors.Add(center - new Vector2(0, 5)); _debugVectors.Add(center + new Vector2(0, 5));
+                _debugVectors.Add(center); _debugVectors.Add(center + rigid.LinearVelocity * .08f);
+            }
             var contacts = state.GetContactCount();
             for (var i = 0; i < contacts; i++)
             {
                 // A pair reported by both dynamic bodies needs one marker and normal.
                 if (state.GetContactColliderObject(i) is RigidBody other && rid > other.GetRID()) continue;
                 var p = state.GetContactLocalPosition(i);
-                _debugPoints.Add(p - new Vector2(2, 0)); _debugPoints.Add(p + new Vector2(2, 0));
-                _debugNormals.Add(p); _debugNormals.Add(p + state.GetContactLocalNormal(i) * 24);
+                if (Index != 8 || rigid == SelectedBody) { _debugPoints.Add(p - new Vector2(2, 0)); _debugPoints.Add(p + new Vector2(2, 0)); }
+                _debugNormals.Add(p); _debugNormals.Add(p + state.GetContactLocalNormal(i) * (Index == 8 && rigid != SelectedBody ? 5 : 20));
             }
         }
         if (!_debugPrepared)
@@ -513,14 +528,15 @@ internal sealed partial class PhysicsScene : Entity
             // Prepare the configured contact ceiling once; spare segments lie outside the viewport.
             var maximum = 0;
             foreach (var body in Bodies) maximum += body.MaxContactsReported * 2;
+            Pad(_debugVectors, Math.Max(2, Bodies.Count * 22));
             Pad(_debugNormals, Math.Max(2, maximum)); Pad(_debugPoints, Math.Max(2, maximum));
             for (var i = 0; i < _debugVectors.Count; i += 2)
                 if (_debugVectors[i] == _debugVectors[i + 1])
                 { _debugVectors[i] = new(-10000, -10000); _debugVectors[i + 1] = new(-10000, -9999); }
             _debugPrepared = true;
         }
-        if (_debugVectors.Count > 0) c.DrawMultiline(CollectionsMarshal.AsSpan(_debugVectors), DebugColor, 1);
-        c.DrawMultiline(_debugNormals.Count == 0 ? [Vector2.Zero, Vector2.Zero] : CollectionsMarshal.AsSpan(_debugNormals), Ink, 2);
+        if (_debugVectors.Count > 0) c.DrawMultiline(CollectionsMarshal.AsSpan(_debugVectors), new Color(DebugColor.R, DebugColor.G, DebugColor.B, .55f), 1);
+        c.DrawMultiline(_debugNormals.Count == 0 ? [Vector2.Zero, Vector2.Zero] : CollectionsMarshal.AsSpan(_debugNormals), new Color(Ink.R, Ink.G, Ink.B, .4f), 1);
         c.DrawMultiline(_debugPoints.Count == 0 ? [Vector2.Zero, Vector2.Zero] : CollectionsMarshal.AsSpan(_debugPoints), Peach, 4);
         foreach (var (rid, _, shape) in _serverBodies)
         {
@@ -543,25 +559,34 @@ internal sealed partial class PhysicsScene : Entity
     // Numeric HUD uses existing glyph draws: changing a number does not create a string or a text layout.
     internal static void DrawReadout(CanvasItem c, Font font, Vector2 position, ReadOnlySpan<char> text, int size, Color color)
     {
-        foreach (var character in text) position.X += font.DrawChar(c, position, character, size, color);
+        foreach (var character in text) position.X += font.DrawChar(c, position.Round(), character, size, color);
     }
 
-    private void DrawObservation(CanvasItem c)
+    private void DrawSelection(CanvasItem c)
     {
-        Span<char> text = stackalloc char[384];
-        int count;
-        if (_selected is { IsDisposed: false } selected)
-        {
-            var status = selected.ProcessMode == ProcessMode.Disabled ? "disabled" : selected.Freeze ? "frozen" : selected.Sleeping ? "sleeping" : "awake";
-            text.TryWrite(CultureInfo.InvariantCulture, $"{selected.Name} · mass {selected.Mass:0.0} · velocity {selected.LinearVelocity.Length():0} · contacts {selected.GetContactCount()} · {status}", out count);
-            DrawReadout(c, _font, new(54, 648), "K freeze · H mode · Z sleep · L lock · Q/E torque · C lift · V policy", 13, Muted);
-        }
-        else if (Index == 5 && _ray is not null && _sweep is not null)
-            text.TryWrite(CultureInfo.InvariantCulture, $"Ray: {(_ray.IsColliding() ? "hit" : "clear")} · wide sweep: {_detected} hit(s) · safe fraction {_sweep.GetClosestCollisionSafeFraction():0.00} · body motion: {(_blocked ? "blocked" : "clear")} · cursor overlaps {_overlaps}", out count);
-        else if (Index == 7)
-            text.TryWrite(CultureInfo.InvariantCulture, $"Independent space: {_serverBodies.Count - 3} RID bodies · sensor entries {_serverEntries} · live scene slots on the left", out count);
-        else { c.DrawString(_font, new(54, 670), Observation, fontSize: 13, modulate: Ink); return; }
-        DrawReadout(c, _font, new(54, 670), text[..count], 13, Ink);
+        if (SelectedBody is not { IsDisposed: false } body) return;
+        if (!_shapeOwners.TryGetValue(body, out var owners)) _shapeOwners.Add(body, owners = body.GetShapeOwners());
+        Rect2? bounds = null;
+        foreach (var owner in owners)
+            for (var i = 0; i < body.ShapeOwnerGetShapeCount(owner); i++)
+            {
+                var r = body.GlobalTransform * body.ShapeOwnerGetTransform(owner) * body.ShapeOwnerGetShape(owner, i).GetRect();
+                bounds = bounds is { } old ? old.Merge(r) : r;
+            }
+        if (bounds is not { } rect) return;
+        rect = rect.Grow(5 / PresentationZoom);
+        c.DrawRect(rect.Grow(2 / PresentationZoom), Ink, false, 1 / PresentationZoom);
+        c.DrawRect(rect, Peach, false, 2 / PresentationZoom);
+        var label = rect.Position + new Vector2(0, -10 / PresentationZoom);
+        const int size = 13;
+        c.DrawSetTransformMatrix(new Transform(0, Vector2.One / PresentationZoom, 0, label));
+        DrawReadout(c, _font, new(-2000, -2000), "0123456789#", size, new Color(0, 0, 0, 0));
+        Span<char> text = stackalloc char[80];
+        text.TryWrite(CultureInfo.InvariantCulture, $"{SelectedRole} #{SelectedNumber}", out var count);
+        var labelWidth = 0f; foreach (var ch in text[..count]) labelWidth += _font.GetCharSize(ch, size).X;
+        c.DrawRect(new(new Vector2(-3, -size - 1), new Vector2(labelWidth + 6, size + 6)), Paper);
+        DrawReadout(c, _font, Vector2.Zero, text[..count], size, Ink);
+        c.DrawSetTransformMatrix(Transform.Identity);
     }
 
     protected override void Dispose(bool disposing)

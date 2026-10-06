@@ -61,7 +61,8 @@ internal static partial class PhysicsSandboxTests
             }
         }
         Switch(0);
-        var crate = current!.Bodies[21];
+        for (var i = 0; i < 180; i++) PhysicsTick(tree);
+        var crate = current!.Bodies[17];
         var point = crate.Position;
         Pointer(root, point, true);
         Motion(root, point + new Vector2(80, -100));
@@ -198,7 +199,12 @@ internal static partial class PhysicsSandboxTests
         var frame = 0;
         var pausedSteps = 0;
         RigidBody? grabbedBody = null;
-        var grabbedStart = Vector2.Zero;
+        var grabbedStart = Vector2.Zero; var grabSteps = 0;
+        Vector2 UI(string name, float ratio = .5f)
+        {
+            var control = window.GetNode<CanvasLayer>("Interface").GetNode<Control>(name);
+            return control.Position + new Vector2(control.Size.X * ratio, control.Size.Y / 2);
+        }
         Action? post = null;
         post = () =>
         {
@@ -206,8 +212,8 @@ internal static partial class PhysicsSandboxTests
             var scene = (frame - 1) / 80;
             var phase = (frame - 1) % 80;
             if (scene >= SandboxWindow.SceneNames.Length) { window.Tree!.Quit(); return; }
-            if (phase == 0) window.SwitchScene(scene);
-            if (scene == 0 && phase == 2) NativeClick(new(160, 46));
+            if (phase == 0) { window.SwitchScene(scene); if (window.Scene.DebugEnabled) NativeClick(UI("Debug")); }
+            if (scene == 0 && phase == 2) NativeClick(UI("SceneSelector"));
             if (scene == 0 && phase == 3)
             {
                 var selector = window.GetNode<CanvasLayer>("Interface").GetChildren().OfType<OptionButton>().Single();
@@ -220,7 +226,7 @@ internal static partial class PhysicsSandboxTests
                 Check(window.SceneIndex == 1 && selector.Selected == 1 && !selector.GetPopup().Visible, $"Keyboard selection switches the actual scene and caption: scene={window.SceneIndex}, selected={selector.Selected}, focus={selector.GetPopup().GetFocusedItem()}, visible={selector.GetPopup().Visible}.");
                 window.SwitchScene(0);
             }
-            if (scene == 0 && phase == 6) NativeClick(new(543, 46));
+            if (scene == 0 && phase == 6) NativeClick(UI("Pause"));
             if (scene == 0 && phase == 7)
             {
                 Check(!window.Scene.Running, "Pause button suspends the solver.");
@@ -229,67 +235,88 @@ internal static partial class PhysicsSandboxTests
             if (scene == 0 && phase == 8)
             {
                 Check(window.Scene.PhysicsSteps == pausedSteps, "Paused frames do not advance physics.");
-                NativeClick(new(661, 46));
+                NativeClick(UI("Step"));
             }
             if (scene == 0 && phase == 10)
             {
                 Check(window.Scene.PhysicsSteps == pausedSteps + 1, "Step toolbar executes exactly one interval.");
-                NativeClick(new(543, 46));
+                NativeClick(UI("Pause"));
             }
             if (scene == 0 && phase == 11) Check(window.Scene.Running, "Play resumes physics.");
-            if (phase == 12) NativeClick(new(398, 46));
+            if (phase == 12) NativeClick(UI("Debug"));
             if (phase == 13)
             {
+                Check(window.GetNode<CanvasLayer>("Interface").GetNode<Button>("Debug").Text == "Collisions ON", "Enabled debug is explicitly labelled.");
                 Check(window.Scene.DebugEnabled, "The debug toolbar button toggles geometry.");
-                NativeClick(new(398, 46));
+                NativeClick(UI("Debug"));
             }
-            if (phase == 14) Check(!window.Scene.DebugEnabled, "Debug turns off again.");
+            if (phase == 14) Check(!window.Scene.DebugEnabled && window.GetNode<CanvasLayer>("Interface").GetNode<Button>("Debug").Text == "Collisions OFF", "Debug state has an explicit caption.");
+            if (scene == 0 && phase == 15) NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.Bodies[0].GlobalPosition);
+            if (scene == 0 && phase == 16)
+                Check(window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter4").Visible, "Clicking the already selected body opens its Object tab.");
+            if (scene == 0 && phase == 17) NativeClick(UI("Inspector0"));
             if (phase == 20)
             {
                 using var pixels = RenderingServer.Service!.Readback();
                 Check(pixels.Size == new Vector2i(1152, 800), "Real renderer uses splash client dimensions.");
+                for (var x = 28; x < 860; x += 16)
+                    Check(pixels.GetPixel(x, 699).IsEqualApprox(PhysicsScene.Paper), "Scene drawing stays clipped above the action dock.");
+                Check(window.GetNode<CanvasLayer>("SimulationCanvas").GetNode<Control>("StageClip").ClipContents, "The world uses the actual public clipping path.");
                 Check(pixels.GetPixel(10, 100).IsEqualApprox(PhysicsScene.Paper), "The actual paper background is drawn.");
                 pixels.SavePNG(System.IO.Path.Combine(directory, $"{scene + 1:00}.png"));
             }
-            if (phase == 22) window.Scene.DebugEnabled = true;
+            if (phase == 22) NativeClick(UI("Debug"));
             if (scene == 0 && phase == 23)
             {
-                grabbedBody = window.Scene.Bodies[21]; grabbedStart = grabbedBody.Position;
+                grabbedBody = window.Scene.Bodies[17]; grabSteps = window.Scene.PhysicsSteps; grabbedStart = grabbedBody.Position;
                 var screen = window.Scene.GetGlobalTransformWithCanvas() * grabbedStart;
                 NativeMotion(screen); NativeButton(screen, true);
             }
-            if (scene == 0 && phase == 24) NativeMotion(window.Scene.GetGlobalTransformWithCanvas() * (grabbedStart + new Vector2(80, -50)));
-            if (scene == 0 && phase == 31)
+            if (scene == 0 && phase is >= 24 and <= 34) NativeMotion(window.Scene.GetGlobalTransformWithCanvas() * (grabbedStart + new Vector2(80, -50)));
+            if (scene == 0 && phase == 35)
             {
-                Check(grabbedBody!.Position.DistanceTo(grabbedStart) > 3, "Native drag moves real geometry while the debug layer is visible.");
-                NativeMotion(new(400, 46)); NativeButton(new(400, 46), false);
+                Check(grabbedBody!.Position.DistanceTo(grabbedStart) > 3, $"Native drag moves real geometry while the debug layer is visible: start={grabbedStart}, now={grabbedBody.Position}, selected={window.Scene.SelectedBody?.Name}, target={grabbedBody.Name}, ticks={window.Scene.PhysicsSteps - grabSteps}, screen={window.Scene.GetGlobalTransformWithCanvas() * grabbedStart}.");
+                NativeMotion(UI("Debug")); NativeButton(UI("Debug"), false);
             }
             if (phase == 36)
             {
                 using var pixels = RenderingServer.Service!.Readback();
+                for (var x = 28; x < 860; x += 16) Check(pixels.GetPixel(x, 699).IsEqualApprox(PhysicsScene.Paper), "Debug vectors also stay inside the field.");
                 pixels.SavePNG(System.IO.Path.Combine(directory, $"{scene + 1:00}-debug.png"));
                 window.Scene.Act(0); window.Scene.Act(1); window.Scene.Act(2);
             }
+            if (phase == 40) NativeClick(UI("Inspector0"));
             if (phase == 42)
             {
                 Check(window.GetNode<CanvasLayer>("Interface").GetChildren().OfType<HSlider>().Count() == 11, "Every story has native world/object/story sliders.");
-                NativeClick(new(1050, 241));
+                NativeClick(UI("Parameter0", .75f));
             }
             if (phase == 44)
             {
                 Check(window.Scene.WorldGravity > 1200 && PhysicsServer.AreaGetGravity(window.Scene.GetWorld()!.Space) == window.Scene.WorldGravity, "Native world slider changes actual world defaults.");
-                NativeClick(new(970, 413));
+                NativeClick(UI("Inspector1"));
             }
-            if (phase == 46)
+            if (phase == 45) NativeClick(UI("Parameter4", .35f));
+            if (phase == 47)
+            {
+                using var inspector = RenderingServer.Service!.Readback();
+                inspector.SavePNG(System.IO.Path.Combine(directory, $"{scene + 1:00}-object.png"));
                 Check(window.Scene.SelectedBody is not RigidBody selected || selected.Mass > 2, "Native selected-object slider changes solver mass.");
-            if (scene == 8 && phase == 48) NativeClick(new(1110, 639));
-            if (scene == 8 && phase == 50) Check(window.Scene.BodyCount == 1024, "Native population slider reaches 1,024 active bodies.");
+            }
+            if (scene == 8 && phase == 48) NativeClick(UI("Inspector2"));
+            if (scene == 8 && phase == 49) NativeClick(UI("Parameter10", .99f));
+            if (scene == 8 && phase == 51)
+            {
+                Check(window.Scene.BodyCount == 1024, "Native population slider reaches 1,024 active bodies.");
+                using var population = RenderingServer.Service!.Readback();
+                population.SavePNG(System.IO.Path.Combine(directory, "09-population.png"));
+            }
             if (scene == 9 && phase == 48) NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.Bodies[1].GlobalPosition);
             if (scene == 9 && phase == 50)
             {
                 var friction = window.GetNode<CanvasLayer>("Interface").GetChildren().OfType<HSlider>().ElementAt(5);
                 Check(window.Scene.SelectedBody == window.Scene.Bodies[1] && Math.Abs(friction.Value - 1.2) < .001, "Rough tire friction displays its actual magnitude.");
-                NativeClick(new(970, 449));
+                NativeClick(UI("Parameter5", .35f));
             }
             if (scene == 9 && phase == 52) Check(PhysicsServer.BodyGetFriction(window.Scene.Bodies[1].GetRID()) < 0, "Editing tire friction preserves rough material mixing.");
             if (scene == 10 && phase == 48) window.Scene.Act(1);

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Electron2D;
 using Electron2D.Examples.PhysicsSandbox;
+using SDL = SDL3.SDL;
 
 internal static partial class PhysicsSandboxTests
 {
@@ -68,6 +69,7 @@ internal static partial class PhysicsSandboxTests
         const int nativeSamples = 192;
         var trialFrames = nativeWarmup + nativeSamples;
         using var window = new SandboxWindow(font, bold);
+        bool[]? nativeInput = null;
         var times = new double[192]; var renders = new double[192]; var bytes = new long[192]; var renderBytes = new long[192];
         long previous = 0, previousBytes = 0, renderStart = 0, renderAllocated = 0;
         var frame = 0;
@@ -84,7 +86,7 @@ internal static partial class PhysicsSandboxTests
                 window.SwitchScene(indices[trial / 2]);
                 if (window.Scene.Index == 8) window.Scene.SetStoryParameter(stressCount); window.Scene.DebugEnabled = trial % 2 != 0;
                 Exercise(window.Scene, 0);
-                NativeMotion(new(-20, -20));
+                ClearProfileHover();
             }
             if (phase >= nativeWarmup)
             {
@@ -101,9 +103,9 @@ internal static partial class PhysicsSandboxTests
             }
             frame++; previous = Stopwatch.GetTimestamp(); previousBytes = GC.GetAllocatedBytesForCurrentThread();
         };
-        window.Ready += _ => { RenderingServer.FramePreDraw += pre; RenderingServer.FramePostDraw += post; };
-        try { Check(Engine.Run(window) == 0 && frame >= indices.Length * 2 * trialFrames, "Complete native performance profile."); }
-        finally { if (RenderingServer.IsAvailable) { RenderingServer.FramePreDraw -= pre; RenderingServer.FramePostDraw -= post; } }
+        window.Ready += _ => { nativeInput = SuppressProfileInput(); RenderingServer.FramePreDraw += pre; RenderingServer.FramePostDraw += post; };
+        try { Check(RunProfileWindow(window) == 0 && frame >= indices.Length * 2 * trialFrames, "Complete native performance profile."); }
+        finally { RestoreProfileInput(nativeInput); if (RenderingServer.IsAvailable) { RenderingServer.FramePreDraw -= pre; RenderingServer.FramePostDraw -= post; } }
         File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, optimized, platform = System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier, backend = "gpu", maxFPS = 60, warmupPhysics = warmup, physicsSamples = 256, warmupNative = nativeWarmup, nativeSamples, thread = "scene/render owner", physics, native }, new JsonSerializerOptions { WriteIndented = true }));
         Console.WriteLine("PhysicsSandbox performance profile: " + path);
         Check(failures.Count == 0, "Zero managed allocation budget: " + string.Join("; ", failures));
@@ -116,6 +118,7 @@ internal static partial class PhysicsSandboxTests
         ProjectSettings.Set(ProjectSettings.PhysicsInterpolation, true);
         Engine.MaxFPS = 60;
         using var window = new SandboxWindow(font, bold);
+        bool[]? nativeInput = null;
         var rows = new List<object>();
         var cadence = new List<double>();
         var watch = new Stopwatch(); var interval = new Stopwatch();
@@ -136,18 +139,47 @@ internal static partial class PhysicsSandboxTests
         };
         window.Ready += _ =>
         {
+            nativeInput = SuppressProfileInput();
             window.SwitchScene(8); window.Scene.SetStoryParameter(1024); window.Scene.DebugEnabled = true;
-            NativeMotion(new(-20, -20)); watch.Start(); interval.Start();
+            ClearProfileHover(); watch.Start(); interval.Start();
             RenderingServer.FramePreDraw += pre; RenderingServer.FramePostDraw += post;
         };
-        try { Check(Engine.Run(window) == 0 && rows.Count >= 12, "Three-minute native settling stress."); }
-        finally { if (RenderingServer.IsAvailable) { RenderingServer.FramePreDraw -= pre; RenderingServer.FramePostDraw -= post; } }
+        try { Check(RunProfileWindow(window) == 0 && rows.Count >= 12, "Three-minute native settling stress."); }
+        finally { RestoreProfileInput(nativeInput); if (RenderingServer.IsAvailable) { RenderingServer.FramePreDraw -= pre; RenderingServer.FramePostDraw -= post; } }
         var path = System.IO.Path.GetFullPath($"bin/physics-sandbox/long-stress-{configuration}.json");
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
         File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, bodies = 1024, debug = true, durationSeconds = 180, rows }, new JsonSerializerOptions { WriteIndented = true }));
         var settled = cadence.Skip(3).Take(3).Average();
         var final = cadence.TakeLast(3).Average();
         Check(final >= settled * .8, $"Settled stress cadence does not decay: {settled:0.0} to {final:0.0} FPS.");
+    }
+
+    private static int RunProfileWindow(SandboxWindow window)
+    {
+        var activate = SDL.GetHint(SDL.Hints.WindowActivateWhenShown);
+        SDL.SetHint(SDL.Hints.WindowActivateWhenShown, "0");
+        try { return Engine.Run(window); }
+        finally { if (activate is null) SDL.ResetHint(SDL.Hints.WindowActivateWhenShown); else SDL.SetHint(SDL.Hints.WindowActivateWhenShown, activate); }
+    }
+
+    // The prepared-frame budget excludes fresh native input. Interactive input has its own native suite.
+    private static readonly SDL.EventType[] ProfileInputEvents = [SDL.EventType.MouseMotion, SDL.EventType.MouseButtonDown, SDL.EventType.MouseButtonUp, SDL.EventType.MouseWheel, SDL.EventType.KeyDown, SDL.EventType.KeyUp, SDL.EventType.TextInput, SDL.EventType.TextEditing];
+    private static bool[] SuppressProfileInput()
+    {
+        var enabled = new bool[ProfileInputEvents.Length];
+        for (var i = 0; i < enabled.Length; i++) { var type = (uint)ProfileInputEvents[i]; enabled[i] = SDL.EventEnabled(type); SDL.SetEventEnabled(type, false); }
+        return enabled;
+    }
+    private static void RestoreProfileInput(bool[]? enabled)
+    {
+        if (enabled is null) return;
+        for (var i = 0; i < enabled.Length; i++) SDL.SetEventEnabled((uint)ProfileInputEvents[i], enabled[i]);
+    }
+    private static void ClearProfileHover()
+    {
+        Span<SDL.Event> input = stackalloc SDL.Event[1];
+        input[0] = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(SDL.GetWindows(out _)![0]), X = -20, Y = -20 } };
+        Check(SDL.PeepEvents(input, 1, SDL.EventAction.AddEvent, 0, 0) == 1, "Profile hover motion is queued before warmup.");
     }
 
     private static void Exercise(PhysicsScene scene, int frame)

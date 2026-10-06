@@ -1,10 +1,10 @@
 # Physics sandbox consumer
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 [PhysicsSandbox](../../examples/PhysicsSandbox/README.md) is a separate desktop executable consuming only the public runtime. [SandboxWindow](../classes/SandboxWindow.md) owns the fixed 1152×800 native window, OptionButton, debug/pause/step/reset controls, three story actions and labels. [PhysicsScene](../classes/PhysicsScene.md) owns one of eleven complete interactive stories. [TugBody](../classes/TugBody.md) supplies the custom-integrated ship. The runtime never references this example.
 
-The visual profile uses the editor's #241B2C background, #2E2238 stage, #F9F3EE text and #F2A6CC pink, with mint/lavender/blue/yellow geometry. Both bundled IBM Plex Sans weights remain caller-owned until the window and all controls are disposed. Collision geometry, visual geometry and debug outlines use the same shape resources and effective indexed poses. No backend type, synthetic animation of physics or downloaded sprite is part of the consumer.
+The visual profile uses the editor's #241B2C background, matching stage, #F9F3EE text and #F2A6CC pink, with mint/lavender/blue/yellow geometry. Both bundled IBM Plex Sans weights remain caller-owned until the window and all controls are disposed. Collision geometry, visual geometry and debug outlines use the same shape resources and effective indexed poses. No backend type, synthetic animation of physics or downloaded sprite is part of the consumer.
 
 ## Gameplay capability map
 
@@ -46,7 +46,7 @@ This map covers gameplay mechanism families. It is not a replacement for exact d
 
 ## Adjustable worlds and games
 
-Every story has native HSlider controls for world gravity, damping and time scale, plus selected-object mass, material response, gravity scale and damping. Unsupported object fields are disabled. The last slider displays a real scene-specific range/count. The public Area field setters accept a space RID and update that world's defaults; local garden Areas still override/compose them. Atelier parameter edits update its independent world as well. The 0.76 simulation CanvasLayer leaves room for the unscaled sidebar without scaling physics body transforms; screen pointers convert through the canvas transform.
+Every story groups its native HSliders into World, Object and Scene tabs. World controls gravity, damping and time scale; Object controls mass, material response, gravity scale and damping. A named selection outline links the clicked body to the object header. Numeric rows include units, ranges and factory-value ticks. Unsupported object fields are disabled. The last slider displays a real scene-specific range/count. The public Area field setters accept a space RID and update that world's defaults; local garden Areas still override/compose them. Atelier parameter edits update its independent world as well. The simulation CanvasLayer uses per-story framing while the interface stays unscaled. A ClipContents Control and counter-translated scene preserve physical world coordinates while clipping story, selection and debug drawing to the 836×536 field. The bike camera follows its chassis, with a recognizable geometric rider/bike and finish flag. The inspector ends at the same height as the field; actions sit immediately underneath. Screen pointers convert through the canvas transform and field bounds reject clicks over the interface.
 
 Material readouts show friction/bounce magnitudes; per-body edits retain the sign encoding rough/absorbent mixing rather than clearing that policy or clamping a rough tire's readout to zero.
 

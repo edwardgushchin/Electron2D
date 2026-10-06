@@ -1,10 +1,10 @@
 # SandboxWindow
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Namespace:** `Electron2D.Examples.PhysicsSandbox`. **Declaration:** `internal sealed partial class SandboxWindow : Window`. **Inherits:** [Window](Window.md). **Source:** [window](../../examples/PhysicsSandbox/SandboxWindow.cs), [parameter controls](../../examples/PhysicsSandbox/SandboxWindow.Parameters.cs). **Component:** [Physics sandbox](../components/physics-sandbox.md).
 
-The example's fixed 1152×800 desktop window. It owns a themed OptionButton for eleven physics stories, debug/pause/step/reset controls, three per-story actions, instructions, live counters and eleven native HSliders for world/selected-body/story settings. Separate CanvasLayers place the scaled simulation below the unscaled interface. It borrows both font weights from the entry point and owns the style resources it creates. Scene selection disposes the previous PhysicsScene before attaching its replacement; pause and debug preferences survive selection and reset.
+The example's fixed 1152×800 desktop window. It owns a themed OptionButton for eleven physics stories, debug/pause/step/reset controls, three per-story actions, instructions, live counters and eleven native HSliders for world/selected-body/story settings. World/Object/Scene tabs keep the inspector sparse. Rows show units, ranges and default markers. A named selection outline connects the object tab to the field. Separate CanvasLayers place the scene-specific framing below the unscaled interface; a ClipContents Control clips every scene descendant, including debug and selection. The field and inspector finish together, directly above the action dock. Collisions explicitly shows ON/OFF and the primary scene action has an accent fill. It borrows both font weights from the entry point and owns the style resources it creates. Scene selection disposes the previous PhysicsScene before attaching its replacement; pause and debug preferences survive selection and reset.
 
 ## Consumer entry
 

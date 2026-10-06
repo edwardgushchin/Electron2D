@@ -2,6 +2,7 @@ namespace Electron2D.Examples.PhysicsSandbox;
 
 internal sealed partial class PhysicsScene
 {
+    private const float ParticleRadius = 8;
     private readonly List<RigidBody> _particles = [];
     private readonly List<RigidBody> _wheels = [];
     private readonly List<(RigidBody Body, Vector2 Home)> _targets = [];
@@ -43,19 +44,19 @@ internal sealed partial class PhysicsScene
     {
         count = Math.Clamp(count, 64, 1024);
         if (count != _particles.Count) _debugPrepared = false;
-        var shape = _particles.Count == 0 ? Circle(6) : _particles[0].ShapeOwnerGetShape(_particles[0].GetShapeOwners()[0], 0);
+        var shape = _particles.Count == 0 ? Circle(ParticleRadius) : _particles[0].ShapeOwnerGetShape(_particles[0].GetShapeOwners()[0], 0);
         while (_particles.Count < count)
         {
             var i = _particles.Count;
             var body = Place(new RigidBody { CanSleep = false, Mass = .2f, LinearDamp = .05f, AngularDamp = .1f }, shape,
-                new(65 + i % 50 * 20, 216 + i / 50 * 18), i % 3 == 0 ? Peach : i % 3 == 1 ? Blue : Mint);
+                new(184 + i % 40 * 20 + (i / 40 % 2) * 2, 615 - i / 40 * 16), i % 3 == 0 ? Peach : i % 3 == 1 ? Blue : Mint);
             body.PhysicsMaterialOverride = _marbleMaterial ??= SurfaceMaterial(.25f, .35f);
             _particles.Add(body);
         }
         while (_particles.Count > count)
         {
             var body = _particles[^1]; _particles.RemoveAt(_particles.Count - 1);
-            Bodies.Remove(body); Colliders.Remove(body); _colors.Remove(body); _shapeOwners.Remove(body); _flashes.Remove(body); _views.Remove(body.GetRID());
+            _numbers.Remove(body); Bodies.Remove(body); Colliders.Remove(body); _colors.Remove(body); _shapeOwners.Remove(body); _flashes.Remove(body); _views.Remove(body.GetRID());
             RemoveChild(body); body.Dispose();
         }
         if (SelectedBody is null || SelectedBody.IsDisposed) SelectedBody = _particles[0];
@@ -71,12 +72,12 @@ internal sealed partial class PhysicsScene
     private void BuildBike()
     {
         Enclose();
-        Solid(Box(210, 16), new(148, 582), Mint);
+        Solid(Box(210, 16), new(148, 582), Lavender);
         Solid(Box(160, 16), new(323, 558), Lavender, -.25f);
-        Solid(Box(155, 18), new(492, 534), Blue);
-        Solid(Box(140, 16), new(669, 578), Peach, .3f);
+        Solid(Box(155, 18), new(492, 534), Lavender);
+        Solid(Box(140, 16), new(669, 578), Lavender, .3f);
         Solid(Box(180, 16), new(866, 598), Lavender, -.19f);
-        Solid(Box(150, 18), new(1045, 580), Mint);
+        Solid(Box(150, 18), new(1045, 580), Lavender);
         _chassis = Dynamic(Box(70, 18), new(142, 504), Peach, 3);
         _chassis.AngularDamp = .35f;
         var tire = SurfaceMaterial(1.2f, .05f, rough: true);
@@ -87,8 +88,8 @@ internal sealed partial class PhysicsScene
             _wheels.Add(wheel);
             var guide = Connect(new GrooveJoint { Length = 50, InitialOffset = 32 }, _chassis, wheel, new(x, 504));
             var suspension = Connect(new DampedSpringJoint { Length = 32, RestLength = 32, Stiffness = 95, Damping = 9 }, _chassis, wheel, new(x, 504));
-            guide.Draw += c => DrawJoint(c, guide, _chassis, wheel);
-            suspension.Draw += c => DrawJoint(c, suspension, _chassis, wheel, true);
+            guide.Draw += c => { if (DebugEnabled) DrawJoint(c, guide, _chassis, wheel); };
+            suspension.Draw += c => { if (DebugEnabled) DrawJoint(c, suspension, _chassis, wheel, true); };
         }
         var finish = Sensor(Box(42, 85), new(1070, 527), Yellow);
         finish.BodyEntered += body => { if (body == _chassis && Score == 0) { Score = 1; Observation = "Finish! Reset the motorcycle or try another gravity and suspension load."; } };
@@ -114,8 +115,9 @@ internal sealed partial class PhysicsScene
         var wood = SurfaceMaterial(.55f, .15f);
         for (var tower = 0; tower < 3; tower++)
         {
-            var x = 600 + tower * 170;
-            for (var row = 0; row < 2; row++)
+            var x = 520 + tower * 160;
+            var rows = tower == 1 ? 3 : tower == 2 ? 1 : 2;
+            for (var row = 0; row < rows; row++)
             {
                 foreach (var offset in new[] { -48f, 48f })
                 {
@@ -125,10 +127,10 @@ internal sealed partial class PhysicsScene
                 var plank = Dynamic(Box(130, 18), new(x, 536 - row * 103), Lavender, 1.4f);
                 plank.PhysicsMaterialOverride = wood;
             }
-            var target = Dynamic(Circle(18), new(x, 405), Mint, .6f);
+            var target = Dynamic(Circle(24), new(x, 513 - (rows - 1) * 103), Mint, .6f);
             _targets.Add((target, target.Position));
         }
-        _bird = Dynamic(Circle(17), _sling, Peach, 2);
+        _bird = Dynamic(Circle(23), _sling, Peach, 2);
         _bird.Freeze = true;
         SelectedBody = _bird;
         Actions = ["Quick shot [B]", "Reload bird [N]", "Heavy / light bird [F]"];
@@ -146,7 +148,7 @@ internal sealed partial class PhysicsScene
     private bool HandleSling(InputEventMouseButton click, Vector2 point)
     {
         if (Index != 10 || _bird is null || !_bird.Freeze || click.ButtonIndex != MouseButton.Left || !click.Pressed || point.DistanceTo(_bird.Position) > 32) return false;
-        _pulling = true; SelectedBody = _bird;
+        _pulling = true; SelectedBody = _bird; SelectionRevision = unchecked(SelectionRevision + 1);
         GetViewport()!.SetInputAsHandled(); return true;
     }
 
@@ -181,25 +183,57 @@ internal sealed partial class PhysicsScene
 
     private void DrawBike(CanvasItem c)
     {
-        c.DrawString(_font, new(970, 450), "FINISH", fontSize: 15, modulate: Yellow);
+        c.DrawLine(new(1040, 480), new(1040, 570), Muted, 3);
+        c.DrawColoredPolygon([new(1040, 480), new(1082, 493), new(1040, 510)], Yellow);
+        c.DrawString(_font, new(995, 460), "FINISH", fontSize: 12, modulate: Yellow);
         if (_chassis is null) return;
+        foreach (var wheel in _wheels)
+        {
+            c.DrawSetTransformMatrix(wheel.GlobalTransform);
+            c.DrawCircle(Vector2.Zero, 19, Paper); c.DrawCircle(Vector2.Zero, 19, Lavender, false, 3);
+            c.DrawCircle(Vector2.Zero, 10, Border); c.DrawCircle(Vector2.Zero, 3, Ink);
+            for (var i = 0; i < 4; i++) { var a = Vector2.FromAngle(i * Mathf.Pi / 2) * 14; c.DrawLine(-a, a, Muted, 1); }
+        }
         c.DrawSetTransformMatrix(_chassis.GlobalTransform);
-        c.DrawLine(new(-8, -8), new(10, -35), Ink, 5);
-        c.DrawCircle(new(13, -43), 10, Yellow);
+        c.DrawColoredPolygon([new(-35, 6), new(-20, -12), new(12, -12), new(35, 4), new(25, 10), new(-24, 10)], Peach);
+        c.DrawLine(new(-20, -12), new(1, 4), Lavender, 4); c.DrawLine(new(1, 4), new(20, -12), Lavender, 4);
+        c.DrawLine(new(-17, -14), new(3, -14), Paper, 5);
+        c.DrawLine(new(22, -11), new(28, -26), Ink, 3); c.DrawLine(new(23, -26), new(33, -26), Ink, 3);
+        c.DrawLine(new(-8, -15), new(0, -32), Lavender, 7); c.DrawLine(new(0, -32), new(21, -23), Ink, 4);
+        c.DrawCircle(new(3, -44), 10, Yellow); c.DrawLine(new(3, -45), new(11, -45), Paper, 3);
         c.DrawSetTransformMatrix(Transform.Identity);
     }
 
     private void DrawBirds(CanvasItem c)
     {
-        c.DrawLine(_sling + new Vector2(0, 24), _sling + new Vector2(0, -28), Lavender, 10);
+        c.DrawLine(_sling + new Vector2(-5, 98), _sling + new Vector2(-5, 16), Muted, 12);
+        c.DrawLine(_sling + new Vector2(-5, 16), _sling + new Vector2(-20, -30), Muted, 9);
+        c.DrawLine(_sling + new Vector2(-5, 16), _sling + new Vector2(20, -30), Muted, 9);
+        foreach (var (target, _) in _targets)
+        {
+            c.DrawSetTransformMatrix(target.GlobalTransform);
+            c.DrawCircle(new(-7, -5), 5, Ink); c.DrawCircle(new(7, -5), 5, Ink);
+            c.DrawCircle(new(-5, -5), 2, Paper); c.DrawCircle(new(9, -5), 2, Paper);
+            c.DrawLine(new(-7, 8), new(7, 8), Border, 3);
+        }
+        if (_bird is not null)
+        {
+            c.DrawSetTransformMatrix(_bird.GlobalTransform);
+            c.DrawCircle(new(7, -5), 7, Ink); c.DrawCircle(new(10, -5), 3, Paper);
+            c.DrawColoredPolygon([new(18, -1), new(34, 5), new(18, 9)], Yellow);
+            c.DrawLine(new(0, -13), new(13, -9), Paper, 3);
+            c.DrawSetTransformMatrix(Transform.Identity);
+        }
         if (_bird is { Freeze: true })
         {
-            c.DrawLine(_sling + new Vector2(-8, -28), _bird.Position, Peach, 4);
-            c.DrawLine(_sling + new Vector2(8, -28), _bird.Position, Peach, 4);
-            var velocity = (_sling - _bird.Position) * _slingPower;
-            Span<Vector2> path = stackalloc Vector2[40];
-            for (var i = 0; i < path.Length; i++) { var t = i * .04f; path[i] = _bird.Position + velocity * t + new Vector2(0, WorldGravity * _bird.GravityScale * t * t * .5f); }
-            c.DrawPolyline(path, new Color(Ink.R, Ink.G, Ink.B, .35f), 1.5f);
+            c.DrawLine(_sling + new Vector2(-20, -30), _bird.Position, Peach, 3);
+            c.DrawLine(_sling + new Vector2(20, -30), _bird.Position, Peach, 3);
+            if (_pulling)
+            {
+                var velocity = (_sling - _bird.Position) * _slingPower;
+                for (var i = 1; i < 32; i++) { var t = i * .045f; var p = _bird.Position + velocity * t + new Vector2(0, WorldGravity * _bird.GravityScale * t * t * .5f); c.DrawCircle(p, 2, Lavender); }
+            }
         }
+        c.DrawSetTransformMatrix(Transform.Identity);
     }
 }

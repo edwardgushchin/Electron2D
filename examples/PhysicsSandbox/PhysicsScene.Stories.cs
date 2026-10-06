@@ -43,13 +43,13 @@ internal sealed partial class PhysicsScene
     private void BuildWarehouse()
     {
         Enclose();
-        var shape = Box(34, 34);
+        var shape = Box(48, 48);
         var material = SurfaceMaterial(.7f, .08f);
         for (var tower = 0; tower < 3; tower++)
-            for (var row = 0; row < 8; row++)
+            for (var row = 0; row < 6 + tower * 2; row++)
                 for (var column = 0; column < 3; column++)
                 {
-                    var box = Dynamic(shape, new(300 + tower * 245 + column * 36, 610 - row * 36), tower == 0 ? Peach : tower == 1 ? Blue : Lavender);
+                    var box = Dynamic(shape, new(280 + tower * 245 + column * 50, 604 - row * 50), tower == 0 ? Peach : tower == 1 ? Blue : Lavender);
                     box.PhysicsMaterialOverride = material;
                 }
         Actions = ["Add crate [B]", "Fire heavy ball [N]", "Shockwave [F]"];
@@ -435,16 +435,10 @@ internal sealed partial class PhysicsScene
         {
             case 9: DrawBike(c); break;
             case 10: DrawBirds(c); break;
-            case 0:
-                c.DrawString(_font, new(72, 259), "LOAD", fontSize: 14, modulate: Muted);
-                c.DrawString(_font, new(72, 280), "72 crates.", fontSize: 18, modulate: Ink);
-                c.DrawString(_font, new(72, 304), "One good push.", fontSize: 16, modulate: Ink);
-                c.DrawLine(new(90, 593), new(162, 581), Muted, 3);
-                c.DrawCircle(new(90, 593), 10, Ink);
-                break;
+            case 0: break;
             case 1:
-                c.DrawString(_font, new(74, 221), "FEED", fontSize: 13, modulate: Muted);
-                c.DrawString(_font, new(875, 630), "DELIVER HERE", fontSize: 14, modulate: Ink);
+                c.DrawString(_font, new(110, 221), "FEED", fontSize: 13, modulate: Muted);
+                c.DrawString(_font, new(875, 505), "DELIVER HERE", fontSize: 14, modulate: Ink);
                 break;
             case 2:
                 foreach (var (x, title) in new[] { (190, "PENDULUM"), (517, "MOTOR"), (671, "SPRING"), (881, "GUIDE") })

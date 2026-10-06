@@ -6,34 +6,33 @@ namespace Electron2D.Examples.PhysicsSandbox;
 internal sealed partial class SandboxWindow : Window
 {
     internal static readonly Vector2i ClientSize = new(1152, 800);
+    internal static readonly Rect2 Playfield = new(24, 156, 836, 536);
     internal static readonly string[] SceneNames = ["Collision warehouse", "Marble delivery", "Clockwork playground", "Gravity garden", "Rooftop courier", "Radar rescue", "Orbital tug", "Shape atelier", "Physics stress test", "Gravity Defied", "Angry birds"];
     internal static readonly string[] Stories =
     [
-        "A delivery went wrong. Pull crates out of the towers, fire a marble, then rebuild the warehouse.",
-        "Deliver marbles through the pastel machine. Compare rubber, ice and clay on the same track.",
-        "Wake the toy workshop: a pendulum, a powered wheel, a slider and a spring share one world.",
-        "Plant a miniature solar system. Move the stars, reverse their gravity and release new seeds.",
-        "Collect every parcel. Jump through the shelves, ride the lift and cross the sloping rooftops.",
-        "Guide the rescue probe through the maze. A thin ray and a wide sweep reveal different clearances.",
-        "Pilot a custom-integrated tug. Tow the cargo into the dock with thrust, torque and a spring cable.",
-        "Build a strange rolling creature. Edit its live shape slots, centre of mass and independent RID world.",
-        "Load up to 1,024 active particles. Stir the tank and compare simulation, contacts and drawing cost.",
-        "Ride a real motorcycle over ramps and gaps. Balance the chassis and drive both wheels to reach the finish.",
-        "Pull the bird back in the sling. Knock the mint targets off their towers and try another shot."
+        "Pull the towers apart, launch a heavy ball, then rebuild the warehouse.",
+        "Deliver marbles into the mint bowl. Compare rubber, ice and clay.",
+        "Pull a pendulum, power the wheel and tune the spring.",
+        "Move the stars, reverse attraction and release orbiting seeds.",
+        "Collect four parcels, ride the lift and cross the rooftops.",
+        "Guide the probe to the beacon. Inspect ray and wide-sweep clearance.",
+        "Tow the cargo into the mint dock with thrust and a spring cable.",
+        "Morph a live compound shape and explore the independent physics world.",
+        "Stir real particles. Compare normal and collision drawing at up to 1,024 bodies.",
+        "Ride over ramps and gaps. Balance the motorcycle and reach the flag.",
+        "Pull the bird back, aim and release. Knock three mint targets off the towers."
     ];
     private readonly List<Resource> _styles = [];
     private readonly Font _regular;
-    private readonly Label _heading;
     private readonly Label _story;
     private readonly Label _help;
     private readonly Entity _telemetry;
     private readonly OptionButton _selector;
-    private readonly Button _debug;
-    private readonly Button _pause;
+    private readonly Button _debug, _pause;
     private readonly Button[] _actions;
-    private readonly PopupMenu _menu;
-    private bool _debugEnabled;
-    private bool _paused;
+    private readonly string[] _actionCaptions = ["", "", ""];
+    private readonly Control _stageClip;
+    private bool _debugEnabled, _paused;
     private double _readoutTime;
     internal PhysicsScene Scene { get; private set; } = null!;
     internal int SceneIndex { get; private set; }
@@ -41,117 +40,139 @@ internal sealed partial class SandboxWindow : Window
     internal SandboxWindow(Font regular, Font semibold)
     {
         _regular = regular;
-        Name = "PhysicsSandbox";
-        Title = "PhysicsSandbox — Electron2D";
-        Size = MinSize = MaxSize = ClientSize;
-        Unresizable = true;
-        GUIEmbedSubwindows = true;
-        _worldLayer = new CanvasLayer { Name = "SimulationCanvas", Layer = 1, Transform = new Transform(0, new Vector2(.76f, .76f), 0, new Vector2(5.76f, 44.16f)) };
+        Name = "PhysicsSandbox"; Title = "PhysicsSandbox — Electron2D";
+        Size = MinSize = MaxSize = ClientSize; Unresizable = true; GUIEmbedSubwindows = true;
+        _worldLayer = new CanvasLayer { Name = "SimulationCanvas", Layer = 1 };
         _ui = new CanvasLayer { Name = "Interface", Layer = 10 };
-        AddChild(_worldLayer); AddChild(_ui);
+        _stageClip = new Control { Name = "StageClip", ClipContents = true, MouseFilter = MouseFilter.Ignore };
+        _worldLayer.AddChild(_stageClip); AddChild(_worldLayer); AddChild(_ui);
         SnapTransformsToPixel = true;
         Ready += _ => { if (RenderingServer.IsAvailable) RenderingServer.SetDefaultClearColor(PhysicsScene.Paper); };
         var background = new Entity { Name = "Background" };
         background.Draw += c =>
         {
             c.DrawRect(new(0, 0, 1152, 800), PhysicsScene.Paper);
-            c.DrawLine(new(24, 86), new(1128, 86), PhysicsScene.Border);
-            c.DrawString(semibold, new(893, 50), "PhysicsSandbox", fontSize: 26, modulate: PhysicsScene.Ink);
-            c.DrawString(regular, new(995, 71), "ELECTRON2D", fontSize: 11, modulate: PhysicsScene.Muted);
+            c.DrawString(semibold, new(24, 36), "Electron2D", fontSize: 21, modulate: PhysicsScene.Ink);
+            c.DrawLine(new(156, 18), new(156, 38), PhysicsScene.Border);
+            c.DrawString(regular, new(174, 35), "PhysicsSandbox", fontSize: 18, modulate: PhysicsScene.Muted);
+            c.DrawLine(new(24, 48), new(1128, 48), PhysicsScene.Border);
+            c.DrawRect(new(Playfield.Position - Vector2.One, Playfield.Size + Vector2.One * 2), PhysicsScene.Border, false);
         };
         AddChild(background);
-        _selector = new OptionButton { Name = "SceneSelector", Position = new(24, 24), Size = new(292, 44), FitToLongestItem = false };
+        _selector = new OptionButton { Name = "SceneSelector", Position = new(24, 64), Size = new(302, 44), FitToLongestItem = false };
         StyleButton(_selector, semibold);
-        _selector.TooltipText = "Choose a physics story. Arrow keys and Enter work in the menu.";
-        for (var i = 0; i < SceneNames.Length; i++) _selector.AddItem($"{i + 1:00}   {SceneNames[i]}", i);
+        _selector.TooltipText = "Choose an experiment · arrows and Enter select a scene";
+        for (var i = 0; i < SceneNames.Length; i++) _selector.AddItem(SceneNames[i], i);
         _ui.AddChild(_selector);
-        _menu = _selector.GetPopup();
-        _menu.AllowSearch = true;
-        _menu.AddThemeFontOverride("font", regular);
-        _menu.AddThemeFontSizeOverride("font_size", 17);
-        _menu.AddThemeColorOverride("font_color", PhysicsScene.Ink);
-        _menu.AddThemeColorOverride("font_hover_color", PhysicsScene.Ink);
-        _menu.AddThemeStyleBoxOverride("panel", Style(PhysicsScene.Surface));
-        _menu.AddThemeStyleBoxOverride("hover", Style(PhysicsScene.Hover));
+        var menu = _selector.GetPopup(); menu.AllowSearch = true;
+        menu.AddThemeFontOverride("font", regular); menu.AddThemeFontSizeOverride("font_size", 16);
+        menu.AddThemeColorOverride("font_color", PhysicsScene.Ink); menu.AddThemeColorOverride("font_hover_color", PhysicsScene.Ink);
+        menu.AddThemeStyleBoxOverride("panel", Style(PhysicsScene.Surface)); menu.AddThemeStyleBoxOverride("hover", Style(PhysicsScene.Hover));
         _selector.ItemSelected += SwitchScene;
-        _debug = MakeButton("Debug [F3]", new(328, 24), 142, regular);
-        _debug.ToggleMode = true;
-        _debug.Toggled += enabled => { _debugEnabled = enabled; Scene.DebugEnabled = enabled; };
-        _pause = MakeButton("Pause [P]", new(482, 24), 122, regular);
-        _pause.ToggleMode = true;
-        _pause.Toggled += paused => SetPaused(paused);
-        MakeButton("Step [.]", new(616, 24), 90, regular).Pressed += () => { SetPaused(true); Scene.StepOnce(); };
-        MakeButton("Reset [R]", new(718, 24), 120, regular).Pressed += () => SwitchScene(SceneIndex);
-        _heading = MakeLabel("", new(24, 100), 28, semibold, PhysicsScene.Ink);
-        _story = MakeLabel("", new(24, 142), 16, regular, PhysicsScene.Muted);
-        _help = MakeLabel("", new(24, 772), 14, regular, PhysicsScene.Muted);
-        _actions = [MakeButton("", new(24, 716), 190, regular), MakeButton("", new(226, 716), 210, regular), MakeButton("", new(448, 716), 220, regular)];
-        for (var i = 0; i < _actions.Length; i++)
+        _pause = MakeButton("Pause", new(338, 64), 106, regular, "Pause"); _pause.ToggleMode = true;
+        _pause.TooltipText = "Pause / play · P"; _pause.Toggled += SetPaused;
+        var step = MakeButton("Step", new(456, 64), 90, regular, "Step"); step.TooltipText = "Advance one fixed tick · period key";
+        step.Pressed += () => { SetPaused(true); Scene.StepOnce(); };
+        var reset = MakeButton("Reset", new(558, 64), 94, regular, "Reset"); reset.TooltipText = "Restore this experiment · R";
+        reset.Pressed += () => SwitchScene(SceneIndex);
+        _debug = MakeButton("Collisions OFF", new(676, 64), 184, regular, "Debug"); _debug.ToggleMode = true;
+        _debug.TooltipText = "Collider shapes and contact normals · F3";
+        _debug.Toggled += enabled => { _debugEnabled = enabled; Scene.DebugEnabled = enabled; UpdateDebug(); };
+        _debug.Draw += c => c.DrawCircle(new(18, 22), 4, _debugEnabled ? PhysicsScene.Mint : PhysicsScene.Muted, _debugEnabled, 1.5f);
+        _story = MakeLabel("", new(24, 124), 15, regular, PhysicsScene.Muted);
+        _help = MakeLabel("", new(24, 776), 13, regular, PhysicsScene.Muted);
+        _actions = [MakeButton("", new(24, 712), 266, semibold), MakeButton("", new(306, 712), 266, regular), MakeButton("", new(588, 712), 272, regular)];
+        _actions[0].AddThemeStyleBoxOverride("normal", Style(Color.FromHTML("#814163"), PhysicsScene.Peach));
+        _actions[0].AddThemeStyleBoxOverride("hover", Style(Color.FromHTML("#974C76"), PhysicsScene.Peach));
+        for (var i = 0; i < 3; i++) { var slot = i; _actions[i].Pressed += () => Scene.Act(ActionIndex(slot)); }
+        _telemetry = new Entity { Name = "Telemetry" };
+        _telemetry.Draw += c =>
         {
-            var action = i;
-            _actions[i].Pressed += () => Scene.Act(action);
-        }
-        var stats = _telemetry = new Entity { Name = "Telemetry" };
-        ProcessEnabled = true;
-        stats.Draw += c =>
-        {
-            Span<char> text = stackalloc char[128];
-            text.TryWrite(CultureInfo.InvariantCulture, $"{Engine.FramesPerSecond:0} FPS · {Scene.BodyCount} bodies · {Scene.ContactEvents} impacts · {Scene.Score} delivered", out var count);
-            PhysicsScene.DrawReadout(c, regular, new(704, 738), text[..count], 15, PhysicsScene.Ink);
-            c.DrawString(regular, new(704, 760), _paused ? "Simulation paused · one step = 1/60 s" : "Drag to grab · right click to kick · B / N / F: actions", fontSize: 13, modulate: PhysicsScene.Muted);
+            PhysicsScene.DrawReadout(c, semibold, new(-300, -300), "0123456789.-—", 28, new Color(0, 0, 0, 0));
+            Span<char> text = stackalloc char[80];
+            var count = 1;
+            if (Engine.FramesPerSecond < 1) text[0] = '—';
+            else text.TryWrite(CultureInfo.InvariantCulture, $"{Engine.FramesPerSecond:0}", out count);
+            PhysicsScene.DrawReadout(c, semibold, new(894, 92), text[..count], 28, PhysicsScene.Ink);
+            c.DrawString(regular, new(949, 92), "FPS", fontSize: 13, modulate: PhysicsScene.Muted);
+            text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.BodyCount} bodies", out count);
+            PhysicsScene.DrawReadout(c, regular, new(1012, 90), text[..count], 14, PhysicsScene.Ink);
+            c.DrawString(regular, new(894, 111), _paused ? "PAUSED · step = 1/60 s" : "LIVE · fixed simulation", fontSize: 12, modulate: _paused ? PhysicsScene.Peach : PhysicsScene.Mint);
+            text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.ContactEvents} contact events", out count);
+            PhysicsScene.DrawReadout(c, regular, new(894, 733), text[..count], 14, PhysicsScene.Muted);
+            if (SceneIndex is 1 or 4 or 6 or 9 or 10)
+            {
+                text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.Score} {SceneIndex switch { 9 => "finish reached", 10 => "targets down / 3", 4 => "parcels / 4", 6 => "cargo docked", _ => "marbles delivered" }}", out count);
+                PhysicsScene.DrawReadout(c, regular, new(894, 753), text[..count], 14, PhysicsScene.Mint);
+            }
         };
-        _ui.AddChild(stats);
-        BuildParameters(regular);
-        InputEnabled = UnhandledInputEnabled = true;
+        _ui.AddChild(_telemetry); BuildParameters(regular, semibold);
+        ProcessEnabled = InputEnabled = UnhandledInputEnabled = true;
         FocusExited += () => Scene.ReleaseGrab(false);
         SwitchScene(0);
     }
 
+    private int ActionIndex(int slot) => SceneIndex switch { 0 => slot switch { 0 => 1, 1 => 0, _ => 2 }, 9 => slot switch { 0 => 1, 1 => 2, _ => 0 }, _ => slot };
+    private void UpdateDebug() { _debug.Text = _debugEnabled ? "Collisions ON" : "Collisions OFF"; _debug.SetPressedNoSignal(_debugEnabled); }
+
     internal void SwitchScene(int index)
     {
         if ((uint)index >= SceneNames.Length) throw new ArgumentOutOfRangeException(nameof(index));
-        if (Scene is not null) { _worldLayer.RemoveChild(Scene); Scene.Dispose(); }
-        SceneIndex = index;
-        Scene = new PhysicsScene(index, _regular) { DebugEnabled = _debugEnabled, Running = !_paused };
-        _worldLayer.AddChild(Scene);
-        Engine.TimeScale = 1;
-        SyncParameters();
-        _heading.Text = SceneNames[index];
-        _story.Text = Stories[index];
-        _help.Text = Scene.Help;
-        _selector.Select(index);
-        _selector.ReleaseFocus();
-        for (var i = 0; i < _actions.Length; i++) _actions[i].Text = Scene.Actions[i];
+        if (Scene is not null) { _stageClip.RemoveChild(Scene); Scene.Dispose(); }
+        SceneIndex = index; Scene = new PhysicsScene(index, _regular) { DebugEnabled = _debugEnabled, Running = !_paused, PhysicsInterpolationMode = PhysicsInterpolationMode.Off, InputBounds = Playfield };
+        _stageClip.AddChild(Scene); FrameScene(); Engine.TimeScale = 1;
+        _selectionRevision = Scene.SelectionRevision; CaptureDefaults(); SyncParameters(); ShowParameters(0);
+        _story.Text = Stories[index]; _help.Text = Scene.Help;
+        _selector.Select(index); _selector.ReleaseFocus(); UpdateActions(); UpdateDebug();
+    }
 
+    private void FrameScene()
+    {
+        var zoom = SceneIndex switch { 0 => 1.05f, 1 => .85f, 8 => 1, 9 => 3f, 10 => .95f, _ => .9f };
+        var width = Playfield.Size.X / zoom; var height = Playfield.Size.Y / zoom;
+        var center = SceneIndex switch { 0 => 582f, 8 => 576f, 10 => 480f, 4 or 5 or 6 or 9 => Scene.CameraTarget.X, _ => 576 };
+        var x = Math.Clamp(center - width / 2, 36, 1116 - width);
+        var bottom = SceneIndex == 9 ? Math.Min(629, Scene.CameraTarget.Y + 100) : 629;
+        var view = new Rect2(x, bottom - height, width, height);
+        _worldLayer.Transform = new Transform(0, new Vector2(zoom, zoom), 0, Playfield.Position - view.Position * zoom);
+        _stageClip.Position = view.Position; _stageClip.Size = view.Size; Scene.Position = -view.Position; Scene.PresentationZoom = zoom;
+    }
+
+    private void UpdateActions()
+    {
+        for (var i = 0; i < 3; i++)
+        {
+            var caption = Scene.Actions[ActionIndex(i)];
+            if (_actionCaptions[i] == caption) continue;
+            _actionCaptions[i] = caption;
+            var end = caption.IndexOf(" [", StringComparison.Ordinal);
+            _actions[i].Text = end < 0 ? caption : caption[..end];
+            _actions[i].TooltipText = caption;
+        }
     }
 
     protected override void OnProcess(double delta)
     {
+        if (SceneIndex is 4 or 5 or 6 or 9) FrameScene();
+        RefreshSelection();
+        if (_debugEnabled != Scene.DebugEnabled) { _debugEnabled = Scene.DebugEnabled; UpdateDebug(); }
         _readoutTime += delta;
         if (_readoutTime >= .1) { _readoutTime = 0; _telemetry.QueueRedraw(); SyncParameters(); }
-        for (var i = 0; i < _actions.Length; i++)
-            if (_actions[i].Text != Scene.Actions[i]) _actions[i].Text = Scene.Actions[i];
-        RefreshSelection();
+        UpdateActions();
     }
-
     private void SetPaused(bool paused)
     {
-        _paused = paused;
-        _pause.SetPressedNoSignal(paused);
-        _pause.Text = paused ? "Play [P]" : "Pause [P]";
-        Scene.Running = !paused;
-        if (paused) Scene.ReleaseGrab(false);
+        _paused = paused; _pause.SetPressedNoSignal(paused); _pause.Text = paused ? "Play" : "Pause";
+        Scene.Running = !paused; if (paused) Scene.ReleaseGrab(false); _telemetry.QueueRedraw();
     }
-
-    protected override void OnInput(InputEvent @event)
+    protected override void OnInput(InputEvent input)
     {
-        if (@event is InputEventMouseMotion motion) Scene.SetPointer(motion.Position);
-        if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false }) Scene.ReleaseGrab();
+        if (input is InputEventMouseMotion motion && Playfield.HasPoint(motion.Position)) Scene.SetPointer(motion.Position);
+        if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false }) Scene.ReleaseGrab();
     }
-
-    protected override void OnUnhandledInput(InputEvent @event)
+    protected override void OnUnhandledInput(InputEvent input)
     {
-        if (@event is not InputEventKey { Pressed: true, Echo: false } key) return;
+        if (input is not InputEventKey { Pressed: true, Echo: false } key) return;
         switch (key.Keycode)
         {
             case Key.Escape: Tree!.Quit(); break;
@@ -163,51 +184,32 @@ internal sealed partial class SandboxWindow : Window
         }
         SetInputAsHandled();
     }
-
-    private Button MakeButton(string text, Vector2 position, float width, Font font)
+    private Button MakeButton(string text, Vector2 position, float width, Font font, string? name = null)
     {
-        var button = new Button(text) { Name = "Action" + _ui.GetChildCount(), Position = position, Size = new(width, 44) };
-        StyleButton(button, font);
-        button.Pressed += button.ReleaseFocus;
-        _ui.AddChild(button);
-        return button;
+        var button = new Button(text) { Name = name ?? "Action" + _ui.GetChildCount(), Position = position, Size = new(width, 44) };
+        StyleButton(button, font); button.Pressed += button.ReleaseFocus; _ui.AddChild(button); return button;
     }
-
     private void StyleButton(Button button, Font font)
     {
-        button.AddThemeFontOverride("font", font);
-        button.AddThemeFontSizeOverride("font_size", 16);
+        button.AddThemeFontOverride("font", font); button.AddThemeFontSizeOverride("font_size", 15);
         foreach (var state in new[] { "font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color" }) button.AddThemeColorOverride(state, PhysicsScene.Ink);
         button.AddThemeColorOverride("font_disabled_color", PhysicsScene.Muted);
-        button.AddThemeStyleBoxOverride("normal", Style(PhysicsScene.Surface));
-        button.AddThemeStyleBoxOverride("hover", Style(PhysicsScene.Hover));
-        button.AddThemeStyleBoxOverride("pressed", Style(PhysicsScene.Pressed));
-        button.AddThemeStyleBoxOverride("hover_pressed", Style(PhysicsScene.Pressed));
+        button.AddThemeStyleBoxOverride("normal", Style(PhysicsScene.Surface)); button.AddThemeStyleBoxOverride("hover", Style(PhysicsScene.Hover));
+        button.AddThemeStyleBoxOverride("pressed", Style(PhysicsScene.Pressed, PhysicsScene.Peach)); button.AddThemeStyleBoxOverride("hover_pressed", Style(PhysicsScene.Pressed, PhysicsScene.Peach));
         button.AddThemeStyleBoxOverride("focus", Style(new Color(0, 0, 0, 0), PhysicsScene.Peach));
     }
-
     private StyleBoxFlat Style(Color color, Color? border = null)
     {
-        var style = new StyleBoxFlat { BGColor = color, BorderColor = border ?? PhysicsScene.Border, ContentMarginLeft = 16, ContentMarginRight = 16, ContentMarginTop = 8, ContentMarginBottom = 8 };
-        style.SetCornerRadiusAll(10);
-        style.SetBorderWidthAll(border.HasValue ? 2 : 1);
-        _styles.Add(style);
-        return style;
+        var style = new StyleBoxFlat { BGColor = color, BorderColor = border ?? PhysicsScene.Border, ContentMarginLeft = 12, ContentMarginRight = 12, ContentMarginTop = 8, ContentMarginBottom = 8 };
+        style.SetCornerRadiusAll(8); style.SetBorderWidthAll(border.HasValue ? 2 : 1); _styles.Add(style); return style;
     }
-
     private Label MakeLabel(string text, Vector2 position, int size, Font font, Color color)
     {
         var label = new Label(text) { Name = "Text" + _ui.GetChildCount(), Position = position, MouseFilter = MouseFilter.Ignore };
-        label.AddThemeFontOverride("font", font);
-        label.AddThemeFontSizeOverride("font_size", size);
-        label.AddThemeColorOverride("font_color", color);
-        _ui.AddChild(label);
-        return label;
+        label.AddThemeFontOverride("font", font); label.AddThemeFontSizeOverride("font_size", size); label.AddThemeColorOverride("font_color", color); _ui.AddChild(label); return label;
     }
-
     protected override void Dispose(bool disposing)
     {
-        base.Dispose(disposing);
-        if (disposing) { foreach (var style in _styles) style.Dispose(); _styles.Clear(); }
+        base.Dispose(disposing); if (disposing) { foreach (var style in _styles) style.Dispose(); _styles.Clear(); }
     }
 }

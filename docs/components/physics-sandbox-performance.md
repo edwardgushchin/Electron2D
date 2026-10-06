@@ -1,14 +1,38 @@
 # PhysicsSandbox performance
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 ## Measurement contract
 
 The test-only [profiler](../../tests/Electron2D.Tests/PhysicsSandboxTests.Profile.cs) measures actual public-API stories and a native 1152×800 Wayland GPU window on Linux x64/.NET 10. `DOTNET_TieredCompilation=0` stabilizes the allocation checks. Each story has 1,600 fixed warmup ticks and 256 measured ticks; every native normal/debug trial has 768 warmup frames and 192 measured frames. A moving scene pointer and periodic impulses keep queries and contacts active. Motorcycle demo drive and a bird shot start each corresponding trial. The final full run uses 1,024 stress bodies. The 60 FPS cap, presentation and scheduling waits remain enabled; this is observed window cadence rather than uncapped renderer throughput.
 
-`GC.GetAllocatedBytesForCurrentThread()` brackets every measured fixed step and full scene/render-owner frame. Render callbacks are bracketed separately. The maximum on every frame, rather than a rounded mean, must be exactly zero. Report serialization, test instrumentation and scene transitions are outside those intervals. Native GUI hover is cleared before warmup; pointer queries are moved through the scene API. Construction, new bodies, configuration edits, fresh native input-event construction, tooltips, readback and native/GPU allocations are not covered by the zero-byte result. Mouse-event creation remains an allocating runtime path. This result is a prepared simulation/UI/debug budget, not a global zero-allocation guarantee for all interactions.
+`GC.GetAllocatedBytesForCurrentThread()` brackets every measured fixed step and full scene/render-owner frame. Render callbacks are bracketed separately. The maximum on every frame, rather than a rounded mean, must be exactly zero. Report serialization, test instrumentation and scene transitions are outside those intervals. The test-only profile window requests no activation when shown; native mouse/keyboard events are disabled during measurement and their previous states are restored afterwards. Native GUI hover is cleared with queued native motion before warmup; pointer queries are moved through the scene API. Construction, new bodies, configuration edits, fresh native input-event construction, tooltips, readback and native/GPU allocations are not covered by the zero-byte result. Mouse-event creation remains an allocating runtime path. This result is a prepared simulation/UI/debug budget, not a global zero-allocation guarantee for all interactions.
 
-## Release result
+## Interface revision result
+
+The revised field, inspector, selection labels and clipped scene/debug drawing passed all eleven fixed profiles and all 22 normal/debug native trials, with exactly zero maximum prepared owner-thread frame bytes. This full run uses tracked runtime `39f16075`, Release, tiered compilation disabled, 1,024 stress particles and the standard warmup/sample counts above. Evidence: `bin/physics-sandbox/profile-Release-ui-acceptance.json`. Native mouse/keyboard input is suppressed only by the profiler; the interactive native suite still exercises dropdown, tabs, sliders, dragging, pause/step and slingshot release in both renderers.
+
+| Story | Bodies | Fixed mean ms | Normal / debug FPS | Normal / debug render ms | Fixed / maximum frame bytes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Collision warehouse | 72 | 0.204 | 57.8 / 57.5 | 1.64 / 2.03 | 0 / 0 |
+| Marble delivery | 8 | 0.027 | 57.0 / 57.7 | 4.51 / 2.29 | 0 / 0 |
+| Clockwork playground | 4 | 0.010 | 58.2 / 57.8 | 2.31 / 1.92 | 0 / 0 |
+| Gravity garden | 18 | 0.038 | 58.1 / 57.7 | 1.74 / 2.27 | 0 / 0 |
+| Rooftop courier | 2 | 0.029 | 57.4 / 58.4 | 3.81 / 1.69 | 0 / 0 |
+| Radar rescue | 1 | 0.044 | 58.3 / 58.4 | 1.62 / 1.56 | 0 / 0 |
+| Orbital tug | 2 | 0.010 | 58.1 / 58.3 | 1.58 / 1.51 | 0 / 0 |
+| Shape atelier | 7 | 0.016 | 58.7 / 56.2 | 1.61 / 5.35 | 0 / 0 |
+| Physics stress test | 1024 | 5.902 | 9.5 / 10.6 | 46.72 / 63.95 | 0 / 0 |
+| Gravity Defied | 3 | 0.018 | 11.6 / 11.1 | 80.72 / 84.74 | 0 / 0 |
+| Angry birds | 22 | 0.065 | 12.3 / 11.7 | 75.75 / 79.71 | 0 / 0 |
+
+The last six native trials dropped to roughly 9–12 FPS across the stress tank, three-body motorcycle and bird scene, while render durations included 47–85 ms presentation waits. Desktop load and window visibility were uncontrolled; these cadence results do not isolate a physics regression. The allocation gate passed, and the fixed-step column measures simulation separately. No guaranteed 60 FPS is claimed from this run.
+
+After integrating tracked runtime `458a0f74`, a focused 1,024-body follow-up measured 2.013 ms fixed mean, 57.8 / 58.1 normal/debug FPS and 3.99 / 7.60 ms render mean. Fixed ticks and both native modes again passed the exact zero-byte gate. Evidence: `bin/physics-sandbox/profile-Release-ui-latest.json`. This follow-up supersedes the older stress cadence for the integrated runtime; host load and presentation remain outside an absolute FPS guarantee.
+
+Numeric readouts prepare the same integer-aligned glyph path used by their changing values. The selection label counter-scales only its draw commands to retain a clear 13-pixel font; physical transforms retain unit scale. An earlier run was rejected after real input added four garden bodies during measurement. The profiler now suppresses that external input and restores its prior event states.
+
+## Previous Release result
 
 All 11 fixed-step cases and all 22 normal/debug trials passed the zero-byte gate. Raw local evidence: `bin/physics-sandbox/profile-Release-final.json` (ignored/generated, not shipped in the runtime).
 
