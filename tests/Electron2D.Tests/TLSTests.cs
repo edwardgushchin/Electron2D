@@ -144,7 +144,18 @@ internal static class TLSTests
     private static void Interop(X509Certificate2 leaf, RSA leafKey, X509Certificate2 authority, Certificate trust, CryptoKey key, Certificate chain, SslProtocols protocol)
     {
         using var identity = leaf.CopyWithPrivateKey(leafKey); using var listener = new TcpListener(IPAddress.Loopback, 0); listener.Start(); var port = ((IPEndPoint)listener.LocalEndpoint).Port;
-        var oracle = Task.Run(async () => { using var accepted = await listener.AcceptTcpClientAsync(); using var ssl = new SslStream(accepted.GetStream(), false); await ssl.AuthenticateAsServerAsync(identity, false, protocol, false); Check(ssl.SslProtocol == protocol, "Independent forced " + protocol + " negotiation."); var bytes = new byte[8]; await ssl.ReadExactlyAsync(bytes); Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 42, "Independent TLS server reads wire value."); System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 99); await ssl.WriteAsync(bytes); await ssl.ShutdownAsync(); });
+        Console.WriteLine("Independent SslStream " + protocol + " server handshake.");
+        var oracle = Task.Run(async () =>
+        {
+            using var accepted = await listener.AcceptTcpClientAsync(); using var ssl = new SslStream(accepted.GetStream(), false);
+            try
+            {
+                await ssl.AuthenticateAsServerAsync(identity, false, protocol, false); Check(ssl.SslProtocol == protocol, "Independent forced " + protocol + " negotiation.");
+                var bytes = new byte[8]; await ssl.ReadExactlyAsync(bytes); Check(System.Buffers.Binary.BinaryPrimitives.ReadUInt64LittleEndian(bytes) == 42, "Independent TLS server reads wire value.");
+                System.Buffers.Binary.BinaryPrimitives.WriteUInt64LittleEndian(bytes, 99); await ssl.WriteAsync(bytes); await ssl.ShutdownAsync();
+            }
+            catch (Exception error) { Console.Error.WriteLine("Independent SslStream " + protocol + " server failed: " + error); throw; }
+        });
         using var raw = new StreamPeerTCP(); raw.ConnectToHost("127.0.0.1", port); Wait(() => { raw.Poll(); return raw.GetStatus() == StreamSocketStatus.Connected; }); using var options = TLSOptions.Client(trust); using var peer = new StreamPeerTLS(); peer.ConnectToStream(raw, "localhost", options); Wait(() => { peer.Poll(); return peer.GetStatus() == TLSStatus.Connected; }); peer.PutU64(42); Wait(() => { peer.Poll(); return peer.GetAvailableBytes() >= 8; }); Check(peer.GetU64() == 99, "Independent SslStream server reply."); Wait(() => oracle.IsCompleted); oracle.GetAwaiter().GetResult();
         Wait(() => { peer.Poll(); return peer.GetStatus() == TLSStatus.Disconnected; });
         Check(!raw.IsDisposed && peer.GetStream() is null, "Independent server close notification preserves borrowed transport ownership.");
