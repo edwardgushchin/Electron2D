@@ -134,8 +134,8 @@ public partial class OptionButton : Button
     /// <remarks>Detached buttons return without opening. Attached presentation requires an embedded window host.</remarks>
     public void ShowPopup()
     {
-        EnsureMutable(); if (GetViewport() is null) return; var rect = GetGlobalRect(); var at = rect.Position + new Vector2(0, rect.Size.Y);
-        if (GetViewport() is Window { Embedder: not null } window) at += (Vector2)window.Position;
+        EnsureMutable(); if (GetViewport() is null) return; var transform = GetGlobalTransformWithCanvas(); var rect = new Rect2(transform.Origin, transform.Scale * Size); var at = rect.Position + new Vector2(0, rect.Size.Y);
+        if (GetViewport() is Window { Embedder: not null } window && _popup.Embedder != window) at += (Vector2)window.Position;
         _popup.LayoutDirection = LayoutDirection; _popup.MinSize = Vector2i.Zero; _popup.Popup(new((Vector2i)at, new(Math.Max(1, (int)MathF.Ceiling(rect.Size.X)), 1)));
         var focus = _selected >= 0 && !_popup.IsItemDisabled(_selected) && !_popup.IsItemSeparator(_selected) ? _selected : GetSelectableItem();
         if (focus >= 0) { if (!WasPressedByMouse) _popup.SetFocusedItem(focus); _popup.ScrollToItem(focus); }
@@ -143,7 +143,7 @@ public partial class OptionButton : Button
     /// <inheritdoc />
     protected override void OnShortcutInput(InputEvent inputEvent)
     {
-        if (_disableShortcuts) return; if (!Disabled && IsVisibleInTree && inputEvent.IsPressed() && !inputEvent.IsEcho() && _popup.ActivateItemByEvent(inputEvent)) { Tree!.SetInputAsHandled(); return; }
+        if (_disableShortcuts) return; var tree = Tree; if (!Disabled && IsVisibleInTree && inputEvent.IsPressed() && !inputEvent.IsEcho() && _popup.ActivateItemByEvent(inputEvent)) { tree?.SetInputAsHandled(); return; }
         base.OnShortcutInput(inputEvent);
     }
     internal override string TranslateButtonText(string text)

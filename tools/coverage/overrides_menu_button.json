@@ -1,0 +1,175 @@
+{
+  "mappings": [
+    {
+      "godot": "class:MenuButton",
+      "electron2d": "T:Electron2D.MenuButton",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::method:get_popup()",
+      "electron2d": "method:Electron2D.MenuButton.GetPopup()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::method:set_disable_shortcuts(bool:)",
+      "electron2d": "method:Electron2D.MenuButton.SetDisableShortcuts(System.Boolean)",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::method:show_popup()",
+      "electron2d": "method:Electron2D.MenuButton.ShowPopup()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:action_mode",
+      "electron2d": "property:Electron2D.BaseButton.ActionMode()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:flat",
+      "electron2d": "property:Electron2D.Button.Flat()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:item_count",
+      "electron2d": "property:Electron2D.MenuButton.ItemCount()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:popup/item_{index}/checkable",
+      "electron2d": "method:Electron2D.MenuButton.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:popup/item_{index}/checked",
+      "electron2d": "method:Electron2D.MenuButton.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:popup/item_{index}/disabled",
+      "electron2d": "method:Electron2D.MenuButton.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:popup/item_{index}/icon",
+      "electron2d": "method:Electron2D.MenuButton.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:popup/item_{index}/id",
+      "electron2d": "method:Electron2D.MenuButton.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:popup/item_{index}/separator",
+      "electron2d": "method:Electron2D.MenuButton.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:popup/item_{index}/text",
+      "electron2d": "method:Electron2D.MenuButton.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:switch_on_hover",
+      "electron2d": "property:Electron2D.MenuButton.SwitchOnHover()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::property:toggle_mode",
+      "electron2d": "property:Electron2D.BaseButton.ToggleMode()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": "MenuButton::signal:about_to_popup()",
+      "electron2d": "event:Electron2D.MenuButton.AboutToPopup()",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.MenuButton..ctor()",
+      "reason": "Typed command-button construction and inherited press/shortcut/notification/diagnostic/lifetime/scene hooks for the owned popup; no dynamic string dispatch or new independent capability.",
+      "adr": "ADRs 0008/0023/0038/0040"
+    },
+    {
+      "electron2d": "constructor:Electron2D.MenuButton..ctor(System.String)",
+      "reason": "Typed command-button construction and inherited press/shortcut/notification/diagnostic/lifetime/scene hooks for the owned popup; no dynamic string dispatch or new independent capability.",
+      "adr": "ADRs 0008/0023/0038/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.MenuButton.CreateSceneInstanceFactory()",
+      "reason": "Typed command-button construction and inherited press/shortcut/notification/diagnostic/lifetime/scene hooks for the owned popup; no dynamic string dispatch or new independent capability.",
+      "adr": "ADRs 0008/0023/0038/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.MenuButton.Dispose(System.Boolean)",
+      "reason": "Typed command-button construction and inherited press/shortcut/notification/diagnostic/lifetime/scene hooks for the owned popup; no dynamic string dispatch or new independent capability.",
+      "adr": "ADRs 0008/0023/0038/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.MenuButton.GetConfigurationWarnings()",
+      "reason": "Typed command-button construction and inherited press/shortcut/notification/diagnostic/lifetime/scene hooks for the owned popup; no dynamic string dispatch or new independent capability.",
+      "adr": "ADRs 0008/0023/0038/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.MenuButton.OnNotification(System.Int32)",
+      "reason": "Typed command-button construction and inherited press/shortcut/notification/diagnostic/lifetime/scene hooks for the owned popup; no dynamic string dispatch or new independent capability.",
+      "adr": "ADRs 0008/0023/0038/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.MenuButton.OnPressed()",
+      "reason": "Typed command-button construction and inherited press/shortcut/notification/diagnostic/lifetime/scene hooks for the owned popup; no dynamic string dispatch or new independent capability.",
+      "adr": "ADRs 0008/0023/0038/0040"
+    },
+    {
+      "electron2d": "method:Electron2D.MenuButton.OnShortcutInput(Electron2D.InputEvent)",
+      "reason": "Typed command-button construction and inherited press/shortcut/notification/diagnostic/lifetime/scene hooks for the owned popup; no dynamic string dispatch or new independent capability.",
+      "adr": "ADRs 0008/0023/0038/0040"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "MenuButton::method:get_popup()",
+        "MenuButton::method:set_disable_shortcuts(bool:)",
+        "MenuButton::method:show_popup()",
+        "MenuButton::property:action_mode",
+        "MenuButton::property:flat",
+        "MenuButton::property:focus_mode",
+        "MenuButton::property:item_count",
+        "MenuButton::property:popup/item_{index}/checkable",
+        "MenuButton::property:popup/item_{index}/checked",
+        "MenuButton::property:popup/item_{index}/disabled",
+        "MenuButton::property:popup/item_{index}/icon",
+        "MenuButton::property:popup/item_{index}/id",
+        "MenuButton::property:popup/item_{index}/separator",
+        "MenuButton::property:popup/item_{index}/text",
+        "MenuButton::property:switch_on_hover",
+        "MenuButton::property:toggle_mode",
+        "MenuButton::signal:about_to_popup()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0040/0083: executable command MenuButton with owned PopupMenu, flat/press-edge/accessibility defaults, ordered AboutToPopup, keyboard/pointer focus, item shortcuts including explicit echo policy, pressed visibility synchronization, related opt-in hover switching, exact seven indexed fields and fresh scene factories. Existing GPU/compatibility targets run this profile; inherited native menu/window/accessibility and foreign-platform acceptance retain their owner prerequisites."
+    },
+    {
+      "godot": [
+        "class:MenuButton"
+      ],
+      "state": "Partial",
+      "reason": "Full own command MenuButton API executes through embedded PopupMenu, including hover routing, indexed scenes and tested shortcut/pointer/key paths. Trigger for full class correspondence: inherited Control accessibility/editor facilities and PopupMenu native/system menu plus independent native child Window hosting on their exact owners."
+    },
+    {
+      "godot": [
+        "class:FileDialog"
+      ],
+      "state": "Blocked",
+      "reason": "Next connected runtime file chooser: accepted ConfirmationDialog/MenuButton/OptionButton/ItemList prerequisites now execute. Implement scoped DirAccess browsing/filtering, shared FileDialogMode identity under ADR 0051, filesystem/open/save validation, native chooser/options callback lifecycle and OS.move_to_trash for the enabled deletion command. Native resource/user/options chooser needs DisplayServer native-file-extra; ordinary filesystem chooser can use the existing SDL request. No substitution of permanent deletion for trash."
+    }
+  ]
+}

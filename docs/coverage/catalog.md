@@ -443,7 +443,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Marshalls](classes/Marshalls.md) | Object | Excluded | 6 |
 | [Material](classes/Material.md) | Resource | Partial | 10 |
 | [MenuBar](classes/MenuBar.md) | Control | Blocked | 40 |
-| [MenuButton](classes/MenuButton.md) | Button | Blocked | 17 |
+| [MenuButton](classes/MenuButton.md) | Button | Partial | 17 |
 | [Mesh](classes/Mesh.md) | Resource | Partial | 89 |
 | [MeshConvexDecompositionSettings](classes/MeshConvexDecompositionSettings.md) | RefCounted | Excluded | 16 |
 | [MeshDataTool](classes/MeshDataTool.md) | RefCounted | Blocked | 38 |

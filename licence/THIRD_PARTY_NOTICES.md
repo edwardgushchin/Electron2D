@@ -138,3 +138,5 @@ system libraries are prerequisites and are not copied into the publish payload.
 Source hashes and provenance are retained in the repository manifests.
 
 Embedded dialog content/button layout and acceptance/cancellation sequencing adapt the [pinned dialogs.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/dialogs.cpp) contract. The published CanvasStyleGeometry MIT notice covers this runtime adaptation; the dialog controls and default theme panel reuse existing typed components.
+
+Command-menu presentation and related hover-switch rules adapt the [pinned menu_button.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/menu_button.cpp) contract through existing typed Button/PopupMenu/SceneTree components. The published CanvasStyleGeometry MIT notice covers this runtime adaptation.

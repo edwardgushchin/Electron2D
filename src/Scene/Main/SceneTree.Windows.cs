@@ -100,10 +100,34 @@ public sealed partial class SceneTree
         }
         else _embeddedFocus.TryGetValue(host, out chosen);
         if (chosen is null || chosen.IsDisposed || !chosen.Visible) { if (host is Popup directPopup) directPopup.HandlePopupInput(input); return input; }
+        if (point != null && input is InputEventMouseMotion && chosen is PopupMenu menu)
+        {
+            while (menu.Parent is PopupMenu parentMenu) menu = parentMenu;
+            if (menu.Parent is MenuButton { SwitchOnHover: true } owner && !menu.EmbeddedHitRect.HasPoint(point.Value)) RefreshMenuBarHover(owner, host, point.Value);
+        }
         target = chosen;
         var localized = input.XformedBy(new Transform(0, -(Vector2)chosen.Position));
         if (localized is InputEventMouse mouseLocal) mouseLocal.GlobalPosition = mouseLocal.Position;
-        try { if (chosen is Popup popup) popup.HandlePopupInput(localized); return localized; }
+        try
+        {
+            if (chosen.EmbeddedWindows.Count > 0) { var nested = RouteEmbeddedInput(chosen, localized, out target); if (!ReferenceEquals(nested, localized)) localized.Dispose(); return nested; }
+            if (chosen is Popup popup) popup.HandlePopupInput(localized); return localized;
+        }
         catch { if (!ReferenceEquals(localized, input)) localized.Dispose(); throw; }
     }
+    private void RefreshMenuBarHover(MenuButton owner, Viewport host, Vector2 point)
+    {
+        if (owner.GetViewport() is not { } viewport) return;
+        if (viewport != host && viewport is Window window) point -= (Vector2)window.Position;
+        using var scope = SelectGUI(viewport); CaptureInputNodes(); List<Exception>? errors = null;
+        try
+        {
+            var target = FindMouseControl(viewport, point, ref errors);
+            if (target is MenuButton other && owner.CanSwitchTo(other)) UpdateGUIHover(viewport, point, ref errors);
+            else try { ClearGUIHover(); } catch (Exception e) { CollectException(ref errors, e); }
+        }
+        finally { _gui.InputTraversal.Clear(); }
+        ThrowCollected("Menu bar hover callbacks failed.", errors);
+    }
+
 }

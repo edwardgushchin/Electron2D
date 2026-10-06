@@ -198,3 +198,5 @@ The [embedded popup window slice](../components/popup-windows.md) composes Windo
 [Dropdown choices](../components/dropdown-choices.md) integrate OptionButton selection, caption/radio state, real menu/search/shortcut input and fresh-process factories through current Button/PopupMenu and text/theme backends. Native keyboard/readback and warm selection checks pass on Linux Wayland GPU/compatibility; inherited semantic/editor/native-popup and broader platform limits remain distinct.
 
 [Embedded acceptance and confirmation dialogs](../components/dialogs.md) compose Window, Label, Button and HBoxContainer with registered LineEdit input. Own public operations, event/hook order, deferred cancel/reopen protection, panel/button themes and fresh scenes execute. Independent native children and inherited accessibility/scaling retain separate prerequisites.
+
+[Command menu buttons](../components/command-menu-buttons.md) execute commands and related hover switching through owned PopupMenu windows. Nested embedded input descends to the final target and choice/menu anchors use their actual embedder.

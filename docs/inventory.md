@@ -830,3 +830,5 @@ CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [C
 
 | [Scene](domains/scene.md) | [Embedded dialogs](components/dialogs.md) | [AcceptDialog](classes/AcceptDialog.md) | [model](../src/Scene/GUI/AcceptDialog.cs), [layout](../src/Scene/GUI/AcceptDialog.Layout.cs), [storage](../src/Scene/GUI/AcceptDialog.Storage.cs) | Current | Executable notification, validation, custom/cancel actions, registered text, themed embedded layout and fresh scenes. |
 | [Scene](domains/scene.md) | [Embedded dialogs](components/dialogs.md) | [ConfirmationDialog](classes/ConfirmationDialog.md) | [source](../src/Scene/GUI/ConfirmationDialog.cs) | Current | Concrete inherited confirmation with an owned cancel button and persisted captions/defaults. |
+
+| [Rendering](domains/rendering.md) | [Command menu buttons](components/command-menu-buttons.md) | [MenuButton](classes/MenuButton.md) | [model](../src/Scene/GUI/MenuButton.cs), [storage](../src/Scene/GUI/MenuButton.Storage.cs) | Current | Command popup, keyboard/pointer/echo shortcuts, related hover switching, nested windows and seven indexed fresh scene fields. |

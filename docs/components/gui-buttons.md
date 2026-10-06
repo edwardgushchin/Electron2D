@@ -1,6 +1,6 @@
 # GUI buttons and shortcuts
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 The component turns pointer, touch, action and shortcut input into themed application actions. It owns [BaseButton](../classes/BaseButton.md), [ButtonGroup](../classes/ButtonGroup.md), [Button](../classes/Button.md), [CheckBox](../classes/CheckBox.md), [CheckButton](../classes/CheckButton.md) and [TextureButton](../classes/TextureButton.md). [Shortcut](../classes/Shortcut.md) and [InputEventShortcut](../classes/InputEventShortcut.md) integrate the input-resource and scene-routing boundary. It reuses Control, Theme, Font, StyleBox, Texture and BitMap; it adds no backend or managed dependency.
 
@@ -33,3 +33,5 @@ Embedded Controls now reuse the same button/focus/tooltip hooks in independent v
 [LineEdit](../classes/LineEdit.md) integrates Control focus, GUIInput, TextInput, IMECompositionChanged and drag hooks for a real single-line editor. Its editing/display tests cover managed authoring and native X11 GPU/compatibility hosts. Popup menus, native virtual keyboards and native symbol-picker presentation retain their exact separate services; the LineEdit coverage class remains Partial.
 
 [Dropdown choices](dropdown-choices.md) add OptionButton as a concrete Button/PopupMenu consumer. The shared Button text path respects selected item translation, and owner polling clears disposed borrowed icons before internal processing can access them. ButtonTests and the new choice tests cover worker disposal; the shared public API is unchanged.
+
+[Command menu buttons](command-menu-buttons.md) add a concrete MenuButton consumer for command menus and FileDialog drive/sort prerequisites. It uses the existing PopupMenu model and themes with related hover switching, exact indexed scenes and preserved accessibility-focus defaults.

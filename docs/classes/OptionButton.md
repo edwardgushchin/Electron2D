@@ -645,3 +645,7 @@ public event System.Action<System.Int32> ItemSelected
 ```
 
 Occurs after a user activation commits the selected index and caption.
+
+Nested embedded window routing descends to the owned popup. Anchor placement now adds the containing Window offset only when the popup embedder is outside that Window; MenuButtonTests executes both nested choice and command consumers. Shortcut callbacks retain their captured SceneTree so disposing an owner during command delivery cannot dereference a detached Tree.
+
+Popup anchors include GetGlobalTransformWithCanvas before any embedder offset, so a changed canvas translation moves the command/choice popup by the same amount exactly once. MenuButtonTests verifies both consumers under a translated inner viewport.

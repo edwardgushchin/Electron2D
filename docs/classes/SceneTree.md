@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -938,3 +938,5 @@ Existing cached templates remain borrowed. A newly loaded temporary template rel
 Reloads the selected scene from its source file without reusing old file content.
 
 Requires a current scene with a file path. Decode failure preserves the current scene.
+
+Embedded Window routing descends recursively to the final focused or pointer target, releasing intermediate transformed events. Command-menu hover uses the shared canvas-order/clipping hit test beneath the active popup. MenuButtonTests verifies nested Window command/choice input and related hover gates.

@@ -193,6 +193,7 @@ public sealed partial class ThemeDB
         ["MainLoop"] = ["MainLoop", "ElectronObject"],
         ["MarginContainer"] = ["MarginContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Material"] = ["Material", "Resource", "ElectronObject"],
+        ["MenuButton"] = ["MenuButton", "Button", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Mesh"] = ["Mesh", "Resource", "ElectronObject"],
         ["MeshInstance"] = ["MeshInstance", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["MultiMesh"] = ["MultiMesh", "Resource", "ElectronObject"],
