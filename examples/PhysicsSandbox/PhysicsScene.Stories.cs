@@ -49,7 +49,7 @@ internal sealed partial class PhysicsScene
             for (var row = 0; row < 6 + tower * 2; row++)
                 for (var column = 0; column < 3; column++)
                 {
-                    var box = Dynamic(shape, new(280 + tower * 245 + column * 50, 604 - row * 50), tower == 0 ? Peach : tower == 1 ? Blue : Lavender);
+                    var box = Dynamic(shape, new(280 + tower * 245 + column * 50, 604 - row * 50), (row + column + tower) % 3 == 0 ? Blush : (row + column + tower) % 3 == 1 ? Berry : Apricot);
                     box.PhysicsMaterialOverride = material;
                 }
         Actions = ["Add crate [B]", "Fire heavy ball [N]", "Shockwave [F]"];
@@ -60,23 +60,23 @@ internal sealed partial class PhysicsScene
     {
         Enclose();
         _marbleMaterial = SurfaceMaterial(.12f, .45f);
-        Solid(Box(700, 14), new(420, 318), Peach, .15f);
-        Solid(Box(700, 14), new(723, 433), Blue, -.15f);
-        Solid(Box(580, 14), new(355, 548), Lavender, .12f);
+        Solid(Box(700, 14), new(420, 318), Pink, .15f);
+        Solid(Box(700, 14), new(723, 433), Apricot, -.15f);
+        Solid(Box(580, 14), new(355, 548), Berry, .12f);
         var bowl = Own(new ConcavePolygonShape { Segments = [new(-80, -60), new(-80, 36), new(-80, 36), new(80, 36), new(80, 36), new(80, -60)] });
-        Solid(bowl, new(947, 590), Mint);
-        Solid(Own(new SegmentShape { A = new(-60, 0), B = new(60, 0) }), new(931, 523), Mint, .2f);
-        var gate = Sensor(Box(140, 50), new(947, 596), Mint);
+        Solid(bowl, new(947, 590), Blush);
+        Solid(Own(new SegmentShape { A = new(-60, 0), B = new(60, 0) }), new(931, 523), Blush, .2f);
+        var gate = Sensor(Box(140, 50), new(947, 596), Blush);
         _delivered.EnsureCapacity(160);
         gate.BodyEntered += body => { if (body is RigidBody rigid && _delivered.Add(rigid.GetRID())) Score++; };
         for (var i = 0; i < 6; i++)
         {
-            var b = Dynamic(Circle(13), new(110 + i * 30, 238), i % 2 == 0 ? Yellow : Peach);
+            var b = Dynamic(Circle(13), new(110 + i * 30, 238), i % 2 == 0 ? Apricot : Pink);
             b.PhysicsMaterialOverride = _marbleMaterial;
         }
-        var capsule = Dynamic(Capsule(12, 48), new(320, 245), Blue);
+        var capsule = Dynamic(Capsule(12, 48), new(320, 245), Apricot);
         capsule.PhysicsMaterialOverride = _marbleMaterial;
-        Dynamic(Own(new ConvexPolygonShape { Points = [new(-20, 16), new(20, 16), new(0, -22)] }), new(405, 245), Lavender);
+        Dynamic(Own(new ConvexPolygonShape { Points = [new(-20, 16), new(20, 16), new(0, -22)] }), new(405, 245), Berry);
         Actions = ["Drop marble [B]", "Material: rubber [N]", "Feed: on [F]"];
         Help = "Rubber bounces, ice slides, clay absorbs. The delivery sensor counts each marble once. Drag any piece to change its route.";
     }
@@ -85,16 +85,16 @@ internal sealed partial class PhysicsScene
     {
         Enclose();
         var anchor = Solid(Circle(8), new(250, 265), Ink);
-        var bob = Dynamic(Circle(30), new(374, 405), Peach, 4);
+        var bob = Dynamic(Circle(30), new(374, 405), Pink, 4);
         var pendulum = Connect(new PinJoint { AngularLimitEnabled = true, AngularLimitLower = -1.2f, AngularLimitUpper = 1.2f }, anchor, bob, anchor.Position);
         var wheelAnchor = Solid(Circle(8), new(590, 358), Ink);
-        var wheel = Dynamic(Box(190, 24), wheelAnchor.Position, Lavender, 4);
+        var wheel = Dynamic(Box(190, 24), wheelAnchor.Position, Berry, 4);
         _motor = Connect(new PinJoint { MotorEnabled = true, MotorTargetVelocity = 1.5f, MotorMaxTorque = 180, AngularLimitEnabled = false }, wheelAnchor, wheel, wheel.Position);
         var guideAnchor = Solid(Circle(7), new(924, 270), Ink);
-        var slider = Dynamic(Box(84, 30), new(924, 405), Blue, 3);
+        var slider = Dynamic(Box(84, 30), new(924, 405), Apricot, 3);
         var groove = Connect(new GrooveJoint { Length = 230, InitialOffset = 135 }, guideAnchor, slider, guideAnchor.Position);
         var springAnchor = Solid(Circle(7), new(694, 252), Ink);
-        var springBob = Dynamic(Circle(20), new(694, 470), Mint, 2);
+        var springBob = Dynamic(Circle(20), new(694, 470), Blush, 2);
         _spring = Connect(new DampedSpringJoint { Length = 218, RestLength = 135, Stiffness = 32, Damping = 5 }, springAnchor, springBob, springAnchor.Position);
         Actions = ["Motor: on [B]", "Spring: soft [N]", "Kick mechanisms [F]"];
         Help = "Grab the pendulum, slider or spring weight. Their constraints remain live. Q / E adds torque to the selected body.";
@@ -111,7 +111,7 @@ internal sealed partial class PhysicsScene
         var positions = new[] { new Vector2(336, 406), new Vector2(784, 406) };
         for (var i = 0; i < positions.Length; i++)
         {
-            var star = Sensor(Circle(195), positions[i], i == 0 ? Peach : Lavender);
+            var star = Sensor(Circle(195), positions[i], i == 0 ? Pink : Berry);
             star.GravitySpaceOverride = i == 0 ? Area.SpaceOverride.CombineReplace : Area.SpaceOverride.Combine;
             star.Gravity = i == 0 ? 480 : 220;
             star.GravityPoint = true;
@@ -125,7 +125,7 @@ internal sealed partial class PhysicsScene
             decoration.Draw += c => { c.DrawCircle(Vector2.Zero, 23, _colors[star]); c.DrawCircle(Vector2.Zero, 23, Ink, false, 2); c.DrawArc(Vector2.Zero, 31, 0, Mathf.Tau, 40, Muted, 1); };
             star.AddChild(decoration);
         }
-        var mist = Sensor(Box(240, 300), new(565, 420), Blue);
+        var mist = Sensor(Box(240, 300), new(565, 420), Apricot);
         mist.LinearDampSpaceOverride = Area.SpaceOverride.Replace;
         mist.LinearDamp = 2.5f;
         mist.AngularDampSpaceOverride = Area.SpaceOverride.Replace;
@@ -134,25 +134,25 @@ internal sealed partial class PhysicsScene
         for (var i = 0; i < 18; i++)
         {
             var angle = i * Mathf.Tau / 18;
-            var b = Dynamic(Circle(7 + i % 3 * 2), positions[i % 2] + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 126, i % 2 == 0 ? Yellow : Mint, .3f);
+            var b = Dynamic(Circle(7 + i % 3 * 2), positions[i % 2] + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 126, i % 2 == 0 ? Apricot : Blush, .3f);
             b.LinearDampMode = RigidBody.DampMode.Replace;
             b.LinearDamp = 0;
             b.LinearVelocity = new Vector2(-MathF.Sin(angle), MathF.Cos(angle)) * 235;
         }
         Actions = ["Release seeds [B]", "Attract / repel [N]", "Mist: on [F]"];
-        Help = "Shift + click: move the pink star   ·   G: field mixing   ·   Blue mist replaces damping   ·   Drag and throw seeds";
+        Help = "Shift + click: move the pink star   ·   G: field mixing   ·   Apricot mist replaces damping   ·   Drag and throw seeds";
     }
 
     private void BuildRooftops()
     {
         Enclose();
-        Solid(Box(190, 18), new(146, 567), Peach);
-        var shelf = Solid(Box(170, 14), new(356, 488), Blue);
+        Solid(Box(190, 18), new(146, 567), Pink);
+        var shelf = Solid(Box(170, 14), new(356, 488), Apricot);
         ((CollisionShape)shelf.GetChild(0)).OneWayCollision = true;
-        Solid(Box(170, 18), new(573, 428), Lavender, -.22f);
-        Solid(Own(new ConvexPolygonShape { Points = [new(-100, 30), new(100, 30), new(100, -40)] }), new(838, 522), Peach);
-        _lift = Place(new AnimatableBody { SyncToPhysics = true }, Box(114, 16), new(684, 572), Mint);
-        _character = Place(new CharacterBody { FloorSnapLength = 12, FloorConstantSpeed = true }, Capsule(13, 42), new(110, 530), Peach);
+        Solid(Box(170, 18), new(573, 428), Berry, -.22f);
+        Solid(Own(new ConvexPolygonShape { Points = [new(-100, 30), new(100, 30), new(100, -40)] }), new(838, 522), Pink);
+        _lift = Place(new AnimatableBody { SyncToPhysics = true }, Box(114, 16), new(684, 572), Blush);
+        _character = Place(new CharacterBody { FloorSnapLength = 12, FloorConstantSpeed = true }, Capsule(13, 42), new(110, 530), Pink);
         _character.PhysicsProcessEnabled = true;
         var foot = Own(new SeparationRayShape { Length = 27, SlideOnSlope = true });
         _character.AddChild(new CollisionShape { Shape = foot });
@@ -161,7 +161,7 @@ internal sealed partial class PhysicsScene
         _character.AddChild(face);
         foreach (var position in new[] { new Vector2(359, 448), new(575, 381), new(858, 422), new(1039, 585) })
         {
-            var parcel = Sensor(Box(20, 20), position, Yellow);
+            var parcel = Sensor(Box(20, 20), position, Apricot);
             _parcels.Add(parcel);
             parcel.BodyEntered += body =>
             {
@@ -169,7 +169,7 @@ internal sealed partial class PhysicsScene
             };
         }
         Actions = ["Restart courier [B]", "Ground / float [N]", "Lift: moving [F]"];
-        Help = "A / D or arrows: walk   ·   Space: jump   ·   W / S in floating mode   ·   Collect four parcels   ·   One-way blue shelf";
+        Help = "A / D or arrows: walk   ·   Space: jump   ·   W / S in floating mode   ·   Collect four parcels   ·   One-way apricot shelf";
         Observation = "Four parcels, one courier. The lift carries the character; the separation ray keeps feet on slopes.";
     }
 
@@ -179,46 +179,46 @@ internal sealed partial class PhysicsScene
         NoGravity();
         for (var i = 0; i < 5; i++)
         {
-            var wall = Solid(Box(28, 130 + i % 2 * 60), new(345 + i * 135, i % 2 == 0 ? 320 : 538), i % 2 == 0 ? Lavender : Blue);
+            var wall = Solid(Box(28, 130 + i % 2 * 60), new(345 + i * 135, i % 2 == 0 ? 320 : 538), i % 2 == 0 ? Berry : Apricot);
             wall.CollisionLayer = i % 2 == 0 ? 1u : 4u;
         }
-        _probe = Place(new CharacterBody { MotionMode = CharacterMotionMode.Floating }, Circle(18), new(110, 407), Peach);
+        _probe = Place(new CharacterBody { MotionMode = CharacterMotionMode.Floating }, Circle(18), new(110, 407), Pink);
         _ray = new RayCast { TargetPosition = new(600, 0), CollisionMask = 5 };
         _probe.AddChild(_ray);
         _sweep = new ShapeCast { Shape = Circle(23), TargetPosition = new(600, 0), CollisionMask = 5 };
         _probe.AddChild(_sweep);
         _queryProbe = Own(new PhysicsShapeQueryParameters { Shape = Circle(34), CollisionMask = 5, Exclude = [_probe.GetRID()] });
         _motionProbe = Own(new PhysicsTestMotionParameters());
-        var rescue = Sensor(Circle(26), new(1050, 550), Yellow);
+        var rescue = Sensor(Circle(26), new(1050, 550), Apricot);
         rescue.BodyEntered += body => { if (body == _probe) Score++; };
-        Actions = ["Ray / wide sweep [B]", "All / blue filter [N]", "Ghost violet [F]"];
-        Help = "WASD / arrows: steer   ·   Mouse: aim   ·   Violet and blue obstacles use different layers   ·   Reach the golden rescue beacon";
+        Actions = ["Ray / wide sweep [B]", "All / apricot filter [N]", "Ghost berry [F]"];
+        Help = "WASD / arrows: steer   ·   Mouse: aim   ·   Berry and apricot obstacles use different layers   ·   Reach the apricot rescue beacon";
     }
 
     private void BuildTug()
     {
         Enclose();
         NoGravity();
-        _tug = Place(new TugBody(), Own(new ConvexPolygonShape { Points = [new(27, 0), new(-17, -18), new(-17, 18)] }), new(228, 415), Peach);
-        _cargo = Dynamic(Box(54, 54), new(402, 415), Blue, 4);
+        _tug = Place(new TugBody(), Own(new ConvexPolygonShape { Points = [new(27, 0), new(-17, -18), new(-17, 18)] }), new(228, 415), Pink);
+        _cargo = Dynamic(Box(54, 54), new(402, 415), Apricot, 4);
         _cargo.GravityScale = 0;
         _cargo.CenterOfMassMode = RigidCenterOfMassMode.Custom;
         _cargo.CenterOfMass = new(9, 0);
         _cargo.Inertia = 3200;
         _spring = Connect(new DampedSpringJoint { Length = 174, RestLength = 145, Stiffness = 12, Damping = 4, Rotation = -Mathf.Pi / 2 }, _tug, _cargo, _tug.Position);
         _spring.Draw += c => DrawJoint(c, _spring, _tug, _cargo, true);
-        var dock = Sensor(Box(160, 144), new(1008, 478), Mint);
+        var dock = Sensor(Box(160, 144), new(1008, 478), Blush);
         dock.BodyEntered += body => { if (body == _cargo) Score++; };
         Actions = ["Tow cable: on [B]", "Thrust: gentle [N]", "Cargo mass [F]"];
-        Help = "W / Up: thrust   ·   S / Down: reverse   ·   A / D: turn   ·   Drag cargo too   ·   Dock the blue crate inside the mint bay";
+        Help = "W / Up: thrust   ·   S / Down: reverse   ·   A / D: turn   ·   Drag cargo too   ·   Dock the apricot crate inside the blush bay";
         Observation = "The tug integrates its own velocity after the solver. Cargo has a custom centre of mass and inertia.";
     }
 
     private void BuildAtelier()
     {
         Enclose();
-        Solid(Box(690, 18), new(410, 576), Lavender, -.09f);
-        _creature = Dynamic(Box(68, 28), new(302, 460), Peach, 3);
+        Solid(Box(690, 18), new(410, 576), Berry, -.09f);
+        _creature = Dynamic(Box(68, 28), new(302, 460), Pink, 3);
         _morphShapes = [Circle(21), Capsule(15, 55), Box(44, 28)];
         _creatureOwner = _creature.CreateShapeOwner(_creature);
         _creature.ShapeOwnerAddShape(_creatureOwner, _morphShapes[0]);
@@ -229,17 +229,17 @@ internal sealed partial class PhysicsScene
         var robot = new RigidBody { Position = new(555, 392) };
         robot.Name = "Compound";
         robot.AddChild(compound);
-        Colliders.Add(robot); Bodies.Add(robot); _colors[robot] = Blue;
-        robot.Draw += c => DrawCollider(c, robot, Blue, false);
+        Colliders.Add(robot); Bodies.Add(robot); _colors[robot] = Apricot;
+        robot.Draw += c => DrawCollider(c, robot, Apricot, false);
         AddChild(robot);
         // This independent world demonstrates explicit RID lifetime and manual stepping.
         _independentSpace = PhysicsServer.SpaceCreate();
         _serverHandles.Add(_independentSpace);
         PhysicsServer.SpaceSetActive(_independentSpace, true);
-        AddServerBody(Box(266, 14), new(939, 586), true, Mint);
-        AddServerBody(Box(14, 300), new(802, 438), true, Mint);
-        AddServerBody(Box(14, 300), new(1076, 438), true, Mint);
-        for (var i = 0; i < 5; i++) AddServerBody(Circle(19), new(844 + i * 46, 302 + i * 40), false, i % 2 == 0 ? Yellow : Lavender);
+        AddServerBody(Box(266, 14), new(939, 586), true, Blush);
+        AddServerBody(Box(14, 300), new(802, 438), true, Blush);
+        AddServerBody(Box(14, 300), new(1076, 438), true, Blush);
+        for (var i = 0; i < 5; i++) AddServerBody(Circle(19), new(844 + i * 46, 302 + i * 40), false, i % 2 == 0 ? Apricot : Berry);
         var receiver = PhysicsServer.AreaCreate();
         _serverHandles.Add(receiver);
         PhysicsServer.AreaAddShape(receiver, Box(236, 80).GetRID());
@@ -281,7 +281,7 @@ internal sealed partial class PhysicsScene
                 if (action == 0) Spawn(new(576, 250));
                 else if (action == 1 && BodyCount < 160)
                 {
-                    var ball = Dynamic(Circle(26), new(106, 574), Yellow, 5);
+                    var ball = Dynamic(Circle(26), new(106, 574), Pink, 5);
                     ball.ApplyCentralImpulse(new Vector2(4100, -500) * _impulseScale);
                 }
                 else if (action == 2)
@@ -306,7 +306,7 @@ internal sealed partial class PhysicsScene
                 break;
             case 3:
                 if (action == 0)
-                    for (var i = 0; i < 5; i++) { if (BodyCount >= 160) break; var b = Dynamic(Circle(9), new(460 + i * 24, 248), Yellow, .4f); b.LinearVelocity = new(160 * _impulseScale, 0); }
+                    for (var i = 0; i < 5; i++) { if (BodyCount >= 160) break; var b = Dynamic(Circle(9), new(460 + i * 24, 248), Apricot, .4f); b.LinearVelocity = new(160 * _impulseScale, 0); }
                 else if (action == 1) { _mode = !_mode; foreach (var star in _stars) star.Gravity = -star.Gravity; Actions[1] = $"Gravity: {(_mode ? "repel" : "attract")} [N]"; }
                 else { var mist = Areas[^1]; mist.LinearDampSpaceOverride = mist.LinearDampSpaceOverride == Area.SpaceOverride.Disabled ? Area.SpaceOverride.Replace : Area.SpaceOverride.Disabled; mist.AngularDampSpaceOverride = mist.LinearDampSpaceOverride; Actions[2] = $"Mist: {(mist.LinearDampSpaceOverride == Area.SpaceOverride.Disabled ? "off" : "on")} [F]"; }
                 break;
@@ -317,7 +317,7 @@ internal sealed partial class PhysicsScene
                 break;
             case 5:
                 if (action == 0) { _mode = !_mode; Actions[0] = $"View: {(_mode ? "wide sweep" : "ray")} [B]"; }
-                else if (action == 1) { _ray!.CollisionMask = _ray.CollisionMask == 5 ? 4u : 5u; _sweep!.CollisionMask = _ray.CollisionMask; Actions[1] = $"Filter: {(_ray.CollisionMask == 5 ? "all" : "blue")} [N]"; }
+                else if (action == 1) { _ray!.CollisionMask = _ray.CollisionMask == 5 ? 4u : 5u; _sweep!.CollisionMask = _ray.CollisionMask; Actions[1] = $"Filter: {(_ray.CollisionMask == 5 ? "all" : "apricot")} [N]"; }
                 else
                 {
                     if (_probe!.GetCollisionExceptions().Length == 0)
@@ -325,7 +325,7 @@ internal sealed partial class PhysicsScene
                         foreach (var wall in Colliders.OfType<StaticBody>().Where(b => b.CollisionLayer == 1 && b.Position.X > 200 && b.Position.X < 1050)) _probe.AddCollisionExceptionWith(wall);
                     }
                     else foreach (var wall in _probe.GetCollisionExceptions()) if (wall is not null) _probe.RemoveCollisionExceptionWith(wall);
-                    Actions[2] = $"Violet: {(_probe.GetCollisionExceptions().Length > 0 ? "ghost" : "solid")} [F]";
+                    Actions[2] = $"Berry: {(_probe.GetCollisionExceptions().Length > 0 ? "ghost" : "solid")} [F]";
                 }
                 break;
             case 6:
@@ -455,16 +455,16 @@ internal sealed partial class PhysicsScene
                 if (_probe is null || _ray is null || _sweep is null) break;
                 var start = _probe.Position;
                 var end = _ray.IsColliding() ? _ray.GetCollisionPoint() : _pointer;
-                c.DrawLine(start, end, Peach, 2);
-                c.DrawCircle(end, 5, Peach);
+                c.DrawLine(start, end, Pink, 2);
+                c.DrawCircle(end, 5, Pink);
                 if (_mode)
                 {
                     var safe = start.Lerp(_pointer, _sweep.GetClosestCollisionSafeFraction());
-                    c.DrawLine(start, safe, Blue, 12);
+                    c.DrawLine(start, safe, Apricot, 12);
                     c.DrawCircle(safe, 23, Ink, false, 2);
-                    c.DrawCircle(_pointer, 34, Mint, false, 1.5f);
-                    for (var i = 0; i < _queryContactCount; i++) c.DrawCircle(_queryContacts[i], 3, Mint);
-                    if (_rest is { } rest) c.DrawLine(rest.Point, rest.Point + rest.Normal * 32, Mint, 2);
+                    c.DrawCircle(_pointer, 34, Blush, false, 1.5f);
+                    for (var i = 0; i < _queryContactCount; i++) c.DrawCircle(_queryContacts[i], 3, Blush);
+                    if (_rest is { } rest) c.DrawLine(rest.Point, rest.Point + rest.Normal * 32, Blush, 2);
                     for (var i = 0; i < _sweep.GetCollisionCount(); i++)
                     {
                         var p = _sweep.GetCollisionPoint(i);
@@ -478,21 +478,21 @@ internal sealed partial class PhysicsScene
                 {
                     var p = _tug.Position;
                     var direction = new Vector2(MathF.Cos(_tug.Rotation), MathF.Sin(_tug.Rotation));
-                    c.DrawLine(p - direction * 20, p - direction * 48, Peach, 10);
+                    c.DrawLine(p - direction * 20, p - direction * 48, Pink, 10);
                 }
                 break;
             case 7:
                 c.DrawLine(new(788, 232), new(788, 615), Border, 2);
                 c.DrawString(_font, new(83, 241), "LIVE SCENE GEOMETRY", fontSize: 13, modulate: Muted);
                 c.DrawString(_font, new(816, 241), "INDEPENDENT RID WORLD", fontSize: 13, modulate: Muted);
-                c.DrawRect(new(821, 420, 236, 80), Mint, false, 1.5f);
-                c.DrawString(_font, new(827, 444), "UPDRAFT SENSOR", fontSize: 12, modulate: Mint);
+                c.DrawRect(new(821, 420, 236, 80), Blush, false, 1.5f);
+                c.DrawString(_font, new(827, 444), "UPDRAFT SENSOR", fontSize: 12, modulate: Blush);
                 if (_creature is not null)
                 {
                     var first = _creature.ShapeOwnerGetShape(_creatureOwner, 0);
                     var overlaps = first.Collide(_creature.GlobalTransform * PhysicsServer.BodyGetShapeTransform(_creature.GetRID(), _creature.ShapeOwnerGetShapeIndex(_creatureOwner, 0)), first, new Transform(0, _pointer));
                     c.DrawSetTransformMatrix(new Transform(0, _pointer));
-                    DrawShape(c, first, overlaps ? Peach : Mint, true);
+                    DrawShape(c, first, overlaps ? Pink : Blush, true);
                     c.DrawSetTransformMatrix(Transform.Identity);
                 }
                 break;

@@ -11,16 +11,16 @@ internal sealed partial class SandboxWindow : Window
     internal static readonly string[] Stories =
     [
         "Pull the towers apart, launch a heavy ball, then rebuild the warehouse.",
-        "Deliver marbles into the mint bowl. Compare rubber, ice and clay.",
+        "Deliver marbles into the blush bowl. Compare rubber, ice and clay.",
         "Pull a pendulum, power the wheel and tune the spring.",
         "Move the stars, reverse attraction and release orbiting seeds.",
         "Collect four parcels, ride the lift and cross the rooftops.",
         "Guide the probe to the beacon. Inspect ray and wide-sweep clearance.",
-        "Tow the cargo into the mint dock with thrust and a spring cable.",
+        "Tow the cargo into the blush dock with thrust and a spring cable.",
         "Morph a live compound shape and explore the independent physics world.",
         "Stir real particles. Compare normal and collision drawing at up to 1,024 bodies.",
         "Ride over ramps and gaps. Balance the motorcycle and reach the flag.",
-        "Pull the bird back, aim and release. Knock three mint targets off the towers."
+        "Pull the bird back, aim and release. Knock three blush targets off the towers."
     ];
     private readonly List<Resource> _styles = [];
     private readonly Font _regular;
@@ -78,12 +78,12 @@ internal sealed partial class SandboxWindow : Window
         _debug = MakeButton("Collisions OFF", new(676, 64), 184, regular, "Debug"); _debug.ToggleMode = true;
         _debug.TooltipText = "Collider shapes and contact normals · F3";
         _debug.Toggled += enabled => { _debugEnabled = enabled; Scene.DebugEnabled = enabled; UpdateDebug(); };
-        _debug.Draw += c => c.DrawCircle(new(18, 22), 4, _debugEnabled ? PhysicsScene.Mint : PhysicsScene.Muted, _debugEnabled, 1.5f);
+        _debug.Draw += c => c.DrawCircle(new(18, 22), 4, _debugEnabled ? PhysicsScene.Blush : PhysicsScene.Muted, _debugEnabled, 1.5f);
         _story = MakeLabel("", new(24, 124), 15, regular, PhysicsScene.Muted);
         _help = MakeLabel("", new(24, 776), 13, regular, PhysicsScene.Muted);
         _actions = [MakeButton("", new(24, 712), 266, semibold), MakeButton("", new(306, 712), 266, regular), MakeButton("", new(588, 712), 272, regular)];
-        _actions[0].AddThemeStyleBoxOverride("normal", Style(Color.FromHTML("#814163"), PhysicsScene.Peach));
-        _actions[0].AddThemeStyleBoxOverride("hover", Style(Color.FromHTML("#974C76"), PhysicsScene.Peach));
+        _actions[0].AddThemeStyleBoxOverride("normal", Style(PhysicsScene.Berry, PhysicsScene.Pink));
+        _actions[0].AddThemeStyleBoxOverride("hover", Style(Color.FromHTML("#BA4C83"), PhysicsScene.Pink));
         for (var i = 0; i < 3; i++) { var slot = i; _actions[i].Pressed += () => Scene.Act(ActionIndex(slot)); }
         _telemetry = new Entity { Name = "Telemetry" };
         _telemetry.Draw += c =>
@@ -97,13 +97,13 @@ internal sealed partial class SandboxWindow : Window
             c.DrawString(regular, new(949, 92), "FPS", fontSize: 13, modulate: PhysicsScene.Muted);
             text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.BodyCount} bodies", out count);
             PhysicsScene.DrawReadout(c, regular, new(1012, 90), text[..count], 14, PhysicsScene.Ink);
-            c.DrawString(regular, new(894, 111), _paused ? "PAUSED · step = 1/60 s" : "LIVE · fixed simulation", fontSize: 12, modulate: _paused ? PhysicsScene.Peach : PhysicsScene.Mint);
+            c.DrawString(regular, new(894, 111), _paused ? "PAUSED · step = 1/60 s" : "LIVE · fixed simulation", fontSize: 12, modulate: _paused ? PhysicsScene.Pink : PhysicsScene.Blush);
             text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.ContactEvents} contact events", out count);
             PhysicsScene.DrawReadout(c, regular, new(894, 733), text[..count], 14, PhysicsScene.Muted);
             if (SceneIndex is 1 or 4 or 6 or 9 or 10)
             {
                 text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.Score} {SceneIndex switch { 9 => "finish reached", 10 => "targets down / 3", 4 => "parcels / 4", 6 => "cargo docked", _ => "marbles delivered" }}", out count);
-                PhysicsScene.DrawReadout(c, regular, new(894, 753), text[..count], 14, PhysicsScene.Mint);
+                PhysicsScene.DrawReadout(c, regular, new(894, 753), text[..count], 14, PhysicsScene.Blush);
             }
         };
         _ui.AddChild(_telemetry); BuildParameters(regular, semibold);
@@ -195,8 +195,8 @@ internal sealed partial class SandboxWindow : Window
         foreach (var state in new[] { "font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color" }) button.AddThemeColorOverride(state, PhysicsScene.Ink);
         button.AddThemeColorOverride("font_disabled_color", PhysicsScene.Muted);
         button.AddThemeStyleBoxOverride("normal", Style(PhysicsScene.Surface)); button.AddThemeStyleBoxOverride("hover", Style(PhysicsScene.Hover));
-        button.AddThemeStyleBoxOverride("pressed", Style(PhysicsScene.Pressed, PhysicsScene.Peach)); button.AddThemeStyleBoxOverride("hover_pressed", Style(PhysicsScene.Pressed, PhysicsScene.Peach));
-        button.AddThemeStyleBoxOverride("focus", Style(new Color(0, 0, 0, 0), PhysicsScene.Peach));
+        button.AddThemeStyleBoxOverride("pressed", Style(PhysicsScene.Pressed, PhysicsScene.Pink)); button.AddThemeStyleBoxOverride("hover_pressed", Style(PhysicsScene.Pressed, PhysicsScene.Pink));
+        button.AddThemeStyleBoxOverride("focus", Style(new Color(0, 0, 0, 0), PhysicsScene.Pink));
     }
     private StyleBoxFlat Style(Color color, Color? border = null)
     {

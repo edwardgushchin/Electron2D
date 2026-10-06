@@ -49,7 +49,7 @@ internal sealed partial class PhysicsScene
         {
             var i = _particles.Count;
             var body = Place(new RigidBody { CanSleep = false, Mass = .2f, LinearDamp = .05f, AngularDamp = .1f }, shape,
-                new(184 + i % 40 * 20 + (i / 40 % 2) * 2, 615 - i / 40 * 16), i % 3 == 0 ? Peach : i % 3 == 1 ? Blue : Mint);
+                new(184 + i % 40 * 20 + (i / 40 % 2) * 2, 615 - i / 40 * 16), i % 3 == 0 ? Pink : i % 3 == 1 ? Apricot : Blush);
             body.PhysicsMaterialOverride = _marbleMaterial ??= SurfaceMaterial(.25f, .35f);
             _particles.Add(body);
         }
@@ -59,7 +59,7 @@ internal sealed partial class PhysicsScene
             _numbers.Remove(body); Bodies.Remove(body); Colliders.Remove(body); _colors.Remove(body); _shapeOwners.Remove(body); _flashes.Remove(body); _views.Remove(body.GetRID());
             RemoveChild(body); body.Dispose();
         }
-        if (SelectedBody is null || SelectedBody.IsDisposed) SelectedBody = _particles[0];
+        if (SelectedBody is { IsDisposed: true }) { SelectedBody = null; _selected = null; _grab = default; }
     }
 
     private void ActStress(int action)
@@ -72,13 +72,13 @@ internal sealed partial class PhysicsScene
     private void BuildBike()
     {
         Enclose();
-        Solid(Box(210, 16), new(148, 582), Lavender);
-        Solid(Box(160, 16), new(323, 558), Lavender, -.25f);
-        Solid(Box(155, 18), new(492, 534), Lavender);
-        Solid(Box(140, 16), new(669, 578), Lavender, .3f);
-        Solid(Box(180, 16), new(866, 598), Lavender, -.19f);
-        Solid(Box(150, 18), new(1045, 580), Lavender);
-        _chassis = Dynamic(Box(70, 18), new(142, 504), Peach, 3);
+        Solid(Box(210, 16), new(148, 582), Berry);
+        Solid(Box(160, 16), new(323, 558), Berry, -.25f);
+        Solid(Box(155, 18), new(492, 534), Berry);
+        Solid(Box(140, 16), new(669, 578), Berry, .3f);
+        Solid(Box(180, 16), new(866, 598), Berry, -.19f);
+        Solid(Box(150, 18), new(1045, 580), Berry);
+        _chassis = Dynamic(Box(70, 18), new(142, 504), Pink, 3);
         _chassis.AngularDamp = .35f;
         var tire = SurfaceMaterial(1.2f, .05f, rough: true);
         foreach (var x in new[] { 112f, 177f })
@@ -91,10 +91,10 @@ internal sealed partial class PhysicsScene
             guide.Draw += c => { if (DebugEnabled) DrawJoint(c, guide, _chassis, wheel); };
             suspension.Draw += c => { if (DebugEnabled) DrawJoint(c, suspension, _chassis, wheel, true); };
         }
-        var finish = Sensor(Box(42, 85), new(1070, 527), Yellow);
+        var finish = Sensor(Box(42, 85), new(1070, 527), Apricot);
         finish.BodyEntered += body => { if (body == _chassis && Score == 0) { Score = 1; Observation = "Finish! Reset the motorcycle or try another gravity and suspension load."; } };
         Actions = ["Reset motorcycle [B]", "Demo drive [N]", "Jump assist [F]"];
-        Help = "W / Up: drive · S / Down: brake / reverse · A / D: lean · Space: jump assist · reach the golden finish";
+        Help = "W / Up: drive · S / Down: brake / reverse · A / D: lean · Space: jump assist · reach the apricot finish";
     }
 
     private void ActBike(int action)
@@ -121,20 +121,19 @@ internal sealed partial class PhysicsScene
             {
                 foreach (var offset in new[] { -48f, 48f })
                 {
-                    var beam = Dynamic(Box(20, 84), new(x + offset, 587 - row * 103), tower % 2 == 0 ? Peach : Blue);
+                    var beam = Dynamic(Box(20, 84), new(x + offset, 587 - row * 103), tower % 2 == 0 ? Pink : Apricot);
                     beam.PhysicsMaterialOverride = wood;
                 }
-                var plank = Dynamic(Box(130, 18), new(x, 536 - row * 103), Lavender, 1.4f);
+                var plank = Dynamic(Box(130, 18), new(x, 536 - row * 103), Berry, 1.4f);
                 plank.PhysicsMaterialOverride = wood;
             }
-            var target = Dynamic(Circle(24), new(x, 513 - (rows - 1) * 103), Mint, .6f);
+            var target = Dynamic(Circle(24), new(x, 513 - (rows - 1) * 103), Blush, .6f);
             _targets.Add((target, target.Position));
         }
-        _bird = Dynamic(Circle(23), _sling, Peach, 2);
+        _bird = Dynamic(Circle(23), _sling, Pink, 2);
         _bird.Freeze = true;
-        SelectedBody = _bird;
         Actions = ["Quick shot [B]", "Reload bird [N]", "Heavy / light bird [F]"];
-        Help = "Pull the pink bird back and release · trajectory preview uses current gravity · knock all three mint targets down";
+        Help = "Pull the pink bird back and release · trajectory preview uses current gravity · knock all three blush targets down";
         Observation = "Pull, aim, release. Towers and targets are ordinary bodies; hits, destruction and scores come from the solver.";
     }
 
@@ -184,23 +183,23 @@ internal sealed partial class PhysicsScene
     private void DrawBike(CanvasItem c)
     {
         c.DrawLine(new(1040, 480), new(1040, 570), Muted, 3);
-        c.DrawColoredPolygon([new(1040, 480), new(1082, 493), new(1040, 510)], Yellow);
-        c.DrawString(_font, new(995, 460), "FINISH", fontSize: 12, modulate: Yellow);
+        c.DrawColoredPolygon([new(1040, 480), new(1082, 493), new(1040, 510)], Apricot);
+        c.DrawString(_font, new(995, 460), "FINISH", fontSize: 12, modulate: Apricot);
         if (_chassis is null) return;
         foreach (var wheel in _wheels)
         {
             c.DrawSetTransformMatrix(wheel.GlobalTransform);
-            c.DrawCircle(Vector2.Zero, 19, Paper); c.DrawCircle(Vector2.Zero, 19, Lavender, false, 3);
+            c.DrawCircle(Vector2.Zero, 19, Paper); c.DrawCircle(Vector2.Zero, 19, Berry, false, 3);
             c.DrawCircle(Vector2.Zero, 10, Border); c.DrawCircle(Vector2.Zero, 3, Ink);
             for (var i = 0; i < 4; i++) { var a = Vector2.FromAngle(i * Mathf.Pi / 2) * 14; c.DrawLine(-a, a, Muted, 1); }
         }
         c.DrawSetTransformMatrix(_chassis.GlobalTransform);
-        c.DrawColoredPolygon([new(-35, 6), new(-20, -12), new(12, -12), new(35, 4), new(25, 10), new(-24, 10)], Peach);
-        c.DrawLine(new(-20, -12), new(1, 4), Lavender, 4); c.DrawLine(new(1, 4), new(20, -12), Lavender, 4);
+        c.DrawColoredPolygon([new(-35, 6), new(-20, -12), new(12, -12), new(35, 4), new(25, 10), new(-24, 10)], Pink);
+        c.DrawLine(new(-20, -12), new(1, 4), Berry, 4); c.DrawLine(new(1, 4), new(20, -12), Berry, 4);
         c.DrawLine(new(-17, -14), new(3, -14), Paper, 5);
         c.DrawLine(new(22, -11), new(28, -26), Ink, 3); c.DrawLine(new(23, -26), new(33, -26), Ink, 3);
-        c.DrawLine(new(-8, -15), new(0, -32), Lavender, 7); c.DrawLine(new(0, -32), new(21, -23), Ink, 4);
-        c.DrawCircle(new(3, -44), 10, Yellow); c.DrawLine(new(3, -45), new(11, -45), Paper, 3);
+        c.DrawLine(new(-8, -15), new(0, -32), Berry, 7); c.DrawLine(new(0, -32), new(21, -23), Ink, 4);
+        c.DrawCircle(new(3, -44), 10, Apricot); c.DrawLine(new(3, -45), new(11, -45), Paper, 3);
         c.DrawSetTransformMatrix(Transform.Identity);
     }
 
@@ -220,18 +219,18 @@ internal sealed partial class PhysicsScene
         {
             c.DrawSetTransformMatrix(_bird.GlobalTransform);
             c.DrawCircle(new(7, -5), 7, Ink); c.DrawCircle(new(10, -5), 3, Paper);
-            c.DrawColoredPolygon([new(18, -1), new(34, 5), new(18, 9)], Yellow);
+            c.DrawColoredPolygon([new(18, -1), new(34, 5), new(18, 9)], Apricot);
             c.DrawLine(new(0, -13), new(13, -9), Paper, 3);
             c.DrawSetTransformMatrix(Transform.Identity);
         }
         if (_bird is { Freeze: true })
         {
-            c.DrawLine(_sling + new Vector2(-20, -30), _bird.Position, Peach, 3);
-            c.DrawLine(_sling + new Vector2(20, -30), _bird.Position, Peach, 3);
+            c.DrawLine(_sling + new Vector2(-20, -30), _bird.Position, Pink, 3);
+            c.DrawLine(_sling + new Vector2(20, -30), _bird.Position, Pink, 3);
             if (_pulling)
             {
                 var velocity = (_sling - _bird.Position) * _slingPower;
-                for (var i = 1; i < 32; i++) { var t = i * .045f; var p = _bird.Position + velocity * t + new Vector2(0, WorldGravity * _bird.GravityScale * t * t * .5f); c.DrawCircle(p, 2, Lavender); }
+                for (var i = 1; i < 32; i++) { var t = i * .045f; var p = _bird.Position + velocity * t + new Vector2(0, WorldGravity * _bird.GravityScale * t * t * .5f); c.DrawCircle(p, 2, Berry); }
             }
         }
         c.DrawSetTransformMatrix(Transform.Identity);

@@ -30,6 +30,7 @@ internal static partial class PhysicsSandboxTests
             Switch(index);
             var scene = current!;
             var initial = scene.BodyCount;
+            Check(scene.SelectedBody is null, "Every new story starts without selection: " + index);
             Check(PhysicsServer.AreaGetGravity(scene.GetWorld()!.Space) == scene.WorldGravity &&
                 PhysicsServer.AreaGetLinearDamp(scene.GetWorld()!.Space) == scene.WorldLinearDamp &&
                 PhysicsServer.AreaGetAngularDamp(scene.GetWorld()!.Space) == scene.WorldAngularDamp, "Story parameters configure actual world defaults.");
@@ -41,6 +42,7 @@ internal static partial class PhysicsSandboxTests
                 scene.Act(action);
                 for (var i = 0; i < 20; i++) { PhysicsTick(tree); tree.ProcessFrame(1d / 60); }
             }
+            Check(scene.SelectedBody is null, "Story actions do not select objects: " + index);
             if (index == 0) Check(scene.BodyCount == 74, "Crate and projectile actions create real bodies.");
             scene.DebugEnabled = true;
             tree.ProcessFrame(1d / 60);
@@ -65,6 +67,7 @@ internal static partial class PhysicsSandboxTests
         var crate = current!.Bodies[17];
         var point = crate.Position;
         Pointer(root, point, true);
+        Check(current.SelectedBody == crate, "Click selects the actual body.");
         Motion(root, point + new Vector2(80, -100));
         for (var i = 0; i < 30; i++) PhysicsTick(tree);
         tree.ProcessFrame(1d / 60);
@@ -85,6 +88,10 @@ internal static partial class PhysicsSandboxTests
             Check(crate.ProcessMode == ProcessMode.Disabled && crate.DisableMode == policy, "Disabled participation cycle: " + policy);
         }
         Key(root, Electron2D.Key.V); PhysicsTick(tree); Check(crate.ProcessMode != ProcessMode.Disabled, "Disabled body restores.");
+        var empty = new Vector2(1000, 230);
+        Pointer(root, empty, true); Pointer(root, empty, false);
+        Check(current.SelectedBody is null, "Empty field click clears selection.");
+        Key(root, Electron2D.Key.K); Check(!crate.Freeze, "Cleared selection receives no body commands.");
         var count = current!.BodyCount;
         Pointer(root, new(60, 380), true);
         Pointer(root, new(60, 380), false);
@@ -104,8 +111,13 @@ internal static partial class PhysicsSandboxTests
         Check(current.Score == 4, "Re-entering a collected parcel does not score twice.");
         Switch(8);
         current!.SetStoryParameter(1024);
+        Check(current.SelectedBody is null, "Population growth keeps selection empty.");
         Check(current.BodyCount == 1024 && current.Bodies.All(body => !body.CanSleep), "Stress capacity is 1,024 active physical bodies.");
+        var removedParticle = current.Bodies[^1];
+        Pointer(root, removedParticle.Position, true); Pointer(root, removedParticle.Position, false);
+        Check(current.SelectedBody == removedParticle, "A stress particle can be selected.");
         current.SetStoryParameter(64);
+        Check(current.SelectedBody is null && removedParticle.IsDisposed, "Removing the selected particle clears selection.");
         Check(current.BodyCount == 64, "Population slider removes real bodies and frees their RIDs.");
         Switch(9);
         var bike = current!.Bodies[0]; var start = bike.Position;
@@ -212,7 +224,7 @@ internal static partial class PhysicsSandboxTests
             var scene = (frame - 1) / 80;
             var phase = (frame - 1) % 80;
             if (scene >= SandboxWindow.SceneNames.Length) { window.Tree!.Quit(); return; }
-            if (phase == 0) { window.SwitchScene(scene); if (window.Scene.DebugEnabled) NativeClick(UI("Debug")); }
+            if (phase == 0) { window.SwitchScene(scene); Check(window.Scene.SelectedBody is null, "New native story has no selection."); if (window.Scene.DebugEnabled) NativeClick(UI("Debug")); }
             if (scene == 0 && phase == 2) NativeClick(UI("SceneSelector"));
             if (scene == 0 && phase == 3)
             {
@@ -253,8 +265,27 @@ internal static partial class PhysicsSandboxTests
             if (phase == 14) Check(!window.Scene.DebugEnabled && window.GetNode<CanvasLayer>("Interface").GetNode<Button>("Debug").Text == "Collisions OFF", "Debug state has an explicit caption.");
             if (scene == 0 && phase == 15) NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.Bodies[0].GlobalPosition);
             if (scene == 0 && phase == 16)
-                Check(window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter4").Visible, "Clicking the already selected body opens its Object tab.");
-            if (scene == 0 && phase == 17) NativeClick(UI("Inspector0"));
+            {
+                Check(window.Scene.SelectedBody == window.Scene.Bodies[0] && window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter4").Visible, "Native body click selects it and opens Object.");
+                NativeClick(new(820, 210));
+            }
+            if (scene == 0 && phase == 17)
+            {
+                Check(window.Scene.SelectedBody is null && !window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter4").Visible, "Native empty click clears selection and hides object controls.");
+                using var emptyInspector = RenderingServer.Service!.Readback();
+                emptyInspector.SavePNG(System.IO.Path.Combine(directory, "01-unselected.png"));
+                NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.Bodies[0].GlobalPosition);
+            }
+            if (scene == 0 && phase == 18)
+            {
+                Check(window.Scene.SelectedBody == window.Scene.Bodies[0], "An object can be selected again after clearing.");
+                NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.Bodies[0].GlobalPosition);
+            }
+            if (scene == 0 && phase == 19)
+            {
+                Check(window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter4").Visible, "Repeated selection keeps Object available.");
+                NativeClick(new(820, 210)); NativeClick(UI("Inspector0"));
+            }
             if (phase == 20)
             {
                 using var pixels = RenderingServer.Service!.Readback();

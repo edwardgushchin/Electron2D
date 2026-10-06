@@ -1,6 +1,6 @@
 # PhysicsSandbox
 
-Eleven interactive physics stories in a fixed **1152 × 800** desktop window, the same client size as the Electron2D editor splash. The example uses only public Electron2D APIs. The editor palette carries through to the sandbox: aubergine surfaces, cream text, pink accents and pastel physics objects. Shapes are drawn as retained geometry; no sprite downloads are needed.
+Eleven interactive physics stories in a fixed **1152 × 800** desktop window, the same client size as the Electron2D editor splash. The example uses only public Electron2D APIs. The supplied visual reference sets the palette: dark plum surfaces, cream text, pink accents, and berry, blush and apricot physics objects. Shapes are drawn as retained geometry; no sprite downloads are needed.
 
 Run from the repository root with .NET 10:
 
@@ -23,22 +23,22 @@ Use the upper-left dropdown. It supports pointer selection, arrow keys and Enter
 | Story | Your task | Main mechanisms |
 | --- | --- | --- |
 | Collision warehouse | Dismantle and rebuild three towers containing 72 crates; fire a heavy ball or release a shockwave | Rigid/static contact response, point grabbing, impulses, contact events, sleep, mass, friction |
-| Marble delivery | Feed the machine and deliver marbles into the mint collection bowl; compare rubber, ice and absorbent clay | Materials, live shared resources, circles/capsules/polygons, segments, hollow terrain, sensors |
+| Marble delivery | Feed the machine and deliver marbles into the blush collection bowl; compare rubber, ice and absorbent clay | Materials, live shared resources, circles/capsules/polygons, segments, hollow terrain, sensors |
 | Clockwork playground | Pull the pendulum and slider, power the wheel and tune the spring | Pin angular limits, motor/torque cap, groove, spring stiffness/damping, live joint changes |
 | Gravity garden | Release orbiting seeds, relocate a star and reverse attraction | Point gravity with falloff, directional fields, priority, all five override modes, linear/angular damping |
-| Rooftop courier | Collect four golden parcels across shelves, slopes and a moving lift | Grounded/floating character sliding, jump, floor snap, separation ray, one-way platform, platform carry |
-| Radar rescue | Steer the probe to the golden beacon and inspect the route ahead | Ray/shape casts, wide-clearance versus ray hits, direct overlaps/manifolds/rest info, body motion tests, layers and exceptions |
-| Orbital tug | Tow the cargo into the mint dock; disconnect/reconnect the cable, change thrust or cargo mass | Custom direct-body integration, forces/torque, spring ownership through shared scene/server RIDs, custom centre/inertia |
+| Rooftop courier | Collect four apricot parcels across shelves, slopes and a moving lift | Grounded/floating character sliding, jump, floor snap, separation ray, one-way platform, platform carry |
+| Radar rescue | Steer the probe to the apricot beacon and inspect the route ahead | Ray/shape casts, wide-clearance versus ray hits, direct overlaps/manifolds/rest info, body motion tests, layers and exceptions |
+| Orbital tug | Tow the cargo into the blush dock; disconnect/reconnect the cable, change thrust or cargo mass | Custom direct-body integration, forces/torque, spring ownership through shared scene/server RIDs, custom centre/inertia |
 | Shape atelier | Morph a rolling creature without adding scene children, disable its extra geometry, and kick the independent-world marbles | Manual shape owners, live indexed replacement/pose/enablement, solid concave decomposition, standalone shape collision, explicit bodies/space, server Area monitoring/fields |
 | Physics stress test | Stir 64–1,024 always-awake real particles, add more and compare normal/debug drawing | Dense solver contacts, body lifecycle, configurable world/material/object properties |
-| Gravity Defied | Drive both wheels, lean and jump over ramps toward the golden finish | Groove guides, spring suspension, friction, torque, chassis mass and gravity |
-| Angry birds | Pull and release the pink bird, aim with a gravity-aware preview and knock three mint targets down | Impulse velocity, mass, restitution, stacked timber contacts and solver-driven scoring |
+| Gravity Defied | Drive both wheels, lean and jump over ramps toward the apricot finish | Groove guides, spring suspension, friction, torque, chassis mass and gravity |
+| Angry birds | Pull and release the pink bird, aim with a gravity-aware preview and knock three blush targets down | Impulse velocity, mass, restitution, stacked timber contacts and solver-driven scoring |
 
 Each story has three buttons below the stage, also bound to **B**, **N** and **F**. Their captions reflect current settings. The footer describes that story's movement controls and objective. The highlighted button is the primary action. Hotkeys stay in tooltips and the shared footer. FPS and body count have separate readouts; scene results appear only for stories that score them. Collisions explicitly shows ON/OFF.
 
 ## Live parameters
 
-The inspector separates eleven native HSliders into **World**, **Object** and **Scene** tabs. Clicking an object opens its tab; a pink selection outline and a named label link it to the inspector. Each row shows its unit, range and a factory-value tick, with one clean circular thumb. Counts are integers and multipliers use ×. Four affect the world: gravity, linear/angular damping and time scale. Six edit the clicked object's mass, friction, bounce, gravity scale and linear/angular damping; inapplicable rigid-body fields are disabled on static/character bodies. The last slider controls a story-specific quantity: impulse strength, spring stiffness, star gravity, move speed, sweep margin, tug thrust, particle count, wheel torque or sling power. Values show physical units/actual counts and edits update real public physics properties. Selecting another scene restores its factory settings and time scale.
+The inspector separates eleven native HSliders into **World**, **Object** and **Scene** tabs. New and reset scenes start with no selected object. Clicking empty field space clears the selection and shows the Object tab’s selection prompt without sliders. Clicking an object opens its tab; a pink selection outline and a named label link it to the inspector. Each row shows its unit, range and a factory-value tick, with one clean circular thumb. Counts are integers and multipliers use ×. Four affect the world: gravity, linear/angular damping and time scale. Six edit the clicked object's mass, friction, bounce, gravity scale and linear/angular damping; inapplicable rigid-body fields are disabled on static/character bodies. The last slider controls a story-specific quantity: impulse strength, spring stiffness, star gravity, move speed, sweep margin, tug thrust, particle count, wheel torque or sling power. Values show physical units/actual counts and edits update real public physics properties. Selecting another scene restores its factory settings and time scale.
 
 Friction and bounce sliders show coefficient magnitudes and preserve the object's rough/absorbent material policy when edited, including the motorcycle tires.
 

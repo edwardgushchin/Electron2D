@@ -6,20 +6,19 @@ namespace Electron2D.Examples.PhysicsSandbox;
 /// <summary>A complete scene owns its geometry, input, physics story and optional observations.</summary>
 internal sealed partial class PhysicsScene : Entity
 {
-    internal static readonly Color Paper = Color.FromHTML("#241B2C");
+    internal static readonly Color Paper = Color.FromHTML("#25192B");
     internal static readonly Color Ink = Color.FromHTML("#F9F3EE");
-    internal static readonly Color Muted = Color.FromHTML("#C6B7CC");
-    internal static readonly Color Border = Color.FromHTML("#594562");
-    internal static readonly Color Surface = Color.FromHTML("#35273F");
-    internal static readonly Color Hover = Color.FromHTML("#46334F");
-    internal static readonly Color Pressed = Color.FromHTML("#573748");
-    internal static readonly Color Contour = Color.FromHTML("#55364C");
-    internal static readonly Color Mint = Color.FromHTML("#B8DCD0");
-    internal static readonly Color Peach = Color.FromHTML("#F2A6CC");
-    internal static readonly Color Lavender = Color.FromHTML("#C9B6E4");
-    internal static readonly Color Blue = Color.FromHTML("#ACCFE6");
-    internal static readonly Color Yellow = Color.FromHTML("#EDDCAC");
-    internal static readonly Color DebugColor = Color.FromHTML("#A7E2CE");
+    internal static readonly Color Muted = Color.FromHTML("#C2A6C8");
+    internal static readonly Color Border = Color.FromHTML("#6D506D");
+    internal static readonly Color Surface = Color.FromHTML("#322338");
+    internal static readonly Color Hover = Color.FromHTML("#443049");
+    internal static readonly Color Pressed = Color.FromHTML("#A93B71");
+    internal static readonly Color Contour = Color.FromHTML("#583149");
+    internal static readonly Color Blush = Color.FromHTML("#FCCCDD");
+    internal static readonly Color Pink = Color.FromHTML("#FD9ECA");
+    internal static readonly Color Berry = Color.FromHTML("#A93B71");
+    internal static readonly Color Apricot = Color.FromHTML("#F09776");
+    internal static readonly Color DebugColor = Color.FromHTML("#FCCCDD");
     internal static readonly Rect2 Stage = new(24, 184, 1104, 510);
     internal readonly List<RigidBody> Bodies = [];
     internal readonly List<CollisionObject> Colliders = [];
@@ -57,11 +56,14 @@ internal sealed partial class PhysicsScene : Entity
             if (body == _character) return "Courier";
             if (body == _tug) return "Tug";
             if (body == _cargo) return "Cargo";
-            foreach (var target in _targets) if (body == target.Body) return "Mint target";
+            foreach (var target in _targets) if (body == target.Body) return "Blush target";
             return Index switch
             {
                 0 => _shapeOwners.TryGetValue(body, out var owners) && owners.Length > 0 && body.ShapeOwnerGetShape(owners[0], 0) is CircleShape ? "Heavy ball" : "Warehouse crate",
-                1 => "Marble", 8 => "Particle", 10 => "Tower beam", _ => "Physical object"
+                1 => "Marble",
+                8 => "Particle",
+                10 => "Tower beam",
+                _ => "Physical object"
             };
         }
     }
@@ -130,7 +132,6 @@ internal sealed partial class PhysicsScene : Entity
             case 10: BuildBirds(); break;
             default: throw new ArgumentOutOfRangeException(nameof(index));
         }
-        SelectedBody ??= Bodies.Count > 0 ? Bodies[0] : (PhysicsBody?)_character ?? _probe;
         _overlay = new Entity { Name = "PhysicsDebug", ZIndex = 20, Visible = false };
         _overlay.Draw += DrawDebug;
         AddChild(_overlay);
@@ -183,7 +184,7 @@ internal sealed partial class PhysicsScene : Entity
 
     private StaticBody Solid(Shape shape, Vector2 position, Color? color = null, float angle = 0)
     {
-        var body = Place(new StaticBody(), shape, position, color ?? Lavender);
+        var body = Place(new StaticBody(), shape, position, color ?? Berry);
         body.Rotation = angle;
         return body;
     }
@@ -343,6 +344,7 @@ internal sealed partial class PhysicsScene : Entity
     {
         SelectionRevision = unchecked(SelectionRevision + 1);
         _pick.Position = point;
+        SelectedBody = null;
         _selected = null;
         _grab = default;
         var count = GetWorld()!.DirectSpaceState.IntersectPoint(_pick, _pickHits.AsSpan(0, 32));
@@ -393,7 +395,7 @@ internal sealed partial class PhysicsScene : Entity
         if (Index == 8) { SetPopulation(_particles.Count + 64); return; }
         if (BodyCount >= BodyLimit) { Observation = "160-body limit reached. Reset the story to start a new experiment."; return; }
         point = point.Clamp(new Vector2(65, 218), new Vector2(1080, 605));
-        var body = Dynamic(Index is 1 or 3 ? Circle(14) : Box(34, 34), point, _serial % 2 == 0 ? Peach : Blue);
+        var body = Dynamic(Index is 1 or 3 ? Circle(14) : Box(34, 34), point, _serial % 2 == 0 ? Pink : Apricot);
         if (Index is 2 or 3 or 6) body.GravityScale = 0;
         if (Index == 1) body.PhysicsMaterialOverride = _marbleMaterial;
     }
@@ -537,7 +539,7 @@ internal sealed partial class PhysicsScene : Entity
         }
         if (_debugVectors.Count > 0) c.DrawMultiline(CollectionsMarshal.AsSpan(_debugVectors), new Color(DebugColor.R, DebugColor.G, DebugColor.B, .55f), 1);
         c.DrawMultiline(_debugNormals.Count == 0 ? [Vector2.Zero, Vector2.Zero] : CollectionsMarshal.AsSpan(_debugNormals), new Color(Ink.R, Ink.G, Ink.B, .4f), 1);
-        c.DrawMultiline(_debugPoints.Count == 0 ? [Vector2.Zero, Vector2.Zero] : CollectionsMarshal.AsSpan(_debugPoints), Peach, 4);
+        c.DrawMultiline(_debugPoints.Count == 0 ? [Vector2.Zero, Vector2.Zero] : CollectionsMarshal.AsSpan(_debugPoints), Pink, 4);
         foreach (var (rid, _, shape) in _serverBodies)
         {
             c.DrawSetTransformMatrix(PhysicsServer.BodyGetTransform(rid));
@@ -576,7 +578,7 @@ internal sealed partial class PhysicsScene : Entity
         if (bounds is not { } rect) return;
         rect = rect.Grow(5 / PresentationZoom);
         c.DrawRect(rect.Grow(2 / PresentationZoom), Ink, false, 1 / PresentationZoom);
-        c.DrawRect(rect, Peach, false, 2 / PresentationZoom);
+        c.DrawRect(rect, Pink, false, 2 / PresentationZoom);
         var label = rect.Position + new Vector2(0, -10 / PresentationZoom);
         const int size = 13;
         c.DrawSetTransformMatrix(new Transform(0, Vector2.One / PresentationZoom, 0, label));

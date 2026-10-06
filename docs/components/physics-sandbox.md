@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 [PhysicsSandbox](../../examples/PhysicsSandbox/README.md) is a separate desktop executable consuming only the public runtime. [SandboxWindow](../classes/SandboxWindow.md) owns the fixed 1152×800 native window, OptionButton, debug/pause/step/reset controls, three story actions and labels. [PhysicsScene](../classes/PhysicsScene.md) owns one of eleven complete interactive stories. [TugBody](../classes/TugBody.md) supplies the custom-integrated ship. The runtime never references this example.
 
-The visual profile uses the editor's #241B2C background, matching stage, #F9F3EE text and #F2A6CC pink, with mint/lavender/blue/yellow geometry. Both bundled IBM Plex Sans weights remain caller-owned until the window and all controls are disposed. Collision geometry, visual geometry and debug outlines use the same shape resources and effective indexed poses. No backend type, synthetic animation of physics or downloaded sprite is part of the consumer.
+The visual reference supplies #25192B plum background, #F9F3EE text, #FD9ECA pink accents and #FCCCDD blush, #A93B71 berry and #F09776 apricot geometry. Both bundled IBM Plex Sans weights remain caller-owned until the window and all controls are disposed. Collision geometry, visual geometry and debug outlines use the same shape resources and effective indexed poses. No backend type, synthetic animation of physics or downloaded sprite is part of the consumer.
 
 ## Gameplay capability map
 
@@ -20,13 +20,13 @@ This map covers gameplay mechanism families. It is not a replacement for exact d
 | Material friction/bounce/absorbent contract | Marble shared material edits compare bounce, zero friction and absorption; warehouse has separate friction |
 | Circle, rectangle, capsule and convex polygon | Crates, marbles, courier, ship and triangular delivery piece |
 | Segment and concave segment collection | Marble ledge and paired-segment collection bowl |
-| CollisionPolygon solid concave decomposition | Atelier's compound blue body |
-| Separation ray and one-way response | Courier's slope-aware feet and blue one-way shelf |
+| CollisionPolygon solid concave decomposition | Atelier's compound apricot body |
+| Separation ray and one-way response | Courier's slope-aware feet and apricot one-way shelf |
 | Manual owner groups and indexed live geometry | Atelier morph/disable buttons preserve owner and shape-slot identity and update visuals |
 | Standalone Shape collision | Atelier cursor outline changes color when its shape intersects the creature's shape |
 | Scene point/ray/shape queries, contact pairs/rest info and motion tests | Picking; radar cursor volume, contact markers, safe fractions and predicted body motion |
 | Cached RayCast and ShapeCast with live mask/exclusions | Radar view and layer buttons; ghost obstacle action adds/removes body exceptions |
-| Collision layers/masks and collision exceptions | Radar blue/violet layers and ghost passage; directional sensor detection |
+| Collision layers/masks and collision exceptions | Radar apricot/berry layers and ghost passage; directional sensor detection |
 | Scene body/object/shape contact snapshots and sleep events | Warehouse flash/impact counter, selected body contact count and debug normals |
 | Scene Area body monitoring | Marble delivery, four parcels and cargo dock |
 | Point/directional gravity, falloff, priority and override modes | Garden's two stars, G mixing cycle and attract/repel action |
@@ -34,7 +34,7 @@ This map covers gameplay mechanism families. It is not a replacement for exact d
 | Grounded/floating MoveAndSlide, contact classification and snap | Courier mode toggle, jumping/slopes/shelves; floating radar probe |
 | Animatable platform targeting and character platform carry | Courier's moving/stopped lift |
 | Pin angular limits and powered motor | Clockwork's pendulum and motor toggle |
-| Groove finite guide and free rotation | Clockwork's constrained blue slider |
+| Groove finite guide and free rotation | Clockwork's constrained apricot slider |
 | Damped spring, live coefficients and anchor leverage | Clockwork stiffness toggle and tug tow cable |
 | Shared scene/server joint RID construction and clear | Tug cable disconnect/reconnect through PhysicsServer |
 | Direct-body custom integration and contact solving | TugBody changes velocity/angular velocity in the post-solver hook while contacts remain native |
@@ -46,11 +46,11 @@ This map covers gameplay mechanism families. It is not a replacement for exact d
 
 ## Adjustable worlds and games
 
-Every story groups its native HSliders into World, Object and Scene tabs. World controls gravity, damping and time scale; Object controls mass, material response, gravity scale and damping. A named selection outline links the clicked body to the object header. Numeric rows include units, ranges and factory-value ticks. Unsupported object fields are disabled. The last slider displays a real scene-specific range/count. The public Area field setters accept a space RID and update that world's defaults; local garden Areas still override/compose them. Atelier parameter edits update its independent world as well. The simulation CanvasLayer uses per-story framing while the interface stays unscaled. A ClipContents Control and counter-translated scene preserve physical world coordinates while clipping story, selection and debug drawing to the 836×536 field. The bike camera follows its chassis, with a recognizable geometric rider/bike and finish flag. The inspector ends at the same height as the field; actions sit immediately underneath. Screen pointers convert through the canvas transform and field bounds reject clicks over the interface.
+Every story groups its native HSliders into World, Object and Scene tabs. World controls gravity, damping and time scale; Object controls mass, material response, gravity scale and damping. New/reset stories and population growth leave selection empty. Clicking empty field space clears it; the Object tab then shows a selection prompt without controls. A named selection outline links the clicked body to the object header. Numeric rows include units, ranges and factory-value ticks. Unsupported object fields are disabled. The last slider displays a real scene-specific range/count. The public Area field setters accept a space RID and update that world's defaults; local garden Areas still override/compose them. Atelier parameter edits update its independent world as well. The simulation CanvasLayer uses per-story framing while the interface stays unscaled. A ClipContents Control and counter-translated scene preserve physical world coordinates while clipping story, selection and debug drawing to the 836×536 field. The bike camera follows its chassis, with a recognizable geometric rider/bike and finish flag. The inspector ends at the same height as the field; actions sit immediately underneath. Screen pointers convert through the canvas transform and field bounds reject clicks over the interface.
 
 Material readouts show friction/bounce magnitudes; per-body edits retain the sign encoding rough/absorbent mixing rather than clearing that policy or clamping a rough tire's readout to zero.
 
-Stress uses 64–1,024 actual circles with sleeping disabled, shared material and eight-vertex visual dots. A motorcycle couples a chassis and two driven wheels through groove guides and damped springs; ramps and a finish sensor provide its objective. Slingshot towers consist of ordinary timber bodies and mint targets; dragging/releasing changes projectile velocity, the ballistic preview uses current world gravity and the bird gravity scale (it approximates motion without damping), and target displacement/velocity drives scoring. These are executable consumer mechanics, not additional runtime APIs.
+Stress uses 64–1,024 actual circles with sleeping disabled, shared material and eight-vertex visual dots. A motorcycle couples a chassis and two driven wheels through groove guides and damped springs; ramps and a finish sensor provide its objective. Slingshot towers consist of ordinary timber bodies and blush targets; dragging/releasing changes projectile velocity, the ballistic preview uses current world gravity and the bird gravity scale (it approximates motion without damping), and target displacement/velocity drives scoring. These are executable consumer mechanics, not additional runtime APIs.
 
 ## Runtime flow and invariants
 

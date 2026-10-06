@@ -47,13 +47,14 @@ internal sealed partial class SandboxWindow
             c.DrawString(bold, new(896, 252), title, fontSize: 17, modulate: PhysicsScene.Ink);
             Span<char> text = stackalloc char[96];
             int count;
-            if (_parameterGroup == 1) text.TryWrite(CultureInfo.InvariantCulture, $"#{Scene.SelectedNumber} · {Scene.SelectedState}", out count);
+            if (_parameterGroup == 1 && Scene.SelectedBody is null) text.TryWrite(CultureInfo.InvariantCulture, $"Click a body in the scene", out count);
+            else if (_parameterGroup == 1) text.TryWrite(CultureInfo.InvariantCulture, $"#{Scene.SelectedNumber} · {Scene.SelectedState}", out count);
             else text.TryWrite(CultureInfo.InvariantCulture, $"{(_parameterGroup == 0 ? "Affects every body" : "Tune this scene's main action")}", out count);
             PhysicsScene.DrawReadout(c, font, new(896, 273), text[..count], 14, PhysicsScene.Muted);
             for (var i = 0; i < _parameters.Count; i++)
             {
                 var slider = _parameters[i]; if (!slider.Visible) continue;
-                var y = Row(i); var color = i < 4 ? PhysicsScene.Mint : i < 10 ? PhysicsScene.Peach : PhysicsScene.Lavender;
+                var y = Row(i); var color = i < 4 ? PhysicsScene.Blush : i < 10 ? PhysicsScene.Pink : PhysicsScene.Apricot;
                 c.DrawString(font, new(896, y + 14), _parameterNames[i], fontSize: 14, modulate: slider.Editable ? PhysicsScene.Ink : PhysicsScene.Muted);
                 if (slider.Editable) WriteValue(text, slider.Value, i, out count); else { text[0] = '—'; count = 1; }
                 DrawRight(c, font, new(1112, y + 14), text[..count], 14, color);
@@ -70,9 +71,14 @@ internal sealed partial class SandboxWindow
             if (_parameterGroup == 0)
             {
                 c.DrawLine(new(896, 551), new(1112, 551), PhysicsScene.Border);
-                c.DrawString(font, new(896, 579), "Mint adjusts the whole world.", fontSize: 13, modulate: PhysicsScene.Muted);
+                c.DrawString(font, new(896, 579), "World settings affect all bodies.", fontSize: 13, modulate: PhysicsScene.Muted);
                 c.DrawString(font, new(896, 602), "u = scene units", fontSize: 13, modulate: PhysicsScene.Muted);
                 c.DrawString(font, new(896, 625), "Tick marks show factory values.", fontSize: 13, modulate: PhysicsScene.Muted);
+            }
+            else if (_parameterGroup == 1 && Scene.SelectedBody is null)
+            {
+                c.DrawString(font, new(896, 320), "Drag to grab and edit an object.", fontSize: 13, modulate: PhysicsScene.Muted);
+                c.DrawString(font, new(896, 345), "Click empty space to deselect.", fontSize: 13, modulate: PhysicsScene.Muted);
             }
             else if (_parameterGroup == 2)
             {
@@ -103,7 +109,7 @@ internal sealed partial class SandboxWindow
     {
         _parameterGroup = group;
         for (var i = 0; i < 3; i++) _tabs[i].SetPressedNoSignal(i == group);
-        for (var i = 0; i < _parameters.Count; i++) _parameters[i].Visible = Group(i) == group;
+        for (var i = 0; i < _parameters.Count; i++) _parameters[i].Visible = Group(i) == group && (group != 1 || _parameterBody is not null);
         _parameterReadout.QueueRedraw();
     }
     private Texture Thumb(Color color)
@@ -118,7 +124,7 @@ internal sealed partial class SandboxWindow
     }
     private void Parameter(string name, double min, double max, double step)
     {
-        var index = _parameters.Count; var color = index < 4 ? PhysicsScene.Mint : index < 10 ? PhysicsScene.Peach : PhysicsScene.Lavender;
+        var index = _parameters.Count; var color = index < 4 ? PhysicsScene.Blush : index < 10 ? PhysicsScene.Pink : PhysicsScene.Apricot;
         var slider = new HSlider { Name = "Parameter" + index, Position = new(896, Row(index) + 23), Size = new(216, 28), MinValue = min, MaxValue = max, Step = step, FocusMode = FocusMode.All };
         var track = Style(PhysicsScene.Border); track.SetBorderWidthAll(0); track.SetCornerRadiusAll(2); track.ContentMarginTop = track.ContentMarginBottom = 2;
         slider.AddThemeStyleBoxOverride("slider", track);
