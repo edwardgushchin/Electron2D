@@ -65,6 +65,16 @@ internal static class PhysicsParallelTests
     private sealed class ProbeBody(int owner) : RigidBody
     {
         internal int Calls, ContactSamples;
+        public override bool Equals(object? other)
+        {
+            if (Environment.CurrentManagedThreadId != owner) throw new Exception("User equality left its owner thread.");
+            return ReferenceEquals(this, other);
+        }
+        public override int GetHashCode()
+        {
+            if (Environment.CurrentManagedThreadId != owner) throw new Exception("User hashing left its owner thread.");
+            return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this);
+        }
         protected override void IntegrateForces(PhysicsDirectBodyState state)
         {
             if (Environment.CurrentManagedThreadId != owner) throw new Exception("Force integration left its owner thread.");

@@ -4,6 +4,9 @@ internal readonly record struct PhysicsShapePair(RID RID, CollisionObject? Other
     int OtherShape, int LocalShape)
 {
     internal ulong InstanceID => Other?.InstanceID ?? 0;
+    public bool Equals(PhysicsShapePair other) => RID == other.RID && ReferenceEquals(Other, other.Other) &&
+        IsArea == other.IsArea && OtherShape == other.OtherShape && LocalShape == other.LocalShape;
+    public override int GetHashCode() => HashCode.Combine(RID, InstanceID, IsArea, OtherShape, LocalShape);
 }
 internal readonly record struct PhysicsShapePairChange(PhysicsShapePair Pair, bool Entered, bool ObjectEvent);
 
