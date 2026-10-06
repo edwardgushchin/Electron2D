@@ -888,8 +888,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Translation](classes/Translation.md) | Resource | Partial | 12 |
 | [TranslationDomain](classes/TranslationDomain.md) | RefCounted | Partial | 23 |
 | [TranslationServer](classes/TranslationServer.md) | Object | Partial | 33 |
-| [Tree](classes/Tree.md) | Control | Blocked | 163 |
-| [TreeItem](classes/TreeItem.md) | Object | Blocked | 127 |
+| [Tree](classes/Tree.md) | Control | Partial | 163 |
+| [TreeItem](classes/TreeItem.md) | Object | Implemented | 127 |
 | [TriangleMesh](classes/TriangleMesh.md) | RefCounted | Blocked | 4 |
 | [TubeTrailMesh](classes/TubeTrailMesh.md) | PrimitiveMesh | Excluded | 8 |
 | [Tween](classes/Tween.md) | RefCounted | Implemented | 56 |

@@ -92,6 +92,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TLS") == "1") { TLSTests
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NETWORKING") == "1") { NetworkingTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINE_EDIT_HOST") == "1") { LineEditTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TREE_HOST") == "1") { TreeTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TREE_CHILD") is { } treePath) { TreeTests.RunChild(treePath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TREE") == "1") { TreeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_EDIT_CHILD") is { } textPath) { TextEditTests.RunChild(textPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_EDIT_HOST") == "1") { TextEditTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_EDIT") == "1") { TextEditTests.Run(); return; }
@@ -562,6 +565,7 @@ CanvasCompositionTests.Run();
 SubViewportContainerTests.Run();
 LineEditTests.Run();
 TextEditTests.Run();
+TreeTests.Run();
 NetworkingTests.Run();
 UPNPTests.Run();
 DTLSTests.Run();

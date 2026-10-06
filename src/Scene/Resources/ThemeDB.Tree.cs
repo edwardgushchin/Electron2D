@@ -1,0 +1,85 @@
+namespace Electron2D;
+
+public sealed partial class ThemeDB
+{
+    private void AddTreeDefaults()
+    {
+        _defaultTheme.SetColor("children_hl_line_color", "Tree", new(0.27f, 0.27f, 0.27f, 1f));
+        _defaultTheme.SetColor("custom_button_font_highlight", "Tree", new(0.95f, 0.95f, 0.95f, 1f));
+        _defaultTheme.SetColor("drop_on_item_color", "Tree", new(1f, 1f, 1f, 1f));
+        _defaultTheme.SetColor("drop_position_color", "Tree", new(1f, 1f, 1f, 1f));
+        _defaultTheme.SetColor("font_color", "Tree", new(0.7f, 0.7f, 0.7f, 1f));
+        _defaultTheme.SetColor("font_disabled_color", "Tree", new(0.875f, 0.875f, 0.875f, 0.5f));
+        _defaultTheme.SetColor("font_hovered_color", "Tree", new(0.95f, 0.95f, 0.95f, 1f));
+        _defaultTheme.SetColor("font_hovered_dimmed_color", "Tree", new(0.875f, 0.875f, 0.875f, 1f));
+        _defaultTheme.SetColor("font_hovered_selected_color", "Tree", new(1f, 1f, 1f, 1f));
+        _defaultTheme.SetColor("font_outline_color", "Tree", new(0f, 0f, 0f, 1f));
+        _defaultTheme.SetColor("font_selected_color", "Tree", new(1f, 1f, 1f, 1f));
+        _defaultTheme.SetColor("guide_color", "Tree", new(0.7f, 0.7f, 0.7f, 0.25f));
+        _defaultTheme.SetColor("parent_hl_line_color", "Tree", new(0.27f, 0.27f, 0.27f, 1f));
+        _defaultTheme.SetColor("relationship_line_color", "Tree", new(0.27f, 0.27f, 0.27f, 1f));
+        _defaultTheme.SetColor("scroll_hint_color", "Tree", new(0f, 0f, 0f, 1f));
+        _defaultTheme.SetColor("title_button_color", "Tree", new(0.875f, 0.875f, 0.875f, 1f));
+        _defaultTheme.SetConstant("button_margin", "Tree", 4);
+        _defaultTheme.SetConstant("check_h_separation", "Tree", 4);
+        _defaultTheme.SetConstant("children_hl_line_width", "Tree", 1);
+        _defaultTheme.SetConstant("dragging_unfold_wait_msec", "Tree", 500);
+        _defaultTheme.SetConstant("draw_guides", "Tree", 1);
+        _defaultTheme.SetConstant("draw_relationship_lines", "Tree", 0);
+        _defaultTheme.SetConstant("h_separation", "Tree", 4);
+        _defaultTheme.SetConstant("icon_h_separation", "Tree", 4);
+        _defaultTheme.SetConstant("icon_max_width", "Tree", 0);
+        _defaultTheme.SetConstant("inner_item_margin_bottom", "Tree", 0);
+        _defaultTheme.SetConstant("inner_item_margin_left", "Tree", 0);
+        _defaultTheme.SetConstant("inner_item_margin_right", "Tree", 0);
+        _defaultTheme.SetConstant("inner_item_margin_top", "Tree", 0);
+        _defaultTheme.SetConstant("item_margin", "Tree", 16);
+        _defaultTheme.SetConstant("outline_size", "Tree", 0);
+        _defaultTheme.SetConstant("parent_hl_line_margin", "Tree", 0);
+        _defaultTheme.SetConstant("parent_hl_line_width", "Tree", 1);
+        _defaultTheme.SetConstant("relationship_line_width", "Tree", 1);
+        _defaultTheme.SetConstant("scroll_border", "Tree", 4);
+        _defaultTheme.SetConstant("scroll_speed", "Tree", 12);
+        _defaultTheme.SetConstant("scrollbar_h_separation", "Tree", 4);
+        _defaultTheme.SetConstant("scrollbar_margin_bottom", "Tree", -1);
+        _defaultTheme.SetConstant("scrollbar_margin_left", "Tree", -1);
+        _defaultTheme.SetConstant("scrollbar_margin_right", "Tree", -1);
+        _defaultTheme.SetConstant("scrollbar_margin_top", "Tree", -1);
+        _defaultTheme.SetConstant("scrollbar_v_separation", "Tree", 4);
+        _defaultTheme.SetConstant("v_separation", "Tree", 4);
+        _defaultTheme.SetFont("font", "Tree", null);
+        _defaultTheme.SetFont("title_button_font", "Tree", null);
+        _defaultTheme.SetFontSize("font_size", "Tree", -1);
+        _defaultTheme.SetFontSize("title_button_font_size", "Tree", -1);
+        _defaultTheme.SetIcon("arrow", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M3 3l5 5 5-5" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("arrow_collapsed", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M5 3l5 5-5 5" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("arrow_collapsed_mirrored", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M10 3l-5 5 5 5" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("checked", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M3 8l3 3 7-7" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("checked_disabled", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M3 8l3 3 7-7" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("indeterminate", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M3 8h10" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("indeterminate_disabled", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M3 8h10" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("scroll_hint", "Tree", _defaultTheme.GetIcon("scroll_hint", "ItemList"));
+        _defaultTheme.SetIcon("select_arrow", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M4 6l4 4 4-4" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("unchecked", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M2 2h12v12H2z" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("unchecked_disabled", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M2 2h12v12H2z" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetIcon("updown", "Tree", CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M4 6l4-4 4 4m-8 4l4 4 4-4" stroke="#ccc" fill="none" stroke-width="2"/></svg>"""u8));
+        _defaultTheme.SetStyleBox("button_hover", "Tree", CreateButtonStyle(new(1, 1, 1, .06f)));
+        _defaultTheme.SetStyleBox("button_pressed", "Tree", CreateButtonStyle(new(1, 1, 1, .06f)));
+        _defaultTheme.SetStyleBox("cursor", "Tree", _defaultTheme.GetStyleBox("focus", "Label"));
+        _defaultTheme.SetStyleBox("cursor_unfocused", "Tree", _defaultTheme.GetStyleBox("focus", "Label"));
+        _defaultTheme.SetStyleBox("custom_button", "Tree", CreateButtonStyle(new(0, 0, 0, 0)));
+        _defaultTheme.SetStyleBox("custom_button_hover", "Tree", CreateButtonStyle(new(1, 1, 1, .06f)));
+        _defaultTheme.SetStyleBox("custom_button_pressed", "Tree", CreateButtonStyle(new(1, 1, 1, .06f)));
+        _defaultTheme.SetStyleBox("focus", "Tree", _defaultTheme.GetStyleBox("focus", "Label"));
+        _defaultTheme.SetStyleBox("hovered", "Tree", CreateButtonStyle(new(1, 1, 1, .06f)));
+        _defaultTheme.SetStyleBox("hovered_dimmed", "Tree", CreateButtonStyle(new(1, 1, 1, .06f)));
+        _defaultTheme.SetStyleBox("hovered_selected", "Tree", CreateButtonStyle(new(.2f, .4f, .6f, .4f)));
+        _defaultTheme.SetStyleBox("hovered_selected_focus", "Tree", CreateButtonStyle(new(.2f, .4f, .6f, .4f)));
+        _defaultTheme.SetStyleBox("panel", "Tree", CreateButtonStyle(new(.08f, .08f, .08f, .8f)));
+        _defaultTheme.SetStyleBox("selected", "Tree", CreateButtonStyle(new(.2f, .4f, .6f, .4f)));
+        _defaultTheme.SetStyleBox("selected_focus", "Tree", CreateButtonStyle(new(.2f, .4f, .6f, .4f)));
+        _defaultTheme.SetStyleBox("title_button_hover", "Tree", CreateButtonStyle(new(1, 1, 1, .06f)));
+        _defaultTheme.SetStyleBox("title_button_normal", "Tree", CreateButtonStyle(new(0, 0, 0, 0)));
+        _defaultTheme.SetStyleBox("title_button_pressed", "Tree", CreateButtonStyle(new(1, 1, 1, .06f)));
+    }
+}

@@ -1,6 +1,6 @@
 # ItemList
 
-Last updated: 2026-09-30
+Last updated: 2026-10-07
 
 **Inherits:** [Control](Control.md), CanvasItem, [Node](Node.md), ElectronObject · **Component:** [Scrolling](../components/scrolling.md)
 
@@ -22,3 +22,5 @@ list.ItemSelected += index => Console.WriteLine(list.GetItemText(index));
 `MaxColumns`, `FixedColumnWidth`, `SameColumnWidth`, `MaxTextLines`, `AutoWidth`, `AutoHeight`, `WraparoundItems`, `TextOverrunBehavior`, `IconDisplayMode`, `IconScale`, `HintMode` and `TileScrollHint` configure measured rows and drawing. `GetItemRect` returns panel-offset content coordinates independent of scrolling; `GetItemAtPosition` uses the displayed, scrolled and RTL-mirrored position. `ForceUpdateListSize` synchronously refreshes measurement and scroll ranges. `EnsureCurrentIsVisible` queues an adjustment; `CenterOnCurrent` centers selected axes immediately.
 
 PackedScene captures count, indexed text/icon/selectable/disabled fields and list configuration, then recreates the two internal bars. Selection and typed metadata remain runtime state. [ItemListTests](../../tests/Electron2D.Tests/ItemListTests.cs) covers model, resources, themes, RTL hit testing, input, search and packing. [ItemListRenderingTests](../../tests/Electron2D.Tests/ItemListRenderingTests.cs) verifies pixels and clipping on Linux Wayland GPU and compatibility. Mixed automatic sizing and two-axis overflow, full keyboard/signal ordering, callback reentry, native allocations, other platforms and owner visual acceptance remain unverified; see [coverage](../coverage/classes/ItemList.md).
+
+Vertical hints share [VerticalScrollHintMode](VerticalScrollHintMode.md) with Tree under ADR 0051.
