@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-06
 
-SpinBox : Range combines the existing shared double value model with a required internal LineEdit, stepped arrow drawing, held repeat and accelerated vertical dragging. It supplies numeric editor/channel/property input and the SpinBox prerequisite for ColorPicker. GetLineEdit returns a stable borrowed control: configure it in place and preserve its parent/lifetime. Direct disposal is rejected while its owner remains live.
+SpinBox : Range combines the existing shared double value model with a required internal LineEdit, stepped arrow drawing, held repeat and accelerated vertical dragging. It supplies numeric editor/channel/property input and the real channel fields in [color authoring](color-authoring.md). GetLineEdit returns a stable borrowed control: configure it in place and preserve its parent/lifetime. Direct disposal is rejected while its owner remains live.
 
 ## Value, editing and input
 

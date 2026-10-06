@@ -1240,6 +1240,7 @@ Permanent typed `input/ui_home` and `input/ui_end` definitions use one default b
 | Definition | Stored key and default |
 | --- | --- |
 | `public static ProjectSetting<InputActionSettings> InputUIAccept { get; }` | input/ui_accept: Enter, keypad Enter, Space and gamepad A on every device. |
+| `public static ProjectSetting<InputActionSettings> InputUIColorPickerDeletePreset { get; }` | input/ui_colorpicker_delete_preset: Delete and gamepad X on every device; focused color swatch removal. |
 | `public static ProjectSetting<InputActionSettings> InputUICancel { get; }` | input/ui_cancel: Escape and gamepad B on every device. |
 | `public static ProjectSetting<InputActionSettings> InputUISelect { get; }` | input/ui_select: Space and gamepad Y on every device. |
 | `public static ProjectSetting<InputActionSettings> InputUIPageUp { get; }` | input/ui_page_up: Page Up. |

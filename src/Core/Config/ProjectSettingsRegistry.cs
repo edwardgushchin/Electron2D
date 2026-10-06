@@ -105,6 +105,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(InputUIMenu, isBasic: false);
         RegisterInternal(InputUIAccept, isBasic: false);
         RegisterInternal(InputUICancel, isBasic: false);
+        RegisterInternal(InputUIColorPickerDeletePreset, isBasic: false);
         RegisterInternal(InputUICloseDialog, isBasic: false);
         RegisterInternal(InputUIFileDialogDelete, isBasic: false);
         RegisterInternal(InputUIFileDialogUpOneLevel, isBasic: false);
@@ -1170,6 +1171,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, InputUIMenu) ||
         ReferenceEquals(setting, InputUIAccept) ||
         ReferenceEquals(setting, InputUICancel) ||
+        ReferenceEquals(setting, InputUIColorPickerDeletePreset) ||
         ReferenceEquals(setting, InputUICloseDialog) ||
         ReferenceEquals(setting, InputUIFileDialogDelete) ||
         ReferenceEquals(setting, InputUIFileDialogUpOneLevel) ||

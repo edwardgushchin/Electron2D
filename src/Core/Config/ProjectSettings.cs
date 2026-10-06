@@ -415,6 +415,13 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
         ]
     });
 
+    /// <summary>Defines Delete and gamepad X for removing a focused color swatch.</summary>
+    /// <value>The permanent typed input/ui_colorpicker_delete_preset definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUIColorPickerDeletePreset { get; } = new("input/ui_colorpicker_delete_preset", new InputActionSettings
+    {
+        Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Delete }, new InputBindingSettings { Kind = InputBindingKind.JoypadButton, JoyButtonIndex = JoyButton.X, Device = InputMap.AllDevices }]
+    });
+
     /// <summary>Defines cancellation/acceptance button order for newly added dialog cancellation buttons.</summary>
     /// <value>Zero chooses the platform order; one places Cancel first and two places OK first.</value>
     public static ProjectSetting<int> SwapCancelOK { get; } = new("gui/common/swap_cancel_ok", 0, value => value is >= 0 and <= 2);

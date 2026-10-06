@@ -2,6 +2,8 @@ namespace Electron2D;
 
 public static partial class ResourceFileTypes
 {
+    private static ColorPicker CreateColorPickerFileNode() => new();
+    private static ColorPickerButton CreateColorPickerButtonFileNode() => new();
     private static SpinBox CreateSpinBoxFileNode() => new();
     private static FileDialog CreateFileDialogFileNode() => new();
     private static MenuButton CreateMenuButtonFileNode() => new();
@@ -15,6 +17,8 @@ public static partial class ResourceFileTypes
     private static void RegisterBuiltInNodes()
     {
         RegisterNode("SpinBox", CreateSpinBoxFileNode);
+        RegisterNode("ColorPicker", CreateColorPickerFileNode);
+        RegisterNode("ColorPickerButton", CreateColorPickerButtonFileNode);
         RegisterNode("FileDialog", CreateFileDialogFileNode);
         RegisterNode("MenuButton", CreateMenuButtonFileNode);
         RegisterNode("AcceptDialog", CreateAcceptDialogFileNode);

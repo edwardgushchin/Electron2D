@@ -18,6 +18,7 @@ public static partial class ResourceFileTypes
         RegisterResource("Resource", CreateResource);
         RegisterResource("PackedScene", CreatePackedScene);
         RegisterResource("PhysicsMaterial", CreatePhysicsMaterial);
+        RegisterResource("ColorPalette", CreateColorPalette);
         RegisterNode("Sprite", CreateSprite);
         RegisterResource("Image", CreateImage);
         RegisterResource("ImageTexture", CreateImageTexture);
@@ -42,6 +43,7 @@ public static partial class ResourceFileTypes
     private static Resource CreateResource() => new();
     private static PackedScene CreatePackedScene() => new();
     private static PhysicsMaterial CreatePhysicsMaterial() => new();
+    private static ColorPalette CreateColorPalette() => new();
     private static Sprite CreateSprite() => new();
     private static Image CreateImage() => new();
     private static ImageTexture CreateImageTexture() => new();

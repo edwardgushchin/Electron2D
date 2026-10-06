@@ -1,0 +1,584 @@
+{
+  "mappings": [
+    {
+      "godot": "class:ColorPicker",
+      "electron2d": "T:Electron2D.ColorPicker",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum:ColorModeType",
+      "electron2d": "T:Electron2D.ColorPicker.ColorModeType",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum:PickerShapeType",
+      "electron2d": "T:Electron2D.ColorPicker.PickerShapeType",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:ColorModeType.MODE_HSV",
+      "electron2d": "enumValue:Electron2D.ColorPicker.ColorModeType.HSV()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:ColorModeType.MODE_LINEAR",
+      "electron2d": "enumValue:Electron2D.ColorPicker.ColorModeType.Linear()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:ColorModeType.MODE_OKHSL",
+      "electron2d": "enumValue:Electron2D.ColorPicker.ColorModeType.OKHSL()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:ColorModeType.MODE_RGB",
+      "electron2d": "enumValue:Electron2D.ColorPicker.ColorModeType.RGB()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:PickerShapeType.SHAPE_HSV_RECTANGLE",
+      "electron2d": "enumValue:Electron2D.ColorPicker.PickerShapeType.HSVRectangle()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:PickerShapeType.SHAPE_HSV_WHEEL",
+      "electron2d": "enumValue:Electron2D.ColorPicker.PickerShapeType.HSVWheel()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:PickerShapeType.SHAPE_NONE",
+      "electron2d": "enumValue:Electron2D.ColorPicker.PickerShapeType.None()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:PickerShapeType.SHAPE_OKHSL_CIRCLE",
+      "electron2d": "enumValue:Electron2D.ColorPicker.PickerShapeType.OKHSLCircle()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:PickerShapeType.SHAPE_OK_HL_RECTANGLE",
+      "electron2d": "enumValue:Electron2D.ColorPicker.PickerShapeType.OKHLRectangle()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:PickerShapeType.SHAPE_OK_HS_RECTANGLE",
+      "electron2d": "enumValue:Electron2D.ColorPicker.PickerShapeType.OKHSRectangle()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::enum_value:PickerShapeType.SHAPE_VHS_CIRCLE",
+      "electron2d": "enumValue:Electron2D.ColorPicker.PickerShapeType.VHSCircle()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::method:add_preset(Color:)",
+      "electron2d": "method:Electron2D.ColorPicker.AddPreset(Electron2D.Color)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::method:add_recent_preset(Color:)",
+      "electron2d": "method:Electron2D.ColorPicker.AddRecentPreset(Electron2D.Color)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::method:erase_preset(Color:)",
+      "electron2d": "method:Electron2D.ColorPicker.ErasePreset(Electron2D.Color)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::method:erase_recent_preset(Color:)",
+      "electron2d": "method:Electron2D.ColorPicker.EraseRecentPreset(Electron2D.Color)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::method:get_presets()",
+      "electron2d": "method:Electron2D.ColorPicker.GetPresets()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::method:get_recent_presets()",
+      "electron2d": "method:Electron2D.ColorPicker.GetRecentPresets()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:can_add_swatches",
+      "electron2d": "property:Electron2D.ColorPicker.CanAddSwatches()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:color",
+      "electron2d": "property:Electron2D.ColorPicker.Color()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:color_mode",
+      "electron2d": "property:Electron2D.ColorPicker.ColorMode()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:color_modes_visible",
+      "electron2d": "property:Electron2D.ColorPicker.ColorModesVisible()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:deferred_mode",
+      "electron2d": "property:Electron2D.ColorPicker.DeferredMode()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:edit_alpha",
+      "electron2d": "property:Electron2D.ColorPicker.EditAlpha()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:edit_intensity",
+      "electron2d": "property:Electron2D.ColorPicker.EditIntensity()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:hex_visible",
+      "electron2d": "property:Electron2D.ColorPicker.HexVisible()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:picker_shape",
+      "electron2d": "property:Electron2D.ColorPicker.PickerShape()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:presets_visible",
+      "electron2d": "property:Electron2D.ColorPicker.PresetsVisible()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:sampler_visible",
+      "electron2d": "property:Electron2D.ColorPicker.SamplerVisible()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::property:sliders_visible",
+      "electron2d": "property:Electron2D.ColorPicker.SlidersVisible()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::signal:color_changed(Color:)",
+      "electron2d": "event:Electron2D.ColorPicker.ColorChanged()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::signal:preset_added(Color:)",
+      "electron2d": "event:Electron2D.ColorPicker.PresetAdded()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::signal:preset_removed(Color:)",
+      "electron2d": "event:Electron2D.ColorPicker.PresetRemoved()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:add_preset",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:bar_arrow",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:center_slider_grabbers",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:color_copy",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:color_hue",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:color_script",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:expanded_arrow",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:focused_not_editing_cursor_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:folded_arrow",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:h_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:label_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:margin",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:menu_option",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:overbright_indicator",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:picker_cursor",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:picker_cursor_bg",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:picker_focus_circle",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:picker_focus_rectangle",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:sample_bg",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:sample_focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:sample_revert",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:screen_picker",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:shape_circle",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:shape_rect",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:shape_rect_wheel",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:sv_height",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPicker::theme_item:sv_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "class:ColorPickerButton",
+      "electron2d": "T:Electron2D.ColorPickerButton",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::method:get_picker()",
+      "electron2d": "method:Electron2D.ColorPickerButton.GetPicker()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::method:get_popup()",
+      "electron2d": "method:Electron2D.ColorPickerButton.GetPopup()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::property:color",
+      "electron2d": "property:Electron2D.ColorPickerButton.Color()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::property:edit_alpha",
+      "electron2d": "property:Electron2D.ColorPickerButton.EditAlpha()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::property:edit_intensity",
+      "electron2d": "property:Electron2D.ColorPickerButton.EditIntensity()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::property:toggle_mode",
+      "electron2d": "property:Electron2D.BaseButton.ToggleMode()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::signal:color_changed(Color:)",
+      "electron2d": "event:Electron2D.ColorPickerButton.ColorChanged()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::signal:picker_created()",
+      "electron2d": "event:Electron2D.ColorPickerButton.PickerCreated()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::signal:popup_closed()",
+      "electron2d": "event:Electron2D.ColorPickerButton.PopupClosed()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPickerButton::theme_item:bg",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "class:ColorPalette",
+      "electron2d": "T:Electron2D.ColorPalette",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ColorPalette::property:colors",
+      "electron2d": "property:Electron2D.ColorPalette.Colors()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_colorpicker_delete_preset",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIColorPickerDeletePreset()",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ColorPalette..ctor()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ColorPicker..ctor()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ColorPickerButton..ctor()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ColorPickerButton..ctor(System.String)",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPalette.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPalette.CreateDuplicateInstance()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPalette.Dispose(System.Boolean)",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPalette.GetPropertyDescriptors()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPicker.CreateSceneInstanceFactory()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPicker.Dispose(System.Boolean)",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPicker.GetPropertyDescriptors()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPicker.OnNotification(System.Int32)",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPickerButton.CreateSceneInstanceFactory()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPickerButton.Dispose(System.Boolean)",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPickerButton.GetPropertyDescriptors()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPickerButton.OnDraw()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPickerButton.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPickerButton.OnNotification(System.Int32)",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.ColorPickerButton.OnPressed()",
+      "reason": "Concrete color editor/palette constructor and typed resource, scene, input, rendering or ownership lifecycle hook.",
+      "adr": "ADR 0004/0013/0083"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "ColorPicker::enum:ColorModeType",
+        "ColorPicker::enum:PickerShapeType",
+        "ColorPicker::enum_value:ColorModeType.MODE_HSV",
+        "ColorPicker::enum_value:ColorModeType.MODE_LINEAR",
+        "ColorPicker::enum_value:ColorModeType.MODE_OKHSL",
+        "ColorPicker::enum_value:ColorModeType.MODE_RGB",
+        "ColorPicker::enum_value:PickerShapeType.SHAPE_HSV_RECTANGLE",
+        "ColorPicker::enum_value:PickerShapeType.SHAPE_HSV_WHEEL",
+        "ColorPicker::enum_value:PickerShapeType.SHAPE_NONE",
+        "ColorPicker::enum_value:PickerShapeType.SHAPE_OKHSL_CIRCLE",
+        "ColorPicker::enum_value:PickerShapeType.SHAPE_OK_HL_RECTANGLE",
+        "ColorPicker::enum_value:PickerShapeType.SHAPE_OK_HS_RECTANGLE",
+        "ColorPicker::enum_value:PickerShapeType.SHAPE_VHS_CIRCLE",
+        "ColorPicker::method:add_preset(Color:)",
+        "ColorPicker::method:add_recent_preset(Color:)",
+        "ColorPicker::method:erase_preset(Color:)",
+        "ColorPicker::method:erase_recent_preset(Color:)",
+        "ColorPicker::method:get_presets()",
+        "ColorPicker::method:get_recent_presets()",
+        "ColorPicker::property:can_add_swatches",
+        "ColorPicker::property:color",
+        "ColorPicker::property:color_mode",
+        "ColorPicker::property:color_modes_visible",
+        "ColorPicker::property:deferred_mode",
+        "ColorPicker::property:edit_alpha",
+        "ColorPicker::property:edit_intensity",
+        "ColorPicker::property:hex_visible",
+        "ColorPicker::property:picker_shape",
+        "ColorPicker::property:presets_visible",
+        "ColorPicker::property:sampler_visible",
+        "ColorPicker::property:sliders_visible",
+        "ColorPicker::signal:color_changed(Color:)",
+        "ColorPicker::signal:preset_added(Color:)",
+        "ColorPicker::signal:preset_removed(Color:)",
+        "ColorPicker::theme_item:add_preset",
+        "ColorPicker::theme_item:bar_arrow",
+        "ColorPicker::theme_item:center_slider_grabbers",
+        "ColorPicker::theme_item:color_copy",
+        "ColorPicker::theme_item:color_hue",
+        "ColorPicker::theme_item:color_script",
+        "ColorPicker::theme_item:expanded_arrow",
+        "ColorPicker::theme_item:focused_not_editing_cursor_color",
+        "ColorPicker::theme_item:folded_arrow",
+        "ColorPicker::theme_item:h_width",
+        "ColorPicker::theme_item:label_width",
+        "ColorPicker::theme_item:margin",
+        "ColorPicker::theme_item:menu_option",
+        "ColorPicker::theme_item:overbright_indicator",
+        "ColorPicker::theme_item:picker_cursor",
+        "ColorPicker::theme_item:picker_cursor_bg",
+        "ColorPicker::theme_item:picker_focus_circle",
+        "ColorPicker::theme_item:picker_focus_rectangle",
+        "ColorPicker::theme_item:sample_bg",
+        "ColorPicker::theme_item:sample_focus",
+        "ColorPicker::theme_item:sample_revert",
+        "ColorPicker::theme_item:screen_picker",
+        "ColorPicker::theme_item:shape_circle",
+        "ColorPicker::theme_item:shape_rect",
+        "ColorPicker::theme_item:shape_rect_wheel",
+        "ColorPicker::theme_item:sv_height",
+        "ColorPicker::theme_item:sv_width",
+        "ColorPickerButton::method:get_picker()",
+        "ColorPickerButton::method:get_popup()",
+        "ColorPickerButton::property:color",
+        "ColorPickerButton::property:edit_alpha",
+        "ColorPickerButton::property:edit_intensity",
+        "ColorPickerButton::property:toggle_mode",
+        "ColorPickerButton::signal:color_changed(Color:)",
+        "ColorPickerButton::signal:picker_created()",
+        "ColorPickerButton::signal:popup_closed()",
+        "ColorPickerButton::theme_item:bg",
+        "class:ColorPalette",
+        "ColorPalette::property:colors"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0013/0038/0046/0080/0083: actual color editing through typed Color math, shared numeric/sliding channels, six spatial surfaces, local swatches, palette files, owned embedded popup and completed application-viewport sampling. Defaults, input, scene files and current Linux GPU/compatibility pixels execute; documented cold/tessellation/platform gates remain distinct."
+    },
+    {
+      "godot": [
+        "class:ColorPicker",
+        "class:ColorPickerButton"
+      ],
+      "state": "Partial",
+      "reason": "The complete current color control API executes with numeric/hex/numeric-constructor editing, palettes, embedded UI and application sampler. Full typed color Expression/object/collection consumers need the separately accepted typed expression host; semantic accessibility and editor quick-load/settings retain their owners. Native external screen capture, OS picker and permission UI need their DisplayServer capabilities and are not application sampling. Shared CPU meshes approximate nonlinear gradients between samples; independent native windows, foreign platforms and owner acceptance are unverified."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:input/ui_colorpicker_delete_preset"
+      ],
+      "state": "Partial",
+      "reason": "Typed permanent Delete/gamepad X binding participates in default/reloaded InputMap; routed Delete removes a focused swatch. Physical controller delivery and platform variants retain the Input owner gate (ADR 0038)."
+    },
+    {
+      "godot": [
+        "ColorPicker::enum_value:ColorModeType.MODE_RAW"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned ColorPicker.xml marks MODE_RAW deprecated in favor of MODE_LINEAR. Only Linear=2 is shipped, with actual linear RGB conversion; no obsolete alias."
+    }
+  ]
+}

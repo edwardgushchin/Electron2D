@@ -52,3 +52,5 @@ Exported SceneState views also retain their file-backed graph snapshot through a
 Internal subresource paths are visible metadata; direct reload by a `file::subresource` path remains a separate ResourceLoader dependency requiring identity-table lookup with ownership rebasing. Load the file root and use its typed properties/SceneState in the current profile.
 
 AudioBusLayout and all 27 concrete effect resources now have built-in direct schemas. Layout count fields prepare indexed bus/effect descriptors before dependent values load; aliases and borrowed external references keep ordinary archive semantics. Applying a loaded layout and generating later snapshots retain the existing internal file graph owner. AudioBusLayoutTests adds fresh-process default startup, cache/corruption and complete DSP schema roundtrips.
+
+ColorPalette has a compiled built-in resource factory and stored Color[] schema. ColorPicker palette commands exercise save/load, and fresh-process ColorPicker scenes recreate the connected numeric GUI consumer; see [color authoring](color-authoring.md).

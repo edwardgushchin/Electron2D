@@ -339,13 +339,6 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004: pinned SpinBox.xml declares updown and set_min_buttons_width_from_icons deprecated. Use up/down state icons and negative buttons_width instead; no aliases or obsolete theme keys shipped."
-    },
-    {
-      "godot": [
-        "class:ColorPicker"
-      ],
-      "state": "Blocked",
-      "reason": "First complete color authoring consumer: Range/LineEdit/SpinBox, sliders, themes, PopupPanel/MenuButton/FileDialog and Color math now execute. Remaining connected prerequisites are ColorPalette resource/files, picker-shape and RGB/HSV/OKHSL/raw/linear controls, preset/palette workflow and actual rendered-viewport legacy sampler. Native external screen capture/color picker require DisplayServer capabilities; they do not block the supported application-window sampler."
     }
   ]
 }

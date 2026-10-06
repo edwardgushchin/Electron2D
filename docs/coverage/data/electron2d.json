@@ -2790,6 +2790,87 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ColorPalette",
+    "kind": "type",
+    "declaringType": "Electron2D.ColorPalette",
+    "name": "ColorPalette",
+    "signature": "public sealed class Electron2D.ColorPalette",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ColorPicker",
+    "kind": "type",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "ColorPicker",
+    "signature": "public class Electron2D.ColorPicker",
+    "visibility": "public",
+    "baseType": "Electron2D.VBoxContainer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ColorPicker.ColorModeType",
+    "kind": "type",
+    "declaringType": "Electron2D.ColorPicker.ColorModeType",
+    "name": "ColorModeType",
+    "signature": "public enum Electron2D.ColorPicker.ColorModeType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ColorPicker.PickerShapeType",
+    "kind": "type",
+    "declaringType": "Electron2D.ColorPicker.PickerShapeType",
+    "name": "PickerShapeType",
+    "signature": "public enum Electron2D.ColorPicker.PickerShapeType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ColorPickerButton",
+    "kind": "type",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "ColorPickerButton",
+    "signature": "public class Electron2D.ColorPickerButton",
+    "visibility": "public",
+    "baseType": "Electron2D.Button",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Colors",
     "kind": "type",
     "declaringType": "Electron2D.Colors",
@@ -12457,6 +12538,64 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.ColorPalette..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ColorPalette",
+    "name": ".ctor",
+    "signature": "public ColorPalette()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ColorPicker..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": ".ctor",
+    "signature": "public ColorPicker()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ColorPickerButton..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": ".ctor",
+    "signature": "public ColorPickerButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ColorPickerButton..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": ".ctor",
+    "signature": "public ColorPickerButton(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.ConcavePolygonShape..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.ConcavePolygonShape",
@@ -18839,6 +18978,149 @@
     "parameters": [],
     "returnType": "Electron2D.CollisionDisableMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.ColorModeType.HSV()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.ColorModeType",
+    "name": "HSV",
+    "signature": "public const Electron2D.ColorPicker.ColorModeType HSV = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.ColorModeType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.ColorModeType.Linear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.ColorModeType",
+    "name": "Linear",
+    "signature": "public const Electron2D.ColorPicker.ColorModeType Linear = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.ColorModeType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.ColorModeType.OKHSL()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.ColorModeType",
+    "name": "OKHSL",
+    "signature": "public const Electron2D.ColorPicker.ColorModeType OKHSL = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.ColorModeType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.ColorModeType.RGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.ColorModeType",
+    "name": "RGB",
+    "signature": "public const Electron2D.ColorPicker.ColorModeType RGB = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.ColorModeType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.PickerShapeType.HSVRectangle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.PickerShapeType",
+    "name": "HSVRectangle",
+    "signature": "public const Electron2D.ColorPicker.PickerShapeType HSVRectangle = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.PickerShapeType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.PickerShapeType.HSVWheel()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.PickerShapeType",
+    "name": "HSVWheel",
+    "signature": "public const Electron2D.ColorPicker.PickerShapeType HSVWheel = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.PickerShapeType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.PickerShapeType.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.PickerShapeType",
+    "name": "None",
+    "signature": "public const Electron2D.ColorPicker.PickerShapeType None = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.PickerShapeType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.PickerShapeType.OKHLRectangle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.PickerShapeType",
+    "name": "OKHLRectangle",
+    "signature": "public const Electron2D.ColorPicker.PickerShapeType OKHLRectangle = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.PickerShapeType",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.PickerShapeType.OKHSLCircle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.PickerShapeType",
+    "name": "OKHSLCircle",
+    "signature": "public const Electron2D.ColorPicker.PickerShapeType OKHSLCircle = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.PickerShapeType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.PickerShapeType.OKHSRectangle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.PickerShapeType",
+    "name": "OKHSRectangle",
+    "signature": "public const Electron2D.ColorPicker.PickerShapeType OKHSRectangle = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.PickerShapeType",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.ColorPicker.PickerShapeType.VHSCircle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ColorPicker.PickerShapeType",
+    "name": "VHSCircle",
+    "signature": "public const Electron2D.ColorPicker.PickerShapeType VHSCircle = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.PickerShapeType",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.Control.SizeFlags.Expand()",
@@ -34074,6 +34356,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.CanvasLayer\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ColorPicker.ColorChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "ColorChanged",
+    "signature": "public event System.Action\u003CElectron2D.Color\u003E ColorChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ColorPicker.PresetAdded()",
+    "kind": "event",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "PresetAdded",
+    "signature": "public event System.Action\u003CElectron2D.Color\u003E PresetAdded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ColorPicker.PresetRemoved()",
+    "kind": "event",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "PresetRemoved",
+    "signature": "public event System.Action\u003CElectron2D.Color\u003E PresetRemoved",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ColorPickerButton.ColorChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "ColorChanged",
+    "signature": "public event System.Action\u003CElectron2D.Color\u003E ColorChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ColorPickerButton.PickerCreated()",
+    "kind": "event",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "PickerCreated",
+    "signature": "public event System.Action PickerCreated",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ColorPickerButton.PopupClosed()",
+    "kind": "event",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "PopupClosed",
+    "signature": "public event System.Action PopupClosed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -60326,6 +60686,391 @@
       }
     ],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPalette.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPalette",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPalette.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPalette",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPalette.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPalette",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPalette.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPalette",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.AddPreset(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "AddPreset",
+    "signature": "public System.Void AddPreset(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.AddRecentPreset(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "AddRecentPreset",
+    "signature": "public System.Void AddRecentPreset(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.ErasePreset(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "ErasePreset",
+    "signature": "public System.Void ErasePreset(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.EraseRecentPreset(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "EraseRecentPreset",
+    "signature": "public System.Void EraseRecentPreset(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.GetPresets()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "GetPresets",
+    "signature": "public Electron2D.Color[] GetPresets()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.GetRecentPresets()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "GetRecentPresets",
+    "signature": "public Electron2D.Color[] GetRecentPresets()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPicker.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.GetPicker()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "GetPicker",
+    "signature": "public Electron2D.ColorPicker GetPicker()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.GetPopup()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "GetPopup",
+    "signature": "public Electron2D.PopupPanel GetPopup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PopupPanel",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent input)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ColorPickerButton.OnPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "OnPressed",
+    "signature": "protected override System.Void OnPressed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -135600,6 +136345,214 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ColorPalette.Colors()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPalette",
+    "name": "Colors",
+    "signature": "public Electron2D.Color[] Colors { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.CanAddSwatches()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "CanAddSwatches",
+    "signature": "public System.Boolean CanAddSwatches { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.Color()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "Color",
+    "signature": "public Electron2D.Color Color { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.ColorMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "ColorMode",
+    "signature": "public Electron2D.ColorPicker.ColorModeType ColorMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.ColorModeType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.ColorModesVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "ColorModesVisible",
+    "signature": "public System.Boolean ColorModesVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.DeferredMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "DeferredMode",
+    "signature": "public System.Boolean DeferredMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.EditAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "EditAlpha",
+    "signature": "public System.Boolean EditAlpha { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.EditIntensity()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "EditIntensity",
+    "signature": "public System.Boolean EditIntensity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.HexVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "HexVisible",
+    "signature": "public System.Boolean HexVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.PickerShape()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "PickerShape",
+    "signature": "public Electron2D.ColorPicker.PickerShapeType PickerShape { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ColorPicker.PickerShapeType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.PresetsVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "PresetsVisible",
+    "signature": "public System.Boolean PresetsVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.SamplerVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "SamplerVisible",
+    "signature": "public System.Boolean SamplerVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPicker.SlidersVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPicker",
+    "name": "SlidersVisible",
+    "signature": "public System.Boolean SlidersVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPickerButton.Color()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "Color",
+    "signature": "public Electron2D.Color Color { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPickerButton.EditAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "EditAlpha",
+    "signature": "public System.Boolean EditAlpha { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ColorPickerButton.EditIntensity()",
+    "kind": "property",
+    "declaringType": "Electron2D.ColorPickerButton",
+    "name": "EditIntensity",
+    "signature": "public System.Boolean EditIntensity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Colors.AliceBlue()",
     "kind": "property",
     "declaringType": "Electron2D.Colors",
@@ -146226,6 +147179,19 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "InputUICloseDialog",
     "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUICloseDialog { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIColorPickerDeletePreset()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIColorPickerDeletePreset",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIColorPickerDeletePreset { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

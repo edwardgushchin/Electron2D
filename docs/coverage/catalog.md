@@ -181,9 +181,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CollisionShape2D](classes/CollisionShape2D.md) | Node2D | Partial | 6 |
 | [CollisionShape3D](classes/CollisionShape3D.md) | Node3D | Excluded | 6 |
 | [Color](classes/Color.md) | — | Implemented | 206 |
-| [ColorPalette](classes/ColorPalette.md) | Resource | Blocked | 1 |
-| [ColorPicker](classes/ColorPicker.md) | VBoxContainer | Blocked | 62 |
-| [ColorPickerButton](classes/ColorPickerButton.md) | Button | Blocked | 10 |
+| [ColorPalette](classes/ColorPalette.md) | Resource | Implemented | 1 |
+| [ColorPicker](classes/ColorPicker.md) | VBoxContainer | Partial | 62 |
+| [ColorPickerButton](classes/ColorPickerButton.md) | Button | Partial | 10 |
 | [ColorRect](classes/ColorRect.md) | Control | Blocked | 1 |
 | [Compositor](classes/Compositor.md) | Resource | Excluded | 1 |
 | [CompositorEffect](classes/CompositorEffect.md) | Resource | Excluded | 15 |

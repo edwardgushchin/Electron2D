@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLOR_PICKER_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLOR_PICKER_CHILD") is { } colorPath) { ColorPickerTests.RunChild(colorPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLOR_PICKER") == "1") { ColorPickerTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX_CHILD") is { } numericPath) { SpinBoxTests.RunChild(numericPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX") == "1") { SpinBoxTests.Run(); return; }
@@ -629,6 +632,7 @@ ScrollThemeTests.Run();
 ItemListTests.Run();
 TabBarTests.Run();
 TabContainerTests.Run();
+ColorPickerTests.Run();
 SpinBoxTests.Run();
 FileDialogTests.Run();
 MenuButtonTests.Run();
