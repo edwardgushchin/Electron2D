@@ -2,6 +2,7 @@ namespace Electron2D;
 
 public static partial class ResourceFileTypes
 {
+    private static SpinBox CreateSpinBoxFileNode() => new();
     private static FileDialog CreateFileDialogFileNode() => new();
     private static MenuButton CreateMenuButtonFileNode() => new();
     private static AcceptDialog CreateAcceptDialogFileNode() => new();
@@ -13,6 +14,7 @@ public static partial class ResourceFileTypes
     private static PopupPanel CreatePopupPanelFileNode() => new PopupPanel();
     private static void RegisterBuiltInNodes()
     {
+        RegisterNode("SpinBox", CreateSpinBoxFileNode);
         RegisterNode("FileDialog", CreateFileDialogFileNode);
         RegisterNode("MenuButton", CreateMenuButtonFileNode);
         RegisterNode("AcceptDialog", CreateAcceptDialogFileNode);

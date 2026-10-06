@@ -10,7 +10,7 @@ namespace Electron2D;
 /// catalogs at each exact locale; later resource registrations win equal scores. This service does not load catalog
 /// files or implement CLDR rules.
 /// </remarks>
-public static class TranslationServer
+public static partial class TranslationServer
 {
     private static readonly object Gate = new();
     private static readonly Dictionary<(string Culture, string Domain, string Context, string Message), string> Messages = new();

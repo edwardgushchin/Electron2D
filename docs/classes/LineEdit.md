@@ -1,6 +1,6 @@
 # LineEdit
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public class LineEdit : Control`.
 
@@ -797,3 +797,5 @@ Occurs when submission is requested while editing.
 Keyboard fixtures use the public command-or-control remapping policy for Undo/Redo, selecting Command on macOS and Control elsewhere. The first full macOS CI run exposed the former Ctrl-only fixture; the corrected full target run remains required.
 
 The embedded popup slice adds Popup/PopupPanel theme/type and exact file-factory integration; focused LineEdit text/IME now resolves the containing native root while retaining popup-local control focus. See [the component](../components/popup-windows.md) for the applicable portion and limits.
+
+The owned SpinBox input reuses editing, scalar selection/caret, submission and theme behavior. An internal formatting operation restores bounded selection/caret after replacing generated numeric text; it adds no public text facade. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.

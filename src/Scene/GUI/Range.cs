@@ -87,10 +87,10 @@ public abstract class Range : Control
         _shared.Value = Calculate(value);
         if (_shared.Value != previous && !(signal && double.IsNaN(_shared.Value) && double.IsNaN(previous))) _shared.Notify(true, signal);
     }
-    private double Calculate(double value)
+    private double Calculate(double value) => CalculateWithStep(value, _shared.Step);
+    internal double CalculateWithStep(double value, double step)
     {
         if (double.IsNaN(value)) return value;
-        var step = _shared.Step;
         if (step > 0 && double.IsFinite(value))
             value = Math.Abs(_shared.Min) > step * 1e14 ? Snap(value, step) : Snap(value - _shared.Min, step) + _shared.Min;
         if (_rounded) value = Math.Round(value, MidpointRounding.AwayFromZero);

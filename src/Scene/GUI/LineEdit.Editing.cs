@@ -7,6 +7,11 @@ public partial class LineEdit
         _deletionVersion++; _deletionPending = false; _text = ""; _caret = 0; _scroll = 0; _ime = ""; Deselect(); _history.Clear(); _history.Add(new("", 0, 0)); _historyPosition = 0;
         InsertTextAtCaret(text); if (_text.Length > 0) Remember(); _caret = 0; _scroll = 0; Invalidate();
     }
+    internal void SetTextPreservingSelection(string text)
+    {
+        var caret = _caret; var selecting = _selecting; var from = _selectionFrom; var to = _selectionTo;
+        AssignText(text); CaretColumn = caret; if (selecting) Select(from, to);
+    }
     /// <summary>Begins editing an attached editable field, acquiring focus when needed.</summary>
     /// <param name="hideFocus">Whether focus decoration is hidden when focus is acquired.</param>
     public void Edit(bool hideFocus = false)

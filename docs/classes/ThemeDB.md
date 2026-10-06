@@ -119,3 +119,5 @@ The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu
 [Dropdown choices](../components/dropdown-choices.md) add OptionButton as an executable Button/PopupMenu consumer with three arrow theme keys and an exact scene/file factory. Selected item translation uses the shared Button text path. Disposed borrowed button icons read as null and clear on owner processing, avoiding the internal-process/deferred-cleanup race. Public shared-owner signatures remain unchanged.
 
 The compiled native type catalog now includes FileDialog and OS. Authored default FileDialog toolbar/file/folder icons, three colors and thumbnail_size are consumed by the real browser. See the [file-dialog component](../components/file-dialogs.md) for its exercised flow and limits.
+
+SpinBox defaults consume all current arrow state icons/colors, button backgrounds, two separators and three sizing constants. SpinBoxInnerLineEdit derives from the LineEdit theme variation; deprecated combined-arrow/min-width keys are omitted. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.

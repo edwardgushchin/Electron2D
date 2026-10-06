@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -443,3 +443,9 @@ The current root-viewport host displays tooltips through an internal CanvasLayer
 Controls in a SubViewport now use its independent GUI context. GrabFocus also focuses containing SubViewportContainer controls so native keyboard/committed text reaches the embedded focus. Cursor/drop targeting follows the connected section and MouseTarget policy. Public PushInput reentry remains rejected; temporary positional event copies retain ADR 0038 ownership.
 
 Inherited layout direction now resolves a same-domain containing Window before falling back to the application culture. PopupTests covers RTL window-to-control propagation. Other locale and project-policy gaps retain their coverage states.
+
+LocalizeNumeralSystem now defaults true in the typed stored schema and refreshes numeric producer presentation when changed. It does not rewrite arbitrary caller-authored text. SpinBox is the current generated-numeric consumer; CodeEdit/list-index/ProgressBar producers retain their own prerequisites. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public System.Boolean LocalizeNumeralSystem { get; set; }` | Generated numeric producer policy; true initially, stored, live translation refresh on changed writes. |
