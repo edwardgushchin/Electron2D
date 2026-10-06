@@ -1034,6 +1034,51 @@
       "godot": "PhysicsServer2D::method:body_set_shape_as_one_way_collision(RID:,int:,bool:,float:,Vector2:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetShapeAsOneWayCollision(Electron2D.RID,System.Int32,System.Boolean,System.Single,System.Nullable<Electron2D.Vector2>)",
       "reason": "ADR 0088: nullable direction default projects local downward, finite normalization preserves zero; shared existing contact/motion kernels execute the policy."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceState.IntersectPoint(Electron2D.PhysicsPointQueryParameters,System.Int32)",
+      "reason": "Copied typed query results preserve the existing maximum, ordering, owner identity and filters under ADR 0063."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceState.IntersectPoint(Electron2D.PhysicsPointQueryParameters,System.Span<Electron2D.PhysicsPointResult>)",
+      "reason": "Caller-owned span is the allocation-free C# projection of the same capped result array under ADRs 0001, 0014 and 0063; it preserves ordering, filters and identity and returns the written count."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2D::method:intersect_shape(PhysicsShapeQueryParameters2D:,int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceState.IntersectShape(Electron2D.PhysicsShapeQueryParameters,System.Int32)",
+      "reason": "Copied typed query results preserve the existing maximum, ordering, owner identity and filters under ADR 0063."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2D::method:intersect_shape(PhysicsShapeQueryParameters2D:,int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceState.IntersectShape(Electron2D.PhysicsShapeQueryParameters,System.Span<Electron2D.PhysicsShapeResult>)",
+      "reason": "Caller-owned span is the allocation-free C# projection of the same capped result array under ADRs 0001, 0014 and 0063; it preserves ordering, filters and identity and returns the written count."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2D::method:collide_shape(PhysicsShapeQueryParameters2D:,int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceState.CollideShape(Electron2D.PhysicsShapeQueryParameters,System.Int32)",
+      "reason": "Copied typed query results preserve the existing maximum, ordering, owner identity and filters under ADR 0063."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2D::method:collide_shape(PhysicsShapeQueryParameters2D:,int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceState.CollideShape(Electron2D.PhysicsShapeQueryParameters,System.Span<Electron2D.Vector2>)",
+      "reason": "Caller-owned span is the allocation-free C# projection of the same capped result array under ADRs 0001, 0014 and 0063; it preserves ordering, filters and identity and returns the written count."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_slide_collision(int:)",
+      "electron2d": "method:Electron2D.CharacterBody.GetSlideCollision(System.Int32)",
+      "reason": "Caller-owned typed snapshot preserves the indexed slide contact under ADR 0063."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_slide_collision(int:)",
+      "electron2d": "method:Electron2D.CharacterBody.GetSlideCollision(System.Int32,Electron2D.KinematicCollision)",
+      "reason": "Reusable caller-owned output preserves the indexed slide snapshot without constructing a new result under ADRs 0014 and 0063."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_last_slide_collision()",
+      "electron2d": "method:Electron2D.CharacterBody.GetLastSlideCollision(Electron2D.KinematicCollision)",
+      "reason": "Reusable caller-owned output preserves the final slide snapshot and clears the result on a miss under ADRs 0014 and 0063."
     }
   ],
   "extras": [
@@ -1426,7 +1471,6 @@
       "reason": "Typed projection of the ray-result stable shape-owner index.",
       "adr": "ADRs 0001, 0063"
     },
-
     {
       "electron2d": "constructor:Electron2D.CollisionPolygon..ctor()",
       "reason": "Managed construction projects an empty direct scene collision polygon with a solid default.",

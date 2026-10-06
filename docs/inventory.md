@@ -497,7 +497,7 @@ This assembly row records the build and package contract. CharacterMovement is r
 | --- | --- | --- | --- |
 | Runtime engine | [`src/`](../src/) and [`Electron2D.csproj`](../Electron2D.csproj) | May use only approved runtime dependencies | Implemented types compile into `Electron2D.dll` |
 | Self-hosted editor | [`editor/Electron2D.Editor.csproj`](../editor/Electron2D.Editor.csproj) | Executable references `Electron2D.dll`; runtime never references editor | Branded 1152×800 startup window with a compact shaded character and live font-rendered labels; internal [EditorScene](classes/EditorScene.md), public runtime host, desktop name/mark metadata and apphost VS Code F5 configuration; authoring remains absent |
-| First-party games/examples | [`examples/`](../examples/) | Each executable references `Electron2D.dll`; runtime never references examples | Rendered [first scene](../examples/CharacterMovement/README.md) with a resize-aware grid, live labels and an arrow-key-controlled character; [CharacterMovementScene](classes/CharacterMovementScene.md) consumes only the public runtime API |
+| First-party games/examples | [`examples/`](../examples/) | Each executable references `Electron2D.dll`; runtime never references examples | [PhysicsSandbox](../examples/PhysicsSandbox/README.md): eleven interactive stories, [SandboxWindow](classes/SandboxWindow.md), [PhysicsScene](classes/PhysicsScene.md) and [TugBody](classes/TugBody.md), with public-data debug and explicit scene/server physics; rendered [first scene](../examples/CharacterMovement/README.md) with a resize-aware grid, live labels and an arrow-key-controlled character; [CharacterMovementScene](classes/CharacterMovementScene.md) consumes only the public runtime API |
 
 ## Audio
 

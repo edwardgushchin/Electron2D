@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 ## Responsibility
 
@@ -62,6 +62,10 @@ The current geometry profile accepts translated/rotated bodies and areas with un
 
 Standalone Shape methods, other shape resources, kinematic bodies, area audio integration, joint solver tuning/debug drawing, remaining direct-space/server methods, shape-index contact events and remaining RigidBody modes retain exact incomplete coverage rows. [ADR 0063](../decisions/physics.md#adr-0063) defines shared RID identity, world access and typed results; direct shape operations and scene ShapeCast now execute under that decision. An executing backend does not make unrelated rows complete.
 
+## Interactive example
+
+[PhysicsSandbox](../../examples/PhysicsSandbox/README.md) now exercises the implemented gameplay mechanisms in eleven interactive desktop stories. Its public-API consumer owns the editor-sized window, scene dropdown, pause/step/reset and optional collider/contact observations; the [capability map](../components/physics-sandbox.md) records which story demonstrates each mechanism. The example adds no server/debug/capture API and does not close unrelated incomplete coverage rows.
+
 ## Decisions
 
 - [0054: Box2D-backed scene bodies](../decisions/physics.md#adr-0054)
@@ -118,3 +122,5 @@ Server-only connections share the scene joint kernels and body-local anchors thr
 [Indexed PhysicsServer geometry](../classes/PhysicsServer.md#shape-slots) now shares the scene/server logical slots, effective local poses and native fixture/query path under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). Raw replacement/pose/disabled/one-way edits do not rewrite child configuration; group/child edits reclaim corresponding overrides. Shape free/replacement follows shared RID/view ownership and related-world phase guards. Effective poses also feed mass geometry. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies real geometry, body/Area lifetime and one-way contacts/motion on Linux/.NET 10.
 
 [Physics world activity](../classes/PhysicsServer.md#activity) is now independent of scene scheduling under [ADR 0089](../decisions/physics-activity.md#adr-0089). SceneTree activates its lazily created world; explicit SpaceCreate defaults inactive and requires SpaceSetActive(true). Global/local false skips simulation, force consumption and solver callbacks without clearing native state or accumulating elapsed time. Queries/configuration/cleanup and scene callbacks/timers continue. [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks the profile and warmed allocation on Linux/.NET 10.
+
+Prepared point/shape/contact query destinations and character slide snapshots can be reused without copied output allocation. Rigid contact limits prepare monitoring storage. Solver contact compaction and sleep/wake transitions reuse cached backend buffers; caches are released with their world. The PhysicsSandbox native performance gate checks owner-thread managed allocations with UI and debug drawing. Native/GPU allocation is not measured by that gate.

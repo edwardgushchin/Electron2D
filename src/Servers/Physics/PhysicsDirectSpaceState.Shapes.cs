@@ -39,6 +39,7 @@ public sealed partial class PhysicsDirectSpaceState
 {
     private readonly List<B2ShapeProxy> _queryProxies = [];
     private readonly List<ShapeCandidate> _shapeCandidates = [];
+    private readonly List<PhysicsShapeResult> _shapeHits = [];
     private bool? _queryRaySlide;
     private float _queryMargin;
 
@@ -52,11 +53,39 @@ public sealed partial class PhysicsDirectSpaceState
     public PhysicsShapeResult[] IntersectShape(PhysicsShapeQueryParameters parameters, int maxResults = 32)
     {
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
+        var hits = CollectShapeHits(parameters);
+        var count = Math.Min(maxResults, hits.Count);
+        if (count == 0) return [];
+        var output = new PhysicsShapeResult[count];
+        hits.CopyTo(0, output, 0, count);
+        return output;
+    }
+
+    /// <summary>Copies ordered unique collider shape-owner hits into caller-owned storage.</summary>
+    /// <param name="parameters">The live shape, pose, motion, margin and filters.</param>
+    /// <param name="results">Destination storage; its length is the maximum result count.</param>
+    /// <returns>The written count. Remaining elements are unchanged; excess hits are truncated in RID/index order.</returns>
+    /// <remarks>Reuses query scratch capacity after preparation; no output array is created. Ownership and query errors match the array overload.</remarks>
+    /// <exception cref="ArgumentNullException">Parameters are null.</exception>
+    /// <exception cref="ArgumentException">The shape RID is invalid or query geometry is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The caller is off-owner or the space is stepping.</exception>
+    /// <exception cref="ObjectDisposedException">The view or required shape/parameters are disposed.</exception>
+    public int IntersectShape(PhysicsShapeQueryParameters parameters, Span<PhysicsShapeResult> results)
+    {
+        var hits = CollectShapeHits(parameters);
+        var count = Math.Min(results.Length, hits.Count);
+        for (var i = 0; i < count; i++) results[i] = hits[i];
+        return count;
+    }
+
+    private List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters)
+    {
         var space = PrepareShapeQuery(parameters);
-        if (maxResults == 0 || _queryProxies.Count == 0 || _shapeCandidates.Count == 0) return [];
+        var hits = _shapeHits;
+        hits.Clear();
+        if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return hits;
         var world = b2GetWorldFromId(space.WorldID);
         var motion = Shape.ToBackend(parameters.Motion);
-        var hits = new List<PhysicsShapeResult>();
         foreach (var candidate in _shapeCandidates)
         {
             var backendShape = b2GetShape(world, candidate.ShapeID);
@@ -83,15 +112,15 @@ public sealed partial class PhysicsDirectSpaceState
             var order = left.ColliderRID.CompareTo(right.ColliderRID);
             return order != 0 ? order : left.ShapeIndex.CompareTo(right.ShapeIndex);
         });
-        var output = new List<PhysicsShapeResult>(Math.Min(maxResults, hits.Count));
-        foreach (var hit in hits)
+        var used = 0;
+        for (var i = 0; i < hits.Count; i++)
         {
-            if (output.Count != 0 && hit.ColliderRID == output[^1].ColliderRID &&
-                hit.ShapeIndex == output[^1].ShapeIndex) continue;
-            output.Add(hit);
-            if (output.Count == maxResults) break;
+            var hit = hits[i];
+            if (used > 0 && hit.ColliderRID == hits[used - 1].ColliderRID && hit.ShapeIndex == hits[used - 1].ShapeIndex) continue;
+            hits[used++] = hit;
         }
-        return output.ToArray();
+        if (used < hits.Count) hits.RemoveRange(used, hits.Count - used);
+        return hits;
     }
 
     /// <summary>Finds safe and unsafe fractions of a shape's requested global motion.</summary>

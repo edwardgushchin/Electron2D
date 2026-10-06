@@ -47,6 +47,8 @@ public readonly struct PhysicsRestInfo
 
 public sealed partial class PhysicsDirectSpaceState
 {
+    private readonly List<ContactPair> _contactPairs = [];
+
     private readonly record struct ContactPair(RID RID, int ShapeIndex, int Piece, Vector2 QueryPoint,
         Vector2 ColliderPoint);
 
@@ -58,11 +60,48 @@ public sealed partial class PhysicsDirectSpaceState
     public Vector2[] CollideShape(PhysicsShapeQueryParameters parameters, int maxResults = 32)
     {
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
+        var contacts = CollectShapeContacts(parameters);
+        var count = Math.Min(maxResults, contacts.Count);
+        if (count == 0) return [];
+        var result = new Vector2[count * 2];
+        CopyShapeContacts(contacts, result, count);
+        return result;
+    }
+
+    /// <summary>Copies ordered query/collider contact-point pairs into caller-owned storage.</summary>
+    /// <param name="parameters">The live shape, pose, motion, margin and filters.</param>
+    /// <param name="results">Destination points; only complete pairs are written.</param>
+    /// <returns>The number of pairs written, at most half the destination length. Unused elements are unchanged.</returns>
+    /// <remarks>Reuses prepared query scratch capacity and creates no output array. Pair ordering and query errors match the array overload.</remarks>
+    /// <exception cref="ArgumentNullException">Parameters are null.</exception>
+    /// <exception cref="ArgumentException">The shape RID is invalid or query geometry is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The caller is off-owner or the space is stepping.</exception>
+    /// <exception cref="ObjectDisposedException">The view or required shape/parameters are disposed.</exception>
+    public int CollideShape(PhysicsShapeQueryParameters parameters, Span<Vector2> results)
+    {
+        var contacts = CollectShapeContacts(parameters);
+        var count = Math.Min(results.Length / 2, contacts.Count);
+        CopyShapeContacts(contacts, results, count);
+        return count;
+    }
+
+    private static void CopyShapeContacts(List<ContactPair> contacts, Span<Vector2> results, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            results[i * 2] = contacts[i].QueryPoint;
+            results[i * 2 + 1] = contacts[i].ColliderPoint;
+        }
+    }
+
+    private List<ContactPair> CollectShapeContacts(PhysicsShapeQueryParameters parameters)
+    {
         var space = PrepareShapeQuery(parameters);
-        if (maxResults == 0 || _queryProxies.Count == 0 || _shapeCandidates.Count == 0) return [];
+        var contacts = _contactPairs;
+        contacts.Clear();
+        if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return contacts;
         var world = b2GetWorldFromId(space.WorldID);
         var motion = Shape.ToBackend(parameters.Motion);
-        var contacts = new List<ContactPair>();
         foreach (var candidate in _shapeCandidates)
         {
             var backendShape = b2GetShape(world, candidate.ShapeID);
@@ -90,14 +129,7 @@ public sealed partial class PhysicsDirectSpaceState
             order = left.ShapeIndex.CompareTo(right.ShapeIndex);
             return order != 0 ? order : left.Piece.CompareTo(right.Piece);
         });
-        var count = Math.Min(maxResults, contacts.Count);
-        var result = new Vector2[count * 2];
-        for (var index = 0; index < count; index++)
-        {
-            result[index * 2] = contacts[index].QueryPoint;
-            result[index * 2 + 1] = contacts[index].ColliderPoint;
-        }
-        return result;
+        return contacts;
     }
 
     /// <summary>Returns the deepest contact across the shape's pose and motion, with collider velocity.</summary>

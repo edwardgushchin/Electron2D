@@ -35,8 +35,7 @@ namespace Box2D.NET
 
             if (islandId == world.islands.count)
             {
-                B2Island emptyIsland = new B2Island();
-                b2Array_Push(ref world.islands, emptyIsland);
+                b2Array_Add(ref world.islands);
             }
             else
             {

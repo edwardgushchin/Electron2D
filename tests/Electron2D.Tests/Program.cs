@@ -35,9 +35,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON") == "1") { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_CHILD") is { } dialogPath) { DialogTests.RunChild(dialogPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG") == "1") { DialogTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SANDBOX_PROFILE") == "1") { PhysicsSandboxTests.RunProfile(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION_CHILD") is { } optionPath) { OptionButtonTests.RunChild(optionPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION") == "1") { OptionButtonTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SANDBOX") == "1") { PhysicsSandboxTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SANDBOX_NATIVE") == "1") { PhysicsSandboxTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER_CHILD") is { } tabContainerPath) { TabContainerTests.RunChild(tabContainerPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER") == "1") { TabContainerTests.Run(); return; }

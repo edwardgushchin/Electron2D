@@ -24,7 +24,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
         Vector2 LocalPoint, Vector2 ColliderPoint, Vector2 Normal, Vector2 LocalVelocity, Vector2 ColliderVelocity, Vector2 Impulse);
 
     internal PhysicsDirectBodyState(PhysicsBodyRuntime runtime, PhysicsSpace space, B2BodyId id)
-    { _runtime = runtime; _space = space; _id = id; }
+    { _runtime = runtime; _space = space; _id = id; PrepareContacts(runtime.ContactLimit); }
     internal bool Matches(PhysicsSpace space, B2BodyId id) => ReferenceEquals(_space, space) && _id == id;
     internal bool CallbackActive => _callbackDepth != 0;
     internal void BeginCallback() => _callbackDepth++;
@@ -42,7 +42,9 @@ public sealed class PhysicsDirectBodyState : ElectronObject
         _space.EnsureQueryAccess();
         try
         {
-            if (_runtime.Space != _space || _runtime.BodyID != _id)
+            var owner = _runtime.Owners;
+            if ((owner.Scene?.Space ?? owner.Server?.Space) != _space ||
+                (owner.Scene?.BackendID ?? owner.Server!.BackendID) != _id)
                 throw new ObjectDisposedException(nameof(PhysicsDirectBodyState), "The backend attachment ended.");
         }
         catch (ArgumentException) { throw new ObjectDisposedException(nameof(PhysicsDirectBodyState), "The body was released."); }
@@ -299,16 +301,18 @@ public sealed class PhysicsDirectBodyState : ElectronObject
         if (!transform.IsFinite() || !transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new ArgumentException("A body pose requires finite translation, unit scale and zero skew.", nameof(transform));
     }
+    internal void PrepareContacts(int limit)
+    {
+        if (_rawContacts.Length < limit) Array.Resize(ref _rawContacts, limit);
+        if (_contacts.Length < limit) Array.Resize(ref _contacts, limit);
+    }
+
     internal void CaptureContacts()
     {
         _contactCount = 0;
         var limit = _runtime.ContactLimit;
         if (limit == 0) return;
-        var capacity = b2Body_GetContactCapacity(_id);
-        if (_rawContacts.Length < capacity) Array.Resize(ref _rawContacts, capacity);
-        var pairs = b2Body_GetContactData(_id, _rawContacts, capacity);
-        var required = Math.Min(limit, checked(pairs * 2));
-        if (_contacts.Length < required) Array.Resize(ref _contacts, required);
+        var pairs = b2Body_GetContactData(_id, _rawContacts, limit);
         for (var index = 0; index < pairs && _contactCount < limit; index++)
         {
             ref readonly var contact = ref _rawContacts[index];

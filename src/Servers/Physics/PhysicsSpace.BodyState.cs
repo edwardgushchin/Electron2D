@@ -34,7 +34,12 @@ internal sealed partial class PhysicsSpace
 
     private bool Current(CallbackBody body)
     {
-        try { return body.Runtime.Space == this && body.Runtime.BodyID == body.ID; }
+        try
+        {
+            var owner = body.Runtime.Owners;
+            return (owner.Scene?.Space ?? owner.Server?.Space) == this &&
+                (owner.Scene?.BackendID ?? owner.Server!.BackendID) == body.ID;
+        }
         catch (ArgumentException) { return false; }
     }
 
@@ -52,7 +57,11 @@ internal sealed partial class PhysicsSpace
         {
             foreach (var body in _callbackBodies)
             {
-                if (!Current(body) || b2Body_GetType(body.ID) == B2BodyType.b2_staticBody ||
+                if (!Current(body)) continue;
+                var owner = body.Runtime.Owners.Scene;
+                if (body.Runtime.ForceCallback is null && body.Runtime.SyncCallback is null &&
+                    (owner is not RigidBody || owner.GetType() == typeof(RigidBody))) continue;
+                if (b2Body_GetType(body.ID) == B2BodyType.b2_staticBody ||
                     !body.Runtime.ActiveBeforeStep && !b2Body_IsAwake(body.ID)) continue;
                 var state = body.Runtime.GetView(this, body.ID);
                 try { state.BeginCallback(); body.Runtime.ForceCallback?.Invoke(state); }

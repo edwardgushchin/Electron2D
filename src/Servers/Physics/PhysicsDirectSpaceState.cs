@@ -65,6 +65,7 @@ public readonly struct PhysicsPointResult
 public sealed partial class PhysicsDirectSpaceState : ElectronObject
 {
     private readonly RID _spaceRID;
+    private readonly List<PhysicsPointResult> _pointHits = [];
 
     internal PhysicsDirectSpaceState(RID spaceRID) => _spaceRID = spaceRID;
 
@@ -78,7 +79,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);
-        return IntersectRay(parameters.From, parameters.To, parameters.CollisionMask, parameters.Exclude,
+        return IntersectRay(parameters.From, parameters.To, parameters.CollisionMask, parameters.ExclusionsArray,
             parameters.CollideWithAreas, parameters.CollideWithBodies, parameters.HitFromInside);
     }
 
@@ -124,18 +125,43 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
     /// <exception cref="ObjectDisposedException">The view has been disposed.</exception>
     public PhysicsPointResult[] IntersectPoint(PhysicsPointQueryParameters parameters, int maxResults = 32)
     {
+        if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
+        var hits = CollectPointHits(parameters);
+        var count = Math.Min(maxResults, hits.Count);
+        if (count == 0) return [];
+        var output = new PhysicsPointResult[count];
+        hits.CopyTo(0, output, 0, count);
+        return output;
+    }
+
+    /// <summary>Copies ordered unique point-query hits into caller-owned storage.</summary>
+    /// <param name="parameters">The global point and collider filters.</param>
+    /// <param name="results">Destination storage; its length is the maximum result count.</param>
+    /// <returns>The written count. Remaining elements are unchanged; excess hits are truncated in RID/index order.</returns>
+    /// <remarks>Reuses prepared query scratch capacity and creates no output array.</remarks>
+    /// <exception cref="ArgumentNullException">Parameters are null.</exception>
+    /// <exception cref="InvalidOperationException">The caller is off-owner or the world is stepping.</exception>
+    /// <exception cref="ObjectDisposedException">The view has been disposed.</exception>
+    public int IntersectPoint(PhysicsPointQueryParameters parameters, Span<PhysicsPointResult> results)
+    {
+        var hits = CollectPointHits(parameters);
+        var count = Math.Min(results.Length, hits.Count);
+        for (var i = 0; i < count; i++) results[i] = hits[i];
+        return count;
+    }
+
+    private List<PhysicsPointResult> CollectPointHits(PhysicsPointQueryParameters parameters)
+    {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);
-        if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
         var space = PhysicsServer.Service.GetSceneSpace(_spaceRID);
         space.PrepareForQuery();
-        if (maxResults == 0 || parameters.CollisionMask == 0 ||
-            !parameters.CollideWithBodies && !parameters.CollideWithAreas) return [];
-
+        var hits = _pointHits;
+        hits.Clear();
+        if (parameters.CollisionMask == 0 || !parameters.CollideWithBodies && !parameters.CollideWithAreas) return hits;
         var point = Shape.ToBackend(parameters.Position);
-        var excluded = parameters.Exclude;
+        var excluded = parameters.ExclusionsArray;
         var mask = parameters.CollisionMask;
-        var hits = new List<PhysicsPointResult>();
         if (parameters.CollideWithBodies)
             for (var index = 0; index < space.Bodies.Count; index++)
                 ScanPointShapes(space.Bodies[index].BackendShapes, point, mask, excluded, hits);
@@ -153,15 +179,15 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
             var order = left.ColliderRID.CompareTo(right.ColliderRID);
             return order != 0 ? order : left.ShapeIndex.CompareTo(right.ShapeIndex);
         });
-        var output = new List<PhysicsPointResult>(Math.Min(maxResults, hits.Count));
-        foreach (var hit in hits)
+        var used = 0;
+        for (var i = 0; i < hits.Count; i++)
         {
-            if (output.Count != 0 && hit.ColliderRID == output[^1].ColliderRID &&
-                hit.ShapeIndex == output[^1].ShapeIndex) continue;
-            output.Add(hit);
-            if (output.Count == maxResults) break;
+            var hit = hits[i];
+            if (used > 0 && hit.ColliderRID == hits[used - 1].ColliderRID && hit.ShapeIndex == hits[used - 1].ShapeIndex) continue;
+            hits[used++] = hit;
         }
-        return output.ToArray();
+        if (used < hits.Count) hits.RemoveRange(used, hits.Count - used);
+        return hits;
     }
 
     private static void ScanRayShapes(IReadOnlyList<B2ShapeId> shapes, B2RayCastInput input, Vector2 from,

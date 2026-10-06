@@ -58540,6 +58540,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CharacterBody.GetLastSlideCollision(Electron2D.KinematicCollision)",
+    "kind": "method",
+    "declaringType": "Electron2D.CharacterBody",
+    "name": "GetLastSlideCollision",
+    "signature": "public System.Boolean GetLastSlideCollision(Electron2D.KinematicCollision result)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "result",
+        "type": "Electron2D.KinematicCollision",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CharacterBody.GetPlatformVelocity()",
     "kind": "method",
     "declaringType": "Electron2D.CharacterBody",
@@ -58608,6 +58627,30 @@
       }
     ],
     "returnType": "Electron2D.KinematicCollision",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CharacterBody.GetSlideCollision(System.Int32,Electron2D.KinematicCollision)",
+    "kind": "method",
+    "declaringType": "Electron2D.CharacterBody",
+    "name": "GetSlideCollision",
+    "signature": "public System.Void GetSlideCollision(System.Int32 index, Electron2D.KinematicCollision result)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "result",
+        "type": "Electron2D.KinematicCollision",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -92558,6 +92601,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsDirectSpaceState.CollideShape(Electron2D.PhysicsShapeQueryParameters,System.Span\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceState",
+    "name": "CollideShape",
+    "signature": "public System.Int32 CollideShape(Electron2D.PhysicsShapeQueryParameters parameters, System.Span\u003CElectron2D.Vector2\u003E results)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameters",
+        "type": "Electron2D.PhysicsShapeQueryParameters",
+        "default": null
+      },
+      {
+        "name": "results",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsDirectSpaceState.GetRestInfo(Electron2D.PhysicsShapeQueryParameters)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
@@ -92601,6 +92668,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectPoint(Electron2D.PhysicsPointQueryParameters,System.Span\u003CElectron2D.PhysicsPointResult\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceState",
+    "name": "IntersectPoint",
+    "signature": "public System.Int32 IntersectPoint(Electron2D.PhysicsPointQueryParameters parameters, System.Span\u003CElectron2D.PhysicsPointResult\u003E results)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameters",
+        "type": "Electron2D.PhysicsPointQueryParameters",
+        "default": null
+      },
+      {
+        "name": "results",
+        "type": "System.Span\u003CElectron2D.PhysicsPointResult\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectRay(Electron2D.PhysicsRayQueryParameters)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
@@ -92641,6 +92732,30 @@
       }
     ],
     "returnType": "Electron2D.PhysicsShapeResult[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceState.IntersectShape(Electron2D.PhysicsShapeQueryParameters,System.Span\u003CElectron2D.PhysicsShapeResult\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceState",
+    "name": "IntersectShape",
+    "signature": "public System.Int32 IntersectShape(Electron2D.PhysicsShapeQueryParameters parameters, System.Span\u003CElectron2D.PhysicsShapeResult\u003E results)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameters",
+        "type": "Electron2D.PhysicsShapeQueryParameters",
+        "default": null
+      },
+      {
+        "name": "results",
+        "type": "System.Span\u003CElectron2D.PhysicsShapeResult\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {

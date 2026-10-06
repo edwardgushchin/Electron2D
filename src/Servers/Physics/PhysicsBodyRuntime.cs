@@ -5,7 +5,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsBodyRuntime(RID rid)
+internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<CollisionObject>? sceneOwner)
 {
     internal RID RID { get; } = rid;
     internal float Mass = 1;
@@ -26,7 +26,15 @@ internal sealed partial class PhysicsBodyRuntime(RID rid)
     internal bool ActiveBeforeStep;
     internal bool FieldsInitialized;
 
-    internal (PhysicsBody? Scene, PhysicsServerCollider? Server) Owners => PhysicsServer.Service.ResolveBodyOwners(RID);
+    internal (PhysicsBody? Scene, PhysicsServerCollider? Server) Owners
+    {
+        get
+        {
+            if (sceneOwner is null) return PhysicsServer.Service.ResolveBodyOwners(RID);
+            if (sceneOwner.TryGetTarget(out var node) && node is PhysicsBody body && !body.IsDisposed) return (body, null);
+            throw new ArgumentException("The RID does not identify a live physics body.", nameof(RID));
+        }
+    }
     internal PhysicsSpace? Space { get { var owner = Owners; return owner.Scene?.Space ?? owner.Server?.Space; } }
     internal B2BodyId BodyID { get { var owner = Owners; return owner.Scene?.BackendID ?? owner.Server!.BackendID; } }
     internal bool Omitted { get => Owners.Scene is RigidBody rigid ? rigid.CustomIntegrator : OmitForces; }

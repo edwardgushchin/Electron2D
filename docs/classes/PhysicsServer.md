@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -100,7 +100,7 @@ Frees only caller-owned server resources. Joint free removes its native handle a
 
 | Signature | Contract |
 | --- | --- |
-| `public static PhysicsDirectBodyState? BodyGetDirectState(RID body)` | Cached attachment view, null while detached. |
+| `public static PhysicsDirectBodyState? BodyGetDirectState(RID body)` | Cached attachment view, null while detached. Synchronizes only this body's pending pose/geometry; whole-space queries prepare their world separately. |
 | `public static void BodySetForceIntegrationCallback(RID body, Action<PhysicsDirectBodyState>? callback)` | Set/clear a post-solver force callback. |
 | `public static void BodySetForceIntegrationCallback<T>(RID body, Action<PhysicsDirectBodyState, T>? callback, T userData)` | Strongly typed data adapter allocated at registration. |
 | `public static void BodySetStateSyncCallback(RID body, Action<PhysicsDirectBodyState>? callback)` | Set/clear the following sync observer. |
@@ -496,3 +496,5 @@ PhysicsServer.FreeRID(space);
 ## Body-state completion dependency
 
 The transform/linear-velocity state facade is still server-only and Partial. Full scene/server state parity needs typed angular velocity, sleep and can-sleep access, deferred kinematic transform targets and exact static surface velocity. The latter requires an actual normal/tangential contact-point velocity channel while pose stays fixed; native static bodies use zero dummy solver state, so storing values or tangentSpeed alone is insufficient. It enters the first stationary-contact solver integration under [ADR 0075](../decisions/physics.md#adr-0075), together with StaticBody constant surface velocities; no feature patch was added to vendored code.
+
+Configured contact limits prepare retained raw-pair and point storage before fixed stepping. Every touching manifold contributes a point, so the reported-point cap also bounds the required raw-pair count. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.

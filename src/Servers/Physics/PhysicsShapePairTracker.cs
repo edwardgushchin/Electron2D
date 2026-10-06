@@ -14,6 +14,12 @@ internal sealed class PhysicsShapePairTracker
     private readonly Dictionary<RID, int> _counts = [];
     private readonly List<PhysicsShapePair> _removed = [];
 
+    internal void Prepare(int capacity)
+    {
+        _current.EnsureCapacity(capacity); _next.EnsureCapacity(capacity);
+        _counts.EnsureCapacity(checked(capacity * 2)); _removed.EnsureCapacity(capacity);
+    }
+
     internal void Begin() => _next.Clear();
     internal void Observe(PhysicsShapePair pair) => _next.Add(pair);
     internal bool Contains(PhysicsShapePair pair) => _current.Contains(pair);

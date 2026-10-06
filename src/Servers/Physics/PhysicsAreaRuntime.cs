@@ -35,6 +35,12 @@ internal sealed class PhysicsAreaRuntime(RID rid)
         EnsureAccess(true);
         if (area) AreaCallback = callback; else BodyCallback = callback;
         Reset();
+        Space?.PrepareMonitoringCapacity();
+    }
+
+    internal void Prepare(int pairs)
+    {
+        Pairs.Prepare(pairs); Changes.EnsureCapacity(checked(pairs * 4));
     }
 
     internal void Reset() { Pairs.Clear(); Changes.Clear(); Generation++; }

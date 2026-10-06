@@ -6,6 +6,7 @@ public sealed class PhysicsRayQueryParameters : ElectronObject
     private Vector2 _from;
     private Vector2 _to;
     private RID[] _exclude = [];
+    internal RID[] ExclusionsArray { get { ThrowIfDisposed(); return _exclude; } }
     private uint _collisionMask = uint.MaxValue;
     private bool _collideWithBodies = true;
 
@@ -94,6 +95,7 @@ public sealed class PhysicsPointQueryParameters : ElectronObject
 {
     private Vector2 _position;
     private RID[] _exclude = [];
+    internal RID[] ExclusionsArray { get { ThrowIfDisposed(); return _exclude; } }
     private uint _collisionMask = uint.MaxValue;
     private bool _collideWithBodies = true;
 

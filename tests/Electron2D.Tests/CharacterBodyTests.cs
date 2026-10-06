@@ -72,6 +72,15 @@ internal static class CharacterBodyTests
         Check(first.GetColliderRID() == hit!.GetColliderRID() &&
               !ReferenceEquals(first, hit),
             "Indexed and last-slide getters return separate caller-owned snapshots.");
+        using var reusable = new KinematicCollision();
+        character.GetSlideCollision(0, reusable);
+        Check(reusable.GetColliderRID() == first.GetColliderRID() && reusable.GetPosition() == first.GetPosition(), "Reusable indexed slide matches the copied snapshot.");
+        for (var i = 0; i < 128; i++) { character.GetSlideCollision(0, reusable); character.GetLastSlideCollision(reusable); }
+        var allocated = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 128; i++) { character.GetSlideCollision(0, reusable); character.GetLastSlideCollision(reusable); }
+        Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "Both warmed reusable slide getters allocate zero bytes.");
+        Reject<ArgumentNullException>(() => character.GetLastSlideCollision(null!));
+        Reject<ArgumentOutOfRangeException>(() => character.GetSlideCollision(-1, reusable));
         local.Scale = new(2, 1);
         var retainedPosition = character.GlobalPosition;
         Reject<InvalidOperationException>(() => character.MoveAndSlide());
@@ -170,6 +179,8 @@ internal static class CharacterBodyTests
         var character = new CharacterBody { Name = "PackedCharacter" };
         root.AddChild(character); character.Owner = root;
         Reject<ArgumentOutOfRangeException>(() => character.GetSlideCollision(0));
+        using var miss = new KinematicCollision();
+        Check(!character.GetLastSlideCollision(miss) && miss.GetColliderRID() == default && miss.GetNormal() == Vector2.Zero, "A reusable last-slide miss clears the destination.");
         Check(character.GetLastSlideCollision() is null,
             "An unused character has no slide result.");
         Reject<ArgumentOutOfRangeException>(() => character.MaxSlides = 0);

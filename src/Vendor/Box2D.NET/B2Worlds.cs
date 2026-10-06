@@ -353,11 +353,8 @@ namespace Box2D.NET
             int setCapacity = world.solverSets.count;
             for (int i = 0; i < setCapacity; ++i)
             {
-                B2SolverSet set = world.solverSets.data[i];
-                if (set.setIndex != B2_NULL_INDEX)
-                {
-                    b2DestroySolverSet(world, i);
-                }
+                // Release unused cached sleeping sets as well as live sets at world teardown.
+                b2DestroySolverSet(world, i, true);
             }
 
             b2Array_Destroy(ref world.solverSets);

@@ -12,6 +12,8 @@ Last updated: 2026-09-26
 
 An owner-thread view of one backend attachment of a scene or server body. Obtain it from PhysicsServer.BodyGetDirectState or the post-solver RigidBody integration hook. It has no public constructor and owns no body or space. The server caches one view per attachment. Access rejects native stepping, wrong threads, disposal, detachment, body release and a replaced attachment; reattachment never revives an old view. Consumer disposal allows a fresh cached view to be created, but disposal during a borrowed callback rejects.
 
+Acquiring a view synchronizes its requested body's pending pose/geometry without scanning other bodies. Direct-space queries synchronize their world independently. Scene runtime ownership retains the existing weak registration and never extends a body's lifetime.
+
 Fields read the live native body. Contact methods read an immutable value snapshot from the last solved step, capped by MaxContactsReported independently of object ContactMonitor. The word local identifies this body; contact positions, normals and velocities use global coordinates. Collision layer/mask changes and direct-space queries may rebuild fixtures without invalidating those stored contact values.
 
 ## Example
@@ -159,3 +161,5 @@ Fast kinematic travel may divide one fixed frame into several native world calls
 ## Selected field parameters
 
 Typed PhysicsServer gravity/damping parameters feed the same reported TotalGravity/TotalLinearDamp/TotalAngularDamp and automatic integration policy for server/non-rigid bodies. CharacterBody.GetGravity reports the same scaled selected field. Custom integration still omits automatic effects while retaining selected-field reporting. [ADR 0076](../decisions/physics-mass.md#adr-0076) and [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) cover the shared policy.
+
+Configured contact limits prepare retained raw-pair and point storage before fixed stepping. Every touching manifold contributes a point, so the reported-point cap also bounds the required raw-pair count. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.

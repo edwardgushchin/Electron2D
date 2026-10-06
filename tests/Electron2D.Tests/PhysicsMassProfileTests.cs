@@ -4,12 +4,45 @@ internal static class PhysicsMassProfileTests
 {
     internal static void Run()
     {
+        VerifyDeferredMassCompletion();
         VerifySceneProfile();
         VerifyServerProfile();
         VerifySegmentsAndEmptyBodies();
         VerifyStorageAndFailures();
         VerifyWarmChanges();
         Console.WriteLine("Rigid and server mass, custom center/inertia, restoration and allocation checks passed.");
+    }
+
+    private static void VerifyDeferredMassCompletion()
+    {
+        using var shape = new RectangleShape { Size = new(24, 30) };
+        var root = new Node();
+        var body = new RigidBody { Mass = 3, Inertia = 125, CenterOfMassMode = RigidCenterOfMassMode.Custom, CenterOfMass = new(2, 4) };
+        body.AddChild(new CollisionShape { Shape = shape }); root.AddChild(body);
+        using var tree = new SceneTree(root);
+        void Clean(RID rid)
+        {
+            var state = PhysicsServer.BodyGetDirectState(rid)!;
+            var id = PhysicsServer.Service.BodyRuntime(rid).BodyID;
+            var world = Box2D.NET.B2Worlds.b2GetWorldFromId(Box2D.NET.B2Bodies.b2Body_GetWorld(id));
+            Check((Box2D.NET.B2Bodies.b2GetBodyFullId(world, id).flags & (uint)Box2D.NET.B2BodyFlags.b2_dirtyMass) == 0,
+                "Applying a validated scene/server mass profile completes deferred fixture mass before the solver.");
+        }
+        Clean(body.GetRID());
+        shape.Size = new(40, 20); Clean(body.GetRID());
+        body.Freeze = true; Clean(body.GetRID()); body.Freeze = false; Clean(body.GetRID());
+        tree.PhysicsFrame(1d / 60);
+        Check(body.Mass == 3 && body.Inertia == 125 && body.CenterOfMass == new Vector2(2, 4), "Completing deferred mass preserves custom scene values.");
+        var server = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.BodyAddShape(server, shape.GetRID()); PhysicsServer.BodySetSpace(server, body.GetWorld()!.Space);
+            PhysicsServer.BodySetMass(server, 5); PhysicsServer.BodySetInertia(server, 220); PhysicsServer.BodySetCenterOfMass(server, new(3, 1));
+            Clean(server); shape.Size = new(30, 30); Clean(server);
+            tree.PhysicsFrame(1d / 60);
+            Check(PhysicsServer.BodyGetMass(server) == 5 && Near(PhysicsServer.BodyGetInertia(server), 220), "Server mass completion preserves explicit overrides.");
+        }
+        finally { PhysicsServer.FreeRID(server); }
     }
 
     private static void VerifySceneProfile()

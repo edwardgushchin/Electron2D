@@ -17,7 +17,7 @@ public sealed partial class PhysicsServer
         ResolveBodyOwners(body);
         lock (_registryGate)
         {
-            if (!_bodyRuntimes.TryGetValue(body, out var runtime)) _bodyRuntimes.Add(body, runtime = new(body));
+            if (!_bodyRuntimes.TryGetValue(body, out var runtime)) _bodyRuntimes.Add(body, runtime = new(body, _sceneObjects.GetValueOrDefault(body)));
             return runtime;
         }
     }
@@ -34,7 +34,9 @@ public sealed partial class PhysicsServer
         var runtime = BodyRuntime(body);
         var space = runtime.Space;
         if (space is null) return null;
-        space.PrepareForQuery();
+        space.EnsureQueryAccess();
+        var owner = runtime.Owners;
+        if (owner.Scene is { } scene) scene.PrepareBackend(); else owner.Server!.PrepareBackend();
         return runtime.GetView(space, runtime.BodyID);
     }
 
@@ -68,7 +70,7 @@ public sealed partial class PhysicsServer
         ThrowIfDisposed(); if (amount < 0) throw new ArgumentOutOfRangeException(nameof(amount));
         var runtime = BodyRuntime(body); runtime.EnsureMutable();
         if (runtime.Owners.Scene is RigidBody rigid) rigid.MaxContactsReported = amount;
-        else runtime.MaxContacts = amount;
+        else { runtime.View?.PrepareContacts(amount); runtime.MaxContacts = amount; }
     }
 
     internal int BodyGetMaxContactsReportedCore(RID body)

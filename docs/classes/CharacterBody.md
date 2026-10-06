@@ -1,6 +1,6 @@
 # CharacterBody
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -58,6 +58,8 @@ The subclass needs a live collision child and `PhysicsProcessEnabled = true`. Gr
 | `public Vector2 GetPlatformVelocity()` | zero | Last contacted platform point velocity, scene units per second. |
 | `public int GetSlideCollisionCount()` | 0 | Number of recorded motion contacts. |
 | `public KinematicCollision GetSlideCollision(int index)` / `GetLastSlideCollision()` | — / null | Caller-owned contact snapshots. |
+| `public void GetSlideCollision(int index, KinematicCollision result)` | — | Copies one indexed contact into a live reusable snapshot. |
+| `public bool GetLastSlideCollision(KinematicCollision result)` | — | Copies the last contact; clears the destination and returns false on a miss. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | — | Stores all query options, not transient contact state. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | — | Restores the exact CharacterBody type in PackedScene. |
 | `protected override void OnEnterTree()` | — | Resets transient floor/wall/platform and slide state. |
@@ -81,7 +83,7 @@ The SceneTree prepares the visible character pose for direct queries immediately
 
 ### `ApplyFloorSnap()` and contact getters
 
-`ApplyFloorSnap()` does nothing when already on a floor. Otherwise it probes down by the larger of `FloorSnapLength` and `SafeMargin`, accepts a normal within `FloorMaxAngle`, stores floor/platform state and applies only the permitted up-axis travel. `IsOnFloor`, `IsOnWall`, `IsOnCeiling` and their `Only` variants describe the last completed movement, not future contacts. Floor/wall normals are global and copied. `GetSlideCollisionCount()` reports the stored list length; `GetSlideCollision(index)` rejects an invalid index, while `GetLastSlideCollision()` returns null on an empty list. Returned contact objects are independent caller-owned snapshots; later movement does not overwrite them. Attached reads require the owner thread.
+`ApplyFloorSnap()` does nothing when already on a floor. Otherwise it probes down by the larger of `FloorSnapLength` and `SafeMargin`, accepts a normal within `FloorMaxAngle`, stores floor/platform state and applies only the permitted up-axis travel. `IsOnFloor`, `IsOnWall`, `IsOnCeiling` and their `Only` variants describe the last completed movement, not future contacts. Floor/wall normals are global and copied. `GetSlideCollisionCount()` reports the stored list length; `GetSlideCollision(index)` rejects an invalid index, while `GetLastSlideCollision()` returns null on an empty list. Returned contact objects are independent caller-owned snapshots; later movement does not overwrite them. The destination overloads write into the supplied live caller-owned snapshot and create no new result object. An indexed read still rejects invalid indices; the final-contact overload clears stale fields on a miss. Null and disposed destinations reject. `CharacterBodyTests` verifies both outputs, independent copied snapshots and warmed zero allocation. Attached reads require the owner thread.
 
 ## Lifecycle, verification and limits
 

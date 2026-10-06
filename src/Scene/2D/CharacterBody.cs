@@ -358,6 +358,33 @@ public partial class CharacterBody : PhysicsBody
         return _slideResults.Count == 0 ? null : new(_slideResults[^1]);
     }
 
+    /// <summary>Copies one slide contact into a reusable caller-owned snapshot.</summary>
+    /// <param name="index">Zero-based contact index.</param>
+    /// <param name="result">Live destination snapshot.</param>
+    /// <exception cref="ArgumentNullException">The destination is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the last slide list.</exception>
+    /// <exception cref="ObjectDisposedException">The body or destination is disposed.</exception>
+    public void GetSlideCollision(int index, KinematicCollision result)
+    {
+        EnsureReadable();
+        ArgumentNullException.ThrowIfNull(result);
+        if ((uint)index >= (uint)_slideResults.Count) throw new ArgumentOutOfRangeException(nameof(index));
+        result.Set(_slideResults[index]);
+    }
+
+    /// <summary>Copies the final slide contact into a reusable caller-owned snapshot.</summary>
+    /// <param name="result">Live destination; cleared when there was no contact.</param>
+    /// <returns>True when a contact was copied, false when the destination was cleared.</returns>
+    /// <exception cref="ArgumentNullException">The destination is null.</exception>
+    /// <exception cref="ObjectDisposedException">The body or destination is disposed.</exception>
+    public bool GetLastSlideCollision(KinematicCollision result)
+    {
+        EnsureReadable();
+        ArgumentNullException.ThrowIfNull(result);
+        result.Set(_slideResults.Count == 0 ? default : _slideResults[^1]);
+        return _slideResults.Count != 0;
+    }
+
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors().Concat(CharacterProperties);

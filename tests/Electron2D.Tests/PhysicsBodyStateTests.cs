@@ -5,6 +5,7 @@ internal static class PhysicsBodyStateTests
     internal static void Run()
     {
         VerifyLiveFieldsAndForces();
+        VerifyBodyViewSynchronization();
         VerifyCustomIntegration();
         VerifySolvedContacts();
         VerifyServerCallbacksAndLifetime();
@@ -12,6 +13,22 @@ internal static class PhysicsBodyStateTests
         VerifyCallbackFailureAndMutations();
         VerifyWarmAllocation();
         Console.WriteLine("Direct body state, post-solver callbacks, custom integration and allocation checks passed.");
+    }
+
+    private static void VerifyBodyViewSynchronization()
+    {
+        using var root = new Node();
+        var target = new RigidBody { Name = "Target", GravityScale = 0 };
+        var other = new RigidBody { Name = "Other", GravityScale = 0 };
+        root.AddChild(target); root.AddChild(other);
+        using var tree = new SceneTree(root);
+        target.Position = new(10, 20); other.Position = new(30, 40);
+        var view = PhysicsServer.BodyGetDirectState(target.GetRID())!;
+        Check(view.Transform.Origin.IsEqualApprox(target.Position) &&
+            Box2D.NET.B2Bodies.b2Body_GetPosition(other.BackendID) == default,
+            "A direct body view synchronizes its own pose without scanning unrelated bodies.");
+        tree.PhysicsFrame(1d / 60);
+        Check(other.Position.DistanceTo(new(30, 40)) < .001f, "The world step synchronizes the remaining body normally.");
     }
 
     private static void VerifyLiveFieldsAndForces()

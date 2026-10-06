@@ -191,6 +191,8 @@ body.CenterOfMass = new Vector2(5, 0);
 body.Inertia = 200;
 ```
 
+Prepared geometry completes deferred backend mass bookkeeping before stepping, including Debug assertion checks; this does not replace configured mass, inertia or custom centre values.
+
 Undefined mode, nonfinite or negative inertia, native reciprocal underflow/overflow and invalid center reject. Attached setters enforce owner thread and reject during solver-owned pose synchronization before replacing stored or native data. PackedScene stores mode before center. PhysicsServer typed mass methods share the same scene profile; BodyResetMassProperties selects Auto, clears stored center/inertia and retains Mass. [PhysicsMassProfileTests](../../tests/Electron2D.Tests/PhysicsMassProfileTests.cs) checks behavior and 64 warmed profile-change/solver frames with zero managed allocation; [ADR 0073](../decisions/physics-mass.md#adr-0073) records automatic geometry and ownership adaptations. Native allocation and other platforms remain unverified.
 
 ## Shared force lifetime
@@ -214,3 +216,5 @@ Current kinematic paths can use several native integration intervals within one 
 ## Server material and field parameter projection
 
 Typed PhysicsServer body parameters share GravityScale, LinearDamp/AngularDamp and their modes with this scene object. A per-body signed friction/bounce write overrides fixture coefficients without mutating a borrowed PhysicsMaterial; resource assignment/revision/disposal reloads both coefficients. Revision polling recovers missed callback delivery. Leaving approximately zero gravity scale follows the immediate wakeup rule, while changed selected fields retain the existing wake policy. [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) and [ADR 0076](../decisions/physics-mass.md#adr-0076) cover ownership, physical contacts, fields and failures.
+
+Configured contact limits prepare retained raw-pair and point storage before fixed stepping. Every touching manifold contributes a point, so the reported-point cap also bounds the required raw-pair count. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.

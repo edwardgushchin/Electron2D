@@ -46,7 +46,7 @@ public partial class RigidBody
     /// <summary>Gets or sets the maximum number of contact points reported from a fixed step.</summary>
     /// <value>Zero by default, which disables contact-point reporting and contact entry/exit.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned count is negative.</exception>
-    /// <remarks>Attached access requires the scene owner thread. Reported points are capped after each fixed step.</remarks>
+    /// <remarks>Attached access requires the scene owner thread. The assignment prepares contact storage; reported points are capped after each fixed step.</remarks>
     public int MaxContactsReported
     {
         get { ThrowIfDisposed(); return _maxContactsReported; }
@@ -54,7 +54,13 @@ public partial class RigidBody
         {
             EnsureMutable();
             if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+            if (_contactData.Length < value) Array.Resize(ref _contactData, value);
+            _contacts.EnsureCapacity(value); _nextContacts.EnsureCapacity(value);
+            _shapePairs.Prepare(value);
+            _pairChanges.EnsureCapacity(checked(value * 4));
+            PhysicsServer.Service.BodyRuntime(PhysicsRID).View?.PrepareContacts(value);
             _maxContactsReported = value;
+            Space?.PrepareMonitoringCapacity();
         }
     }
 
@@ -106,15 +112,14 @@ public partial class RigidBody
         return pending;
     }
 
-    internal void CollectContacts(PhysicsSpace space, List<PhysicsSpace.ContactEvent> events)
+    internal void CollectContacts(List<PhysicsSpace.ContactEvent> events)
     {
         _nextContacts.Clear(); _shapePairs.Begin();
         var pointCount = 0;
         if (_maxContactsReported > 0 && HasBackend)
         {
-            var capacity = b2Body_GetContactCapacity(BackendID);
-            if (_contactData.Length < capacity) Array.Resize(ref _contactData, capacity);
-            var pairCount = b2Body_GetContactData(BackendID, _contactData, capacity);
+            // Every touching manifold contributes at least one point; the point limit also bounds required pairs.
+            var pairCount = b2Body_GetContactData(BackendID, _contactData, _maxContactsReported);
             for (var index = 0; index < pairCount && pointCount < _maxContactsReported; index++)
             {
                 ref readonly var contact = ref _contactData[index];
@@ -123,13 +128,12 @@ public partial class RigidBody
                 pointCount += retained;
                 if (!_contactMonitor) continue;
                 var first = b2Shape_GetBody(contact.shapeIdA);
-                var second = b2Shape_GetBody(contact.shapeIdB);
-                var other = space.FindBody(first == BackendID ? second : first);
+                var ownTag = b2Shape_GetUserData(first == BackendID ? contact.shapeIdA : contact.shapeIdB).GetRef<PhysicsFixtureTag>();
+                var otherTag = b2Shape_GetUserData(first == BackendID ? contact.shapeIdB : contact.shapeIdA).GetRef<PhysicsFixtureTag>();
+                var other = otherTag is null ? null : PhysicsServer.Service.ResolveSceneObject(otherTag.ColliderRID) as PhysicsBody;
                 if (other is not null && !ReferenceEquals(other, this))
                 {
                     _nextContacts.Add(other);
-                    var ownTag = b2Shape_GetUserData(first == BackendID ? contact.shapeIdA : contact.shapeIdB).GetRef<PhysicsFixtureTag>();
-                    var otherTag = b2Shape_GetUserData(first == BackendID ? contact.shapeIdB : contact.shapeIdA).GetRef<PhysicsFixtureTag>();
                     if (ownTag is not null && otherTag is not null)
                         _shapePairs.Observe(new(otherTag.ColliderRID, other, false, otherTag.ShapeIndex, ownTag.ShapeIndex));
                 }

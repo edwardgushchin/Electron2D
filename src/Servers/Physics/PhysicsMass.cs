@@ -109,6 +109,8 @@ internal static class PhysicsMass
             applied.mass = 0; applied.rotationalInertia = 0;
         }
         b2Body_SetMassData(body, applied);
+        // Fixture edits defer mass; the validated custom profile completes that pending update.
+        b2GetBodyFullId(world, body).flags &= ~(uint)B2BodyFlags.b2_dirtyMass;
         var simulation = PhysicsBodyRuntime.Simulation(body);
         simulation.minExtent = minExtent; simulation.maxExtent = maxExtent;
         return result;

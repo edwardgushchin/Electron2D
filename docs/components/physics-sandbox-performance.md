@@ -1,0 +1,53 @@
+# PhysicsSandbox performance
+
+Last updated: 2026-10-06
+
+## Measurement contract
+
+The test-only [profiler](../../tests/Electron2D.Tests/PhysicsSandboxTests.Profile.cs) measures actual public-API stories and a native 1152×800 Wayland GPU window on Linux x64/.NET 10. `DOTNET_TieredCompilation=0` stabilizes the allocation checks. Each story has 1,600 fixed warmup ticks and 256 measured ticks; every native normal/debug trial has 768 warmup frames and 192 measured frames. A moving scene pointer and periodic impulses keep queries and contacts active. Motorcycle demo drive and a bird shot start each corresponding trial. The final full run uses 1,024 stress bodies. The 60 FPS cap, presentation and scheduling waits remain enabled; this is observed window cadence rather than uncapped renderer throughput.
+
+`GC.GetAllocatedBytesForCurrentThread()` brackets every measured fixed step and full scene/render-owner frame. Render callbacks are bracketed separately. The maximum on every frame, rather than a rounded mean, must be exactly zero. Report serialization, test instrumentation and scene transitions are outside those intervals. Native GUI hover is cleared before warmup; pointer queries are moved through the scene API. Construction, new bodies, configuration edits, fresh native input-event construction, tooltips, readback and native/GPU allocations are not covered by the zero-byte result. Mouse-event creation remains an allocating runtime path. This result is a prepared simulation/UI/debug budget, not a global zero-allocation guarantee for all interactions.
+
+## Release result
+
+All 11 fixed-step cases and all 22 normal/debug trials passed the zero-byte gate. Raw local evidence: `bin/physics-sandbox/profile-Release-final.json` (ignored/generated, not shipped in the runtime).
+
+| Story | Bodies | Fixed mean / p95 ms | Normal / debug FPS | Normal / debug render ms | Fixed / maximum frame bytes | Construction MiB |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Collision warehouse | 72 | 0.196 / 0.238 | 57.1 / 58.0 | 3.49 / 2.64 | 0 / 0 | 20.18 |
+| Marble delivery | 8 | 0.032 / 0.043 | 58.6 / 58.1 | 1.69 / 1.84 | 0 / 0 | 1.14 |
+| Clockwork playground | 4 | 0.010 / 0.011 | 58.8 / 58.2 | 1.62 / 1.84 | 0 / 0 | 0.63 |
+| Gravity garden | 18 | 0.055 / 0.092 | 58.0 / 57.3 | 1.79 / 2.75 | 0 / 0 | 2.34 |
+| Rooftop courier | 2 | 0.029 / 0.035 | 58.5 / 57.4 | 1.69 / 3.00 | 0 / 0 | 0.66 |
+| Radar rescue | 1 | 0.044 / 0.052 | 57.7 / 58.8 | 1.97 / 1.62 | 0 / 0 | 0.57 |
+| Orbital tug | 2 | 0.012 / 0.013 | 58.5 / 56.6 | 1.72 / 2.42 | 0 / 0 | 0.39 |
+| Shape atelier | 7 | 0.038 / 0.053 | 58.2 / 57.6 | 1.82 / 2.05 | 0 / 0 | 0.90 |
+| Physics stress test | 1024 | 11.568 / 21.657 | 24.0 / 41.9 | 5.69 / 9.17 | 0 / 0 | 61.96 |
+| Gravity Defied | 3 | 0.022 / 0.026 | 58.3 / 58.2 | 1.79 / 1.78 | 0 / 0 | 0.65 |
+| Angry birds | 22 | 0.081 / 0.105 | 58.5 / 57.7 | 1.60 / 1.87 | 0 / 0 | 2.22 |
+
+The final stress row uses 1,024 always-awake real circles. The preceding 512-body full run measured 3.689 ms/tick and 57.9 FPS with debug off/on, also at zero frame bytes. Construction allocates deliberately: contact caps, graph/overlap storage and dormant solver sets are prepared and retained until world disposal. Four contacts per rounded body-capacity slot is the prepared graph ceiling; denser unprepared topology can grow buffers. Dormant storage follows bodies that can sleep; the stress particles disable automatic sleeping. Larger sleepable populations increase startup/storage cost, so this table also reports construction bytes.
+
+## Reported low FPS and changes
+
+The user's 1,024-body screenshot reported roughly 2–6 FPS with debug off. Ordinary unoptimized Debug measured 54.4 ms per fixed tick even after the first arithmetic changes. The example now opts into compiler/JIT optimization for its consumer and runtime reference in both configurations; Debug symbols and backend assertions remain enabled. Other projects retain their own build configuration.
+
+A controlled early Release 1,024-body run measured 25.0 FPS normally and 11.6 FPS with debug, with about 14 ms fixed ticks. That run still had late contact-object and render-buffer growth. The first optimized iteration reached 55.5 / 33.9 FPS and 7.5 ms/tick; these are intermediate measurements with a shorter 240-tick fixed warmup, not the final acceptance sample.
+
+A later full-warmup maximum-load attempt regressed to 9.8 debug FPS despite zero managed frame bytes. Thus the allocation gate alone did not establish performance. The final scene-owner runtime retains its existing weak registration, preserving release/attachment guards while avoiding repeated locked registry lookups in state access. Acquiring a direct body view now prepares its requested body rather than the entire space; whole-space queries still prepare all fixtures separately. Collecting N initial body views therefore avoids N whole-world scans. Debug draws each dynamic contact pair once and removes redundant transform commands from the batched stress path. A focused 1,024-body Release run with default tiered compilation after the weak-owner/pair change measured 55.4 / 56.6 FPS, 7.564 ms fixed mean (8.896 ms p95), and 3.575 / 6.269 ms render mean. All 256 fixed ticks and 192 normal plus 192 debug sampled frames had exactly zero owner-thread managed bytes (`profile-Release-stress1024-cache.json`).
+
+The final three-minute Release settling run with tiered compilation disabled recorded 33.5–49.3 FPS in fifteen-second windows. Settled mean was 40.6 FPS at 60–90 seconds and final mean 43.1 FPS at 150–180 seconds, so the cadence-retention gate passed. After the initial window, physics stayed approximately 60 Hz and the impact counter stayed at 8,561. Evidence: `bin/physics-sandbox/long-stress-Release.json`. An optimized Debug run retained its relative cadence too, but still had lower throughput and host-load spikes; 60 render FPS at 1,024 bodies is not guaranteed in Debug.
+
+The original warehouse Debug run measured 39.9 / 22.7 FPS and 15,304 managed bytes per debug frame. The final steady budget is exactly zero in the table above. Renderer readout/static-grid costs, contact-owner scans and redundant empty integration synchronization were removed. Query/slide results fill caller-owned buffers, direct views are reused, numeric HUD formatting stays on the stack, and four-lane solver arithmetic uses Vector128 operations. Contact/island slots, sleeping storage and contact/body bit sets are retained/prepared. Debug normals/markers use batched lines and prepare their configured contact ceiling once using clipped-off segments; a new maximum contact count cannot then force late growth. Temporary allocation listeners and per-node timing probes were removed.
+
+## Reproduce and limits
+
+```bash
+DOTNET_TieredCompilation=0 ELECTRON2D_TEST_PHYSICS_SANDBOX_PROFILE=1 ELECTRON2D_SANDBOX_PROFILE_TAG=verified SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests -c Release
+```
+
+Use `ELECTRON2D_SANDBOX_PROFILE_SCENE=8 ELECTRON2D_SANDBOX_STRESS_COUNT=1024` for the maximum-load case. Use `-c Debug -p:Optimize=true` for the optimized Debug runtime used by this example. JSON records optimization state, sample counts, body count, mean/p95 durations and exact maximum managed bytes.
+
+`ELECTRON2D_SANDBOX_PROFILE_LONG=1` selects a three-minute native settling run at 1,024 always-awake bodies with debug enabled. Fifteen-second windows record cadence, render time, physics frequency, contact-event count and managed heap. The final 150–180-second mean must retain at least 80% of the settled 60–90-second mean; initial filling/cold work is excluded from that relative comparison. The long-run instrumentation itself allocates at interval boundaries and is not the zero-byte profiler. Concurrent desktop/compiler work affects these real window measurements; no absolute FPS assertion is imposed on arbitrary hosts.
+
+The focused sandbox checks cover 11 finite stories, all 33 actions, world defaults, native sliders, pause/step, grabbing, deferred parcel collection, motorcycle joints and native slingshot release. The physical runtime audit exercised 38 existing suites. GPU and compatibility capture runs cover all 11 normal/debug views and native controls on Linux Wayland. Other platforms, sustained native input allocation, native/GPU memory and human game-feel acceptance remain separate gates. The game cap and incomplete physics capabilities are listed in the [sandbox map](physics-sandbox.md).

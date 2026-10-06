@@ -1,6 +1,6 @@
 # Physics server and direct queries component
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -68,3 +68,5 @@ Shared [scene/server joint resources](physics-joints.md) use the existing physic
 [Indexed PhysicsServer geometry](../classes/PhysicsServer.md#shape-slots) now shares the scene/server logical slots, effective local poses and native fixture/query path under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). Raw replacement/pose/disabled/one-way edits do not rewrite child configuration; group/child edits reclaim corresponding overrides. Shape free/replacement follows shared RID/view ownership and related-world phase guards. Effective poses also feed mass geometry. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies real geometry, body/Area lifetime and one-way contacts/motion on Linux/.NET 10.
 
 [Physics world activity](../classes/PhysicsServer.md#activity) is now independent of scene scheduling under [ADR 0089](../decisions/physics-activity.md#adr-0089). SceneTree activates its lazily created world; explicit SpaceCreate defaults inactive and requires SpaceSetActive(true). Global/local false skips simulation, force consumption and solver callbacks without clearing native state or accumulating elapsed time. Queries/configuration/cleanup and scene callbacks/timers continue. [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks the profile and warmed allocation on Linux/.NET 10.
+
+Point, shape-intersection and shape-contact queries also accept caller-owned spans. Their bounded outputs share ordering, deduplication, filtering and units with the copied-array overloads; only full contact pairs are written. Scratch buffers and copied exclusions are retained across repeated calls. `PhysicsShapeQueryTests` checks active/miss zero managed allocation after preparation and all output boundary cases. Character slide getters have reusable `KinematicCollision` destination overloads under the same ownership rule.

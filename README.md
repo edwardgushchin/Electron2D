@@ -101,6 +101,12 @@ For macOS, use the [application bundle](examples/CharacterMovement/README.md#mac
 
 [Example source](examples/CharacterMovement/CharacterMovementScene.cs) · [Run instructions](examples/CharacterMovement/README.md)
 
+Explore the physics engine with [PhysicsSandbox](examples/PhysicsSandbox/README.md): eleven interactive scenes, a scene dropdown and collider/contact debugging in a 1152×800 desktop window.
+
+```bash
+dotnet run --project examples/PhysicsSandbox -c Release
+```
+
 <a id="use-electron2d-in-your-game"></a>
 
 ### Create a game project

@@ -10,7 +10,49 @@ internal static class PhysicsShapeQueryTests
         VerifyContactPairFamilies();
         VerifyCompoundAndHollowQueries();
         VerifySceneShapeQueries();
+        VerifyCallerOwnedResults();
         Console.WriteLine("Physics shape-query overlap, motion, contacts and rest checks passed.");
+    }
+
+    private static void VerifyCallerOwnedResults()
+    {
+        using var root = new SubViewport();
+        using var tree = new SceneTree(root);
+        using var box = new RectangleShape { Size = new(40, 40) };
+        var body = new StaticBody();
+        body.AddChild(new CollisionShape { Shape = box });
+        body.AddChild(new CollisionShape { Name = "Second", Shape = box });
+        root.AddChild(body);
+        var direct = body.GetWorld()!.DirectSpaceState;
+        using var shape = new PhysicsShapeQueryParameters { Shape = box };
+        using var point = new PhysicsPointQueryParameters();
+        using var ray = PhysicsRayQueryParameters.Create(new(-60, 0), new(60, 0), exclude: [body.GetRID()]);
+        var shapeBuffer = new PhysicsShapeResult[8];
+        var pointBuffer = new PhysicsPointResult[8];
+        var contacts = new Vector2[33];
+        var expectedShape = direct.IntersectShape(shape);
+        var expectedPoint = direct.IntersectPoint(point);
+        var expectedContacts = direct.CollideShape(shape);
+        Check(direct.IntersectShape(shape, shapeBuffer) == expectedShape.Length && shapeBuffer.AsSpan(0, expectedShape.Length).SequenceEqual(expectedShape), "Shape spans preserve compound owner order and identity.");
+        Check(direct.IntersectPoint(point, pointBuffer) == expectedPoint.Length && pointBuffer.AsSpan(0, expectedPoint.Length).SequenceEqual(expectedPoint), "Point spans preserve ordered owner hits.");
+        contacts[^1] = new(999, 999);
+        Check(direct.CollideShape(shape, contacts) * 2 == expectedContacts.Length && contacts.AsSpan(0, expectedContacts.Length).SequenceEqual(expectedContacts) && contacts[^1] == new Vector2(999, 999), "Contact spans preserve pairs and the unused odd tail.");
+        Check(direct.IntersectShape(shape, shapeBuffer.AsSpan(0, 1)) == 1 && direct.IntersectPoint(point, pointBuffer.AsSpan(0, 1)) == 1 && direct.CollideShape(shape, contacts.AsSpan(0, 3)) == 1, "Destination capacity truncates only after stable ordering and keeps complete pairs.");
+        Check(direct.IntersectShape(shape, Span<PhysicsShapeResult>.Empty) == 0 && direct.IntersectPoint(point, Span<PhysicsPointResult>.Empty) == 0 && direct.CollideShape(shape, contacts.AsSpan(0, 1)) == 0, "Empty or sub-pair capacity writes no results.");
+        for (var i = 0; i < 128; i++) { direct.IntersectShape(shape, shapeBuffer); direct.IntersectPoint(point, pointBuffer); direct.CollideShape(shape, contacts); direct.IntersectRay(ray); }
+        var allocated = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 128; i++)
+        {
+            direct.IntersectShape(shape, shapeBuffer); direct.IntersectPoint(point, pointBuffer); direct.CollideShape(shape, contacts); direct.IntersectRay(ray);
+            shape.Transform = new Transform(0, new Vector2(i % 2 == 0 ? 100 : 0, 0));
+            point.Position = shape.Transform.Origin;
+        }
+        Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "Warmed active/miss point, shape, contact and excluded-ray queries allocate zero managed bytes.");
+        shape.Exclude = [body.GetRID()]; point.Exclude = [body.GetRID()];
+        Check(direct.IntersectShape(shape, shapeBuffer) == 0 && direct.IntersectPoint(point, pointBuffer) == 0 && direct.CollideShape(shape, contacts) == 0, "Span query exclusions are shared with the copied-result contract.");
+        Reject<ArgumentNullException>(() => direct.IntersectShape(null!, shapeBuffer));
+        Reject<ArgumentNullException>(() => direct.IntersectPoint(null!, pointBuffer));
+        Reject<ArgumentNullException>(() => direct.CollideShape(null!, contacts));
     }
 
     private static void VerifyParametersAndBorrowedShapeRID()

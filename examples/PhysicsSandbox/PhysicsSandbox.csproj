@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Optimize>true</Optimize>
+    <AssemblyName>PhysicsSandbox</AssemblyName>
+    <ApplicationIcon>../../editor/Assets/Electron2D.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Electron2D.csproj" AdditionalProperties="Optimize=true" />
+    <Content Include="../../editor/Assets/IBMPlexSans-Regular.ttf;../../editor/Assets/IBMPlexSans-SemiBold.ttf;../../editor/Assets/IBMPlexSans-OFL.txt" Link="Assets/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
+</Project>

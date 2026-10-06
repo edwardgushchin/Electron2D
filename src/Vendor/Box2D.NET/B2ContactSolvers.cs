@@ -5,6 +5,7 @@
 
 using System;
 using System.Numerics;
+using System.Runtime.Intrinsics;
 using System.Runtime.CompilerServices;
 using static Box2D.NET.B2Arrays;
 using static Box2D.NET.B2Cores;
@@ -654,31 +655,31 @@ namespace Box2D.NET
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2AddW(in B2FloatW a, in B2FloatW b)
         {
-            return new B2FloatW(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) + Unsafe.BitCast<B2FloatW, Vector128<float>>(b));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2SubW(in B2FloatW a, in B2FloatW b)
         {
-            return new B2FloatW(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
+            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) - Unsafe.BitCast<B2FloatW, Vector128<float>>(b));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2MulW(in B2FloatW a, in B2FloatW b)
         {
-            return new B2FloatW(a.X * b.X, a.Y * b.Y, a.Z * b.Z, a.W * b.W);
+            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) * Unsafe.BitCast<B2FloatW, Vector128<float>>(b));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2MulAddW(in B2FloatW a, in B2FloatW b, in B2FloatW c)
         {
-            return new B2FloatW(a.X + b.X * c.X, a.Y + b.Y * c.Y, a.Z + b.Z * c.Z, a.W + b.W * c.W);
+            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) + Unsafe.BitCast<B2FloatW, Vector128<float>>(b) * Unsafe.BitCast<B2FloatW, Vector128<float>>(c));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static B2FloatW b2MulSubW(in B2FloatW a, in B2FloatW b, in B2FloatW c)
         {
-            return new B2FloatW(a.X - b.X * c.X, a.Y - b.Y * c.Y, a.Z - b.Z * c.Z, a.W - b.W * c.W);
+            return Unsafe.BitCast<Vector128<float>, B2FloatW>(Unsafe.BitCast<B2FloatW, Vector128<float>>(a) - Unsafe.BitCast<B2FloatW, Vector128<float>>(b) * Unsafe.BitCast<B2FloatW, Vector128<float>>(c));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

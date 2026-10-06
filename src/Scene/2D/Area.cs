@@ -240,6 +240,12 @@ public sealed partial class Area : CollisionObject
         }
     }
 
+    internal void PrepareOverlaps(int objects, int pairs)
+    {
+        _overlaps.EnsureCapacity(objects); _nextOverlaps.EnsureCapacity(objects);
+        _shapePairs.Prepare(pairs); _pairChanges.EnsureCapacity(checked(pairs * 4));
+    }
+
     internal void BeginOverlapScan() { _nextOverlaps.Clear(); _shapePairs.Begin(); }
     internal void Observe(PhysicsShapePair pair)
     {

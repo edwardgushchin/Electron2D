@@ -37,6 +37,8 @@ internal sealed partial class PhysicsSpace : IDisposable
     private bool _dispatchingContacts;
     private bool _disposed;
     private long _contactStep;
+    private int _preparedBodyCapacity;
+    private int _preparedSleepCapacity;
 
     internal readonly record struct OverlapEvent(Area Area, PhysicsShapePairChange Change);
     internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsShapePairChange Change);
@@ -108,6 +110,92 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var collider in _serverColliders) collider.PrepareBackend();
     }
 
+    internal void PrepareMonitoringCapacity()
+    {
+        var objects = _bodies.Count + _areas.Count + _serverColliders.Count;
+        var shapes = 0; var contactEvents = 0;
+        foreach (var body in _bodies) { shapes += body.BackendShapes.Count; if (body is RigidBody rigid) contactEvents += checked(rigid.MaxContactsReported * 4); }
+        foreach (var area in _areas) shapes += area.BackendShapes.Count;
+        foreach (var collider in _serverColliders) shapes += collider.BackendShapes.Count;
+        var overlapEvents = 0; var serverEvents = 0;
+        foreach (var area in _areas)
+        {
+            var pairs = checked(area.BackendShapes.Count * shapes);
+            area.PrepareOverlaps(objects, pairs); overlapEvents += checked(pairs * 4);
+            if (PhysicsServer.Service.FindAreaRuntime(area.PhysicsRID) is { } runtime) { runtime.Prepare(pairs); serverEvents += checked(pairs * 2); }
+        }
+        foreach (var collider in _serverColliders)
+            if (collider.IsArea && PhysicsServer.Service.FindAreaRuntime(collider.RID) is { } runtime)
+            {
+                var pairs = checked(collider.BackendShapes.Count * shapes);
+                runtime.Prepare(pairs); serverEvents += checked(pairs * 2);
+            }
+        _contactEvents.EnsureCapacity(contactEvents); _sleepEvents.EnsureCapacity(_bodies.Count);
+        _overlapEvents.EnsureCapacity(overlapEvents); _serverAreaEvents.EnsureCapacity(serverEvents);
+        _fieldAreas.EnsureCapacity(_areas.Count + _serverColliders.Count);
+        var world = b2GetWorldFromId(_worldID);
+        foreach (var sensor in world.sensors.data.AsSpan(0, world.sensors.count))
+        {
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref sensor.hits, world.shapes.count);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref sensor.overlaps1, world.shapes.count);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref sensor.overlaps2, world.shapes.count);
+        }
+
+    }
+
+    private void PrepareSolverCapacity()
+    {
+        var world = b2GetWorldFromId(_worldID);
+        var count = world.bodyIdPool.nextIndex;
+        var sleeping = 0;
+        foreach (var body in world.bodies.data.AsSpan(0, world.bodies.count))
+            if (body.id >= 0 && body.type == B2BodyType.b2_dynamicBody && body.enableSleep) sleeping++;
+        var sleepCapacity = sleeping == 0 ? 0 : (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)sleeping);
+        var capacity = (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(8, count));
+        if (capacity <= _preparedBodyCapacity && sleepCapacity <= _preparedSleepCapacity) return;
+        _preparedBodyCapacity = Math.Max(_preparedBodyCapacity, capacity);
+        _preparedSleepCapacity = Math.Max(_preparedSleepCapacity, sleepCapacity);
+        capacity = _preparedBodyCapacity; sleepCapacity = _preparedSleepCapacity;
+        // Dormant island storage follows bodies that can sleep; active stress particles need no dormant copies.
+        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSets, sleepCapacity + 3);
+        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSetIdPool.freeArray, sleepCapacity + 3);
+        while (world.solverSets.count < sleepCapacity + 3)
+        {
+            var index = world.solverSetIdPool.nextIndex++;
+            var set = new B2SolverSet { setIndex = B2_NULL_INDEX };
+            Box2D.NET.B2Arrays.b2Array_Push(ref world.solverSets, set);
+            Box2D.NET.B2IdPools.b2FreeId(world.solverSetIdPool, index);
+        }
+        var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
+        Box2D.NET.B2Arrays.b2Array_Reserve(ref awake.bodyStates, capacity);
+        // ponytail: Four contacts per body is the prepared graph budget; larger topologies need explicit capacity preparation.
+        var contacts = checked(capacity * 4);
+        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.contacts, contacts);
+        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.contactIdPool.freeArray, contacts);
+        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.islands, capacity);
+        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.islandIdPool.freeArray, capacity);
+        foreach (var set in world.solverSets.data.AsSpan(0, world.solverSets.count))
+        {
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.bodySims, set.setIndex >= 0 ? capacity : sleepCapacity);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.contactSims, set.setIndex >= 0 ? contacts : sleepCapacity * 4);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.jointSims, 4);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.islandSims, set.setIndex >= 0 ? capacity : sleepCapacity);
+        }
+        foreach (var task in world.taskContexts.data.AsSpan(0, world.taskContexts.count))
+        {
+            Box2D.NET.B2BitSets.b2SetBitCountAndClear(ref task.contactStateBitSet, contacts);
+            Box2D.NET.B2BitSets.b2SetBitCountAndClear(ref task.enlargedSimBitSet, capacity);
+            Box2D.NET.B2BitSets.b2SetBitCountAndClear(ref task.awakeIslandBitSet, capacity);
+        }
+        for (var index = 0; index < world.constraintGraph.colors.Length; index++)
+        {
+            ref var color = ref world.constraintGraph.colors[index];
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref color.contactSims, contacts);
+            if (index != Box2D.NET.B2ConstraintGraphs.B2_OVERFLOW_INDEX && color.bodySet.blockCount < (capacity + 63) / 64)
+                Box2D.NET.B2BitSets.b2GrowBitSet(ref color.bodySet, (capacity + 63) / 64);
+        }
+    }
+
     internal void Add(PhysicsBody body)
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
@@ -116,6 +204,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         _bodies.EnsureCapacity(_bodies.Count + 1);
         body.AttachBackend(this);
         _bodies.Add(body);
+        PrepareSolverCapacity();
+        PrepareMonitoringCapacity();
         foreach (var joint in _joints) joint.BodyArrived();
         PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
     }
@@ -175,6 +265,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         _areas.EnsureCapacity(_areas.Count + 1);
         area.AttachBackend(this);
         _areas.Add(area);
+        PrepareSolverCapacity();
+        PrepareMonitoringCapacity();
     }
 
     internal void Add(PhysicsServerCollider collider, RID spaceRID)
@@ -185,6 +277,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         _serverColliders.EnsureCapacity(_serverColliders.Count + 1);
         collider.AttachBackend(this, spaceRID);
         _serverColliders.Add(collider);
+        PrepareSolverCapacity();
+        PrepareMonitoringCapacity();
         if (!collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
     }
 
@@ -254,7 +348,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             {
                 if (body is not RigidBody rigid) continue;
                 if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid);
-                rigid.CollectContacts(this, _contactEvents);
+                rigid.CollectContacts(_contactEvents);
             }
             ScanAreas();
             ScanAreaMonitors();
@@ -523,14 +617,6 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
         var cache = new B2SimplexCache();
         return b2ShapeDistance(ref input, ref cache, null, 0).distance <= 0.1f * B2_LINEAR_SLOP;
-    }
-
-    internal PhysicsBody? FindBody(B2BodyId id)
-    {
-        // ponytail: Linear lookup is sufficient for small scenes; index body IDs if contact-heavy worlds show a measured cost.
-        foreach (var body in _bodies)
-            if (body.BackendID == id) return body;
-        return null;
     }
 
     private void DispatchEvents()
