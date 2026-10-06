@@ -71,7 +71,7 @@ Start with the “Character movement” example. You will see a character and mo
 
 Use NuGet to install `Electron2D` and the packages for your game targets: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` or `Electron2D.tvOS`. Android TV uses `Electron2D.Android`; Apple TV uses `Electron2D.tvOS`. Native dependencies restore automatically. [Platform packages and version rules](docs/native-packaging.md).
 
-Prerelease packages require `--prerelease`. Use matching engine and platform package versions. Publication of the current `0.1.0-alpha` packages to nuget.org is not complete yet.
+Prerelease packages require `--prerelease`. Use matching engine and platform package versions. Current NuGet version: [`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha).
 
 ### Build and run
 

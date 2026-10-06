@@ -71,7 +71,7 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 Подключайте движок через NuGet: пакет `Electron2D` и пакеты нужных платформ: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` или `Electron2D.tvOS`. Для Android TV используется `Electron2D.Android`, для Apple TV используется `Electron2D.tvOS`. Нативные зависимости восстанавливаются автоматически. [Платформенные пакеты и правила версий](docs/native-packaging.md).
 
-Для предварительных версий добавляйте `--prerelease`. Используйте совпадающие версии движка и платформенных пакетов. Публикация текущих пакетов `0.1.0-alpha` на nuget.org ещё не завершена.
+Для предварительных версий добавляйте `--prerelease`. Используйте совпадающие версии движка и платформенных пакетов. Текущая версия в NuGet: [`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha).
 
 ### Сборка и запуск
 

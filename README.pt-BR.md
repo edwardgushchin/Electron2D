@@ -71,7 +71,7 @@ Comece pelo exemplo «Movimentação do personagem». Você verá um personagem 
 
 Instale pelo NuGet `Electron2D` e os pacotes das plataformas do seu jogo: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` ou `Electron2D.tvOS`. O Android TV usa `Electron2D.Android`; o Apple TV usa `Electron2D.tvOS`. As dependências nativas são restauradas automaticamente. [Pacotes de plataforma e regras de versões](docs/native-packaging.md).
 
-Pacotes de pré-lançamento exigem `--prerelease`. Use versões correspondentes do motor e dos pacotes de plataforma. A publicação dos pacotes atuais `0.1.0-alpha` no nuget.org ainda não foi concluída.
+Pacotes de pré-lançamento exigem `--prerelease`. Use versões correspondentes do motor e dos pacotes de plataforma. Versão atual no NuGet: [`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha).
 
 ### Compilar e executar
 
