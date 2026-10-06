@@ -6,7 +6,7 @@
     <source media="(prefers-color-scheme: light) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-light.svg">
     <source media="(prefers-color-scheme: dark)" srcset="docs/design/assets/sprite/logo-primary-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/design/assets/sprite/logo-primary-light.svg">
-    <img alt="Electron2D — Agent-native cross-platform 2D game engine" src="docs/design/assets/sprite/logo-primary-light.svg" width="640" height="148">
+    <img alt="Electron2D - Agent-native cross-platform 2D game engine" src="docs/design/assets/sprite/logo-primary-light.svg" width="640" height="148">
   </picture>
 </h1>
 
@@ -38,22 +38,24 @@
 
 Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与 AI 智能体共同开发游戏**。
 
-使用熟悉的 .NET 工具，以及 Codex、Claude Code 等 AI 助手，创作游戏世界和玩法。
+使用熟悉的 .NET 工具创作游戏世界和玩法。Codex、Claude Code 和其他 AI 助手可以协助编写代码。
 
 <a id="features"></a>
 
 ## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="28" align="absmiddle" alt=""> 功能
 
+这里概述引擎已经实现的主要功能。各子系统的 API 仍在开发中，具体范围和限制见对应文档。
+
 - [图形](docs/domains/rendering.md)。精灵、纹理图集、摄像机、视差，以及图形和文字绘制。支持为材质导入 HLSL 和 GLSL 着色器。
-- [场景与动画](docs/domains/scene.md)。可复用的对象和关卡、逐帧动画、属性动画和计时器。
+- [场景与动画](docs/domains/scene.md)。游戏对象层级、场景保存与加载、逐帧动画、属性动画和计时器。
 - [物理](docs/domains/physics.md)。刚体、碰撞、区域、相交查询、铰链和弹簧。
 - [游戏界面](docs/domains/scene.md)。按钮、输入框、滚动、布局容器、字体和主题。
 - [音频](docs/domains/audio.md)。WAV、MP3 和 Ogg Vorbis、位置音效、混音、效果和录音。
 - [输入](docs/domains/input.md)。键盘、鼠标、触控和控制器。将输入映射到游戏操作。
 - [寻路](docs/domains/navigation.md)。在网格或指定点之间寻找路径，并考虑障碍物与移动代价。
 - [资源](docs/domains/resources.md)。加载图像、字体和音频。支持渐变、曲线和程序化纹理。
-- [本地化](docs/domains/localization.md)。翻译、复数形式和语言选择。
-- [网络](docs/domains/networking.md)。TCP、UDP、本地套接字和 TLS 加密连接。
+- [本地化](docs/domains/localization.md)。翻译、语言选择，以及按应用提供的规则选择复数形式。
+- [网络](docs/domains/networking.md)。TCP、UDP 和本地套接字、TLS 与 DTLS 安全连接、HTTP/HTTPS、WebSocket，以及 ENet 多人连接。
 
 着色器材质需要 GPU 渲染器。兼容渲染器支持基础 2D 图形。详细说明和限制请参阅上方链接中的文档。
 
@@ -69,13 +71,13 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)。仅从源码构建时需要 Git。
 
-通过 NuGet 安装 `Electron2D` 以及游戏目标平台的包：`Electron2D.Windows`、`Electron2D.Linux`、`Electron2D.MacOS`、`Electron2D.Web`、`Electron2D.Android`、`Electron2D.iOS` 或 `Electron2D.tvOS`。Android TV 使用 `Electron2D.Android`，Apple TV 使用 `Electron2D.tvOS`。原生依赖会自动还原。[平台包及版本规则](docs/native-packaging.md)。
+通过 NuGet 安装主包 `Electron2D` 和目标平台的包，命令见[下方表格](#use-electron2d-in-your-game)。NuGet 会自动还原原生依赖。[平台包版本规则](docs/native-packaging.md)。
 
 安装预发布包时需要 `--prerelease`。请使用版本匹配的引擎包和平台包。当前 NuGet 版本：[`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha)。
 
 ### 构建与运行
 
-通过 NuGet 构建和运行自己的游戏，请执行下方[在自己的游戏中使用 Electron2D](#use-electron2d-in-your-game)中的命令。无需引擎源码或原生编译器。
+创建自己的项目，请参阅[创建游戏项目](#use-electron2d-in-your-game)。以下命令用于构建和运行仓库中的现有示例。
 
 从源码构建时，克隆仓库并构建库：
 
@@ -99,9 +101,9 @@ dotnet run --project examples/CharacterMovement
 
 <a id="use-electron2d-in-your-game"></a>
 
-### 在自己的游戏中使用 Electron2D
+### 创建游戏项目
 
-使用 NuGet 开发桌面游戏时，创建一个 .NET 10 控制台项目并安装引擎：
+为面向 Windows、Linux 或 macOS 的游戏创建一个 .NET 10 控制台项目，并添加引擎包：
 
 ```bash
 dotnet new console -n MyGame --framework net10.0
@@ -117,7 +119,7 @@ dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
 cd ../MyGame
 ```
 
-通过 NuGet 添加目标平台的包，选择以下一条命令：
+然后安装目标平台的包：
 
 | 平台 | 命令 |
 | --- | --- |
@@ -125,12 +127,11 @@ cd ../MyGame
 | Linux | `dotnet add package Electron2D.Linux --prerelease` |
 | macOS | `dotnet add package Electron2D.MacOS --prerelease` |
 | Web | `dotnet add package Electron2D.Web --prerelease` |
-| Android | `dotnet add package Electron2D.Android --prerelease` |
+| Android 和 Android TV | `dotnet add package Electron2D.Android --prerelease` |
 | iOS | `dotnet add package Electron2D.iOS --prerelease` |
-| Android TV | `dotnet add package Electron2D.Android --prerelease` |
 | Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-面向多个平台时，请添加每个所需的平台包。Web、Android/Android TV 和 iOS/tvOS 需要对应的 .NET 工作负载和平台应用宿主；平台包本身不提供宿主。下方控制台示例仅适用于桌面平台。
+面向多个平台时，请添加每个所需的平台包。Web、Android、iOS 和 tvOS 需要对应的 .NET 工作负载，以及面向所选平台的独立应用项目。平台包不包含现成的应用项目。下方控制台示例适用于 Windows、Linux 和 macOS。
 
 将 `Program.cs` 的内容替换为以下代码：
 
@@ -181,13 +182,11 @@ Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生
 
 <a id="development"></a>
 
-## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> 引擎开发
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> 项目状态
 
-场景可以保存到文件中重复使用，也可以在游戏下次启动时加载。这由 `PackedScene` 和[类型化资源及场景文件](docs/components/resource-files.md)提供。目前可视化编辑器仅显示启动画面，游戏项目编辑和项目管理命令尚未实现。
+Electron2D 处于 alpha 阶段。公共 API 仍在开发中，可能随版本变化。
 
-[引擎架构](docs/decisions/agent-native.md#adr-0090)规划了供 AI 助手使用的项目操作命令，以及带图像验证的游戏场景运行工具。完整工具集仍待实现。
-
-下一步任务和各方法的状态见[开发路线图](docs/coverage/index.md)。已实现的行为在 API 参考中说明。
+可以在代码中创建场景，通过 `PackedScene` 保存，再从[资源及场景文件](docs/components/resource-files.md)中加载。目前可视化编辑器仅显示启动画面，游戏项目编辑尚未实现。
 
 <a id="documentation"></a>
 
@@ -198,8 +197,6 @@ Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生
 | 查找类或方法 | [API 参考](docs/inventory.md) |
 | 了解子系统 | [文档目录](docs/README.md) |
 | 准备着色器 | [HLSL 和 GLSL 导入工具](tools/shaders/README.md) |
-| 了解架构与设计决策 | [架构决策](docs/decisions/index.md) |
-| 选择开发任务 | [开发路线图](docs/coverage/index.md) |
 
 <a id="examples"></a>
 
@@ -213,14 +210,7 @@ Android 和浏览器验证目前仅涵盖特定场景。各目标平台的原生
 
 通过 [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) 报告错误或提出功能建议。报告错误时，请注明引擎版本或提交、操作系统和渲染器，并附上最小复现示例及错误输出。
 
-通过 [Pull Request](https://github.com/edwardgushchin/Electron2D/pulls) 提交修复。开始前请阅读[维护指南](docs/maintaining.md)及相关架构决策。代码、测试和文档应一起更新。
-
-在仓库根目录运行主要检查：
-
-```bash
-dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release
-tools/coverage/check.sh
-```
+通过 [Pull Request](https://github.com/edwardgushchin/Electron2D/pulls) 提交修复。工作流程见[贡献指南](CONTRIBUTING.md)。
 
 <a id="contributors"></a>
 

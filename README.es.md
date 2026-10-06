@@ -6,7 +6,7 @@
     <source media="(prefers-color-scheme: light) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-light.svg">
     <source media="(prefers-color-scheme: dark)" srcset="docs/design/assets/sprite/logo-primary-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/design/assets/sprite/logo-primary-light.svg">
-    <img alt="Electron2D — Agent-native cross-platform 2D game engine" src="docs/design/assets/sprite/logo-primary-light.svg" width="640" height="148">
+    <img alt="Electron2D - Agent-native cross-platform 2D game engine" src="docs/design/assets/sprite/logo-primary-light.svg" width="640" height="148">
   </picture>
 </h1>
 
@@ -38,22 +38,24 @@
 
 Electron2D es un **motor 2D libre y multiplataforma, escrito en C#, para crear juegos en colaboración con agentes de IA**.
 
-Crea mundos y mecánicas de juego con las herramientas habituales de .NET y asistentes de IA como Codex o Claude Code.
+Crea mundos y mecánicas de juego con las herramientas habituales de .NET. Codex, Claude Code y otros asistentes de IA pueden ayudarte con el código.
 
 <a id="features"></a>
 
 ## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="28" align="absmiddle" alt=""> Funciones
 
+Este es un resumen de las principales funciones ya implementadas en el motor. Las API de los subsistemas siguen evolucionando; los enlaces describen su alcance y sus limitaciones.
+
 - [Gráficos](docs/domains/rendering.md). Sprites y atlas, cámaras, paralaje, dibujo de formas y texto. Importación de shaders HLSL y GLSL para materiales.
-- [Escenas y animación](docs/domains/scene.md). Objetos y niveles reutilizables, animación por fotogramas, animación de propiedades y temporizadores.
+- [Escenas y animación](docs/domains/scene.md). Jerarquías de objetos del juego, guardado y carga de escenas, animación por fotogramas, animación de propiedades y temporizadores.
 - [Física](docs/domains/physics.md). Cuerpos rígidos, colisiones, áreas, consultas de intersección, articulaciones y resortes.
 - [Interfaz de juego](docs/domains/scene.md). Botones, campos de texto, desplazamiento, contenedores de diseño, fuentes y temas.
 - [Audio](docs/domains/audio.md). WAV, MP3 y Ogg Vorbis, audio posicional, mezcla, efectos y grabación.
 - [Controles](docs/domains/input.md). Teclado, ratón, entrada táctil y mandos. Asignación de entradas a acciones del juego.
 - [Búsqueda de rutas](docs/domains/navigation.md). Rutas en una cuadrícula o entre puntos definidos, teniendo en cuenta obstáculos y costes de desplazamiento.
 - [Recursos](docs/domains/resources.md). Carga de imágenes, fuentes y audio. Gradientes, curvas y texturas procedurales.
-- [Localización](docs/domains/localization.md). Traducciones, formas plurales y selección de idioma.
-- [Redes](docs/domains/networking.md). TCP, UDP, sockets locales y conexiones cifradas con TLS.
+- [Localización](docs/domains/localization.md). Traducciones, selección de idioma y formas plurales con reglas definidas por la aplicación.
+- [Redes](docs/domains/networking.md). TCP, UDP y sockets locales, conexiones seguras con TLS y DTLS, HTTP/HTTPS, WebSocket y conexiones multijugador mediante ENet.
 
 Los materiales con shaders requieren el renderizador GPU. El renderizador de compatibilidad admite gráficos 2D básicos. Consulta los enlaces anteriores para conocer los detalles y las limitaciones.
 
@@ -69,13 +71,13 @@ Empieza con el ejemplo «Movimiento del personaje». Verás un personaje que pue
 
 - [SDK de .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0). Git solo es necesario para compilar desde el código fuente.
 
-Instala mediante NuGet `Electron2D` y los paquetes de las plataformas de tu juego: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` o `Electron2D.tvOS`. Android TV usa `Electron2D.Android`; Apple TV usa `Electron2D.tvOS`. Las dependencias nativas se restauran automáticamente. [Paquetes de plataforma y reglas de versiones](docs/native-packaging.md).
+Instala mediante NuGet el paquete principal `Electron2D` y el paquete de tu plataforma con los [comandos de la tabla siguiente](#use-electron2d-in-your-game). NuGet restaura las dependencias nativas automáticamente. [Reglas de versiones de los paquetes de plataforma](docs/native-packaging.md).
 
 Los paquetes preliminares requieren `--prerelease`. Usa versiones coincidentes del motor y los paquetes de plataforma. Versión actual en NuGet: [`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha).
 
 ### Compilar y ejecutar
 
-Para compilar y ejecutar tu juego con NuGet, sigue las instrucciones de [Usar Electron2D en tu juego](#use-electron2d-in-your-game) más abajo. No necesitas el código fuente del motor ni un compilador nativo.
+Para crear tu propio proyecto, consulta [Crear un proyecto de juego](#use-electron2d-in-your-game). Los comandos siguientes compilan y ejecutan el ejemplo del repositorio.
 
 Para compilar desde el código fuente, clona el repositorio y compila la biblioteca:
 
@@ -99,9 +101,9 @@ Se abrirá una escena con un personaje rosa sobre una cuadrícula. Las flechas l
 
 <a id="use-electron2d-in-your-game"></a>
 
-### Usar Electron2D en tu juego
+### Crear un proyecto de juego
 
-Para un juego de escritorio con NuGet, crea un proyecto de consola de .NET 10 e instala el motor:
+Para un juego destinado a Windows, Linux o macOS, crea un proyecto de consola de .NET 10 y añade el paquete del motor:
 
 ```bash
 dotnet new console -n MyGame --framework net10.0
@@ -117,7 +119,7 @@ dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
 cd ../MyGame
 ```
 
-Añade el paquete de tu plataforma mediante NuGet. Elige un comando:
+Después, instala el paquete de la plataforma objetivo:
 
 | Plataforma | Comando |
 | --- | --- |
@@ -125,12 +127,11 @@ Añade el paquete de tu plataforma mediante NuGet. Elige un comando:
 | Linux | `dotnet add package Electron2D.Linux --prerelease` |
 | macOS | `dotnet add package Electron2D.MacOS --prerelease` |
 | Web | `dotnet add package Electron2D.Web --prerelease` |
-| Android | `dotnet add package Electron2D.Android --prerelease` |
+| Android y Android TV | `dotnet add package Electron2D.Android --prerelease` |
 | iOS | `dotnet add package Electron2D.iOS --prerelease` |
-| Android TV | `dotnet add package Electron2D.Android --prerelease` |
 | Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-Para varios destinos, añade cada paquete de plataforma necesario. Web, Android/Android TV e iOS/tvOS requieren la carga de trabajo de .NET y el host de aplicación correspondientes; el paquete de plataforma no proporciona ese host. El ejemplo de consola siguiente es solo para escritorio.
+Para varios destinos, añade cada paquete de plataforma necesario. Web, Android, iOS y tvOS necesitan las cargas de trabajo de .NET correspondientes y un proyecto de aplicación específico para la plataforma elegida. Los paquetes de plataforma no incluyen proyectos de aplicación listos para usar. El ejemplo de consola siguiente es para Windows, Linux y macOS.
 
 Sustituye el contenido de `Program.cs` por este código:
 
@@ -181,13 +182,11 @@ Consulta los modelos de dispositivos, los comandos y el alcance de las comprobac
 
 <a id="development"></a>
 
-## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> Desarrollo del motor
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> Estado del proyecto
 
-Puedes guardar escenas en archivos y reutilizarlas, incluso en el siguiente inicio del juego, con `PackedScene` y [archivos tipados de recursos y escenas](docs/components/resource-files.md). El editor visual muestra por ahora una pantalla de inicio; la edición de proyectos de juego y los comandos para gestionarlos aún no están implementados.
+Electron2D está en fase alfa. Su API pública sigue evolucionando y puede cambiar entre versiones.
 
-La [arquitectura del motor](docs/decisions/agent-native.md#adr-0090) prevé comandos para que los asistentes de IA trabajen con proyectos y ejecuten escenarios de juego con comprobación de imágenes. El conjunto completo de herramientas aún está por implementar.
-
-Las próximas tareas y el estado de los métodos se detallan en el [plan de desarrollo](docs/coverage/index.md). El comportamiento implementado se describe en la referencia de la API.
+Puedes crear escenas en código, guardarlas con `PackedScene` y volver a cargarlas desde [archivos de recursos y escenas](docs/components/resource-files.md). El editor visual muestra por ahora una pantalla de inicio; la edición de proyectos de juego aún no está implementada.
 
 <a id="documentation"></a>
 
@@ -198,8 +197,6 @@ Las próximas tareas y el estado de los métodos se detallan en el [plan de desa
 | Encontrar una clase o un método | [Referencia de la API](docs/inventory.md) |
 | Entender un subsistema | [Índice de documentación](docs/README.md) |
 | Preparar shaders | [Herramienta de importación de HLSL y GLSL](tools/shaders/README.md) |
-| Entender la arquitectura y las decisiones | [Decisiones de arquitectura](docs/decisions/index.md) |
-| Elegir una tarea de desarrollo | [Plan de desarrollo](docs/coverage/index.md) |
 
 <a id="examples"></a>
 
@@ -213,14 +210,7 @@ Hay instrucciones independientes para reproducir las comprobaciones de [Android]
 
 Informa de errores y propón funciones en [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). En un informe de error, indica la versión o el commit del motor, el sistema operativo y el renderizador. Adjunta un ejemplo mínimo y la salida del error.
 
-Envía correcciones mediante [pull requests](https://github.com/edwardgushchin/Electron2D/pulls). Antes de empezar, lee la [guía de mantenimiento](docs/maintaining.md) y las decisiones de arquitectura del tema correspondiente. Actualiza el código, las pruebas y la documentación juntos.
-
-Ejecuta las comprobaciones principales desde la raíz del repositorio:
-
-```bash
-dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release
-tools/coverage/check.sh
-```
+Envía correcciones mediante [pull requests](https://github.com/edwardgushchin/Electron2D/pulls). El proceso de trabajo está descrito en la [guía de contribución](CONTRIBUTING.md).
 
 <a id="contributors"></a>
 

@@ -6,7 +6,7 @@
     <source media="(prefers-color-scheme: light) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-light.svg">
     <source media="(prefers-color-scheme: dark)" srcset="docs/design/assets/sprite/logo-primary-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="docs/design/assets/sprite/logo-primary-light.svg">
-    <img alt="Electron2D — Agent-native cross-platform 2D game engine" src="docs/design/assets/sprite/logo-primary-light.svg" width="640" height="148">
+    <img alt="Electron2D - Agent-native cross-platform 2D game engine" src="docs/design/assets/sprite/logo-primary-light.svg" width="640" height="148">
   </picture>
 </h1>
 
@@ -38,22 +38,24 @@
 
 Electron2D - **свободный кроссплатформенный 2D-движок на C# для совместной разработки игр человеком и ИИ-агентами**.
 
-Создавайте игровые миры и механики с привычными инструментами .NET и ИИ-помощниками вроде Codex или Claude Code.
+Создавайте игровые миры и механики с привычными инструментами .NET. В работе с кодом помогут Codex, Claude Code и другие ИИ-помощники.
 
 <a id="features"></a>
 
 ## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="28" align="absmiddle" alt=""> Возможности
 
+Это обзор основных возможностей, которые уже есть в движке. API отдельных подсистем ещё развивается; подробности и ограничения описаны по ссылкам.
+
 - [Графика](docs/domains/rendering.md). Спрайты и атласы, камеры, параллакс, рисование фигур и текста. Импорт шейдеров HLSL и GLSL для материалов.
-- [Сцены и анимация](docs/domains/scene.md). Повторно используемые объекты и уровни, покадровая анимация, анимация свойств и таймеры.
+- [Сцены и анимация](docs/domains/scene.md). Иерархия игровых объектов, сохранение и загрузка сцен, покадровая анимация, анимация свойств и таймеры.
 - [Физика](docs/domains/physics.md). Твёрдые тела, столкновения, области, проверка пересечений, шарниры и пружины.
 - [Игровой интерфейс](docs/domains/scene.md). Кнопки, поля ввода, прокрутка, контейнеры для размещения элементов, шрифты и темы оформления.
 - [Звук](docs/domains/audio.md). WAV, MP3 и Ogg Vorbis, позиционный звук, микширование, эффекты и запись.
 - [Управление](docs/domains/input.md). Клавиатура, мышь, касания и контроллеры. Привязка ввода к игровым действиям.
 - [Поиск пути](docs/domains/navigation.md). Маршруты по сетке и между заданными точками с учётом препятствий и стоимости перемещения.
 - [Ресурсы](docs/domains/resources.md). Загрузка изображений, шрифтов и аудио. Градиенты, кривые и процедурные текстуры.
-- [Локализация](docs/domains/localization.md). Переводы, формы множественного числа и выбор языка.
-- [Сеть](docs/domains/networking.md). TCP, UDP и локальные сокеты, TLS-шифрование соединений.
+- [Локализация](docs/domains/localization.md). Переводы, выбор языка и формы множественного числа по заданным правилам.
+- [Сеть](docs/domains/networking.md). TCP, UDP и локальные сокеты, защищённые соединения TLS и DTLS, HTTP/HTTPS, WebSocket и многопользовательские соединения через ENet.
 
 Шейдерные материалы требуют GPU-рендерера. Совместимый рендерер поддерживает базовую 2D-графику. Подробности и ограничения описаны в документации по ссылкам выше.
 
@@ -69,13 +71,13 @@ Electron2D - **свободный кроссплатформенный 2D-дви
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). Git нужен только для сборки из исходников.
 
-Подключайте движок через NuGet: пакет `Electron2D` и пакеты нужных платформ: `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` или `Electron2D.tvOS`. Для Android TV используется `Electron2D.Android`, для Apple TV используется `Electron2D.tvOS`. Нативные зависимости восстанавливаются автоматически. [Платформенные пакеты и правила версий](docs/native-packaging.md).
+Установите через NuGet основной пакет `Electron2D` и пакет целевой платформы из [таблицы ниже](#use-electron2d-in-your-game). Нативные зависимости NuGet загрузит автоматически. [Правила версий платформенных пакетов](docs/native-packaging.md).
 
 Для предварительных версий добавляйте `--prerelease`. Используйте совпадающие версии движка и платформенных пакетов. Текущая версия в NuGet: [`0.1.0-alpha`](https://www.nuget.org/packages/Electron2D/0.1.0-alpha).
 
 ### Сборка и запуск
 
-Для сборки и запуска своей игры через NuGet выполните команды из раздела [Подключение к своей игре](#use-electron2d-in-your-game) ниже. Исходники движка и нативный компилятор не нужны.
+Чтобы создать свой проект, перейдите к разделу [Создание игрового проекта](#use-electron2d-in-your-game). Ниже показано, как собрать и запустить готовый пример из репозитория.
 
 Для сборки из исходников клонируйте репозиторий и соберите библиотеку:
 
@@ -99,9 +101,9 @@ dotnet run --project examples/CharacterMovement
 
 <a id="use-electron2d-in-your-game"></a>
 
-### Подключение к своей игре
+### Создание игрового проекта
 
-Для настольной игры с NuGet создайте консольный проект .NET 10 и установите движок:
+Для игры под Windows, Linux или macOS создайте консольный проект .NET 10 и добавьте в него пакет движка:
 
 ```bash
 dotnet new console -n MyGame --framework net10.0
@@ -117,7 +119,7 @@ dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
 cd ../MyGame
 ```
 
-Добавьте пакет своей платформы через NuGet. Выберите одну команду:
+Затем установите пакет целевой платформы:
 
 | Платформа | Команда |
 | --- | --- |
@@ -125,12 +127,11 @@ cd ../MyGame
 | Linux | `dotnet add package Electron2D.Linux --prerelease` |
 | macOS | `dotnet add package Electron2D.MacOS --prerelease` |
 | Web | `dotnet add package Electron2D.Web --prerelease` |
-| Android | `dotnet add package Electron2D.Android --prerelease` |
+| Android и Android TV | `dotnet add package Electron2D.Android --prerelease` |
 | iOS | `dotnet add package Electron2D.iOS --prerelease` |
-| Android TV | `dotnet add package Electron2D.Android --prerelease` |
 | Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
 
-Для нескольких целевых платформ добавьте каждый нужный пакет. Для Web, Android/Android TV и iOS/tvOS нужны соответствующая рабочая нагрузка .NET и платформенный хост приложения; платформенный пакет не содержит такого хоста. Консольный пример ниже предназначен только для настольных платформ.
+Для нескольких целевых платформ добавьте каждый нужный пакет. Для Web, Android, iOS и tvOS понадобятся соответствующие наборы инструментов .NET (workloads) и отдельный проект приложения для выбранной платформы. Готовые проекты приложений в платформенные пакеты не входят. Консольный пример ниже предназначен для Windows, Linux и macOS.
 
 Замените содержимое `Program.cs` следующим кодом:
 
@@ -165,12 +166,12 @@ dotnet run -c Release
 
 | Целевая платформа игры | Проверено в репозитории |
 | --- | --- |
-| Windows, x86 / x64 / ARM64 | Полные headless-наборы и доступные trimmed/AOT-проверки прошли в CI. Отрисовка ещё не проверена |
-| Linux, x64 / ARM64 | Полные headless-наборы и trimmed/AOT-проверки прошли на обеих архитектурах. На x64 проверены окно, ввод и отрисовка через Wayland, а также отрисовка через XWayland. Отрисовка на ARM64 ещё не проверена |
-| macOS, x64 / ARM64 | Полные headless-наборы и trimmed/AOT-проверки прошли в CI. Отрисовка ещё не проверена |
+| Windows, x86 / x64 / ARM64 | Все тесты движка без окна и доступные проверки trimming и AOT завершились успешно в CI. Отрисовка ещё не проверена |
+| Linux, x64 / ARM64 | Все тесты движка без окна и проверки trimming и AOT завершились успешно на обеих архитектурах. На x64 проверены окно, ввод и отрисовка через Wayland, а также отрисовка через XWayland. Отрисовка на ARM64 ещё не проверена |
+| macOS, x64 / ARM64 | Все тесты движка без окна и проверки trimming и AOT завершились успешно в CI. Отрисовка ещё не проверена |
 | Android, телефоны и планшеты | На одном телефоне ARM64 проверены отрисовка, шейдерные материалы и физика |
 | Android TV | На одном 32-битном телевизоре проверены совместимый рендерер и физика |
-| iOS и tvOS, устройства и симуляторы | Нативные контракты прошли во всех четырёх профилях симуляторов. Приложения для устройств собираются без подписи; запуск на реальных устройствах и отрисовка ещё не проверены |
+| iOS и tvOS, устройства и симуляторы | Проверки с нативными библиотеками завершились успешно во всех четырёх профилях симуляторов. Приложения для устройств собираются без подписи; запуск на реальных устройствах и отрисовка ещё не проверены |
 | Браузеры | Отрисовка и физика проверены в отдельном тестовом приложении. Запуск игры в браузере ещё не реализован |
 
 Проверки Android и браузера пока относятся к отдельным сценариям. Доступность нативных библиотек для выбранной платформы описана в [инструкциях по их доставке](docs/native-packaging.md).
@@ -181,13 +182,11 @@ dotnet run -c Release
 
 <a id="development"></a>
 
-## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> Разработка движка
+## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> Состояние проекта
 
-Сцены можно сохранять в файлы и использовать повторно, в том числе при следующем запуске игры. Для этого служат `PackedScene` и [типизированные файлы ресурсов и сцен](docs/components/resource-files.md). Визуальный редактор пока показывает стартовое окно; редактирование игровых проектов и команды управления ими ещё не реализованы.
+Electron2D находится на стадии alpha. Публичный API ещё развивается и может меняться между релизами.
 
-Для ИИ-помощников в [архитектуре движка](docs/decisions/agent-native.md#adr-0090) предусмотрены команды работы с проектом и запуска игровых сценариев с проверкой изображения. Полный набор этих инструментов ещё предстоит реализовать.
-
-Следующие задачи и состояние отдельных методов доступны в [плане разработки](docs/coverage/index.md). Реализованное поведение описано в справочнике API.
+Игровые сцены можно создавать в коде, сохранять через `PackedScene` и повторно загружать из [файлов ресурсов и сцен](docs/components/resource-files.md). Визуальный редактор пока показывает стартовое окно; редактирование игровых проектов в нём ещё не реализовано.
 
 <a id="documentation"></a>
 
@@ -198,8 +197,6 @@ dotnet run -c Release
 | Найти класс или метод | [Справочник API](docs/inventory.md) |
 | Разобраться в подсистеме | [Оглавление документации](docs/README.md) |
 | Подготовить шейдеры | [Инструмент импорта HLSL и GLSL](tools/shaders/README.md) |
-| Понять архитектуру и принятые решения | [Архитектурные решения](docs/decisions/index.md) |
-| Выбрать задачу для разработки | [План разработки](docs/coverage/index.md) |
 
 <a id="examples"></a>
 
@@ -213,14 +210,7 @@ dotnet run -c Release
 
 Сообщайте об ошибках и предлагайте новые возможности в [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). Для ошибки укажите версию или коммит движка, операционную систему и рендерер. Приложите минимальный пример и вывод ошибки.
 
-Исправления присылайте через [пул-реквесты](https://github.com/edwardgushchin/Electron2D/pulls). Перед работой прочитайте [правила сопровождения](docs/maintaining.md) и архитектурные решения по выбранной теме. Код, тесты и документацию меняйте вместе.
-
-Основные проверки запускаются из корня репозитория:
-
-```bash
-dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release
-tools/coverage/check.sh
-```
+Исправления присылайте через [пул-реквесты](https://github.com/edwardgushchin/Electron2D/pulls). Порядок работы описан в [руководстве для участников](CONTRIBUTING.md).
 
 <a id="contributors"></a>
 
