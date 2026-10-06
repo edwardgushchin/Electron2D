@@ -4336,12 +4336,19 @@ static void VerifyConfigFiles()
             "Saving must not create an absent destination directory implicitly.");
         var directoryTarget = IOPath.Combine(directory, "directory-target");
         Directory.CreateDirectory(directoryTarget);
-        Expect<IOException>(() => config.Save(directoryTarget),
-            "Atomic saving must surface a destination that cannot be replaced by a file.");
-        Require(!Directory.EnumerateFiles(directory, "*.tmp", SearchOption.TopDirectoryOnly).Any(),
-            "A failed atomic replacement must clean up its temporary file.");
-
         var rawKey = Enumerable.Range(0, 32).Select(value => (byte)value).ToArray();
+        foreach (var save in new Action[] { () => config.Save(directoryTarget),
+                     () => config.SaveEncrypted(directoryTarget, rawKey),
+                     () => config.SaveEncryptedPass(directoryTarget, "correct horse battery staple") })
+        {
+            var error = Capture(save);
+            Require(OperatingSystem.IsWindows() ? error is UnauthorizedAccessException : error is IOException,
+                "Every atomic save must preserve the platform's error for a destination directory.");
+            Require(Directory.Exists(directoryTarget) && config.EncodeToText() == Encoding.UTF8.GetString(savedBytes) &&
+                    !Directory.EnumerateFiles(directory, "*.tmp", SearchOption.TopDirectoryOnly).Any(),
+                "A failed atomic replacement must preserve the destination and configuration and clean up its temporary file.");
+        }
+
         var rawEncryptedPath = IOPath.Combine(directory, "settings-key.bin");
         config.SaveEncrypted(rawEncryptedPath, rawKey);
         var encryptedBytes = File.ReadAllBytes(rawEncryptedPath);

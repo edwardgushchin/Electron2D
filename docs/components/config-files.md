@@ -1,6 +1,6 @@
 # Configuration files component
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 ## Scope
 
@@ -68,6 +68,8 @@ All applicable own members are implemented and audited under ADR 0018. Text test
 ## Verification
 
 `tests/Electron2D.Tests/Program.cs` exercises successful and failing in-memory, concurrent mutation/disposal, filesystem, serializer, strict color, four-vector, floating/integer rectangle, and transform schemas and rollback, UTF-8, raw-key encryption, password encryption, tamper, mode, rollback, disposal, and cleanup paths. Local tests cannot prove crash-time durability on every filesystem, resistance to compromised process memory, or suitability for storing high-value credentials.
+
+The directory-destination failure check covers plain, raw-key and password saves. It retains the original operating-system exception (`UnauthorizedAccessException` on Windows, `IOException` on Unix) rather than changing the atomic writer's error policy. Each failure must preserve the directory and in-memory document and remove its temporary file. [Run 37404576411](https://github.com/edwardgushchin/Electron2D/actions/runs/37404576411) exposed the prior Unix-only fixture expectation on all three Windows architectures; corrected Windows execution remains required.
 
 ## Decisions
 

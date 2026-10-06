@@ -283,6 +283,21 @@ class Checks(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             run_apple.select(profiles, "iOS")
 
+    def test_android_system_logcat_preserves_all_buffers_and_command_failures(self):
+        adb = ["adb", "-s", "emulator-fixture"]
+        for outcome in ("success", "denied", "timeout"):
+            with self.subTest(outcome=outcome):
+                call = subprocess.TimeoutExpired("logcat", 15, b"partial system exit", "timeout fixture") if outcome == "timeout" else \
+                    subprocess.CompletedProcess([], int(outcome == "denied"), "ActivityManager kill fixture", "permission fixture")
+                with patch.object(run_android.subprocess, "run", side_effect=call if isinstance(call, Exception) else None,
+                                  return_value=call) as process:
+                    text = run_android.system_logcat(adb)
+                self.assertIn("partial system exit" if outcome == "timeout" else "ActivityManager kill fixture", text)
+                self.assertIn("timed out" if outcome == "timeout" else "exit " + str(int(outcome == "denied")), text)
+                self.assertIn("timeout fixture" if outcome == "timeout" else "permission fixture", text)
+                process.assert_called_once_with(adb + ["logcat", "-d", "-b", "all", "-v", "threadtime"],
+                                               capture_output=True, text=True, timeout=15)
+
     def test_android_backtrace_uses_only_the_owned_pid_and_bounded_commands(self):
         adb = ["adb", "-s", "emulator-fixture"]
         for pid in ("", "0", "99999999999", "12 34", "12;reboot", "\u0661\u0662"):

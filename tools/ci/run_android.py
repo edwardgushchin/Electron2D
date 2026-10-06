@@ -15,6 +15,17 @@ ABIS = {"android-x64": "x86_64", "android-x86": "x86", "android-arm64": "arm64-v
 PACKAGE = "org.electron2d.tests"
 
 
+def system_logcat(adb):
+    try:
+        process = subprocess.run(adb + ["logcat", "-d", "-b", "all", "-v", "threadtime"],
+                                 capture_output=True, text=True, timeout=15)
+        return f"Android system logcat exit {process.returncode}:\n" + process.stdout + process.stderr
+    except subprocess.TimeoutExpired as error:
+        output = "\n".join(value.decode("utf-8", "replace") if isinstance(value, bytes) else value or ""
+                           for value in (error.stdout, error.stderr))
+        return "Android system logcat timed out after 15 seconds:\n" + output
+
+
 def backtrace(adb):
     try:
         process = subprocess.run(adb + ["shell", "pidof", PACKAGE], capture_output=True, text=True, timeout=15)
@@ -79,6 +90,7 @@ def run(apk, rid, serial, timeout=120):
         directory.mkdir(parents=True, exist_ok=True)
         (directory / "logcat.txt").write_text(diagnostics)
         (directory / "native-backtrace.txt").write_text(trace)
+        (directory / "system-logcat.txt").write_text(system_logcat(adb))
         raise TimeoutError("Android app did not report completion within the deadline.\n" + diagnostics[-6000:] + "\n" + trace[-6000:])
     finally:
         command("shell", "am", "force-stop", PACKAGE)
