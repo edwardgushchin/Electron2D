@@ -30,13 +30,19 @@ def check_bundle(app):
 
 def run(app, platform, timeout=120):
     def command(*args, timeout=180, env=None):
+        print(f"simctl {args[0]}", flush=True)
         try:
             process = subprocess.run(["xcrun", "simctl", *args], check=True, capture_output=True, text=True, timeout=timeout, env=env)
+        except subprocess.TimeoutExpired as error:
+            output = "\n".join(value.decode("utf-8", "replace") if isinstance(value, bytes) else value or ""
+                               for value in (error.stdout, error.stderr))
+            raise TimeoutError(f"simctl {args[0]} timed out after {timeout} seconds:\n{output[-8000:]}") from error
         except subprocess.CalledProcessError as error:
             raise RuntimeError(f"simctl {' '.join(args)} failed: {error.stdout}{error.stderr}") from error
         return process.stdout
 
     runtime, device = select(json.loads(command("list", "--json")), platform)
+    print(f"{platform} simulator: runtime={runtime}, device={device}", flush=True)
     udid = command("create", "Electron2D contract tests", device, runtime).strip()
     try:
         command("boot", udid)

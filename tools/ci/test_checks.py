@@ -318,6 +318,30 @@ class Checks(unittest.TestCase):
                 if shutdown_timeout:
                     self.assertIn("shutdown timed out; attempting deletion", log.getvalue())
 
+    def test_apple_setup_timeout_preserves_progress_and_cleans_up(self):
+        profiles = {"runtimes": [{"name": "iOS 26", "version": "26.0", "identifier": "runtime", "isAvailable": True,
+                                  "supportedDeviceTypes": [{"name": "iPhone 17", "identifier": "phone"}]}]}
+        for phase in ("bootstatus", "install"):
+            with self.subTest(phase=phase), redirect_stdout(StringIO()) as log:
+                def command(args, **kwargs):
+                    if args[2] == phase:
+                        raise subprocess.TimeoutExpired(args, kwargs["timeout"], b"Waiting on system app launch\n", "setup fixture blocked\n")
+                    output = json.dumps(profiles) if args[2] == "list" else "fixture" if args[2] == "create" else ""
+                    return subprocess.CompletedProcess(args, 0, output, "")
+
+                with patch.object(run_apple.subprocess, "run", side_effect=command) as process:
+                    with self.assertRaises(TimeoutError) as error:
+                        run_apple.run(Path("fixture.app"), "iOS")
+                self.assertIn(phase, str(error.exception))
+                self.assertIn("300" if phase == "bootstatus" else "180", str(error.exception))
+                self.assertIn("Waiting on system app launch", str(error.exception))
+                self.assertIn("setup fixture blocked", str(error.exception))
+                self.assertIn("runtime", log.getvalue())
+                self.assertIn("phone", log.getvalue())
+                self.assertEqual(sum(call.args[0][2] == phase for call in process.call_args_list), 1)
+                self.assertEqual(process.call_args_list[-2].args[0], ["xcrun", "simctl", "shutdown", "fixture"])
+                self.assertEqual(process.call_args_list[-1].args[0], ["xcrun", "simctl", "delete", "fixture"])
+
     def test_matrix_rejects_missing_duplicate_and_wrong_platform(self):
         rows = rids.matrix()
         for changed in (rows[:-1], rows + [rows[0]], [dict(rows[0], platform="Linux")] + rows[1:]):
