@@ -32,7 +32,9 @@ public sealed class MainActivity : SDLActivity
             Log.Info("Electron2DTests", "CHECK managed contracts");
             ContractChecks.Run(message => Log.Info("Electron2DTests", message));
             Log.Info("Electron2DTests", "CHECK native font precision");
-            NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+            var latin = FontTestFixtures.OpenSans; var arabic = FontTestFixtures.Arabic;
+            Log.Info("Electron2DTests", "CHECK native font fixtures ready");
+            NativeFontPrecisionTests.Run(latin, arabic, message => Log.Info("Electron2DTests", message));
             // Match the desktop headless PCM profile; emulator hardware output is a separate gate.
             SDL3.SDL.SetHint("SDL_AUDIODRIVER", "dummy");
             Log.Info("Electron2DTests", "CHECK native TLS/audio lifecycle");

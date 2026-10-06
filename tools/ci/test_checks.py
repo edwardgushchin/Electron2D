@@ -273,6 +273,31 @@ class Checks(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             run_apple.select(profiles, "iOS")
 
+    def test_android_backtrace_uses_only_the_owned_pid_and_bounded_commands(self):
+        adb = ["adb", "-s", "emulator-fixture"]
+        for pid in ("", "0", "99999999999", "12 34", "12;reboot", "\u0661\u0662"):
+            with self.subTest(pid=pid), patch.object(run_android.subprocess, "run",
+                    return_value=subprocess.CompletedProcess([], 0, pid, "")) as process:
+                self.assertIn("unavailable", run_android.backtrace(adb))
+                process.assert_called_once_with(adb + ["shell", "pidof", run_android.PACKAGE],
+                                               capture_output=True, text=True, timeout=15)
+        for outcome in ("success", "denied", "timeout"):
+            with self.subTest(outcome=outcome):
+                calls = [subprocess.CompletedProcess([], 0, "123\n", "")]
+                calls.append(subprocess.TimeoutExpired("debuggerd", 15, b"partial native frame", "timeout fixture") if outcome == "timeout" else
+                             subprocess.CompletedProcess([], int(outcome == "denied"), "native frame fixture", "permission fixture"))
+                with patch.object(run_android.subprocess, "run", side_effect=calls) as process:
+                    text = run_android.backtrace(adb)
+                self.assertIn("timed out" if outcome == "timeout" else "native frame fixture", text)
+                if outcome == "timeout":
+                    self.assertIn("partial native frame", text)
+                    self.assertIn("timeout fixture", text)
+                if outcome == "denied":
+                    self.assertIn("exit 1", text)
+                    self.assertIn("permission fixture", text)
+                self.assertEqual(process.call_args_list[-1].args[0], adb + ["shell", "debuggerd", "-b", "123"])
+                self.assertEqual(process.call_args_list[-1].kwargs["timeout"], 15)
+
     def test_apple_report_checks_completion_and_cleans_up(self):
         profiles = {"runtimes": [{"name": "iOS 26", "version": "26.0", "identifier": "runtime", "isAvailable": True,
                                   "supportedDeviceTypes": [{"name": "iPhone 17", "identifier": "phone"}]}],

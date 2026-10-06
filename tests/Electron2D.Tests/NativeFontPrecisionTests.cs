@@ -6,17 +6,25 @@ using Electron2D;
 internal static class NativeFontPrecisionTests
 {
     // Inputs are the pinned Open Sans SemiBold WOFF2 and a fixture with Arabic coverage.
-    internal static void Run(byte[] openSansData, byte[] arabicData)
+    internal static void Run(byte[] openSansData, byte[] arabicData, Action<string>? report = null)
     {
+        report ??= Console.WriteLine;
+        report("FONT CHECK: public resource.");
         using (var resource = new FontFile { Data = openSansData })
             Check(resource.GetStringSize("ffi").X > 0, "The public font resource accepts the current packaged process architecture.");
+        report("FONT CHECK: metrics and shaping.");
         VerifyMetricsAndShaping(openSansData);
+        report("FONT CHECK: metadata and raster metrics.");
         VerifyMetadataAndRasterMetrics(openSansData);
+        report("FONT CHECK: raster phases.");
         VerifyRasterPhases(openSansData);
+        report("FONT CHECK: Arabic shaping.");
         VerifyArabic(arabicData);
+        report("FONT CHECK: lifetime and foreign-thread rejection.");
         VerifyLifetime(openSansData);
+        report("FONT CHECK: warmed reuse.");
         VerifyWarmReuse(openSansData, arabicData);
-        Console.WriteLine("Native font precision verifies fractional FT metrics, SFNT/WOFF2 shaping, ligatures, Arabic, clusters, lifetime and warmed zero managed allocations.");
+        report("Native font precision verifies fractional FT metrics, SFNT/WOFF2 shaping, ligatures, Arabic, clusters, lifetime and warmed zero managed allocations.");
     }
 
     private static void VerifyMetricsAndShaping(byte[] data)

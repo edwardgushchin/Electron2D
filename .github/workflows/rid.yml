@@ -164,6 +164,13 @@ jobs:
           arch: ${{ (inputs.rid == 'android-arm' || inputs.rid == 'android-x86') && 'x86' || 'x86_64' }}
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
           script: python -B tools/ci/run_android.py "tests/Electron2D.AndroidTests/bin/Release/net10.0-android/$CI_RID/org.electron2d.tests-Signed.apk" "$CI_RID" --serial emulator-5554
+      - name: Preserve Android timeout diagnostics
+        if: failure() && inputs.tests && inputs.suite == 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-timeout-${{ inputs.rid }}
+          path: bin/ci/${{ inputs.rid }}/android-diagnostics/
+          if-no-files-found: warn
       - name: Build Apple contract app
         if: inputs.tests && (inputs.suite == 'apple-simulator' || inputs.suite == 'apple-device')
         run: |

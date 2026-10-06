@@ -15,6 +15,20 @@ ABIS = {"android-x64": "x86_64", "android-x86": "x86", "android-arm64": "arm64-v
 PACKAGE = "org.electron2d.tests"
 
 
+def backtrace(adb):
+    try:
+        process = subprocess.run(adb + ["shell", "pidof", PACKAGE], capture_output=True, text=True, timeout=15)
+        pid = process.stdout.strip()
+        if process.returncode or len(pid) > 10 or not pid.isascii() or not pid.isdecimal() or not 0 < int(pid) <= 2147483647:
+            return "Android native backtrace unavailable: no single live test process.\n" + process.stderr
+        process = subprocess.run(adb + ["shell", "debuggerd", "-b", pid], capture_output=True, text=True, timeout=15)
+        return f"Android native backtrace exit {process.returncode}:\n" + process.stdout + process.stderr
+    except subprocess.TimeoutExpired as error:
+        output = "\n".join(value.decode("utf-8", "replace") if isinstance(value, bytes) else value or ""
+                           for value in (error.stdout, error.stderr))
+        return "Android native backtrace timed out after 15 seconds:\n" + output
+
+
 def check_apk(apk, rid):
     with ZipFile(apk) as archive:
         check_notices(lambda name: archive.read("assets/licence/" + name))
@@ -60,7 +74,12 @@ def run(apk, rid, serial, timeout=120):
                 return
             time.sleep(1)
         diagnostics = command("logcat", "-d", "-v", "brief", "AndroidRuntime:E", "DEBUG:E", "libc:F", "mono-rt:E", "Electron2DTests:I", "*:S")
-        raise TimeoutError("Android app did not report completion within the deadline.\n" + diagnostics[-12000:])
+        trace = backtrace(adb)
+        directory = Path("bin/ci") / rid / "android-diagnostics"
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / "logcat.txt").write_text(diagnostics)
+        (directory / "native-backtrace.txt").write_text(trace)
+        raise TimeoutError("Android app did not report completion within the deadline.\n" + diagnostics[-6000:] + "\n" + trace[-6000:])
     finally:
         command("shell", "am", "force-stop", PACKAGE)
         command("uninstall", PACKAGE)
