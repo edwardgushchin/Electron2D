@@ -578,6 +578,17 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>The permanent typed input/ui_text_caret_page_down setting; projects may override its bindings.</value>
     public static ProjectSetting<InputActionSettings> InputUITextCaretPageDown { get; } = CreateDefaultKeyAction("ui_text_caret_page_down", Key.PageDown, 0);
 
+    /// <summary>Defines the maximum committed multiline undo steps sampled when an editor is constructed.</summary><value>The nonnegative gui/common/text_edit_undo_stack_max_size setting; 1024 initially, zero disables committed history.</value>
+    public static ProjectSetting<int> TextEditUndoStackMaxSize { get; } = new("gui/common/text_edit_undo_stack_max_size", 1024, value => value >= 0);
+    /// <summary>Defines Enter and keypad Enter for multiline newline insertion.</summary><value>The typed input/ui_text_newline definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextNewline { get; } = new("input/ui_text_newline", new InputActionSettings { Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter }, new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.KeypadEnter }] });
+    /// <summary>Defines Command/Control-Home for document start.</summary><value>The typed input/ui_text_caret_document_start definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretDocumentStart { get; } = CreateDefaultKeyAction("ui_text_caret_document_start", Key.Home, KeyModifierMask.CommandOrControl);
+    /// <summary>Defines Command/Control-End for document end.</summary><value>The typed input/ui_text_caret_document_end definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextCaretDocumentEnd { get; } = CreateDefaultKeyAction("ui_text_caret_document_end", Key.End, KeyModifierMask.CommandOrControl);
+    /// <summary>Defines Insert for switching typing mode.</summary><value>The typed input/ui_text_toggle_insert_mode definition.</value>
+    public static ProjectSetting<InputActionSettings> InputUITextToggleInsertMode { get; } = CreateDefaultKeyAction("ui_text_toggle_insert_mode", Key.Insert, 0);
+
     /// <summary>Defines the default keyboard binding for ui_swap_input_direction.</summary>
     /// <value>The permanent typed input/ui_swap_input_direction setting; projects may override its bindings.</value>
     public static ProjectSetting<InputActionSettings> InputUISwapInputDirection { get; } = CreateDefaultKeyAction("ui_swap_input_direction", Key.QuoteLeft, KeyModifierMask.CommandOrControl);

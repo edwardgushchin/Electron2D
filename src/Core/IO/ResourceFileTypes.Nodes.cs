@@ -62,6 +62,7 @@ public static partial class ResourceFileTypes
         RegisterNode("Label", CreateLabelFileNode);
         RegisterNode("Line", CreateLineFileNode);
         RegisterNode("LineEdit", CreateLineEditFileNode);
+        RegisterNode("TextEdit", CreateTextEditFileNode);
         RegisterNode("MarginContainer", CreateMarginContainerFileNode);
         RegisterNode("MeshInstance", CreateMeshInstanceFileNode);
         RegisterNode("MultiMeshInstance", CreateMultiMeshInstanceFileNode);
@@ -141,6 +142,7 @@ public static partial class ResourceFileTypes
     private static ItemList CreateItemListFileNode() => new();
     private static Label CreateLabelFileNode() => new();
     private static Line CreateLineFileNode() => new();
+    private static TextEdit CreateTextEditFileNode() => new();
     private static LineEdit CreateLineEditFileNode() => new();
     private static MarginContainer CreateMarginContainerFileNode() => new();
     private static MeshInstance CreateMeshInstanceFileNode() => new();

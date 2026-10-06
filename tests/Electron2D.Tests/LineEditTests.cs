@@ -28,11 +28,11 @@ internal static class LineEditTests
     private static void Commands()
     {
         using var field = new LineEdit(); var changed = 0; field.TextChanged += _ => changed++;
-        field.MenuOption(LineEditMenuAction.InsertLRM); Check(field.Text == "\u200e" && changed == 1, "Unicode command inserts and notifies.");
-        field.MenuOption(LineEditMenuAction.Undo); Check(field.Text == "" && field.HasRedo(), "Programmatic undo command."); field.MenuOption(LineEditMenuAction.Redo); Check(field.Text == "\u200e", "Programmatic redo command.");
-        field.MenuOption(LineEditMenuAction.DirectionRTL); field.MenuOption(LineEditMenuAction.DisplayUCC); Check(field.TextDirection == TextDirection.RTL && field.DrawControlChars, "Direction/display commands execute.");
-        field.Editable = false; field.MenuOption(LineEditMenuAction.Clear); Check(field.Text == "\u200e", "Read-only menu mutation suppressed.");
-        Reject<NotSupportedException>(() => field.MenuOption(LineEditMenuAction.EmojiAndSymbols));
+        field.MenuOption(TextMenuAction.InsertLRM); Check(field.Text == "\u200e" && changed == 1, "Unicode command inserts and notifies.");
+        field.MenuOption(TextMenuAction.Undo); Check(field.Text == "" && field.HasRedo(), "Programmatic undo command."); field.MenuOption(TextMenuAction.Redo); Check(field.Text == "\u200e", "Programmatic redo command.");
+        field.MenuOption(TextMenuAction.DirectionRTL); field.MenuOption(TextMenuAction.DisplayUCC); Check(field.TextDirection == TextDirection.RTL && field.DrawControlChars, "Direction/display commands execute.");
+        field.Editable = false; field.MenuOption(TextMenuAction.Clear); Check(field.Text == "\u200e", "Read-only menu mutation suppressed.");
+        Reject<NotSupportedException>(() => field.MenuOption(TextMenuAction.EmojiAndSymbols));
     }
     private static void Routing()
     {
@@ -158,8 +158,8 @@ internal static class LineEditTests
 
             }
             else if (Frames == 2) { Check(field.HasIMEText() && field.Text == "native😀", "Native preedit."); PushText("中"); }
-            else if (Frames == 3) { Check(field.Text == "native😀中" && !field.HasIMEText(), "Native preedit commit."); field.SelectAll(); field.MenuOption(LineEditMenuAction.Copy); Check(DisplayServer.ClipboardGet() == "native😀中", "Native copy command."); field.Clear(); field.MenuOption(LineEditMenuAction.Paste); Check(field.Text == "native😀中", "Native paste command."); }
-            else { field.Secret = true; field.SelectAll(); DisplayServer.ClipboardSet("marker"); field.MenuOption(LineEditMenuAction.Copy); field.MenuOption(LineEditMenuAction.Cut); Check(DisplayServer.ClipboardGet() == "marker" && field.Text == "native😀中", "Secret copy/cut suppression."); Tree!.Quit(); }
+            else if (Frames == 3) { Check(field.Text == "native😀中" && !field.HasIMEText(), "Native preedit commit."); field.SelectAll(); field.MenuOption(TextMenuAction.Copy); Check(DisplayServer.ClipboardGet() == "native😀中", "Native copy command."); field.Clear(); field.MenuOption(TextMenuAction.Paste); Check(field.Text == "native😀中", "Native paste command."); }
+            else { field.Secret = true; field.SelectAll(); DisplayServer.ClipboardSet("marker"); field.MenuOption(TextMenuAction.Copy); field.MenuOption(TextMenuAction.Cut); Check(DisplayServer.ClipboardGet() == "marker" && field.Text == "native😀中", "Secret copy/cut suppression."); Tree!.Quit(); }
         }
     }
     private static void NativeInput() { var window = new Window { Size = new(160, 80) }; var field = new LineEdit { Name = "field", Size = new(70, 28) }; var container = new SubViewportContainer { Name = "container", Position = new(8, 8), Size = new(144, 64), Stretch = true, StretchShrink = 2 }; var view = new SubViewport { Name = "view" }; view.AddChild(field); container.AddChild(view); var driver = new Driver(field); window.AddChild(container); window.AddChild(driver); Check(Engine.Run(window) == 0 && driver.Frames == 4, "Native input lifecycle."); }

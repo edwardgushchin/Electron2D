@@ -1,6 +1,8 @@
 # API coverage register
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
+
+The executable [multiline editing slice](../components/multiline-editing.md) connects TextEdit, SyntaxHighlighter and CodeHighlighter, with grouped/scalar/multicaret edits, native SDL commit/preedit and clipboard, wrapped/theme/gutter/minimap drawing, independent stored highlighters and fresh-process scenes. GPU/compatibility checks and 64 prepared frames per backend establish the current Linux profile; native keyboard/picker and semantic/editor/foreign gates stay explicit. Tree now has its required multiline cell host, while its hierarchy/model/layout integration remains the next dependency.
 
 The executable TabBar slice adds shaped/theme-rendered tabs, selection/scroll/RTL/close behavior, typed identity-stable group drags, a real hover timer and fresh-process scene persistence. CPU and current Linux Wayland GPU/compatibility pixel/visual checks pass; 64 warmed active selection/layout/record/render frames measure zero managed bytes per backend. TabContainer now executes through the tab-panel consumer; native accessibility and editor authoring remain separate dependencies.
 

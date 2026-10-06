@@ -94,6 +94,15 @@ internal static class ResourceFileCodecs
     var count = s.Get32(); if (count is < 0 or > 65536) throw new InvalidDataException("Dictionary exceeds file budget."); var result = new Dictionary<string, int>(StringComparer.Ordinal); for (var i = 0; i < count; i++) if (!result.TryAdd(ResourceArchiveStrings.Read(s), s.Get32())) throw new InvalidDataException("Duplicate dictionary key."); return result;
 }
 );
+        Add<Dictionary<string, Color>>((s, v) =>
+        {
+            if (v.Count > 65536) throw new InvalidDataException("Dictionary exceeds file budget.");
+            s.Put32(v.Count); foreach (var pair in v.OrderBy(p => p.Key, StringComparer.Ordinal)) { ResourceArchiveStrings.Write(s, pair.Key); ResourceFileTypes.Codec<Color>().Write(s, pair.Value); }
+        }, s =>
+        {
+            var count = s.Get32(); if (count is < 0 or > 65536) throw new InvalidDataException("Dictionary exceeds file budget.");
+            var result = new Dictionary<string, Color>(StringComparer.Ordinal); for (var i = 0; i < count; i++) if (!result.TryAdd(ResourceArchiveStrings.Read(s), ResourceFileTypes.Codec<Color>().Read(s))) throw new InvalidDataException("Duplicate dictionary key."); return result;
+        });
         Nullable<bool>();
         Nullable<int>();
         Nullable<float>();

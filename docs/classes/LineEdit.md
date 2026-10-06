@@ -1,6 +1,6 @@
 # LineEdit
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Namespace:** `Electron2D`. **Declaration:** `public class LineEdit : Control`.
 
@@ -18,7 +18,7 @@ The default keyboard actions are permanent typed [ProjectSettings](ProjectSettin
 
 The field draws themed normal/read-only/focus styles, glyph outlines, visual selection colors, caret, placeholder and clear/right icons. Text and selection clip to the content rectangle. Empty text still has font-height caret geometry. Left/right alignment follows layout direction; Center centers unscrolled text, Fill uses existing word/Kashida expansion. ExpandToTextLength affects minimum width. Original icon mode uses intrinsic size, FitToText uses a font-height square, and FitToLineEdit fits field bounds then applies the finite RightIconScale. Icons/fonts are borrowed; notifications are polled on the scene thread, and font generations recover changes hidden by throwing observers. Typed in-memory PackedScene reconstruction stores MaxLength, Text and CaretColumn in the required order.
 
-MenuOption executes [LineEditMenuAction](LineEditMenuAction.md) without popup presentation. PopupMenu/Popup/Window transient ownership, native virtual keyboards and native symbol-picker presentation are exact remaining prerequisites. EmojiAndSymbols currently throws NotSupportedException. The class remains Partial in [coverage](../coverage/classes/LineEdit.md); this slice completes editing/display and available command behavior, not those absent hosts. Accessibility/editor file authoring, native allocator totals, broad-scene performance, other platforms and owner acceptance remain separate.
+MenuOption executes [TextMenuAction](TextMenuAction.md) without popup presentation. PopupMenu/Popup/Window transient ownership, native virtual keyboards and native symbol-picker presentation are exact remaining prerequisites. EmojiAndSymbols currently throws NotSupportedException. The class remains Partial in [coverage](../coverage/classes/LineEdit.md); this slice completes editing/display and available command behavior, not those absent hosts. Accessibility/editor file authoring, native allocator totals, broad-scene performance, other platforms and owner acceptance remain separate.
 
 ## Example
 
@@ -404,7 +404,7 @@ System.ArgumentOutOfRangeException: The value is outside minus one through three
 | `public System.Boolean HasUndo()` | Returns whether undo has an earlier text state. |
 | `public System.Void InsertTextAtCaret(System.String text)` | Inserts text at the scalar caret without deleting selection or emitting TextChanged. |
 | `public System.Boolean IsEditing()` | Returns whether editing is active. |
-| `public System.Void MenuOption(Electron2D.LineEditMenuAction option)` | Executes a typed editing command without requiring popup presentation. |
+| `public System.Void MenuOption(Electron2D.TextMenuAction option)` | Executes a typed editing command without requiring popup presentation. |
 | `protected override System.Boolean OnCanDropData(Electron2D.Vector2 atPosition, Electron2D.DragPayload payload)` | Tests a potential drop target; false rejects it. |
 | `protected override System.Void OnDropData(Electron2D.Vector2 atPosition, Electron2D.DragPayload payload)` | Consumes an accepted drop after the target test succeeds. |
 | `protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)` | Processes a temporary control-local event before Electron2D.Control.GUIInput subscribers. |
@@ -632,7 +632,7 @@ Returns: True while this field is editing.
 <a id="member-710a22042346"></a>
 ### MenuOption
 
-`public System.Void MenuOption(Electron2D.LineEditMenuAction option)`
+`public System.Void MenuOption(Electron2D.TextMenuAction option)`
 
 Executes a typed editing command without requiring popup presentation.
 
@@ -799,3 +799,5 @@ Keyboard fixtures use the public command-or-control remapping policy for Undo/Re
 The embedded popup slice adds Popup/PopupPanel theme/type and exact file-factory integration; focused LineEdit text/IME now resolves the containing native root while retaining popup-local control focus. See [the component](../components/popup-windows.md) for the applicable portion and limits.
 
 The owned SpinBox input reuses editing, scalar selection/caret, submission and theme behavior. An internal formatting operation restores bounded selection/caret after replacing generated numeric text; it adds no public text facade. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.
+
+Editing commands use [TextMenuAction](TextMenuAction.md), shared with TextEdit under ADR 0051. The former owner-specific enum identity is removed; command numbers and behavior remain.

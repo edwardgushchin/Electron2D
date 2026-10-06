@@ -22,6 +22,12 @@ internal sealed partial class TextLayout
         }
         return 0;
     }
+    internal (int From, int To) WordAt(int column)
+    {
+        column = Math.Clamp(column, 0, _count); var from = 0;
+        for (var to = 1; to <= _count; to++) if (_wordBoundaries[to]) { if (_wordEnds[to] && from <= column && to >= column) return (from, to); from = to; }
+        return (column, column);
+    }
     internal int NextWord(int column)
     {
         column = Math.Clamp(column, 0, _count); do { column++; } while (column < _count && !_wordEnds[column]); return Math.Min(column, _count);

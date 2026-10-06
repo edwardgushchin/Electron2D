@@ -7,44 +7,44 @@ public partial class LineEdit
     /// <param name="option">The editing, text-direction or Unicode-control command.</param>
     /// <remarks>Unknown numeric values are ignored. Native symbol-picker presentation requires a separate display service.</remarks>
     /// <exception cref="NotSupportedException">EmojiAndSymbols is selected without a native symbol-picker service.</exception>
-    public void MenuOption(LineEditMenuAction option)
+    public void MenuOption(TextMenuAction option)
     {
         EnsureMutable();
         switch (option)
         {
-            case LineEditMenuAction.Cut: if (_editable && !_secret && _selecting) { CopySelection(); DeleteRange(_selectionFrom, _selectionTo); ChangedByUser(); } return;
-            case LineEditMenuAction.Copy: CopySelection(); return;
-            case LineEditMenuAction.Paste: if (_editable) UserInsert(DisplayServer.Service?.ClipboardGetCore() ?? ""); return;
-            case LineEditMenuAction.Clear: if (_editable) Clear(); return;
-            case LineEditMenuAction.SelectAll: SelectAll(); return;
-            case LineEditMenuAction.Undo: RestoreHistory(-1); return;
-            case LineEditMenuAction.Redo: RestoreHistory(1); return;
-            case LineEditMenuAction.DirectionInherited: TextDirection = TextDirection.Inherited; return;
-            case LineEditMenuAction.DirectionAuto: TextDirection = TextDirection.Auto; return;
-            case LineEditMenuAction.DirectionLTR: TextDirection = TextDirection.LTR; return;
-            case LineEditMenuAction.DirectionRTL: TextDirection = TextDirection.RTL; return;
-            case LineEditMenuAction.DisplayUCC: DrawControlChars = !DrawControlChars; return;
-            case LineEditMenuAction.EmojiAndSymbols: throw new NotSupportedException("Native symbol-picker presentation is not integrated.");
+            case TextMenuAction.Cut: if (_editable && !_secret && _selecting) { CopySelection(); DeleteRange(_selectionFrom, _selectionTo); ChangedByUser(); } return;
+            case TextMenuAction.Copy: CopySelection(); return;
+            case TextMenuAction.Paste: if (_editable) UserInsert(DisplayServer.Service?.ClipboardGetCore() ?? ""); return;
+            case TextMenuAction.Clear: if (_editable) Clear(); return;
+            case TextMenuAction.SelectAll: SelectAll(); return;
+            case TextMenuAction.Undo: RestoreHistory(-1); return;
+            case TextMenuAction.Redo: RestoreHistory(1); return;
+            case TextMenuAction.DirectionInherited: TextDirection = TextDirection.Inherited; return;
+            case TextMenuAction.DirectionAuto: TextDirection = TextDirection.Auto; return;
+            case TextMenuAction.DirectionLTR: TextDirection = TextDirection.LTR; return;
+            case TextMenuAction.DirectionRTL: TextDirection = TextDirection.RTL; return;
+            case TextMenuAction.DisplayUCC: DrawControlChars = !DrawControlChars; return;
+            case TextMenuAction.EmojiAndSymbols: throw new NotSupportedException("Native symbol-picker presentation is not integrated.");
         }
         if (!_editable) return;
         var scalar = option switch
         {
-            LineEditMenuAction.InsertLRM => 0x200e,
-            LineEditMenuAction.InsertRLM => 0x200f,
-            LineEditMenuAction.InsertLRE => 0x202a,
-            LineEditMenuAction.InsertRLE => 0x202b,
-            LineEditMenuAction.InsertLRO => 0x202d,
-            LineEditMenuAction.InsertRLO => 0x202e,
-            LineEditMenuAction.InsertPDF => 0x202c,
-            LineEditMenuAction.InsertALM => 0x061c,
-            LineEditMenuAction.InsertLRI => 0x2066,
-            LineEditMenuAction.InsertRLI => 0x2067,
-            LineEditMenuAction.InsertFSI => 0x2068,
-            LineEditMenuAction.InsertPDI => 0x2069,
-            LineEditMenuAction.InsertZWJ => 0x200d,
-            LineEditMenuAction.InsertZWNJ => 0x200c,
-            LineEditMenuAction.InsertWJ => 0x2060,
-            LineEditMenuAction.InsertSHY => 0x00ad,
+            TextMenuAction.InsertLRM => 0x200e,
+            TextMenuAction.InsertRLM => 0x200f,
+            TextMenuAction.InsertLRE => 0x202a,
+            TextMenuAction.InsertRLE => 0x202b,
+            TextMenuAction.InsertLRO => 0x202d,
+            TextMenuAction.InsertRLO => 0x202e,
+            TextMenuAction.InsertPDF => 0x202c,
+            TextMenuAction.InsertALM => 0x061c,
+            TextMenuAction.InsertLRI => 0x2066,
+            TextMenuAction.InsertRLI => 0x2067,
+            TextMenuAction.InsertFSI => 0x2068,
+            TextMenuAction.InsertPDI => 0x2069,
+            TextMenuAction.InsertZWJ => 0x200d,
+            TextMenuAction.InsertZWNJ => 0x200c,
+            TextMenuAction.InsertWJ => 0x2060,
+            TextMenuAction.InsertSHY => 0x00ad,
             _ => 0
         };
         if (scalar == 0) return; var before = _text;
@@ -54,8 +54,8 @@ public partial class LineEdit
     }
 }
 
-/// <summary>Identifies executable LineEdit editing commands; popup submenu identifiers are not editing commands.</summary>
-public enum LineEditMenuAction
+/// <summary>Identifies executable text editing commands; popup submenu identifiers are not editing commands.</summary>
+public enum TextMenuAction
 {
     /// <summary>Cuts selected text.</summary>
     Cut = 0,
