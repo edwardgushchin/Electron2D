@@ -1,6 +1,6 @@
 # FlowContainer
 
-Last updated: 2026-10-02
+Last updated: 2026-10-06
 
 - Declaration: `public class FlowContainer : Container`
 - Source: [FlowContainer.cs](../../src/Scene/GUI/FlowContainer.cs)
@@ -34,7 +34,7 @@ flow.AddChild(new Button { Text = "Exit" });
 | `protected FlowContainer(bool vertical)` | Initializes a fixed-orientation subclass. |
 | [`public bool Vertical { get; set; }`](#vertical) | False on generic FlowContainer. |
 | [`public bool ReverseFill { get; set; }`](#reversefill) | False initially. |
-| [`public AlignmentMode Alignment { get; set; }`](#alignment) | Begin initially. |
+| [`public FlowContainer.AlignmentMode Alignment { get; set; }`](#alignment) | Begin initially. |
 | [`public LastWrapAlignmentMode LastWrapAlignment { get; set; }`](#lastwrapalignment) | Inherit initially. |
 | [`public int HSeparation { get; set; }`](#hseparation) | Horizontal gap, built-in default four. |
 | [`public int VSeparation { get; set; }`](#vseparation) | Vertical equivalent using v_separation, initially four. |
@@ -48,7 +48,7 @@ flow.AddChild(new Button { Text = "Exit" });
 
 ## Enumerations
 
-[AlignmentMode](AlignmentMode.md): Begin=0, Center=1, End=2.
+[AlignmentMode](FlowContainer.AlignmentMode.md): Begin=0, Center=1, End=2.
 [LastWrapAlignmentMode](FlowContainer.LastWrapAlignmentMode.md): Inherit=0, Begin=1, Center=2, End=3.
 
 ## Property descriptions
@@ -67,7 +67,7 @@ False initially. Horizontal flows fill rows from the bottom when true; vertical 
 
 ### Alignment
 
-`public AlignmentMode Alignment { get; set; }`
+`public FlowContainer.AlignmentMode Alignment { get; set; }`
 
 Begin initially. Uses leading/center/trailing residual primary space after capped expansion. Changing it arranges synchronously; equal values are silent. Undefined enum values reject before mutation.
 

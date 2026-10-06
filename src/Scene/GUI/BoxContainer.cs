@@ -5,6 +5,16 @@ namespace Electron2D;
 /// Horizontal layout honors RTL. Inherited theme constants and local overrides control the gap.</remarks>
 public class BoxContainer : Container
 {
+    /// <summary>Aligns the child group along the primary layout axis.</summary>
+    public enum AlignmentMode
+    {
+        /// <summary>Aligns to the leading edge, mirrored horizontally in RTL layout.</summary>
+        Begin = 0,
+        /// <summary>Centers the child group.</summary>
+        Center = 1,
+        /// <summary>Aligns to the trailing edge, mirrored horizontally in RTL layout.</summary>
+        End = 2
+    }
     private bool _vertical, _fixed, _arranging, _arrangeAgain;
     private AlignmentMode _alignment;
     private readonly List<Slot> _slots = [];

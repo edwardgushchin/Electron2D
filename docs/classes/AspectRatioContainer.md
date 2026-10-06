@@ -1,6 +1,6 @@
 # AspectRatioContainer
 
-Last updated: 2026-09-30
+Last updated: 2026-10-06
 
 **Inherits:** [Container](Container.md), [Control](Control.md), CanvasItem, [Node](Node.md), ElectronObject · **Inherited By:** —
 
@@ -20,12 +20,12 @@ frame.AddChild(new Panel { Name = "Content" });
 | Signature | Contract |
 | --- | --- |
 | `public AspectRatioContainer()` | Creates a centered, fitting ratio-one container. |
-| [AlignmentMode](AlignmentMode.md) | Begin=0, Center=1, End=2. |
+| [AlignmentMode](AspectRatioContainer.AlignmentMode.md) | Begin=0, Center=1, End=2. |
 | `public enum StretchMode` | WidthControlsHeight=0, HeightControlsWidth=1, Fit=2, Cover=3. |
 | `public float Ratio { get; set; }` | Positive finite width divided by height; one initially. |
 | `public StretchMode Stretch { get; set; }` | Fit initially. |
-| `public AlignmentMode AlignmentHorizontal { get; set; }` | Center initially, mirrored under RTL. |
-| `public AlignmentMode AlignmentVertical { get; set; }` | Center initially. |
+| `public AspectRatioContainer.AlignmentMode AlignmentHorizontal { get; set; }` | Center initially, mirrored under RTL. |
+| `public AspectRatioContainer.AlignmentMode AlignmentVertical { get; set; }` | Center initially. |
 | `protected override Vector2 OnGetMinimumSize()` | Largest eligible bound child minimum. |
 | `protected override void OnNotification(int what)` | Computes aspect allocations on the deferred sort notification. |
 | `protected override SizeFlags[] GetAllowedSizeFlagsHorizontal()` | Advisory Fill and three shrink choices. |

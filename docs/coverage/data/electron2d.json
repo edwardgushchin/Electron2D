@@ -117,24 +117,6 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.AlignmentMode",
-    "kind": "type",
-    "declaringType": "Electron2D.AlignmentMode",
-    "name": "AlignmentMode",
-    "signature": "public enum Electron2D.AlignmentMode",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
     "id": "T:Electron2D.AnchorMode",
     "kind": "type",
     "declaringType": "Electron2D.AnchorMode",
@@ -1014,6 +996,24 @@
     "baseType": "Electron2D.Container",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AspectRatioContainer.AlignmentMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AspectRatioContainer.AlignmentMode",
+    "name": "AlignmentMode",
+    "signature": "public enum Electron2D.AspectRatioContainer.AlignmentMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -2341,6 +2341,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.BoxContainer.AlignmentMode",
+    "kind": "type",
+    "declaringType": "Electron2D.BoxContainer.AlignmentMode",
+    "name": "AlignmentMode",
+    "signature": "public enum Electron2D.BoxContainer.AlignmentMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Button",
     "kind": "type",
     "declaringType": "Electron2D.Button",
@@ -3584,6 +3602,24 @@
     "baseType": "Electron2D.Container",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FlowContainer.AlignmentMode",
+    "kind": "type",
+    "declaringType": "Electron2D.FlowContainer.AlignmentMode",
+    "name": "AlignmentMode",
+    "signature": "public enum Electron2D.FlowContainer.AlignmentMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -16112,45 +16148,6 @@
     "value": "2"
   },
   {
-    "id": "enumValue:Electron2D.AlignmentMode.Begin()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.AlignmentMode",
-    "name": "Begin",
-    "signature": "public const Electron2D.AlignmentMode Begin = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.AlignmentMode",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.AlignmentMode.Center()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.AlignmentMode",
-    "name": "Center",
-    "signature": "public const Electron2D.AlignmentMode Center = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.AlignmentMode",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.AlignmentMode.End()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.AlignmentMode",
-    "name": "End",
-    "signature": "public const Electron2D.AlignmentMode End = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.AlignmentMode",
-    "value": "2"
-  },
-  {
     "id": "enumValue:Electron2D.AnchorMode.DragCenter()",
     "kind": "enumValue",
     "declaringType": "Electron2D.AnchorMode",
@@ -16955,6 +16952,45 @@
     "parameters": [],
     "returnType": "Electron2D.Area.SpaceOverride",
     "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.AspectRatioContainer.AlignmentMode.Begin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AspectRatioContainer.AlignmentMode",
+    "name": "Begin",
+    "signature": "public const Electron2D.AspectRatioContainer.AlignmentMode Begin = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AspectRatioContainer.AlignmentMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AspectRatioContainer.AlignmentMode.Center()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AspectRatioContainer.AlignmentMode",
+    "name": "Center",
+    "signature": "public const Electron2D.AspectRatioContainer.AlignmentMode Center = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AspectRatioContainer.AlignmentMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AspectRatioContainer.AlignmentMode.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AspectRatioContainer.AlignmentMode",
+    "name": "End",
+    "signature": "public const Electron2D.AspectRatioContainer.AlignmentMode End = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AspectRatioContainer.AlignmentMode",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.AspectRatioContainer.StretchMode.Cover()",
@@ -17994,6 +18030,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.BlendMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.BoxContainer.AlignmentMode.Begin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BoxContainer.AlignmentMode",
+    "name": "Begin",
+    "signature": "public const Electron2D.BoxContainer.AlignmentMode Begin = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BoxContainer.AlignmentMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.BoxContainer.AlignmentMode.Center()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BoxContainer.AlignmentMode",
+    "name": "Center",
+    "signature": "public const Electron2D.BoxContainer.AlignmentMode Center = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BoxContainer.AlignmentMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.BoxContainer.AlignmentMode.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BoxContainer.AlignmentMode",
+    "name": "End",
+    "signature": "public const Electron2D.BoxContainer.AlignmentMode End = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BoxContainer.AlignmentMode",
     "value": "2"
   },
   {
@@ -20282,6 +20357,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.FillEnum",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.AlignmentMode.Begin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.AlignmentMode",
+    "name": "Begin",
+    "signature": "public const Electron2D.FlowContainer.AlignmentMode Begin = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.AlignmentMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.AlignmentMode.Center()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.AlignmentMode",
+    "name": "Center",
+    "signature": "public const Electron2D.FlowContainer.AlignmentMode Center = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.AlignmentMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.AlignmentMode.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.AlignmentMode",
+    "name": "End",
+    "signature": "public const Electron2D.FlowContainer.AlignmentMode End = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.AlignmentMode",
     "value": "2"
   },
   {
@@ -125758,12 +125872,12 @@
     "kind": "property",
     "declaringType": "Electron2D.AspectRatioContainer",
     "name": "AlignmentHorizontal",
-    "signature": "public Electron2D.AlignmentMode AlignmentHorizontal { get; set; }",
+    "signature": "public Electron2D.AspectRatioContainer.AlignmentMode AlignmentHorizontal { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.AlignmentMode",
+    "returnType": "Electron2D.AspectRatioContainer.AlignmentMode",
     "value": null
   },
   {
@@ -125771,12 +125885,12 @@
     "kind": "property",
     "declaringType": "Electron2D.AspectRatioContainer",
     "name": "AlignmentVertical",
-    "signature": "public Electron2D.AlignmentMode AlignmentVertical { get; set; }",
+    "signature": "public Electron2D.AspectRatioContainer.AlignmentMode AlignmentVertical { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.AlignmentMode",
+    "returnType": "Electron2D.AspectRatioContainer.AlignmentMode",
     "value": null
   },
   {
@@ -128111,12 +128225,12 @@
     "kind": "property",
     "declaringType": "Electron2D.BoxContainer",
     "name": "Alignment",
-    "signature": "public Electron2D.AlignmentMode Alignment { get; set; }",
+    "signature": "public Electron2D.BoxContainer.AlignmentMode Alignment { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.AlignmentMode",
+    "returnType": "Electron2D.BoxContainer.AlignmentMode",
     "value": null
   },
   {
@@ -133454,12 +133568,12 @@
     "kind": "property",
     "declaringType": "Electron2D.FlowContainer",
     "name": "Alignment",
-    "signature": "public Electron2D.AlignmentMode Alignment { get; set; }",
+    "signature": "public Electron2D.FlowContainer.AlignmentMode Alignment { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.AlignmentMode",
+    "returnType": "Electron2D.FlowContainer.AlignmentMode",
     "value": null
   },
   {

@@ -82,8 +82,8 @@ internal static class LayoutContainersTests
         using var tree = new SceneTree(viewport);
         tree.FlushDeferred();
         Check(aspect.Stretch == AspectRatioContainer.StretchMode.Fit &&
-              aspect.AlignmentHorizontal == AlignmentMode.Center &&
-              aspect.AlignmentVertical == AlignmentMode.Center &&
+              aspect.AlignmentHorizontal == AspectRatioContainer.AlignmentMode.Center &&
+              aspect.AlignmentVertical == AspectRatioContainer.AlignmentMode.Center &&
               child.Position == new Vector2(0, 5) && child.Size == new Vector2(100, 50),
             "Fit preserves the target aspect and centers the complete child inside both axes.");
         child.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
@@ -102,18 +102,18 @@ internal static class LayoutContainersTests
         tree.FlushDeferred();
         Check(child.Size == new Vector2(120, 60), "Height-controls-width uses the full height.");
         aspect.Stretch = AspectRatioContainer.StretchMode.WidthControlsHeight;
-        aspect.AlignmentVertical = AlignmentMode.End;
+        aspect.AlignmentVertical = AspectRatioContainer.AlignmentMode.End;
         tree.FlushDeferred();
         Check(child.Position == new Vector2(0, 10) && child.Size == new Vector2(100, 50),
             "Width-controls-height and trailing alignment use the remaining vertical space.");
         aspect.Stretch = AspectRatioContainer.StretchMode.Fit;
         aspect.Ratio = 1;
-        aspect.AlignmentHorizontal = AlignmentMode.Begin;
+        aspect.AlignmentHorizontal = AspectRatioContainer.AlignmentMode.Begin;
         aspect.LayoutDirection = LayoutDirection.RTL;
         tree.FlushDeferred();
         Check(child.Position == new Vector2(40, 0) && child.Size == new Vector2(60, 60),
             "Horizontal Begin is mirrored under RTL while the vertical axis is unchanged.");
-        aspect.AlignmentHorizontal = AlignmentMode.End;
+        aspect.AlignmentHorizontal = AspectRatioContainer.AlignmentMode.End;
         tree.FlushDeferred();
         Check(child.Position == Vector2.Zero, "RTL End selects the physical left edge.");
         child.CustomMinimumSize = new(80, 80);
@@ -126,7 +126,7 @@ internal static class LayoutContainersTests
         Reject<ArgumentOutOfRangeException>(() => aspect.Ratio = float.NaN);
         Reject<ArgumentOutOfRangeException>(() => aspect.Ratio = float.PositiveInfinity);
         Reject<ArgumentOutOfRangeException>(() => aspect.Stretch = (AspectRatioContainer.StretchMode)99);
-        Reject<ArgumentOutOfRangeException>(() => aspect.AlignmentVertical = (AlignmentMode)99);
+        Reject<ArgumentOutOfRangeException>(() => aspect.AlignmentVertical = (AspectRatioContainer.AlignmentMode)99);
         Check(aspect.Ratio == retainedRatio, "Invalid finite-geometry input leaves the prior ratio intact.");
     }
 
@@ -138,8 +138,8 @@ internal static class LayoutContainersTests
         {
             Ratio = 2,
             Stretch = AspectRatioContainer.StretchMode.Cover,
-            AlignmentHorizontal = AlignmentMode.End,
-            AlignmentVertical = AlignmentMode.Begin
+            AlignmentHorizontal = AspectRatioContainer.AlignmentMode.End,
+            AlignmentVertical = AspectRatioContainer.AlignmentMode.Begin
         };
         using var packedCenter = new PackedScene(); packedCenter.Pack(center);
         using var packedMargin = new PackedScene(); packedMargin.Pack(margin);
@@ -149,8 +149,8 @@ internal static class LayoutContainersTests
         using var aspectCopy = (AspectRatioContainer)packedAspect.Instantiate();
         Check(centerCopy.UseTopLeft && marginCopy.GetMarginSize(Side.Left) == 13 && aspectCopy.Ratio == 2 &&
               aspectCopy.Stretch == AspectRatioContainer.StretchMode.Cover &&
-              aspectCopy.AlignmentHorizontal == AlignmentMode.End &&
-              aspectCopy.AlignmentVertical == AlignmentMode.Begin,
+              aspectCopy.AlignmentHorizontal == AspectRatioContainer.AlignmentMode.End &&
+              aspectCopy.AlignmentVertical == AspectRatioContainer.AlignmentMode.Begin,
             "Exact scene factories retain each container type and its typed policy/theme state.");
     }
 

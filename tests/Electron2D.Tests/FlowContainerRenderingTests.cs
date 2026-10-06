@@ -22,7 +22,7 @@ internal static partial class RenderingRuntimeTests
                 {
                     Check(flow.GetLineCount() == 2 && c.Position == new Vector2(0, 15), "Native flow wraps before third child.");
                     Pixel(pixels, 4, 4, Colors.Red); Pixel(pixels, 16, 4, Colors.Black); Pixel(pixels, 18, 4, Colors.Blue); Pixel(pixels, 4, 17, Colors.Black); Pixel(pixels, 4, 19, Colors.Green);
-                    flow.Alignment = AlignmentMode.Center;
+                    flow.Alignment = FlowContainer.AlignmentMode.Center;
                 }
                 else if (frames == 1)
                 {
@@ -46,7 +46,7 @@ internal static partial class RenderingRuntimeTests
                 {
                     Check(a.Position.Y == 28 && c.Position.Y == 17, "Native reverse fill wraps upward.");
                     Pixel(pixels, 31, 32, Colors.Red); Pixel(pixels, 7, 21, Colors.Green); Pixel(pixels, 31, 4, Colors.Black);
-                    flow.Alignment = AlignmentMode.Begin; flow.LastWrapAlignment = FlowContainer.LastWrapAlignmentMode.Inherit; flow.Vertical = true;
+                    flow.Alignment = FlowContainer.AlignmentMode.Begin; flow.LastWrapAlignment = FlowContainer.LastWrapAlignmentMode.Inherit; flow.Vertical = true;
                 }
                 else
                 {

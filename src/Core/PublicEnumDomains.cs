@@ -109,17 +109,6 @@ public enum WindowFlag
     Max = 13,
 }
 
-/// <summary>Aligns content at the leading edge, center, or trailing edge.</summary>
-public enum AlignmentMode
-{
-    /// <summary>Begins at the leading edge.</summary>
-    Begin = 0,
-    /// <summary>Centers the child group.</summary>
-    Center = 1,
-    /// <summary>Ends at the trailing edge.</summary>
-    End = 2
-}
-
 /// <summary>Controls how a nine-patch center region fills one axis in controls and styles.</summary>
 public enum AxisStretchMode
 {

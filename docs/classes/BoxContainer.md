@@ -1,6 +1,6 @@
 # BoxContainer
 
-Last updated: 2026-10-02
+Last updated: 2026-10-06
 
 **Inherits:** [Container](Container.md), Control, CanvasItem, Node, ElectronObject · **Inherited By:** [HBoxContainer](HBoxContainer.md), [VBoxContainer](VBoxContainer.md)
 
@@ -25,7 +25,7 @@ tree.ProcessFrame(0);
 | --- | --- |
 | `public BoxContainer()` | Horizontal, Begin, separation four. |
 | `protected BoxContainer(bool vertical)` | Creates a fixed-orientation specialization. |
-| `public AlignmentMode Alignment { get; set; }` | Begin; changes arrange attached children synchronously. |
+| `public BoxContainer.AlignmentMode Alignment { get; set; }` | Begin; changes arrange attached children synchronously. |
 | `public bool Vertical { get; set; }` | False; generic boxes allow changes, fixed subclasses reject all assignments. |
 | `public int Separation { get; set; }` | Signed resolved pixel gap; built-in default four, local override projection. |
 | `public Control AddSpacer(bool begin)` | Adds real primary-axis ExpandFill child. |
@@ -35,7 +35,7 @@ tree.ProcessFrame(0);
 | `protected override SizeFlags[] GetAllowedSizeFlagsVertical()` | Omits cross-axis Expand when horizontal. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores generic orientation/alignment; separation edits the inherited typed constant override. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Exact generic box identity. |
-| [AlignmentMode](AlignmentMode.md) | [Begin=0, Center=1, End=2](AlignmentMode.md). |
+| [AlignmentMode](BoxContainer.AlignmentMode.md) | [Begin=0, Center=1, End=2](BoxContainer.AlignmentMode.md). |
 
 ## Property descriptions
 
@@ -57,7 +57,7 @@ tree.ProcessFrame(0);
 **Layout hooks:** each weighted share uses available primary pixels and the ratio sum. Iterative refit fixes children below minimum or above maximum and redistributes surplus. Fractional shares accumulate pixel error; the last still-expanding child reaches the boundary. Zero/negative weights retain source behavior; positive total enters refit. Maximum propagation passes remaining primary bound through a temporary child cache. FitChildInRect supplies final fill/shrink, zero anchors and reset visual transforms.
 
 <a id="getallowedsizeflagshorizontal"></a><a id="getallowedsizeflagsvertical"></a><a id="getpropertydescriptors"></a><a id="createsceneinstancefactory"></a><a id="alignmentmode"></a>
-**Inspector/storage hooks and enumeration:** choices are advisory; arbitrary stored bits remain allowed. Generic/fixed scene factories preserve exact types. AlignmentMode is documented on its own page.
+**Inspector/storage hooks and enumeration:** choices are advisory; arbitrary stored bits remain allowed. Generic/fixed scene factories preserve exact types. [BoxContainer.AlignmentMode](BoxContainer.AlignmentMode.md) is declared by this container and documented on its own page.
 
 ## Lifecycle, errors, dependencies and verification
 

@@ -73,6 +73,18 @@ DIMENSIONAL_TYPE_EXCEPTIONS = {
 }
 
 
+ALIGNMENT_ENUM_OWNERS = {
+    "AlignmentMode": {"BoxContainer", "AspectRatioContainer", "FlowContainer", "TabBar"},
+    "LastWrapAlignmentMode": {"FlowContainer"},
+    "HorizontalAlignment": {""},
+    "VerticalAlignment": {""},
+    "InlineAlignment": {""},
+    "ParticlesTransformAlign": {"RenderingServer"},
+    "ParticlesTransformAlignAxis": {"RenderingServer"},
+    "ParticlesTransformAlignCustomSrc": {"RenderingServer"},
+}
+
+
 def validate_public_type_names(engine):
     invalid = [item["id"] for item in engine if item["kind"] == "type"
                and re.search(r"(?<!\d)[123][dD](?:$|[A-Z_<`])", item["name"])
@@ -80,6 +92,18 @@ def validate_public_type_names(engine):
     if invalid:
         raise ValueError("ADR 0004: unapproved dimensional public type names: " + ", ".join(invalid)
                          + ". Omit the dimension marker or follow an explicitly accepted ADR exception.")
+
+    invalid = []
+    for item in engine:
+        if item["kind"] != "type":
+            continue
+        name = item["id"].removeprefix("T:Electron2D.")
+        owner, _, enum = name.rpartition(".")
+        if enum in ALIGNMENT_ENUM_OWNERS and owner not in ALIGNMENT_ENUM_OWNERS[enum]:
+            invalid.append(item["id"])
+    if invalid:
+        raise ValueError("ADR 0051: alignment enum declaring owners must match the reference: "
+                         + ", ".join(invalid))
 
 
 def coverage_target(name):
