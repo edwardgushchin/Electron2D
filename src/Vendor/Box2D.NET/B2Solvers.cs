@@ -1047,6 +1047,15 @@ public enum b2SolverBlockType
 
             int workerIndex = 0;
 
+            if (context.workerCount == 1)
+            {
+                for (int i = 0; i < blockCount; ++i)
+                {
+                    b2ExecuteBlock(stage, context, stage.blocks[i], workerIndex);
+                }
+                return;
+            }
+
             if (blockCount == 1)
             {
                 b2ExecuteBlock(stage, context, stage.blocks[0], workerIndex);
@@ -1064,6 +1073,10 @@ public enum b2SolverBlockType
                 // todo consider using the cycle counter as well
                 while (b2AtomicLoadInt(ref stage.completionCount) != blockCount)
                 {
+                    if (System.Threading.Volatile.Read(ref context.workerFailure) is System.Exception failure)
+                    {
+                        throw new System.InvalidOperationException("Constraint worker failed.", failure);
+                    }
                     b2Pause();
                 }
 
@@ -1518,7 +1531,7 @@ public enum b2SolverBlockType
                 ArraySegment<B2JointSim> joints =
                     b2AllocateArenaItem<B2JointSim>(world.arena, awakeJointCount, "joint pointers");
 
-                B2_ASSERT(B2FixedArray4<B2ContactConstraintSIMD>.Size == B2_SIMD_WIDTH);
+                B2_ASSERT(B2FixedArray8<B2ContactConstraintSIMD>.Size == B2_SIMD_WIDTH);
                 int simdConstraintSize = b2GetContactConstraintSIMDByteCount();
                 ArraySegment<B2ContactConstraintSIMD> simdContactConstraints =
                     b2AllocateArenaItem<B2ContactConstraintSIMD>(world.arena, simdContactCount /** simdConstraintSize */, "contact constraint");
@@ -2229,7 +2242,7 @@ public enum b2SolverBlockType
                 ulong sensorHitTicks = b2GetTicks();
 
                 int workerCount = world.workerCount;
-                B2_ASSERT(workerCount == world.taskContexts.count);
+                B2_ASSERT(workerCount <= world.taskContexts.count);
 
                 for (int i = 0; i < workerCount; ++i)
                 {

@@ -1,13 +1,13 @@
 # Electron2D physics decisions
 
-Last updated: 2026-09-30
+Last updated: 2026-10-06
 
 This bounded document owns executable two-dimensional bodies, shapes and areas. [The decision index](index.md) routes other domains.
 
 <a id="adr-0054"></a>
 ## ADR 0054: Box2D-backed scene bodies and collision shapes
 
-Last updated: 2026-09-30
+Last updated: 2026-10-06
 
 - Status: Accepted
 - Scope: First typed scene-body and shape vertical slice
@@ -24,6 +24,7 @@ The fixed physics frame, scene-node hierarchy, typed resources and retained rend
 - A `SceneTree` lazily owns one internal Box2D world. Direct body entry creates a backend body; direct collision-shape children add circle/rectangle fixtures. Shape changes, disables and collision-layer/mask edits rebuild fixtures before the next step. Tree exit and disposal release bodies, fixtures and world, while borrowed Shape resources remain caller-owned. Failed geometry validation rejects before replacing existing fixtures.
 - One scene unit is 0.01 Box2D meters. Default downward gravity is 980 scene units per second squared. Scene fixed physics callbacks run before a four-substep world step; body transforms and velocities synchronize back before timers, tweens and the physics-interpolation end snapshot. Geometry accepts translation and rotation with unit global scale and zero skew; unsupported scaled/skewed active physics transforms fail explicitly. This is an initial profile, not a claim that every inherited or own physics member is complete.
 - The initial public body profile includes circle/rectangle dimensions and bounds, managed shape copying, collision-shape assignment and enablement, 32 collision-layer/mask bits, dynamic/static contact response, mass, gravity scale, linear/angular velocity and damping, sleep, freeze, rotation lock, central force and impulse. Other applicable members retain operation-specific Partial, Unimplemented or Blocked coverage rows.
+- Large worlds with at least 256 awake backend bodies use up to four retained workers, bounded by available processors; smaller worlds and browser hosts use one. Worker tasks cover collision ranges and the existing colored constraint stages without changing the four substeps or public callback lane. Threads and task storage belong to each world and are released on disposal. One-way pair state is synchronized internally; user integration/contact/area callbacks remain on the world owner. The backend uses eight-lane `Vector256<float>` arithmetic with .NET fallback and separate multiply/add operations. [The performance report](../components/box2d-performance.md) defines measured throughput and platform limits.
 - Engine-owned warmed resting-contact, active-contact and moving-body fixed steps allocate zero managed bytes in the checked Linux/.NET 8 profile. The pinned Box2D.NET port needed per-world reuse of its step context and graph-color block array plus zero-overflow-contact fast exits; the applicable current-upstream buffer reuse is proposed in [ikpil/Box2D.NET#101](https://github.com/ikpil/Box2D.NET/pull/101). No allocation claim is made for unmeasured native/platform paths or user callbacks.
 
 ### Consequences
@@ -215,7 +216,7 @@ Games can use reusable multi-edge terrain, open contours and hollow line sensors
 <a id="adr-0065"></a>
 ## ADR 0065: One-way scene-body contacts
 
-Last updated: 2026-09-30
+Last updated: 2026-10-06
 
 - Status: Accepted
 - Scope: CollisionShape one-way flag and local direction on scene physics bodies
@@ -228,7 +229,7 @@ Two-sided fixtures prevent a body from passing through a platform and landing on
 ### Decision
 
 - `CollisionShape.OneWayCollision` defaults to false and `OneWayCollisionDirection` defaults to `(0, 1)`. A finite nonzero direction is normalized before mutation; zero rejects contact from every side when the flag is enabled. Direction rotates with the shape's local pose and its parent body. Area children retain these scene properties for packing but remain sensor-only and warn that one-way response does not apply.
-- Mark only enabled body fixtures for Box2D pre-solve. Per-fixture user data carries the local contact direction; the world callback compares the first contact normal to its current body rotation. Keep the initial allowed/denied decision for the shape pair until no contact is observed. Fixture rebuilds change backend IDs and therefore discard old pair decisions without changing public node identity. The current world uses its default single-worker task system; callback state is world-owned and unavailable to user code.
+- Mark only enabled body fixtures for Box2D pre-solve. Per-fixture user data carries the local contact direction; the world callback compares the first contact normal to its current body rotation. Keep the initial allowed/denied decision for the shape pair until no contact is observed. Fixture rebuilds change backend IDs and therefore discard old pair decisions without changing public node identity. Large worlds use the retained task system from ADR 0054. One-way pair updates are serialized within that world; callback state remains internal, and gameplay callbacks execute on the owner after solver tasks finish.
 - Expose finite nonnegative `OneWayCollisionMargin`, default one scene unit, on CollisionShape and CollisionPolygon. Typed body motion accepts initial recovery against the solid side only up to the larger of this value and the query's safe margin; a deeper one-way overlap is ignored. Fixed-step pre-solve continues to use the established side decision. The value survives PackedScene, and edits rebuild fixture tags before a later motion query. No vendored source changes are needed.
 
 ### Consequences

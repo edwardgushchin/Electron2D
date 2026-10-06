@@ -4,6 +4,8 @@ internal static class PhysicsBodyTests
 {
     internal static void Run()
     {
+        Box2DSIMDTests.Run();
+        PhysicsParallelTests.Run();
         VerifyDefaultsAndValidation();
         VerifyCircleAndShapeChanges();
         VerifyPackedPhysicsNodes();
