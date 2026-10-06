@@ -1,10 +1,10 @@
-# LineEditMenuAction
+# TextMenuAction
 
-Last updated: 2026-10-04
+Last updated: 2026-10-07
 
-**Source:** [LineEdit.Menu.cs](../../src/Scene/GUI/LineEdit.Menu.cs). **Owner:** [LineEdit](LineEdit.md).
+**Source:** [LineEdit.Menu.cs](../../src/Scene/GUI/LineEdit.Menu.cs). **Owners:** [LineEdit](LineEdit.md) and [TextEdit](TextEdit.md).
 
-Typed single-line editing commands. Values 7 and 13 belong to popup submenu presentation; the count sentinel is omitted. EmojiAndSymbols requires the currently absent native picker.
+Shared typed editing commands under ADR 0051. Values 7 and 13 belong to popup submenu presentation; the count sentinel is omitted. EmojiAndSymbols requires the currently absent native picker.
 
 | Name | Value | Contract |
 | --- | ---: | --- |

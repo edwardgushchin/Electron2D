@@ -173,7 +173,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CircleShape2D](classes/CircleShape2D.md) | Shape2D | Implemented | 1 |
 | [ClassDB](classes/ClassDB.md) | Object | Excluded | 36 |
 | [CodeEdit](classes/CodeEdit.md) | TextEdit | Blocked | 145 |
-| [CodeHighlighter](classes/CodeHighlighter.md) | SyntaxHighlighter | Blocked | 21 |
+| [CodeHighlighter](classes/CodeHighlighter.md) | SyntaxHighlighter | Implemented | 21 |
 | [CollisionObject2D](classes/CollisionObject2D.md) | Node2D | Partial | 45 |
 | [CollisionObject3D](classes/CollisionObject3D.md) | Node3D | Excluded | 36 |
 | [CollisionPolygon2D](classes/CollisionPolygon2D.md) | Node2D | Implemented | 9 |
@@ -838,13 +838,13 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SubViewportContainer](classes/SubViewportContainer.md) | Container | Implemented | 5 |
 | [SubtweenTweener](classes/SubtweenTweener.md) | Tweener | Implemented | 1 |
 | [SurfaceTool](classes/SurfaceTool.md) | RefCounted | Blocked | 46 |
-| [SyntaxHighlighter](classes/SyntaxHighlighter.md) | Resource | Blocked | 7 |
+| [SyntaxHighlighter](classes/SyntaxHighlighter.md) | Resource | Implemented | 7 |
 | [SystemFont](classes/SystemFont.md) | Font | Blocked | 17 |
 | [TCPServer](classes/TCPServer.md) | SocketServer | Implemented | 3 |
 | [TLSOptions](classes/TLSOptions.md) | RefCounted | Implemented | 9 |
 | [TabBar](classes/TabBar.md) | Control | Implemented | 99 |
 | [TabContainer](classes/TabContainer.md) | Container | Implemented | 85 |
-| [TextEdit](classes/TextEdit.md) | Control | Blocked | 299 |
+| [TextEdit](classes/TextEdit.md) | Control | Partial | 299 |
 | [TextLine](classes/TextLine.md) | RefCounted | Blocked | 30 |
 | [TextMesh](classes/TextMesh.md) | PrimitiveMesh | Excluded | 18 |
 | [TextParagraph](classes/TextParagraph.md) | RefCounted | Blocked | 49 |

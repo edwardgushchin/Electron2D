@@ -19,6 +19,8 @@ public static partial class ResourceFileTypes
         RegisterResource("PackedScene", CreatePackedScene);
         RegisterResource("PhysicsMaterial", CreatePhysicsMaterial);
         RegisterResource("ColorPalette", CreateColorPalette);
+        RegisterResource("SyntaxHighlighter", CreateSyntaxHighlighter);
+        RegisterResource("CodeHighlighter", CreateCodeHighlighter);
         RegisterNode("Sprite", CreateSprite);
         RegisterResource("Image", CreateImage);
         RegisterResource("ImageTexture", CreateImageTexture);
@@ -40,6 +42,8 @@ public static partial class ResourceFileTypes
     }
     private static Node CreateNode() => new();
     private static Entity CreateEntity() => new();
+    private static SyntaxHighlighter CreateSyntaxHighlighter() => new();
+    private static CodeHighlighter CreateCodeHighlighter() => new();
     private static Resource CreateResource() => new();
     private static PackedScene CreatePackedScene() => new();
     private static PhysicsMaterial CreatePhysicsMaterial() => new();

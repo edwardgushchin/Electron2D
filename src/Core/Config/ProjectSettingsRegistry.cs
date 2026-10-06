@@ -118,6 +118,12 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(TCPConnectTimeoutSeconds, isBasic: false);
         RegisterInternal(UDSConnectTimeoutSeconds, isBasic: false);
         RegisterInternal(InputUITextSubmit, isBasic: false);
+        RegisterInternal(TextEditUndoStackMaxSize, isBasic: false);
+        RegisterInternal(InputUITextNewline, isBasic: false);
+        RegisterInternal(InputUITextCaretDocumentStart, isBasic: false);
+        RegisterInternal(InputUITextCaretDocumentEnd, isBasic: false);
+        RegisterInternal(InputUITextToggleInsertMode, isBasic: false);
+
         RegisterInternal(InputUITextSelectAll, isBasic: false);
         RegisterInternal(InputUICopy, isBasic: false);
         RegisterInternal(InputUICut, isBasic: false);
@@ -1184,6 +1190,12 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, TCPConnectTimeoutSeconds) ||
         ReferenceEquals(setting, UDSConnectTimeoutSeconds) ||
         ReferenceEquals(setting, InputUITextSubmit) ||
+        ReferenceEquals(setting, TextEditUndoStackMaxSize) ||
+        ReferenceEquals(setting, InputUITextNewline) ||
+        ReferenceEquals(setting, InputUITextCaretDocumentStart) ||
+        ReferenceEquals(setting, InputUITextCaretDocumentEnd) ||
+        ReferenceEquals(setting, InputUITextToggleInsertMode) ||
+
         ReferenceEquals(setting, InputUITextSelectAll) ||
         ReferenceEquals(setting, InputUICopy) ||
         ReferenceEquals(setting, InputUICut) ||

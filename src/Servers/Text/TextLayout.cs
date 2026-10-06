@@ -626,7 +626,7 @@ internal sealed partial class TextLayout
     }
 
     internal void Draw(CanvasItem canvas, Vector2 baseline, Color color, int outline = 0, float oversampling = 0,
-        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false, Rect2? clipRect = null)
+        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false, Rect2? clipRect = null, ReadOnlySpan<Color> characterColors = default)
     {
         if (IsBusy) throw new InvalidOperationException("An active text layout cannot record itself recursively.");
         for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
@@ -635,14 +635,14 @@ internal sealed partial class TextLayout
             if (_builtFontGeneration != read.Generation) { Build(_font, Key, _options); continue; }
             if (!read.IsCurrent) continue;
             _active++;
-            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect); return; }
+            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect, characterColors); return; }
             finally { _active--; }
         }
         throw Font.UnsettledRead();
     }
 
     private void DrawCore(CanvasItem canvas, Vector2 baseline, Color color, int outline, float oversampling,
-        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth, Rect2? clipRect)
+        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth, Rect2? clipRect, ReadOnlySpan<Color> characterColors)
     {
         if (firstLine < 0 || firstLine >= _lines.Count) return;
         var end = Key.MaxLines < 0 ? _lines.Count : Math.Min(Key.MaxLines, _lines.Count);
@@ -657,6 +657,7 @@ internal sealed partial class TextLayout
             for (var j = line.GlyphStart; j < line.GlyphStart + line.GlyphCount; j++)
             {
                 var glyph = _glyphs[j];
+                var glyphColor = !outlinePass && glyph.Start >= 0 && glyph.Start < characterColors.Length ? characterColors[glyph.Start] : color;
                 if (visibleCharacters >= 0)
                 {
                     var reverse = visibleBehavior == 4 || visibleBehavior == 2 && line.ParagraphLevel == 1;
@@ -667,7 +668,7 @@ internal sealed partial class TextLayout
                 if (glyph.Missing)
                 {
                     if (clipToWidth && Key.Width > 0 && (glyph.Position.X - glyph.Offset.X < 0 || glyph.Position.X - glyph.Offset.X + glyph.Advance > Key.Width)) continue;
-                    if (!outlinePass) TextMissingGlyph.Draw(canvas, Key.FontSize, origin + glyph.Position, glyph.Index, color, clipRect, _options.PreserveControl);
+                    if (!outlinePass) TextMissingGlyph.Draw(canvas, Key.FontSize, origin + glyph.Position, glyph.Index, glyphColor, clipRect, _options.PreserveControl);
                     continue;
                 }
                 for (var repeat = 0; repeat < glyph.Repeat; repeat++)
@@ -680,7 +681,7 @@ internal sealed partial class TextLayout
                     var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(repeat * glyph.Advance, 0) : new Vector2(0, repeat * glyph.Advance);
                     var position = origin + glyph.Position + offset;
                     var image = glyph.Face!.GetGlyph(glyph.Index, Key.FontSize, outline, oversampling, position, out var rasterPosition);
-                    DrawGlyph(canvas, image, rasterPosition, color, !outlinePass && glyph.Face.ModulateColorGlyphs, clipRect);
+                    DrawGlyph(canvas, image, rasterPosition, glyphColor, !outlinePass && glyph.Face.ModulateColorGlyphs, clipRect);
                 }
             }
         }

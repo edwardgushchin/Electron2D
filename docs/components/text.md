@@ -1,6 +1,6 @@
 # Text shaping and canvas fonts
 
-Last updated: 2026-10-05
+Last updated: 2026-10-07
 
 Private native binaries come from versioned Linux/macOS/Windows packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; full Windows/macOS runtime verification is pending.
 
@@ -44,3 +44,5 @@ A fresh self-contained Linux x64 former host-example publish passes native and l
 [LineEdit](../classes/LineEdit.md) uses complete shaped-line caret/selection geometry, scalar editing, grapheme/word navigation, native IME/commits, history, typed command dispatch, clipboard and text dragging. Nonprinting control display emits clipped hexadecimal placeholders. Local text clipping also applies to glyph rasters and missing-glyph geometry; other consumers keep their previous unclipped path. Caret geometry is prepared once per layout, with linear hit testing and reused buffers. The LineEdit class page records the exact remaining popup, virtual-keyboard and picker prerequisites and test boundaries.
 
 Native delivery now uses the explicit `Electron2D.{Platform}` package. The filtered `TextBreak78.dat` remains embedded in the managed engine independently of native source-build mode. Native font, shaping and text libraries resolve from the selected RID directory. See [the delivery contract](../native-packaging.md).
+
+The executable [multiline editing component](multiline-editing.md) connects TextEdit documents, typed syntax resources, existing font/Control rendering, scene storage and input. Its cold/warm and target limits are recorded with the exercised workflow.
