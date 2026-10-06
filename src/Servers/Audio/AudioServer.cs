@@ -109,7 +109,7 @@ public sealed partial class AudioServer : ElectronObject
     internal void SetBusSendCore(int index, string send) { var bus = GetBus(index); ArgumentNullException.ThrowIfNull(send); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); if (bus.Send == send) return; bus.Send = send; RebuildGraph(); BusLayoutChangedCore?.Invoke(); }
     internal float GetBusVolumeDBCore(int index) => GetBus(index).VolumeDB;
     internal float GetBusVolumeLinearCore(int index) => (float)Mathf.DBToLinear(GetBusVolumeDBCore(index));
-    internal void SetBusVolumeDBCore(int index, float volumeDB) { var bus = GetBus(index); if (!float.IsFinite(volumeDB)) throw new ArgumentOutOfRangeException(nameof(volumeDB)); bus.VolumeDB = volumeDB; ApplyGains(); }
+    internal void SetBusVolumeDBCore(int index, float volumeDB) { var bus = GetBus(index); if (!float.IsFinite(volumeDB) || !float.IsFinite(Mathf.DBToLinear(volumeDB))) throw new ArgumentOutOfRangeException(nameof(volumeDB)); bus.VolumeDB = volumeDB; ApplyGains(); }
     internal void SetBusVolumeLinearCore(int index, float volumeLinear) { var bus = GetBus(index); if (!float.IsFinite(volumeLinear) || volumeLinear < 0) throw new ArgumentOutOfRangeException(nameof(volumeLinear)); bus.VolumeDB = (float)Mathf.LinearToDB(volumeLinear); ApplyGains(); }
     internal bool IsBusMuteCore(int index) => GetBus(index).Mute;
     internal void SetBusMuteCore(int index, bool enable) { GetBus(index).Mute = enable; ApplyGains(); }

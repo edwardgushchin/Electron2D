@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 ## Responsibility
 
@@ -139,3 +139,5 @@ AudioStreamSynchronized stores only active-prefix child/volume configuration in 
 ## Typed file integration
 
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+AudioBusLayout and all 27 concrete audio-effect schemas now use the existing typed archive producer/loader. Ordered controls and effect aliases persist; private file graph retention protects applied bus configuration and derived snapshots. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).

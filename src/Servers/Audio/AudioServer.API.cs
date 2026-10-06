@@ -246,8 +246,8 @@ public sealed partial class AudioServer
 
     /// <summary>Sets finite bus gain in decibels.</summary>
     /// <param name="index">Live bus index.</param>
-    /// <param name="volumeDB">Finite gain.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The gain is not finite.</exception>
+    /// <param name="volumeDB">Finite decibels producing a finite linear multiplier.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The gain or converted multiplier is not finite.</exception>
     public static void SetBusVolumeDB(int index, float volumeDB) => Service.SetBusVolumeDBCore(index, volumeDB);
 
     /// <summary>Sets nonnegative finite linear bus gain.</summary>

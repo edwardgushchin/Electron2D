@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -515,3 +515,5 @@ Engine consumers can detect content changes through an internal monotonic revisi
 ## Typed file integration
 
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+AudioBusLayout and AudioServer use the existing private file graph retention to preserve internally decoded effects after the root layout is disposed. External dependencies remain borrowed; retention never serializes native processing state.

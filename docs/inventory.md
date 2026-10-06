@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -501,6 +501,7 @@ This assembly row records the build and package contract. CharacterMovement is r
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioServer](classes/AudioServer.md) | [AudioServer.cs](../src/Servers/Audio/AudioServer.cs) | Current | Executable WAV/stream/bus output; broader capabilities recorded in coverage |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioBusLayout](classes/AudioBusLayout.md) | [AudioBusLayout.cs](../src/Scene/Resources/AudioBusLayout.cs) | Current | Typed saved bus configuration, effect aliases and retained file graphs |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioSample](classes/AudioSample.md) | [AudioSample.cs](../src/Scene/Resources/AudioSample.cs) | Current | Copied immutable PCM and prepared native traversal |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioSamplePlayback](classes/AudioSamplePlayback.md) | [AudioSamplePlayback.cs](../src/Scene/Resources/AudioSamplePlayback.cs) | Current | Typed owned association and live native controls |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioDefaultPlaybackType](classes/AudioDefaultPlaybackType.md) | [AudioDefaultPlaybackType.cs](../src/Scene/Resources/AudioDefaultPlaybackType.cs) | Current | Two-value project default transport |

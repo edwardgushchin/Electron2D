@@ -40,6 +40,7 @@ public sealed partial class ThemeDB
         ["ArrayMesh"] = ["ArrayMesh", "Mesh", "Resource", "ElectronObject"],
         ["AspectRatioContainer"] = ["AspectRatioContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["AtlasTexture"] = ["AtlasTexture", "Texture", "Resource", "ElectronObject"],
+        ["AudioBusLayout"] = ["AudioBusLayout", "Resource", "ElectronObject"],
         ["AudioEffect"] = ["AudioEffect", "Resource", "ElectronObject"],
         ["AudioEffectAmplify"] = ["AudioEffectAmplify", "AudioEffect", "Resource", "ElectronObject"],
         ["AudioEffectBandLimitFilter"] = ["AudioEffectBandLimitFilter", "AudioEffectFilter", "AudioEffect", "Resource", "ElectronObject"],

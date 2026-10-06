@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -1262,6 +1262,7 @@ These definitions are permanently registered alongside other built-in typed sett
 | --- | --- |
 | `public static ProjectSetting<float> AudioBusesChannelDisableThresholdDB { get; }` | audio/buses/channel_disable_threshold_db; -60 dB. |
 | `public static ProjectSetting<float> AudioBusesChannelDisableTime { get; }` | audio/buses/channel_disable_time; 2 seconds. |
+| `public static ProjectSetting<string> AudioBusesDefaultBusLayout { get; }` | audio/buses/default_bus_layout; res://default_bus_layout.e2dres, applied before startup/autoplay. |
 
 <a id="audiobuseschanneldisablethresholddb"></a>
 ### AudioBusesChannelDisableThresholdDB
@@ -1285,3 +1286,7 @@ The `InputUIText*`, `InputUICopy`, `InputUICut`, `InputUIPaste`, `InputUIUndo`, 
 ## Native stream connection timeouts
 
 `public static ProjectSetting<int> TCPConnectTimeoutSeconds { get; }` maps `network/limits/tcp/connect_timeout_seconds`; `public static ProjectSetting<int> UDSConnectTimeoutSeconds { get; }` maps `network/limits/unix/connect_timeout_seconds`. Both start at 30 seconds, reject negative values and are permanent typed settings sampled on a new ConnectToHost attempt. StreamPeerSocket.Poll enforces the captured deadline; later registry changes do not retime an active attempt. NetworkingTests verifies actual connection/poll behavior. Full I/O blocking is separate from this connection deadline.
+
+## Default audio bus layout
+
+`public static ProjectSetting<string> AudioBusesDefaultBusLayout { get; }` defines audio/buses/default_bus_layout, initially `res://default_bus_layout.e2dres`. The retained registry registers it as a built-in basic setting. Empty or missing paths preserve existing buses; Engine.Start/Run apply a valid typed AudioBusLayout archive before initialization/autoplay, including active feature overrides. Invalid/corrupt files report startup failure. File-owned effects remain retained by the applied configuration. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).

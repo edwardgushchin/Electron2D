@@ -166,6 +166,9 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <summary>Sets the global width of two-dimensional spatial audio panning.</summary>
     /// <value>audio/general/2d_panning_strength; 0.5 initially, read by new spatial players.</value>
     public static ProjectSetting<float> AudioGeneral2DPanningStrength { get; } = new("audio/general/2d_panning_strength", .5f, value => float.IsFinite(value) && value >= 0);
+    /// <summary>Defines the optional audio bus archive applied before the main loop initializes.</summary>
+    /// <value>audio/buses/default_bus_layout; res://default_bus_layout.e2dres initially. Empty or absent files preserve current configuration.</value>
+    public static ProjectSetting<string> AudioBusesDefaultBusLayout { get; } = new("audio/buses/default_bus_layout", "res://default_bus_layout.e2dres");
     /// <summary>Gets the threshold below which unused bus stereo pairs become inactive after their timeout.</summary>
     /// <value>audio/buses/channel_disable_threshold_db; minus 60 dB initially. Read at output preparation.</value>
     public static ProjectSetting<float> AudioBusesChannelDisableThresholdDB { get; } = new("audio/buses/channel_disable_threshold_db", -60f, float.IsFinite);

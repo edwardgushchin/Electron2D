@@ -1,6 +1,6 @@
 # Audio domain
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 iOS/tvOS now connect the target static FAudio/SDL closure and native captured-PCM/lifecycle test app. Native simulator execution remains required; unsigned device profiles are build-only. The accepted FAudio backend and ownership semantics are unchanged.
 
@@ -26,13 +26,13 @@ Procedural generator streams own configuration and independent bounded copied PC
 [AudioStreamMicrophone](../classes/AudioStreamMicrophone.md) and AudioServer recording methods share an independently owned SDL3 input stream with finite stereo conversion, bounded history and independent server/playback cursors. The typed AudioDriverEnableInput setting gates starts. Device changes, explicit global pause, automatic request ownership and engine teardown execute; Linux dummy capture, injected native conversion/FAudio output and Wayland host tests establish runtime behavior while physical input/permissions and other platforms remain unverified.
 
 
-[AudioEffect](../classes/AudioEffect.md), [AudioEffectInstance](../classes/AudioEffectInstance.md), [AudioEffectCapture](../classes/AudioEffectCapture.md) and the AudioServer chain API now execute ordered native stereo processing, raw bounded capture, bypass/enable, pre-gain effect ordering and post-gain peaks. Buses own pair instances and borrow resources. Prepared activity preserves silent tails and explicit ProcessSilence behavior. Native callback exceptions latch silence and reach the owner frame; closure/removal and failed custom cleanup release references coherently. Remaining effect resources/DSP, bus-layout serialization and file export retain separate triggers. See [verification](../components/audio-playback.md#bus-effects).
+[AudioEffect](../classes/AudioEffect.md), [AudioEffectInstance](../classes/AudioEffectInstance.md), [AudioEffectCapture](../classes/AudioEffectCapture.md) and the AudioServer chain API now execute ordered native stereo processing, raw bounded capture, bypass/enable, pre-gain effect ordering and post-gain peaks. Buses own pair instances and borrow resources. Prepared activity preserves silent tails and explicit ProcessSilence behavior. Native callback exceptions latch silence and reach the owner frame; closure/removal and failed custom cleanup release references coherently. Saved bus layouts now persist these effects; file export and usage tagging retain separate triggers. See [verification](../components/audio-playback.md#bus-effects).
 
 [AudioEffectRecord](../classes/AudioEffectRecord.md) adds front-pair bus recording and caller-owned WAV snapshots in all four supported sample formats. Start, stop, restart, copy and failed-chain rollback execute through the existing bus graph; see [bus recording](../components/audio-playback.md#bus-recording). It does not create a disk file or provide a batch capture host.
 
 [AudioEffectAmplify](../classes/AudioEffectAmplify.md) and [AudioEffectPanner](../classes/AudioEffectPanner.md) add live scalar gain and channel crossfeed to that bus chain. Independent per-pair instances ramp gain across the next processed block and sample pan once per block. Native PCM and warmed allocation checks use the existing FAudio path; other DSP families retain their own triggers.
 
-[AudioEffectEQ](../classes/AudioEffectEQ.md) and its six, ten and twenty-one band presets add typed indexed gain and prepared per-pair frequency filtering. Resource/scene-local values, native band response and current Wayland host paths execute; see the [graphic-EQ component](../components/audio-playback.md#graphic-eq). Other effects and bus-layout serialization remain separate work.
+[AudioEffectEQ](../classes/AudioEffectEQ.md) and its six, ten and twenty-one band presets add typed indexed gain and prepared per-pair frequency filtering. Resource/scene-local values, native band response and current Wayland host paths execute; see the [graphic-EQ component](../components/audio-playback.md#graphic-eq). Saved bus layouts now persist the EQ presets and indexed gains.
 
 
 The [frequency-filter family](../classes/AudioEffectFilter.md) now adds executable low/high/band-pass, notch, broad band-rejection and low/high-shelf processing. Typed finite scalar snapshots feed independent prepared stereo histories at actual output rate. Source PCM is preserved in ordinary regimes; documented Nyquist/pole and opposite BandLimit response defects are corrected. Resource and scene-local copies retain concrete configuration, while native instances use the established borrowed-resource lifecycle. Filter foundations can support later EQ and other DSP slices; no absent family is described as implemented. See [verification and limits](../components/audio-playback.md#frequency-filters).
@@ -75,3 +75,5 @@ Scene players now preserve full attacks with 64-frame lookahead and execute prep
 [Output selection and buffering](../components/audio-playback.md#output-device-selection-and-driver-buffering) now switches live native transport without recreating playback/DSP state and publishes opened-device chunk/queue duration. End-to-end hardware/transport latency is outside that driver snapshot.
 
 [Animation audio cues](../components/scene-animation.md#audio-tracks) connect clip keys to the existing player/emitter/polyphonic backend with cold child/native preparation, weighted gain, trim/seek and controller cleanup. No separate audio clock/backend is introduced.
+
+[AudioBusLayout](../classes/AudioBusLayout.md) now persists and restores complete bus configuration and typed effects through resource archives. Engine startup applies an optional project default before initialization/autoplay; live replacement preserves streamed/sample transport and prepares new effect instances before commit. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).

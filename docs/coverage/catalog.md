@@ -55,7 +55,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ArrayOccluder3D](classes/ArrayOccluder3D.md) | Occluder3D | Excluded | 3 |
 | [AspectRatioContainer](classes/AspectRatioContainer.md) | Container | Implemented | 13 |
 | [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Implemented | 5 |
-| [AudioBusLayout](classes/AudioBusLayout.md) | Resource | Blocked | 0 |
+| [AudioBusLayout](classes/AudioBusLayout.md) | Resource | Implemented | 0 |
 | [AudioEffect](classes/AudioEffect.md) | Resource | Implemented | 1 |
 | [AudioEffectAmplify](classes/AudioEffectAmplify.md) | AudioEffect | Implemented | 2 |
 | [AudioEffectBandLimitFilter](classes/AudioEffectBandLimitFilter.md) | AudioEffectFilter | Implemented | 0 |

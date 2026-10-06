@@ -136,7 +136,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
 | Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
 | Trigger: platform font discovery, matching and owned fallback faces over the integrated FontFile backend (ADR 0046). | 1 |
-| Trigger: typed AudioBusLayout resource data and ResourceLoader/ResourceSaver format integration, then serialize/apply the live graph (ADRs 0013/0047/0090). | 1 |
 | Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space. | 1 |
 | Trigger: typed live body-state callback and solver ownership over the PhysicsServer space. | 1 |
 | Trigger: typed missing-asset mesh placeholder producer/loader and its 2D drawing/bounds policy over the implemented Mesh resource (ADR 0092). | 1 |

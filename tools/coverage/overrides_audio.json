@@ -2429,6 +2429,26 @@
       "godot": "AudioServer::method:get_output_latency()",
       "electron2d": "method:Electron2D.AudioServer.GetOutputLatency()",
       "reason": "ADR 0047: live selected SDL output stream replacement retains FAudio mix format, playback/bus/effect identity and history. Engine-owned pinned native bridge prepares before commit; invalid selection preserves output. OutputLatency reads current SDL device buffer duration plus queued PCM, cached from callbacks; it excludes additional OS/transport/DAC delay. Native active/paused/sample, logical profiles, host and warm checks verify current Linux behavior."
+    },
+    {
+      "godot": "class:AudioBusLayout",
+      "electron2d": "T:Electron2D.AudioBusLayout",
+      "reason": "ADR 0047: typed bus snapshots preserve order, sends, gain, solo/mute/bypass and borrowed ordered effect identities. Built-in archives save/load all 27 concrete DSP resources and aliases, including default project loading before MainLoop/Window autoplay. Live Stream/Sample replacement preserves playback, resets effect histories, retains internal file graphs and prepares factories before commit; invalid data/factory failure rolls back, cleanup/notification reports after commitment. AudioBusLayoutTests verifies archives, fresh-process execution, native PCM and 64 warmed passes; public GPU/compatibility hosts execute. Physical listening, other-target execution and editor UI remain separate."
+    },
+    {
+      "godot": "AudioServer::method:generate_bus_layout()",
+      "electron2d": "method:Electron2D.AudioServer.GenerateBusLayout()",
+      "reason": "ADR 0047: typed bus snapshots preserve order, sends, gain, solo/mute/bypass and borrowed ordered effect identities. Built-in archives save/load all 27 concrete DSP resources and aliases, including default project loading before MainLoop/Window autoplay. Live Stream/Sample replacement preserves playback, resets effect histories, retains internal file graphs and prepares factories before commit; invalid data/factory failure rolls back, cleanup/notification reports after commitment. AudioBusLayoutTests verifies archives, fresh-process execution, native PCM and 64 warmed passes; public GPU/compatibility hosts execute. Physical listening, other-target execution and editor UI remain separate."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_layout(AudioBusLayout:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusLayout(Electron2D.AudioBusLayout)",
+      "reason": "ADR 0047: typed bus snapshots preserve order, sends, gain, solo/mute/bypass and borrowed ordered effect identities. Built-in archives save/load all 27 concrete DSP resources and aliases, including default project loading before MainLoop/Window autoplay. Live Stream/Sample replacement preserves playback, resets effect histories, retains internal file graphs and prepares factories before commit; invalid data/factory failure rolls back, cleanup/notification reports after commitment. AudioBusLayoutTests verifies archives, fresh-process execution, native PCM and 64 warmed passes; public GPU/compatibility hosts execute. Physical listening, other-target execution and editor UI remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:audio/buses/default_bus_layout",
+      "electron2d": "property:Electron2D.ProjectSettings.AudioBusesDefaultBusLayout()",
+      "reason": "Typed projection of audio/buses/default_bus_layout: optional e2dres bus archive applied before MainLoop initialization or Window autoplay; missing/empty paths preserve configuration (ADRs 0019/0047/0090)."
     }
   ],
   "extras": [
@@ -2524,7 +2544,6 @@
       "electron2d": "method:Electron2D.AudioStreamWAV.OnIsMonophonic()",
       "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
     },
-
     {
       "electron2d": "property:Electron2D.AudioWAVImportOptions.Compression()",
       "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
@@ -3792,6 +3811,26 @@
     {
       "electron2d": "method:Electron2D.AudioEffectCompressor.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "Typed construction, seven stored controls, independent linked envelopes and exact Resource/scene copying project the executable compressor lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioBusLayout..ctor()",
+      "reason": "Typed constructor and Resource storage/copy/disposal hooks project the AudioBusLayout configuration and resource lifecycle; no native state is copied (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioBusLayout.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed constructor and Resource storage/copy/disposal hooks project the AudioBusLayout configuration and resource lifecycle; no native state is copied (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioBusLayout.CreateDuplicateInstance()",
+      "reason": "Typed constructor and Resource storage/copy/disposal hooks project the AudioBusLayout configuration and resource lifecycle; no native state is copied (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioBusLayout.Dispose(System.Boolean)",
+      "reason": "Typed constructor and Resource storage/copy/disposal hooks project the AudioBusLayout configuration and resource lifecycle; no native state is copied (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioBusLayout.GetPropertyDescriptors()",
+      "reason": "Typed constructor and Resource storage/copy/disposal hooks project the AudioBusLayout configuration and resource lifecycle; no native state is copied (ADRs 0013/0047)."
     }
   ],
   "statusGroups": [
@@ -3932,15 +3971,6 @@
       "reason": "Runtime EnterTree autoplay executes; editor-hint suppression requires the missing Engine editor-hint lifecycle and first editor host (ADRs 0027/0047).",
       "godot": [
         "AudioStreamPlayer::property:autoplay"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: typed AudioBusLayout resource data and ResourceLoader/ResourceSaver format integration, then serialize/apply the live graph (ADRs 0013/0047/0090).",
-      "godot": [
-        "AudioServer::method:generate_bus_layout()",
-        "AudioServer::method:set_bus_layout(AudioBusLayout:)",
-        "class:AudioBusLayout"
       ]
     },
     {
@@ -4554,6 +4584,22 @@
         "AudioStreamPlaylist::property:loop",
         "AudioStreamPlaylist::property:shuffle",
         "AudioStreamPlaylist::property:stream_count"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: typed bus snapshots preserve order, sends, gain, solo/mute/bypass and borrowed ordered effect identities. Built-in archives save/load all 27 concrete DSP resources and aliases, including default project loading before MainLoop/Window autoplay. Live Stream/Sample replacement preserves playback, resets effect histories, retains internal file graphs and prepares factories before commit; invalid data/factory failure rolls back, cleanup/notification reports after commitment. AudioBusLayoutTests verifies archives, fresh-process execution, native PCM and 64 warmed passes; public GPU/compatibility hosts execute. Physical listening, other-target execution and editor UI remain separate.",
+      "godot": [
+        "class:AudioBusLayout",
+        "AudioServer::method:generate_bus_layout()",
+        "AudioServer::method:set_bus_layout(AudioBusLayout:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed projection of audio/buses/default_bus_layout: optional e2dres bus archive applied before MainLoop initialization or Window autoplay; missing/empty paths preserve configuration (ADRs 0019/0047/0090).",
+      "godot": [
+        "ProjectSettings::property:audio/buses/default_bus_layout"
       ]
     }
   ]

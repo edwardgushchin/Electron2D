@@ -1,6 +1,6 @@
 # AudioServer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-06
 
 **Declaration:** `public sealed partial class Electron2D.AudioServer` · **Source:** [AudioServer.cs](../../src/Servers/Audio/AudioServer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -12,7 +12,7 @@ Public static declarations are in [`AudioServer.API.cs`](../../src/Servers/Audio
 
 Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
-Borrowed process-wide service; disposing it throws before logical disposal. The first owner-bound operation claims its configuration thread; passive singleton/rate/speed reads and worker resource mixing do not claim ownership. Later foreign configuration rejects. Native output opens lazily for playback or device queries; runtime bus records remain after native closure. Buses form sends to earlier indices, with unknown/self/later targets falling back to Master. Master stays at index zero. Graph edits prepare replacement submix nodes and redirect existing native sources under the audio mix lock, preserving playback identity, exact cursor, history, pause and polyphony. On failure the configured metadata remains committed, all native output is closed and callers may retry playback. Mute affects a bus and its downstream output; solo retains paths carrying soloed sources, filtering direct unrelated Master sources. Peak meters read actual native post-volume submix samples. Lock/Unlock pair around caller critical sections; native mixing uses that same gate. Native teardown releases every player slot, bus, master and engine even after custom playback cleanup failures. Ordered public static effects now execute before bus gain and final peak metering. Sample registration is cold, transactional and weak-keyed; explicit re-registration captures edits for subsequent voices while active voices retain their snapshot. Engine closure clears registrations. Bus-layout resources and output selection/latency remain separate dependencies.
+Borrowed process-wide service; disposing it throws before logical disposal. The first owner-bound operation claims its configuration thread; passive singleton/rate/speed reads and worker resource mixing do not claim ownership. Later foreign configuration rejects. Native output opens lazily for playback or device queries; runtime bus records remain after native closure. Buses form sends to earlier indices, with unknown/self/later targets falling back to Master. Master stays at index zero. Graph edits prepare replacement submix nodes and redirect existing native sources under the audio mix lock, preserving playback identity, exact cursor, history, pause and polyphony. On failure the configured metadata remains committed, all native output is closed and callers may retry playback. Mute affects a bus and its downstream output; solo retains paths carrying soloed sources, filtering direct unrelated Master sources. Peak meters read actual native post-volume submix samples. Lock/Unlock pair around caller critical sections; native mixing uses that same gate. Native teardown releases every player slot, bus, master and engine even after custom playback cleanup failures. Ordered public static effects now execute before bus gain and final peak metering. Sample registration is cold, transactional and weak-keyed; explicit re-registration captures edits for subsequent voices while active voices retain their snapshot. Engine closure clears registrations. Saved bus layouts and live output selection/latency now execute; see the contracts below.
 
 ## API summary
 
@@ -265,3 +265,22 @@ AudioServer.OutputDevice = "Default";
 ```
 
 This partial owner-thread snippet requires an available named output. [AudioOutputTests](../../tests/Electron2D.Tests/AudioOutputTests.cs) executes active/paused stream and sample switches, borrowed playback/effect identity, format retention, PCM, invalid names, owner guards, lock-held calls, preference reapplication and warmed allocation. Current logical 2/4/6/8 profiles and two actual Window host cycles on each Wayland renderer are checked. Additional end-to-end audible latency, physical listening, other hardware/drivers/platforms and SDL/OS allocations remain separate limits.
+
+## Bus layout methods
+
+| Complete C# signature | Contract |
+| --- | --- |
+| `public static AudioBusLayout GenerateBusLayout()` | Caller-owned independent configuration containers, borrowing current effects and retaining internal file dependencies. |
+| `public static void SetBusLayout(AudioBusLayout busLayout)` | Replaces the whole graph after validation and factory preparation. |
+
+### GenerateBusLayout
+
+Requires the audio owner and rejects audio callback reentrancy. Does not open a device. Captures ordered names/sends, volume, solo/mute/bypass and ordered resource/enabled pairs. Playback, processing histories and native identities are absent. See [AudioBusLayout](AudioBusLayout.md) for copying and persistence.
+
+### SetBusLayout
+
+The borrowed live layout must contain one through 255 buses. The first bus is normalized to Master; remaining exact names must be unique after normalization. Null effects are skipped, disposed effects reject, and gain must produce a finite multiplier (negative infinity denotes zero gain). Missing, self and forward sends use the existing Master fallback.
+
+With output open, cold factory preparation completes under the audio gate before commit; invalid data or factory failure preserves prior graph and playback. Existing Stream/Sample playback identity, cursor and pause survive a successful replacement. New independent effect instances reset histories. Closed-output application preserves lazy device preparation; its factories run when output next opens. Native graph failure commits configuration then closes output under the existing graph policy. Old instance/file graph cleanup and one BusLayoutChanged notification follow commitment; collected failures throw AggregateException after all cleanup attempts. File-backed internal dependencies remain retained until the last layout/configuration owner releases them; external resources stay borrowed. Configuration survives engine output closure.
+
+AudioBusLayoutTests checks archive schemas for all 27 concrete effects, default startup in a fresh process, copies/aliases, cache failure, 255 buses, owner/reentrancy and factory/cleanup/notification failure, active/paused/sample native PCM, current public GPU/compatibility hosts and 64 warmed callback passes without measured managed bytes or FAudio allocator calls. Other targets, physical listening and native failure injection remain unverified.

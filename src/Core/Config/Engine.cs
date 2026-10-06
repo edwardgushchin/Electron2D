@@ -166,6 +166,7 @@ public sealed partial class Engine : ElectronObject
         try
         {
             TranslationServer.LoadProjectLocalization();
+            AudioServer.LoadDefaultLayout();
             mainLoop.StartForEngine();
             ResetRunState();
             Volatile.Write(ref _runtimeState, RuntimeRunning);

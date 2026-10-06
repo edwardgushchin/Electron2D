@@ -67,6 +67,7 @@ public class Resource : ElectronObject
     internal void AdoptFileOwnership(ResourceFileOwnership? ownership) { var old = _fileOwnership; _fileOwnership = ownership; old?.ReleaseOwner(); OnFileOwnershipChanged(); }
     internal virtual void OnFileOwnershipChanged() { }
     internal IDisposable? RetainFileResources() => _fileOwnership?.Retain();
+    internal ResourceFileOwnership? RetainFileOwnership() => _fileOwnership?.RetainOwner();
 
     private readonly object _changeBatchGate = new();
     private readonly object _stateGate = new();

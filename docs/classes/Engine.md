@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-05
+Last updated: 2026-10-06
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -452,3 +452,5 @@ Engine.Run captures the scheduled scaled process delta before callbacks and pass
 ## Typed file integration
 
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+Engine.Start and Engine.Run apply the optional AudioBusesDefaultBusLayout archive before main-loop initialization or Window autoplay, using the runtime project registry and active feature overrides. Empty/missing files preserve current buses; invalid files report startup failure. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).

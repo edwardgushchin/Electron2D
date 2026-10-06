@@ -60,6 +60,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(AudioGeneral2DPanningStrength, isBasic: false);
         RegisterInternal(AudioBusesChannelDisableThresholdDB, isBasic: false);
         RegisterInternal(AudioBusesChannelDisableTime, isBasic: false);
+        RegisterInternal(AudioBusesDefaultBusLayout, isBasic: true);
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
         RegisterInternal(Physics2DDefaultGravity, isBasic: true);
         RegisterInternal(Physics2DDefaultGravityVector, isBasic: true);
@@ -1115,6 +1116,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, AudioGeneral2DPanningStrength) ||
         ReferenceEquals(setting, AudioBusesChannelDisableThresholdDB) ||
         ReferenceEquals(setting, AudioBusesChannelDisableTime) ||
+        ReferenceEquals(setting, AudioBusesDefaultBusLayout) ||
         ReferenceEquals(setting, PhysicsTicksPerSecond) ||
         ReferenceEquals(setting, Physics2DDefaultGravity) ||
         ReferenceEquals(setting, Physics2DDefaultGravityVector) ||

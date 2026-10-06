@@ -36,6 +36,7 @@ public sealed partial class Engine
         try
         {
             TranslationServer.LoadProjectLocalization();
+            AudioServer.LoadDefaultLayout();
             Input.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
             window.OpenNative();
             tree = new SceneTree(window, attachToEngine: true);

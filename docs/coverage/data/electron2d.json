@@ -1053,6 +1053,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioBusLayout",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioBusLayout",
+    "name": "AudioBusLayout",
+    "signature": "public sealed class Electron2D.AudioBusLayout",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioDefaultPlaybackType",
     "kind": "type",
     "declaringType": "Electron2D.AudioDefaultPlaybackType",
@@ -10930,6 +10945,19 @@
     "declaringType": "Electron2D.AtlasTexture",
     "name": ".ctor",
     "signature": "public AtlasTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioBusLayout..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioBusLayout",
+    "name": ".ctor",
+    "signature": "public AudioBusLayout()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -45711,6 +45739,90 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioBusLayout.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioBusLayout",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioBusLayout.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioBusLayout",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioBusLayout.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioBusLayout",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioBusLayout.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioBusLayout",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioEffect.Instantiate()",
     "kind": "method",
     "declaringType": "Electron2D.AudioEffect",
@@ -48017,6 +48129,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioServer.GenerateBusLayout()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "GenerateBusLayout",
+    "signature": "public static Electron2D.AudioBusLayout GenerateBusLayout()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioBusLayout",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioServer.GetBusChannels(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.AudioServer",
@@ -48658,6 +48783,25 @@
       {
         "name": "enabled",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioServer.SetBusLayout(Electron2D.AudioBusLayout)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "SetBusLayout",
+    "signature": "public static System.Void SetBusLayout(Electron2D.AudioBusLayout busLayout)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "busLayout",
+        "type": "Electron2D.AudioBusLayout",
         "default": null
       }
     ],
@@ -138165,6 +138309,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AudioBusesDefaultBusLayout()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AudioBusesDefaultBusLayout",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E AudioBusesDefaultBusLayout { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {

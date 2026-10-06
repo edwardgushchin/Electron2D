@@ -24,6 +24,7 @@ public static partial class ResourceFileTypes
         RegisterResource("AtlasTexture", CreateAtlasTexture);
 
         RegisterBuiltInNodes();
+        RegisterAudioFileResources();
         RegisterResource("StyleBoxFlat", CreateFlatFileResource);
         RegisterResource("StyleBoxLine", CreateLineFileResource);
         RegisterResource("StyleBoxTexture", CreateTextureStyleFileResource);

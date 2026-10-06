@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUS_LAYOUT_HOST") == "1") { AudioBusLayoutTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUS_LAYOUT_CHILD") is { } busLayoutPath) { AudioBusLayoutTests.RunChild(busLayoutPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUS_LAYOUT") == "1") { AudioBusLayoutTests.Run(native: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CHARACTER_MOVEMENT") == "1") { CharacterMovementTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR") == "1") { EditorSceneTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_ARCHIVE_CHILD") is { } archivePath) { ResourceArchiveTests.RunChild(archivePath); return; }
@@ -567,6 +570,7 @@ FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 LabelTests.Run(FontTestFixtures.OpenSans);
 FontResourceLoaderTests.Run();
 ResourceArchiveTests.Run();
+AudioBusLayoutTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();
