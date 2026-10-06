@@ -232,6 +232,7 @@ public sealed partial class ThemeDB
         ["PinJoint"] = ["PinJoint", "Joint", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Polygon"] = ["Polygon", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["Popup"] = ["Popup", "Window", "Viewport", "Node", "ElectronObject"],
+        ["PopupMenu"] = ["PopupMenu", "Popup", "Window", "Viewport", "Node", "ElectronObject"],
         ["PopupPanel"] = ["PopupPanel", "Popup", "Window", "Viewport", "Node", "ElectronObject"],
         ["ProjectSettings"] = ["ProjectSettings", "ProjectSettingsRegistry", "ElectronObject"],
         ["ProjectSettingsRegistry"] = ["ProjectSettingsRegistry", "ElectronObject"],

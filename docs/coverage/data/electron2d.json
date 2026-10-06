@@ -6268,6 +6268,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PopupMenu",
+    "kind": "type",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "PopupMenu",
+    "signature": "public class Electron2D.PopupMenu",
+    "visibility": "public",
+    "baseType": "Electron2D.Popup",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PopupPanel",
     "kind": "type",
     "declaringType": "Electron2D.PopupPanel",
@@ -13775,6 +13790,19 @@
     "declaringType": "Electron2D.Popup",
     "name": ".ctor",
     "signature": "public Popup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PopupMenu..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": ".ctor",
+    "signature": "public PopupMenu()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -34357,6 +34385,58 @@
     "declaringType": "Electron2D.Popup",
     "name": "PopupHide",
     "signature": "public event System.Action PopupHide",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.PopupMenu.IDFocused()",
+    "kind": "event",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IDFocused",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E IDFocused",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.PopupMenu.IDPressed()",
+    "kind": "event",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IDPressed",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E IDPressed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.PopupMenu.IndexPressed()",
+    "kind": "event",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IndexPressed",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E IndexPressed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.PopupMenu.MenuChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "MenuChanged",
+    "signature": "public event System.Action MenuChanged",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -93756,6 +93836,1799 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PopupMenu.ActivateItemByEvent(Electron2D.InputEvent,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "ActivateItemByEvent",
+    "signature": "public System.Boolean ActivateItemByEvent(Electron2D.InputEvent inputEvent, System.Boolean forGlobalOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      },
+      {
+        "name": "forGlobalOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddCheckItem(System.String,System.Int32,Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddCheckItem",
+    "signature": "public System.Void AddCheckItem(System.String label, System.Int32 id = -1, Electron2D.Key accelerator = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "accelerator",
+        "type": "Electron2D.Key",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddCheckShortcut(Electron2D.Shortcut,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddCheckShortcut",
+    "signature": "public System.Void AddCheckShortcut(Electron2D.Shortcut shortcut, System.Int32 id = -1, System.Boolean global = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shortcut",
+        "type": "Electron2D.Shortcut",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "global",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddIconCheckItem(Electron2D.Texture,System.String,System.Int32,Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddIconCheckItem",
+    "signature": "public System.Void AddIconCheckItem(Electron2D.Texture icon, System.String label, System.Int32 id = -1, Electron2D.Key accelerator = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "accelerator",
+        "type": "Electron2D.Key",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddIconCheckShortcut(Electron2D.Texture,Electron2D.Shortcut,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddIconCheckShortcut",
+    "signature": "public System.Void AddIconCheckShortcut(Electron2D.Texture icon, Electron2D.Shortcut shortcut, System.Int32 id = -1, System.Boolean global = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "shortcut",
+        "type": "Electron2D.Shortcut",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "global",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddIconItem(Electron2D.Texture,System.String,System.Int32,Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddIconItem",
+    "signature": "public System.Void AddIconItem(Electron2D.Texture icon, System.String label, System.Int32 id = -1, Electron2D.Key accelerator = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "accelerator",
+        "type": "Electron2D.Key",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddIconRadioCheckItem(Electron2D.Texture,System.String,System.Int32,Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddIconRadioCheckItem",
+    "signature": "public System.Void AddIconRadioCheckItem(Electron2D.Texture icon, System.String label, System.Int32 id = -1, Electron2D.Key accelerator = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "accelerator",
+        "type": "Electron2D.Key",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddIconRadioCheckShortcut(Electron2D.Texture,Electron2D.Shortcut,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddIconRadioCheckShortcut",
+    "signature": "public System.Void AddIconRadioCheckShortcut(Electron2D.Texture icon, Electron2D.Shortcut shortcut, System.Int32 id = -1, System.Boolean global = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "shortcut",
+        "type": "Electron2D.Shortcut",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "global",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddIconShortcut(Electron2D.Texture,Electron2D.Shortcut,System.Int32,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddIconShortcut",
+    "signature": "public System.Void AddIconShortcut(Electron2D.Texture icon, Electron2D.Shortcut shortcut, System.Int32 id = -1, System.Boolean global = false, System.Boolean allowEcho = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "shortcut",
+        "type": "Electron2D.Shortcut",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "global",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "allowEcho",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddItem(System.String,System.Int32,Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddItem",
+    "signature": "public System.Void AddItem(System.String label, System.Int32 id = -1, Electron2D.Key accelerator = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "accelerator",
+        "type": "Electron2D.Key",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddMultistateItem(System.String,System.Int32,System.Int32,System.Int32,Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddMultistateItem",
+    "signature": "public System.Void AddMultistateItem(System.String label, System.Int32 maxStates, System.Int32 defaultState = 0, System.Int32 id = -1, Electron2D.Key accelerator = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "maxStates",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "defaultState",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "accelerator",
+        "type": "Electron2D.Key",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddRadioCheckItem(System.String,System.Int32,Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddRadioCheckItem",
+    "signature": "public System.Void AddRadioCheckItem(System.String label, System.Int32 id = -1, Electron2D.Key accelerator = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "accelerator",
+        "type": "Electron2D.Key",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddRadioCheckShortcut(Electron2D.Shortcut,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddRadioCheckShortcut",
+    "signature": "public System.Void AddRadioCheckShortcut(Electron2D.Shortcut shortcut, System.Int32 id = -1, System.Boolean global = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shortcut",
+        "type": "Electron2D.Shortcut",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "global",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddSeparator(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddSeparator",
+    "signature": "public System.Void AddSeparator(System.String label = \u0022\u0022, System.Int32 id = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddShortcut(Electron2D.Shortcut,System.Int32,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddShortcut",
+    "signature": "public System.Void AddShortcut(Electron2D.Shortcut shortcut, System.Int32 id = -1, System.Boolean global = false, System.Boolean allowEcho = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shortcut",
+        "type": "Electron2D.Shortcut",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "global",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "allowEcho",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddSubmenuItem(System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddSubmenuItem",
+    "signature": "public System.Void AddSubmenuItem(System.String label, System.String submenu, System.Int32 id = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "submenu",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.AddSubmenuNodeItem(System.String,Electron2D.PopupMenu,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AddSubmenuNodeItem",
+    "signature": "public System.Void AddSubmenuNodeItem(System.String label, Electron2D.PopupMenu submenu, System.Int32 id = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "label",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "submenu",
+        "type": "Electron2D.PopupMenu",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.Clear(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "Clear",
+    "signature": "public System.Void Clear(System.Boolean freeSubmenus = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "freeSubmenus",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetFocusedItem()",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetFocusedItem",
+    "signature": "public System.Int32 GetFocusedItem()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemAccelerator(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemAccelerator",
+    "signature": "public Electron2D.Key GetItemAccelerator(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Key",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemAutoTranslateMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemAutoTranslateMode",
+    "signature": "public Electron2D.NodeAutoTranslateMode GetItemAutoTranslateMode(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemID",
+    "signature": "public System.Int32 GetItemID(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemIcon(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemIcon",
+    "signature": "public Electron2D.Texture GetItemIcon(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemIconMaxWidth(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemIconMaxWidth",
+    "signature": "public System.Int32 GetItemIconMaxWidth(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemIconModulate(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemIconModulate",
+    "signature": "public Electron2D.Color GetItemIconModulate(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemIndent(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemIndent",
+    "signature": "public System.Int32 GetItemIndent(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemIndex",
+    "signature": "public System.Int32 GetItemIndex(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemLanguage(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemLanguage",
+    "signature": "public System.String GetItemLanguage(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemMetadata\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemMetadata",
+    "signature": "public T GetItemMetadata\u003CT\u003E(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemMultistate(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemMultistate",
+    "signature": "public System.Int32 GetItemMultistate(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemMultistateMax(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemMultistateMax",
+    "signature": "public System.Int32 GetItemMultistateMax(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemShortcut(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemShortcut",
+    "signature": "public Electron2D.Shortcut GetItemShortcut(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Shortcut",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemSubmenu(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemSubmenu",
+    "signature": "public System.String GetItemSubmenu(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemSubmenuNode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemSubmenuNode",
+    "signature": "public Electron2D.PopupMenu GetItemSubmenuNode(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PopupMenu",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemText(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemText",
+    "signature": "public System.String GetItemText(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemTextDirection(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemTextDirection",
+    "signature": "public Electron2D.TextDirection GetItemTextDirection(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetItemTooltip(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetItemTooltip",
+    "signature": "public System.String GetItemTooltip(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.IsItemCheckable(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IsItemCheckable",
+    "signature": "public System.Boolean IsItemCheckable(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.IsItemChecked(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IsItemChecked",
+    "signature": "public System.Boolean IsItemChecked(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.IsItemDisabled(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IsItemDisabled",
+    "signature": "public System.Boolean IsItemDisabled(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.IsItemRadioCheckable(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IsItemRadioCheckable",
+    "signature": "public System.Boolean IsItemRadioCheckable(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.IsItemSeparator(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IsItemSeparator",
+    "signature": "public System.Boolean IsItemSeparator(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.IsItemShortcutDisabled(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "IsItemShortcutDisabled",
+    "signature": "public System.Boolean IsItemShortcutDisabled(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.OnGetContentsMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "OnGetContentsMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetContentsMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.OnInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "OnInput",
+    "signature": "protected override System.Void OnInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.RemoveItem(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "RemoveItem",
+    "signature": "public System.Void RemoveItem(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.ScrollToItem(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "ScrollToItem",
+    "signature": "public System.Void ScrollToItem(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetFocusedItem(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetFocusedItem",
+    "signature": "public System.Void SetFocusedItem(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemAccelerator(System.Int32,Electron2D.Key)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemAccelerator",
+    "signature": "public System.Void SetItemAccelerator(System.Int32 index, Electron2D.Key value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Key",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemAsCheckable(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemAsCheckable",
+    "signature": "public System.Void SetItemAsCheckable(System.Int32 index, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemAsRadioCheckable(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemAsRadioCheckable",
+    "signature": "public System.Void SetItemAsRadioCheckable(System.Int32 index, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemAsSeparator(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemAsSeparator",
+    "signature": "public System.Void SetItemAsSeparator(System.Int32 index, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemAutoTranslateMode(System.Int32,Electron2D.NodeAutoTranslateMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemAutoTranslateMode",
+    "signature": "public System.Void SetItemAutoTranslateMode(System.Int32 index, Electron2D.NodeAutoTranslateMode value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.NodeAutoTranslateMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemChecked(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemChecked",
+    "signature": "public System.Void SetItemChecked(System.Int32 index, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemDisabled(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemDisabled",
+    "signature": "public System.Void SetItemDisabled(System.Int32 index, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemID(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemID",
+    "signature": "public System.Void SetItemID(System.Int32 index, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemIcon(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemIcon",
+    "signature": "public System.Void SetItemIcon(System.Int32 index, Electron2D.Texture icon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemIconMaxWidth(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemIconMaxWidth",
+    "signature": "public System.Void SetItemIconMaxWidth(System.Int32 index, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemIconModulate(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemIconModulate",
+    "signature": "public System.Void SetItemIconModulate(System.Int32 index, Electron2D.Color value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemIndent(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemIndent",
+    "signature": "public System.Void SetItemIndent(System.Int32 index, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemIndex(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemIndex",
+    "signature": "public System.Void SetItemIndex(System.Int32 index, System.Int32 targetIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "targetIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemLanguage(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemLanguage",
+    "signature": "public System.Void SetItemLanguage(System.Int32 index, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemMetadata\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemMetadata",
+    "signature": "public System.Void SetItemMetadata\u003CT\u003E(System.Int32 index, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemMultistate(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemMultistate",
+    "signature": "public System.Void SetItemMultistate(System.Int32 index, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemMultistateMax(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemMultistateMax",
+    "signature": "public System.Void SetItemMultistateMax(System.Int32 index, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemShortcut(System.Int32,Electron2D.Shortcut,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemShortcut",
+    "signature": "public System.Void SetItemShortcut(System.Int32 index, Electron2D.Shortcut shortcut, System.Boolean global = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "shortcut",
+        "type": "Electron2D.Shortcut",
+        "default": null
+      },
+      {
+        "name": "global",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemShortcutDisabled(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemShortcutDisabled",
+    "signature": "public System.Void SetItemShortcutDisabled(System.Int32 index, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemSubmenu(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemSubmenu",
+    "signature": "public System.Void SetItemSubmenu(System.Int32 index, System.String submenu)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "submenu",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemSubmenuNode(System.Int32,Electron2D.PopupMenu)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemSubmenuNode",
+    "signature": "public System.Void SetItemSubmenuNode(System.Int32 index, Electron2D.PopupMenu submenu)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "submenu",
+        "type": "Electron2D.PopupMenu",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemText(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemText",
+    "signature": "public System.Void SetItemText(System.Int32 index, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemTextDirection(System.Int32,Electron2D.TextDirection)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemTextDirection",
+    "signature": "public System.Void SetItemTextDirection(System.Int32 index, Electron2D.TextDirection value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.TextDirection",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.SetItemTooltip(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SetItemTooltip",
+    "signature": "public System.Void SetItemTooltip(System.Int32 index, System.String value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.ToggleItemChecked(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "ToggleItemChecked",
+    "signature": "public System.Void ToggleItemChecked(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PopupMenu.ToggleItemMultistate(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "ToggleItemMultistate",
+    "signature": "public System.Void ToggleItemMultistate(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PopupPanel.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.PopupPanel",
@@ -139944,6 +141817,162 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.AllowSearch()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "AllowSearch",
+    "signature": "public System.Boolean AllowSearch { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.HideOnCheckableItemSelection()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "HideOnCheckableItemSelection",
+    "signature": "public System.Boolean HideOnCheckableItemSelection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.HideOnItemSelection()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "HideOnItemSelection",
+    "signature": "public System.Boolean HideOnItemSelection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.HideOnStateItemSelection()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "HideOnStateItemSelection",
+    "signature": "public System.Boolean HideOnStateItemSelection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.ItemCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "ItemCount",
+    "signature": "public System.Int32 ItemCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.SearchBarEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SearchBarEnabled",
+    "signature": "public System.Boolean SearchBarEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.SearchBarFuzzySearchEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SearchBarFuzzySearchEnabled",
+    "signature": "public System.Boolean SearchBarFuzzySearchEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.SearchBarFuzzySearchMaxMisses()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SearchBarFuzzySearchMaxMisses",
+    "signature": "public System.Int32 SearchBarFuzzySearchMaxMisses { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.SearchBarMinItemCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SearchBarMinItemCount",
+    "signature": "public System.Int32 SearchBarMinItemCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.ShrinkHeight()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "ShrinkHeight",
+    "signature": "public System.Boolean ShrinkHeight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.ShrinkWidth()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "ShrinkWidth",
+    "signature": "public System.Boolean ShrinkWidth { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PopupMenu.SubmenuPopupDelay()",
+    "kind": "property",
+    "declaringType": "Electron2D.PopupMenu",
+    "name": "SubmenuPopupDelay",
+    "signature": "public System.Double SubmenuPopupDelay { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
     "value": null
   },
   {

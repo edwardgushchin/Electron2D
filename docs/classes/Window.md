@@ -670,3 +670,5 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 | `public System.Boolean Unresizable { get; set; }` | Gets or sets the policy preventing user border resizing. |
 | `public System.Boolean Visible { get; set; }` | Gets or sets native-root or embedded-child visibility. |
 | `public System.Boolean WrapControls { get; set; }` | Gets or sets whether child control minimums constrain this window's size. |
+
+The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu theme keys, inherited Window popup hooks and an exact built-in scene/file factory. Internal item/search controls receive focus after visibility propagation; public runtime signatures of these owners are unchanged.

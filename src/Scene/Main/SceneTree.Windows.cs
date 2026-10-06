@@ -41,7 +41,7 @@ public sealed partial class SceneTree
     internal Window GetEmbeddedTextWindow(Window root) { var window = root; while (_embeddedFocus.GetValueOrDefault(window) is { IsDisposed: false, Visible: true } next) window = next; return window; }
     private InputEvent? RouteEmbeddedInput(Viewport host, InputEvent input, out Viewport target)
     {
-        target = host; if (host.EmbeddedWindows.Count == 0) return input;
+        target = host; if (host.EmbeddedWindows.Count == 0) { if (host is Popup directPopup) directPopup.HandlePopupInput(input); return input; }
         Vector2? point = input switch { InputEventMouse mouse => mouse.Position, InputEventScreenTouch touch => touch.Position, InputEventScreenDrag drag => drag.Position, InputEventGesture gesture => gesture.Position, _ => null };
         if (_embeddedDecorDrag.TryGetValue(host, out var decor))
         {
@@ -75,7 +75,7 @@ public sealed partial class SceneTree
             for (var i = host.EmbeddedWindows.Count - 1; chosen is null && i >= 0; i--)
             {
                 var window = host.EmbeddedWindows[i]; if (window.IsDisposed || !window.Visible) continue;
-                if (window.PopupWindow || window.Exclusive || window.EmbeddedHitRect.HasPoint(point.Value)) { chosen = window; break; }
+                if (window.AcceptEmbeddedPointer(point.Value, input) && (window.PopupWindow || window.Exclusive || window.EmbeddedHitRect.HasPoint(point.Value))) { chosen = window; break; }
             }
             if (chosen is not null && !chosen.EmbeddedHitRect.HasPoint(point.Value) && chosen.PopupWindow && !chosen.Exclusive && input is InputEventMouseButton { Pressed: true }) { chosen.RequestEmbeddedClose(); return null; }
             if (chosen is { Exclusive: true } && !chosen.EmbeddedHitRect.HasPoint(point.Value) && input is InputEventMouseButton { Pressed: true }) return null;
@@ -99,7 +99,7 @@ public sealed partial class SceneTree
             if (input is InputEventScreenTouch touchEvent) { if (touchEvent.Pressed && chosen is not null) _embeddedTouchCapture[(host, touchEvent.Index)] = chosen; else if (!touchEvent.Pressed) _embeddedTouchCapture.Remove((host, touchEvent.Index)); }
         }
         else _embeddedFocus.TryGetValue(host, out chosen);
-        if (chosen is null || chosen.IsDisposed || !chosen.Visible) return input;
+        if (chosen is null || chosen.IsDisposed || !chosen.Visible) { if (host is Popup directPopup) directPopup.HandlePopupInput(input); return input; }
         target = chosen;
         var localized = input.XformedBy(new Transform(0, -(Vector2)chosen.Position));
         if (localized is InputEventMouse mouseLocal) mouseLocal.GlobalPosition = mouseLocal.Position;

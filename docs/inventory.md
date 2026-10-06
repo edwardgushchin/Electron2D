@@ -821,3 +821,5 @@ CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [C
 
 | [Scene](domains/scene.md) | [Embedded popup windows](components/popup-windows.md) | [Popup](classes/Popup.md) | [Popup.cs](../src/Scene/GUI/Popup.cs) | Current | Transient embedded window, deferred cancellation and hide event; independent native children pending |
 | [Scene](domains/scene.md) | [Embedded popup windows](components/popup-windows.md) | [PopupPanel](classes/PopupPanel.md) | [PopupPanel.cs](../src/Scene/GUI/PopupPanel.cs) | Current | Transparent styled content/shadow layout, RTL, own scene factory |
+
+| [Scene](domains/scene.md) | [Popup menus](components/popup-menus.md) | [PopupMenu](classes/PopupMenu.md) | [model](../src/Scene/GUI/PopupMenu.cs), [layout](../src/Scene/GUI/PopupMenu.Layout.cs), [input](../src/Scene/GUI/PopupMenu.Input.cs), [search](../src/Scene/GUI/PopupMenu.Search.cs), [storage](../src/Scene/GUI/PopupMenu.Storage.cs) | Current | Executable embedded typed items, check/radio/state, shortcuts, scroll/search, submenu timer and indexed scene/file factories; native/system menu service pending. |

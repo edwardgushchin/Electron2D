@@ -79,6 +79,7 @@ public partial class Window
     {
         CheckPopup(); AboutToPopup?.Invoke(); if (IsDisposed || !IsInsideTree) return;
         if (rect != default) { Size = rect.Size; Position = rect.Position; }
+        PreparePopup();
         UpdateEmbeddedContents(); if (centered) { var area = GetUsableParentRect(); Position = area.Position + (area.Size - Size) / 2; }
         AdjustPopup(); Transient = true; Show(); GrabFocus();
     }
@@ -128,6 +129,9 @@ public partial class Window
     }
     private static void CheckRatio(float ratio) { if (!float.IsFinite(ratio) || ratio <= 0 || ratio > 1) throw new ArgumentOutOfRangeException(nameof(ratio)); }
     private void CheckPopup() { EnsureMutable(); if (!IsInsideTree || Parent is null) throw new InvalidOperationException("Popup requires an attached child window."); if (Embedder is null) throw new NotSupportedException("Enable GUIEmbedSubwindows on a containing viewport; independent native child windows are unavailable."); }
+    internal virtual void AfterVisibilityChanged(bool visible) { }
+    internal virtual bool AcceptEmbeddedPointer(Vector2 point, InputEvent input) => true;
+    internal virtual void PreparePopup() { }
     internal virtual void AdjustPopup() { }
     internal void UpdateEmbeddedContents()
     {

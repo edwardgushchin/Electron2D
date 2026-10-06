@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-06
 
-**Namespace:** `Electron2D`. **Declaration:** `public class Popup : Window`. **Source:** [Popup.cs](../../src/Scene/GUI/Popup.cs). **Inherits:** [Window](Window.md). **Component:** [Embedded popup windows](../components/popup-windows.md).
+**Namespace:** `Electron2D`. **Declaration:** `public class Popup : Window`. **Source:** [Popup.cs](../../src/Scene/GUI/Popup.cs). **Inherits:** [Window](Window.md). **Inherited By:** [PopupPanel](PopupPanel.md), [PopupMenu](PopupMenu.md). **Component:** [Embedded popup windows](../components/popup-windows.md).
 
 A transient embedded popup with deferred cancellation and hide notification.
 
@@ -92,3 +92,5 @@ protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDes
 ```csharp
 protected override System.Void OnNotification(System.Int32 what)
 ```
+
+[PopupMenu](PopupMenu.md) adds the executable themed item/search/submenu consumer. Direct popup input now follows inherited deferred cancellation, and internal control focus is assigned after canvas visibility propagation.

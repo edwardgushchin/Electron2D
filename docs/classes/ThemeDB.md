@@ -111,3 +111,5 @@ The built-in theme now supplies SplitContainer/HSplitContainer/VSplitContainer s
 Built-in TabBar entries now include all declared styles/icons/colors, fallback font/size, separation, icon cap, outline and hover-delay controls. They use existing theme ownership and retained consumers; see [tab strips](../components/tab-strips.md).
 
 The embedded popup slice adds Popup/PopupPanel theme/type and exact file-factory integration; focused LineEdit text/IME now resolves the containing native root while retaining popup-local control focus. See [the component](../components/popup-windows.md) for the applicable portion and limits.
+
+The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu theme keys, inherited Window popup hooks and an exact built-in scene/file factory. Internal item/search controls receive focus after visibility propagation; public runtime signatures of these owners are unchanged.

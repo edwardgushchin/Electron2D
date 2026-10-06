@@ -171,6 +171,7 @@ public partial class Window : Viewport
                 try { item.PropagateVisibilityChanged(); }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
+            try { AfterVisibilityChanged(value); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Window visibility callbacks failed.", errors);
         }
     }

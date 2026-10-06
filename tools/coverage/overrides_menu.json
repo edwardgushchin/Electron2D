@@ -1,0 +1,880 @@
+{
+  "mappings": [
+    {
+      "godot": "class:PopupMenu",
+      "electron2d": "T:Electron2D.PopupMenu",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:activate_item_by_event(InputEvent:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.ActivateItemByEvent(Electron2D.InputEvent,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_check_item(String:,int:,int:Key)",
+      "electron2d": "method:Electron2D.PopupMenu.AddCheckItem(System.String,System.Int32,Electron2D.Key)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_check_shortcut(Shortcut:,int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddCheckShortcut(Electron2D.Shortcut,System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_icon_check_item(Texture2D:,String:,int:,int:Key)",
+      "electron2d": "method:Electron2D.PopupMenu.AddIconCheckItem(Electron2D.Texture,System.String,System.Int32,Electron2D.Key)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_icon_check_shortcut(Texture2D:,Shortcut:,int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddIconCheckShortcut(Electron2D.Texture,Electron2D.Shortcut,System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_icon_item(Texture2D:,String:,int:,int:Key)",
+      "electron2d": "method:Electron2D.PopupMenu.AddIconItem(Electron2D.Texture,System.String,System.Int32,Electron2D.Key)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_icon_radio_check_item(Texture2D:,String:,int:,int:Key)",
+      "electron2d": "method:Electron2D.PopupMenu.AddIconRadioCheckItem(Electron2D.Texture,System.String,System.Int32,Electron2D.Key)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_icon_radio_check_shortcut(Texture2D:,Shortcut:,int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddIconRadioCheckShortcut(Electron2D.Texture,Electron2D.Shortcut,System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_icon_shortcut(Texture2D:,Shortcut:,int:,bool:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddIconShortcut(Electron2D.Texture,Electron2D.Shortcut,System.Int32,System.Boolean,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_item(String:,int:,int:Key)",
+      "electron2d": "method:Electron2D.PopupMenu.AddItem(System.String,System.Int32,Electron2D.Key)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_multistate_item(String:,int:,int:,int:,int:Key)",
+      "electron2d": "method:Electron2D.PopupMenu.AddMultistateItem(System.String,System.Int32,System.Int32,System.Int32,Electron2D.Key)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_radio_check_item(String:,int:,int:Key)",
+      "electron2d": "method:Electron2D.PopupMenu.AddRadioCheckItem(System.String,System.Int32,Electron2D.Key)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_radio_check_shortcut(Shortcut:,int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddRadioCheckShortcut(Electron2D.Shortcut,System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_separator(String:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddSeparator(System.String,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_shortcut(Shortcut:,int:,bool:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddShortcut(Electron2D.Shortcut,System.Int32,System.Boolean,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_submenu_item(String:,String:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddSubmenuItem(System.String,System.String,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:add_submenu_node_item(String:,PopupMenu:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.AddSubmenuNodeItem(System.String,Electron2D.PopupMenu,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:clear(bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.Clear(System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_focused_item()",
+      "electron2d": "method:Electron2D.PopupMenu.GetFocusedItem()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_accelerator(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemAccelerator(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_auto_translate_mode(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemAutoTranslateMode(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_icon(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemIcon(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_icon_max_width(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemIconMaxWidth(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_icon_modulate(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemIconModulate(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_id(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemID(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_indent(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemIndent(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_index(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemIndex(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_language(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemLanguage(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_metadata(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemMetadata`1(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_multistate(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemMultistate(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_multistate_max(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemMultistateMax(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_shortcut(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemShortcut(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_submenu(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemSubmenu(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_submenu_node(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemSubmenuNode(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_text(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemText(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_text_direction(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemTextDirection(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:get_item_tooltip(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemTooltip(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:is_item_checkable(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemCheckable(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:is_item_checked(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemChecked(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:is_item_disabled(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemDisabled(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:is_item_radio_checkable(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemRadioCheckable(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:is_item_separator(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemSeparator(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:is_item_shortcut_disabled(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemShortcutDisabled(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:remove_item(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.RemoveItem(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:scroll_to_item(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.ScrollToItem(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_focused_item(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetFocusedItem(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_accelerator(int:,int:Key)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemAccelerator(System.Int32,Electron2D.Key)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_as_checkable(int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemAsCheckable(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_as_radio_checkable(int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemAsRadioCheckable(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_as_separator(int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemAsSeparator(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_auto_translate_mode(int:,int:Node.AutoTranslateMode)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemAutoTranslateMode(System.Int32,Electron2D.NodeAutoTranslateMode)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_checked(int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemChecked(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_disabled(int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemDisabled(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_icon(int:,Texture2D:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemIcon(System.Int32,Electron2D.Texture)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_icon_max_width(int:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemIconMaxWidth(System.Int32,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_icon_modulate(int:,Color:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemIconModulate(System.Int32,Electron2D.Color)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_id(int:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemID(System.Int32,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_indent(int:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemIndent(System.Int32,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_index(int:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemIndex(System.Int32,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_language(int:,String:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemLanguage(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_metadata(int:,Variant:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemMetadata`1(System.Int32,T)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_multistate(int:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemMultistate(System.Int32,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_multistate_max(int:,int:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemMultistateMax(System.Int32,System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_shortcut(int:,Shortcut:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemShortcut(System.Int32,Electron2D.Shortcut,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_shortcut_disabled(int:,bool:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemShortcutDisabled(System.Int32,System.Boolean)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_submenu(int:,String:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemSubmenu(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_submenu_node(int:,PopupMenu:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemSubmenuNode(System.Int32,Electron2D.PopupMenu)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_text(int:,String:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemText(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_text_direction(int:,int:Control.TextDirection)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemTextDirection(System.Int32,Electron2D.TextDirection)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:set_item_tooltip(int:,String:)",
+      "electron2d": "method:Electron2D.PopupMenu.SetItemTooltip(System.Int32,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:toggle_item_checked(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.ToggleItemChecked(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::method:toggle_item_multistate(int:)",
+      "electron2d": "method:Electron2D.PopupMenu.ToggleItemMultistate(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:allow_search",
+      "electron2d": "property:Electron2D.PopupMenu.AllowSearch()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:canvas_item_default_texture_filter",
+      "electron2d": "property:Electron2D.Viewport.CanvasItemDefaultTextureFilter()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:canvas_item_default_texture_repeat",
+      "electron2d": "property:Electron2D.Viewport.CanvasItemDefaultTextureRepeat()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:hide_on_checkable_item_selection",
+      "electron2d": "property:Electron2D.PopupMenu.HideOnCheckableItemSelection()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:hide_on_item_selection",
+      "electron2d": "property:Electron2D.PopupMenu.HideOnItemSelection()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:hide_on_state_item_selection",
+      "electron2d": "property:Electron2D.PopupMenu.HideOnStateItemSelection()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:item_count",
+      "electron2d": "property:Electron2D.PopupMenu.ItemCount()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:item_{index}/checkable",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemCheckable(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:item_{index}/checked",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemChecked(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:item_{index}/disabled",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemDisabled(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:item_{index}/icon",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemIcon(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:item_{index}/id",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemID(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:item_{index}/separator",
+      "electron2d": "method:Electron2D.PopupMenu.IsItemSeparator(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:item_{index}/text",
+      "electron2d": "method:Electron2D.PopupMenu.GetItemText(System.Int32)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:search_bar_enabled",
+      "electron2d": "property:Electron2D.PopupMenu.SearchBarEnabled()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:search_bar_fuzzy_search_enabled",
+      "electron2d": "property:Electron2D.PopupMenu.SearchBarFuzzySearchEnabled()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:search_bar_fuzzy_search_max_misses",
+      "electron2d": "property:Electron2D.PopupMenu.SearchBarFuzzySearchMaxMisses()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:search_bar_min_item_count",
+      "electron2d": "property:Electron2D.PopupMenu.SearchBarMinItemCount()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:shrink_height",
+      "electron2d": "property:Electron2D.PopupMenu.ShrinkHeight()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:shrink_width",
+      "electron2d": "property:Electron2D.PopupMenu.ShrinkWidth()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:submenu_popup_delay",
+      "electron2d": "property:Electron2D.PopupMenu.SubmenuPopupDelay()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:transparent",
+      "electron2d": "property:Electron2D.Window.Transparent()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::property:transparent_bg",
+      "electron2d": "property:Electron2D.Viewport.TransparentBG()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::signal:id_focused(int:)",
+      "electron2d": "event:Electron2D.PopupMenu.IDFocused()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::signal:id_pressed(int:)",
+      "electron2d": "event:Electron2D.PopupMenu.IDPressed()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::signal:index_pressed(int:)",
+      "electron2d": "event:Electron2D.PopupMenu.IndexPressed()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::signal:menu_changed()",
+      "electron2d": "event:Electron2D.PopupMenu.MenuChanged()",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:checked",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:checked_disabled",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font",
+      "electron2d": "method:Electron2D.Window.GetThemeFont(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_accelerator_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_disabled_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_hover_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_separator",
+      "electron2d": "method:Electron2D.Window.GetThemeFont(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_separator_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_separator_outline_color",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_separator_size",
+      "electron2d": "method:Electron2D.Window.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:font_size",
+      "electron2d": "method:Electron2D.Window.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:gutter_compact",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:h_separation",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:hover",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:icon_max_width",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:indent",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:item_end_padding",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:item_start_padding",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:labeled_separator_left",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:labeled_separator_right",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:panel",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:radio_checked",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:radio_checked_disabled",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:radio_unchecked",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:radio_unchecked_disabled",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:search",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:search_bar_separation",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:separator",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:separator_outline_size",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:submenu",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:submenu_mirrored",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:unchecked",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:unchecked_disabled",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    },
+    {
+      "godot": "PopupMenu::theme_item:v_separation",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.PopupMenu..ctor()",
+      "reason": "Concrete construction and protected input/layout/notification/minimum/storage/disposal hooks project PopupMenu plus inherited Window/Node scene contracts under ADRs 0004/0008/0038/0083; no separate dynamic or backend game capability is added."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupMenu.CreateSceneInstanceFactory()",
+      "reason": "Concrete construction and protected input/layout/notification/minimum/storage/disposal hooks project PopupMenu plus inherited Window/Node scene contracts under ADRs 0004/0008/0038/0083; no separate dynamic or backend game capability is added."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupMenu.Dispose(System.Boolean)",
+      "reason": "Concrete construction and protected input/layout/notification/minimum/storage/disposal hooks project PopupMenu plus inherited Window/Node scene contracts under ADRs 0004/0008/0038/0083; no separate dynamic or backend game capability is added."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupMenu.GetPropertyDescriptors()",
+      "reason": "Concrete construction and protected input/layout/notification/minimum/storage/disposal hooks project PopupMenu plus inherited Window/Node scene contracts under ADRs 0004/0008/0038/0083; no separate dynamic or backend game capability is added."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupMenu.OnGetContentsMinimumSize()",
+      "reason": "Concrete construction and protected input/layout/notification/minimum/storage/disposal hooks project PopupMenu plus inherited Window/Node scene contracts under ADRs 0004/0008/0038/0083; no separate dynamic or backend game capability is added."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupMenu.OnInput(Electron2D.InputEvent)",
+      "reason": "Concrete construction and protected input/layout/notification/minimum/storage/disposal hooks project PopupMenu plus inherited Window/Node scene contracts under ADRs 0004/0008/0038/0083; no separate dynamic or backend game capability is added."
+    },
+    {
+      "electron2d": "method:Electron2D.PopupMenu.OnNotification(System.Int32)",
+      "reason": "Concrete construction and protected input/layout/notification/minimum/storage/disposal hooks project PopupMenu plus inherited Window/Node scene contracts under ADRs 0004/0008/0038/0083; no separate dynamic or backend game capability is added."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct.",
+      "godot": [
+        "PopupMenu::method:activate_item_by_event(InputEvent:,bool:)",
+        "PopupMenu::method:add_check_item(String:,int:,int:Key)",
+        "PopupMenu::method:add_check_shortcut(Shortcut:,int:,bool:)",
+        "PopupMenu::method:add_icon_check_item(Texture2D:,String:,int:,int:Key)",
+        "PopupMenu::method:add_icon_check_shortcut(Texture2D:,Shortcut:,int:,bool:)",
+        "PopupMenu::method:add_icon_item(Texture2D:,String:,int:,int:Key)",
+        "PopupMenu::method:add_icon_radio_check_item(Texture2D:,String:,int:,int:Key)",
+        "PopupMenu::method:add_icon_radio_check_shortcut(Texture2D:,Shortcut:,int:,bool:)",
+        "PopupMenu::method:add_icon_shortcut(Texture2D:,Shortcut:,int:,bool:,bool:)",
+        "PopupMenu::method:add_item(String:,int:,int:Key)",
+        "PopupMenu::method:add_multistate_item(String:,int:,int:,int:,int:Key)",
+        "PopupMenu::method:add_radio_check_item(String:,int:,int:Key)",
+        "PopupMenu::method:add_radio_check_shortcut(Shortcut:,int:,bool:)",
+        "PopupMenu::method:add_separator(String:,int:)",
+        "PopupMenu::method:add_shortcut(Shortcut:,int:,bool:,bool:)",
+        "PopupMenu::method:add_submenu_item(String:,String:,int:)",
+        "PopupMenu::method:add_submenu_node_item(String:,PopupMenu:,int:)",
+        "PopupMenu::method:clear(bool:)",
+        "PopupMenu::method:get_focused_item()",
+        "PopupMenu::method:get_item_accelerator(int:)",
+        "PopupMenu::method:get_item_auto_translate_mode(int:)",
+        "PopupMenu::method:get_item_icon(int:)",
+        "PopupMenu::method:get_item_icon_max_width(int:)",
+        "PopupMenu::method:get_item_icon_modulate(int:)",
+        "PopupMenu::method:get_item_id(int:)",
+        "PopupMenu::method:get_item_indent(int:)",
+        "PopupMenu::method:get_item_index(int:)",
+        "PopupMenu::method:get_item_language(int:)",
+        "PopupMenu::method:get_item_metadata(int:)",
+        "PopupMenu::method:get_item_multistate(int:)",
+        "PopupMenu::method:get_item_multistate_max(int:)",
+        "PopupMenu::method:get_item_shortcut(int:)",
+        "PopupMenu::method:get_item_submenu(int:)",
+        "PopupMenu::method:get_item_submenu_node(int:)",
+        "PopupMenu::method:get_item_text(int:)",
+        "PopupMenu::method:get_item_text_direction(int:)",
+        "PopupMenu::method:get_item_tooltip(int:)",
+        "PopupMenu::method:is_item_checkable(int:)",
+        "PopupMenu::method:is_item_checked(int:)",
+        "PopupMenu::method:is_item_disabled(int:)",
+        "PopupMenu::method:is_item_radio_checkable(int:)",
+        "PopupMenu::method:is_item_separator(int:)",
+        "PopupMenu::method:is_item_shortcut_disabled(int:)",
+        "PopupMenu::method:remove_item(int:)",
+        "PopupMenu::method:scroll_to_item(int:)",
+        "PopupMenu::method:set_focused_item(int:)",
+        "PopupMenu::method:set_item_accelerator(int:,int:Key)",
+        "PopupMenu::method:set_item_as_checkable(int:,bool:)",
+        "PopupMenu::method:set_item_as_radio_checkable(int:,bool:)",
+        "PopupMenu::method:set_item_as_separator(int:,bool:)",
+        "PopupMenu::method:set_item_auto_translate_mode(int:,int:Node.AutoTranslateMode)",
+        "PopupMenu::method:set_item_checked(int:,bool:)",
+        "PopupMenu::method:set_item_disabled(int:,bool:)",
+        "PopupMenu::method:set_item_icon(int:,Texture2D:)",
+        "PopupMenu::method:set_item_icon_max_width(int:,int:)",
+        "PopupMenu::method:set_item_icon_modulate(int:,Color:)",
+        "PopupMenu::method:set_item_id(int:,int:)",
+        "PopupMenu::method:set_item_indent(int:,int:)",
+        "PopupMenu::method:set_item_index(int:,int:)",
+        "PopupMenu::method:set_item_language(int:,String:)",
+        "PopupMenu::method:set_item_metadata(int:,Variant:)",
+        "PopupMenu::method:set_item_multistate(int:,int:)",
+        "PopupMenu::method:set_item_multistate_max(int:,int:)",
+        "PopupMenu::method:set_item_shortcut(int:,Shortcut:,bool:)",
+        "PopupMenu::method:set_item_shortcut_disabled(int:,bool:)",
+        "PopupMenu::method:set_item_submenu(int:,String:)",
+        "PopupMenu::method:set_item_submenu_node(int:,PopupMenu:)",
+        "PopupMenu::method:set_item_text(int:,String:)",
+        "PopupMenu::method:set_item_text_direction(int:,int:Control.TextDirection)",
+        "PopupMenu::method:set_item_tooltip(int:,String:)",
+        "PopupMenu::method:toggle_item_checked(int:)",
+        "PopupMenu::method:toggle_item_multistate(int:)",
+        "PopupMenu::property:allow_search",
+        "PopupMenu::property:canvas_item_default_texture_filter",
+        "PopupMenu::property:canvas_item_default_texture_repeat",
+        "PopupMenu::property:hide_on_checkable_item_selection",
+        "PopupMenu::property:hide_on_item_selection",
+        "PopupMenu::property:hide_on_state_item_selection",
+        "PopupMenu::property:item_count",
+        "PopupMenu::property:item_{index}/checkable",
+        "PopupMenu::property:item_{index}/checked",
+        "PopupMenu::property:item_{index}/disabled",
+        "PopupMenu::property:item_{index}/icon",
+        "PopupMenu::property:item_{index}/id",
+        "PopupMenu::property:item_{index}/separator",
+        "PopupMenu::property:item_{index}/text",
+        "PopupMenu::property:search_bar_enabled",
+        "PopupMenu::property:search_bar_fuzzy_search_enabled",
+        "PopupMenu::property:search_bar_fuzzy_search_max_misses",
+        "PopupMenu::property:search_bar_min_item_count",
+        "PopupMenu::property:shrink_height",
+        "PopupMenu::property:shrink_width",
+        "PopupMenu::property:submenu_popup_delay",
+        "PopupMenu::property:transparent",
+        "PopupMenu::property:transparent_bg",
+        "PopupMenu::signal:id_focused(int:)",
+        "PopupMenu::signal:id_pressed(int:)",
+        "PopupMenu::signal:index_pressed(int:)",
+        "PopupMenu::signal:menu_changed()",
+        "PopupMenu::theme_item:checked",
+        "PopupMenu::theme_item:checked_disabled",
+        "PopupMenu::theme_item:font",
+        "PopupMenu::theme_item:font_accelerator_color",
+        "PopupMenu::theme_item:font_color",
+        "PopupMenu::theme_item:font_disabled_color",
+        "PopupMenu::theme_item:font_hover_color",
+        "PopupMenu::theme_item:font_outline_color",
+        "PopupMenu::theme_item:font_separator",
+        "PopupMenu::theme_item:font_separator_color",
+        "PopupMenu::theme_item:font_separator_outline_color",
+        "PopupMenu::theme_item:font_separator_size",
+        "PopupMenu::theme_item:font_size",
+        "PopupMenu::theme_item:gutter_compact",
+        "PopupMenu::theme_item:h_separation",
+        "PopupMenu::theme_item:hover",
+        "PopupMenu::theme_item:icon_max_width",
+        "PopupMenu::theme_item:indent",
+        "PopupMenu::theme_item:item_end_padding",
+        "PopupMenu::theme_item:item_start_padding",
+        "PopupMenu::theme_item:labeled_separator_left",
+        "PopupMenu::theme_item:labeled_separator_right",
+        "PopupMenu::theme_item:outline_size",
+        "PopupMenu::theme_item:panel",
+        "PopupMenu::theme_item:radio_checked",
+        "PopupMenu::theme_item:radio_checked_disabled",
+        "PopupMenu::theme_item:radio_unchecked",
+        "PopupMenu::theme_item:radio_unchecked_disabled",
+        "PopupMenu::theme_item:search",
+        "PopupMenu::theme_item:search_bar_separation",
+        "PopupMenu::theme_item:separator",
+        "PopupMenu::theme_item:separator_outline_size",
+        "PopupMenu::theme_item:submenu",
+        "PopupMenu::theme_item:submenu_mirrored",
+        "PopupMenu::theme_item:unchecked",
+        "PopupMenu::theme_item:unchecked_disabled",
+        "PopupMenu::theme_item:v_separation"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADRs 0008/0038/0083: typed embedded PopupMenu model, title/icon/check/radio/state records, explicit check/state edits, identity IDs, event/shortcut activation, scroll/search, submenu and hide policies, themes and indexed scene factories. Managed/fresh-process and current Linux Wayland GPU/compatibility tests verify the executable profile. Native/system menu service remains ADR 0041 decision/backend blocked; inherited popup/window and accessibility/editor/platform gaps remain distinct. Class requires independent native/system menu and the inherited popup profile for full correspondence.",
+      "godot": [
+        "class:PopupMenu"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0041 requires an accepted native-menu service signature/lifetime/platform decision, a NativeMenu backend and system-menu registration plus owned menu callbacks before this native family can execute. Embedded menu rendering supplies none of those OS services.",
+      "godot": [
+        "PopupMenu::method:is_native_menu()",
+        "PopupMenu::method:is_system_menu()",
+        "PopupMenu::property:prefer_native_menu",
+        "PopupMenu::property:system_menu_id"
+      ]
+    }
+  ]
+}
