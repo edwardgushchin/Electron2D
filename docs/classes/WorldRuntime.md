@@ -13,3 +13,7 @@ Retains complete world identity independently of public resource wrappers: canva
 ## Verification
 
 [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) checks sharing, transfer, wrapper replacement, query identity, notifications, once-per-tick simulation and real GPU/compatibility canvas lifetime. [The world contract](../components/worlds.md) records current limits.
+
+## Navigation map integration
+
+World.NavigationMap now lazily owns an active borrowed map in the same runtime lifetime as canvas/physics. Scene NavigationRegion nodes and server-owned regions use that same map storage; the physics lane commits staged topology. NavigationServer is available through Engine named-service lookup. [The navigation contract](../components/navigation-maps.md) records implemented behavior and remaining dependencies.

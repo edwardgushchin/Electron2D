@@ -29,7 +29,7 @@ PhysicsDirectSpaceState queries = world.DirectSpaceState;
 secondary.World = null; // fresh independent canvas and physics world
 ```
 
-World association is live, discoverable typed state and is not stored in PackedScene. Existing scene resource schemas do not serialize native runtime identities. NavigationMap remains Blocked on the real navigation map/region/polygon/avoidance backend and its registration/release contract (ADRs 0052/0063); canvas identity does not satisfy that domain.
+World association is live, discoverable typed state and is not stored in PackedScene. Existing scene resource schemas do not serialize native runtime identities. World.NavigationMap now registers a real active map in the same runtime lifetime. [Authored map/region topology](navigation-maps.md) and World replacement execute; further navigation bake/avoidance/query capabilities retain exact prerequisites.
 
 ## Verification
 

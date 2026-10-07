@@ -406,7 +406,7 @@ def reason_for_type(item, lookup):
     families = (
         ("Physics2D", r"Physics|Collision|RigidBody2D|StaticBody2D|CharacterBody2D|Area2D|Joint2D|RayCast2D|ShapeCast2D|Shape2D|SpringArm2D", "next type-specific 2D physics operation beyond the implemented Box2D-backed scene-body slice (ADR 0012)"),
         ("Audio", r"Audio|Sound|Microphone", "first audio mixing and playback slice"),
-        ("Navigation2D", r"Navigation", "first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052)"),
+        ("Navigation2D", r"Navigation", "next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097)"),
         ("Animation", r"Animation", "first missing type-specific animation resource utility or persistence slice on the executable graph/state-machine/BlendSpace/action foundation (ADR 0093); applicable event tracks already execute"),
         ("Skeleton", r"Skeleton2D|Bone2D", "typed 2D bone hierarchy, rest/pose transforms and skinning integration"),
         ("Tiles", r"Tile|Atlas", "first tile and atlas resource slice after 2D rendering"),

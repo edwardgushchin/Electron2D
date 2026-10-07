@@ -482,10 +482,10 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [NavigationPathQueryParameters3D](classes/NavigationPathQueryParameters3D.md) | RefCounted | Excluded | 27 |
 | [NavigationPathQueryResult2D](classes/NavigationPathQueryResult2D.md) | RefCounted | Blocked | 9 |
 | [NavigationPathQueryResult3D](classes/NavigationPathQueryResult3D.md) | RefCounted | Excluded | 9 |
-| [NavigationPolygon](classes/NavigationPolygon.md) | Resource | Blocked | 42 |
-| [NavigationRegion2D](classes/NavigationRegion2D.md) | Node2D | Blocked | 17 |
+| [NavigationPolygon](classes/NavigationPolygon.md) | Resource | Partial | 42 |
+| [NavigationRegion2D](classes/NavigationRegion2D.md) | Node2D | Partial | 17 |
 | [NavigationRegion3D](classes/NavigationRegion3D.md) | Node3D | Excluded | 17 |
-| [NavigationServer2D](classes/NavigationServer2D.md) | Object | Blocked | 151 |
+| [NavigationServer2D](classes/NavigationServer2D.md) | Object | Partial | 151 |
 | [NavigationServer2DManager](classes/NavigationServer2DManager.md) | Object | Blocked | 2 |
 | [NavigationServer3D](classes/NavigationServer3D.md) | Object | Excluded | 168 |
 | [NavigationServer3DManager](classes/NavigationServer3DManager.md) | Object | Excluded | 2 |
@@ -1053,7 +1053,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [WebXRInterface](classes/WebXRInterface.md) | XRInterface | Excluded | 32 |
 | [Window](classes/Window.md) | Viewport | Partial | 199 |
 | [WorkerThreadPool](classes/WorkerThreadPool.md) | Object | Blocked | 9 |
-| [World2D](classes/World2D.md) | Resource | Partial | 4 |
+| [World2D](classes/World2D.md) | Resource | Implemented | 4 |
 | [World3D](classes/World3D.md) | Resource | Excluded | 7 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | Shape2D | Unimplemented | 2 |
 | [WorldBoundaryShape3D](classes/WorldBoundaryShape3D.md) | Shape3D | Excluded | 1 |

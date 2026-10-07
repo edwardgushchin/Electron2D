@@ -8,7 +8,8 @@ internal sealed class WorldRuntime
     internal readonly bool SceneOwned;
     internal SceneTree? SceneOwner { get; private set; }
     internal PhysicsSpace? ExistingSpace { get; private set; }
-    private RID _spaceRID;
+    private RID _spaceRID, _navigationMap;
+    internal RID NavigationMap { get { lock (_gate) { EnsureAlive(); if (!_navigationMap.IsValid()) { _navigationMap = NavigationServer.Service.CreateMap(this); NavigationServer.MapSetActive(_navigationMap, true); } return _navigationMap; } } }
     internal readonly RenderingCanvasRuntime Canvas;
     internal bool Alive => Volatile.Read(ref _alive);
     internal WorldRuntime(bool sceneOwned) { SceneOwned = sceneOwned; Canvas = RenderingCanvasRegistry.Register(world: this); }
@@ -53,6 +54,6 @@ internal sealed class WorldRuntime
     {
         if (!_alive) return;
         try { ExistingSpace?.Dispose(); }
-        finally { PhysicsServer.Service.UnregisterSceneSpace(_spaceRID); ExistingSpace = null; _spaceRID = default; RenderingCanvasRegistry.Remove(Canvas.RID); _alive = false; }
+        finally { PhysicsServer.Service.UnregisterSceneSpace(_spaceRID); if (_navigationMap.IsValid()) NavigationServer.Service.ReleaseWorldMap(_navigationMap); _navigationMap = default; ExistingSpace = null; _spaceRID = default; RenderingCanvasRegistry.Remove(Canvas.RID); _alive = false; }
     }
 }

@@ -1,16 +1,17 @@
 # Navigation domain
 
-Last updated: 2026-09-24
+Last updated: 2026-10-07
 
 ## Responsibility
 
-Navigation owns typed 2D pathfinding and, in later slices, map, polygon and avoidance services. Its first two executable components are standalone point and grid searches that games can use without opening a SceneTree, renderer or native host.
+Navigation owns typed 2D pathfinding authored map/polygon/region services and future baking/avoidance slices. Its first two executable components are standalone point and grid searches that games can use without opening a SceneTree, renderer or native host.
 
 ## Component inventory
 
 | Component | Responsibility | State |
 | --- | --- | --- |
 | [A-star point graph](../components/astar-graph.md) | Directed weighted points, nearest-segment queries and full/partial path search | Implemented and verified in managed execution |
+| [Authored maps](../components/navigation-maps.md) | World map ownership, scene regions, convex portal routes and deferred publication | Implemented profile; further capabilities retain coverage dependencies |
 | [A-star grid](../components/astar-grid.md) | Rectangular cells, obstacles, weights, diagonal and jump-point search | Implemented and verified in managed execution |
 
 ## Public surface
@@ -26,7 +27,7 @@ Navigation owns typed 2D pathfinding and, in later slices, map, polygon and avoi
 - Links are directional for travel and undirected for segment existence. A path pays the destination point's weight on each edge. Disabled points are excluded from path expansion and closest-segment queries unless a point query explicitly includes them.
 - A path callback may inspect graph state, but search re-entry, mutation and disposal are rejected. Concurrent callers coordinate access externally.
 - Grid region and cell geometry are finite and bounded to managed arrays. Jumping intentionally ignores individual cell weights, matching its separate search mode. Both graph types reject search re-entry, mutation and disposal from callbacks.
-- NavigationServer2D remains a separate backend prerequisite; this domain does not expose placeholder maps, RIDs, agents or avoidance callbacks.
+- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; baking, links and avoidance retain their own exact prerequisites.
 
 ## Verification and limits
 
@@ -36,7 +37,12 @@ Navigation owns typed 2D pathfinding and, in later slices, map, polygon and avoi
 
 ## Decisions
 
+- [0097: Typed planar navigation maps](../decisions/navigation.md#adr-0097)
 - [0052: Standalone typed AStar](../decisions/navigation.md#adr-0052)
 - [0053: Standalone typed 2D grid search](../decisions/navigation.md#adr-0053)
 - [0003: Managed engine lifetime](../decisions/core-object-runtime.md#adr-0003)
 - [0004: Strict 2D public API](../decisions/product.md#adr-0004)
+
+## Executable authored maps and regions
+
+[Navigation maps](../components/navigation-maps.md) now supply real RID ownership, World maps, convex region topology, deferred publication, projection and copied routes with a native scene path-following consumer. Baking/async/links/avoidance/query/debug capabilities remain exact separate dependencies.

@@ -97,6 +97,8 @@ public sealed partial class Engine : ElectronObject
         _singletonNames.Add(nameof(ResourceSaver));
         _singletons.Add(nameof(ResourceUID), ResourceUID.Runtime);
         _singletonNames.Add(nameof(ResourceUID));
+        _singletons.Add(nameof(NavigationServer), NavigationServer.Service);
+        _singletonNames.Add(nameof(NavigationServer));
         _singletons.Add(nameof(AudioServer), AudioServer.Service);
         _singletonNames.Add(nameof(AudioServer));
     }

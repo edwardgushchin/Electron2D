@@ -2,7 +2,7 @@
 
 Last updated: 2026-09-24
 
-This bounded document owns standalone 2D pathfinding decisions. The [decision index](index.md) routes other domains.
+This bounded document owns standalone and server-backed 2D pathfinding decisions. The [decision index](index.md) routes other domains.
 
 <a id="adr-0052"></a>
 ## ADR 0052: Standalone typed AStar graph before navigation servers
@@ -27,7 +27,7 @@ The current 2D renderer and SceneTree can display and move game objects, but the
 
 Games can compute directed, weighted and partial paths without native backend setup. The graph has deterministic managed lifetime and API validation; returned paths stay valid after later graph edits. The chosen managed representation maintains the pinned public capacity values even though its private dictionary has a different allocation layout. Search and output arrays allocate by design; it is not a per-frame renderer primitive.
 
-`AStarGrid` has its own complete grid, cell-shape, diagonal and jump-point slice under ADR 0053. Navigation maps, polygon baking, agents and avoidance require the first full navigation-server backend and lifetime contract. This decision does not classify those domains as implemented.
+`AStarGrid` has its own complete grid, cell-shape, diagonal and jump-point slice under ADR 0053. Authored navigation maps/regions now execute under ADR 0097; polygon baking, agents and avoidance retain separate kernel prerequisites. This decision does not classify those domains as implemented.
 
 ### Rejected alternatives
 
@@ -56,4 +56,26 @@ The point graph from ADR 0052 requires callers to build every edge. The pinned 4
 
 ### Consequences
 
-Games can query full or partial cell paths without constructing point-edge graphs. The grid is a managed standalone algorithm with no renderer, physics, SDL or native platform verification requirement. Returned paths and cell data are snapshots. Large grid performance and owner game acceptance remain separate verification work; navigation-server maps, regions and avoidance retain their own backend trigger.
+Games can query full or partial cell paths without constructing point-edge graphs. The grid is a managed standalone algorithm with no renderer, physics, SDL or native platform verification requirement. Returned paths and cell data are snapshots. Large grid performance and owner game acceptance remain separate verification work; authored navigation-server maps/regions execute under ADR 0097, while baking/avoidance retain their own backend triggers.
+
+<a id="adr-0097"></a>
+## ADR 0097: Typed planar navigation maps and authored region topology
+
+Last updated: 2026-10-07
+
+- Status: Accepted for the user-authorized full API implementation goal
+- Scope: Initial executable map/region/polygon pathfinding backend, World registration and scene ownership
+- Depends on: [0004](product.md#adr-0004), [0005](core-object-runtime.md#adr-0005), [0052](#adr-0052), [0063](physics.md#adr-0063), [0095](singleton-services.md#adr-0095)
+
+### Decision
+
+- Implement NavigationServer as a retained process-wide ElectronObject with static typed operations. RID maps/regions keep their own ownership; World.NavigationMap lazily registers an active borrowed map with the same runtime lifetime as canvas/physics. NavigationRegion maps the scene Entity role onto the same server region storage.
+- The initial backend consumes copied authored planar vertices and convex polygon indices from NavigationPolygon. Use existing planar math types, .NET collections and a polygon/portal search kernel; no second public AStar facade, backend-native IDs, Variant or 3D vector API is exposed. Polygon data snapshots, numeric/type/index validation and resource graph copying remain typed.
+- Commands stage configuration under one cold service gate and immutable committed map iterations supply path/closest-point queries. Synchronize commits at the beginning of the physics lane; an explicit typed Synchronize batch call exercises the same kernel without a SceneTree. It is a C# host operation, not a renamed deprecated MapForceUpdate. Queued topology changes do not silently mutate published paths. MapChanged follows committed publication; handlers may stage later commands, but recursive synchronization rejects.
+- Authored geometry connects shared edges; enabled/layer/transform/travel/entry-cost changes participate in real topology and routing. Path search projects endpoints, finds an applicable polygon corridor, and returns copied paths with portal-midpoint or funnel optimization. Keep weighted search, unreachable closest-reached behavior and supported edge-merging policy auditable against the pinned implementation; unsupported topology/property branches retain explicit coverage dependencies.
+- Do not expose bake settings, async switches or constant-result compatibility members before their consumers execute. Baking/source parsing, clearance/outlines, links, metadata query objects, agent avoidance and debug/editor producers retain exact separate prerequisites. The deprecated make_polygons_from_outlines, map_force_update and get_region_rid are excluded under ADR 0004 with pinned metadata; current authored geometry, synchronization and GetRID supply executable paths.
+- World and scene nodes use the same server identities. Node exit releases borrowed region membership, stable managed region identity remains until node disposal, and user-created regions/maps require FreeRID. World-owned maps reject FreeRID and are released with runtime teardown.
+
+### Verification
+
+The connected slice requires polygon/resource checks, deferred publication and reentry/lifetime errors, weighted routes, projection/unreachable behavior, region scene membership/World replacement, and real rendered path following on each claimed backend. Source/scene storage is verified separately from native pixels; compilation alone establishes neither.

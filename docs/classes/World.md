@@ -24,6 +24,10 @@ Combines a stable rendering canvas and lazily created physics space. Viewport.Wo
 
 ## Lifecycle and limits
 
-[The world contract](../components/worlds.md) defines scene/default versus explicit resource lifetime, wrapper recreation, shared once-per-tick simulation, world replacement and failure recovery. Scene-default identities expire with the tree; caller worlds can remain alive across hosts. RIDs remain borrowed by their owning servers. One runtime has one scene driver and one physics thread. NavigationMap remains blocked on the navigation backend; no zero RID placeholder is exposed.
+[The world contract](../components/worlds.md) defines scene/default versus explicit resource lifetime, wrapper recreation, shared once-per-tick simulation, world replacement and failure recovery. Scene-default identities expire with the tree; caller worlds can remain alive across hosts. RIDs remain borrowed by their owning servers. One runtime has one scene driver and one physics thread. NavigationMap supplies a real lazy map; further navigation topology/baking/avoidance features retain their own exact prerequisites.
 
 [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) covers headless behavior and actual native shared/independent pixels; [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) covers established direct queries and fallback-world teardown. See [ADR 0063](../decisions/physics.md#adr-0063) and [ADR 0028](../decisions/rendering.md#adr-0028).
+
+## Navigation map integration
+
+World.NavigationMap now lazily owns an active borrowed map in the same runtime lifetime as canvas/physics. Scene NavigationRegion nodes and server-owned regions use that same map storage; the physics lane commits staged topology. NavigationServer is available through Engine named-service lookup. [The navigation contract](../components/navigation-maps.md) records implemented behavior and remaining dependencies.

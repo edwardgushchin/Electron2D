@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -479,3 +479,7 @@ See [resource-file contracts](../components/resource-files.md) for registered ty
 Engine.Start and Engine.Run apply the optional AudioBusesDefaultBusLayout archive before main-loop initialization or Window autoplay, using the runtime project registry and active feature overrides. Empty/missing files preserve current buses; invalid files report startup failure. See [saved bus layouts](../components/audio-playback.md#saved-bus-layouts).
 
 Engine permanently registers OS as a retained service and rejects its unregistration, matching the existing built-in disposal/identity contract. See the [file-dialog component](../components/file-dialogs.md) for its exercised flow and limits.
+
+## Navigation map integration
+
+World.NavigationMap now lazily owns an active borrowed map in the same runtime lifetime as canvas/physics. Scene NavigationRegion nodes and server-owned regions use that same map storage; the physics lane commits staged topology. NavigationServer is available through Engine named-service lookup. [The navigation contract](../components/navigation-maps.md) records implemented behavior and remaining dependencies.

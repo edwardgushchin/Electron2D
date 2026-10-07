@@ -80,7 +80,9 @@
     "SkeletonModification2DJiggle": "SkeletonModificationJiggle",
     "SkeletonModification2DStackHolder": "SkeletonModificationStackHolder",
     "PhysicalBone2D": "PhysicalBone",
-    "SkeletonModification2DPhysicalBones": "SkeletonModificationPhysicalBones"
+    "SkeletonModification2DPhysicalBones": "SkeletonModificationPhysicalBones",
+    "NavigationServer2D": "NavigationServer",
+    "NavigationRegion2D": "NavigationRegion"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

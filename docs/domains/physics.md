@@ -143,4 +143,4 @@ The sandbox Smash workload covers a large sleeping fragment wall using public sc
 
 ## Executable viewport worlds
 
-[The world contract](../components/worlds.md) combines canvas and physics ownership, default/shared/explicit viewport binding, transition notification and real native pixel verification. NavigationMap retains its separate navigation-backend trigger.
+[The world contract](../components/worlds.md) combines canvas and physics ownership, default/shared/explicit viewport binding, transition notification and real native pixel verification. NavigationMap registers a real active authored-region map under ADR 0097; further navigation capabilities retain operation-specific prerequisites.
