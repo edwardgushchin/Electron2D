@@ -345,13 +345,13 @@ public abstract partial class CanvasItem
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
                 var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.PhysicsInterpolationFraction : 1f;
-                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true, fraction, outputSize);
+                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this);
                 continue;
             }
             if (replay.Mesh is { } mesh)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true);
+                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true, skinOwner: this);
                 continue;
             }
             if (replay.ParticleCustom is { } custom)

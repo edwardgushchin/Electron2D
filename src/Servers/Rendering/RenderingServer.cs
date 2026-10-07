@@ -410,6 +410,7 @@ public sealed partial class RenderingServer : ElectronObject
             try
             {
                 try { ReleaseOwnedMultiMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
+                ReleaseOwnedSkeletons();
                 try { ReleaseOwnedMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseOwnedTextures(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { _backend.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }

@@ -11,7 +11,7 @@ Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/R
 
 ## Borrowed skeletal identity
 
-Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon skin replay. FreeRID rejects it on an active owner rather than disposing a scene node. Caller-created palette storage and arbitrary canvas attachment are separately blocked until their actual typed producer/consumer and ownership integration; no server-owned skeleton facade is exposed here.
+Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon skin replay. FreeRID rejects it on an active owner rather than disposing a scene node. Caller-created palette storage and actual scene-canvas attachment now execute through the mesh skin API below, with distinct borrowed/owned lifetime and replay callback guards. Generic owned canvas creation/command authoring retains its separate prerequisite.
 
 ## Description
 
@@ -826,3 +826,160 @@ ClipChildren extends the existing composition stream. Command-bearing mask owner
 ## World particle composition
 
 For CPUParticles world-coordinate commands, each render entry captures the current framebuffer/viewport/CanvasLayer basis separately from the ordinary emitter transform. Existing particles remain visible after emitter motion or singular scale; normal children, logical transform queries, clips, Z/Y sort and repetition retain their ordinary paths. Native GPU/compatibility checks and prepared measurements are recorded in [CPU particles](../components/cpu-particles.md).
+
+## Mesh skin API
+
+| Complete signature | Contract |
+| --- | --- |
+| `public const System.Int32 ArrayWeightsSize = 4` | The default number of bone/weight slots per skinned vertex; Use8BoneWeights selects twice this count. |
+| `public static System.Void CanvasItemAttachSkeleton(Electron2D.RID item, Electron2D.RID skeleton)` | Attaches a borrowed palette to a live scene canvas item for retained mesh skin replay. |
+| `public static System.Int32 MeshSurfaceGetFormatSkinStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Returns the packed skin stride for a supported two-dimensional surface format. |
+| `public static System.Void MeshSurfaceUpdateSkinRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates copied bytes in a caller-owned mesh's packed skin channel. |
+| `public static System.Void SkeletonAllocateData(Electron2D.RID skeleton, System.Int32 bones)` | Replaces owned palette storage with zero transforms; equal capacity preserves values. |
+| `public static Electron2D.Transform SkeletonBoneGetTransform2D(Electron2D.RID skeleton, System.Int32 bone)` | Returns one stored deformation transform from owned or scene storage. |
+| `public static System.Void SkeletonBoneSetTransform2D(Electron2D.RID skeleton, System.Int32 bone, Electron2D.Transform transform)` | Sets a finite skin deformation transform in owned storage. |
+| `public static Electron2D.RID SkeletonCreate()` | Creates an empty caller-owned two-dimensional skin palette. |
+| `public static System.Int32 SkeletonGetBoneCount(Electron2D.RID skeleton)` | Returns the number of transforms in a live owned or scene palette. |
+| `public static System.Void SkeletonSetBaseTransform2D(Electron2D.RID skeleton, Electron2D.Transform baseTransform)` | Sets the finite palette base transform in canvas coordinates. |
+
+## Mesh skin member descriptions
+
+### ArrayWeightsSize
+
+`public const System.Int32 ArrayWeightsSize = 4`
+
+The default number of bone/weight slots per skinned vertex; Use8BoneWeights selects twice this count.
+
+### CanvasItemAttachSkeleton
+
+`public static System.Void CanvasItemAttachSkeleton(Electron2D.RID item, Electron2D.RID skeleton)`
+
+Attaches a borrowed palette to a live scene canvas item for retained mesh skin replay.
+
+Remarks: The attachment is transient, does not own the palette and is not inherited by canvas children. Freed palettes leave the original unskinned geometry. Scene palettes must share viewport/canvas layer with their consumer.
+
+`item`: Scene-owned CanvasItem.GetCanvasItem identity.
+
+`skeleton`: Live owned/scene palette, or an empty RID to detach.
+
+Throws `System.ArgumentException`: The item or nonempty palette identity is absent.
+
+Throws `System.InvalidOperationException`: The service is unavailable or owner/capture/submission rules reject mutation.
+
+### MeshSurfaceGetFormatSkinStride
+
+`public static System.Int32 MeshSurfaceGetFormatSkinStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)`
+
+Returns the packed skin stride for a supported two-dimensional surface format.
+
+Returns: Zero without skin; two bytes per present index/weight slot, with four or eight slots.
+
+`format`: Typed channel flags.
+
+`vertexCount`: Nonnegative count; does not affect the fixed skin stride.
+
+### MeshSurfaceUpdateSkinRegion
+
+`public static System.Void MeshSurfaceUpdateSkinRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+
+Updates copied bytes in a caller-owned mesh's packed skin channel.
+
+`mesh`: Caller-owned mesh identity.
+
+`surface`: Existing skinned surface.
+
+`offset`: Byte offset into the skin buffer.
+
+`data`: Little-endian uint16 indices followed by UNORM16 weights per vertex.
+
+### SkeletonAllocateData
+
+`public static System.Void SkeletonAllocateData(Electron2D.RID skeleton, System.Int32 bones)`
+
+Replaces owned palette storage with zero transforms; equal capacity preserves values.
+
+Remarks: All palettes are two-dimensional; no dimensional selector is exposed. Allocation commits after successful preparation.
+
+`skeleton`: Caller-owned palette identity.
+
+`bones`: Nonnegative transform count.
+
+Throws `System.ArgumentOutOfRangeException`: The bone count is negative.
+
+Throws `System.InvalidOperationException`: Ownership or renderer/scene owner/submission rules reject mutation.
+
+### SkeletonBoneGetTransform2D
+
+`public static Electron2D.Transform SkeletonBoneGetTransform2D(Electron2D.RID skeleton, System.Int32 bone)`
+
+Returns one stored deformation transform from owned or scene storage.
+
+Returns: Stored transform; scene palettes supply actual pose multiplied by inverse rest.
+
+`skeleton`: Live palette.
+
+`bone`: Existing zero-based index.
+
+Throws `System.ArgumentException`: The identity is absent or disposed.
+
+Throws `System.ArgumentOutOfRangeException`: The index is absent.
+
+Throws `System.InvalidOperationException`: The renderer is unavailable or read off-owner.
+
+### SkeletonBoneSetTransform2D
+
+`public static System.Void SkeletonBoneSetTransform2D(Electron2D.RID skeleton, System.Int32 bone, Electron2D.Transform transform)`
+
+Sets a finite skin deformation transform in owned storage.
+
+`skeleton`: Caller-owned palette.
+
+`bone`: Existing zero-based index.
+
+`transform`: Finite transform, including singular or reflected bases.
+
+Throws `System.ArgumentException`: The palette is absent or the transform is nonfinite.
+
+Throws `System.ArgumentOutOfRangeException`: The bone index is absent.
+
+Throws `System.InvalidOperationException`: Ownership or renderer owner/submission rules reject mutation.
+
+### SkeletonCreate
+
+`public static Electron2D.RID SkeletonCreate()`
+
+Creates an empty caller-owned two-dimensional skin palette.
+
+Returns: A stable RID released by FreeRID or renderer shutdown.
+
+Throws `System.InvalidOperationException`: The native service is unavailable or called off-owner/during submission.
+
+### SkeletonGetBoneCount
+
+`public static System.Int32 SkeletonGetBoneCount(Electron2D.RID skeleton)`
+
+Returns the number of transforms in a live owned or scene palette.
+
+Returns: Nonnegative count; scene palettes follow actual rig membership.
+
+`skeleton`: Live palette identity.
+
+Throws `System.ArgumentException`: The identity is absent or disposed.
+
+Throws `System.InvalidOperationException`: The renderer is unavailable or read off-owner.
+
+### SkeletonSetBaseTransform2D
+
+`public static System.Void SkeletonSetBaseTransform2D(Electron2D.RID skeleton, Electron2D.Transform baseTransform)`
+
+Sets the finite palette base transform in canvas coordinates.
+
+`skeleton`: Caller-owned palette.
+
+`baseTransform`: Canvas basis; singular bases retain data but omit deformation.
+
+Throws `System.ArgumentException`: The identity is absent or the base is nonfinite.
+
+Throws `System.InvalidOperationException`: Ownership or renderer owner/submission rules reject mutation.
+
+The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.

@@ -46,7 +46,7 @@ Exact state persists through versioned 4096-joint/64-MiB blobs and registered re
 
 ELECTRON2D_TEST_SKELETON=1 runs SkeletonTests through the test host, including actual AnimationPlayer bindings, noncommuting transforms, TopLevel, physics presentation, hierarchy/override/constraint/path cases, callback failures/retry/reentry, resource ownership and fresh-process .e2dscene loading. 128 warm pose/redraw/skin/replay iterations report zero managed allocation. ELECTRON2D_TEST_SKELETON_HOST=1 with ELECTRON2D_SKELETON_RENDERER=gpu or compatibility runs Engine.Run, verifies actual deformed native pixels, borrowed RID protection and 64 prepared intervals with zero managed allocation on current Linux x64. Captures were visually inspected; native allocator behavior, large-rig throughput, foreign platforms and owner acceptance remain unverified.
 
-General MeshSurfaceData skin channels/packed regions and caller-owned server palette attachment are still separate executable producer/consumer slices. Editor gizmo authoring retains its member-specific coverage dependency; this component adds no inert placeholders. See [ADR 0092](../decisions/mesh.md#adr-0092), [scene](../domains/scene.md), [rendering](../domains/rendering.md) and [resources](../domains/resources.md).
+General MeshSurfaceData skin channels/packed regions and caller-owned server palette attachment now execute through the [mesh component](meshes.md#server-palettes-and-foureight-skin-records). Editor gizmo authoring retains its member-specific coverage dependency; this component adds no inert placeholders. See [ADR 0092](../decisions/mesh.md#adr-0092), [scene](../domains/scene.md), [rendering](../domains/rendering.md) and [resources](../domains/resources.md).
 
 ## Physics-driven bones
 

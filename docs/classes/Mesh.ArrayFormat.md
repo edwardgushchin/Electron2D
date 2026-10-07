@@ -1,6 +1,6 @@
 # Mesh.ArrayFormat
 
-Last updated: 2026-10-02
+Last updated: 2026-10-07
 
 **Namespace:** `Electron2D` · **Declaration:** `public enum Electron2D.Mesh.ArrayFormat` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
@@ -81,3 +81,33 @@ Summary: Vertex positions.
 ## Dependencies, errors and verification
 
 [ADR 0092](../decisions/mesh.md#adr-0092) owns typed arrays, pinned exercised byte packing and deferred deformation/channel consumers. [Mesh component](../components/meshes.md) records current scope and executable verification. [MeshTests](../../tests/Electron2D.Tests/MeshTests.cs) checks copied state, updates/rollback, topology, callbacks, lifetime, duplication/scene storage and warmed replay. [MeshRenderingTests](../../tests/Electron2D.Tests/MeshRenderingTests.cs) checks real rendered pixels, primitive profiles, owned server lifetime and active/idle frames on GPU and compatibility. Native allocator totals, other platforms and owner acceptance remain unverified.
+
+## Mesh skin API
+
+| Complete signature | Contract |
+| --- | --- |
+| `public const Electron2D.Mesh.ArrayFormat Bones = 1024` | Flattened unsigned 16-bit bone indices. |
+| `public const Electron2D.Mesh.ArrayFormat Use8BoneWeights = 134217728` | Skin records contain eight indices and eight weights instead of four. |
+| `public const Electron2D.Mesh.ArrayFormat Weights = 2048` | Flattened unsigned normalized 16-bit skin weights. |
+
+## Mesh skin member descriptions
+
+### Bones
+
+`public const Electron2D.Mesh.ArrayFormat Bones = 1024`
+
+Flattened unsigned 16-bit bone indices.
+
+### Use8BoneWeights
+
+`public const Electron2D.Mesh.ArrayFormat Use8BoneWeights = 134217728`
+
+Skin records contain eight indices and eight weights instead of four.
+
+### Weights
+
+`public const Electron2D.Mesh.ArrayFormat Weights = 2048`
+
+Flattened unsigned normalized 16-bit skin weights.
+
+The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.

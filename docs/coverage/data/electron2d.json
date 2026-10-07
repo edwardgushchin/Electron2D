@@ -11693,6 +11693,19 @@
     "value": "\u0022project.e2d\u0022"
   },
   {
+    "id": "constant:Electron2D.RenderingServer.ArrayWeightsSize()",
+    "kind": "constant",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ArrayWeightsSize",
+    "signature": "public const System.Int32 ArrayWeightsSize = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "4"
+  },
+  {
     "id": "constant:Electron2D.RenderingServer.CanvasLayerMax()",
     "kind": "constant",
     "declaringType": "Electron2D.RenderingServer",
@@ -30439,6 +30452,19 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Bones()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Bones",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Bones = 1024",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "1024"
+  },
+  {
     "id": "enumValue:Electron2D.Mesh.ArrayFormat.Color()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Mesh.ArrayFormat",
@@ -30504,6 +30530,19 @@
     "value": "33554432"
   },
   {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Use8BoneWeights()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Use8BoneWeights",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Use8BoneWeights = 134217728",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "134217728"
+  },
+  {
     "id": "enumValue:Electron2D.Mesh.ArrayFormat.UseDynamicUpdate()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Mesh.ArrayFormat",
@@ -30528,6 +30567,19 @@
     "parameters": [],
     "returnType": "Electron2D.Mesh.ArrayFormat",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Weights()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Weights",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Weights = 2048",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "2048"
   },
   {
     "id": "enumValue:Electron2D.Mesh.PrimitiveType.LineStrip()",
@@ -51015,6 +51067,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ArrayMesh.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ArrayMesh.OnGetSurfaceCount()",
     "kind": "method",
     "declaringType": "Electron2D.ArrayMesh",
@@ -51252,6 +51317,35 @@
     "declaringType": "Electron2D.ArrayMesh",
     "name": "SurfaceUpdateAttributeRegion",
     "signature": "public System.Void SurfaceUpdateAttributeRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.SurfaceUpdateSkinRegion(System.Int32,System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "SurfaceUpdateSkinRegion",
+    "signature": "public System.Void SurfaceUpdateSkinRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -62646,6 +62740,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.GetCanvasItem()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetCanvasItem",
+    "signature": "public Electron2D.RID GetCanvasItem()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {
@@ -113664,6 +113771,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.CanvasItemAttachSkeleton(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemAttachSkeleton",
+    "signature": "public static System.Void CanvasItemAttachSkeleton(Electron2D.RID item, Electron2D.RID skeleton)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "skeleton",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -113946,6 +114077,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatSkinStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetFormatSkinStride",
+    "signature": "public static System.Int32 MeshSurfaceGetFormatSkinStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "format",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": null
+      },
+      {
+        "name": "vertexCount",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -114076,6 +114231,40 @@
     "declaringType": "Electron2D.RenderingServer",
     "name": "MeshSurfaceUpdateAttributeRegion",
     "signature": "public static System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceUpdateSkinRegion(Electron2D.RID,System.Int32,System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceUpdateSkinRegion",
+    "signature": "public static System.Void MeshSurfaceUpdateSkinRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -114692,6 +114881,139 @@
       {
         "name": "color",
         "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.SkeletonAllocateData(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "SkeletonAllocateData",
+    "signature": "public static System.Void SkeletonAllocateData(Electron2D.RID skeleton, System.Int32 bones)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "skeleton",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bones",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.SkeletonBoneGetTransform2D(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "SkeletonBoneGetTransform2D",
+    "signature": "public static Electron2D.Transform SkeletonBoneGetTransform2D(Electron2D.RID skeleton, System.Int32 bone)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "skeleton",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bone",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.SkeletonBoneSetTransform2D(Electron2D.RID,System.Int32,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "SkeletonBoneSetTransform2D",
+    "signature": "public static System.Void SkeletonBoneSetTransform2D(Electron2D.RID skeleton, System.Int32 bone, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "skeleton",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bone",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.SkeletonCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "SkeletonCreate",
+    "signature": "public static Electron2D.RID SkeletonCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.SkeletonGetBoneCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "SkeletonGetBoneCount",
+    "signature": "public static System.Int32 SkeletonGetBoneCount(Electron2D.RID skeleton)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "skeleton",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.SkeletonSetBaseTransform2D(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "SkeletonSetBaseTransform2D",
+    "signature": "public static System.Void SkeletonSetBaseTransform2D(Electron2D.RID skeleton, Electron2D.Transform baseTransform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "skeleton",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "baseTransform",
+        "type": "Electron2D.Transform",
         "default": null
       }
     ],
@@ -169536,6 +169858,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.MeshSurfaceData.Bones()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Bones",
+    "signature": "public System.Int32[] Bones { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.MeshSurfaceData.Colors()",
     "kind": "property",
     "declaringType": "Electron2D.MeshSurfaceData",
@@ -169585,6 +169920,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Weights()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Weights",
+    "signature": "public System.Single[] Weights { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single[]",
     "value": null
   },
   {

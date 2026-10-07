@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Executable mesh skin integration
+
+CanvasItem.GetCanvasItem now supplies a stable weak scene-owned identity for actual palette attachment. It survives tree exit/reentry, closes on disposal and is protected from renderer free. Attachments are transient and do not inherit or copy.
+
 ## Physical skeletal integration
 
 [PhysicalBone and its modification consumer](../components/skeletal-animation.md#physics-driven-bones) now connect authored body/joint nodes to actual scene Bone poses. Weak path/ownership repair and parent-first startup execute; editor generation remains separate.

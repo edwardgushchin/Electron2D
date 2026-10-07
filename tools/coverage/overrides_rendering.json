@@ -3863,13 +3863,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "First backend-neutral canvas resource-identity/lifetime slice must implement typed low-level server consumers and ownership together; the retained renderer has no public canvas-item handle.",
-      "godot": [
-        "CanvasItem::method:get_canvas_item()"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "First Light resource and 2D lighting backend slice must connect LightMask to light selection and actual rendering, with stored state and pixel checks.",
       "godot": [
         "CanvasItem::property:light_mask"

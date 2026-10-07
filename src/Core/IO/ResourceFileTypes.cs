@@ -28,6 +28,8 @@ public static partial class ResourceFileTypes
         RegisterResource("SkeletonModificationStackHolder", CreateSkeletonStackHolder);
         RegisterResource("SkeletonModificationPhysicalBones", CreateSkeletonPhysicalBones);
         RegisterResourceArray<SkeletonModification>();
+        RegisterResource("ArrayMesh", CreateArrayMesh);
+        RegisterResourceArray<Material>();
         RegisterResource("Resource", CreateResource);
         RegisterResource("PackedScene", CreatePackedScene);
         RegisterResource("FontVariation", CreateFontVariation);
@@ -77,6 +79,7 @@ public static partial class ResourceFileTypes
     private static SyntaxHighlighter CreateSyntaxHighlighter() => new();
     private static CodeHighlighter CreateCodeHighlighter() => new();
     private static RichTextEffect CreateRichTextEffect() => new();
+    private static ArrayMesh CreateArrayMesh() => new();
     private static Resource CreateResource() => new();
     private static Curve CreateCurveResource() => new();
     private static Gradient CreateGradientResource() => new();

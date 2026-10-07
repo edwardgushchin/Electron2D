@@ -1,6 +1,6 @@
 # ArrayMesh
 
-Last updated: 2026-10-03
+Last updated: 2026-10-07
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.ArrayMesh` · **Source:** [ArrayMesh.cs](../../src/Scene/Resources/ArrayMesh.cs).
 
@@ -69,7 +69,7 @@ Summary: Adds one copied two-dimensional surface.
 
 primitive: Vertex topology, including points, lines and strips.
 
-arrays: Borrowed typed vertex/color/UV/index arrays copied before mutation.
+arrays: Borrowed typed vertex/color/UV/index/skin arrays copied before mutation.
 
 blendShapes: Null or empty until the typed deformation consumer is integrated.
 
@@ -267,8 +267,47 @@ System.ArgumentOutOfRangeException: The region exceeds the vertex buffer.
 
 [ADR 0092](../decisions/mesh.md#adr-0092) owns typed arrays, pinned exercised byte packing and deferred deformation/channel consumers. [Mesh component](../components/meshes.md) records current scope and executable verification. [MeshTests](../../tests/Electron2D.Tests/MeshTests.cs) checks copied state, updates/rollback, topology, callbacks, lifetime, duplication/scene storage and warmed replay. [MeshRenderingTests](../../tests/Electron2D.Tests/MeshRenderingTests.cs) checks real rendered pixels, primitive profiles, owned server lifetime and active/idle frames on GPU and compatibility. Native allocator totals, other platforms and owner acceptance remain unverified.
 
-Region updates accept byte offsets including partial records. Affected complete X/Y or color/UV records are reconstructed and finite-validated in a first pass, then committed in a second pass without heap allocation. Vertex stride is eight bytes; attribute stride is four RGBA8 bytes plus eight UV bytes when present. Names/materials/data getters validate indices and disposed resource state. Nonempty blendShapes/lods and unknown flags throw NotSupportedException before mutation. Advanced channels remain exact Blocked/Partial coverage; no stubs are shipped.
+Region updates accept byte offsets including partial records. Affected complete X/Y or color/UV records are reconstructed and finite-validated in a first pass, then committed in a second pass without heap allocation. Vertex stride is eight bytes; attribute stride is four RGBA8 bytes plus eight UV bytes when present. Names/materials/data getters validate indices and disposed resource state. Nonempty blendShapes/lods and unknown flags throw NotSupportedException before mutation; matching explicit existing channel bits are supported. Advanced channels remain exact Blocked/Partial coverage; no stubs are shipped.
 
 Inherited SurfaceGetArrayLen, SurfaceGetArrayIndexLen, SurfaceGetFormat and SurfaceGetPrimitiveType query the same concrete storage; GetFaces expands its triangle surfaces into independent local Vector2 faces. Vertex and attribute updates execute with or without UseDynamicUpdate, which is a storage-policy hint.
 
 Inherited Mesh.GetAABB returns local Rect2 visibility bounds for every stored vertex, including unreferenced vertices and point/line topologies. Prepared bounds/replay do not copy live ArrayMesh data. MeshInstance resource-change listeners use worker-safe invalidation; attached node setters retain owner/capture guards.
+
+## Mesh skin API
+
+| Complete signature | Contract |
+| --- | --- |
+| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Extends inherited typed schema with validated surface bytes and a separate material resource graph. |
+| `public System.Void SurfaceUpdateSkinRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates copied bytes in the packed skin buffer, including partial records. |
+
+## Mesh skin member descriptions
+
+### GetPropertyDescriptors
+
+`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`
+
+Extends inherited typed schema with validated surface bytes and a separate material resource graph.
+
+### SurfaceUpdateSkinRegion
+
+`public System.Void SurfaceUpdateSkinRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+
+Updates copied bytes in the packed skin buffer, including partial records.
+
+Remarks: Retained mesh draws observe edits without rerecording; configured palette bounds are validated at draw time.
+
+`surfaceIndex`: Existing surface with bone/weight channels.
+
+`offset`: Byte offset into 16-byte four-slot or 32-byte eight-slot records.
+
+`data`: Little-endian uint16 indices followed by UNORM16 weights for each vertex.
+
+Throws `System.InvalidOperationException`: No skin buffer exists.
+
+Throws `System.ArgumentOutOfRangeException`: The surface or byte region is invalid.
+
+The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.
+
+## Surface file state
+
+Exact ArrayMesh files store bounded versioned geometry/topology/flags/name/skin bytes separately from typed Material arrays, preserving aliases. Complete validation precedes replacement. New storage supports 4096 surfaces, 65536 name code units and 64 MiB; import/query/duplicate/file preparation may allocate. Palette attachments and logical identities are transient.

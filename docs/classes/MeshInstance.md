@@ -6,6 +6,10 @@ Last updated: 2026-10-04
 
 **Inherits:** [Entity](Entity.md).
 
+## Executable mesh skin integration
+
+RenderingServer.CanvasItemAttachSkeleton(GetCanvasItem(), paletteRID) now makes its retained Mesh consume actual four/eight skin data. The node owns neither mesh nor palette; attachment is transient and must be authored again after scene copying/loading.
+
 ## Description
 
 Entity scene consumer borrowing Mesh and optional Texture. Setters use scene owner/capture guards; equal assignments are silent. Mesh identity preparation occurs before subscribing Changed, with mutation revalidation afterward. Texture commits before TextureChanged, and listener failure retains the assignment. OnDraw records DrawMesh with current resources, retaining live ArrayMesh geometry; per-surface material overrides the inherited canvas material. Mesh changes request redraw, but live replay also sees committed region edits even if an earlier Changed listener fails. Disposal detaches event handlers and clears borrowed fields without disposing resources. GetConfigurationWarnings reports a missing Mesh, including inherited warnings; assigning even an empty mesh clears this warning before warning listeners run. The exact scene factory and typed stored descriptors preserve borrowed/local Resource ownership.

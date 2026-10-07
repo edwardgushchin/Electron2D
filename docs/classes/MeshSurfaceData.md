@@ -1,6 +1,6 @@
 # MeshSurfaceData
 
-Last updated: 2026-10-02
+Last updated: 2026-10-07
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.MeshSurfaceData` · **Source:** [MeshSurfaceData.cs](../../src/Scene/Resources/MeshSurfaceData.cs).
 
@@ -8,7 +8,7 @@ Typed enum or managed payload.
 
 ## Description
 
-Typed replacement for the heterogeneous mesh array-of-arrays. Named fields hold two-dimensional positions, optional matching vertex colors/primary UV and optional vertex ordering indices. Setter arrays remain caller-owned until passed to AddSurfaceFromArrays, which copies all channels. Query results own independent arrays. This payload adds no native handle, generic object dispatcher or data-only claim for unsupported channels.
+Typed replacement for the heterogeneous mesh array-of-arrays. Named fields hold two-dimensional positions, optional matching vertex colors/primary UV optional vertex ordering indices and flattened four/eight bone indices and weights. Setter arrays remain caller-owned until passed to AddSurfaceFromArrays, which copies all channels. Query results own independent arrays. This payload adds no native handle, generic object dispatcher or data-only claim for unsupported channels.
 
 ## Example
 
@@ -85,3 +85,30 @@ Value: Empty initially; vertices must be finite when consumed.
 ## Dependencies, errors and verification
 
 [ADR 0092](../decisions/mesh.md#adr-0092) owns typed arrays, pinned exercised byte packing and deferred deformation/channel consumers. [Mesh component](../components/meshes.md) records current scope and executable verification. [MeshTests](../../tests/Electron2D.Tests/MeshTests.cs) checks copied state, updates/rollback, topology, callbacks, lifetime, duplication/scene storage and warmed replay. [MeshRenderingTests](../../tests/Electron2D.Tests/MeshRenderingTests.cs) checks real rendered pixels, primitive profiles, owned server lifetime and active/idle frames on GPU and compatibility. Native allocator totals, other platforms and owner acceptance remain unverified.
+
+## Mesh skin API
+
+| Complete signature | Contract |
+| --- | --- |
+| `public System.Int32[] Bones { get; set; }` | Gets or sets optional flattened four- or eight-slot bone indices per vertex. |
+| `public System.Single[] Weights { get; set; }` | Gets or sets flattened skin weights matching Bones. |
+
+## Mesh skin member descriptions
+
+### Bones
+
+`public System.Int32[] Bones { get; set; }`
+
+Gets or sets optional flattened four- or eight-slot bone indices per vertex.
+
+Value: Empty without skin; every stored index is zero through 65535 and must resolve when drawn with a palette.
+
+### Weights
+
+`public System.Single[] Weights { get; set; }`
+
+Gets or sets flattened skin weights matching Bones.
+
+Value: Finite values; imports clamp and truncate to unsigned normalized 16-bit weights without normalizing the sum.
+
+The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.

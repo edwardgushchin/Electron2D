@@ -6,6 +6,10 @@ Last updated: 2026-10-04
 
 **Inherits:** [Entity](Entity.md).
 
+## Executable mesh skin integration
+
+A transient attached palette now deforms its underlying mesh through CanvasMesh before each instance transform. Conservative replay avoids rest-bound culling of deformed geometry; resource-local GetAABB still reports authored geometry.
+
 ## Description
 
 Entity scene consumer borrowing MultiMesh and optional Texture. Setters enforce attached owner/capture guards, prepare logical identity before subscription and revalidate mutation. Equal replacements are silent. Texture changes commit before TextureChanged; callback failure retains assignment. Resource changes use worker-safe canvas invalidation, and retained replay reads current instance/mesh data even when Changed listener failure prevents later listeners.

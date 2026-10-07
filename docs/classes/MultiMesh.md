@@ -6,6 +6,10 @@ Last updated: 2026-10-04
 
 **Inherits:** [Resource](Resource.md).
 
+## Executable mesh skin integration
+
+An attached canvas palette can now deform its borrowed mesh during actual MultiMesh replay. Per-instance transforms/colors/custom data remain applied afterward; GetAABB/presentation bounds retain authored geometry.
+
 ## Description
 
 Fixed two-dimensional instance resource borrowing a Mesh and owning copied packed current/previous records. Configure UseColors/UseCustomData at zero count, then allocate and author every transform; initial records are zero, including colors. VisibleInstanceCount selects a prefix without reallocating. Queries return current logical data. Empty legacy assignments are no-ops; finite full-sized edits preflight before commit. Changes commit before Changed listeners and listener failure retains data. Resource methods serialize individual operations; callers synchronize compound configuration/authoring sequences.

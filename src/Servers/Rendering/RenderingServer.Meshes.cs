@@ -17,10 +17,23 @@ public sealed partial class RenderingServer
     internal void MeshSurfaceUpdateAttributeRegionCore(RID mesh, int surface, int offset, ReadOnlySpan<byte> data) { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).SurfaceUpdateAttributeRegion(surface, offset, data); }
     internal int MeshSurfaceGetFormatVertexStrideCore(Mesh.ArrayFormat format, int vertexCount) { EnsureOwner(); ValidateMeshFormat(format, vertexCount); return (format & Mesh.ArrayFormat.Vertex) != 0 ? 8 : 0; }
     internal int MeshSurfaceGetFormatAttributeStrideCore(Mesh.ArrayFormat format, int vertexCount) { EnsureOwner(); ValidateMeshFormat(format, vertexCount); return ((format & Mesh.ArrayFormat.Color) != 0 ? 4 : 0) + ((format & Mesh.ArrayFormat.TexUV) != 0 ? 8 : 0); }
+    internal void MeshSurfaceUpdateSkinRegionCore(RID mesh, int surface, int offset, ReadOnlySpan<byte> data) { EnsureTextureChange(); RenderingMeshRegistry.Owned(mesh, this).SurfaceUpdateSkinRegion(surface, offset, data); }
+    internal int MeshSurfaceGetFormatSkinStrideCore(Mesh.ArrayFormat format, int vertexCount) { EnsureOwner(); ValidateMeshFormat(format, vertexCount); var slots = (format & Mesh.ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4; return ((format & Mesh.ArrayFormat.Bones) != 0 ? slots * 2 : 0) + ((format & Mesh.ArrayFormat.Weights) != 0 ? slots * 2 : 0); }
+    /// <summary>Updates copied bytes in a caller-owned mesh's packed skin channel.</summary>
+    /// <param name="mesh">Caller-owned mesh identity.</param>
+    /// <param name="surface">Existing skinned surface.</param>
+    /// <param name="offset">Byte offset into the skin buffer.</param>
+    /// <param name="data">Little-endian uint16 indices followed by UNORM16 weights per vertex.</param>
+    public static void MeshSurfaceUpdateSkinRegion(RID mesh, int surface, int offset, ReadOnlySpan<byte> data) => RequireService().MeshSurfaceUpdateSkinRegionCore(mesh, surface, offset, data);
+    /// <summary>Returns the packed skin stride for a supported two-dimensional surface format.</summary>
+    /// <param name="format">Typed channel flags.</param>
+    /// <param name="vertexCount">Nonnegative count; does not affect the fixed skin stride.</param>
+    /// <returns>Zero without skin; two bytes per present index/weight slot, with four or eight slots.</returns>
+    public static int MeshSurfaceGetFormatSkinStride(Mesh.ArrayFormat format, int vertexCount) => RequireService().MeshSurfaceGetFormatSkinStrideCore(format, vertexCount);
     private static void ValidateMeshFormat(Mesh.ArrayFormat format, int vertexCount)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(vertexCount);
-        const Mesh.ArrayFormat supported = Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate;
+        const Mesh.ArrayFormat supported = Mesh.ArrayFormat.Vertex | Mesh.ArrayFormat.Color | Mesh.ArrayFormat.TexUV | Mesh.ArrayFormat.Index | Mesh.ArrayFormat.Use2DVertices | Mesh.ArrayFormat.UseDynamicUpdate | Mesh.ArrayFormat.Bones | Mesh.ArrayFormat.Weights | Mesh.ArrayFormat.Use8BoneWeights;
         if ((format & ~supported) != 0 || (format & Mesh.ArrayFormat.Vertex) != 0 && (format & Mesh.ArrayFormat.Use2DVertices) == 0)
             throw new NotSupportedException("The mesh format requires unsupported attribute storage or non-2D vertices.");
     }

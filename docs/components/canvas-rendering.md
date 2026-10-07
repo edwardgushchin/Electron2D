@@ -5,6 +5,10 @@ Last updated: 2026-10-07
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
+## Executable mesh skin integration
+
+CanvasItemAttachSkeleton now connects a borrowed owned/scene palette to retained Mesh/MultiMesh commands via a stable scene CanvasItem RID. Matrix-conjugated four/eight skinning feeds the existing triangles/material/texture/order path; no separate hardware shader capability is claimed.
+
 ## Physical skeletal integration
 
 PhysicalBone simulation now produces Bone transforms through SkeletonModificationPhysicalBones; retained Polygon influences consume them through the existing palette and triangle submission.

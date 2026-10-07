@@ -1223,19 +1223,6 @@
     },
     {
       "godot": [
-        "RenderingServer::method:canvas_item_attach_skeleton(RID:,RID:)",
-        "RenderingServer::method:skeleton_allocate_data(RID:,int:,bool:)",
-        "RenderingServer::method:skeleton_bone_get_transform_2d(RID:,int:)",
-        "RenderingServer::method:skeleton_bone_set_transform_2d(RID:,int:,Transform2D:)",
-        "RenderingServer::method:skeleton_create()",
-        "RenderingServer::method:skeleton_get_bone_count(RID:)",
-        "RenderingServer::method:skeleton_set_base_transform_2d(RID:,Transform2D:)"
-      ],
-      "state": "Blocked",
-      "reason": "Requires caller-owned typed 2D palette allocation/get/set/base transform, borrowed/owned RID lifetime and arbitrary retained canvas attachment with an actual weighted draw consumer. The executable scene-owned Skeleton.GetSkeleton RID and Polygon palette do not supply mutable server storage; trigger its first full server palette/attachment slice under ADRs 0028/0092."
-    },
-    {
-      "godot": [
         "class:SkeletonModification2DCCDIK",
         "SkeletonModification2DCCDIK::method:get_ccdik_joint_bone2d_node(int:)",
         "SkeletonModification2DCCDIK::method:get_ccdik_joint_bone_index(int:)",

@@ -6,6 +6,10 @@ Last updated: 2026-10-07
 
 **Inherits:** None (static registry or enum).
 
+## Executable mesh skin integration
+
+ArrayMesh exact file factory and Material resource-array registration now support bounded geometry/skin bytes with separate material graphs and fresh-process executable mesh consumers.
+
 ## Physical skeletal integration
 
 Registered PhysicalBone and SkeletonModificationPhysicalBones factories support exact fresh-process scenes with copied consumer path arrays and authored physics/joint properties.

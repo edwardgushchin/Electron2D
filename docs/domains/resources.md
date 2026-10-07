@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Executable mesh skin integration
+
+ArrayMesh persists copied typed geometry/name/skin arrays and a separate Material graph through exact built-in file registration. Fresh scenes restore aliases and actual four/eight skin consumers; renderer identities and palette attachments are transient.
+
 ## Physical skeletal integration
 
 PhysicalBone and SkeletonModificationPhysicalBones have exact node/resource factories and copied bounded consumer paths. Fresh scenes restore independent modification graphs and run actual physics-driven poses; pending named commands and live bindings are transient.

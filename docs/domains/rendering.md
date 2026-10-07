@@ -4,9 +4,13 @@ Last updated: 2026-10-07
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
+## Executable mesh skin integration
+
+Owned/scene palettes now attach to stable scene canvas identities and deform four/eight-slot Mesh/MultiMesh skin records into real triangles on both backends. Rest-bound culling cannot discard skinned instances moved into view; prepared storage remains backend-neutral.
+
 ## Physical skeletal integration
 
-[Physics-driven bones](../components/skeletal-animation.md#physics-driven-bones) feed solved rigid-body poses into the existing retained weighted Polygon palette. The renderer continues using ordinary triangles; server-owned palette and generic Mesh skin storage/consumers remain separate.
+[Physics-driven bones](../components/skeletal-animation.md#physics-driven-bones) feed solved rigid-body poses into the existing retained weighted Polygon palette. The renderer continues using ordinary triangles; server-owned palettes and generic Mesh skin storage/consumers now execute.
 
 ## Jiggle controller integration
 

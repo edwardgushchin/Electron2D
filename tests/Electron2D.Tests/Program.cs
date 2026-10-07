@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN_CHILD") is { } meshSkinChild) { MeshSkinTests.RunChild(meshSkinChild); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN_HOST") == "1") { MeshSkinTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_SKIN") == "1") { MeshSkinTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_CHILD") is { } physicalChild) { PhysicalBoneTests.RunChild(physicalChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_HOST") == "1") { PhysicalBoneTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE") == "1") { PhysicalBoneTests.Run(); return; }
@@ -634,6 +637,7 @@ AudioEQTests.Run(); AudioDelayTests.Run(); AudioReverbTests.Run(); AudioChorusTe
 AudioSpatialTests.Run();
 AudioFilterTests.Run();
 MeshTests.Run();
+MeshSkinTests.Run();
 MultiMeshTests.Run();
 CPUParticlesTests.Run();
 SkeletonTests.Run();

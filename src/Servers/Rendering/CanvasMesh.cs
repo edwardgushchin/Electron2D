@@ -10,30 +10,41 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
     internal void Clear() { mesh = null!; _revision = -1; _customCount = 0; Array.Clear(_custom); }
 
     internal void Append(List<CanvasVertex> vertices, List<CanvasBatch> batches, Texture? texture, Transform transform, Color color,
-        MaterialState? inheritedMaterial, BlendMode inheritedBlend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, MultiMesh? instances = null, float fraction = 1)
+        MaterialState? inheritedMaterial, BlendMode inheritedBlend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, MultiMesh? instances = null, float fraction = 1, CanvasItem? skinOwner = null)
     {
         ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
         transform *= local; color *= modulate;
-        var arrays = mesh as ArrayMesh ?? (mesh as ImmediateMesh)?.Surfaces;
-        if (arrays is not null)
+        RenderingSkeletonRegistry.Palette? lease = null;
+        try
         {
-            lock (arrays.Gate)
+            ReadOnlySpan<Transform> palette = default; var toPalette = Transform.Identity; var fromPalette = Transform.Identity;
+            if (skinOwner is not null && skinOwner.AttachedSkeleton.IsValid() && RenderingSkeletonRegistry.Prepare(skinOwner.AttachedSkeleton, skinOwner, out var prepared, out var basis, out lease))
             {
-                for (var i = 0; i < arrays.SurfaceCount; i++)
-                {
-                    var surface = arrays.Get(i); var first = vertices.Count;
-                    AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction);
-                    AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip);
-                }
+                var itemGlobal = skinOwner.GetInterpolatedGlobalVisualTransform((float)Engine.PhysicsInterpolationFraction);
+                if (basis.Determinant() != 0 && itemGlobal.Determinant() != 0) { palette = prepared; toPalette = basis.AffineInverse() * itemGlobal; fromPalette = itemGlobal.AffineInverse() * basis; }
             }
-            return;
+            var arrays = mesh as ArrayMesh ?? (mesh as ImmediateMesh)?.Surfaces;
+            if (arrays is not null)
+            {
+                lock (arrays.Gate)
+                {
+                    for (var i = 0; i < arrays.SurfaceCount; i++)
+                    {
+                        var surface = arrays.Get(i); var first = vertices.Count;
+                        AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
+                        AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip);
+                    }
+                }
+                return;
+            }
+            PrepareCustom();
+            for (var i = 0; i < _customCount; i++)
+            {
+                var first = vertices.Count; var surface = _custom[i]; AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
+                AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip);
+            }
         }
-        PrepareCustom();
-        for (var i = 0; i < _customCount; i++)
-        {
-            var first = vertices.Count; var surface = _custom[i]; AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction);
-            AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip);
-        }
+        finally { if (lease is not null) lease.ReplayReaders--; }
     }
     private bool _preparing;
     private void PrepareCustom()
@@ -48,7 +59,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                 var count = mesh.GetSurfaceCount(); if (_custom.Length < count) Array.Resize(ref _custom, count);
                 for (var i = 0; i < count; i++)
                 {
-                    var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive);
+                    var data = mesh.SurfaceGetArrays(i); var primitive = mesh.SurfaceGetPrimitiveType(i); data.Validate(primitive); data.QuantizeSkin();
                     _custom[i] = (data, primitive, mesh.SurfaceGetMaterial(i));
                 }
                 ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
@@ -83,30 +94,31 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             batches[^1] = last with { Count = last.Count + count };
         else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip));
     }
-    private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction)
+    private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)
     {
-        if (instances is null) { AppendSurface(output, data, primitive, transform, modulation, snap); return; }
+        if (!palette.IsEmpty && data.Bones.Length != 0) foreach (var bone in data.Bones) if ((uint)bone >= (uint)palette.Length) throw new InvalidOperationException("A mesh skin index does not resolve in its palette.");
+        if (instances is null) { AppendSurface(output, data, primitive, transform, modulation, snap, default, palette, toPalette, fromPalette); return; }
         for (var index = 0; index < instances.DrawCount; index++)
         {
             instances.Presentation(index, fraction, out var pose, out var color, out var custom);
-            AppendSurface(output, data, primitive, transform * pose, modulation * color, snap, custom);
+            AppendSurface(output, data, primitive, transform * pose, modulation * color, snap, custom, palette, toPalette, fromPalette);
         }
     }
-    private static void AppendSurface(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, Color custom = default)
+    private static void AppendSurface(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)
     {
         var count = data.Indices.Length == 0 ? data.Vertices.Length : data.Indices.Length;
         if (primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip)
         {
             if (primitive == Mesh.PrimitiveType.Triangles)
-                for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, snap, custom));
+                for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, snap, custom, palette, toPalette, fromPalette));
             else
-                for (var i = 0; i + 2 < count; i++) { output.Add(Vertex(data, i + (i % 2), transform, modulation, snap, custom)); output.Add(Vertex(data, i + 1 - (i % 2), transform, modulation, snap, custom)); output.Add(Vertex(data, i + 2, transform, modulation, snap, custom)); }
+                for (var i = 0; i + 2 < count; i++) { output.Add(Vertex(data, i + (i % 2), transform, modulation, snap, custom, palette, toPalette, fromPalette)); output.Add(Vertex(data, i + 1 - (i % 2), transform, modulation, snap, custom, palette, toPalette, fromPalette)); output.Add(Vertex(data, i + 2, transform, modulation, snap, custom, palette, toPalette, fromPalette)); }
             return;
         }
         var step = primitive == Mesh.PrimitiveType.Lines ? 2 : 1;
         for (var i = 0; i < count - (primitive == Mesh.PrimitiveType.Points ? 0 : 1); i += step)
         {
-            var a = Vertex(data, i, transform, modulation, snap, custom); var b = primitive == Mesh.PrimitiveType.Points ? a : Vertex(data, i + 1, transform, modulation, snap, custom);
+            var a = Vertex(data, i, transform, modulation, snap, custom, palette, toPalette, fromPalette); var b = primitive == Mesh.PrimitiveType.Points ? a : Vertex(data, i + 1, transform, modulation, snap, custom, palette, toPalette, fromPalette);
             var dx = (double)b.Position.X - a.Position.X; var dy = (double)b.Position.Y - a.Position.Y;
             if (primitive != Mesh.PrimitiveType.Points && dx == 0 && dy == 0) continue;
             var length = double.Hypot(dx, dy);
@@ -116,9 +128,16 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             output.Add(q0); output.Add(q1); output.Add(q2); output.Add(q0); output.Add(q2); output.Add(q3);
         }
     }
-    private static CanvasVertex Vertex(MeshSurfaceData data, int order, Transform transform, Color modulation, bool snap, Color custom = default)
+    private static Vector2 Deform(MeshSurfaceData data, int index, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)
     {
-        var index = data.Indices.Length == 0 ? order : data.Indices[order]; var position = transform * data.Vertices[index]; var color = (data.Colors.Length == 0 ? Colors.White : data.Colors[index]) * modulation;
+        var point = data.Vertices[index]; if (palette.IsEmpty || data.Bones.Length == 0) return point;
+        var source = toPalette * point; double x = 0, y = 0, total = 0; var slots = data.SkinSlots;
+        for (var slot = 0; slot < slots; slot++) { var entry = index * slots + slot; var weight = data.Weights[entry]; if (weight == 0) continue; var transformed = palette[data.Bones[entry]] * source; x += transformed.X * (double)weight; y += transformed.Y * (double)weight; total += weight; }
+        var result = fromPalette.BasisXform(new((float)x, (float)y)) + fromPalette.Origin * (float)total; if (!result.IsFinite()) throw new InvalidOperationException("Mesh skin deformation overflowed finite coordinates."); return result;
+    }
+    private static CanvasVertex Vertex(MeshSurfaceData data, int order, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)
+    {
+        var index = data.Indices.Length == 0 ? order : data.Indices[order]; var position = transform * Deform(data, index, palette, toPalette, fromPalette); var color = (data.Colors.Length == 0 ? Colors.White : data.Colors[index]) * modulation;
         if (!position.IsFinite() || !color.IsFinite()) throw new InvalidOperationException("Mesh canvas values overflowed finite coordinates.");
         return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom);
     }

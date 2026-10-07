@@ -1286,3 +1286,25 @@ System.ObjectDisposedException: This node is disposed.
 ## CPU particle commands
 
 CPUParticles records ordinary quads with internal custom phase/lifetime channels. AppendCanvas reads current CanvasItemMaterial sheet settings on replay, keeping paused material changes visible. An internal world-coordinate drawing flag separates these quads from the emitter's logical transform; the renderer preserves its viewport/CanvasLayer basis, ordinary child inheritance and clipping. Complete interpolation tick hooks let this consumer track global emitter poses even when its own interpolation mode is Off. Existing public drawing signatures and transform queries retain their contracts; native and prepared evidence is in [CPU particles](../components/cpu-particles.md).
+
+## Mesh skin API
+
+| Complete signature | Contract |
+| --- | --- |
+| `public Electron2D.RID GetCanvasItem()` | Returns this scene-owned stable weak canvas identity, independent of native startup. |
+
+## Mesh skin member descriptions
+
+### GetCanvasItem
+
+`public Electron2D.RID GetCanvasItem()`
+
+Returns this scene-owned stable weak canvas identity, independent of native startup.
+
+Returns: A borrowed RID valid until node disposal; renderer FreeRID cannot release scene ownership.
+
+Throws `System.InvalidOperationException`: An attached node is read off-owner.
+
+Throws `System.ObjectDisposedException`: The node is disposed.
+
+The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.

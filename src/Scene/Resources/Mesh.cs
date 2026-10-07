@@ -33,6 +33,12 @@ public abstract class Mesh : Resource
         TexUV = 16,
         /// <summary>Vertex ordering indices.</summary>
         Index = 4096,
+        /// <summary>Flattened unsigned 16-bit bone indices.</summary>
+        Bones = 1024,
+        /// <summary>Flattened unsigned normalized 16-bit skin weights.</summary>
+        Weights = 2048,
+        /// <summary>Skin records contain eight indices and eight weights instead of four.</summary>
+        Use8BoneWeights = 134217728,
         /// <summary>Vertex positions use two floating components.</summary>
         Use2DVertices = 33554432,
         /// <summary>Surface buffers accept explicit region updates.</summary>

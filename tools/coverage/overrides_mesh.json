@@ -609,6 +609,131 @@
       "godot": "CanvasItem::method:draw_multimesh(MultiMesh:,Texture2D:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawMultiMesh(Electron2D.RID,Electron2D.RID)",
       "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_update_skin_region(int:,int:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.ArrayMesh.SurfaceUpdateSkinRegion(System.Int32,System.Int32,System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "CanvasItem::method:get_canvas_item()",
+      "electron2d": "method:Electron2D.CanvasItem.GetCanvasItem()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_attach_skeleton(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAttachSkeleton(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:skeleton_create()",
+      "electron2d": "method:Electron2D.RenderingServer.SkeletonCreate()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:skeleton_allocate_data(RID:,int:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.SkeletonAllocateData(Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:skeleton_get_bone_count(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.SkeletonGetBoneCount(Electron2D.RID)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:skeleton_bone_get_transform_2d(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.SkeletonBoneGetTransform2D(Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:skeleton_bone_set_transform_2d(RID:,int:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.SkeletonBoneSetTransform2D(Electron2D.RID,System.Int32,Electron2D.Transform)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:skeleton_set_base_transform_2d(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.SkeletonSetBaseTransform2D(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_format_skin_stride(int:RenderingServer.ArrayFormat,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatSkinStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_update_skin_region(RID:,int:,int:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceUpdateSkinRegion(Electron2D.RID,System.Int32,System.Int32,System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::constant:ARRAY_WEIGHTS_SIZE",
+      "electron2d": "constant:Electron2D.RenderingServer.ArrayWeightsSize()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum:ArrayFormat",
+      "electron2d": "T:Electron2D.Mesh.ArrayFormat",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_VERTEX",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Vertex()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_COLOR",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Color()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.TexUV()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_INDEX",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Index()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USE_2D_VERTICES",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Use2DVertices()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USE_DYNAMIC_UPDATE",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.UseDynamicUpdate()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_BONES",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Bones()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_BONES",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Bones()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_WEIGHTS",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Weights()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_WEIGHTS",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Weights()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USE_8_BONE_WEIGHTS",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Use8BoneWeights()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_8_BONE_WEIGHTS",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Use8BoneWeights()",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
     }
   ],
   "extras": [
@@ -819,6 +944,18 @@
     {
       "electron2d": "method:Electron2D.MultiMeshInstance.OnNotification(System.Int32)",
       "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Bones()",
+      "reason": "ADRs 0001/0013/0092: named typed bone/weight channels replace heterogeneous array selectors; inherited schema persists validated geometry and separate material graph. The payload feeds actual palette deformation, not data-only storage."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Weights()",
+      "reason": "ADRs 0001/0013/0092: named typed bone/weight channels replace heterogeneous array selectors; inherited schema persists validated geometry and separate material graph. The payload feeds actual palette deformation, not data-only storage."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0092: named typed bone/weight channels replace heterogeneous array selectors; inherited schema persists validated geometry and separate material graph. The payload feeds actual palette deformation, not data-only storage."
     }
   ],
   "statusGroups": [
@@ -916,16 +1053,6 @@
         "RenderingServer::method:mesh_surface_update_attribute_region(RID:,int:,int:,PackedByteArray:)",
         "RenderingServer::method:mesh_surface_update_vertex_region(RID:,int:,int:,PackedByteArray:)",
         "class:MeshInstance2D"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: typed MeshSurfaceData bone indices/weights and packed skin regions, including four/eight influence schema, copied byte updates and actual Mesh-bound palette drawing. Skeleton/Bone and Polygon four-influence skinning already execute; they do not expose Mesh skin channels (ADR 0092).",
-      "godot": [
-        "ArrayMesh::method:surface_update_skin_region(int:,int:,PackedByteArray:)",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_8_BONE_WEIGHTS",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_BONES",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_WEIGHTS"
       ]
     },
     {
@@ -1172,6 +1299,94 @@
         "RenderingServer::method:multimesh_get_buffer_rd_rid(RID:)",
         "RenderingServer::method:multimesh_get_command_buffer_rd_rid(RID:)"
       ]
+    },
+    {
+      "godot": [
+        "ArrayMesh::method:surface_update_skin_region(int:,int:,PackedByteArray:)",
+        "CanvasItem::method:get_canvas_item()",
+        "RenderingServer::method:canvas_item_attach_skeleton(RID:,RID:)",
+        "RenderingServer::method:skeleton_create()",
+        "RenderingServer::method:skeleton_allocate_data(RID:,int:,bool:)",
+        "RenderingServer::method:skeleton_get_bone_count(RID:)",
+        "RenderingServer::method:skeleton_bone_get_transform_2d(RID:,int:)",
+        "RenderingServer::method:skeleton_bone_set_transform_2d(RID:,int:,Transform2D:)",
+        "RenderingServer::method:skeleton_set_base_transform_2d(RID:,Transform2D:)",
+        "RenderingServer::method:mesh_surface_get_format_skin_stride(int:RenderingServer.ArrayFormat,int:)",
+        "RenderingServer::method:mesh_surface_update_skin_region(RID:,int:,int:,PackedByteArray:)",
+        "RenderingServer::constant:ARRAY_WEIGHTS_SIZE",
+        "RenderingServer::enum:ArrayFormat",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_VERTEX",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_COLOR",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_INDEX",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USE_2D_VERTICES",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USE_DYNAMIC_UPDATE",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_BONES",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_BONES",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_WEIGHTS",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_WEIGHTS",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USE_8_BONE_WEIGHTS",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_8_BONE_WEIGHTS"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0_SHIFT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1_SHIFT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2_SHIFT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV2"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: concrete typed normal/tangent/secondary-UV/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092)."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_BLEND_SHAPE_MASK"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: typed 2D morph target storage, relative/normalized weight semantics and visible deformation producer/consumer integration (ADR 0092)."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: actual procedural shader-generated mesh vertices and non-position channel storage with visible draw verification; current canvas geometry requires explicit positions (ADR 0092)."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum:ArrayType",
+        "RenderingServer::enum_value:ArrayType.ARRAY_BONES",
+        "RenderingServer::enum_value:ArrayType.ARRAY_COLOR",
+        "RenderingServer::enum_value:ArrayType.ARRAY_CUSTOM0",
+        "RenderingServer::enum_value:ArrayType.ARRAY_CUSTOM1",
+        "RenderingServer::enum_value:ArrayType.ARRAY_CUSTOM2",
+        "RenderingServer::enum_value:ArrayType.ARRAY_CUSTOM3",
+        "RenderingServer::enum_value:ArrayType.ARRAY_INDEX",
+        "RenderingServer::enum_value:ArrayType.ARRAY_MAX",
+        "RenderingServer::enum_value:ArrayType.ARRAY_NORMAL",
+        "RenderingServer::enum_value:ArrayType.ARRAY_TANGENT",
+        "RenderingServer::enum_value:ArrayType.ARRAY_TEX_UV",
+        "RenderingServer::enum_value:ArrayType.ARRAY_TEX_UV2",
+        "RenderingServer::enum_value:ArrayType.ARRAY_VERTEX",
+        "RenderingServer::enum_value:ArrayType.ARRAY_WEIGHTS"
+      ],
+      "state": "Excluded",
+      "reason": "ADRs 0001/0092: renderer arrays use named typed MeshSurfaceData fields; exclude only numeric heterogeneous-array selectors, consistently with Mesh.ArrayType. Actual absent channels retain their format/storage/consumer dependencies."
     }
   ]
 }

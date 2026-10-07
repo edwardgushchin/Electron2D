@@ -518,3 +518,7 @@ The [CPU particle slice](../components/cpu-particles.md) closes 114 own emitter/
 ## Physical skeletal integration
 
 The [physical bone slice](../components/skeletal-animation.md#physics-driven-bones) implements all 15 own reference declarations across PhysicalBone2D and SkeletonModification2DPhysicalBones. Inherited body rows retain their existing independent states. Actual body/joint poses, follower filters, copied named commands and fresh scene consumers execute; editor generation, server palettes and generic Mesh skin channels retain exact prerequisites.
+
+## Owned palettes and mesh skin integration
+
+The [mesh palette slice](../components/meshes.md#server-palettes-and-foureight-skin-records) adds stable scene canvas identity, all seven palette/attachment operations and actual typed four/eight skin storage/stride/partial-region/rendering. The complete shared ArrayFormat family follows the Mesh semantics under ADR 0051; unavailable attributes/morph/compression retain exact triggers and renderer heterogeneous selectors follow the existing typed-data exclusion. Fresh scenes retain geometry/material aliases; hardware buffers, generic owned canvas authoring, native allocator/platform/owner acceptance remain separate.

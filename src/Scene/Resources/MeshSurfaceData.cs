@@ -20,19 +20,30 @@ public sealed class MeshSurfaceData
     /// <value>Empty initially; each index must address Vertices when consumed.</value>
     public int[] Indices { get; set; } = [];
 
+    /// <summary>Gets or sets optional flattened four- or eight-slot bone indices per vertex.</summary>
+    /// <value>Empty without skin; every stored index is zero through 65535 and must resolve when drawn with a palette.</value>
+    public int[] Bones { get; set; } = [];
+    /// <summary>Gets or sets flattened skin weights matching Bones.</summary>
+    /// <value>Finite values; imports clamp and truncate to unsigned normalized 16-bit weights without normalizing the sum.</value>
+    public float[] Weights { get; set; } = [];
+    internal int SkinSlots => Bones.Length == 0 ? 0 : Bones.Length / Vertices.Length;
+    internal void QuantizeSkin() { for (var i = 0; i < Weights.Length; i++) Weights[i] = (ushort)Math.Clamp(Weights[i] * 65535f, 0, 65535) / 65535f; }
     internal MeshSurfaceData Copy()
     {
         ArgumentNullException.ThrowIfNull(Vertices); ArgumentNullException.ThrowIfNull(Colors);
-        ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(Indices);
-        return new() { Vertices = (Vector2[])Vertices.Clone(), Colors = (Color[])Colors.Clone(), UVs = (Vector2[])UVs.Clone(), Indices = (int[])Indices.Clone() };
+        ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(Indices); ArgumentNullException.ThrowIfNull(Bones); ArgumentNullException.ThrowIfNull(Weights);
+        return new() { Vertices = (Vector2[])Vertices.Clone(), Colors = (Color[])Colors.Clone(), UVs = (Vector2[])UVs.Clone(), Indices = (int[])Indices.Clone(), Bones = (int[])Bones.Clone(), Weights = (float[])Weights.Clone() };
     }
     internal void Validate(Mesh.PrimitiveType primitive)
     {
         ArgumentNullException.ThrowIfNull(Vertices); ArgumentNullException.ThrowIfNull(Colors);
-        ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(Indices);
+        ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(Indices); ArgumentNullException.ThrowIfNull(Bones); ArgumentNullException.ThrowIfNull(Weights);
         if (primitive is < Mesh.PrimitiveType.Points or > Mesh.PrimitiveType.TriangleStrip) throw new ArgumentOutOfRangeException(nameof(primitive));
         if (Vertices.Length == 0) throw new ArgumentException("A surface requires vertex positions.");
         if (Colors.Length != 0 && Colors.Length != Vertices.Length || UVs.Length != 0 && UVs.Length != Vertices.Length) throw new ArgumentException("Attribute counts must match the vertex count.");
+        if (Bones.Length != Weights.Length || Bones.Length != 0 && (Bones.LongLength != Vertices.LongLength * 4 && Bones.LongLength != Vertices.LongLength * 8)) throw new ArgumentException("Skin channels require matching four or eight slots per vertex.");
+        foreach (var bone in Bones) if ((uint)bone > 65535) throw new ArgumentOutOfRangeException(nameof(Bones));
+        foreach (var weight in Weights) if (!float.IsFinite(weight)) throw new ArgumentException("Skin weights must be finite.");
         foreach (var vertex in Vertices) if (!vertex.IsFinite()) throw new ArgumentException("Mesh positions must be finite.");
         foreach (var color in Colors) if (!color.IsFinite()) throw new ArgumentException("Mesh colors must be finite.");
         foreach (var uv in UVs) if (!uv.IsFinite()) throw new ArgumentException("Mesh coordinates must be finite.");

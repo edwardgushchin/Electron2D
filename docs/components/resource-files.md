@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Executable mesh skin integration
+
+Exact ArrayMesh registration uses bounded versioned geometry/skin bytes and typed Material arrays. Fresh .e2dscene processes preserve surface names, flags, skin weights and material aliases and execute the palette consumer. Malformed geometry fails before replacement.
+
 ## Physical skeletal integration
 
 Exact PhysicalBone and SkeletonModificationPhysicalBones factories retain inherited node/body/joint properties and copied string[] path slots. Fresh-process scenes run actual joint-driven bone pose transfer. Pending command names and weak scene bindings are transient.
