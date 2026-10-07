@@ -25,4 +25,6 @@ Local boundary and compiler adaptations:
 
 12. Polygon separation reads both polygon records by reference. The four-vertex support search evaluates independent coordinates in Vector128 lanes while retaining scalar reduction order and a scalar fallback. Separate multiply/add, edge tie selection, NaN and signed-zero behavior are checked against scalar arithmetic; maximum Smash state bytes match before/after the change.
 
+13. An optional internal world callback replaces body integration stages during GPU-world development. The CPU path retains its existing stages. The developing GPU host uses one world worker and owns its compute resources; no backend callback is public. Typed arena abort clears temporary step storage after a failed GPU interval, allowing world disposal without replay.
+
 The library remains an internal backend. Electron2D public signatures use only Electron2D-owned types. Review every upstream update against this pinned version, license, internalization and integration tests before replacing these files.

@@ -54,6 +54,12 @@ public sealed partial class RenderingServer : ElectronObject
 
     internal static RenderingServer? Service => Volatile.Read(ref _instance);
 
+    internal RenderHandle? RetainComputeDevice()
+    {
+        EnsureOwner();
+        return (_backend as GPUCanvasBackend)?.RetainComputeDevice();
+    }
+
     internal bool RenderLoopEnabledCore
     {
         get { EnsureOwner(); return _renderLoopEnabled; }

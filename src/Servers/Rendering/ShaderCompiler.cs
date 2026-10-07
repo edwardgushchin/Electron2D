@@ -22,6 +22,29 @@ internal static unsafe class ShaderCompiler
 
     internal static SDL.GPUShaderFormat GetFormats() => Run(ShaderCross.GetSPIRVShaderFormats);
 
+    internal static nint CreateComputePipeline(nint device, byte[] code) => Run(() =>
+    {
+        fixed (byte* pointer = code)
+        fixed (byte* entrypoint = "main\0"u8)
+        {
+            var reflection = ShaderCross.ReflectComputeSPIRV((nint)pointer, (nuint)code.Length, 0);
+            if (reflection == 0) throw new ArgumentException("Compute reflection failed: " + SDL.GetError(), nameof(code));
+            try
+            {
+                var metadata = Marshal.PtrToStructure<ShaderCross.ComputePipelineMetadata>(reflection);
+                var info = new ShaderCross.SPIRVInfo
+                {
+                    ByteCode = (nint)pointer,
+                    ByteCodeSize = (nuint)code.Length,
+                    Entrypoint = (nint)entrypoint,
+                    ShaderStage = ShaderCross.ShaderStage.Compute
+                };
+                return ShaderCross.CompileComputePipelineFromSPIRV(device, in info, in metadata, 0);
+            }
+            finally { SDL.Free(reflection); }
+        }
+    });
+
     internal static nint CreateShader(nint device, byte[] code, bool fragment) => Run(() =>
     {
         fixed (byte* pointer = code)

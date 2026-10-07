@@ -1,0 +1,173 @@
+using Box2D.NET;
+using Electron2D;
+
+internal static class GPUPhysicsTests
+{
+    internal static void Run()
+    {
+        using var gpu = new GPUPhysicsWorld();
+        foreach (var count in new[] { 1, 63, 64, 65, 4097, 65536 }) VerifyIntegration(gpu, count);
+        VerifyWorld();
+        VerifyDeviceLifetime("gpu");
+        VerifyDeviceLifetime("compatibility");
+        Console.WriteLine($"GPU integration passed on {gpu.Driver}: forces, damping, locks, speed limits, rotations and dispatch boundaries.");
+    }
+
+    private static B2StepContext Context(int count)
+    {
+        var world = new B2World { gravity = new(1.25f, 9.8f) };
+        world.solverSets.data = [new(), new(), new()];
+        world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.count = count;
+        return new B2StepContext
+        {
+            world = world,
+            h = 1f / 240,
+            inv_dt = 60,
+            maxLinearVelocity = 400,
+            states = new B2BodyState[count],
+            sims = new B2BodySim[count]
+        };
+    }
+
+    private static void VerifyIntegration(GPUPhysicsWorld gpu, int count)
+    {
+        var expected = Context(count); var actual = Context(count); var random = new Random(711 + count);
+        float Number(float scale) => (float)(random.NextDouble() * 2 - 1) * scale;
+        for (var i = 0; i < count; i++)
+        {
+            expected.states[i] = new B2BodyState
+            {
+                linearVelocity = new(Number(650), Number(650)),
+                angularVelocity = Number(180),
+                flags = (uint)(i % 8),
+                deltaPosition = new(Number(100), Number(100)),
+                deltaRotation = B2MathFunction.b2MakeRot(Number(3))
+            };
+            expected.sims[i] = new B2BodySim
+            {
+                force = new(Number(30), Number(30)),
+                torque = Number(20),
+                invMass = i % 7 == 0 ? 0 : .4f,
+                invInertia = .2f,
+                gravityScale = Number(2),
+                linearDamping = .1f + i % 5,
+                angularDamping = .2f + i % 3,
+                flags = i % 9 == 0 ? (uint)B2BodyFlags.b2_allowFastRotation : 0
+            };
+            actual.states[i] = B2BodyState.Create(expected.states[i]);
+            actual.sims[i] = new B2BodySim(); actual.sims[i].CopyFrom(expected.sims[i]);
+        }
+        B2Solvers.b2IntegrateVelocitiesTask(0, count, expected);
+        gpu.Integrate(B2SolverStageType.b2_stageIntegrateVelocities, actual);
+        Compare(expected, actual);
+        B2Solvers.b2IntegratePositionsTask(0, count, expected);
+        gpu.Integrate(B2SolverStageType.b2_stageIntegratePositions, actual);
+        Compare(expected, actual);
+        var before = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 8; i++) gpu.Integrate(B2SolverStageType.b2_stageIntegratePositions, actual);
+        var bytes = GC.GetTotalAllocatedBytes(true) - before;
+        if (bytes != 0) throw new InvalidOperationException($"Prepared GPU integration allocated {bytes} managed bytes.");
+    }
+
+    private static void Compare(B2StepContext expected, B2StepContext actual)
+    {
+        for (var i = 0; i < expected.states.Length; i++)
+        {
+            var e = expected.states[i]; var a = actual.states[i];
+            Near(e.linearVelocity.X, a.linearVelocity.X); Near(e.linearVelocity.Y, a.linearVelocity.Y); Near(e.angularVelocity, a.angularVelocity);
+            Near(e.deltaPosition.X, a.deltaPosition.X); Near(e.deltaPosition.Y, a.deltaPosition.Y);
+            Near(e.deltaRotation.c, a.deltaRotation.c); Near(e.deltaRotation.s, a.deltaRotation.s);
+            if (expected.sims[i].flags != actual.sims[i].flags) throw new InvalidOperationException("GPU speed-cap flags differ.");
+        }
+    }
+
+    private static void Near(float expected, float actual)
+    {
+        if (!float.IsFinite(actual) || MathF.Abs(expected - actual) > 2e-5f * MathF.Max(1, MathF.Abs(expected)))
+            throw new InvalidOperationException($"GPU integration differs: CPU {expected}, GPU {actual}.");
+    }
+
+    private static void VerifyWorld()
+    {
+        var cpuSpace = PhysicsServer.SpaceCreate(); var gpuSpace = PhysicsServer.SpaceCreate();
+        var circle = PhysicsServer.CircleShapeCreate(); var rectangle = PhysicsServer.RectangleShapeCreate();
+        var cpuBody = PhysicsServer.BodyCreate(); var gpuBody = PhysicsServer.BodyCreate();
+        var cpuFloor = PhysicsServer.BodyCreate(); var gpuFloor = PhysicsServer.BodyCreate();
+        try
+        {
+            using var circleData = new CircleShape { Radius = 12 }; using var rectangleData = new RectangleShape { Size = new(600, 32) };
+            PhysicsServer.ShapeSetData(circle, circleData); PhysicsServer.ShapeSetData(rectangle, rectangleData);
+            foreach (var (space, body, floor) in new[] { (cpuSpace, cpuBody, cpuFloor), (gpuSpace, gpuBody, gpuFloor) })
+            {
+                PhysicsServer.BodySetMode(floor, PhysicsServer.BodyMode.Static);
+                PhysicsServer.BodyAddShape(floor, rectangle); PhysicsServer.BodySetTransform(floor, new(0, Vector2.One, 0, new(0, 160)));
+                PhysicsServer.BodyAddShape(body, circle); PhysicsServer.BodySetMaxContactsReported(body, 4);
+                PhysicsServer.BodySetSpace(floor, space); PhysicsServer.BodySetSpace(body, space);
+                PhysicsServer.SpaceSetActive(space, true);
+            }
+            var world = PhysicsServer.Service.GetSceneSpace(gpuSpace); var gpu = world.EnableGPUIntegration();
+            var callbacks = 0; PhysicsServer.BodySetForceIntegrationCallback(gpuBody, _ => callbacks++);
+            for (var tick = 0; tick < 120; tick++)
+            {
+                PhysicsServer.SpaceStep(cpuSpace, 1d / 60); PhysicsServer.SpaceStep(gpuSpace, 1d / 60);
+                var expected = PhysicsServer.BodyGetTransform(cpuBody).Origin; var actual = PhysicsServer.BodyGetTransform(gpuBody).Origin;
+                if (expected.DistanceTo(actual) > .03f) throw new InvalidOperationException("GPU/CPU falling-contact trajectories differ.");
+            }
+            using var view = PhysicsServer.BodyGetDirectState(gpuBody)!;
+            if (gpu.DispatchCount == 0 || callbacks == 0 || view.GetContactCount() == 0)
+                throw new InvalidOperationException("The ordinary physics world must execute GPU kernels, callbacks and contact capture.");
+            using var query = new PhysicsPointQueryParameters { Position = view.Transform.Origin };
+            if (!PhysicsServer.SpaceGetDirectState(gpuSpace).IntersectPoint(query).Any(hit => hit.ColliderRID == gpuBody))
+                throw new InvalidOperationException("GPU-published body poses must reach direct queries.");
+            Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).integrateBodyStage = (_, _) => throw new IOException("injected GPU failure");
+            PhysicsServer.BodySetLinearVelocity(gpuBody, new(10, 0));
+            try { PhysicsServer.SpaceStep(gpuSpace, 1d / 60); throw new Exception("GPU failure was not reported."); }
+            catch (AggregateException ex) when (ex.InnerExceptions.Any(e => e is IOException)) { }
+            try { PhysicsServer.SpaceStep(gpuSpace, 1d / 60); throw new Exception("A failed GPU interval was replayed."); }
+            catch (InvalidOperationException ex) when (ex.InnerException is IOException) { }
+            // Disposal must release live backend bodies and scratch storage after the failed interval.
+        }
+        finally
+        {
+            PhysicsServer.FreeRID(gpuSpace); PhysicsServer.FreeRID(cpuSpace);
+            foreach (var rid in new[] { gpuBody, cpuBody, gpuFloor, cpuFloor, circle, rectangle }) PhysicsServer.FreeRID(rid);
+        }
+        Console.WriteLine("GPU world step, CPU comparison, contacts, post-solver callbacks, queries and failed-interval teardown passed.");
+    }
+
+    private static void VerifyDeviceLifetime(string rendering)
+    {
+        var previous = ProjectSettings.GetWithOverride(ProjectSettings.RenderingMethod);
+        ProjectSettings.Set(ProjectSettings.RenderingMethod, rendering);
+        GPUPhysicsWorld? gpu = null;
+        var context = Context(1); context.states[0] = new() { deltaRotation = new(1, 0), linearVelocity = new(1, 0) };
+        context.sims[0] = new();
+        using var window = new Window { Size = new(512, 384) };
+        var frames = 0;
+        Action rendered = () => { if (++frames == 3) window.Tree!.Quit(); };
+        window.Ready += _ =>
+        {
+            gpu = new GPUPhysicsWorld();
+            gpu.Integrate(B2SolverStageType.b2_stageIntegratePositions, context);
+            RenderingServer.FramePostDraw += rendered;
+        };
+        var activate = SDL3.SDL.GetHint(SDL3.SDL.Hints.WindowActivateWhenShown);
+        SDL3.SDL.SetHint(SDL3.SDL.Hints.WindowActivateWhenShown, "0");
+        try
+        {
+            if (Engine.Run(window) != 0 || frames != 3 || gpu is null) throw new InvalidOperationException("The native device lifetime host did not finish.");
+            // The renderer has closed its handle. The compute host must still own a usable device reference.
+            gpu.Integrate(B2SolverStageType.b2_stageIntegratePositions, context);
+            if (gpu.DispatchCount != 2 || context.states[0].deltaPosition.X <= 0)
+                throw new InvalidOperationException("Compute resources must survive renderer teardown.");
+        }
+        finally
+        {
+            if (RenderingServer.IsAvailable) RenderingServer.FramePostDraw -= rendered;
+            gpu?.Dispose(); ProjectSettings.Set(ProjectSettings.RenderingMethod, previous);
+            if (activate is null) SDL3.SDL.ResetHint(SDL3.SDL.Hints.WindowActivateWhenShown);
+            else SDL3.SDL.SetHint(SDL3.SDL.Hints.WindowActivateWhenShown, activate);
+        }
+        Console.WriteLine($"GPU compute lifetime independent of {rendering} renderer passed.");
+    }
+}

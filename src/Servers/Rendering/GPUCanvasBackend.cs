@@ -29,6 +29,8 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
     internal override string Driver { get; }
     private nint Device => _device.DangerousGetHandle();
 
+    internal RenderHandle RetainComputeDevice() => new(Device, static _ => { }, _device);
+
     internal GPUCanvasBackend(SafeHandle window)
     {
         _window = window.DangerousGetHandle();

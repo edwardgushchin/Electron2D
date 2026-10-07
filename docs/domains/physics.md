@@ -50,6 +50,12 @@ The current geometry profile accepts translated/rotated bodies and areas with un
 
 ## Verification and limits
 
+GPU physics is being developed under [ADR 0054](../decisions/physics.md#adr-0054)
+alongside the retained CPU compatibility backend. The internal compute host
+currently executes velocity/pose integration only; the public world still
+selects CPU. [The implementation status](../components/gpu-physics.md) separates
+these executing stages from the required full GPU world and startup fallback.
+
 [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape RID/resource selection, live edits, swept overlap, safe/unsafe motion, manifold contact pairs, rest velocity, compound and hollow geometry, filters, off-owner rejection and warmed unchanged casts/rest queries without managed allocation. Native allocation, other platforms and owner visual acceptance remain unverified.
 
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks server and scene body travel, typed local/collider shape identities, instance exclusions, reciprocal masks, one-way recovery and deep-overlap stopping, plus warmed unchanged motion tests without managed allocation. Native allocation, other platforms and owner visual acceptance remain unverified.

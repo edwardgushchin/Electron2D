@@ -65,5 +65,13 @@ namespace Box2D.NET
             allocation = 0;
             maxAllocation = 0;
         }
+
+        public void Abort()
+        {
+            for (int i = 0; i < entries.count; i++)
+                if (entries.data[i].usedMalloc) b2Free(entries.data[i].data.Array, entries.data[i].size);
+            b2Array_Clear(ref entries);
+            index = allocation = 0;
+        }
     }
 }

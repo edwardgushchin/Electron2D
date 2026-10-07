@@ -15,12 +15,19 @@ One owner-thread Box2D world shared by scene bodies/Areas/joints and caller-owne
 | `PhysicsSpace()` | Native world, retained task scheduler and sampled default fields; initially inactive. |
 | `RID`, `WorldID`, body/Area/server-collider/joint lists | Stable server identity and current native generation/membership. |
 | `bool IsActive { get; private set; }`, `SetActive(bool active)` | Local interval policy, owner/solver guard; SceneTree sets true on registration. |
-| `EnsureQueryAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
+| `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
 | `Step(double delta)` | Gate on local/global activity/nonzero delta; prepare fields/body states/joints, solve native intervals, capture state and dispatch callbacks/events. |
+| `EnableGPUIntegration()` | Internal development entry for GPU velocity/pose stages; retains one compute host and uses one solver worker. Other world stages remain CPU. |
 | `LastStep`, cached body-state callback list | Last actual interval and generation-aware delivery; skipped intervals retain data. |
 | `Add` / `Remove` scene/server objects | Native membership, dependent joint/monitor lifetime and identity. |
 | `GetJointWorldBody()` | Hidden shape-free world anchor for single-body server pin. |
 | `Dispose()` | Destroy joints before bodies/world, join retained workers, detach caller configuration and invalidate views. |
+
+An internally enabled GPU-stage failure releases solver scratch/lock ownership,
+marks the space failed and rejects later stepping/queries rather than replaying
+a partially committed interval on CPU. Disposal remains available. This failure
+path belongs to the incomplete [GPU world](../components/gpu-physics.md), not a
+new public backend or fallback selector.
 
 ## Invariants and verification
 

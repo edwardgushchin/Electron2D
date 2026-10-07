@@ -24,6 +24,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PHYSICS") == "1") { GPUPhysicsTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES_HOST") == "1") { RenderingPrimitiveTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES") == "1") { RenderingPrimitiveTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNED_CANVAS_HOST") == "1") { RenderingCanvasTests.RunHost(); return; }

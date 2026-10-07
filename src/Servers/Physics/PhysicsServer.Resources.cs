@@ -250,7 +250,7 @@ public sealed partial class PhysicsServer
         }
         if (space is not null)
         {
-            space.EnsureQueryAccess();
+            space.EnsureReleaseAccess();
             space.Dispose();
             lock (_registryGate)
             {

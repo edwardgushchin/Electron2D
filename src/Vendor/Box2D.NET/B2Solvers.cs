@@ -1044,6 +1044,13 @@ public enum b2SolverBlockType
 
         internal static void b2ExecuteMainStage(B2SolverStage stage, B2StepContext context, uint syncBits)
         {
+            if (context.world.integrateBodyStage != null &&
+                (stage.type == B2SolverStageType.b2_stageIntegrateVelocities || stage.type == B2SolverStageType.b2_stageIntegratePositions))
+            {
+                B2_ASSERT(context.workerCount == 1);
+                context.world.integrateBodyStage(stage.type, context);
+                return;
+            }
             int blockCount = stage.blockCount;
             if (blockCount == 0)
             {
