@@ -12,6 +12,8 @@ Built-in exact factories/descriptors include Skeleton, Bone, SkeletonModificatio
 
 ## Description
 
+Exact built-in factories now include SkeletonModificationTwoBoneIK, SkeletonModificationCCDIK and SkeletonModificationFABRIK. Existing modification arrays preserve them polymorphically; versioned bounded joint blobs store paths/indices, constraints, magnets and final-orientation settings with no weak caches/scratch. SkeletonIKTests loads and executes all registered types in a fresh process.
+
 Registers stable compiled factories and typed portable value codecs for resource/scene files.
 
 Registration is allocating setup. IDs are ordinal and immutable; file data never loads assemblies, invokes reflected members or constructs arbitrary CLR types. Register the same schemas before saving and in every loading process. Factories are direct static delegates and must return fresh exact-type instances.

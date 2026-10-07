@@ -8070,6 +8070,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SkeletonModificationCCDIK",
+    "kind": "type",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SkeletonModificationCCDIK",
+    "signature": "public sealed class Electron2D.SkeletonModificationCCDIK",
+    "visibility": "public",
+    "baseType": "Electron2D.SkeletonModification",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SkeletonModificationFABRIK",
+    "kind": "type",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "SkeletonModificationFABRIK",
+    "signature": "public sealed class Electron2D.SkeletonModificationFABRIK",
+    "visibility": "public",
+    "baseType": "Electron2D.SkeletonModification",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SkeletonModificationLookAt",
     "kind": "type",
     "declaringType": "Electron2D.SkeletonModificationLookAt",
@@ -8092,6 +8122,21 @@
     "signature": "public sealed class Electron2D.SkeletonModificationStack",
     "visibility": "public",
     "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SkeletonModificationTwoBoneIK",
+    "kind": "type",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "SkeletonModificationTwoBoneIK",
+    "signature": "public sealed class Electron2D.SkeletonModificationTwoBoneIK",
+    "visibility": "public",
+    "baseType": "Electron2D.SkeletonModification",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -16506,6 +16551,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.SkeletonModificationCCDIK..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": ".ctor",
+    "signature": "public SkeletonModificationCCDIK()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SkeletonModificationFABRIK..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": ".ctor",
+    "signature": "public SkeletonModificationFABRIK()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.SkeletonModificationLookAt..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.SkeletonModificationLookAt",
@@ -16524,6 +16595,19 @@
     "declaringType": "Electron2D.SkeletonModificationStack",
     "name": ".ctor",
     "signature": "public SkeletonModificationStack()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SkeletonModificationTwoBoneIK..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": ".ctor",
+    "signature": "public SkeletonModificationTwoBoneIK()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -122484,6 +122568,690 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointBoneIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointBoneIndex",
+    "signature": "public System.Int32 GetCCDIKJointBoneIndex(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointBoneNode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointBoneNode",
+    "signature": "public System.String GetCCDIKJointBoneNode(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointConstraintAngleInvert(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointConstraintAngleInvert",
+    "signature": "public System.Boolean GetCCDIKJointConstraintAngleInvert(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointConstraintAngleMax(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointConstraintAngleMax",
+    "signature": "public System.Single GetCCDIKJointConstraintAngleMax(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointConstraintAngleMin(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointConstraintAngleMin",
+    "signature": "public System.Single GetCCDIKJointConstraintAngleMin(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointConstraintInLocalSpace(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointConstraintInLocalSpace",
+    "signature": "public System.Boolean GetCCDIKJointConstraintInLocalSpace(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointEnableConstraint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointEnableConstraint",
+    "signature": "public System.Boolean GetCCDIKJointEnableConstraint(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointRotateFromJoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointRotateFromJoint",
+    "signature": "public System.Boolean GetCCDIKJointRotateFromJoint(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.OnExecute(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "OnExecute",
+    "signature": "protected override System.Void OnExecute(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointBoneIndex(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointBoneIndex",
+    "signature": "public System.Void SetCCDIKJointBoneIndex(System.Int32 jointIndex, System.Int32 boneIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "boneIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointBoneNode(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointBoneNode",
+    "signature": "public System.Void SetCCDIKJointBoneNode(System.Int32 jointIndex, System.String boneNode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "boneNode",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointConstraintAngleInvert(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointConstraintAngleInvert",
+    "signature": "public System.Void SetCCDIKJointConstraintAngleInvert(System.Int32 jointIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointConstraintAngleMax(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointConstraintAngleMax",
+    "signature": "public System.Void SetCCDIKJointConstraintAngleMax(System.Int32 jointIndex, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointConstraintAngleMin(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointConstraintAngleMin",
+    "signature": "public System.Void SetCCDIKJointConstraintAngleMin(System.Int32 jointIndex, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointConstraintInLocalSpace(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointConstraintInLocalSpace",
+    "signature": "public System.Void SetCCDIKJointConstraintInLocalSpace(System.Int32 jointIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointEnableConstraint(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointEnableConstraint",
+    "signature": "public System.Void SetCCDIKJointEnableConstraint(System.Int32 jointIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointRotateFromJoint(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointRotateFromJoint",
+    "signature": "public System.Void SetCCDIKJointRotateFromJoint(System.Int32 jointIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.GetFABRIKJointBoneIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "GetFABRIKJointBoneIndex",
+    "signature": "public System.Int32 GetFABRIKJointBoneIndex(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.GetFABRIKJointBoneNode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "GetFABRIKJointBoneNode",
+    "signature": "public System.String GetFABRIKJointBoneNode(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.GetFABRIKJointMagnetPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "GetFABRIKJointMagnetPosition",
+    "signature": "public Electron2D.Vector2 GetFABRIKJointMagnetPosition(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.GetFABRIKJointUseTargetRotation(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "GetFABRIKJointUseTargetRotation",
+    "signature": "public System.Boolean GetFABRIKJointUseTargetRotation(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.OnExecute(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "OnExecute",
+    "signature": "protected override System.Void OnExecute(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.SetFABRIKJointBoneIndex(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "SetFABRIKJointBoneIndex",
+    "signature": "public System.Void SetFABRIKJointBoneIndex(System.Int32 jointIndex, System.Int32 boneIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "boneIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.SetFABRIKJointBoneNode(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "SetFABRIKJointBoneNode",
+    "signature": "public System.Void SetFABRIKJointBoneNode(System.Int32 jointIndex, System.String boneNode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "boneNode",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.SetFABRIKJointMagnetPosition(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "SetFABRIKJointMagnetPosition",
+    "signature": "public System.Void SetFABRIKJointMagnetPosition(System.Int32 jointIndex, Electron2D.Vector2 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationFABRIK.SetFABRIKJointUseTargetRotation(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "SetFABRIKJointUseTargetRotation",
+    "signature": "public System.Void SetFABRIKJointUseTargetRotation(System.Int32 jointIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SkeletonModificationLookAt.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.SkeletonModificationLookAt",
@@ -123003,6 +123771,218 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.GetJointOneBoneIndex()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "GetJointOneBoneIndex",
+    "signature": "public System.Int32 GetJointOneBoneIndex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.GetJointOneBoneNode()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "GetJointOneBoneNode",
+    "signature": "public System.String GetJointOneBoneNode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.GetJointTwoBoneIndex()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "GetJointTwoBoneIndex",
+    "signature": "public System.Int32 GetJointTwoBoneIndex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.GetJointTwoBoneNode()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "GetJointTwoBoneNode",
+    "signature": "public System.String GetJointTwoBoneNode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.OnExecute(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "OnExecute",
+    "signature": "protected override System.Void OnExecute(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.SetJointOneBoneIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "SetJointOneBoneIndex",
+    "signature": "public System.Void SetJointOneBoneIndex(System.Int32 boneIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "boneIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.SetJointOneBoneNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "SetJointOneBoneNode",
+    "signature": "public System.Void SetJointOneBoneNode(System.String boneNode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "boneNode",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.SetJointTwoBoneIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "SetJointTwoBoneIndex",
+    "signature": "public System.Void SetJointTwoBoneIndex(System.Int32 boneIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "boneIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.SetJointTwoBoneNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "SetJointTwoBoneNode",
+    "signature": "public System.Void SetJointTwoBoneNode(System.String boneNode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "boneNode",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -174121,6 +175101,71 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SkeletonModificationCCDIK.CCDIKDataChainLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "CCDIKDataChainLength",
+    "signature": "public System.Int32 CCDIKDataChainLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationCCDIK.TargetNodePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "TargetNodePath",
+    "signature": "public System.String TargetNodePath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationCCDIK.TipNodePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "TipNodePath",
+    "signature": "public System.String TipNodePath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationFABRIK.FABRIKDataChainLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "FABRIKDataChainLength",
+    "signature": "public System.Int32 FABRIKDataChainLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationFABRIK.TargetNodePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationFABRIK",
+    "name": "TargetNodePath",
+    "signature": "public System.String TargetNodePath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.SkeletonModificationLookAt.BoneIndex()",
     "kind": "property",
     "declaringType": "Electron2D.SkeletonModificationLookAt",
@@ -174209,6 +175254,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationTwoBoneIK.FlipBendDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "FlipBendDirection",
+    "signature": "public System.Boolean FlipBendDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationTwoBoneIK.TargetMaximumDistance()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "TargetMaximumDistance",
+    "signature": "public System.Single TargetMaximumDistance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationTwoBoneIK.TargetMinimumDistance()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "TargetMinimumDistance",
+    "signature": "public System.Single TargetMinimumDistance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationTwoBoneIK.TargetNodePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "TargetNodePath",
+    "signature": "public System.String TargetNodePath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

@@ -329,6 +329,216 @@
       "godot": "Polygon2D::property:skeleton",
       "electron2d": "property:Electron2D.Polygon.Skeleton()",
       "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "class:SkeletonModification2DCCDIK",
+      "electron2d": "T:Electron2D.SkeletonModificationCCDIK",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:get_ccdik_joint_bone2d_node(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointBoneNode(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:get_ccdik_joint_bone_index(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointBoneIndex(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:get_ccdik_joint_constraint_angle_invert(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointConstraintAngleInvert(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:get_ccdik_joint_constraint_angle_max(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointConstraintAngleMax(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:get_ccdik_joint_constraint_angle_min(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointConstraintAngleMin(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:get_ccdik_joint_enable_constraint(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointEnableConstraint(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:get_ccdik_joint_rotate_from_joint(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointRotateFromJoint(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:set_ccdik_joint_bone2d_node(int:,NodePath:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointBoneNode(System.Int32,System.String)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:set_ccdik_joint_bone_index(int:,int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointBoneIndex(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:set_ccdik_joint_constraint_angle_invert(int:,bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointConstraintAngleInvert(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:set_ccdik_joint_constraint_angle_max(int:,float:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointConstraintAngleMax(System.Int32,System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:set_ccdik_joint_constraint_angle_min(int:,float:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointConstraintAngleMin(System.Int32,System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:set_ccdik_joint_enable_constraint(int:,bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointEnableConstraint(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::method:set_ccdik_joint_rotate_from_joint(int:,bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointRotateFromJoint(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::property:ccdik_data_chain_length",
+      "electron2d": "property:Electron2D.SkeletonModificationCCDIK.CCDIKDataChainLength()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::property:target_nodepath",
+      "electron2d": "property:Electron2D.SkeletonModificationCCDIK.TargetNodePath()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DCCDIK::property:tip_nodepath",
+      "electron2d": "property:Electron2D.SkeletonModificationCCDIK.TipNodePath()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "class:SkeletonModification2DFABRIK",
+      "electron2d": "T:Electron2D.SkeletonModificationFABRIK",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::method:get_fabrik_joint_bone2d_node(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.GetFABRIKJointBoneNode(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::method:get_fabrik_joint_bone_index(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.GetFABRIKJointBoneIndex(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::method:get_fabrik_joint_magnet_position(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.GetFABRIKJointMagnetPosition(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::method:get_fabrik_joint_use_target_rotation(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.GetFABRIKJointUseTargetRotation(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::method:set_fabrik_joint_bone2d_node(int:,NodePath:)",
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.SetFABRIKJointBoneNode(System.Int32,System.String)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::method:set_fabrik_joint_bone_index(int:,int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.SetFABRIKJointBoneIndex(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::method:set_fabrik_joint_magnet_position(int:,Vector2:)",
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.SetFABRIKJointMagnetPosition(System.Int32,Electron2D.Vector2)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::method:set_fabrik_joint_use_target_rotation(int:,bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.SetFABRIKJointUseTargetRotation(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::property:fabrik_data_chain_length",
+      "electron2d": "property:Electron2D.SkeletonModificationFABRIK.FABRIKDataChainLength()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DFABRIK::property:target_nodepath",
+      "electron2d": "property:Electron2D.SkeletonModificationFABRIK.TargetNodePath()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "class:SkeletonModification2DTwoBoneIK",
+      "electron2d": "T:Electron2D.SkeletonModificationTwoBoneIK",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::method:get_joint_one_bone2d_node()",
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.GetJointOneBoneNode()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::method:get_joint_one_bone_idx()",
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.GetJointOneBoneIndex()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::method:get_joint_two_bone2d_node()",
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.GetJointTwoBoneNode()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::method:get_joint_two_bone_idx()",
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.GetJointTwoBoneIndex()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::method:set_joint_one_bone2d_node(NodePath:)",
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.SetJointOneBoneNode(System.String)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::method:set_joint_one_bone_idx(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.SetJointOneBoneIndex(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::method:set_joint_two_bone2d_node(NodePath:)",
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.SetJointTwoBoneNode(System.String)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::method:set_joint_two_bone_idx(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.SetJointTwoBoneIndex(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::property:flip_bend_direction",
+      "electron2d": "property:Electron2D.SkeletonModificationTwoBoneIK.FlipBendDirection()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::property:target_maximum_distance",
+      "electron2d": "property:Electron2D.SkeletonModificationTwoBoneIK.TargetMaximumDistance()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::property:target_minimum_distance",
+      "electron2d": "property:Electron2D.SkeletonModificationTwoBoneIK.TargetMinimumDistance()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "SkeletonModification2DTwoBoneIK::property:target_nodepath",
+      "electron2d": "property:Electron2D.SkeletonModificationTwoBoneIK.TargetNodePath()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
     }
   ],
   "extras": [
@@ -476,6 +686,91 @@
       "electron2d": "property:Electron2D.SkeletonModificationLookAt.ConstraintInLocalSpace()",
       "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
       "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModificationCCDIK..ctor()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModificationFABRIK..ctor()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModificationTwoBoneIK..ctor()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.CreateDuplicateInstance()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointConstraintInLocalSpace(System.Int32)",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.GetPropertyDescriptors()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.OnExecute(System.Double)",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointConstraintInLocalSpace(System.Int32,System.Boolean)",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.CreateDuplicateInstance()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.GetPropertyDescriptors()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationFABRIK.OnExecute(System.Double)",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.CreateDuplicateInstance()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.GetPropertyDescriptors()",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.OnExecute(System.Double)",
+      "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
     }
   ],
   "statusGroups": [
@@ -578,6 +873,54 @@
       ],
       "state": "Blocked",
       "reason": "Requires caller-owned typed 2D palette allocation/get/set/base transform, borrowed/owned RID lifetime and arbitrary retained canvas attachment with an actual weighted draw consumer. The executable scene-owned Skeleton.GetSkeleton RID and Polygon palette do not supply mutable server storage; trigger its first full server palette/attachment slice under ADRs 0028/0092."
+    },
+    {
+      "godot": [
+        "class:SkeletonModification2DCCDIK",
+        "SkeletonModification2DCCDIK::method:get_ccdik_joint_bone2d_node(int:)",
+        "SkeletonModification2DCCDIK::method:get_ccdik_joint_bone_index(int:)",
+        "SkeletonModification2DCCDIK::method:get_ccdik_joint_constraint_angle_invert(int:)",
+        "SkeletonModification2DCCDIK::method:get_ccdik_joint_constraint_angle_max(int:)",
+        "SkeletonModification2DCCDIK::method:get_ccdik_joint_constraint_angle_min(int:)",
+        "SkeletonModification2DCCDIK::method:get_ccdik_joint_enable_constraint(int:)",
+        "SkeletonModification2DCCDIK::method:get_ccdik_joint_rotate_from_joint(int:)",
+        "SkeletonModification2DCCDIK::method:set_ccdik_joint_bone2d_node(int:,NodePath:)",
+        "SkeletonModification2DCCDIK::method:set_ccdik_joint_bone_index(int:,int:)",
+        "SkeletonModification2DCCDIK::method:set_ccdik_joint_constraint_angle_invert(int:,bool:)",
+        "SkeletonModification2DCCDIK::method:set_ccdik_joint_constraint_angle_max(int:,float:)",
+        "SkeletonModification2DCCDIK::method:set_ccdik_joint_constraint_angle_min(int:,float:)",
+        "SkeletonModification2DCCDIK::method:set_ccdik_joint_enable_constraint(int:,bool:)",
+        "SkeletonModification2DCCDIK::method:set_ccdik_joint_rotate_from_joint(int:,bool:)",
+        "SkeletonModification2DCCDIK::property:ccdik_data_chain_length",
+        "SkeletonModification2DCCDIK::property:target_nodepath",
+        "SkeletonModification2DCCDIK::property:tip_nodepath",
+        "class:SkeletonModification2DFABRIK",
+        "SkeletonModification2DFABRIK::method:get_fabrik_joint_bone2d_node(int:)",
+        "SkeletonModification2DFABRIK::method:get_fabrik_joint_bone_index(int:)",
+        "SkeletonModification2DFABRIK::method:get_fabrik_joint_magnet_position(int:)",
+        "SkeletonModification2DFABRIK::method:get_fabrik_joint_use_target_rotation(int:)",
+        "SkeletonModification2DFABRIK::method:set_fabrik_joint_bone2d_node(int:,NodePath:)",
+        "SkeletonModification2DFABRIK::method:set_fabrik_joint_bone_index(int:,int:)",
+        "SkeletonModification2DFABRIK::method:set_fabrik_joint_magnet_position(int:,Vector2:)",
+        "SkeletonModification2DFABRIK::method:set_fabrik_joint_use_target_rotation(int:,bool:)",
+        "SkeletonModification2DFABRIK::property:fabrik_data_chain_length",
+        "SkeletonModification2DFABRIK::property:target_nodepath",
+        "class:SkeletonModification2DTwoBoneIK",
+        "SkeletonModification2DTwoBoneIK::method:get_joint_one_bone2d_node()",
+        "SkeletonModification2DTwoBoneIK::method:get_joint_one_bone_idx()",
+        "SkeletonModification2DTwoBoneIK::method:get_joint_two_bone2d_node()",
+        "SkeletonModification2DTwoBoneIK::method:get_joint_two_bone_idx()",
+        "SkeletonModification2DTwoBoneIK::method:set_joint_one_bone2d_node(NodePath:)",
+        "SkeletonModification2DTwoBoneIK::method:set_joint_one_bone_idx(int:)",
+        "SkeletonModification2DTwoBoneIK::method:set_joint_two_bone2d_node(NodePath:)",
+        "SkeletonModification2DTwoBoneIK::method:set_joint_two_bone_idx(int:)",
+        "SkeletonModification2DTwoBoneIK::property:flip_bend_direction",
+        "SkeletonModification2DTwoBoneIK::property:target_maximum_distance",
+        "SkeletonModification2DTwoBoneIK::property:target_minimum_distance",
+        "SkeletonModification2DTwoBoneIK::property:target_nodepath"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
     }
   ]
 }

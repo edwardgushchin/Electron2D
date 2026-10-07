@@ -12,6 +12,9 @@ public class Skeleton : Entity
     private Transform[] _overrides = [];
     private float[] _strength = [];
     private bool[] _persistent = [];
+    private Transform[] _savedOverrides = [];
+    private float[] _savedStrength = [];
+    private bool[] _savedPersistent = [];
     private bool _dirty = true, _settingUp, _executing;
     private ulong _generation;
     private RID _rid;
@@ -38,6 +41,7 @@ public class Skeleton : Entity
             foreach (var old in _bones) old.SkeletonIndex = -1;
             _bones.Clear(); _bones.AddRange(_build); _inverse = inverse; _valid = valid; _pose = pose; _skinPalette = new Transform[count]; _overrides = overrides; _strength = new float[count]; _persistent = new bool[count];
             for (var i = 0; i < count; i++) _bones[i].SkeletonIndex = i;
+            _savedOverrides = new Transform[count]; _savedStrength = new float[count]; _savedPersistent = new bool[count];
             _dirty = false; _generation++;
         }
         finally { _settingUp = false; }
@@ -77,11 +81,12 @@ public class Skeleton : Entity
     }
     /// <summary>Executes the matching stack phase and applies idle local overrides.</summary><param name="delta">Finite nonnegative seconds.</param><param name="executionMode">Existing idle or physics phase domain.</param>
     /// <remarks>Physics prepares overrides; idle applies them. Authored bone poses are retained independently of modification writes.
-    /// Reentry and structural mutation during execution reject; callback failure restores authored poses and execution guards.</remarks>
+    /// Reentry and structural mutation during execution reject; callback failure restores authored poses, prior override requests and execution guards.</remarks>
     public void ExecuteModifications(double delta, ProcessPhase executionMode)
     {
         EnsureMutable(); EnsureSetup(); ValidateExecution(delta, executionMode); if (_executing) throw new InvalidOperationException("Skeleton execution cannot reenter.");
         _executing = true;
+        _overrides.CopyTo(_savedOverrides, 0); _strength.CopyTo(_savedStrength, 0); _persistent.CopyTo(_savedPersistent, 0);
         try
         {
             for (var i = 0; i < _bones.Count; i++) _bones[i].ApplyModifiedPose(_bones[i].AuthoredPose);
@@ -98,6 +103,7 @@ public class Skeleton : Entity
         }
         catch (Exception executionError)
         {
+            _savedOverrides.CopyTo(_overrides, 0); _savedStrength.CopyTo(_strength, 0); _savedPersistent.CopyTo(_persistent, 0);
             List<Exception>? cleanup = null;
             foreach (var bone in _bones) if (!bone.IsDisposed) try { bone.ApplyModifiedPose(bone.AuthoredPose); } catch (Exception error) { (cleanup ??= []).Add(error); }
             if (cleanup is not null) { cleanup.Insert(0, executionError); throw new AggregateException("Modification execution and pose restoration failed.", cleanup); }

@@ -2,9 +2,13 @@
 
 Last updated: 2026-10-07
 
+## Executable IK integration
+
+[TwoBoneIK/CCDIK/FABRIK](../components/skeletal-animation.md#executable-ik-solvers) add target-driven limb and chain solving to the existing scene/animation consumer. Typed resource joint state, weak binding revisions, restored failed-pass requests and real weighted Polygon output execute; jiggle, physical bones and editor gizmos retain their own prerequisites.
+
 ## Skeletal scene execution
 
-[Skeletal animation](../components/skeletal-animation.md) adds Skeleton/Bone, authored/rest pose separation, automatic endpoints, phase-aware overrides and executable LookAt stacks. Existing AnimationPlayer and canvas inheritance provide actual animation consumers; scene membership/path revisions prepare weak Polygon/target bindings. Editor/advanced IK/physical bone integration remain exact coverage dependencies.
+[Skeletal animation](../components/skeletal-animation.md) adds Skeleton/Bone, authored/rest pose separation, automatic endpoints, phase-aware overrides and executable LookAt stacks. Existing AnimationPlayer and canvas inheritance provide actual animation consumers; scene membership/path revisions prepare weak Polygon/target bindings. Editor/jiggle/physical bone integration remain exact coverage dependencies.
 
 ## Responsibility
 

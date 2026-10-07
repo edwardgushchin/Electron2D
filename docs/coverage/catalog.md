@@ -780,13 +780,13 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Skeleton3D](classes/Skeleton3D.md) | Node3D | Excluded | 63 |
 | [SkeletonIK3D](classes/SkeletonIK3D.md) | SkeletonModifier3D | Excluded | 14 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | Resource | Partial | 11 |
-| [SkeletonModification2DCCDIK](classes/SkeletonModification2DCCDIK.md) | SkeletonModification2D | Blocked | 17 |
-| [SkeletonModification2DFABRIK](classes/SkeletonModification2DFABRIK.md) | SkeletonModification2D | Blocked | 10 |
+| [SkeletonModification2DCCDIK](classes/SkeletonModification2DCCDIK.md) | SkeletonModification2D | Implemented | 17 |
+| [SkeletonModification2DFABRIK](classes/SkeletonModification2DFABRIK.md) | SkeletonModification2D | Implemented | 10 |
 | [SkeletonModification2DJiggle](classes/SkeletonModification2DJiggle.md) | SkeletonModification2D | Blocked | 28 |
 | [SkeletonModification2DLookAt](classes/SkeletonModification2DLookAt.md) | SkeletonModification2D | Implemented | 13 |
 | [SkeletonModification2DPhysicalBones](classes/SkeletonModification2DPhysicalBones.md) | SkeletonModification2D | Blocked | 6 |
 | [SkeletonModification2DStackHolder](classes/SkeletonModification2DStackHolder.md) | SkeletonModification2D | Blocked | 2 |
-| [SkeletonModification2DTwoBoneIK](classes/SkeletonModification2DTwoBoneIK.md) | SkeletonModification2D | Blocked | 12 |
+| [SkeletonModification2DTwoBoneIK](classes/SkeletonModification2DTwoBoneIK.md) | SkeletonModification2D | Implemented | 12 |
 | [SkeletonModificationStack2D](classes/SkeletonModificationStack2D.md) | Resource | Implemented | 12 |
 | [SkeletonModifier3D](classes/SkeletonModifier3D.md) | Node3D | Excluded | 38 |
 | [SkeletonProfile](classes/SkeletonProfile.md) | Resource | Excluded | 30 |

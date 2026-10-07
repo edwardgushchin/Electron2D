@@ -20,6 +20,9 @@ public static partial class ResourceFileTypes
         RegisterNode("Bone", CreateBone);
         RegisterResource("SkeletonModificationStack", CreateSkeletonStack);
         RegisterResource("SkeletonModificationLookAt", CreateSkeletonLookAt);
+        RegisterResource("SkeletonModificationTwoBoneIK", CreateSkeletonTwoBoneIK);
+        RegisterResource("SkeletonModificationCCDIK", CreateSkeletonCCDIK);
+        RegisterResource("SkeletonModificationFABRIK", CreateSkeletonFABRIK);
         RegisterResourceArray<SkeletonModification>();
         RegisterResource("Resource", CreateResource);
         RegisterResource("PackedScene", CreatePackedScene);
@@ -60,6 +63,9 @@ public static partial class ResourceFileTypes
     private static Bone CreateBone() => new();
     private static SkeletonModificationStack CreateSkeletonStack() => new();
     private static SkeletonModificationLookAt CreateSkeletonLookAt() => new();
+    private static SkeletonModificationTwoBoneIK CreateSkeletonTwoBoneIK() => new();
+    private static SkeletonModificationCCDIK CreateSkeletonCCDIK() => new();
+    private static SkeletonModificationFABRIK CreateSkeletonFABRIK() => new();
     private static SyntaxHighlighter CreateSyntaxHighlighter() => new();
     private static CodeHighlighter CreateCodeHighlighter() => new();
     private static RichTextEffect CreateRichTextEffect() => new();

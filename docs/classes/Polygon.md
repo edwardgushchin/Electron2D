@@ -114,6 +114,8 @@ Inverted polygons ignore skinning. Bone paths are relative to the selected Skele
 
 ## Description
 
+The three concrete [IK solvers](../components/skeletal-animation.md#executable-ik-solvers) now produce live bone transforms consumed by this retained skin path. Native tests display one weighted Polygon per solver on GPU and compatibility; no new public Polygon API or triangle/shader contract is introduced.
+
 Polygon is a spatial scene node that fills a closed local contour. It inherits the tree lifecycle from Node, canvas visibility, material and sampling from CanvasItem, and position, rotation and scale from Entity. `Vertices` is the copied vertex list; the name avoids a C# member/type collision. With no `Polygons` entries, the node draws vertices in order and closes the contour. With entries, each `int[]` selects one independently filled contour by vertex index. Separate contours do not create holes. `InvertEnabled` fills the area between the contour and its bounds expanded by `InvertBorder`, ignoring explicit `Polygons` while enabled.
 
 The node borrows `Texture`, subscribes to its change signal, and retains draw commands until geometry, color, UV, texture or resource content changes. Assigning arrays copies them; getters and `SceneState` reads return independent arrays, including each nested contour. Mutations on an attached node follow the scene owner thread. Disposing Polygon removes its texture subscription and does not dispose the texture.

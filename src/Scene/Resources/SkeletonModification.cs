@@ -23,6 +23,7 @@ public abstract class SkeletonModification : Resource
     /// <summary>Returns its borrowed live stack, if bound.</summary><returns>Null after detachment or stack disposal.</returns>
     public SkeletonModificationStack? GetModificationStack() { lock (ModificationGate) { ThrowIfDisposed(); return Stack(); } }
     private SkeletonModificationStack? Stack() => _stack is not null && _stack.TryGetTarget(out var stack) && !stack.IsDisposed ? stack : null;
+    internal Skeleton? BoundSkeleton { get { EnsureModificationMutable(); return _owner is not null && _owner.TryGetTarget(out var owner) && !owner.IsDisposed ? owner : null; } }
     /// <summary>Validates resource lifetime and its current scene owner before derived configuration edits.</summary>
     protected void EnsureModificationMutable() { ThrowIfDisposed(); if (_owner is not null && _owner.TryGetTarget(out var skeleton) && !skeleton.IsDisposed) skeleton.Tree?.EnsureOwnerThread(); }
     internal void ValidateBinding(SkeletonModificationStack stack)

@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Executable IK integration
+
+Registered TwoBoneIK/CCDIK/FABRIK modification resources persist exact selections and scalar/vector policies through bounded joint state, existing nullable resource arrays and independent PackedScene stack graphs. Fresh-process checks exercise actual solver behavior after restoration.
+
 ## Independent skeletal scene resources
 
 Built-in Skeleton/Bone and stack/LookAt schemas restore authored rigs. A hidden versioned Polygon bone-record blob validates all paths/counts/finite weights before replacement. Scene stack descriptors force independent graph copies using the existing resource session, retain aliases and transfer encoded/copy-created resources to ordinary scene-owned lifetime. Fresh-process SkeletonTests loads and actually aims the bone.

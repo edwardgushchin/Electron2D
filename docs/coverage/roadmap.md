@@ -101,7 +101,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 8 |
 | Trigger: first layered/array texture storage, upload and sampling slice in the 2D renderer (ADR 0028). | 7 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 7 |
-| Trigger: concrete typed skeletal solver over the implemented bone/rest/pose palette and modification stack: CCD/FABRIK/TwoBoneIK iterative constraints, jiggle state/reset, child-stack execution or physics-body pose synchronization as owned by each family (ADRs 0028/0092). | 6 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
@@ -125,7 +124,10 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Animation: trigger is the first missing type-specific animation resource utility or persistence slice on the executable graph/state-machine/BlendSpace/action foundation (ADR 0093); applicable event tracks already execute. | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
+| Trigger: actual PhysicalBone/PhysicsBody synchronization, simulation selection/start/stop, joint ownership and native physics-driven skeletal output; the concrete IK resources do not supply physical bones (ADRs 0028/0092). | 1 |
 | Trigger: actual PhysicsBody-to-Bone synchronization, simulation ownership, joint/pose reset and native physics execution over the implemented Skeleton/Bone hierarchy. | 1 |
+| Trigger: borrowed child-stack binding, phase/strength composition, nested execution/cycle guards, copied scene ownership and actual modified pose output over the implemented stack (ADRs 0014/0028/0092). | 1 |
+| Trigger: bounded jiggle spring/damping/gravity state, reset/interpolation and copied joint settings driving the implemented Skeleton palette; optional collision queries require actual physics-world ownership (ADRs 0028/0092). | 1 |
 | Trigger: concrete applicable 2D mesh import/library entry model, owned resource graphs and loader/authoring format integration over the implemented mesh resources (ADRs 0013/0092); audit 3D-only entry fields separately. | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first applicable typed 2D procedural geometry producer with concrete generation parameters and visible mesh output; static surface rendering already executes (ADR 0092). | 1 |

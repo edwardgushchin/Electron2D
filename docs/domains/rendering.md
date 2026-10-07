@@ -4,6 +4,10 @@ Last updated: 2026-10-07
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
+## Executable IK integration
+
+Three concrete IK resources now exercise the existing skeletal palette-to-Polygon triangle path on both Linux native backend. The solvers do not add native dependencies, generic Mesh skin storage or caller-owned palette attachment. Those producer/consumer families retain exact coverage triggers.
+
 ## Skeletal canvas consumer
 
 The [skeletal component](../components/skeletal-animation.md) prepares inverse-rest/current presentation palettes and retained strongest-four Polygon deformation for both native triangle backends. Weak scene palette identity remains borrowed; same viewport/CanvasLayer space and TopLevel/interpolation apply. General Mesh skin channels and server-owned palette attachment are still absent with exact triggers.

@@ -5,6 +5,10 @@ Last updated: 2026-10-07
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
+## Executable IK integration
+
+TwoBoneIK/CCDIK/FABRIK now drive the existing weighted Polygon commands through ordinary bone poses and temporary overrides. The native host exercises all three at once on GPU/compatibility, including target motion and prepared allocation; backend drawing is shared without a solver-specific pass.
+
 ## Weighted polygon replay
 
 [Skeleton/Bone](skeletal-animation.md) feed prepared Polygon skin positions into the existing CanvasPolygon triangle path on GPU and compatibility. Binding is weak and revision-aware, with reusable source maps and strongest-four weights; colors/UV/material/triangulation remain retained. Same viewport/CanvasLayer presentation bases and TopLevel/interpolation are enforced. Forced ordinary Polygon redraw also reuses geometry scratch capacity.

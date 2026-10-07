@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Executable IK integration
+
+Concrete TwoBoneIK/CCDIK/FABRIK resources retain copied bounded joint configuration and weak scene binding under the existing stack ownership policy. Their exact factories/archives support fresh-process files and forced independent scene copies; prepared scratch is transient and scene-node references remain borrowed.
+
 ## Skeletal graph resources
 
 [Modification stacks](../components/skeletal-animation.md) own copied slot storage and borrow modifications. Scene binding is exclusive and transient. PackedScene force-copies the complete stack graph per rig through existing alias-preserving sessions; typed built-in schemas persist concrete LookAt settings and copied Polygon bone records. Arbitrary custom extensions require explicit registration/copy contracts.

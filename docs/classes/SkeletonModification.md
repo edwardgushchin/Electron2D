@@ -7,9 +7,11 @@ Last updated: 2026-10-07
 - Inherits: [Resource](Resource.md)
 - Component: [Skeletal animation](../components/skeletal-animation.md)
 
-- Inherited by: [SkeletonModificationLookAt](SkeletonModificationLookAt.md)
+- Inherited by: [SkeletonModificationLookAt](SkeletonModificationLookAt.md), [SkeletonModificationTwoBoneIK](SkeletonModificationTwoBoneIK.md), [SkeletonModificationCCDIK](SkeletonModificationCCDIK.md), [SkeletonModificationFABRIK](SkeletonModificationFABRIK.md)
 
 ## Description
+
+Concrete [TwoBoneIK](SkeletonModificationTwoBoneIK.md), [CCDIK](SkeletonModificationCCDIK.md) and [FABRIK](SkeletonModificationFABRIK.md) resources now execute through the existing phase/enable/setup callbacks. Their relative path/index caches use an internal direct weak BoundSkeleton owner accessor for configuration checks, avoiding reverse stack-gate lookup. The shared base public API is unchanged.
 
 Typed resource extension point for actual pose modifications. Enabled defaults true and ExecutionMode defaults ProcessPhase.Idle. A stack borrows this resource, binding weak transient stack/skeleton references before calling OnSetupModification. OnExecute receives finite nonnegative seconds on the scene owner thread. Override it to request a local pose through Skeleton.SetBoneLocalPoseOverride. Implement the existing Resource factory/copy and registered typed schema contract to persist a custom derived resource; arbitrary types are never constructed from archive text.
 
@@ -169,6 +171,6 @@ Idle initially; raw source integers project to the shared semantic ProcessPhase 
 
 Scene-bound calls follow the skeleton's owner thread. Cold structure/rest/path edits prepare new arrays and weak bindings; ordinary pose updates and retained replay reuse capacity. All numeric configuration requires finite values; strengths range from zero to one and phase selections use the existing ProcessPhase semantics. Invalid indices, disposed values, competing live bindings and structural reentry reject. User callbacks run after binding or setup commitment. Execution failures attempt every authored-pose restoration and release guards; setup failures keep GetIsSetup false for explicit retry. Resource graph persistence excludes transient setup, target references, palette RIDs and simulation history.
 
-SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor gizmos, further IK solvers, physics synchronization and general Mesh skin channels retain exact coverage triggers.
+SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor gizmos, jiggle/stack-holder resources, physics synchronization and general Mesh skin channels retain exact coverage triggers.
 
 See [skeletal animation](../components/skeletal-animation.md), [the mesh decision](../decisions/mesh.md#adr-0092) and the linked base-class lifecycle.

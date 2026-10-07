@@ -73,7 +73,10 @@
     "Bone2D": "Bone",
     "SkeletonModification2D": "SkeletonModification",
     "SkeletonModificationStack2D": "SkeletonModificationStack",
-    "SkeletonModification2DLookAt": "SkeletonModificationLookAt"
+    "SkeletonModification2DLookAt": "SkeletonModificationLookAt",
+    "SkeletonModification2DTwoBoneIK": "SkeletonModificationTwoBoneIK",
+    "SkeletonModification2DCCDIK": "SkeletonModificationCCDIK",
+    "SkeletonModification2DFABRIK": "SkeletonModificationFABRIK"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
