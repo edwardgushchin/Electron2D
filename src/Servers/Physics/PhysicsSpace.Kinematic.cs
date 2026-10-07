@@ -93,9 +93,11 @@ internal sealed partial class PhysicsSpace
         if (shapeCount == 0 || b2Body_GetType(id) != B2BodyType.b2_kinematicBody) return;
         var sim = PhysicsBodyRuntime.Simulation(id);
         minimumExtent = MathF.Min(minimumExtent, sim.minExtent);
-        var velocity = b2Body_GetLinearVelocity(id);
+        var world = b2GetWorld(id.world0);
+        var state = b2GetBodyState(world, b2GetBodyFullId(world, id));
+        var velocity = state?.linearVelocity ?? default;
         travel = Math.Max(travel, delta * (Math.Sqrt((double)velocity.X * velocity.X + (double)velocity.Y * velocity.Y) +
-            Math.Abs(b2Body_GetAngularVelocity(id)) * sim.maxExtent));
+            Math.Abs(state?.angularVelocity ?? 0) * sim.maxExtent));
     }
 
     private void Capture(B2BodyId id)

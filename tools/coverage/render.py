@@ -664,6 +664,8 @@ def render():
             updated = "2026-10-04"
         if name in {"RichTextLabel", "RichTextEffect", "CharFXTransform", "GraphElement", "GraphNode", "GraphFrame", "GraphEdit", "@GlobalScope", "TextServer"}:
             updated = "2026-10-07"
+        if name in {"StaticBody2D", "AnimatableBody2D", "PhysicsDirectBodyState2D", "PhysicsServer2D"}:
+            updated = "2026-10-08"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

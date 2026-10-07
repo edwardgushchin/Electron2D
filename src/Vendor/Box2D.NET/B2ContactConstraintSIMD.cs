@@ -17,6 +17,8 @@ namespace Box2D.NET
         public B2FloatW invMassA, invMassB;
         public B2FloatW invIA, invIB;
         public B2Vec2W normal;
+        internal B2Vec2W surfaceLinearA, surfaceLinearB;
+        internal B2FloatW surfaceAngularA, surfaceAngularB;
         public B2FloatW friction;
         public B2FloatW tangentSpeed;
         public B2FloatW rollingResistance;

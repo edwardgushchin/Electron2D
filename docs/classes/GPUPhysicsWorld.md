@@ -12,7 +12,7 @@ The developing GPU-world host currently executes velocity and delta-pose
 integration, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
-Contact/joint working records occupy 176/192 bytes. Contact uploads use 96-byte
+Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
 inputs and optional 80-byte geometry overrides. GPU/transfer buffers grow together
 before use and retain their capacity.
 
@@ -58,3 +58,8 @@ compute execution through `ELECTRON2D_TEST_GPU_PHYSICS=1`. CPU integration is th
 numeric comparison source. Current tests do not establish a full GPU physics world,
 cross-device determinism or sustained application frame rate. See the component
 status for remaining world stages and backend selection/fallback work.
+
+Contact inputs/working records include two virtual endpoint velocities. Preparation,
+warm start, solving and restitution add those velocities without changing the
+integrated body state. Surface conformance includes static endpoints in colored
+and serial overflow constraints.

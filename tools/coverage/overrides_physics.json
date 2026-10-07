@@ -2518,7 +2518,7 @@
         "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)"
       ],
       "state": "Partial",
-      "reason": "Existing typed transform/linear-velocity branches are server-only. Full scene/server state parity requires remaining angular/sleep/can-sleep pairs and exact deferred kinematic targets. Static linear/angular velocities additionally require a normal and tangential stationary contact-point velocity channel: native static dummy solver state is zero and scalar tangentSpeed alone is insufficient (ADR 0075). Those branches enter the first complete stationary-contact solver integration alongside StaticBody constant velocities; no inert stored flags or narrowed dynamic-only completion is claimed."
+      "reason": "Typed transform/linear-velocity branches remain narrower than the full state contract. StaticBody linear velocity and scene/server direct-state surface velocities now use the CPU/GPU stationary contact channel (ADR 0075; PhysicsSurfaceVelocityTests). Full scene/server state parity still requires remaining typed angular/sleep/can-sleep pairs and exact deferred kinematic targets; the surface slice does not close those gaps."
     },
     {
       "godot": [
@@ -2700,8 +2700,8 @@
       "godot": [
         "class:StaticBody2D"
       ],
-      "state": "Partial",
-      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+      "state": "Implemented",
+      "reason": "Own static-body surface members execute: material override and stored linear/angular virtual velocity, with CPU/GPU contacts, point queries, character carry, packing and lifecycle verified by PhysicsSurfaceVelocityTests. Inherited gaps remain on their declaring pages."
     },
     {
       "godot": [
@@ -3032,8 +3032,8 @@
         "StaticBody2D::property:constant_linear_velocity",
         "StaticBody2D::property:constant_angular_velocity"
       ],
-      "state": "Blocked",
-      "reason": "Exact trigger: a stationary-surface velocity channel must supply both normal and tangential point velocity to contact constraints while leaving body pose stationary. Box2D static contacts select a zero dummy solver state (B2ContactSolvers), and material tangentSpeed supplies only a scalar tangent offset; the current bool pre-solve callback cannot supply a full surface velocity. Requires an engine-owned constraint/solver bridge or verified backend support; stored metadata or moving/restoring a kinematic pose would not close this behavior."
+      "state": "Implemented",
+      "reason": "Finite stored surface velocity drives CPU scalar/SIMD and GPU contacts without pose integration; inherited kinematic target motion is additive. Point/contact queries, character carry, wakeup, packing, reentry and warmed allocation are covered by PhysicsSurfaceVelocityTests (ADR 0075)."
     },
     {
       "godot": [

@@ -803,26 +803,14 @@ namespace Box2D.NET
         {
             B2World world = b2GetWorld(bodyId.world0);
             B2Body body = b2GetBodyFullId(world, bodyId);
-            B2BodyState state = b2GetBodyState(world, body);
-            if (state != null)
-            {
-                return state.linearVelocity;
-            }
-
-            return b2Vec2_zero;
+            return b2Add(b2GetBodyState(world, body)?.linearVelocity ?? default, b2GetBodySim(world, body).surfaceLinearVelocity);
         }
 
         public static float b2Body_GetAngularVelocity(B2BodyId bodyId)
         {
             B2World world = b2GetWorld(bodyId.world0);
             B2Body body = b2GetBodyFullId(world, bodyId);
-            B2BodyState state = b2GetBodyState(world, body);
-            if (state != null)
-            {
-                return state.angularVelocity;
-            }
-
-            return 0.0f;
+            return (b2GetBodyState(world, body)?.angularVelocity ?? 0) + b2GetBodySim(world, body).surfaceAngularVelocity;
         }
 
         public static void b2Body_SetLinearVelocity(B2BodyId bodyId, B2Vec2 linearVelocity)
@@ -944,16 +932,11 @@ namespace Box2D.NET
             B2World world = b2GetWorld(bodyId.world0);
             B2Body body = b2GetBodyFullId(world, bodyId);
             B2BodyState state = b2GetBodyState(world, body);
-            if (state == null)
-            {
-                return b2Vec2_zero;
-            }
-
             B2SolverSet set = b2Array_Get(ref world.solverSets, body.setIndex);
             B2BodySim bodySim = b2Array_Get(ref set.bodySims, body.localIndex);
 
             B2Vec2 r = b2RotateVector(bodySim.transform.q, b2Sub(localPoint, bodySim.localCenter));
-            B2Vec2 v = b2Add(state.linearVelocity, b2CrossSV(state.angularVelocity, r));
+            B2Vec2 v = b2Add(b2Add(state?.linearVelocity ?? default, bodySim.surfaceLinearVelocity), b2CrossSV((state?.angularVelocity ?? 0) + bodySim.surfaceAngularVelocity, r));
             return v;
         }
 
@@ -963,16 +946,11 @@ namespace Box2D.NET
             B2World world = b2GetWorld(bodyId.world0);
             B2Body body = b2GetBodyFullId(world, bodyId);
             B2BodyState state = b2GetBodyState(world, body);
-            if (state == null)
-            {
-                return b2Vec2_zero;
-            }
-
             B2SolverSet set = b2Array_Get(ref world.solverSets, body.setIndex);
             B2BodySim bodySim = b2Array_Get(ref set.bodySims, body.localIndex);
 
             B2Vec2 r = b2Sub(worldPoint, bodySim.center);
-            B2Vec2 v = b2Add(state.linearVelocity, b2CrossSV(state.angularVelocity, r));
+            B2Vec2 v = b2Add(b2Add(state?.linearVelocity ?? default, bodySim.surfaceLinearVelocity), b2CrossSV((state?.angularVelocity ?? 0) + bodySim.surfaceAngularVelocity, r));
             return v;
         }
 
@@ -1224,6 +1202,9 @@ namespace Box2D.NET
             {
                 return;
             }
+
+            var surface = b2GetBodySim(world, body);
+            surface.surfaceLinearVelocity = default; surface.surfaceAngularVelocity = 0;
 
             // Stage 1: skip disabled bodies
             if (body.setIndex == (int)B2SolverSetType.b2_disabledSet)

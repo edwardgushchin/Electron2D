@@ -428,6 +428,8 @@ namespace Box2D.NET
                     contactSim.bodySimIndexB = bodyB.setIndex == (int)B2SolverSetType.b2_awakeSet ? bodyB.localIndex : B2_NULL_INDEX;
                     contactSim.invMassB = bodySimB.invMass;
                     contactSim.invIB = bodySimB.invInertia;
+                    contactSim.surfaceLinearA = bodySimA.surfaceLinearVelocity; contactSim.surfaceAngularA = bodySimA.surfaceAngularVelocity;
+                    contactSim.surfaceLinearB = bodySimB.surfaceLinearVelocity; contactSim.surfaceAngularB = bodySimB.surfaceAngularVelocity;
 
                     B2Transform transformA = bodySimA.transform;
                     B2Transform transformB = bodySimB.transform;

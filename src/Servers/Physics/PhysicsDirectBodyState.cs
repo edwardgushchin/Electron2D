@@ -71,11 +71,43 @@ public sealed class PhysicsDirectBodyState : ElectronObject
 
     /// <summary>Gets or sets angular velocity in radians per second; assignment wakes a dynamic body.</summary>
     /// <value>Angular velocity in radians per second; assignment wakes a dynamic body.</value>
-    public float AngularVelocity { get { Access(); return b2GetBodyState(_world, _body)?.angularVelocity ?? 0; } set { var id = Access(); Finite(value); b2Body_SetAwake(id, true); b2Body_SetAngularVelocity(id, value); } }
+    /// <remarks>Reads include virtual surface rotation. On a StaticBody, assignment updates its stored
+    /// constant surface speed; on an AnimatableBody it also replaces the current target-derived component.</remarks>
+    public float AngularVelocity
+    {
+        get => b2Body_GetAngularVelocity(Access());
+        set
+        {
+            var id = Access(); Finite(value); var owner = _runtime.Owners;
+            if (owner.Scene is StaticBody surface)
+            {
+                b2Body_SetAngularVelocity(id, 0);
+                surface.ConstantAngularVelocity = value;
+            }
+            else if (owner.Server is { Mode: PhysicsServer.BodyMode.Static } server) server.SetAngularVelocity(value);
+            else { b2Body_SetAwake(id, true); b2Body_SetAngularVelocity(id, value); }
+        }
+    }
 
     /// <summary>Gets or sets global-axis velocity in scene units per second; assignment wakes a dynamic body.</summary>
     /// <value>Global-axis velocity in scene units per second; assignment wakes a dynamic body.</value>
-    public Vector2 LinearVelocity { get { Access(); return ToScene(b2GetBodyState(_world, _body)?.linearVelocity ?? default); } set { var id = Access(); Finite(value); b2Body_SetAwake(id, true); b2Body_SetLinearVelocity(id, Shape.ToBackend(value)); } }
+    /// <remarks>Reads include virtual surface motion. On a StaticBody, assignment updates its stored
+    /// constant surface velocity; on an AnimatableBody it also replaces the current target-derived component.</remarks>
+    public Vector2 LinearVelocity
+    {
+        get => ToScene(b2Body_GetLinearVelocity(Access()));
+        set
+        {
+            var id = Access(); Finite(value); var owner = _runtime.Owners;
+            if (owner.Scene is StaticBody surface)
+            {
+                b2Body_SetLinearVelocity(id, default);
+                surface.ConstantLinearVelocity = value;
+            }
+            else if (owner.Server is { Mode: PhysicsServer.BodyMode.Static } server) server.SetLinearVelocity(value);
+            else { b2Body_SetAwake(id, true); b2Body_SetLinearVelocity(id, Shape.ToBackend(value)); }
+        }
+    }
 
     /// <summary>Gets center-of-mass offset from the body origin along global axes, in scene units.</summary>
     /// <value>Center-of-mass offset from the body origin along global axes, in scene units.</value>

@@ -181,6 +181,8 @@ public sealed partial class PhysicsServer
 
     internal void BodySetLinearVelocityCore(RID body, Vector2 velocity)
     {
+        ThrowIfDisposed();
+        if (ResolveSceneObject(body) is StaticBody surface) { surface.ConstantLinearVelocity = velocity; return; }
         var collider = GetCollider(body, isArea: false);
         EnsureColliderSpaceAccessible(collider);
         collider.SetLinearVelocity(velocity);

@@ -68,6 +68,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
             if (!IsArea && _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear)
                 b2Body_SetLinearVelocity(_bodyID, Shape.ToBackend(_linearVelocity));
             RebuildShapes();
+            if (!IsArea && _mode == PhysicsServer.BodyMode.Static)
+                PhysicsBodyRuntime.SetSurfaceVelocity(_bodyID, _linearVelocity, _angularVelocity);
         }
         catch { DetachBackend(); throw; }
     }
@@ -174,8 +176,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         if (_space is null) return;
         b2Body_SetType(_bodyID, BackendType);
         b2Body_SetMotionLocks(_bodyID, new(false, false, mode == PhysicsServer.BodyMode.RigidLinear));
-        if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
-            b2Body_SetLinearVelocity(_bodyID, default);
+        b2Body_SetLinearVelocity(_bodyID, Shape.ToBackend(_linearVelocity));
+        if (mode is PhysicsServer.BodyMode.Rigid) b2Body_SetAngularVelocity(_bodyID, _angularVelocity);
         if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic or PhysicsServer.BodyMode.RigidLinear)
             b2Body_SetAngularVelocity(_bodyID, 0);
         RebuildShapes();
@@ -210,15 +212,24 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     internal float GetAngularVelocity() => _space is null || _mode == PhysicsServer.BodyMode.Static ? _angularVelocity : b2Body_GetAngularVelocity(_bodyID);
     internal void SetAngularVelocity(float velocity)
     {
+        if (!float.IsFinite(velocity)) throw new ArgumentOutOfRangeException(nameof(velocity));
+        if (_space is not null && !IsArea)
+        {
+            if (_mode == PhysicsServer.BodyMode.Static) PhysicsBodyRuntime.SetSurfaceVelocity(_bodyID, _linearVelocity, velocity);
+            else b2Body_SetAngularVelocity(_bodyID, velocity);
+        }
         _angularVelocity = velocity;
-        if (_space is not null && !IsArea) b2Body_SetAngularVelocity(_bodyID, velocity);
     }
 
     internal void SetLinearVelocity(Vector2 velocity)
     {
         if (!velocity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(velocity));
+        if (_space is not null && !IsArea)
+        {
+            if (_mode == PhysicsServer.BodyMode.Static) PhysicsBodyRuntime.SetSurfaceVelocity(_bodyID, velocity, _angularVelocity);
+            else b2Body_SetLinearVelocity(_bodyID, Shape.ToBackend(velocity));
+        }
         _linearVelocity = velocity;
-        if (_space is not null && !IsArea) b2Body_SetLinearVelocity(_bodyID, Shape.ToBackend(velocity));
     }
 
     internal void SetFilter(uint layer, uint mask)

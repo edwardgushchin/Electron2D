@@ -31,6 +31,8 @@ namespace Box2D.NET
         public float invIB;
 
         public B2Manifold manifold;
+        internal B2Vec2 surfaceLinearA, surfaceLinearB;
+        internal float surfaceAngularA, surfaceAngularB;
 
         // Positive version identifies generated GPU geometry; negative version identifies a completed GPU solve.
         // The indexed source survives graph copies and is checked against its owner world.
@@ -71,6 +73,8 @@ namespace Box2D.NET
             invIB = other.invIB;
 
             manifold = other.manifold;
+            surfaceLinearA = other.surfaceLinearA; surfaceLinearB = other.surfaceLinearB;
+            surfaceAngularA = other.surfaceAngularA; surfaceAngularB = other.surfaceAngularB;
             generatedManifoldVersion = other.generatedManifoldVersion;
             generatedManifoldIndex = other.generatedManifoldIndex;
 

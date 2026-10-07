@@ -11,12 +11,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private struct Contact
     {
         internal Float4 IDs, Mass, Normal, Rolling, Soft;
-        internal Float4 Anchors1, Params1, Impulses1, Anchors2, Params2, Impulses2;
+        internal Float4 Anchors1, Params1, Impulses1, Anchors2, Params2, Impulses2, SurfaceA, SurfaceB;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct ContactInput
     {
-        internal Float4 IDs, Mass, Material, Warm, Source, Offset;
+        internal Float4 IDs, Mass, Material, Warm, Source, Offset, SurfaceA, SurfaceB;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct Joint
@@ -201,6 +201,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     Material = new(c.friction, c.tangentSpeed, c.rollingResistance, c.restitution),
                     Warm = source >= 0 ? default : new(p1.normalImpulse, p1.tangentImpulse, p2.normalImpulse, p2.tangentImpulse),
                     Source = new(source, m.rollingImpulse, p1.id, p2.id),
+                    SurfaceA = new(c.surfaceLinearA.X, c.surfaceLinearA.Y, c.surfaceAngularA, 0),
+                    SurfaceB = new(c.surfaceLinearB.X, c.surfaceLinearB.Y, c.surfaceAngularB, 0),
                     Offset = offset
                 };
             }

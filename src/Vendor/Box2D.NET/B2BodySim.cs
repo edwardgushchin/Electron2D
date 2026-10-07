@@ -22,6 +22,9 @@ namespace Box2D.NET
         // location of center of mass relative to the body origin
         public B2Vec2 localCenter;
 
+        internal B2Vec2 surfaceLinearVelocity;
+        internal float surfaceAngularVelocity;
+
         public B2Vec2 force;
         public float torque;
 
@@ -52,6 +55,7 @@ namespace Box2D.NET
 
             localCenter = new B2Vec2();
 
+            surfaceLinearVelocity = default; surfaceAngularVelocity = 0;
             force = new B2Vec2();
             torque = 0.0f;
 
@@ -80,6 +84,7 @@ namespace Box2D.NET
 
             localCenter = other.localCenter;
 
+            surfaceLinearVelocity = other.surfaceLinearVelocity; surfaceAngularVelocity = other.surfaceAngularVelocity;
             force = other.force;
             torque = other.torque;
 

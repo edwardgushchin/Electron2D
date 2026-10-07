@@ -816,7 +816,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SpriteBase3D](classes/SpriteBase3D.md) | GeometryInstance3D | Excluded | 36 |
 | [SpriteFrames](classes/SpriteFrames.md) | Resource | Implemented | 24 |
 | [StandardMaterial3D](classes/StandardMaterial3D.md) | BaseMaterial3D | Excluded | 0 |
-| [StaticBody2D](classes/StaticBody2D.md) | PhysicsBody2D | Partial | 3 |
+| [StaticBody2D](classes/StaticBody2D.md) | PhysicsBody2D | Implemented | 3 |
 | [StaticBody3D](classes/StaticBody3D.md) | PhysicsBody3D | Excluded | 3 |
 | [StatusIndicator](classes/StatusIndicator.md) | Node | Blocked | 6 |
 | [StreamPeer](classes/StreamPeer.md) | RefCounted | Implemented | 34 |

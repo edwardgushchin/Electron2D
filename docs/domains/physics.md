@@ -135,7 +135,7 @@ The body runtime now owns one-step pending force/torque and routes scene/direct-
 
 ## Frozen kinematic motion
 
-[RigidBody.FreezeMode](../classes/RigidBody.md#freezemode) selects Static/default teleports or manually driven Kinematic targets while Freeze remains true. The latter ignores gravity/forces, exposes zero physical inverse values and restores configured dynamic mass/locks on unfreeze. Exact native history and unchanged-target guards avoid decoded-angle idle drift; synchronized AnimatableBody uses the same idle rule. The internal [kinematic integration path](../../src/Servers/Physics/PhysicsSpace.Kinematic.cs) subdivides native calls by travel and collider extents, replays captured force/torque for full outer duration and retains one callback/event cycle. Cost grows with travel and small geometry; native TOI is the measured-performance upgrade path. Current contact impulse views expose the last native solve; whole-step aggregation remains separately Partial. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) checks physical path contacts and 64 warmed active subdivisions with zero managed allocation on Linux/.NET 10. Native allocation, broad-world performance, other platforms and owner visual acceptance remain unverified. [ADR 0075](../decisions/physics.md#adr-0075) owns this policy and stationary-surface prerequisite.
+[RigidBody.FreezeMode](../classes/RigidBody.md#freezemode) selects Static/default teleports or manually driven Kinematic targets while Freeze remains true. The latter ignores gravity/forces, exposes zero physical inverse values and restores configured dynamic mass/locks on unfreeze. Exact native history and unchanged-target guards avoid decoded-angle idle drift; synchronized AnimatableBody uses the same idle rule. The internal [kinematic integration path](../../src/Servers/Physics/PhysicsSpace.Kinematic.cs) subdivides native calls by travel and collider extents, replays captured force/torque for full outer duration and retains one callback/event cycle. Cost grows with travel and small geometry; native TOI is the measured-performance upgrade path. Current contact impulse views expose the last native solve; whole-step aggregation remains separately Partial. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) checks physical path contacts and 64 warmed active subdivisions with zero managed allocation on Linux/.NET 10. Native allocation, broad-world performance, other platforms and owner visual acceptance remain unverified. [ADR 0075](../decisions/physics.md#adr-0075) owns this policy and the stationary-surface channel.
 
 ## Complete typed body parameters
 
@@ -173,3 +173,12 @@ The sandbox Smash workload covers a large sleeping fragment wall using public sc
 ## Executable viewport worlds
 
 [The world contract](../components/worlds.md) combines canvas and physics ownership, default/shared/explicit viewport binding, transition notification and real native pixel verification. NavigationMap registers a real active authored-region map under ADR 0097; further navigation capabilities retain operation-specific prerequisites.
+
+## Stationary surface velocity
+
+StaticBody linear/angular surface velocity now executes on CPU and the developing
+GPU solver. Its endpoint velocity drives contact response, point queries and
+character platform carry while the pose stays fixed; AnimatableBody combines it
+with actual target motion. [PhysicsSurfaceVelocityTests](../../tests/Electron2D.Tests/PhysicsSurfaceVelocityTests.cs)
+verifies configuration, scene/server lifecycle, state views and warmed allocation.
+This closes the stationary-surface prerequisite, not the wider completion boundary.

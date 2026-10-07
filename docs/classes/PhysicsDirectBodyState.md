@@ -1,6 +1,6 @@
 # PhysicsDirectBodyState
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -165,3 +165,9 @@ Typed PhysicsServer gravity/damping parameters feed the same reported TotalGravi
 Configured contact limits prepare retained raw-pair and point storage before fixed stepping. Every touching manifold contributes a point, so the reported-point cap also bounds the required raw-pair count. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.
 
 Contact monitoring and direct-state values use the same solved-pair traversal. Snapshot collection may run on internal world workers; contact, integration and sync callbacks remain on the scene owner thread. The owner waits for every collector before any game callback can edit bodies or fixtures.
+
+Static/kinematic `LinearVelocity`, `AngularVelocity` and point-velocity queries
+include configured virtual surface motion. StaticBody/AnimatableBody velocity
+writes project to their stored surface properties; a direct write replaces the
+corresponding total velocity component immediately. Contact collider velocities
+remain snapshots of the completed solve, including stationary surface motion.

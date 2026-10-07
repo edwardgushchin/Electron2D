@@ -1,6 +1,6 @@
 # AnimatableBody
 
-Last updated: 2026-09-26
+Last updated: 2026-10-08
 
 **Inherits:** [StaticBody](StaticBody.md), [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -58,3 +58,9 @@ Inherited `DisableMode.MakeStatic` temporarily replaces the kinematic native typ
 ## Idle and fast kinematic paths
 
 Synchronized solved poses stop their derived velocity on unchanged frames without rebuilding a target from the native angle decoder. Current scene/server kinematic roles can subdivide world integration when travel would otherwise cross a dynamic body between collision updates; outer callback/event timing remains one fixed frame. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) checks synchronized sibling idle rotation and [ADR 0075](../decisions/physics.md#adr-0075) defines the shared integration policy and performance/precision limits.
+
+Inherited `ConstantLinearVelocity` and `ConstantAngularVelocity` add virtual surface
+motion to contact and point-query velocity. They never add displacement to the
+manual target. Kinematic subdivision uses actual target travel only.
+PhysicsSurfaceVelocityTests verifies linear/angular surface state, target motion
+and character platform carry on CPU/GPU.

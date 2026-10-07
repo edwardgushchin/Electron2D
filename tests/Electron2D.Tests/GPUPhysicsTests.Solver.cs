@@ -128,6 +128,18 @@ internal static partial class GPUPhysicsTests
         overflow.overflowConstraints = new B2ContactConstraint[2];
         overflow.jointSims.count = 2;
         overflow.jointSims.data = [Joint(seed % 2 == 0, 0, 2), new() { type = B2JointType.b2_filterJoint, constraintHertz = 13, constraintDampingRatio = .8f, invMassA = .2f, invMassB = .4f }];
+        if (seed % 2 == 0)
+        {
+            var surface = overflow.contactSims.data[0];
+            surface.bodySimIndexA = -1; surface.invMassA = surface.invIA = 0;
+            surface.surfaceLinearA = new(.3f, -.4f); surface.surfaceAngularA = .7f;
+            if (lanes > 1)
+            {
+                surface = contacts.contactSims.data[1];
+                surface.bodySimIndexB = -1; surface.invMassB = surface.invIB = 0;
+                surface.surfaceLinearB = new(-.25f, .15f); surface.surfaceAngularB = -.5f;
+            }
+        }
         return c;
 
         B2ContactSim Contact(int a, int b, int points)

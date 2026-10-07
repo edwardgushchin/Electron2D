@@ -3,7 +3,7 @@
 #include "PhysicsBody.inc.glsl"
 layout(local_size_x = 64) in;
 #include "PhysicsContact.inc.glsl"
-struct ContactInput { vec4 ids; vec4 mass; vec4 material; vec4 warm; vec4 source; vec4 offset; };
+struct ContactInput { vec4 ids; vec4 mass; vec4 material; vec4 warm; vec4 source; vec4 offset; vec4 surfaceA; vec4 surfaceB; };
 struct Manifold { vec4 normal; vec4 anchor1; vec4 point1; vec4 anchor2; vec4 point2; };
 struct Joint {
     vec4 ids; vec4 mass; vec4 frameA; vec4 frameB; vec4 geometry;
@@ -74,6 +74,7 @@ void prepareContact(uint index)
     vec4 a1 = first ? m.anchor1 : m.anchor2, b1 = first ? m.point1 : m.point2;
     vec4 a2 = second ? m.anchor1 : m.anchor2, b2 = second ? m.point1 : m.point2;
     Contact c;
+    c.surfaceA = packet.surfaceA; c.surfaceB = packet.surfaceB;
     c.ids = packet.ids; c.mass = packet.mass; c.normal = vec4(m.normal.xy, packet.material.xy);
     c.rolling = vec4(packet.material.z, 0, packet.source.y, packet.material.w); c.soft = vec4(0);
     c.anchors1 = vec4(a1.xy, b1.xy) - packet.offset; c.anchors2 = vec4(a2.xy, b2.xy) - packet.offset;
@@ -100,7 +101,7 @@ void prepareContact(uint index)
     c.rolling.y = k > 0 ? divideRefined(1.0, k) : 0;
     float warm = (uint(preparation.w) & 1u) != 0 ? 1 : 0;
     c.rolling.z *= warm;
-    vec3 a = readBody(int(c.ids.x)).velocity.xyz, b = readBody(int(c.ids.y)).velocity.xyz;
+    vec3 a = readBody(int(c.ids.x)).velocity.xyz + c.surfaceA.xyz, b = readBody(int(c.ids.y)).velocity.xyz + c.surfaceB.xyz;
     preparePoint(c, a, b, c.anchors1, c.params1, c.impulses1, warm);
     if (c.ids.z > 1) preparePoint(c, a, b, c.anchors2, c.params2, c.impulses2, warm);
     else { c.anchors2 = vec4(0); c.params2 = vec4(0); c.impulses2 = vec4(0); }
@@ -184,7 +185,7 @@ void solveContact(uint index, uint stage)
 {
     Contact c = contacts[index];
     Body ba = readBody(int(c.ids.x)); Body bb = readBody(int(c.ids.y));
-    precise vec3 a = ba.velocity.xyz; precise vec3 b = bb.velocity.xyz;
+    precise vec3 a = ba.velocity.xyz + c.surfaceA.xyz; precise vec3 b = bb.velocity.xyz + c.surfaceB.xyz;
     contactPoint(a, b, c, c.anchors1, c.params1, c.impulses1, ba, bb, stage);
     if (c.ids.z > 1) contactPoint(a, b, c, c.anchors2, c.params2, c.impulses2, ba, bb, stage);
     if (stage == 2)

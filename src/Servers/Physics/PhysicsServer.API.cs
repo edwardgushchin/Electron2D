@@ -926,8 +926,8 @@ public sealed partial class PhysicsServer
     /// <returns>The current scene-unit pose, including solved dynamic movement.</returns>
     public static Transform BodyGetTransform(RID body) => Service.BodyGetTransformCore(body);
 
-    /// <summary>Sets the body's finite linear velocity in scene units per second.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <summary>Sets finite linear velocity, or constant surface velocity for a static body.</summary>
+    /// <param name="body">A live server body RID or StaticBody scene RID.</param>
     /// <param name="velocity">Finite global scene units per second.</param>
     public static void BodySetLinearVelocity(RID body, Vector2 velocity) => Service.BodySetLinearVelocityCore(body, velocity);
 

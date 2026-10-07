@@ -84,28 +84,30 @@ namespace Box2D.NET
                 constraint.rollingResistance = contactSim.rollingResistance;
                 constraint.rollingImpulse = warmStartScale * manifold.rollingImpulse;
                 constraint.tangentSpeed = contactSim.tangentSpeed;
+                constraint.surfaceLinearA = contactSim.surfaceLinearA; constraint.surfaceAngularA = contactSim.surfaceAngularA;
+                constraint.surfaceLinearB = contactSim.surfaceLinearB; constraint.surfaceAngularB = contactSim.surfaceAngularB;
                 constraint.pointCount = pointCount;
 
-                B2Vec2 vA = b2Vec2_zero;
-                float wA = 0.0f;
+                B2Vec2 vA = contactSim.surfaceLinearA;
+                float wA = contactSim.surfaceAngularA;
                 float mA = contactSim.invMassA;
                 float iA = contactSim.invIA;
                 if (indexA != B2_NULL_INDEX)
                 {
                     B2BodyState stateA = awakeStates[indexA];
-                    vA = stateA.linearVelocity;
-                    wA = stateA.angularVelocity;
+                    vA = b2Add(stateA.linearVelocity, contactSim.surfaceLinearA);
+                    wA = stateA.angularVelocity + contactSim.surfaceAngularA;
                 }
 
-                B2Vec2 vB = b2Vec2_zero;
-                float wB = 0.0f;
+                B2Vec2 vB = contactSim.surfaceLinearB;
+                float wB = contactSim.surfaceAngularB;
                 float mB = contactSim.invMassB;
                 float iB = contactSim.invIB;
                 if (indexB != B2_NULL_INDEX)
                 {
                     B2BodyState stateB = awakeStates[indexB];
-                    vB = stateB.linearVelocity;
-                    wB = stateB.angularVelocity;
+                    vB = b2Add(stateB.linearVelocity, contactSim.surfaceLinearB);
+                    wB = stateB.angularVelocity + contactSim.surfaceAngularB;
                 }
 
                 if (indexA == B2_NULL_INDEX || indexB == B2_NULL_INDEX)
@@ -193,10 +195,10 @@ namespace Box2D.NET
                 B2BodyState stateA = indexA == B2_NULL_INDEX ? dummyState : states[indexA];
                 B2BodyState stateB = indexB == B2_NULL_INDEX ? dummyState : states[indexB];
 
-                B2Vec2 vA = stateA.linearVelocity;
-                float wA = stateA.angularVelocity;
-                B2Vec2 vB = stateB.linearVelocity;
-                float wB = stateB.angularVelocity;
+                B2Vec2 vA = b2Add(stateA.linearVelocity, constraint.surfaceLinearA);
+                float wA = stateA.angularVelocity + constraint.surfaceAngularA;
+                B2Vec2 vB = b2Add(stateB.linearVelocity, constraint.surfaceLinearB);
+                float wB = stateB.angularVelocity + constraint.surfaceAngularB;
 
                 float mA = constraint.invMassA;
                 float iA = constraint.invIA;
@@ -273,13 +275,13 @@ namespace Box2D.NET
                 float iB = constraint.invIB;
 
                 B2BodyState stateA = constraint.indexA == B2_NULL_INDEX ? dummyState : states[constraint.indexA];
-                B2Vec2 vA = stateA.linearVelocity;
-                float wA = stateA.angularVelocity;
+                B2Vec2 vA = b2Add(stateA.linearVelocity, constraint.surfaceLinearA);
+                float wA = stateA.angularVelocity + constraint.surfaceAngularA;
                 B2Rot dqA = stateA.deltaRotation;
 
                 B2BodyState stateB = constraint.indexB == B2_NULL_INDEX ? dummyState : states[constraint.indexB];
-                B2Vec2 vB = stateB.linearVelocity;
-                float wB = stateB.angularVelocity;
+                B2Vec2 vB = b2Add(stateB.linearVelocity, constraint.surfaceLinearB);
+                float wB = stateB.angularVelocity + constraint.surfaceAngularB;
                 B2Rot dqB = stateB.deltaRotation;
 
                 B2Vec2 dp = b2Sub(stateB.deltaPosition, stateA.deltaPosition);
@@ -445,12 +447,12 @@ namespace Box2D.NET
                 float iB = constraint.invIB;
 
                 B2BodyState stateA = constraint.indexA == B2_NULL_INDEX ? dummyState : states[constraint.indexA];
-                B2Vec2 vA = stateA.linearVelocity;
-                float wA = stateA.angularVelocity;
+                B2Vec2 vA = b2Add(stateA.linearVelocity, constraint.surfaceLinearA);
+                float wA = stateA.angularVelocity + constraint.surfaceAngularA;
 
                 B2BodyState stateB = constraint.indexB == B2_NULL_INDEX ? dummyState : states[constraint.indexB];
-                B2Vec2 vB = stateB.linearVelocity;
-                float wB = stateB.angularVelocity;
+                B2Vec2 vB = b2Add(stateB.linearVelocity, constraint.surfaceLinearB);
+                float wB = stateB.angularVelocity + constraint.surfaceAngularB;
 
                 B2Vec2 normal = constraint.normal;
                 int pointCount = constraint.pointCount;
@@ -1170,26 +1172,26 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                         constraint.indexA[j] = indexA;
                         constraint.indexB[j] = indexB;
 
-                        B2Vec2 vA = b2Vec2_zero;
-                        float wA = 0.0f;
+                        B2Vec2 vA = contactSim.surfaceLinearA;
+                        float wA = contactSim.surfaceAngularA;
                         float mA = contactSim.invMassA;
                         float iA = contactSim.invIA;
                         if (indexA != B2_NULL_INDEX)
                         {
                             B2BodyState stateA = awakeStates[indexA];
-                            vA = stateA.linearVelocity;
-                            wA = stateA.angularVelocity;
+                            vA = b2Add(stateA.linearVelocity, contactSim.surfaceLinearA);
+                            wA = stateA.angularVelocity + contactSim.surfaceAngularA;
                         }
 
-                        B2Vec2 vB = b2Vec2_zero;
-                        float wB = 0.0f;
+                        B2Vec2 vB = contactSim.surfaceLinearB;
+                        float wB = contactSim.surfaceAngularB;
                         float mB = contactSim.invMassB;
                         float iB = contactSim.invIB;
                         if (indexB != B2_NULL_INDEX)
                         {
                             B2BodyState stateB = awakeStates[indexB];
-                            vB = stateB.linearVelocity;
-                            wB = stateB.angularVelocity;
+                            vB = b2Add(stateB.linearVelocity, contactSim.surfaceLinearB);
+                            wB = stateB.angularVelocity + contactSim.surfaceAngularB;
                         }
 
                         // TODO: @ikpil, check
@@ -1231,6 +1233,9 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
 
                         constraint.friction[j] = contactSim.friction;
                         constraint.tangentSpeed[j] = contactSim.tangentSpeed;
+                        constraint.surfaceLinearA.X[j] = contactSim.surfaceLinearA.X; constraint.surfaceLinearA.Y[j] = contactSim.surfaceLinearA.Y;
+                        constraint.surfaceLinearB.X[j] = contactSim.surfaceLinearB.X; constraint.surfaceLinearB.Y[j] = contactSim.surfaceLinearB.Y;
+                        constraint.surfaceAngularA[j] = contactSim.surfaceAngularA; constraint.surfaceAngularB[j] = contactSim.surfaceAngularB;
                         constraint.restitution[j] = contactSim.restitution;
                         constraint.rollingResistance[j] = contactSim.rollingResistance;
                         constraint.rollingImpulse[j] = warmStartScale * manifold.rollingImpulse;
@@ -1341,6 +1346,9 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                         constraint.normal.Y[j] = 0.0f;
                         constraint.friction[j] = 0.0f;
                         constraint.tangentSpeed[j] = 0.0f;
+                        constraint.surfaceLinearA.X[j] = constraint.surfaceLinearA.Y[j] = 0;
+                        constraint.surfaceLinearB.X[j] = constraint.surfaceLinearB.Y[j] = 0;
+                        constraint.surfaceAngularA[j] = constraint.surfaceAngularB[j] = 0;
                         constraint.rollingResistance[j] = 0.0f;
                         constraint.rollingMass[j] = 0.0f;
                         constraint.rollingImpulse[j] = 0.0f;
@@ -1392,6 +1400,8 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                 ref B2ContactConstraintSIMD c = ref constraints[i];
                 B2BodyStateW bA = b2GatherBodies(states, c.indexA.AsSpan());
                 B2BodyStateW bB = b2GatherBodies(states, c.indexB.AsSpan());
+                bA.v.X = b2AddW(bA.v.X, c.surfaceLinearA.X); bA.v.Y = b2AddW(bA.v.Y, c.surfaceLinearA.Y); bA.w = b2AddW(bA.w, c.surfaceAngularA);
+                bB.v.X = b2AddW(bB.v.X, c.surfaceLinearB.X); bB.v.Y = b2AddW(bB.v.Y, c.surfaceLinearB.Y); bB.w = b2AddW(bB.w, c.surfaceAngularB);
 
                 B2FloatW tangentX = c.normal.Y;
                 B2FloatW tangentY = b2SubW(b2ZeroW(), c.normal.X);
@@ -1459,6 +1469,8 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
 
                 B2BodyStateW bA = b2GatherBodies(states, c.indexA.AsSpan());
                 B2BodyStateW bB = b2GatherBodies(states, c.indexB.AsSpan());
+                bA.v.X = b2AddW(bA.v.X, c.surfaceLinearA.X); bA.v.Y = b2AddW(bA.v.Y, c.surfaceLinearA.Y); bA.w = b2AddW(bA.w, c.surfaceAngularA);
+                bB.v.X = b2AddW(bB.v.X, c.surfaceLinearB.X); bB.v.Y = b2AddW(bB.v.Y, c.surfaceLinearB.Y); bB.w = b2AddW(bB.w, c.surfaceAngularB);
 
                 B2FloatW biasRate, massScale, impulseScale;
                 if (useBias)
@@ -1708,6 +1720,8 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
 
                 B2BodyStateW bA = b2GatherBodies(states, c.indexA.AsSpan());
                 B2BodyStateW bB = b2GatherBodies(states, c.indexB.AsSpan());
+                bA.v.X = b2AddW(bA.v.X, c.surfaceLinearA.X); bA.v.Y = b2AddW(bA.v.Y, c.surfaceLinearA.Y); bA.w = b2AddW(bA.w, c.surfaceAngularA);
+                bB.v.X = b2AddW(bB.v.X, c.surfaceLinearB.X); bB.v.Y = b2AddW(bB.v.Y, c.surfaceLinearB.Y); bB.w = b2AddW(bB.w, c.surfaceAngularB);
 
                 // first point non-penetration constraint
                 {

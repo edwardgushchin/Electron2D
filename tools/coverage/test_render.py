@@ -326,7 +326,7 @@ def main():
                    if row.startswith("| [`") and ("FreezeMode" in row or "freeze_mode" in row)]
     assert len(freeze_rows) == 4 and all(" | Implemented | " in row for row in freeze_rows)
     static_rows = pages[CLASS_PAGES / "StaticBody2D.md"].splitlines()
-    assert all(" | Blocked | " in next(row for row in static_rows if f"property {typ} {name}" in row)
+    assert all(" | Implemented | " in next(row for row in static_rows if f"property {typ} {name}" in row)
                for typ, name in (("Vector2", "constant_linear_velocity"), ("float", "constant_angular_velocity")))
     shape_node_rows = [row for row in pages[CLASS_PAGES / "CollisionShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
@@ -435,7 +435,7 @@ def main():
                          ("CollisionObject2D", "CollisionObject"), ("PhysicsBody2D", "PhysicsBody"),
                          ("StaticBody2D", "StaticBody"), ("RigidBody2D", "RigidBody")):
         assert f"../../classes/{target}.md" in class_rows[name]
-        assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D"} else " | Partial | ") in class_rows[name]
+        assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D"} else " | Partial | ") in class_rows[name]
     for name, count in (("UPNP", 45), ("UPNPDevice", 22)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name

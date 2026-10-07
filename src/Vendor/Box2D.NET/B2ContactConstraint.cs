@@ -11,6 +11,8 @@ namespace Box2D.NET
         public int indexB;
         public B2FixedArray2<B2ContactConstraintPoint> points;
         public B2Vec2 normal;
+        internal B2Vec2 surfaceLinearA, surfaceLinearB;
+        internal float surfaceAngularA, surfaceAngularB;
         public float invMassA, invMassB;
         public float invIA, invIB;
         public float friction;

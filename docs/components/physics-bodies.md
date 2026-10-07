@@ -1,6 +1,6 @@
 # Scene physics bodies component
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 ## Physical skeletal integration
 
@@ -73,7 +73,7 @@ The body runtime now owns one-step pending force/torque and routes scene/direct-
 
 ## Frozen kinematic motion
 
-[RigidBody.FreezeMode](../classes/RigidBody.md#freezemode) selects Static/default teleports or manually driven Kinematic targets while Freeze remains true. The latter ignores gravity/forces, exposes zero physical inverse values and restores configured dynamic mass/locks on unfreeze. Exact native history and unchanged-target guards avoid decoded-angle idle drift; synchronized AnimatableBody uses the same idle rule. The internal [kinematic integration path](../../src/Servers/Physics/PhysicsSpace.Kinematic.cs) subdivides native calls by travel and collider extents, replays captured force/torque for full outer duration and retains one callback/event cycle. Cost grows with travel and small geometry; native TOI is the measured-performance upgrade path. Current contact impulse views expose the last native solve; whole-step aggregation remains separately Partial. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) checks physical path contacts and 64 warmed active subdivisions with zero managed allocation on Linux/.NET 10. Native allocation, broad-world performance, other platforms and owner visual acceptance remain unverified. [ADR 0075](../decisions/physics.md#adr-0075) owns this policy and stationary-surface prerequisite.
+[RigidBody.FreezeMode](../classes/RigidBody.md#freezemode) selects Static/default teleports or manually driven Kinematic targets while Freeze remains true. The latter ignores gravity/forces, exposes zero physical inverse values and restores configured dynamic mass/locks on unfreeze. Exact native history and unchanged-target guards avoid decoded-angle idle drift; synchronized AnimatableBody uses the same idle rule. The internal [kinematic integration path](../../src/Servers/Physics/PhysicsSpace.Kinematic.cs) subdivides native calls by travel and collider extents, replays captured force/torque for full outer duration and retains one callback/event cycle. Cost grows with travel and small geometry; native TOI is the measured-performance upgrade path. Current contact impulse views expose the last native solve; whole-step aggregation remains separately Partial. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) checks physical path contacts and 64 warmed active subdivisions with zero managed allocation on Linux/.NET 10. Native allocation, broad-world performance, other platforms and owner visual acceptance remain unverified. [ADR 0075](../decisions/physics.md#adr-0075) owns this policy and the stationary-surface channel.
 
 ## Complete typed body parameters
 
@@ -105,3 +105,12 @@ Membership preparation skips full monitor scans for uninstrumented additions to 
 Broad-phase pair queries retain their peak requested/overflow count between intervals. Dense query results therefore reuse the arena buffer after preparation instead of repeatedly allocating overflow pair objects when the number of moving proxies drops. PhysicsSandboxTests includes a 96-body overlapping query exceeding the original 16-pairs-per-proxy estimate.
 
 [Viewport worlds](worlds.md) now isolate or share both physics and canvas identity. Bodies/Areas/joints move between selected spaces without changing logical RIDs; spatial audio area routing uses the emitter's selected world.
+
+StaticBody's stored constant linear/angular velocities feed a shared virtual
+surface channel. CPU scalar/SIMD and GPU constraints add it to endpoint velocity
+for normal/friction/rolling/restitution response; pose integration excludes it.
+AnimatableBody adds its inherited channel to actual target motion. Live point
+queries, captured contacts and CharacterBody platform carry agree. Changes wake
+touching bodies, while packing/reentry preserve scene configuration.
+PhysicsSurfaceVelocityTests verifies these paths and 64 warmed active contact
+frames without all-thread managed allocation on the tested Linux/Vulkan host.

@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -502,3 +502,9 @@ Configured contact limits prepare retained raw-pair and point storage before fix
 ## Viewport world integration
 
 [Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.
+
+`BodySetLinearVelocity` also accepts a StaticBody scene RID and projects to
+`ConstantLinearVelocity`. Raw server static velocities affect contacts and point
+queries without moving the pose. Angular surface velocity is writable through
+an attached `PhysicsDirectBodyState`; wider typed server state operations retain
+their separate coverage gaps.

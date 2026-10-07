@@ -45,9 +45,9 @@ versions address generated geometry, negative versions address a completed solve
 World identity and the latest submission prevent using an overwritten solver buffer;
 the owner/step marker prevents cross-world or old-step reuse. Feature IDs resolve
 point reordering or pruning directly on GPU. Center-of-mass offsets are captured at the
-collision pose. The solver uploads a 96-byte input (body indices/masses,
-materials, retained impulses, source and offsets) instead of retransmitting the
-176-byte contact record. Missing provenance or an explicit internal geometry replacement uses a separate
+collision pose. The solver uploads a 128-byte input (body indices/masses,
+materials, retained impulses, source, offsets and surface velocities) instead of retransmitting the
+working contact geometry. Missing provenance or an explicit internal geometry replacement uses a separate
 80-byte override; this includes sleeping contacts awakened after collision
 collection. Reset, another collision batch and consumption invalidate reuse.
 The input/manifold buffers bind read-only during solving. The first manifold
@@ -57,7 +57,7 @@ residency, not elimination of the collision synchronization fence.
 The internal `PhysicsSpace.EnableGPUSolver` development entry submits all four
 substeps as one GPU command buffer. Body/contact/joint state remains resident
 between stages and is published once after its fence. Packed records are 80,
-176 and 192 bytes; solver uniforms occupy 64 bytes. GPU/transfer buffers retain
+208 and 192 bytes; solver uniforms occupy 64 bytes. GPU/transfer buffers retain
 capacity. Colored groups execute in parallel without shared dynamic-body writes;
 overflow preserves serial joint/contact order. The earlier
 `EnableGPUIntegration` entry remains a numeric development check.
@@ -112,7 +112,7 @@ solving at 3, 63, 64, 65, 66, 67 and 1,027 contacts. They exercise nonzero mass
 centers, graph copies, feature reordering/pruning, explicit overrides and older batches,
 pre-solve veto, overwritten/empty/consumed batches and step reset. Eight warmed
 collision/update/solve cycles allocate zero all-thread managed bytes on the
-checked Linux/Vulkan path. Transfer counters assert exactly 96 bytes per
+checked Linux/Vulkan path. Transfer counters assert exactly 128 bytes per
 resident contact plus 80 bytes per geometry override.
 History checks compare GPU feature matching with the actual CPU contact updater
 across all nine pair families, including reordered, unmatched and duplicate old
@@ -190,3 +190,13 @@ remain unverified.
 Remaining work: GPU broad phase, chain manifolds, GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
+
+Constant linear/angular surface velocity is shared with the CPU constraint path.
+Its endpoint data adds 32 bytes to contact inputs/working records (128/208 bytes
+now); it affects normal/friction/rolling/restitution response without pose motion.
+PhysicsSurfaceVelocityTests exercises surface response, queries, wakeup, character
+carry and kinematic additivity on CPU/GPU. The standalone multi-world test first
+stalled during SDL/GTK video reinitialization on this Wayland host; its harness now
+retains SDL for the full run, as the general GPU runner does. This does not establish
+unrestricted native video teardown/reinitialization support. Historical profile
+sizes/timings above describe their recorded binaries.

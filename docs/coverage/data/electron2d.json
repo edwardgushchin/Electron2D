@@ -184590,6 +184590,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.StaticBody.ConstantAngularVelocity()",
+    "kind": "property",
+    "declaringType": "Electron2D.StaticBody",
+    "name": "ConstantAngularVelocity",
+    "signature": "public System.Single ConstantAngularVelocity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StaticBody.ConstantLinearVelocity()",
+    "kind": "property",
+    "declaringType": "Electron2D.StaticBody",
+    "name": "ConstantLinearVelocity",
+    "signature": "public Electron2D.Vector2 ConstantLinearVelocity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.StaticBody.PhysicsMaterialOverride()",
     "kind": "property",
     "declaringType": "Electron2D.StaticBody",

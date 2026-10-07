@@ -24,7 +24,13 @@ internal sealed partial class PhysicsSpace
         {
             var sim = awake.bodySims.data[i];
             var state = awake.bodyStates.data[i];
-            _bodyMotions[sim.bodyId] = new(sim.center, state.linearVelocity, state.angularVelocity, true);
+            _bodyMotions[sim.bodyId] = new(sim.center, b2Add(state.linearVelocity, sim.surfaceLinearVelocity), state.angularVelocity + sim.surfaceAngularVelocity, true);
+        }
+        var stationary = world.solverSets.data[(int)B2SolverSetType.b2_staticSet];
+        for (var i = 0; i < stationary.bodySims.count; i++)
+        {
+            var sim = stationary.bodySims.data[i];
+            _bodyMotions[sim.bodyId] = new(sim.center, sim.surfaceLinearVelocity, sim.surfaceAngularVelocity, true);
         }
     }
 
