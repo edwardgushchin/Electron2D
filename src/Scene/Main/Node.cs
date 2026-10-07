@@ -2521,6 +2521,7 @@ public partial class Node : ElectronObject
 
     private void NotifyChildOrderChanged()
     {
+        RenderingServer.Service?.PublishSceneDrawOrder(this);
         DispatchNotification(NotificationChildOrderChanged);
         ChildOrderChanged?.Invoke(this);
     }

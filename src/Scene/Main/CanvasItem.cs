@@ -280,7 +280,7 @@ public abstract partial class CanvasItem : Node
     public uint VisibilityLayer
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _visibilityLayer; }
-        set { EnsureMutable(); _visibilityLayer = value; }
+        set { EnsureMutable(); _visibilityLayer = value; if (ServerState is { } state) state.VisibilityLayer = null; }
     }
 
     /// <summary>Returns whether a zero-based rendering visibility bit is enabled.</summary>

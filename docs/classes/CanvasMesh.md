@@ -9,3 +9,7 @@ Mesh batch coalescing is limited to ordinary Draw operations with equal state. I
 ## Executable mesh skin integration
 
 Replay now resolves the drawing item palette once, holds owned storage against callback reentry, validates every skin index, and applies all four/eight UNORM16 influences through item/base conjugation and raw weight sums before command-local transforms. Custom surfaces quantize copied skin channels on revision preparation.
+
+## Low-level primitive integration
+
+PrepareSkin now supplies one shared palette/basis/lease policy to ordinary mesh surfaces and low-level indexed triangles. AppendTriangleData uses existing vertex deformation, finite validation, color/UV capture and lease cleanup. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).

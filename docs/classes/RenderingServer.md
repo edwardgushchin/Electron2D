@@ -1016,3 +1016,27 @@ See [canvas lifetime and replay contract](../components/canvas-rendering.md#call
 | `ViewportSetCanvasTransform` | Sets one attached canvas view matrix without rewriting scene viewport or layer authoring. |
 | `ViewportSetCanvasStacking` | Sets signed layer/sublayer order for one canvas view before item Z/Y sorting. |
 | `CanvasItemAddNinePatch` | Records retained nine-patch geometry using shared AxisStretchMode, borrowed source texture or internal white, margins/source regions and optional center. |
+
+## Low-level primitive API
+
+[The primitive command contract](../components/canvas-rendering.md#low-level-primitive-commands) defines copied storage, palette consumption, command state, native/source separation and raster limits.
+
+| Operation | Behavior |
+| --- | --- |
+| `CanvasItemAddLine` | Records a copied local line with finite color/width and optional antialiasing. |
+| `CanvasItemAddPolyline` | Records a connected copied polyline; colors are empty, uniform or per vertex. |
+| `CanvasItemAddMultiline` | Records copied endpoint pairs; colors can be empty, uniform, per segment or per endpoint. |
+| `CanvasItemAddRect` | Records a filled rectangle with optional antialias feather geometry. |
+| `CanvasItemAddCircle` | Records a filled circle through the retained 64-segment ellipse kernel. |
+| `CanvasItemAddEllipse` | Records a filled local ellipse with major/minor radii and optional antialiasing. |
+| `CanvasItemAddPolygon` | Copies and triangulates a simple contour with white/uniform/per-vertex color and optional borrowed texture. |
+| `CanvasItemAddPrimitive` | Copies one through four points; missing color/UV values follow the existing primitive contract. |
+| `CanvasItemAddTextureRect` | Records a borrowed texture rectangle with tiling, modulation, flips and transpose. |
+| `CanvasItemAddTextureRectRegion` | Records a borrowed texture source region with optional transpose and UV clipping. |
+| `CanvasItemAddTriangleArray` | Copies indexed triangles and optional four-slot skin channels; count selects an index prefix in triangles. |
+| `CanvasItemAddSetTransform` | Records a finite drawing transform for subsequent visible commands. |
+| `CanvasItemAddAnimationSlice` | Records a finite repeating half-open interval controlling subsequent commands. |
+| `CanvasItemAddClipIgnore` | Records whether subsequent commands bypass rectangular inherited/own clipping; alpha masks still apply. |
+| `CanvasItemSetDrawIndex` | Sets signed stable order among equal-Y/equal-Z render siblings without changing Node order. |
+| `CanvasItemSetVisibilityLayer` | Sets the native 32-bit visibility mask used by each destination viewport without changing authored getters. |
+| `CanvasItemSetUseParentMaterial` | Selects borrowed material inheritance through the actual render graph, preserving authored flags. |

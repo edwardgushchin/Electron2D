@@ -13,6 +13,7 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.MaxFPS = 60;
             ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_ORDER") == "1") { foreach (var backend in new[] { "gpu", "compatibility" }) { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasOrdering(backend); } return; }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RID_NATIVE") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })

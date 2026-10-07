@@ -38,3 +38,7 @@ Recording failure may leave scratch contents changed, but no command references 
 ## Verification
 
 [CanvasPolygonTests](../../tests/Electron2D.Tests/CanvasPolygonTests.cs) covers area/winding, attributes, invalid contours, pooling, failure/retry, custom callback reentry, lifetime, transforms and allocation. [CanvasPolygonRenderingTests](../../tests/Electron2D.Tests/CanvasPolygonRenderingTests.cs) covers native sampling and pixels. Public use is documented through [CanvasItem](CanvasItem.md#drawpolygon); this internal helper has no user-facing example or public compatibility row.
+
+## Low-level primitive integration
+
+SetIndexedTriangles reuses copied MeshSurfaceData arrays for raw producer storage, with complete draw triples, independent optional four-slot channels and UNORM16 quantization. Bounds include original input points; classic contour/scene skin remains separate. Replay calls the same CanvasMesh palette helper with an owner lease. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).

@@ -34,7 +34,7 @@ public abstract partial class CanvasItem
         if (commands._canvasCommands is not null) foreach (var command in commands._canvasCommands)
             {
                 if (command.SetTransform) { drawing = command.Transform; continue; }
-                if (command.AnimationSlice is not null) continue;
+                if (command.AnimationSlice is not null || command.ClipIgnore is not null) continue;
                 Rect2? value = command.Mesh?.GetDrawBounds() ?? command.MultiMesh?.Bounds();
                 if (value is null && command.Stroke is { } stroke) value = stroke.GetLocalBounds();
                 if (value is null && command.Polygon is { } polygon) value = polygon.GetLocalBounds();
@@ -42,6 +42,46 @@ public abstract partial class CanvasItem
                 if (value is { } area) { area = drawing * area; bounds = found ? bounds.Merge(area) : area; found = true; }
             }
         return bounds;
+    }
+    internal ServerDrawingScope StartServerDrawing() => new(this);
+    internal readonly struct ServerDrawingScope : IDisposable
+    {
+        private readonly CanvasItem _item;
+        private readonly CanvasItem? _previous;
+        private readonly bool _drawing;
+        internal ServerDrawingScope(CanvasItem item) { _item = item; _previous = _currentDrawingItem; _drawing = item._drawing; _currentDrawingItem = item; item._drawing = true; }
+        public void Dispose() { _item._drawing = _drawing; _currentDrawingItem = _previous; }
+    }
+    internal bool MayIgnoreClip
+    {
+        get { var commands = ServerState?.Commands?._canvasCommands ?? _canvasCommands; if (commands is not null) foreach (var command in commands) if (command.ClipIgnore == true) return true; return false; }
+    }
+    internal uint RenderVisibilityLayer => ServerState?.VisibilityLayer ?? _visibilityLayer;
+    internal void RecordServerClipIgnore(bool ignore) => (_canvasCommands ??= []).Add(new(false, default, default, Colors.White, 0, false, Transform.Identity, ClipIgnore: ignore));
+    internal void RecordServerStroke(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected)
+    {
+        EnsureDrawing();
+        if (points.Length < 2 || points.Length > 1_048_576 || !connected && points.Length % 2 != 0 || colors.Length != 0 && colors.Length != 1 && colors.Length != points.Length && (connected || colors.Length != points.Length / 2)) throw new ArgumentException("Invalid stroke point/color count.");
+        if (!float.IsFinite(width)) throw new ArgumentException("Stroke width must be finite.");
+        foreach (var point in points) if (!point.IsFinite()) throw new ArgumentException("Stroke points must be finite.");
+        foreach (var color in colors) ValidateCanvasColor(color);
+        var stroke = NextStroke(); stroke.Set(points, colors, width, antialiased, connected, perVertexColors: !connected && colors.Length == points.Length); CommitStroke(stroke);
+    }
+    internal void RecordServerTriangles(ReadOnlySpan<int> indices, ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, ReadOnlySpan<int> bones, ReadOnlySpan<float> weights, Texture? texture, int count)
+    {
+        EnsureDrawing();
+        if (points.Length == 0 || points.Length > 1_048_576 || colors.Length != 0 && colors.Length != 1 && colors.Length != points.Length || uvs.Length != 0 && uvs.Length != points.Length || bones.Length != 0 && bones.Length != checked(points.Length * 4) || weights.Length != 0 && weights.Length != checked(points.Length * 4)) throw new ArgumentException("Invalid triangle channel count.");
+        var used = count < 0 ? indices.Length / 3 * 3 : checked(count * 3); if (used > indices.Length) throw new ArgumentOutOfRangeException(nameof(count));
+        foreach (var point in points) if (!point.IsFinite()) throw new ArgumentException("Triangle points must be finite.");
+        foreach (var color in colors) ValidateCanvasColor(color);
+        foreach (var uv in uvs) if (!uv.IsFinite()) throw new ArgumentException("Triangle UVs must be finite.");
+        foreach (var bone in bones) if ((uint)bone > 65535) throw new ArgumentOutOfRangeException(nameof(bones));
+        foreach (var weight in weights) if (!float.IsFinite(weight)) throw new ArgumentException("Triangle weights must be finite.");
+        foreach (var index in indices[..used]) if ((uint)index >= (uint)points.Length) throw new ArgumentOutOfRangeException(nameof(indices));
+        if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+        _polygons ??= []; if (_polygonCount == _polygons.Count) _polygons.Add(new());
+        var polygon = _polygons[_polygonCount]; polygon.SetIndexedTriangles(indices[..used], points, colors, uvs, bones, weights, indices.IsEmpty ? points.Length / 3 * 3 : used);
+        (_canvasCommands ??= []).Add(new(false, default, default, Colors.White, 0, false, Transform.Identity, texture, Polygon: polygon)); _polygonCount++;
     }
     internal void AppendServerMesh(Mesh mesh, Texture? texture, Transform transform, Color modulate)
     { var previous = _currentDrawingItem; var drawing = _drawing; _currentDrawingItem = this; _drawing = true; try { DrawMesh(mesh, texture, transform, modulate); } finally { _drawing = drawing; _currentDrawingItem = previous; } }

@@ -69,7 +69,7 @@ public abstract partial class CanvasItem
     public bool UseParentMaterial
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _useParentMaterial; }
-        set { EnsureMutable(); _useParentMaterial = value; }
+        set { EnsureMutable(); _useParentMaterial = value; if (ServerState is { } state) state.UseParentMaterial = null; }
     }
 
     /// <summary>Requests regeneration of this node's retained drawing commands before a later visible frame.</summary>
@@ -308,7 +308,7 @@ public abstract partial class CanvasItem
     internal virtual Rect2? CanvasClipRect => null;
     internal virtual bool CanvasUsesWorldCoordinates => false;
 
-    internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
+    internal Material? CanvasMaterial => (ServerState?.UseParentMaterial ?? _useParentMaterial) ? RenderParent?.CanvasMaterial : _material;
     internal Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
     internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null, Vector2i? outputSize = null, Viewport? renderViewport = null)
@@ -327,14 +327,16 @@ public abstract partial class CanvasItem
         var blend = BlendMode.Mix;
         var capturedMaterial = false;
         var drawingTransform = Transform.Identity;
-        var skipping = false;
+        var skipping = false; var commandClip = clip;
         var capturedParticles = false;
         (bool Enabled, int Horizontal, int Vertical, bool Loop) particlesAnimation = default;
         foreach (var command in commands)
         {
             if (command.AnimationSlice is { } slice) { skipping = !slice.Includes(time); continue; }
             if (skipping || command.Texture is ServerTexture { IsDisposed: true }) continue;
+            if (command.ClipIgnore is { } ignore) { commandClip = ignore ? null : clip; continue; }
             if (command.SetTransform) { drawingTransform = command.Transform; continue; }
+            if (commandClip is { } empty && !empty.HasArea()) continue;
             var replay = command;
             if (command.Texture is ServerTexture { IsProxy: true } proxy)
             {
@@ -347,13 +349,13 @@ public abstract partial class CanvasItem
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
                 var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.PhysicsInterpolationFraction : 1f;
-                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this);
+                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this);
                 continue;
             }
             if (replay.Mesh is { } mesh)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true, skinOwner: this);
+                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, skinOwner: this);
                 continue;
             }
             if (replay.ParticleCustom is { } custom)
@@ -371,7 +373,7 @@ public abstract partial class CanvasItem
                 }
             }
             var first = vertices.Count;
-            CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true);
+            CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true, this);
             if (replay.ParticleCustom is { } particleCustom)
                 for (var vertex = first; vertex < vertices.Count; vertex++) vertices[vertex] = vertices[vertex] with { InstanceCustom = particleCustom };
             var count = vertices.Count - first;
@@ -385,9 +387,9 @@ public abstract partial class CanvasItem
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
             if (batches.Count != 0 && batches[^1] is var last && last.Operation == CanvasOperation.Draw && last.Material == material && last.Texture == replay.Texture &&
-                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
+                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip)
                 batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, clip));
+            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip));
         }
     }
 

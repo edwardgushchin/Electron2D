@@ -17,12 +17,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         RenderingSkeletonRegistry.Palette? lease = null;
         try
         {
-            ReadOnlySpan<Transform> palette = default; var toPalette = Transform.Identity; var fromPalette = Transform.Identity;
-            if (skinOwner is not null && skinOwner.AttachedSkeleton.IsValid() && RenderingSkeletonRegistry.Prepare(skinOwner.AttachedSkeleton, skinOwner, out var prepared, out var basis, out lease))
-            {
-                var itemGlobal = skinOwner.RenderGlobal((float)Engine.PhysicsInterpolationFraction);
-                if (basis.Determinant() != 0 && itemGlobal.Determinant() != 0) { palette = prepared; toPalette = basis.AffineInverse() * itemGlobal; fromPalette = itemGlobal.AffineInverse() * basis; }
-            }
+            PrepareSkin(skinOwner, out var palette, out var toPalette, out var fromPalette, out lease);
             var arrays = mesh as ArrayMesh ?? (mesh as ImmediateMesh)?.Surfaces;
             if (arrays is not null)
             {
@@ -43,6 +38,25 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                 var first = vertices.Count; var surface = _custom[i]; AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
                 AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip);
             }
+        }
+        finally { if (lease is not null) lease.ReplayReaders--; }
+    }
+    private static void PrepareSkin(CanvasItem? owner, out ReadOnlySpan<Transform> palette, out Transform toPalette, out Transform fromPalette, out RenderingSkeletonRegistry.Palette? lease)
+    {
+        palette = default; toPalette = fromPalette = Transform.Identity; lease = null;
+        if (owner is null || !owner.AttachedSkeleton.IsValid() || !RenderingSkeletonRegistry.Prepare(owner.AttachedSkeleton, owner, out var prepared, out var basis, out lease)) return;
+        var global = owner.RenderGlobal((float)Engine.PhysicsInterpolationFraction);
+        if (basis.Determinant() == 0 || global.Determinant() == 0) return;
+        palette = prepared; toPalette = basis.AffineInverse() * global; fromPalette = global.AffineInverse() * basis;
+    }
+    internal static void AppendTriangleData(List<CanvasVertex> output, MeshSurfaceData data, int drawCount, Transform transform, Color color, bool snap, CanvasItem? owner)
+    {
+        RenderingSkeletonRegistry.Palette? lease = null;
+        try
+        {
+            PrepareSkin(owner, out var palette, out var toPalette, out var fromPalette, out lease);
+            if (!palette.IsEmpty) foreach (var bone in data.Bones) if ((uint)bone >= (uint)palette.Length) throw new InvalidOperationException("A triangle skin index does not resolve in its palette.");
+            for (var i = 0; i < drawCount; i++) output.Add(Vertex(data, i, transform, color, snap, default, palette, toPalette, fromPalette));
         }
         finally { if (lease is not null) lease.ReplayReaders--; }
     }

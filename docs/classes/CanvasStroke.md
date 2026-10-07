@@ -32,3 +32,7 @@ Local overflow throws ArgumentException before command commit. Transformed or mo
 ## Verification
 
 [CanvasStrokeTests](../../tests/Electron2D.Tests/CanvasStrokeTests.cs) covers geometry, attributes, guards and allocation. [CanvasStrokeRenderingTests](../../tests/Electron2D.Tests/CanvasStrokeRenderingTests.cs) covers native pixels and frame retention on the currently tested Linux backends. Other platforms and owner visual acceptance remain unverified.
+
+## Low-level primitive integration
+
+Raw multiline input can provide one color per endpoint. Negative-width lines retain endpoint attributes; wide/feather triangles interpolate endpoint colors using widened finite arithmetic. Existing segment-color and connected-strip consumers keep their policy. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).

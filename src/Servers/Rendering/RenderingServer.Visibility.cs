@@ -14,7 +14,7 @@ public sealed partial class RenderingServer
         for (var index = first; index < _vertices.Count; index++) bounds = bounds.Expand(_vertices[index].Position);
         if (!bounds.IsFinite()) throw new InvalidOperationException("Transformed screen bounds exceed the finite canvas range.");
         var viewport = new Rect2(0, 0, pixels.X, pixels.Y);
-        if (clip is { } clipping) viewport = viewport.Intersection(new(clipping.Position, clipping.Size));
+        if (!node.MayIgnoreClip && clip is { } clipping) viewport = viewport.Intersection(new(clipping.Position, clipping.Size));
         notifier.ScreenCandidate = bounds.Intersects(viewport, includeBorders: true);
     }
 

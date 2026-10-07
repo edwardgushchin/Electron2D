@@ -11,18 +11,28 @@ internal sealed class CanvasStroke
     private bool _connected;
 
     internal Rect2 GetLocalBounds() { var found = false; var bounds = default(Rect2); foreach (var vertex in _triangles) { bounds = found ? bounds.Expand(vertex.Position) : new(vertex.Position, Vector2.Zero); found = true; } foreach (var vertex in _thin) { bounds = found ? bounds.Expand(vertex.Position) : new(vertex.Position, Vector2.Zero); found = true; } return bounds; }
-    internal void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected)
+    internal void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected, bool perVertexColors = false)
     {
         _triangles.Clear(); _thin.Clear(); _connected = connected;
         if (width < 0)
         {
-            for (var i = 0; i < points.Length; i++) _thin.Add(new(points[i], ColorAt(colors, connected ? i : i / 2)));
+            for (var i = 0; i < points.Length; i++) _thin.Add(new(points[i], ColorAt(colors, connected || perVertexColors ? i : i / 2)));
             return;
         }
         if (!connected)
         {
             for (var i = 0; i < points.Length; i += 2)
-                AppendLine(_triangles, points[i], points[i + 1], ColorAt(colors, i / 2), width, antialiased, Transform.Identity, false);
+            {
+                var triangleStart = _triangles.Count; AppendLine(_triangles, points[i], points[i + 1], perVertexColors ? Colors.White : ColorAt(colors, i / 2), width, antialiased, Transform.Identity, false);
+                if (!perVertexColors) continue;
+                var dx = (double)points[i + 1].X - points[i].X; var dy = (double)points[i + 1].Y - points[i].Y; var length = dx * dx + dy * dy;
+                for (var vertex = triangleStart; vertex < _triangles.Count; vertex++)
+                {
+                    var current = _triangles[vertex]; var phase = length == 0 ? 0 : Math.Clamp(((current.Position.X - (double)points[i].X) * dx + (current.Position.Y - (double)points[i].Y) * dy) / length, 0, 1);
+                    var from = colors[i]; var to = colors[i + 1]; var tint = new Color((float)(from.R * (1 - phase) + to.R * phase), (float)(from.G * (1 - phase) + to.G * phase), (float)(from.B * (1 - phase) + to.B * phase), (float)(from.A * (1 - phase) + to.A * phase));
+                    _triangles[vertex] = current with { Color = tint * current.Color };
+                }
+            }
             return;
         }
         if (antialiased) width = CompensatedWidth(width);

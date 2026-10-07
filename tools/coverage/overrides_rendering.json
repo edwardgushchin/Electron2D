@@ -3393,6 +3393,91 @@
       "godot": "RenderingServer::method:canvas_item_add_nine_patch(RID:,Rect2:,Rect2:,RID:,Vector2:,Vector2:,int:RenderingServer.NinePatchAxisMode,int:RenderingServer.NinePatchAxisMode,bool:,Color:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddNinePatch(Electron2D.RID,Electron2D.Rect2,Electron2D.Rect2,Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2,Electron2D.AxisStretchMode,Electron2D.AxisStretchMode,System.Boolean,System.Nullable<Electron2D.Color>)",
       "reason": "ADRs 0004/0028/0051/0079: canvas/item ownership now fulfills the low-level nine-patch command trigger. CanvasItemAddNinePatch reuses real retained stretch/tile/tile-fit geometry, source regions/reflection, margins, center suppression and borrowed textures; empty texture selects internal white. Shared AxisStretchMode preserves all three pinned numeric values. Typed finite/enum guards, command/bounds lifetime and native owned-canvas pixels are exercised by RenderingCanvasTests, with existing NinePatchRenderingTests covering shared geometry/backend limits."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_animation_slice(RID:,float:,float:,float:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddAnimationSlice(Electron2D.RID,System.Double,System.Double,System.Double,System.Double)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_circle(RID:,Vector2:,float:,Color:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddCircle(Electron2D.RID,Electron2D.Vector2,System.Single,Electron2D.Color,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_clip_ignore(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddClipIgnore(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_ellipse(RID:,Vector2:,float:,float:,Color:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddEllipse(Electron2D.RID,Electron2D.Vector2,System.Single,System.Single,Electron2D.Color,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_line(RID:,Vector2:,Vector2:,Color:,float:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddLine(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_multiline(RID:,PackedVector2Array:,PackedColorArray:,float:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddMultiline(Electron2D.RID,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.Single,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_polygon(RID:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddPolygon(Electron2D.RID,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_polyline(RID:,PackedVector2Array:,PackedColorArray:,float:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddPolyline(Electron2D.RID,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.Single,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_primitive(RID:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddPrimitive(Electron2D.RID,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_rect(RID:,Rect2:,Color:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddRect(Electron2D.RID,Electron2D.Rect2,Electron2D.Color,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_set_transform(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddSetTransform(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_texture_rect(RID:,Rect2:,RID:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddTextureRect(Electron2D.RID,Electron2D.Rect2,Electron2D.RID,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddTextureRectRegion(Electron2D.RID,Electron2D.Rect2,Electron2D.RID,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_triangle_array(RID:,PackedInt32Array:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,PackedInt32Array:,PackedFloat32Array:,RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddTriangleArray(Electron2D.RID,System.ReadOnlySpan<System.Int32>,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<System.Int32>,System.ReadOnlySpan<System.Single>,Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_draw_index(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetDrawIndex(Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_visibility_layer(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetVisibilityLayer(Electron2D.RID,System.UInt32)",
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_use_parent_material(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetUseParentMaterial(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0095: native borrowed material inheritance follows the actual renderer parent for owned/source items, preserves authored UseParentMaterial and republish semantics, and executes real additive native pixels in RenderingPrimitiveTests. Direct material RID binding still requires material identity/ownership."
     }
   ],
   "statusGroups": [
@@ -4843,6 +4928,75 @@
         "RenderingServer::method:canvas_item_add_nine_patch(RID:,Rect2:,Rect2:,RID:,Vector2:,Vector2:,int:RenderingServer.NinePatchAxisMode,int:RenderingServer.NinePatchAxisMode,bool:,Color:)"
       ],
       "reason": "ADRs 0004/0028/0051/0079: canvas/item ownership now fulfills the low-level nine-patch command trigger. CanvasItemAddNinePatch reuses real retained stretch/tile/tile-fit geometry, source regions/reflection, margins, center suppression and borrowed textures; empty texture selects internal white. Shared AxisStretchMode preserves all three pinned numeric values. Typed finite/enum guards, command/bounds lifetime and native owned-canvas pixels are exercised by RenderingCanvasTests, with existing NinePatchRenderingTests covering shared geometry/backend limits."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:canvas_item_add_animation_slice(RID:,float:,float:,float:,float:)",
+        "RenderingServer::method:canvas_item_add_circle(RID:,Vector2:,float:,Color:,bool:)",
+        "RenderingServer::method:canvas_item_add_clip_ignore(RID:,bool:)",
+        "RenderingServer::method:canvas_item_add_ellipse(RID:,Vector2:,float:,float:,Color:,bool:)",
+        "RenderingServer::method:canvas_item_add_polygon(RID:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,RID:)",
+        "RenderingServer::method:canvas_item_add_rect(RID:,Rect2:,Color:,bool:)",
+        "RenderingServer::method:canvas_item_add_set_transform(RID:,Transform2D:)",
+        "RenderingServer::method:canvas_item_add_texture_rect(RID:,Rect2:,RID:,bool:,Color:,bool:)",
+        "RenderingServer::method:canvas_item_add_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:,bool:,bool:)",
+        "RenderingServer::method:canvas_item_add_triangle_array(RID:,PackedInt32Array:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,PackedInt32Array:,PackedFloat32Array:,RID:,int:)",
+        "RenderingServer::method:canvas_item_set_draw_index(RID:,int:)",
+        "RenderingServer::method:canvas_item_set_visibility_layer(RID:,int:)"
+      ],
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:canvas_item_add_line(RID:,Vector2:,Vector2:,Color:,float:,bool:)",
+        "RenderingServer::method:canvas_item_add_multiline(RID:,PackedVector2Array:,PackedColorArray:,float:,bool:)",
+        "RenderingServer::method:canvas_item_add_polyline(RID:,PackedVector2Array:,PackedColorArray:,float:,bool:)"
+      ],
+      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit. Remaining exact shared stroke dependency: negative widths still expand to framebuffer triangles; hardware subpixel line/end coverage remains unverified under the existing stroke contract. The new owned command producer does not close that inherited raster gap."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:canvas_item_add_primitive(RID:,PackedVector2Array:,PackedColorArray:,PackedVector2Array:,RID:)"
+      ],
+      "reason": "ADRs 0004/0028/0095: owned/borrowed primitive recording copies one through four vertices and preserves partial color/UV defaults, textures and command state. Triangle/quad native geometry is verified through the shared kernel. Remaining shared primitive raster dependency: exact hardware subpixel point/line coverage is unaudited because one-pixel triangle footprints remain in use. This is an executable producer, with the existing precise raster gap retained."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:canvas_item_set_use_parent_material(RID:,bool:)"
+      ],
+      "reason": "ADRs 0004/0028/0095: native borrowed material inheritance follows the actual renderer parent for owned/source items, preserves authored UseParentMaterial and republish semantics, and executes real additive native pixels in RenderingPrimitiveTests. Direct material RID binding still requires material identity/ownership."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingServer::method:canvas_item_add_msdf_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:,int:,float:,float:)"
+      ],
+      "reason": "Trigger: executable signed-distance/MSDF glyph texture generation plus derivative/range/outline shader and sampler policy on the claiming backends. Ordinary retained texture rectangles and canvas identity are now implemented, but do not decode signed distances."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingServer::method:canvas_item_add_lcd_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:)"
+      ],
+      "reason": "Trigger: executable LCD/subpixel glyph coverage texture and component blending/contrast/order policy with backend capability reporting. Ordinary texture modulation and native canvas recording do not supply LCD component coverage."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingServer::method:canvas_item_add_particles(RID:,RID:,RID:)"
+      ],
+      "reason": "Trigger: real caller-owned GPU particle emitter storage, process-material execution, update/draw buffers and typed RID lifetime. Existing CPUParticles scene output is not a native emitter RID producer."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingServer::method:canvas_item_set_material(RID:,RID:)"
+      ],
+      "reason": "Trigger: material RID identity/ownership and a real borrowed/owned resource resolver feeding the existing executable CanvasItemMaterial/ShaderMaterial state. Native parent-material inheritance now executes independently; direct RID binding remains absent."
     }
   ],
   "extras": [

@@ -1312,3 +1312,7 @@ The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-
 ## Server canvas integration
 
 `GetCanvas()` returns the borrowed canvas selected by authored tree membership, or empty while detached. Server state attached to `GetCanvasItem()` changes native replay independently of authored properties; matching source setters and redraw republish their own fields/commands. See [the executable canvas contract](../components/canvas-rendering.md#caller-owned-canvases-and-items).
+
+## Low-level primitive integration
+
+Native indexed triangle and primitive commands replay through existing storage. Command clip-ignore switches scissor state without changing authored properties; native draw-index and visibility-mask setters likewise remain separate. Matching source structure/mask edits republish their own fields. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).

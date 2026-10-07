@@ -1549,3 +1549,7 @@ SetMultiplayerAuthority is now virtual so MultiplayerSynchronizer stops/rebinds 
 ## Typed file integration
 
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+## Low-level primitive integration
+
+Structural child order changes now notify the active renderer to republish registered source draw-index overrides below this parent, before ordinary child-order notifications. Source Node order and existing event/capture/owner behavior remain authoritative. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).

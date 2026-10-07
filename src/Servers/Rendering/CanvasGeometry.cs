@@ -7,7 +7,7 @@ internal readonly record struct CanvasVertex(Vector2 Position, Color Color, Vect
 
 internal readonly record struct CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color,
     float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect2 Source = default,
-    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null, bool SetTransform = false, CanvasAnimationSlice? AnimationSlice = null, CanvasNinePatch? NinePatch = null, bool ConstantSource = false, CanvasMesh? Mesh = null, CanvasMultiMesh? MultiMesh = null, Color? ParticleCustom = null);
+    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null, bool SetTransform = false, CanvasAnimationSlice? AnimationSlice = null, CanvasNinePatch? NinePatch = null, bool ConstantSource = false, CanvasMesh? Mesh = null, CanvasMultiMesh? MultiMesh = null, Color? ParticleCustom = null, bool? ClipIgnore = null);
 
 internal readonly record struct CanvasAnimationSlice(double Length, double Begin, double End, double Offset)
 {
@@ -20,11 +20,11 @@ internal readonly record struct CanvasAnimationSlice(double Length, double Begin
 
 internal static class CanvasGeometry
 {
-    internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false)
+    internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null)
     {
         if (command.NinePatch is { } ninePatch) { ninePatch.Append(output, command, transform, modulation, snapVertices); return; }
         if (command.Stroke is { } stroke) { stroke.Append(output, transform, modulation, snapVertices); return; }
-        if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices); return; }
+        if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices, skinOwner); return; }
         var color = command.Color * modulation;
         if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
         if (command.Texture is not null) { AppendTexture(output, command, transform, color, snapVertices); return; }
