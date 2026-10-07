@@ -8,10 +8,11 @@ internal static partial class GPUPhysicsTests
 {
     private static void VerifyManifolds(GPUPhysicsWorld gpu)
     {
+        B2Contacts.b2InitializeContactRegisters();
         var activeFamilies = new int[9];
         foreach (var count in new[] { 1, 63, 64, 65, 4097 })
         {
-            var world = new B2World(); var context = new B2StepContext { world = world };
+            var world = new B2World { frictionCallback = B2Worlds.b2DefaultFrictionCallback, restitutionCallback = B2Worlds.b2DefaultRestitutionCallback, enableSpeculative = true }; var context = new B2StepContext { world = world };
             world.shapes.data = new B2Shape[2 * count]; world.shapes.count = world.shapes.capacity = 2 * count;
             world.bodies.data = new B2Body[2 * count]; world.bodies.count = world.bodies.capacity = 2 * count;
             world.contacts.capacity = count;
@@ -53,11 +54,32 @@ internal static partial class GPUPhysicsTests
                     expected[i] = default;
                 }
                 if (expected[i].pointCount > 0) activeFamilies[i % types.Length]++;
+                var old = expected[i];
+                old.rollingImpulse = .02f * (i % 5 + 1);
+                old.points[0].normalImpulse = .4f; old.points[0].tangentImpulse = -.03f;
+                old.points[1].normalImpulse = .7f; old.points[1].tangentImpulse = .05f;
+                switch (i % 5)
+                {
+                    case 0: old.pointCount = 0; break;
+                    case 1: if (old.pointCount == 2) (old.points[0], old.points[1]) = (old.points[1], old.points[0]); break;
+                    case 2: old.points[0].id ^= 0x8000; break;
+                    case 3: old.points[1].id = old.points[0].id; break;
+                }
+                context.contacts[i].manifold = old;
             }
             gpu.GenerateManifolds(context, count);
             for (var i = 0; i < count; i++)
             {
-                try { CompareManifold(expected[i], context.generatedManifolds[i]); }
+                try
+                {
+                    CompareManifold(expected[i], context.generatedManifolds[i]);
+                    var oracle = new B2ContactSim { manifold = context.contacts[i].manifold };
+                    if (B2MathFunction.b2AABB_Overlaps(world.shapes.data[2 * i].fatAABB, world.shapes.data[2 * i + 1].fatAABB))
+                        B2Contacts.b2UpdateContact(world, oracle, world.shapes.data[2 * i], sims[2 * i].transform, default,
+                            world.shapes.data[2 * i + 1], sims[2 * i + 1].transform, default);
+                    else oracle.manifold = default;
+                    CompareWarmStart(oracle.manifold, context.generatedManifolds[i]);
+                }
                 catch (Exception ex) { throw new InvalidOperationException($"GPU manifold case {i}/{count}, {types[i % types.Length]} differs.", ex); }
             }
             var before = GC.GetTotalAllocatedBytes(true);

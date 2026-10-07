@@ -2,11 +2,7 @@
 #extension GL_GOOGLE_include_directive : require
 #include "PhysicsBody.inc.glsl"
 layout(local_size_x = 64) in;
-struct Contact {
-    vec4 ids; vec4 mass; vec4 normal; vec4 rolling; vec4 soft;
-    vec4 anchors1; vec4 params1; vec4 impulses1;
-    vec4 anchors2; vec4 params2; vec4 impulses2;
-};
+#include "PhysicsContact.inc.glsl"
 struct ContactInput { vec4 ids; vec4 mass; vec4 material; vec4 warm; vec4 source; vec4 offset; };
 struct Manifold { vec4 normal; vec4 anchor1; vec4 point1; vec4 anchor2; vec4 point2; };
 struct Joint {
@@ -19,6 +15,7 @@ layout(std430, set = 1, binding = 2) buffer Joints { Joint joints[]; };
 layout(std430, set = 0, binding = 0) readonly buffer Inputs { ContactInput inputs[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Manifolds { Manifold manifolds[]; };
 layout(std430, set = 0, binding = 2) readonly buffer Fallbacks { Manifold fallbacks[]; };
+layout(std430, set = 0, binding = 3) readonly buffer Matched { ContactHistory matched[]; };
 layout(std140, set = 2, binding = 0) uniform Step { vec4 step; vec4 control; vec4 solve; vec4 preparation; };
 
 float cross2(vec2 a, vec2 b) { precise float r = a.x * b.y - a.y * b.x; return r; }
@@ -64,7 +61,7 @@ void preparePoint(Contact c, vec3 a, vec3 b, vec4 anchors, inout vec4 params, in
     precise float kt = c.mass.x + c.mass.y + c.mass.z * rtA * rtA + c.mass.w * rtB * rtB;
     params.x = kn > 0 ? divideRefined(1.0, kn) : 0; params.y = kt > 0 ? divideRefined(1.0, kt) : 0;
     params.z -= dot2(rb - ra, n); params.w = dot2(n, relativeVelocity(a, b, ra, rb));
-    impulses.xy *= warm; impulses.zw = vec2(0);
+    impulses.xy *= warm; impulses.z = 0;
 }
 void prepareContact(uint index)
 {
@@ -81,7 +78,14 @@ void prepareContact(uint index)
     c.rolling = vec4(packet.material.z, 0, packet.source.y, packet.material.w); c.soft = vec4(0);
     c.anchors1 = vec4(a1.xy, b1.xy) - packet.offset; c.anchors2 = vec4(a2.xy, b2.xy) - packet.offset;
     c.params1 = vec4(0, 0, a1.z, 0); c.params2 = vec4(0, 0, a2.z, 0);
-    c.impulses1 = vec4(packet.warm.xy, 0, 0); c.impulses2 = vec4(packet.warm.zw, 0, 0);
+    c.impulses1 = vec4(packet.warm.xy, 0, packet.source.z); c.impulses2 = vec4(packet.warm.zw, 0, packet.source.w);
+    if (source >= 0)
+    {
+        ContactHistory history = matched[source];
+        c.impulses1.xy = first ? history.impulses.xy : history.impulses.zw;
+        c.impulses2.xy = second ? history.impulses.xy : history.impulses.zw;
+        c.rolling.z = history.features.w;
+    }
     precise float hertz = min(preparation.x, 0.125 * solve.y), damping = preparation.y;
     if (c.ids.x < 0 || c.ids.y < 0) hertz *= 2.0;
     else if (c.ids.w == 0 && preparation.z != 0)

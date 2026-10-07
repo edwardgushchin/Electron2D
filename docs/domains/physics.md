@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 ## Physical skeletal integration
 
@@ -25,6 +25,22 @@ Physics owns the executable 2D rigid-body, collision-shape, surface-material and
 | [Scene physics joints](../components/physics-joints.md) | [`Joint`](../classes/Joint.md), [`PinJoint`](../classes/PinJoint.md), [`GrooveJoint`](../classes/GrooveJoint.md), [`DampedSpringJoint`](../classes/DampedSpringJoint.md) | Shared scene/server joint RIDs, revolute/guide/spring kernels, collision suppression, angular limits and motor executable; positional bias/correction caps, pin softness and debug drawing remain incomplete |
 | [Physics server and direct queries](../components/physics-queries.md) | [`RID`](../classes/RID.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`World`](../classes/World.md), [`PhysicsDirectSpaceState`](../classes/PhysicsDirectSpaceState.md), [`RayCast`](../classes/RayCast.md), [`ShapeCast`](../classes/ShapeCast.md), typed ray/point/shape/motion parameters and results | Shared scene/server space identity, resource lifecycle, direct and body motion queries, cached scene ray/shape casts executable; canvas/navigation RIDs and wider server methods incomplete |
 | [Physics areas](../components/physics-areas.md) | [`Area`](../classes/Area.md), [`Area.SpaceOverride`](../classes/Area.SpaceOverride.md) | Directional monitoring, snapshots, object events and priority gravity/damping fields executable; audio and shape events incomplete |
+
+## Completion boundary
+
+Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
+GPU world. GPU-stage conformance alone does not close the common API contracts.
+Acceptance includes per-body CCD modes, stationary linear/angular surface velocity,
+world-boundary and dynamic separation-ray response, joint correction/softness/caps,
+shape/body/world solver settings, object/shape mouse picking, contact impulse totals
+and truncation, virtual tile-owner propagation, canvas-filtered point queries,
+unified shape/joint debug drawing, remaining typed server state/identity operations,
+and backend extension/registration. The owning [coverage tables](../coverage/index.md),
+including [bodies](../coverage/classes/RigidBody2D.md),
+[surfaces](../coverage/classes/StaticBody2D.md) and
+[server operations](../coverage/classes/PhysicsServer2D.md), retain the detailed
+acceptance evidence and gaps. This paragraph records the full completion boundary,
+not implemented functionality or a replacement for those tables.
 
 ## Public surface
 
@@ -147,8 +163,9 @@ Rigid-body monitoring and direct-state contact values share one traversal of the
 
 The developing GPU path retains generated manifold geometry for constraint preparation,
 using batch provenance and feature identity across graph moves with step-scoped validity.
-Managed material callbacks, warm-start matching and contact transitions still require
-manifold readback. Geometry overrides cover contacts awakened after collision collection;
+Feature matching and normal/tangent/rolling warm-start reuse execute on GPU,
+reading current previous-solve slots or compact cold histories. Managed material
+callbacks, contact transitions and the CPU contact mirror still require readback. Geometry overrides cover contacts awakened after collision collection;
 see [GPU physics](../components/gpu-physics.md) for transfer and conformance evidence.
 
 The sandbox Smash workload covers a large sleeping fragment wall using public scene bodies. Shared solver sets prepare whole-world capacities; dormant slots start small and retain island-specific high-water storage. New larger topologies require warmup before the measured interval. The 65,536-fragment regression checks linear dormant storage and finite real contact simulation; prepared sleep/wake and the native owner-thread profile enforce the measured allocation boundary. See [PhysicsSandbox](../components/physics-sandbox.md) and [its performance report](../components/physics-sandbox-performance.md).

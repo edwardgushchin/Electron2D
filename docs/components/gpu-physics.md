@@ -1,6 +1,6 @@
 # GPU physics implementation status
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 [ADR 0054](../decisions/physics.md#adr-0054) selects a full GPU world alongside the
 managed CPU compatibility backend. Implementation is in progress. The existing
@@ -29,11 +29,20 @@ Chain segments are explicitly unsupported by this development entry. Geometry
 records are shared by shape ID rather than duplicated per contact (144 bytes);
 each pair occupies 48 bytes and its returned manifold 80 bytes. The owner waits
 for the collision fence and validates the batch before publication. Material
-mixing, pre-solve filtering, warm-start matching and contact transitions still
-use the common managed world path.
+mixing, pre-solve filtering and contact transitions still use the common managed
+world path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
+execute in the collision shader. It reads the previous completed GPU solver
+buffer directly when that contact's source is current; cold or older sources
+upload a compact 32-byte history record. Empty histories need no upload.
+The matched 32-byte result remains on GPU for preparation and is also read back
+for the existing managed contact snapshot. Shared contact processing shifts
+anchors and applies pre-solve veto without repeating feature matching. A veto
+clears rolling state, preventing a later contact from reviving stale impulses.
 
 The generated manifold buffer now remains available to constraint preparation.
-Each contact carries the generating batch version and slot through graph copies;
+Each contact carries a source version and slot through graph copies: positive
+versions address generated geometry, negative versions address a completed solve.
+World identity and the latest submission prevent using an overwritten solver buffer;
 the owner/step marker prevents cross-world or old-step reuse. Feature IDs resolve
 point reordering or pruning directly on GPU. Center-of-mass offsets are captured at the
 collision pose. The solver uploads a 96-byte input (body indices/masses,
@@ -42,7 +51,7 @@ materials, retained impulses, source and offsets) instead of retransmitting the
 80-byte override; this includes sleeping contacts awakened after collision
 collection. Reset, another collision batch and consumption invalidate reuse.
 The input/manifold buffers bind read-only during solving. The first manifold
-readback and managed event/warm-start processing still remain; this is partial
+readback and managed event processing still remain; this is partial
 residency, not elimination of the collision synchronization fence.
 
 The internal `PhysicsSpace.EnableGPUSolver` development entry submits all four
@@ -105,6 +114,17 @@ pre-solve veto, overwritten/empty/consumed batches and step reset. Eight warmed
 collision/update/solve cycles allocate zero all-thread managed bytes on the
 checked Linux/Vulkan path. Transfer counters assert exactly 96 bytes per
 resident contact plus 80 bytes per geometry override.
+History checks compare GPU feature matching with the actual CPU contact updater
+across all nine pair families, including reordered, unmatched and duplicate old
+features, rolling impulses and empty old manifolds. Resident checks exercise six
+collision/solve cycles, explicit invalidation, capacity growth, an unprocessed
+contact, foreign-world snapshots, cleared history and a failed preparation after
+solver-buffer growth. Starting a new solve invalidates its predecessor before
+a buffer can be replaced or overwritten. Eight warmed complete
+cycles allocate zero all-thread managed bytes on the tested Linux/Vulkan device.
+`ResidentHistoryCount`, `UploadedHistoryCount` and `HistoryUploadBytes` expose
+internal submission accounting; sleeping contacts whose source buffer was reused
+seed their current CPU snapshot rather than reading an obsolete GPU slot.
 Manifold checks compare 4,290 pairs across nine supported shape combinations,
 including rotated/offset and rounded geometry, exact contact feature IDs,
 one/two/empty contacts and an unused arena tail. Eight warmed submissions at
@@ -149,6 +169,15 @@ the contact. The diagnostic profile flag
 host; no production backend setting or CPU solver fallback is added.
 Artifacts: `bin/physics-sandbox/profile-Release-gpu-resident-final.json` and
 `profile-Release-gpu-resident-final-upload.json` (ignored local evidence).
+With GPU feature matching and resident solved history, the same headless
+32-warmup/64-sample maximum-Smash run averaged 196.38 ms, p95 266.21 ms,
+with zero owner/all-thread managed bytes. It reused 4,883,353 history records
+without any history upload; empty new histories required no input record.
+There were 4,969,124 solver contacts. The state hash and awake-body progression
+matched the preceding profile exactly. Collision/solver phases averaged
+100.69/53.16 ms. The 32-byte matched-history readback still serves the managed
+contact mirror; this stage does not demonstrate an application speedup.
+Artifact: `bin/physics-sandbox/profile-Release-gpu-warm-matching.json`.
 The real native window run (32 warmup/64 measured frames, 65,537 bodies)
 reached 5.32 FPS. Its zero-allocation gate failed: three frames allocated 4,992
 managed bytes each outside the measured physics phases and renderer. The same
@@ -158,6 +187,6 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: GPU broad phase, chain manifolds, GPU contact transitions/warm-start matching without manifold readback, spring
+Remaining work: GPU broad phase, chain manifolds, GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.

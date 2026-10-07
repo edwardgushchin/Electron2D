@@ -457,7 +457,7 @@ namespace Box2D.NET
             B2Shape shapeB, in B2Transform transformB, B2Vec2 centerOffsetB, B2Manifold[] generatedManifolds = null, int generatedIndex = 0)
         {
             // Save old manifold
-            B2Manifold oldManifold = contactSim.manifold;
+            B2Manifold oldManifold = generatedManifolds == null ? contactSim.manifold : default;
 
             // Compute new manifold
             if (generatedManifolds == null) contactSim.generatedManifoldVersion = 0;
@@ -544,10 +544,8 @@ namespace Box2D.NET
                 contactSim.simFlags &= ~(uint)B2ContactSimFlags.b2_simEnableHitEvent;
             }
 
-            if (pointCount > 0)
-            {
-                contactSim.manifold.rollingImpulse = oldManifold.rollingImpulse;
-            }
+            if (pointCount == 0) contactSim.manifold.rollingImpulse = 0;
+            else if (generatedManifolds == null) contactSim.manifold.rollingImpulse = oldManifold.rollingImpulse;
 
             // Match old contact ids to new contact ids and copy the
             // stored impulses to warm start the solver.
@@ -559,6 +557,9 @@ namespace Box2D.NET
                 // shift anchors to be center of mass relative
                 mp2.anchorA = b2Sub(mp2.anchorA, centerOffsetA);
                 mp2.anchorB = b2Sub(mp2.anchorB, centerOffsetB);
+
+                // Generated manifolds already carry feature-matched impulses and persistence.
+                if (generatedManifolds != null) continue;
 
                 mp2.normalImpulse = 0.0f;
                 mp2.tangentImpulse = 0.0f;

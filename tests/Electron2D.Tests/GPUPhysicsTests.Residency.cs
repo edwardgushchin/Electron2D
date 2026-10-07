@@ -52,7 +52,7 @@ internal static partial class GPUPhysicsTests
         var simA = B2Bodies.b2GetBodySim(vetoed.world, vetoed.world.bodies.data[shapeA.bodyId]);
         var simB = B2Bodies.b2GetBodySim(vetoed.world, vetoed.world.bodies.data[shapeB.bodyId]);
         if (B2Contacts.b2UpdateContact(vetoed.world, rejected, shapeA, simA.transform, b2RotateVector(simA.transform.q, simA.localCenter),
-                shapeB, simB.transform, b2RotateVector(simB.transform.q, simB.localCenter), vetoed.generatedManifolds, 66) || callbacks != 1)
+                shapeB, simB.transform, b2RotateVector(simB.transform.q, simB.localCenter), vetoed.generatedManifolds, 66) || callbacks != 1 || rejected.manifold.rollingImpulse != 0)
             throw new Exception("Resident geometry bypassed the pre-solve veto.");
         vetoed.graph.colors[0].contactSims.data[0] = vetoed.graph.colors[0].contactSims.data[64];
         vetoed.graph.colors[0].contactSims.count = reference.graph.colors[0].contactSims.count = 64;
@@ -114,6 +114,11 @@ internal static partial class GPUPhysicsTests
     private static void GenerateAndUpdate(GPUPhysicsWorld gpu, B2StepContext c)
     {
         gpu.GenerateManifolds(c, c.contacts.Count);
+        UpdateGeneratedContacts(c);
+    }
+
+    private static void UpdateGeneratedContacts(B2StepContext c)
+    {
         for (var i = 0; i < c.contacts.Count; i++)
         {
             var contact = c.contacts[i]; var a = c.world.shapes.data[contact.shapeIdA]; var b = c.world.shapes.data[contact.shapeIdB];

@@ -32,7 +32,8 @@ namespace Box2D.NET
 
         public B2Manifold manifold;
 
-        // Current GPU geometry provenance survives graph copies and common contact processing.
+        // Positive version identifies generated GPU geometry; negative version identifies a completed GPU solve.
+        // The indexed source survives graph copies and is checked against its owner world.
         // An internal geometry replacement must clear the version; COM shifts and point pruning preserve it.
         internal long generatedManifoldVersion;
         internal int generatedManifoldIndex;

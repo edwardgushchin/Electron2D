@@ -1,6 +1,6 @@
 # GPUPhysicsWorld
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
@@ -19,14 +19,19 @@ before use and retain their capacity.
 `GenerateManifolds` packs geometry once per referenced shape, current pair
 transforms and fat-proxy overlap, then generates all contact points in one
 compute submission. Its packed shape/pair/result records occupy 144/48/80
-bytes. The complete result is validated before reaching material, pre-solve,
-warm-start and contact-transition processing in the managed world. Chain
+bytes, plus a 32-byte history result. Feature matching and normal/tangent/rolling
+warm-start reuse execute on GPU. Current contacts read the retained previous
+solver buffer; cold/stale contacts upload 32-byte histories. Empty histories
+need no upload. The complete result is validated before reaching material,
+pre-solve and contact-transition processing in the managed world. Chain
 segments are rejected explicitly; broad-phase pairs and sensor queries still
 belong to the CPU path.
 
 `Integrate` requires the live world owner. It packs awake states, submits the
 integration kernel, waits for the submission fence, verifies every returned
 pose/velocity is finite, then publishes the result into the managed query mirror.
+Per-contact signed source versions distinguish geometry from completed solver
+state; graph copies preserve the source and world identity rejects foreign data.
 `Solve` resolves generated manifolds by per-contact batch version and slot, then
 selects retained feature IDs on GPU. Captured center offsets
 preserve mass-relative anchors. Missing provenance or an internal geometry replacement has an explicit
@@ -34,7 +39,10 @@ upload; no CPU solve is substituted. Step reset, collision replacement and solve
 consumption prevent reuse of stale buffers. Inputs/manifolds are read-only during
 solving. `ResidentContactCount`, `UploadedManifoldCount` and `ContactUploadBytes`
 record the most recent solve's transfer accounting. The managed collision
-readback remains for material/event/warm-start processing.
+readback remains for material/event processing and the CPU state mirror.
+`ResidentHistoryCount`, `UploadedHistoryCount` and `HistoryUploadBytes` report the
+most recent collision submission. Source slots are published only after successful
+solve completion; older or explicitly invalidated snapshots use their CPU history.
 
 `Solve` uploads raw constraint inputs and computes their effective masses, softness,
 anchor frames and warm-start state on GPU. It retains states across all four substeps, preserves colored/overflow

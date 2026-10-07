@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -18,7 +18,7 @@ One owner-thread Box2D world shared by scene bodies/Areas/joints and caller-owne
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
 | `EnsureWorldBindingChange()`, `EnsureWorldRelease()` | Binding changes reject a failed GPU world; releasing its last resource still permits cleanup. Both preserve owner/solver/live-body-callback guards. |
 | `Step(double delta)` | Gate on local/global activity/nonzero delta; prepare fields/body states/joints, solve native intervals, capture state and dispatch callbacks/events. |
-| `EnableGPUIntegration()`, `EnableGPUSolver()` | Internal development entries for numeric integration and manifold generation and constraint preparation/solving. GPU callbacks run on the owner; generated manifold geometry remains on GPU for constraint preparation, while CPU contact updates retain workers. Broad phase and sleep/CCD remain CPU; chain manifolds are not yet supported by the GPU entry. |
+| `EnableGPUIntegration()`, `EnableGPUSolver()` | Internal development entries for numeric integration and manifold generation and constraint preparation/solving. GPU callbacks run on the owner; generated geometry and feature-matched warm-start state remain on GPU for constraint preparation, while CPU contact updates retain workers. Broad phase and sleep/CCD remain CPU; chain manifolds are not yet supported by the GPU entry. |
 | `LastStep`, cached body-state callback list | Last actual interval and generation-aware delivery; skipped intervals retain data. |
 | `Add` / `Remove` scene/server objects | Native membership, dependent joint/monitor lifetime and identity. |
 | `GetJointWorldBody()` | Hidden shape-free world anchor for single-body server pin. |

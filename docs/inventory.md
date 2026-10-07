@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -257,7 +257,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Physics](domains/physics.md) | [Physics areas](components/physics-areas.md) | [`Area`](classes/Area.md) | [`Area.cs`](../src/Scene/2D/Area.cs), [`Area.Fields.cs`](../src/Scene/2D/Area.Fields.cs) | Current | Directional object/shape-pair monitoring with nullable server payloads and field reduction |
 | [Physics](domains/physics.md) | [Physics areas](components/physics-areas.md) | [`Area.SpaceOverride`](classes/Area.SpaceOverride.md) | [`Area.Fields.cs`](../src/Scene/2D/Area.Fields.cs) | Current | Five independent field reduction modes |
 | [Physics](domains/physics.md) | [Scene physics bodies](components/physics-bodies.md) | [`PhysicsSpace`](classes/PhysicsSpace.md) | [`PhysicsSpace.cs`](../src/Servers/Physics/PhysicsSpace.cs) | Internal | Shared active/inactive Box2D world, interval gate, contacts/motion, fields, sleep sync and area monitoring |
-| [Physics](domains/physics.md) | [GPU physics](components/gpu-physics.md) | [`GPUPhysicsWorld`](classes/GPUPhysicsWorld.md) | [`GPUPhysicsWorld.cs`](../src/Servers/Physics/GPUPhysicsWorld.cs) | Internal | Developing GPU-world host; integration/manifold/constraint-preparation/contact/pin/groove kernels, resident manifold reuse, retained buffers and world-boundary state/impulse publication |
+| [Physics](domains/physics.md) | [GPU physics](components/gpu-physics.md) | [`GPUPhysicsWorld`](classes/GPUPhysicsWorld.md) | [`GPUPhysicsWorld.cs`](../src/Servers/Physics/GPUPhysicsWorld.cs) | Internal | Developing GPU-world host; integration/manifold/constraint-preparation/contact/pin/groove kernels, resident manifold/impulse-history reuse and feature matching, retained buffers and world-boundary state/impulse publication |
 | [Physics](domains/physics.md) | [Scene physics bodies](components/physics-bodies.md) | [`PhysicsTaskScheduler`](classes/PhysicsTaskScheduler.md) | [`PhysicsTaskScheduler.cs`](../src/Servers/Physics/PhysicsTaskScheduler.cs) | Internal | Lazy retained world workers, bounded range jobs, failure delivery and joined disposal |
 | [Physics](domains/physics.md) | [Physics server and direct queries](components/physics-queries.md) | [`RID`](classes/RID.md) | [`RID.cs`](../src/Core/Object/RID.cs) | Current | Shared opaque, monotonic server resource identity |
 | [Physics](domains/physics.md) | [Physics server and direct queries](components/physics-queries.md) | [`PhysicsServer`](classes/PhysicsServer.md) | [`PhysicsServer*.cs`](../src/Servers/Physics/PhysicsServer.cs) | Current | Scene/explicit resources, direct/body queries and body RID exceptions; wider server API Partial |

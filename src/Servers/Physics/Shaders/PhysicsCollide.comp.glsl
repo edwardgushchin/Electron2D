@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2025 Ikpil Choi
 // SPDX-License-Identifier: MIT
 #version 450
+#extension GL_GOOGLE_include_directive : require
+#include "PhysicsContact.inc.glsl"
 layout(local_size_x = 64) in;
 struct Geometry { vec4 info; vec4 vertices[8]; };
 struct Pair { vec4 ids; vec4 poseA; vec4 poseB; };
@@ -9,6 +11,9 @@ struct Result { vec4 normal; vec4 anchor1; vec4 point1; vec4 anchor2; vec4 point
 layout(std430, set = 1, binding = 0) buffer Shapes { Geometry shapes[]; };
 layout(std430, set = 1, binding = 1) buffer Pairs { Pair pairs[]; };
 layout(std430, set = 1, binding = 2) buffer Results { Result results[]; };
+layout(std430, set = 1, binding = 3) buffer Matched { ContactHistory matched[]; };
+layout(std430, set = 0, binding = 0) readonly buffer Solved { Contact solved[]; };
+layout(std430, set = 0, binding = 1) readonly buffer UploadedHistory { ContactHistory uploadedHistory[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { uvec4 settings; };
 const float epsilon = 1.1920928955078125e-7;
 const float speculative = 0.02;
@@ -210,7 +215,7 @@ void main()
 {
     uint index=gl_GlobalInvocationID.x; if(index>=settings.x) return;
     Pair pair=pairs[index]; Result r=Result(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
-    if(pair.ids.z==0) { results[index]=r; return; }
+    if(pair.ids.z==0) { results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0)); return; }
     Geometry a=shapes[int(pair.ids.x)],b=shapes[int(pair.ids.y)]; int ta=int(a.info.x),tb=int(b.info.x);
     Manifold m; vec2 origin=vec2(0);
     if(tb==0)
@@ -237,5 +242,27 @@ void main()
             if(i==0) { r.anchor1=ap; r.point1=bp; } else { r.anchor2=ap; r.point2=bp; }
         }
     }
-    results[index]=r;
+    ContactHistory old = ContactHistory(vec4(0),vec4(0));
+    int source = int(pair.ids.w);
+    if (source >= 0)
+    {
+        Contact c = solved[source];
+        old = ContactHistory(vec4(c.impulses1.xy,c.impulses2.xy),vec4(c.impulses1.w,c.impulses2.w,c.ids.z,c.rolling.z));
+    }
+    else if (source < -1) old = uploadedHistory[-source-2];
+    ContactHistory warm = ContactHistory(vec4(0),vec4(0));
+    if (m.count > 0) warm.features = vec4(float(m.ids[0]),float(m.ids[1]),m.count,old.features.w);
+    for (int i=0;i<m.count;i++)
+    {
+        for (int j=0;j<int(old.features.z);j++)
+        {
+            if (float(m.ids[i]) != old.features[j]) continue;
+            vec2 impulse = j==0 ? old.impulses.xy : old.impulses.zw;
+            if (i==0) warm.impulses.xy=impulse; else warm.impulses.zw=impulse;
+            if (j==0) old.impulses.xy=vec2(0); else old.impulses.zw=vec2(0);
+            r.normal.w += float(1<<i);
+            break;
+        }
+    }
+    results[index]=r; matched[index]=warm;
 }

@@ -10,6 +10,7 @@ internal static partial class GPUPhysicsTests
         VerifyConstraints(gpu);
         VerifyManifolds(gpu);
         VerifyResidentConstraints(gpu);
+        VerifyWarmHistory(gpu);
         VerifyWorld(false); VerifyWorld(true);
         VerifyWorld(true, true);
         VerifyOwnedWorldFailure();

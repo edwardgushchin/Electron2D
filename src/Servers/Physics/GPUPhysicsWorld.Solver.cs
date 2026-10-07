@@ -29,6 +29,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         internal Float4 Values, Control, Solve, Preparation;
     }
     private readonly Storage<Contact> _contactStorage;
+    private B2World? _solvedWorld;
     private readonly Storage<ContactInput> _contactInputStorage;
     private readonly Storage<ManifoldResult> _fallbackManifoldStorage;
     internal int ResidentContactCount { get; private set; }
@@ -47,6 +48,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
         var count = context.world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.count;
         ResidentContactCount = UploadedManifoldCount = 0; ContactUploadBytes = 0;
         if (count == 0) { context.generatedManifoldOwner = null!; _manifoldContext = null; return; }
+        // A new solve can replace or overwrite the prior buffer before it succeeds.
+        _solvedWorld = null;
         // Follow the world's prepared storage budget rather than its temporarily sleeping population.
         _bodyStorage.Reserve(Math.Max(count, context.world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.capacity));
         PackBodies(context, count);
@@ -62,7 +65,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         _jointStorage.Reserve(Math.Max(Math.Max(1, jointCount), context.world.joints.capacity));
         _contactInputStorage.Reserve(_contactStorage.Data.Length);
         _fallbackManifoldStorage.Reserve(_contactStorage.Data.Length);
-        _manifoldStorage.Reserve(1);
+        _manifoldStorage.Reserve(1); _matchedStorage.Reserve(1);
         PackConstraints(context);
         context.generatedManifoldOwner = null!; _manifoldContext = null;
         ContactUploadBytes = (long)contactCount * sizeof(ContactInput) + (long)UploadedManifoldCount * sizeof(ManifoldResult);
@@ -123,7 +126,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 SolverProfileMS[2] = System.Diagnostics.Stopwatch.GetElapsedTime(profileRecorded, profileFinished).TotalMilliseconds;
                 SolverProfileMS[3] = System.Diagnostics.Stopwatch.GetElapsedTime(profileFinished).TotalMilliseconds;
             }
-            SolverSubmissionCount++;
+            SolverSubmissionCount++; _solvedWorld = context.world;
         }
         finally
         {
@@ -156,8 +159,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
         var compute = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, binding, 3);
         if (compute == 0) throw Failure("begin a constraint stage");
         SDL.BindGPUComputePipeline(compute, _solve.DangerousGetHandle());
-        var inputs = stackalloc nint[3] { _contactInputStorage.Handle, _manifoldStorage.Handle, _fallbackManifoldStorage.Handle };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 3);
+        var inputs = stackalloc nint[4] { _contactInputStorage.Handle, _manifoldStorage.Handle, _fallbackManifoldStorage.Handle, _matchedStorage.Handle };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 4);
         fixed (SolverStep* uniform = &settings) SDL.PushGPUComputeUniformData(command, 0, (nint)uniform, (uint)sizeof(SolverStep));
         SDL.DispatchGPUCompute(compute, serial ? 1 : checked((uint)(count + 63) / 64), 1, 1);
         SDL.EndGPUComputePass(compute); DispatchCount++;
@@ -196,7 +199,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     IDs = new(c.bodySimIndexA, c.bodySimIndexB, m.pointCount, color == B2Constants.B2_GRAPH_COLOR_COUNT - 1 ? 1 : 0),
                     Mass = new(c.invMassA, c.invMassB, c.invIA, c.invIB),
                     Material = new(c.friction, c.tangentSpeed, c.rollingResistance, c.restitution),
-                    Warm = new(p1.normalImpulse, p1.tangentImpulse, p2.normalImpulse, p2.tangentImpulse),
+                    Warm = source >= 0 ? default : new(p1.normalImpulse, p1.tangentImpulse, p2.normalImpulse, p2.tangentImpulse),
                     Source = new(source, m.rollingImpulse, p1.id, p2.id),
                     Offset = offset
                 };
@@ -249,7 +252,10 @@ internal sealed unsafe partial class GPUPhysicsWorld
             for (var i = 0; i < group.contactSims.count; i++)
             {
                 var packet = _contactStorage.Data[_contactStarts[color] + i];
-                ref var m = ref group.contactSims.data[i].manifold; m.rollingImpulse = packet.Rolling.Z;
+                var contact = group.contactSims.data[i];
+                contact.generatedManifoldVersion = -(SolverSubmissionCount + 1);
+                contact.generatedManifoldIndex = _contactStarts[color] + i;
+                ref var m = ref contact.manifold; m.rollingImpulse = packet.Rolling.Z;
                 m.points[0].normalImpulse = packet.Impulses1.X; m.points[0].tangentImpulse = packet.Impulses1.Y;
                 m.points[0].totalNormalImpulse = packet.Impulses1.Z; m.points[0].normalVelocity = packet.Params1.W;
                 if (m.pointCount > 1)
