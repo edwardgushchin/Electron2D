@@ -41,6 +41,7 @@ public sealed class Shader : Resource
     /// <summary>Creates a canvas fragment shader from a copied SPIR-V module.</summary>
     /// <param name="bytecode">A little-endian SPIR-V module, at most 16 MiB, with one fragment entry point named main.</param>
     /// <returns>A shader owning an immutable copy of the validated bytecode.</returns>
+    /// <remarks>No active renderer is required. The selected platform package supplies native reflection and shader toolchain libraries.</remarks>
     /// <exception cref="ArgumentException">The bytecode is malformed or reflection fails.</exception>
     /// <exception cref="NotSupportedException">The module uses unsupported stages, capabilities or interfaces.</exception>
     public static Shader CreateFromSPIRV(ReadOnlySpan<byte> bytecode)
@@ -51,7 +52,8 @@ public sealed class Shader : Resource
     /// <summary>Replaces the program after copying the input and checking its structure and reflected interface.</summary>
     /// <param name="bytecode">Compiled SPIR-V with the supported canvas fragment interface.</param>
     /// <remarks>A failure preserves the prior program. A successful replacement emits Changed. Native pipelines
-    /// are rebuilt by the renderer on demand; the resource itself owns no device handles.</remarks>
+    /// are rebuilt by the renderer on demand; the resource itself owns no device handles. Native reflection
+    /// resolves the selected platform package independently of renderer startup.</remarks>
     /// <exception cref="ArgumentException">The bytecode is malformed or reflection fails.</exception>
     /// <exception cref="NotSupportedException">The module uses unsupported stages, capabilities or interfaces.</exception>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>

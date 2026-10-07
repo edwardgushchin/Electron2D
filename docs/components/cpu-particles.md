@@ -1,0 +1,33 @@
+# CPU particles
+
+Last updated: 2026-10-07
+
+## Scope and owned types
+
+[CPUParticles](../classes/CPUParticles.md) is an Entity consumer of existing internal scene processing, scalar [Curve](../classes/Curve.md), [Gradient](../classes/Gradient.md), textures and [CanvasItemMaterial](../classes/CanvasItemMaterial.md). Its owner-specific DrawOrderMode, EmissionShapeMode, Parameter and ParticleFlags keep the applicable numeric domains. The private Particle value record, two capacity arrays, RNG and order array belong to the node. Borrowed resources stay caller-owned; disposal clears subscriptions/state without disposing them.
+
+## Runtime flow and invariants
+
+Visible ordinary process frames obey scene pause/process policy. FixedFPS optionally accumulates a capped frame remainder; SpeedScale changes simulation time. First update handles Preprocess. RequestParticlesProcess explicitly runs emitting/residual intervals using 30 Hz or fixed subdivisions, including detached headless authoring and zero speed. Amount and seek work are bounded; every substep validates scratch records before swapping published state. Earlier completed seek steps remain committed on a later failure.
+
+Each cycle schedules births by index, explosiveness and deterministic cycle/index jitter. OneShot stops after its first cycle and drains existing particles. Finished and the one-shot property-list update occur after the final state commits; both are attempted on failure, and delivery is not replayed. Completion may restart/dispose/remove the node. Restart clears transient state and retains the seed when requested/fixed. All seven emission distributions, twelve scalar channels, unit curves, split scale, gradients, hue and point colors feed actual pose/color/velocity/animation. Matching normal/color arrays modify point emissions; missing arrays are optional.
+
+Local drawing uses the normal scene transform. World drawing keeps birth canvas coordinates and receives the renderer's viewport/CanvasLayer basis separately, allowing a singular emitter transform without inverse reconstruction. Other scene drawing, children, clipping, repetition and order remain ordinary. Complete physics-tick captures feed world emission interpolation; this follow behavior is independent of the node's default Off. Recorded quads carry the shared shader custom vector `(0, age / cycleLifetime, animationPhase, randomizedLifetime / cycleLifetime)`.
+
+The four particle animation material properties select normalized row-major sprite-sheet UVs during replay. Frame counts are 1..1024 per axis, clamped/wrapped phase maps to the first/last frame and the full image determines quad geometry. Stored command data survives live material changes during paused simulation. Texture/atlas snapshots use the same canvas lifetime and sampling paths. Arbitrary ShaderMaterial draws remain GPU-only, with explicit compatibility rejection.
+
+## Programmatic storage
+
+Registered factories and stored descriptors persist complete CPUParticles configuration through PackedScene/.e2dscene. The generic initial-velocity curve has a hidden typed resource descriptor; ordinary dedicated channel/scale curves retain alias identity. Scalar Curve now persists a versioned bounded byte record containing limits, bake resolution and exact position/tangent/mode points. Gradient persists its four copied-array/interpolation properties; CanvasItemMaterial persists blend and animation. Resources are reconstructed in a fresh process; live particles, clock, RNG progression, native handles and scene delegates are absent. ShaderMaterial archive schemas remain their separate resource prerequisite.
+
+## Source audit and corrections
+
+The pinned [CPUParticles2D XML](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CPUParticles2D.xml), [simulation source](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/cpu_particles_2d.cpp) and header at `ed1daf0bf001b61586d9930840f2f1394092c079` were inspected, including absence of deprecation metadata. The full own family is accounted in [coverage](../coverage/classes/CPUParticles2D.md). Construction chooses a random seed as the source constructor does, despite XML's nominal zero. FractDelta retains newborn age-zero sampling, random parameter order, paired range repair, projected SphereSurface distribution, default minimum scale, clockwise orbit, and full-image sprite geometry.
+
+Two demonstrated source defects are corrected: point/ring selection uses the emitter's seeded RNG instead of process-global randomness, and newborn animation offset samples AnimOffsetCurve rather than AngleCurve. The one-shot boundary processes remaining births from the ending cycle before disabling further emission; bounded ordinary subdivisions avoid dropping entire cycles on a long frame. Numeric validation, capacity/seek limits, per-step scratch commitment and independent completion delivery make failures explicit. These corrections are tested alongside retained behavior, without publishing compatibility switches. The existing published CanvasStyleGeometry MIT notice covers the adaptation.
+
+## Verification and limits
+
+[CPUParticlesTests](../../tests/Electron2D.Tests/CPUParticlesTests.cs) checks defaults, paired ranges, invalid capacities/numbers/enums/borrowed resources, copied arrays, owner guards, all seven shapes and seeded replay, each force channel, birth fractions, fixed remainder, preprocess/explicit seeking, curves/color/hue/split scale, lifecycle callback failure/restart, pause/visibility, world persistence, complete-tick interpolation, real quad UV/custom data and fresh-process resource graphs. It measures 128 prepared active simulation/record/replay iterations and 64 idle replays with zero managed bytes. Native current Linux Engine.Run hosts check visible local/world quads, a singular world emitter, ring particles, sprite sheets and a real GPU custom-data shader, then 64 prepared render/simulation intervals on GPU and compatibility with zero measured managed bytes.
+
+GPU compute particle simulation, ParticleProcessMaterial shaders/forces/collision/attractors and conversion from those concrete owners retain precise dependencies. RotateY/DisableZ source flags have no 2D reader and remain Excluded rather than inert public switches. Native/backend allocations, large-emitter performance, device/foreign execution, real editor inspector and owner acceptance are unverified. Headless checks prove state execution; only actual selected-backend readback proves rendered output. ADRs 0004/0008/0014/0028/0051/0090 govern this boundary.

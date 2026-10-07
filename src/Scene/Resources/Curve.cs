@@ -7,7 +7,7 @@ namespace Electron2D;
 /// <remarks>Point insertion clamps to the current domain/value limits. SetPointValue permits values outside those
 /// limits. Tangents are slopes, not angles. State access is serialized; synchronous events run outside the state
 /// lock after commitment. Copies own their points and cache. Sampling after a bake allocates no managed memory.</remarks>
-public sealed class Curve : Resource
+public sealed partial class Curve : Resource
 {
     /// <summary>Controls one side of a point's tangent.</summary>
     public enum TangentMode
@@ -385,6 +385,7 @@ public sealed class Curve : Resource
     {
         foreach (var property in base.GetPropertyDescriptors()) yield return property;
         foreach (var property in Properties) yield return property;
+        yield return CurveStorage;
         var count = PointCount;
         for (var i = 0; i < count; i++)
         {

@@ -1,6 +1,6 @@
 # CanvasCommand
 
-Last updated: 2026-09-23
+Last updated: 2026-10-07
 
 - Declaration: `internal readonly record struct CanvasCommand`
 - Source: [CanvasGeometry.cs](../../src/Servers/Rendering/CanvasGeometry.cs)
@@ -28,3 +28,7 @@ For lines A/B are endpoints; for textures they are destination position/size. Re
 ## Verification and limits
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) and [CanvasTextureTests](../../tests/Electron2D.Tests/CanvasTextureTests.cs) exercise this path through retained drawing and native readback on Linux Wayland and dummy/software. Pixel and allocation checks cover the documented baseline; they do not establish other platforms or frame-time guarantees.
+
+## Particle records
+
+The current constructor additionally has NinePatch, ConstantSource, Mesh, MultiMesh and nullable `Color ParticleCustom` channels. A particle record retains `(unused, cycle-normalized age, animation phase, lifetime ratio)` as values. Replay selects sprite-sheet Source UVs from the live CanvasItemMaterial and supplies the common CanvasVertex.InstanceCustom vector. No resource or native ownership is added; ordinary commands retain null particle metadata.

@@ -115,6 +115,7 @@ public sealed partial class RenderingServer : ElectronObject
         internal bool Wanted, Drawn;
     }
     private Viewport _viewport;
+    private Transform _canvasBasis;
     private readonly Dictionary<Viewport, CanvasFrame> _canvasFrames = new(ReferenceEqualityComparer.Instance);
     private readonly List<CanvasFrame> _activeFrames = [];
     private void UseFrame(CanvasFrame frame)
@@ -219,7 +220,8 @@ public sealed partial class RenderingServer : ElectronObject
                 _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex(includeInternal: true);
                 _canvasTooltipOverlay = SceneTree.IsTooltipNode(node);
                 _canvasID = layer?.InstanceID ?? 0;
-                OrderCanvas(node, framebufferTransform * _viewport.GetCanvasRenderTransform(layer, _interpolationFraction));
+                _canvasBasis = framebufferTransform * _viewport.GetCanvasRenderTransform(layer, _interpolationFraction);
+                OrderCanvas(node, _canvasBasis);
             }
         _order.Sort(static (x, y) =>
         {
@@ -320,7 +322,7 @@ public sealed partial class RenderingServer : ElectronObject
     {
         if (item is Parallax parallax) _repeatTransforms[parallax] = transform;
         _canvasTransforms[item] = transform;
-        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform, ParentGroup(item)));
+        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, item.CanvasUsesWorldCoordinates ? _canvasBasis : transform, ParentGroup(item)));
     }
 
     private bool HasEmptyOwnClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null) =>

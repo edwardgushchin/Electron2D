@@ -15,6 +15,7 @@ public static partial class ResourceFileTypes
     {
         RegisterNode("Node", CreateNode);
         RegisterNode("Entity", CreateEntity);
+        RegisterNode("CPUParticles", CreateCPUParticles);
         RegisterResource("Resource", CreateResource);
         RegisterResource("PackedScene", CreatePackedScene);
         RegisterResource("FontVariation", CreateFontVariation);
@@ -37,6 +38,9 @@ public static partial class ResourceFileTypes
         RegisterResource("StyleBoxEmpty", CreateEmptyFileResource);
         RegisterResource("FontFile", CreateFontFileResource);
         RegisterResource("SystemFont", CreateSystemFontResource);
+        RegisterResource("Curve", CreateCurveResource);
+        RegisterResource("Gradient", CreateGradientResource);
+        RegisterResource("CanvasItemMaterial", CreateCanvasItemMaterialResource);
         RegisterResource("CircleShape", CreateCircleFileResource);
         RegisterResource("CapsuleShape", CreateCapsuleFileResource);
         RegisterResource("SegmentShape", CreateSegmentFileResource);
@@ -46,10 +50,14 @@ public static partial class ResourceFileTypes
     }
     private static Node CreateNode() => new();
     private static Entity CreateEntity() => new();
+    private static CPUParticles CreateCPUParticles() => new();
     private static SyntaxHighlighter CreateSyntaxHighlighter() => new();
     private static CodeHighlighter CreateCodeHighlighter() => new();
     private static RichTextEffect CreateRichTextEffect() => new();
     private static Resource CreateResource() => new();
+    private static Curve CreateCurveResource() => new();
+    private static Gradient CreateGradientResource() => new();
+    private static CanvasItemMaterial CreateCanvasItemMaterialResource() => new();
     private static PackedScene CreatePackedScene() => new();
     private static FontVariation CreateFontVariation() => new();
     private static Script CreateScript() => new();

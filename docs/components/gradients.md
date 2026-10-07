@@ -1,6 +1,6 @@
 # Gradients component
 
-Last updated: 2026-09-23
+Last updated: 2026-10-07
 
 ## Scope and owned types
 
@@ -31,3 +31,7 @@ Shared Resource/Texture integration gaps remain Partial on their own rows. Nativ
 [GradientTests](../../tests/Electron2D.Tests/GradientTests.cs) verifies numeric interpolation and all spaces/modes, lazy storage ordering, inclusive pixels, all fills/repeats, extreme/degenerate coordinates, byte quantization, copies/local ownership, events/failure/disposal, checked-size recovery, coherent concurrent images and warm allocation behavior.
 
 [RenderingGradientTests](../../tests/Electron2D.Tests/RenderingGradientTests.cs) verifies LDR canvas patterns and worker changes without geometry rebuilding on Linux Wayland GPU/compatibility and dummy/software. GPU preserves HDR in canvas and six signed/HDR/live-source/removal stages for each HLSL/GLSL material. Tested compatibility drivers explicitly reject unavailable HDR precision and release resources. Uninitialized binding failure and borrowed ownership are checked. This does not establish other platforms, owner visual acceptance, fresh AOT/self-contained publication or throughput targets.
+
+## Particle graph persistence
+
+Gradient's four offset/color/interpolation descriptors now store their typed values and its factory is registered. CPUParticlesTests verifies fresh-process ramp content and actual seeded/lifetime sampling; arrays remain copied and the ordinary multi-call coordination rule applies.

@@ -1,6 +1,6 @@
 # NativeLibraries
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 Native binaries come from the explicitly selected `Electron2D.{Platform}` package and its platform-only dependencies. The managed `Electron2D` package contains no native payload or implicit platform references. [Native delivery](../native-packaging.md) records the package/version/RID contract and separates local validation from publication and target execution.
 
@@ -51,3 +51,5 @@ Self-contained Linux x64 tests loaded images and GPU shaders with LD_LIBRARY_PAT
 [NativeLibraryTests](../../tests/Electron2D.Tests/NativeLibraryTests.cs) checks project-reference runtime-directory files and rejects root copies. The CharacterMovement Linux x64 publish and fresh ProjectReference/NuGet consumer checks preserve the entire selected native layout, including SDL and font libraries. The executable suite passes; focused font/audio checks and both Wayland audio hosts load the libraries with `LD_LIBRARY_PATH` unset from an external working directory. A local NuGet consumer verifies public text/audio calls in both its ordinary build and Linux x64 RID-directory publish. These checks do not establish foreign native execution or physical listening.
 
 The default Debug apphost was also exercised against the system .NET runtime reporting `arch-x64`. Native resolution selects the packaged `linux-x64` directory by OS and process architecture; it does not require a custom DOTNET_ROOT or a distribution-specific native package.
+
+SPIRV-Cross reflection imports now resolve the already packaged runtime-directory shared library directly before any SDL shadercross/device initialization. CPUParticlesTests creates its custom-data Shader in a fresh GPU host process before Engine.Run, then checks actual native pixels. Windows/macOS/Android names were checked against package artifacts; this Linux execution does not establish their native runtime acceptance. Static browser/Apple shader integrations keep their existing separate gates.

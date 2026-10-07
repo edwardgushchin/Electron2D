@@ -93,3 +93,7 @@ The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu
 ## System font integration
 
 [System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+
+## CPU particle graph schemas
+
+Built-in factories now include CPUParticles, scalar Curve, Gradient and CanvasItemMaterial. Their stored schemas reconstruct particle configuration, scalar point snapshots, ramp arrays and sheet/blend settings in a fresh process. Native particle state and delegates are omitted; the generic initial-velocity curve and ordinary curve aliases remain typed resource references. Other unregistered concrete resource types keep their explicit application registration prerequisites.

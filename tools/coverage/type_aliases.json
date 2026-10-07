@@ -64,12 +64,17 @@
     "AudioListener2D": "AudioListener",
     "AudioStreamPlayer2D": "AudioStreamEmitter",
     "MultiMeshInstance2D": "MultiMeshInstance",
+    "CPUParticles2D": "CPUParticles",
     "StreamPeerExtension": "StreamPeer",
     "PacketPeerExtension": "PacketPeer",
     "MultiplayerPeerExtension": "MultiplayerPeer",
     "MultiplayerAPIExtension": "MultiplayerAPI"
   },
   "enums": {
+    "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
+    "CPUParticles2D.EmissionShape": "CPUParticles.EmissionShapeMode",
+    "CPUParticles2D.Parameter": "CPUParticles.Parameter",
+    "CPUParticles2D.ParticleFlags": "CPUParticles.ParticleFlags",
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",
     "CharacterBody2D.MotionMode": "CharacterMotionMode",
     "CharacterBody2D.PlatformOnLeave": "CharacterPlatformOnLeave",

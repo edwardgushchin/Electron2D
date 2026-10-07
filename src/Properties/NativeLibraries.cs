@@ -34,6 +34,14 @@ internal static class NativeLibraries
         if (OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser()) return;
         NativeLibrary.SetDllImportResolver(typeof(NativeLibraries).Assembly, (name, assembly, path) =>
         {
+            if (name == "spirv-cross-c-shared")
+            {
+                if (OperatingSystem.IsAndroid()) return NativeLibrary.Load("libspirv-cross-c-shared.so", assembly, path);
+                if (OperatingSystem.IsWindows()) return LoadRuntime("spirv-cross-c-shared.dll", assembly, path);
+                if (OperatingSystem.IsMacOS()) return LoadRuntime("libspirv-cross-c-shared.0.dylib", assembly, path);
+                if (OperatingSystem.IsLinux()) return LoadRuntime("libspirv-cross-c-shared.so.0", assembly, path);
+                return 0;
+            }
             if (OperatingSystem.IsAndroid())
             {
                 if (name == "HarfBuzzSharp") return NativeLibrary.Load("libElectron2DHarfBuzz.so", assembly, path);

@@ -7,7 +7,7 @@ public abstract partial class CanvasItem
     private bool _interpolationValid;
     private bool _interpolationFirstTick;
 
-    internal void BeginPhysicsInterpolationTick()
+    internal virtual void BeginPhysicsInterpolationTick()
     {
         if (!IsPhysicsInterpolatedAndEnabled()) { _interpolationValid = false; return; }
         _interpolationFirstTick = !_interpolationValid;
@@ -15,7 +15,7 @@ public abstract partial class CanvasItem
         _interpolationPrevious = _interpolationCurrent;
     }
 
-    internal void EndPhysicsInterpolationTick()
+    internal virtual void EndPhysicsInterpolationTick()
     {
         if (!IsPhysicsInterpolatedAndEnabled()) { _interpolationValid = false; return; }
         var current = GetVisualTransform();

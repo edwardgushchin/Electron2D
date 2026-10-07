@@ -1,6 +1,6 @@
 # Gradient
 
-Last updated: 2026-09-23
+Last updated: 2026-10-07
 
 - Declaration: `public sealed class Gradient : Resource`
 - Source: [Gradient.cs](../../src/Scene/Resources/Gradient.cs)
@@ -114,3 +114,7 @@ GetPropertyDescriptors supplies typed Offsets, Colors, InterpolationMode and Int
 ## Verification and limits
 
 [GradientTests](../../tests/Electron2D.Tests/GradientTests.cs) checks numeric color-space/interpolation samples, storage order, events, extreme coordinates, empty/degenerate data, copy/scene ownership, concurrency, failure and warm allocations. [Native checks](../../tests/Electron2D.Tests/RenderingGradientTests.cs) verify the texture consumers. Editor authoring, disk serialization, other platforms, owner visual acceptance and fresh AOT/self-contained publication remain unverified or absent. See [ADR 0013](../decisions/resources.md#adr-0013).
+
+## Typed file storage
+
+Gradient is a registered built-in resource. Offsets, Colors, InterpolationMode and InterpolationColorSpace are stored typed descriptors, preserving copied arrays and both policies through resource/scene files. Fresh-process particle scenes verify red/blue ramp content and independent reconstruction. Coordinate concurrent authoring/saving as with ordinary multi-call resource edits; live particle sampling uses the existing serialized gradient path.

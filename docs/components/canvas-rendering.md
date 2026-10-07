@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -415,3 +415,7 @@ Viewport GUI state now has explicit ownership: independent focus, hover, mouse/t
 Positional events forward from container GUI input; nonpositional events forward at scene input while focused, otherwise unhandled input. The typed predicate can reject before scaling. HandleInputLocally dynamically selects the receiving viewport or containing Window/topmost viewport's active handled state. Direct container forwarding uses an internal sanctioned nested path with separate prepared snapshots and deterministic context restoration. Public PushInput remains nonreentrant. Callback failures continue later child dispatch and required cleanup. Detachment removes GUI-state map ownership and native targets; viewport references/resources remain borrowed.
 
 SubViewportContainerTests verifies typed defaults/packing/invalid writes, size policy, two nested shrink transforms, viewport focus/hover/handled state, predicate and disabled-input paths, callback failures, tooltip ownership, automatic/forced root-child and child-root drops, MouseTarget and description semantics. Native Linux Wayland GPU and hardware compatibility check eight composition phases (resolution, modulation, visibility, rotation and sibling lifetime), injected SDL click/cursor/keyboard focus pixels, and 64 active plus 64 idle stable-size render/mutation intervals with zero managed bytes after preparation. GPU HLSL/GLSL consume the native viewport sampler. Those intervals exclude ordinary input Resource copies and process/pump work; native/driver allocations, large scenes, other platforms, editor/file workflows, independent native subwindows, multiview and human visual acceptance remain separate gates.
+
+## CPU particle quads
+
+[CPU particles](cpu-particles.md) execute seeded scene simulation and record ordinary canvas quads, phase/lifetime custom channels and live sprite-sheet sampling. World commands use the captured viewport/layer basis rather than the emitter pose, preserving already emitted positions and singular-emitter output. Both current native backends render the baseline; arbitrary custom-data shaders retain GPU-only capability rules. Existing vertex/batch preparation and native texture/material lifetime are reused.

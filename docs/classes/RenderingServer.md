@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-07
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -818,3 +818,7 @@ Its private CanvasFrame owns reusable per-target node/order/geometry/batch buffe
 RenderingServer.Composition.cs collects same-Z group ranges, fits or retains owner geometry, inserts copy/clear/composite boundaries and guards unsupported nested/writable-buffer reads. Its internal screen readback is an explicit native probe, separate from ordinary frame submission. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 ClipChildren extends the existing composition stream. Command-bearing mask owners end their captured same-Z range, AndDraw inserts an early ordinary owner draw using already uploaded geometry, and final owner geometry supplies alpha. Parent/internal Y-sort and canvas boundaries follow the same compositor traversal. See [alpha masks](../components/canvas-rendering.md#canvas-alpha-masks).
+
+## World particle composition
+
+For CPUParticles world-coordinate commands, each render entry captures the current framebuffer/viewport/CanvasLayer basis separately from the ordinary emitter transform. Existing particles remain visible after emitter motion or singular scale; normal children, logical transform queries, clips, Z/Y sort and repetition retain their ordinary paths. Native GPU/compatibility checks and prepared measurements are recorded in [CPU particles](../components/cpu-particles.md).

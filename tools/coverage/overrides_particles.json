@@ -1,0 +1,760 @@
+{
+  "mappings": [
+    {
+      "godot": "class:CPUParticles2D",
+      "electron2d": "T:Electron2D.CPUParticles",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum:DrawOrder",
+      "electron2d": "T:Electron2D.CPUParticles.DrawOrderMode",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum:EmissionShape",
+      "electron2d": "T:Electron2D.CPUParticles.EmissionShapeMode",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum:Parameter",
+      "electron2d": "T:Electron2D.CPUParticles.Parameter",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum:ParticleFlags",
+      "electron2d": "T:Electron2D.CPUParticles.ParticleFlags",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:DrawOrder.DRAW_ORDER_INDEX",
+      "electron2d": "enumValue:Electron2D.CPUParticles.DrawOrderMode.Index()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:DrawOrder.DRAW_ORDER_LIFETIME",
+      "electron2d": "enumValue:Electron2D.CPUParticles.DrawOrderMode.Lifetime()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_DIRECTED_POINTS",
+      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.DirectedPoints()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_MAX",
+      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Max()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_POINT",
+      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Point()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_POINTS",
+      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Points()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_RECTANGLE",
+      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Rectangle()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_RING",
+      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Ring()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_SPHERE",
+      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.Sphere()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_SPHERE_SURFACE",
+      "electron2d": "enumValue:Electron2D.CPUParticles.EmissionShapeMode.SphereSurface()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_ANGLE",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.Angle()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_ANGULAR_VELOCITY",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.AngularVelocity()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_ANIM_OFFSET",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.AnimOffset()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_ANIM_SPEED",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.AnimSpeed()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_DAMPING",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.Damping()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_HUE_VARIATION",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.HueVariation()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_INITIAL_LINEAR_VELOCITY",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.InitialLinearVelocity()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_LINEAR_ACCEL",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.LinearAccel()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_MAX",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.Max()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_ORBIT_VELOCITY",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.OrbitVelocity()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_RADIAL_ACCEL",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.RadialAccel()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_SCALE",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.Scale()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:Parameter.PARAM_TANGENTIAL_ACCEL",
+      "electron2d": "enumValue:Electron2D.CPUParticles.Parameter.TangentialAccel()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:ParticleFlags.PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY",
+      "electron2d": "enumValue:Electron2D.CPUParticles.ParticleFlags.AlignYToVelocity()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::enum_value:ParticleFlags.PARTICLE_FLAG_MAX",
+      "electron2d": "enumValue:Electron2D.CPUParticles.ParticleFlags.Max()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:get_param_curve(int:CPUParticles2D.Parameter)",
+      "electron2d": "method:Electron2D.CPUParticles.GetParamCurve(Electron2D.CPUParticles.Parameter)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:get_param_max(int:CPUParticles2D.Parameter)",
+      "electron2d": "method:Electron2D.CPUParticles.GetParamMax(Electron2D.CPUParticles.Parameter)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:get_param_min(int:CPUParticles2D.Parameter)",
+      "electron2d": "method:Electron2D.CPUParticles.GetParamMin(Electron2D.CPUParticles.Parameter)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:get_particle_flag(int:CPUParticles2D.ParticleFlags)",
+      "electron2d": "method:Electron2D.CPUParticles.GetParticleFlag(Electron2D.CPUParticles.ParticleFlags)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:request_particles_process(float:,float:)",
+      "electron2d": "method:Electron2D.CPUParticles.RequestParticlesProcess(System.Single,System.Single)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:restart(bool:)",
+      "electron2d": "method:Electron2D.CPUParticles.Restart(System.Boolean)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:set_param_curve(int:CPUParticles2D.Parameter,Curve:)",
+      "electron2d": "method:Electron2D.CPUParticles.SetParamCurve(Electron2D.CPUParticles.Parameter,Electron2D.Curve)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:set_param_max(int:CPUParticles2D.Parameter,float:)",
+      "electron2d": "method:Electron2D.CPUParticles.SetParamMax(Electron2D.CPUParticles.Parameter,System.Single)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:set_param_min(int:CPUParticles2D.Parameter,float:)",
+      "electron2d": "method:Electron2D.CPUParticles.SetParamMin(Electron2D.CPUParticles.Parameter,System.Single)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::method:set_particle_flag(int:CPUParticles2D.ParticleFlags,bool:)",
+      "electron2d": "method:Electron2D.CPUParticles.SetParticleFlag(Electron2D.CPUParticles.ParticleFlags,System.Boolean)",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:amount",
+      "electron2d": "property:Electron2D.CPUParticles.Amount()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:angle_curve",
+      "electron2d": "property:Electron2D.CPUParticles.AngleCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:angle_max",
+      "electron2d": "property:Electron2D.CPUParticles.AngleMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:angle_min",
+      "electron2d": "property:Electron2D.CPUParticles.AngleMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:angular_velocity_curve",
+      "electron2d": "property:Electron2D.CPUParticles.AngularVelocityCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:angular_velocity_max",
+      "electron2d": "property:Electron2D.CPUParticles.AngularVelocityMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:angular_velocity_min",
+      "electron2d": "property:Electron2D.CPUParticles.AngularVelocityMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:anim_offset_curve",
+      "electron2d": "property:Electron2D.CPUParticles.AnimOffsetCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:anim_offset_max",
+      "electron2d": "property:Electron2D.CPUParticles.AnimOffsetMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:anim_offset_min",
+      "electron2d": "property:Electron2D.CPUParticles.AnimOffsetMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:anim_speed_curve",
+      "electron2d": "property:Electron2D.CPUParticles.AnimSpeedCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:anim_speed_max",
+      "electron2d": "property:Electron2D.CPUParticles.AnimSpeedMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:anim_speed_min",
+      "electron2d": "property:Electron2D.CPUParticles.AnimSpeedMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:color",
+      "electron2d": "property:Electron2D.CPUParticles.Color()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:color_initial_ramp",
+      "electron2d": "property:Electron2D.CPUParticles.ColorInitialRamp()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:color_ramp",
+      "electron2d": "property:Electron2D.CPUParticles.ColorRamp()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:damping_curve",
+      "electron2d": "property:Electron2D.CPUParticles.DampingCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:damping_max",
+      "electron2d": "property:Electron2D.CPUParticles.DampingMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:damping_min",
+      "electron2d": "property:Electron2D.CPUParticles.DampingMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:direction",
+      "electron2d": "property:Electron2D.CPUParticles.Direction()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:draw_order",
+      "electron2d": "property:Electron2D.CPUParticles.DrawOrder()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emission_colors",
+      "electron2d": "property:Electron2D.CPUParticles.EmissionColors()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emission_normals",
+      "electron2d": "property:Electron2D.CPUParticles.EmissionNormals()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emission_points",
+      "electron2d": "property:Electron2D.CPUParticles.EmissionPoints()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emission_rect_extents",
+      "electron2d": "property:Electron2D.CPUParticles.EmissionRectExtents()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emission_ring_inner_radius",
+      "electron2d": "property:Electron2D.CPUParticles.EmissionRingInnerRadius()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emission_ring_radius",
+      "electron2d": "property:Electron2D.CPUParticles.EmissionRingRadius()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emission_shape",
+      "electron2d": "property:Electron2D.CPUParticles.EmissionShape()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emission_sphere_radius",
+      "electron2d": "property:Electron2D.CPUParticles.EmissionSphereRadius()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:emitting",
+      "electron2d": "property:Electron2D.CPUParticles.Emitting()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:explosiveness",
+      "electron2d": "property:Electron2D.CPUParticles.Explosiveness()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:fixed_fps",
+      "electron2d": "property:Electron2D.CPUParticles.FixedFPS()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:fract_delta",
+      "electron2d": "property:Electron2D.CPUParticles.FractDelta()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:gravity",
+      "electron2d": "property:Electron2D.CPUParticles.Gravity()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:hue_variation_curve",
+      "electron2d": "property:Electron2D.CPUParticles.HueVariationCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:hue_variation_max",
+      "electron2d": "property:Electron2D.CPUParticles.HueVariationMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:hue_variation_min",
+      "electron2d": "property:Electron2D.CPUParticles.HueVariationMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:initial_velocity_max",
+      "electron2d": "property:Electron2D.CPUParticles.InitialVelocityMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:initial_velocity_min",
+      "electron2d": "property:Electron2D.CPUParticles.InitialVelocityMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:lifetime",
+      "electron2d": "property:Electron2D.CPUParticles.Lifetime()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:lifetime_randomness",
+      "electron2d": "property:Electron2D.CPUParticles.LifetimeRandomness()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:linear_accel_curve",
+      "electron2d": "property:Electron2D.CPUParticles.LinearAccelCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:linear_accel_max",
+      "electron2d": "property:Electron2D.CPUParticles.LinearAccelMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:linear_accel_min",
+      "electron2d": "property:Electron2D.CPUParticles.LinearAccelMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:local_coords",
+      "electron2d": "property:Electron2D.CPUParticles.LocalCoords()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:one_shot",
+      "electron2d": "property:Electron2D.CPUParticles.OneShot()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:orbit_velocity_curve",
+      "electron2d": "property:Electron2D.CPUParticles.OrbitVelocityCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:orbit_velocity_max",
+      "electron2d": "property:Electron2D.CPUParticles.OrbitVelocityMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:orbit_velocity_min",
+      "electron2d": "property:Electron2D.CPUParticles.OrbitVelocityMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:particle_flag_align_y",
+      "electron2d": "property:Electron2D.CPUParticles.ParticleFlagAlignY()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:physics_interpolation_mode",
+      "electron2d": "property:Electron2D.Node.PhysicsInterpolationMode()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:preprocess",
+      "electron2d": "property:Electron2D.CPUParticles.Preprocess()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:radial_accel_curve",
+      "electron2d": "property:Electron2D.CPUParticles.RadialAccelCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:radial_accel_max",
+      "electron2d": "property:Electron2D.CPUParticles.RadialAccelMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:radial_accel_min",
+      "electron2d": "property:Electron2D.CPUParticles.RadialAccelMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:randomness",
+      "electron2d": "property:Electron2D.CPUParticles.Randomness()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:scale_amount_curve",
+      "electron2d": "property:Electron2D.CPUParticles.ScaleAmountCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:scale_amount_max",
+      "electron2d": "property:Electron2D.CPUParticles.ScaleAmountMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:scale_amount_min",
+      "electron2d": "property:Electron2D.CPUParticles.ScaleAmountMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:scale_curve_x",
+      "electron2d": "property:Electron2D.CPUParticles.ScaleCurveX()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:scale_curve_y",
+      "electron2d": "property:Electron2D.CPUParticles.ScaleCurveY()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:seed",
+      "electron2d": "property:Electron2D.CPUParticles.Seed()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:speed_scale",
+      "electron2d": "property:Electron2D.CPUParticles.SpeedScale()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:split_scale",
+      "electron2d": "property:Electron2D.CPUParticles.SplitScale()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:spread",
+      "electron2d": "property:Electron2D.CPUParticles.Spread()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:tangential_accel_curve",
+      "electron2d": "property:Electron2D.CPUParticles.TangentialAccelCurve()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:tangential_accel_max",
+      "electron2d": "property:Electron2D.CPUParticles.TangentialAccelMax()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:tangential_accel_min",
+      "electron2d": "property:Electron2D.CPUParticles.TangentialAccelMin()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:texture",
+      "electron2d": "property:Electron2D.CPUParticles.Texture()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::property:use_fixed_seed",
+      "electron2d": "property:Electron2D.CPUParticles.UseFixedSeed()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CPUParticles2D::signal:finished()",
+      "electron2d": "event:Electron2D.CPUParticles.Finished()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CanvasItemMaterial::property:particles_anim_h_frames",
+      "electron2d": "property:Electron2D.CanvasItemMaterial.ParticlesAnimHFrames()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CanvasItemMaterial::property:particles_anim_loop",
+      "electron2d": "property:Electron2D.CanvasItemMaterial.ParticlesAnimLoop()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CanvasItemMaterial::property:particles_anim_v_frames",
+      "electron2d": "property:Electron2D.CanvasItemMaterial.ParticlesAnimVFrames()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": "CanvasItemMaterial::property:particles_animation",
+      "electron2d": "property:Electron2D.CanvasItemMaterial.ParticlesAnimation()",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.CPUParticles..ctor()",
+      "reason": "Default construction and inherited scene drawing, internal notification, schema, configuration-warning and deterministic disposal overrides of the applicable CPU particle node. These preserve Node/CanvasItem lifecycle without adding a dynamic API.",
+      "adr": "ADR 0004/0008/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CPUParticles.CreateSceneInstanceFactory()",
+      "reason": "Default construction and inherited scene drawing, internal notification, schema, configuration-warning and deterministic disposal overrides of the applicable CPU particle node. These preserve Node/CanvasItem lifecycle without adding a dynamic API.",
+      "adr": "ADR 0004/0008/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CPUParticles.Dispose(System.Boolean)",
+      "reason": "Default construction and inherited scene drawing, internal notification, schema, configuration-warning and deterministic disposal overrides of the applicable CPU particle node. These preserve Node/CanvasItem lifecycle without adding a dynamic API.",
+      "adr": "ADR 0004/0008/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CPUParticles.GetConfigurationWarnings()",
+      "reason": "Default construction and inherited scene drawing, internal notification, schema, configuration-warning and deterministic disposal overrides of the applicable CPU particle node. These preserve Node/CanvasItem lifecycle without adding a dynamic API.",
+      "adr": "ADR 0004/0008/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CPUParticles.GetPropertyDescriptors()",
+      "reason": "Default construction and inherited scene drawing, internal notification, schema, configuration-warning and deterministic disposal overrides of the applicable CPU particle node. These preserve Node/CanvasItem lifecycle without adding a dynamic API.",
+      "adr": "ADR 0004/0008/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CPUParticles.OnDraw()",
+      "reason": "Default construction and inherited scene drawing, internal notification, schema, configuration-warning and deterministic disposal overrides of the applicable CPU particle node. These preserve Node/CanvasItem lifecycle without adding a dynamic API.",
+      "adr": "ADR 0004/0008/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CPUParticles.OnNotification(System.Int32)",
+      "reason": "Default construction and inherited scene drawing, internal notification, schema, configuration-warning and deterministic disposal overrides of the applicable CPU particle node. These preserve Node/CanvasItem lifecycle without adding a dynamic API.",
+      "adr": "ADR 0004/0008/0014/0028"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "CPUParticles2D::enum:DrawOrder",
+        "CPUParticles2D::enum:EmissionShape",
+        "CPUParticles2D::enum:Parameter",
+        "CPUParticles2D::enum:ParticleFlags",
+        "CPUParticles2D::enum_value:DrawOrder.DRAW_ORDER_INDEX",
+        "CPUParticles2D::enum_value:DrawOrder.DRAW_ORDER_LIFETIME",
+        "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_DIRECTED_POINTS",
+        "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_MAX",
+        "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_POINT",
+        "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_POINTS",
+        "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_RECTANGLE",
+        "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_RING",
+        "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_SPHERE",
+        "CPUParticles2D::enum_value:EmissionShape.EMISSION_SHAPE_SPHERE_SURFACE",
+        "CPUParticles2D::enum_value:Parameter.PARAM_ANGLE",
+        "CPUParticles2D::enum_value:Parameter.PARAM_ANGULAR_VELOCITY",
+        "CPUParticles2D::enum_value:Parameter.PARAM_ANIM_OFFSET",
+        "CPUParticles2D::enum_value:Parameter.PARAM_ANIM_SPEED",
+        "CPUParticles2D::enum_value:Parameter.PARAM_DAMPING",
+        "CPUParticles2D::enum_value:Parameter.PARAM_HUE_VARIATION",
+        "CPUParticles2D::enum_value:Parameter.PARAM_INITIAL_LINEAR_VELOCITY",
+        "CPUParticles2D::enum_value:Parameter.PARAM_LINEAR_ACCEL",
+        "CPUParticles2D::enum_value:Parameter.PARAM_MAX",
+        "CPUParticles2D::enum_value:Parameter.PARAM_ORBIT_VELOCITY",
+        "CPUParticles2D::enum_value:Parameter.PARAM_RADIAL_ACCEL",
+        "CPUParticles2D::enum_value:Parameter.PARAM_SCALE",
+        "CPUParticles2D::enum_value:Parameter.PARAM_TANGENTIAL_ACCEL",
+        "CPUParticles2D::enum_value:ParticleFlags.PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY",
+        "CPUParticles2D::enum_value:ParticleFlags.PARTICLE_FLAG_MAX",
+        "CPUParticles2D::method:get_param_curve(int:CPUParticles2D.Parameter)",
+        "CPUParticles2D::method:get_param_max(int:CPUParticles2D.Parameter)",
+        "CPUParticles2D::method:get_param_min(int:CPUParticles2D.Parameter)",
+        "CPUParticles2D::method:get_particle_flag(int:CPUParticles2D.ParticleFlags)",
+        "CPUParticles2D::method:request_particles_process(float:,float:)",
+        "CPUParticles2D::method:restart(bool:)",
+        "CPUParticles2D::method:set_param_curve(int:CPUParticles2D.Parameter,Curve:)",
+        "CPUParticles2D::method:set_param_max(int:CPUParticles2D.Parameter,float:)",
+        "CPUParticles2D::method:set_param_min(int:CPUParticles2D.Parameter,float:)",
+        "CPUParticles2D::method:set_particle_flag(int:CPUParticles2D.ParticleFlags,bool:)",
+        "CPUParticles2D::property:amount",
+        "CPUParticles2D::property:angle_curve",
+        "CPUParticles2D::property:angle_max",
+        "CPUParticles2D::property:angle_min",
+        "CPUParticles2D::property:angular_velocity_curve",
+        "CPUParticles2D::property:angular_velocity_max",
+        "CPUParticles2D::property:angular_velocity_min",
+        "CPUParticles2D::property:anim_offset_curve",
+        "CPUParticles2D::property:anim_offset_max",
+        "CPUParticles2D::property:anim_offset_min",
+        "CPUParticles2D::property:anim_speed_curve",
+        "CPUParticles2D::property:anim_speed_max",
+        "CPUParticles2D::property:anim_speed_min",
+        "CPUParticles2D::property:color",
+        "CPUParticles2D::property:color_initial_ramp",
+        "CPUParticles2D::property:color_ramp",
+        "CPUParticles2D::property:damping_curve",
+        "CPUParticles2D::property:damping_max",
+        "CPUParticles2D::property:damping_min",
+        "CPUParticles2D::property:direction",
+        "CPUParticles2D::property:draw_order",
+        "CPUParticles2D::property:emission_colors",
+        "CPUParticles2D::property:emission_normals",
+        "CPUParticles2D::property:emission_points",
+        "CPUParticles2D::property:emission_rect_extents",
+        "CPUParticles2D::property:emission_ring_inner_radius",
+        "CPUParticles2D::property:emission_ring_radius",
+        "CPUParticles2D::property:emission_shape",
+        "CPUParticles2D::property:emission_sphere_radius",
+        "CPUParticles2D::property:emitting",
+        "CPUParticles2D::property:explosiveness",
+        "CPUParticles2D::property:fixed_fps",
+        "CPUParticles2D::property:fract_delta",
+        "CPUParticles2D::property:gravity",
+        "CPUParticles2D::property:hue_variation_curve",
+        "CPUParticles2D::property:hue_variation_max",
+        "CPUParticles2D::property:hue_variation_min",
+        "CPUParticles2D::property:initial_velocity_max",
+        "CPUParticles2D::property:initial_velocity_min",
+        "CPUParticles2D::property:lifetime",
+        "CPUParticles2D::property:lifetime_randomness",
+        "CPUParticles2D::property:linear_accel_curve",
+        "CPUParticles2D::property:linear_accel_max",
+        "CPUParticles2D::property:linear_accel_min",
+        "CPUParticles2D::property:local_coords",
+        "CPUParticles2D::property:one_shot",
+        "CPUParticles2D::property:orbit_velocity_curve",
+        "CPUParticles2D::property:orbit_velocity_max",
+        "CPUParticles2D::property:orbit_velocity_min",
+        "CPUParticles2D::property:particle_flag_align_y",
+        "CPUParticles2D::property:physics_interpolation_mode",
+        "CPUParticles2D::property:preprocess",
+        "CPUParticles2D::property:radial_accel_curve",
+        "CPUParticles2D::property:radial_accel_max",
+        "CPUParticles2D::property:radial_accel_min",
+        "CPUParticles2D::property:randomness",
+        "CPUParticles2D::property:scale_amount_curve",
+        "CPUParticles2D::property:scale_amount_max",
+        "CPUParticles2D::property:scale_amount_min",
+        "CPUParticles2D::property:scale_curve_x",
+        "CPUParticles2D::property:scale_curve_y",
+        "CPUParticles2D::property:seed",
+        "CPUParticles2D::property:speed_scale",
+        "CPUParticles2D::property:split_scale",
+        "CPUParticles2D::property:spread",
+        "CPUParticles2D::property:tangential_accel_curve",
+        "CPUParticles2D::property:tangential_accel_max",
+        "CPUParticles2D::property:tangential_accel_min",
+        "CPUParticles2D::property:texture",
+        "CPUParticles2D::property:use_fixed_seed",
+        "CPUParticles2D::signal:finished()",
+        "CanvasItemMaterial::property:particles_anim_h_frames",
+        "CanvasItemMaterial::property:particles_anim_loop",
+        "CanvasItemMaterial::property:particles_anim_v_frames",
+        "CanvasItemMaterial::property:particles_animation"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: CPUParticles executes seeded CPU simulation, seven emission distributions, phase/random/lifetime/force/curve/color channels, explicit seek and one-shot lifecycle, world/interpolated-follow transforms, ordinary canvas quads and custom shader data. CanvasItemMaterial sprite-sheet parameters are read at replay on both current backends. CPUParticlesTests exercises copied ownership, failure commitment, graph storage/fresh process, actual pixels and prepared allocation boundaries; GPU compute particles and process-material conversion remain exact dependencies."
+    },
+    {
+      "godot": [
+        "class:CPUParticles2D"
+      ],
+      "state": "Partial",
+      "reason": "CPUParticles simulation, canvas/material animation and typed scene storage execute. Trigger: ConvertFromParticles enters the first actual GPUParticles/ParticleProcessMaterial integration slice; no fake conversion from an unavailable source is exposed."
+    },
+    {
+      "godot": [
+        "CPUParticles2D::method:convert_from_particles(Node:)"
+      ],
+      "state": "Blocked",
+      "reason": "Requires a concrete GPUParticles emitter and typed ParticleProcessMaterial with executable matching settings. Trigger: its first GPU simulation/material/renderer slice must connect this conversion to CPUParticles settings and retain source ownership."
+    },
+    {
+      "godot": [
+        "CPUParticles2D::enum_value:ParticleFlags.PARTICLE_FLAG_DISABLE_Z",
+        "CPUParticles2D::enum_value:ParticleFlags.PARTICLE_FLAG_ROTATE_Y"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned CPUParticles2D.xml/cpu_particles_2d.cpp retain RotateY/DisableZ flags from the 3D particle domain, but the 2D simulation never reads them; do not expose inert switches. AlignYToVelocity executes; source bound Max=3 remains nonselectable."
+    }
+  ]
+}

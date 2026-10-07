@@ -132,7 +132,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Button](classes/Button.md) | BaseButton | Implemented | 45 |
 | [ButtonGroup](classes/ButtonGroup.md) | Resource | Implemented | 5 |
 | [CCDIK3D](classes/CCDIK3D.md) | IterateIK3D | Excluded | 0 |
-| [CPUParticles2D](classes/CPUParticles2D.md) | Node2D | Blocked | 113 |
+| [CPUParticles2D](classes/CPUParticles2D.md) | Node2D | Partial | 113 |
 | [CPUParticles3D](classes/CPUParticles3D.md) | GeometryInstance3D | Excluded | 122 |
 | [CSGBox3D](classes/CSGBox3D.md) | CSGPrimitive3D | Excluded | 2 |
 | [CSGCombiner3D](classes/CSGCombiner3D.md) | CSGShape3D | Excluded | 0 |

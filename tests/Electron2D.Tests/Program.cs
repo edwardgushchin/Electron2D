@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_CHILD") is { } particlesPath) { CPUParticlesTests.RunChild(particlesPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES_HOST") == "1") { CPUParticlesTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_PARTICLES") == "1") { CPUParticlesTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "empty") { SystemFontTests.RunEmptyCatalog(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "collection") { SystemFontTests.RunCollectionCatalog(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "1") { SystemFontTests.RunCatalog(); return; }
@@ -618,6 +621,7 @@ AudioSpatialTests.Run();
 AudioFilterTests.Run();
 MeshTests.Run();
 MultiMeshTests.Run();
+CPUParticlesTests.Run();
 ImmediateMeshTests.Run();
 TextureRectTests.Run();
 StyleBoxTests.Run();

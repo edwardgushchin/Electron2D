@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "networking")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "networking")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -311,8 +311,8 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001)."
     if name.startswith("VisualShader"):
         return "Blocked", "Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028)."
-    if name in {"CPUParticles2D", "GPUParticles2D", "ParticleProcessMaterial"}:
-        return "Blocked", "Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028)."
+    if name in {"GPUParticles2D", "ParticleProcessMaterial"}:
+        return "Blocked", "Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion."
     if name in {"DirectionalLight2D", "Light2D", "LightOccluder2D", "OccluderPolygon2D", "PointLight2D"}:
         return "Blocked", "Trigger: first 2D light and occlusion renderer slice (ADR 0028)."
     if name in {"BackBufferCopy", "CanvasGroup"}:

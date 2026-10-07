@@ -954,3 +954,14 @@ CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [C
 | [Rendering](domains/rendering.md) | [System fonts](components/system-fonts.md) | [SystemFont](classes/SystemFont.md) | [SystemFont.cs](../src/Scene/Resources/SystemFont.cs) | Current | Installed font matching, owned fallback and shared native text lifecycle. |
 | [Rendering](domains/rendering.md) | [System fonts](components/system-fonts.md) | [NativeSystemFonts](classes/NativeSystemFonts.md) | [NativeSystemFonts.cs](../src/Servers/Text/NativeSystemFonts.cs) | Internal | Installed font matching, owned fallback and shared native text lifecycle. |
 | [Rendering](domains/rendering.md) | [System fonts](components/system-fonts.md) | [SystemFontMatch](classes/SystemFontMatch.md) | [NativeSystemFonts.cs](../src/Servers/Text/NativeSystemFonts.cs) | Internal | Installed font matching, owned fallback and shared native text lifecycle. |
+
+## CPU particle types
+
+| Domain | Component | Type | Source | Status | Responsibility |
+| --- | --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [CPU particles](components/cpu-particles.md) | [CPUParticles](classes/CPUParticles.md) | [CPUParticles.cs](../src/Scene/2D/CPUParticles.cs) | Current | Seeded simulation, ordinary canvas quads, material animation and typed scene/resource authoring. |
+| [Rendering](domains/rendering.md) | [CPU particles](components/cpu-particles.md) | [CPUParticles.DrawOrderMode](classes/CPUParticles.DrawOrderMode.md) | [CPUParticles.cs](../src/Scene/2D/CPUParticles.cs) | Current | Quad index/lifetime order. |
+| [Rendering](domains/rendering.md) | [CPU particles](components/cpu-particles.md) | [CPUParticles.EmissionShapeMode](classes/CPUParticles.EmissionShapeMode.md) | [CPUParticles.cs](../src/Scene/2D/CPUParticles.cs) | Current | Seven real birth distributions. |
+| [Rendering](domains/rendering.md) | [CPU particles](components/cpu-particles.md) | [CPUParticles.Parameter](classes/CPUParticles.Parameter.md) | [CPUParticles.cs](../src/Scene/2D/CPUParticles.cs) | Current | Twelve scalar simulation channels. |
+| [Rendering](domains/rendering.md) | [CPU particles](components/cpu-particles.md) | [CPUParticles.ParticleFlags](classes/CPUParticles.ParticleFlags.md) | [CPUParticles.cs](../src/Scene/2D/CPUParticles.cs) | Current | Applicable velocity alignment. |
+| [Rendering](domains/rendering.md) | [CPU particles](components/cpu-particles.md) | [CPUParticles.Particle](classes/CPUParticles.Particle.md) | [CPUParticles.Simulation.cs](../src/Scene/2D/CPUParticles.Simulation.cs) | Private | Transient double-buffered simulation record. |

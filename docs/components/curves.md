@@ -1,6 +1,6 @@
 # Curves component
 
-Last updated: 2026-09-24
+Last updated: 2026-10-07
 
 ## Scope and owned types
 
@@ -36,3 +36,7 @@ Warm cached sampling and closest queries allocate no managed memory. Editing/bak
 [CurveTests](../../tests/Electron2D.Tests/CurveTests.cs) runs through the ordinary managed test executable. It checks exact analytic and baked samples, defaults, events, clamping/tie order, modes, duplicate cleanup and tangent refresh, cache invalidation, tessellation density/depth, closed/degenerate geometry, closest projection, overflow recovery, descriptors, exact shallow/deep/CopyFromResource copies, PackedScene local ownership, a processing Entity consumer, callback failure/disposal, concurrent access and warm-query allocation. The class examples match executable analytic tests.
 
 Verified locally on Linux through Release build and managed tests. [CurveTextureTests](../../tests/Electron2D.Tests/CurveTextureTests.cs) checks RGB/Red/XYZ storage, width bounds, unit-domain sampling, null defaults, copy/subscription aliases, local scene ownership, callback/disposal paths and concurrent coherent publication. [RenderingCurveTextureTests](../../tests/Electron2D.Tests/RenderingCurveTextureTests.cs) verifies Linux Wayland GPU canvas and eight frame stages for each HLSL/GLSL material, preserving negative and HDR values through worker edits, mode/width changes, defaults and atlas bindings. Wayland compatibility and dummy/software reject unsupported float precision explicitly and release resources. Readable images are copied from generated CPU snapshots, following the documented image-copy contract; the pinned reference curve types inherit null/unspecified base queries, an omission recorded in ADR 0013. Default curve textures report 256×1 but have no image until an actual setting/source change; drawing them uninitialized fails explicitly. Red-only mode retains RF CPU storage; both modes upload as RGBA32Float, with no present GPU memory saving. These checks do not establish owner visual acceptance, other platforms, fresh self-contained/AOT delivery or throughput guarantees. See [Resources](../domains/resources.md), ADRs [0013](../decisions/resources.md#adr-0013), [0014](../decisions/resources.md#adr-0014), [0034](../decisions/core-math.md#adr-0034), [0035](../decisions/core-math.md#adr-0035).
+
+## Particle authoring persistence
+
+Scalar Curve now supplies registered bounded typed file storage. `_curve_data` preserves exact points/tangents/modes, domain/value limits and bake resolution; validation precedes atomic state publication. The copied record omits baked samples and native identity. CPUParticlesTests loads it in a fresh process, checks aliases and tangent values, then consumes it in real simulation. This extends persistence without altering scalar sampling behavior.

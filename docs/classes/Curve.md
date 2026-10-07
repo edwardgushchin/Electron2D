@@ -1,6 +1,6 @@
 # Curve
 
-Last updated: 2026-09-23
+Last updated: 2026-10-07
 
 **Inherits:** [Resource](Resource.md), [ElectronObject](ElectronObject.md)
 
@@ -515,3 +515,7 @@ Uses the existing Resource, Vector2, Mathf and Transform contracts and standard 
 The pinned Godot 4.7.2 [implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/curve.cpp) is audited alongside its XML. [ADR 0013](../decisions/resources.md#adr-0013) records the typed mappings and proven correctness fixes under ADR 0034: duplicate cleanup and surviving linear tangents, finite-domain cache arithmetic, nonconstant closed segments, degenerate nearest-point queries and identity orientation. The inherited Resource API is documented on its own class page. [Path/PathFollow](../components/scene-paths.md) now consume spatial curves. Curve textures, editor widgets and disk serialization remain separate unimplemented consumers with explicit [dependency triggers](../components/curves.md#dependent-slices).
 
 CurveTexture and CurveXYZTexture borrow scalar curves and synchronously rebuild their floating-point rows on Changed; see [curve texture contracts](CurveTexture.md). The internal texture sampler captures all row samples under one curve lock using the same baked interpolation, without changing this public API.
+
+## Typed file storage
+
+Curve is a registered built-in resource for .e2dres/.e2dscene. Hidden stored `_curve_data` owns a versioned byte snapshot of limits, bake resolution and all exact point positions, left/right tangents and tangent modes. It preserves duplicate offsets, outside-insertion-bound values and derived IEEE slopes without replaying clamping setters. Storage is bounded to 65536 points and validates size/version/range/order/modes before publication; free tangents must be finite. Invalid input preserves the previous record. Decoding clears the transient bake and emits Changed after commitment. Prepared sampling remains unchanged. CPUParticlesTests checks fresh-process points/tangents, aliases and real particle consumption.

@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-05
+Last updated: 2026-10-07
 
 **Inherits:** [Node](Node.md)
 
@@ -1278,3 +1278,7 @@ Remarks: This query does not cache results, emit events or require an edited sce
 System.InvalidOperationException: An attached query runs off the scene owner thread.
 
 System.ObjectDisposedException: This node is disposed.
+
+## CPU particle commands
+
+CPUParticles records ordinary quads with internal custom phase/lifetime channels. AppendCanvas reads current CanvasItemMaterial sheet settings on replay, keeping paused material changes visible. An internal world-coordinate drawing flag separates these quads from the emitter's logical transform; the renderer preserves its viewport/CanvasLayer basis, ordinary child inheritance and clipping. Complete interpolation tick hooks let this consumer track global emitter poses even when its own interpolation mode is Off. Existing public drawing signatures and transform queries retain their contracts; native and prepared evidence is in [CPU particles](../components/cpu-particles.md).

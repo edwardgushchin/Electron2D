@@ -200,3 +200,5 @@ See [resource-file contracts](../components/resource-files.md) for registered ty
 ## System font integration
 
 [System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+
+NativeLibraries resolves the packaged SPIRV-Cross shared library directly for cold shader reflection before renderer startup. The current Linux particle shader host exercises this path; foreign native execution remains unverified.

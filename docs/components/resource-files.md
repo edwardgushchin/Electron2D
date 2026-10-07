@@ -62,3 +62,7 @@ Script archives store editable source text and a stable compiled type ID resolve
 ## System font integration
 
 [System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+
+## Particle resources
+
+The connected CPU particle scene schema registers CPUParticles, Curve, Gradient and CanvasItemMaterial. Scalar curves retain exact bounded point/tangent/mode and limit records in a versioned byte-array property; gradients store arrays and interpolation policies. The ordinary reference table preserves shared curve aliases, and material blend/sheet configuration is copied independently. Fresh-process checks load and execute the particle scene with no process-local factory or live particle cache. ShaderMaterial storage remains its separate schema dependency.

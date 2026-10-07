@@ -305,6 +305,7 @@ public abstract partial class CanvasItem
 
     internal bool HasCanvasCommands => _canvasCommands is { Count: > 0 };
     internal virtual Rect2? CanvasClipRect => null;
+    internal virtual bool CanvasUsesWorldCoordinates => false;
 
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
     internal Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
@@ -325,6 +326,8 @@ public abstract partial class CanvasItem
         var capturedMaterial = false;
         var drawingTransform = Transform.Identity;
         var skipping = false;
+        var capturedParticles = false;
+        (bool Enabled, int Horizontal, int Vertical, bool Loop) particlesAnimation = default;
         foreach (var command in _canvasCommands)
         {
             if (command.AnimationSlice is { } slice) { skipping = !slice.Includes(time); continue; }
@@ -351,8 +354,24 @@ public abstract partial class CanvasItem
                 mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true);
                 continue;
             }
+            if (replay.ParticleCustom is { } custom)
+            {
+                if (!capturedParticles) { particlesAnimation = CanvasMaterial is CanvasItemMaterial particleMaterial ? particleMaterial.GetParticlesAnimation() : default; capturedParticles = true; }
+                var phase = custom.B;
+                var animation = particlesAnimation;
+                if (animation.Enabled)
+                {
+                    var frameCount = animation.Horizontal * animation.Vertical;
+                    phase = animation.Loop ? phase - MathF.Floor(phase) : Math.Clamp(phase, 0, 1);
+                    var frame = Math.Min(frameCount - 1, (int)MathF.Floor(phase * frameCount));
+                    var frameSize = replay.Source.Size / new Vector2(animation.Horizontal, animation.Vertical);
+                    replay = replay with { Source = new(replay.Source.Position + new Vector2(frame % animation.Horizontal, frame / animation.Horizontal) * frameSize, frameSize) };
+                }
+            }
             var first = vertices.Count;
             CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true);
+            if (replay.ParticleCustom is { } particleCustom)
+                for (var vertex = first; vertex < vertices.Count; vertex++) vertices[vertex] = vertices[vertex] with { InstanceCustom = particleCustom };
             var count = vertices.Count - first;
             if (count == 0) continue;
             if (!capturedMaterial)
@@ -368,6 +387,16 @@ public abstract partial class CanvasItem
                 batches[^1] = last with { Count = last.Count + count };
             else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, clip));
         }
+    }
+
+    internal void DrawParticleQuad(Texture? texture, Rect2 destination, Color color, Color custom)
+    {
+        EnsureDrawing(); var first = _canvasCommands?.Count ?? 0;
+        if (texture is null) DrawRect(destination, color);
+        else DrawTextureRectRegion(texture, destination, new(Vector2.Zero, texture.GetSize()), color, clipUV: false);
+        var commands = _canvasCommands!;
+        for (var index = first; index < commands.Count; index++)
+            if (!commands[index].SetTransform) commands[index] = commands[index] with { ParticleCustom = custom };
     }
 
     private void EnsureDrawing()

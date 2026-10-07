@@ -104,6 +104,7 @@ public sealed partial class ThemeDB
         ["BoxContainer"] = ["BoxContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["Button"] = ["Button", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["ButtonGroup"] = ["ButtonGroup", "Resource", "ElectronObject"],
+        ["CPUParticles"] = ["CPUParticles", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["CallbackTweener"] = ["CallbackTweener", "Tweener", "ElectronObject"],
         ["Camera"] = ["Camera", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["CanvasGroup"] = ["CanvasGroup", "Entity", "CanvasItem", "Node", "ElectronObject"],

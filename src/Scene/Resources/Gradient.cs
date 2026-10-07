@@ -245,10 +245,10 @@ public sealed class Gradient : Resource
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
-        new PropertyDescriptor<Gradient, float[]>(nameof(Offsets), g => g.Offsets, (g, v) => g.Offsets = v, _ => [0, 1]),
-        new PropertyDescriptor<Gradient, Color[]>(nameof(Colors), g => g.Colors, (g, v) => g.Colors = v, _ => [Electron2D.Colors.Black, Electron2D.Colors.White]),
-        new PropertyDescriptor<Gradient, InterpolationMode>(nameof(InterpolationMode), g => g.InterpolationMode, (g, v) => g.InterpolationMode = v, _ => InterpolationMode.Linear),
-        new PropertyDescriptor<Gradient, ColorSpace>(nameof(InterpolationColorSpace), g => g.InterpolationColorSpace, (g, v) => g.InterpolationColorSpace = v, _ => ColorSpace.SRGB),
+        new PropertyDescriptor<Gradient, float[]>(nameof(Offsets), g => g.Offsets, (g, v) => g.Offsets = v, _ => [0, 1], stored: true),
+        new PropertyDescriptor<Gradient, Color[]>(nameof(Colors), g => g.Colors, (g, v) => g.Colors = v, _ => [Electron2D.Colors.Black, Electron2D.Colors.White], stored: true),
+        new PropertyDescriptor<Gradient, InterpolationMode>(nameof(InterpolationMode), g => g.InterpolationMode, (g, v) => g.InterpolationMode = v, _ => InterpolationMode.Linear, stored: true),
+        new PropertyDescriptor<Gradient, ColorSpace>(nameof(InterpolationColorSpace), g => g.InterpolationColorSpace, (g, v) => g.InterpolationColorSpace = v, _ => ColorSpace.SRGB, stored: true),
     ]);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new Gradient();

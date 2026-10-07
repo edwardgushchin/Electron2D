@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-05
+Last updated: 2026-10-07
 
 ## Scope and implementation state
 
@@ -230,3 +230,5 @@ SCREEN_TEXTURE is a renderer-owned sampled 2D binding in descriptor set two, at 
 Use framebuffer fragment position multiplied by SCREEN_PIXEL_SIZE for viewport UVs: HLSL SV_Position.xy or GLSL gl_FragCoord.xy. SCREEN_TEXTURE uses linear/clamped sampling with available mip levels. Ordinary screen-reading draws snapshot once implicitly unless BackBufferCopy has supplied an explicit region; generated mips accompany GPU screen copies when screen-reading materials require the levels. Group materials consume the current transparent group buffer, and CanvasGroup.UseMipmaps controls generation after group children. Sampling a level not generated for the current group is not a supported result. BackBufferCopy region samples outside the copied region are unspecified. A group child cannot sample its active writable backbuffer.
 
 The checked [HLSL fixture](../../tests/Electron2D.Tests/Shaders/Screen.frag.hlsl) and [GLSL fixture](../../tests/Electron2D.Tests/Shaders/Screen.frag.glsl) compile through the pinned import tool and execute in CanvasCompositionTests. Both share typed tint/LOD/offset parameters and reserved target data. Compatibility rejects arbitrary shader materials. [The composition component](canvas-rendering.md#group-composition-and-screen-snapshots) records native pixels, mipmap, lifetime and allocation limits.
+
+SPIRV-Cross reflection imports now resolve the already packaged runtime-directory shared library directly before any SDL shadercross/device initialization. CPUParticlesTests creates its custom-data Shader in a fresh GPU host process before Engine.Run, then checks actual native pixels. Windows/macOS/Android names were checked against package artifacts; this Linux execution does not establish their native runtime acceptance. Static browser/Apple shader integrations keep their existing separate gates.

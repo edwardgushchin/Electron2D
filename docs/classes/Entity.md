@@ -1,6 +1,6 @@
 # Entity
 
-Last updated: 2026-10-04
+Last updated: 2026-10-07
 
 **Inherits:** [CanvasItem](CanvasItem.md)
 
@@ -498,3 +498,5 @@ All own `Node2D` mapped members and its type row are Implemented after managed b
 Transform assignments commit immediately, including equal values. Enabled local notifications run synchronously while attached; global notifications coalesce until scene delivery or inherited ForceUpdateTransform. GlobalTransform queries resolve the cached mathematical composition without consuming pending notifications. See [CanvasItem delivery](CanvasItem.md#transform-notification-delivery).
 
 CanvasGroup and BackBufferCopy now derive directly from Entity, preserving the separate spatial canvas branch and exact typed placement/factory rules. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
+
+CPUParticles is an implemented spatial subclass. It inherits logical positioning and lifecycle, while its default world drawing retains emitted canvas positions independently of later emitter transforms. See [CPU particles](CPUParticles.md).

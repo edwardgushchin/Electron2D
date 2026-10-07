@@ -17,7 +17,7 @@ public enum BlendMode
 
 /// <summary>Applies a fixed blend mode to canvas geometry and textures.</summary>
 /// <remarks>Nodes borrow this resource. The active mode is read each frame without re-recording draw commands.</remarks>
-public sealed class CanvasItemMaterial : Material
+public sealed partial class CanvasItemMaterial : Material
 {
     private readonly object _gate = new();
     private BlendMode _blendMode;
@@ -50,10 +50,15 @@ public sealed class CanvasItemMaterial : Material
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource) =>
-        ((CanvasItemMaterial)target).BlendMode = BlendMode;
+        CopyMaterial((CanvasItemMaterial)target);
+
+    private void CopyMaterial(CanvasItemMaterial target)
+    {
+        lock (_gate) { ThrowIfDisposed(); target._blendMode = _blendMode; target._particlesAnimation = _particlesAnimation; target._particlesAnimHFrames = _particlesAnimHFrames; target._particlesAnimVFrames = _particlesAnimVFrames; target._particlesAnimLoop = _particlesAnimLoop; }
+    }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ParticleProperties).Concat(
         [new PropertyDescriptor<CanvasItemMaterial, BlendMode>(nameof(BlendMode), m => m.BlendMode,
             (m, v) => m.BlendMode = v, _ => BlendMode.Mix, stored: true)]);
 }
