@@ -216,6 +216,7 @@ public sealed partial class ThemeDB
         ["MultiplayerPeer"] = ["MultiplayerPeer", "PacketPeer", "ElectronObject"],
         ["MultiplayerSpawner"] = ["MultiplayerSpawner", "Node", "ElectronObject"],
         ["MultiplayerSynchronizer"] = ["MultiplayerSynchronizer", "Node", "ElectronObject"],
+        ["NavigationAgent"] = ["NavigationAgent", "Node", "ElectronObject"],
         ["NavigationLink"] = ["NavigationLink", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["NavigationPathQueryParameters"] = ["NavigationPathQueryParameters", "ElectronObject"],
         ["NavigationPathQueryResult"] = ["NavigationPathQueryResult", "ElectronObject"],

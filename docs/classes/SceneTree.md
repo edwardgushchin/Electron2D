@@ -954,3 +954,5 @@ FileDialog regression checks exercise teardown with an active embedded-window to
 ## Navigation map integration
 
 World.NavigationMap now lazily owns an active borrowed map in the same runtime lifetime as canvas/physics. Scene NavigationRegion nodes and server-owned regions use that same map storage; the physics lane commits staged topology. NavigationServer is available through Engine named-service lookup. [The navigation contract](../components/navigation-maps.md) records implemented behavior and remaining dependencies.
+
+Viewport World replacement also rebinds direct Entity-parent NavigationAgent map memberships through the retained navigation service. These nonspatial nodes participate without being CanvasItem types; nested viewports retain their own selection boundary.

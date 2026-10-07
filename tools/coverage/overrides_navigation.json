@@ -719,6 +719,201 @@
       "godot": "NavigationServer2D::method:simplify_path(PackedVector2Array:,float:)",
       "electron2d": "method:Electron2D.NavigationServer.SimplifyPath(System.ReadOnlySpan<Electron2D.Vector2>,System.Single)",
       "reason": "ADR 0097 static typed query over one committed map, atomic caller result, optional zero-argument Action completion; iterative RDP consumes finite copied world points."
+    },
+    {
+      "godot": "NavigationAgent2D::method:distance_to_target()",
+      "electron2d": "method:Electron2D.NavigationAgent.DistanceToTarget()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_current_navigation_path()",
+      "electron2d": "method:Electron2D.NavigationAgent.GetCurrentNavigationPath()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_current_navigation_path_index()",
+      "electron2d": "method:Electron2D.NavigationAgent.GetCurrentNavigationPathIndex()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_current_navigation_result()",
+      "electron2d": "method:Electron2D.NavigationAgent.GetCurrentNavigationResult()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_final_position()",
+      "electron2d": "method:Electron2D.NavigationAgent.GetFinalPosition()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_navigation_layer_value(int:)",
+      "electron2d": "method:Electron2D.NavigationAgent.GetNavigationLayerValue(System.Int32)",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_navigation_map()",
+      "electron2d": "method:Electron2D.NavigationAgent.GetNavigationMap()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_next_path_position()",
+      "electron2d": "method:Electron2D.NavigationAgent.GetNextPathPosition()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_path_length()",
+      "electron2d": "method:Electron2D.NavigationAgent.GetPathLength()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_rid()",
+      "electron2d": "method:Electron2D.NavigationAgent.GetRID()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:is_navigation_finished()",
+      "electron2d": "method:Electron2D.NavigationAgent.IsNavigationFinished()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:is_target_reachable()",
+      "electron2d": "method:Electron2D.NavigationAgent.IsTargetReachable()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:is_target_reached()",
+      "electron2d": "method:Electron2D.NavigationAgent.IsTargetReached()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:set_navigation_layer_value(int:,bool:)",
+      "electron2d": "method:Electron2D.NavigationAgent.SetNavigationLayerValue(System.Int32,System.Boolean)",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::method:set_navigation_map(RID:)",
+      "electron2d": "method:Electron2D.NavigationAgent.SetNavigationMap(Electron2D.RID)",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:navigation_layers",
+      "electron2d": "property:Electron2D.NavigationAgent.NavigationLayers()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:path_desired_distance",
+      "electron2d": "property:Electron2D.NavigationAgent.PathDesiredDistance()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:path_max_distance",
+      "electron2d": "property:Electron2D.NavigationAgent.PathMaxDistance()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:path_metadata_flags",
+      "electron2d": "property:Electron2D.NavigationAgent.PathMetadataFlags()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:path_postprocessing",
+      "electron2d": "property:Electron2D.NavigationAgent.PathPostprocessing()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:path_return_max_length",
+      "electron2d": "property:Electron2D.NavigationAgent.PathReturnMaxLength()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:path_return_max_radius",
+      "electron2d": "property:Electron2D.NavigationAgent.PathReturnMaxRadius()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:path_search_max_distance",
+      "electron2d": "property:Electron2D.NavigationAgent.PathSearchMaxDistance()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:path_search_max_polygons",
+      "electron2d": "property:Electron2D.NavigationAgent.PathSearchMaxPolygons()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:pathfinding_algorithm",
+      "electron2d": "property:Electron2D.NavigationAgent.PathfindingAlgorithm()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:simplify_epsilon",
+      "electron2d": "property:Electron2D.NavigationAgent.SimplifyEpsilon()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:simplify_path",
+      "electron2d": "property:Electron2D.NavigationAgent.SimplifyPath()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:target_desired_distance",
+      "electron2d": "property:Electron2D.NavigationAgent.TargetDesiredDistance()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::property:target_position",
+      "electron2d": "property:Electron2D.NavigationAgent.TargetPosition()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::signal:link_reached(Dictionary:)",
+      "electron2d": "event:Electron2D.NavigationAgent.LinkReached()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::signal:navigation_finished()",
+      "electron2d": "event:Electron2D.NavigationAgent.NavigationFinished()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::signal:path_changed()",
+      "electron2d": "event:Electron2D.NavigationAgent.PathChanged()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::signal:target_reached()",
+      "electron2d": "event:Electron2D.NavigationAgent.TargetReached()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationAgent2D::signal:waypoint_reached(Dictionary:)",
+      "electron2d": "event:Electron2D.NavigationAgent.WaypointReached()",
+      "reason": "ADR 0097 direct Entity-parent path following through shared typed query controls. Typed NavigationWaypoint replaces dictionary details; retained node-owned agent/result lifetimes and static server map storage execute."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_create()",
+      "electron2d": "method:Electron2D.NavigationServer.AgentCreate()",
+      "reason": "ADR 0097 stable caller/node agent RID membership, map teardown and consumed committed version observation; static retained service with real scene follower consumer."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_map(RID:,RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetMap(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0097 stable caller/node agent RID membership, map teardown and consumed committed version observation; static retained service with real scene follower consumer."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_map(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetMap(Electron2D.RID)",
+      "reason": "ADR 0097 stable caller/node agent RID membership, map teardown and consumed committed version observation; static retained service with real scene follower consumer."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_is_map_changed(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentIsMapChanged(Electron2D.RID)",
+      "reason": "ADR 0097 stable caller/node agent RID membership, map teardown and consumed committed version observation; static retained service with real scene follower consumer."
+    },
+    {
+      "godot": "NavigationServer2D::method:map_get_agents(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.MapGetAgents(Electron2D.RID)",
+      "reason": "ADR 0097 stable caller/node agent RID membership, map teardown and consumed committed version observation; static retained service with real scene follower consumer."
     }
   ],
   "extras": [
@@ -886,6 +1081,131 @@
       "electron2d": "method:Electron2D.NavigationPathQueryResult.GetPropertyDescriptors()",
       "reason": "Typed C# constructor and inherited ElectronObject disposal/discovered property schema for reusable query settings/results; not a Resource archive or manual reference-count facade.",
       "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "T:Electron2D.NavigationWaypoint",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "constructor:Electron2D.NavigationAgent..ctor()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.CreateSceneInstanceFactory()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.Dispose(System.Boolean)",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.GetConfigurationWarnings()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.GetPropertyDescriptors()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.OnEnterTree()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.OnExitTree()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.OnNotification(System.Int32)",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.ValidateDisposal()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationAgent.ValidateMutation()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationWaypoint.Equals(Electron2D.NavigationWaypoint)",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationWaypoint.Equals(System.Object)",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationWaypoint.GetHashCode()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationWaypoint.ToString()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "operator:Electron2D.NavigationWaypoint.op_Equality(Electron2D.NavigationWaypoint,Electron2D.NavigationWaypoint)",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "operator:Electron2D.NavigationWaypoint.op_Inequality(Electron2D.NavigationWaypoint,Electron2D.NavigationWaypoint)",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "property:Electron2D.NavigationWaypoint.LinkEntryPosition()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "property:Electron2D.NavigationWaypoint.LinkExitPosition()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "property:Electron2D.NavigationWaypoint.Owner()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "property:Electron2D.NavigationWaypoint.OwnerID()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "property:Electron2D.NavigationWaypoint.Position()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "property:Electron2D.NavigationWaypoint.RID()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "property:Electron2D.NavigationWaypoint.Type()",
+      "reason": "ADR 0097 typed nullable waypoint value and logical owner identity replace untyped details; C# constructor/value identity and inherited source-schema/lifecycle guards support executable agent following.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationPathQueryResult.ValidateDisposal()",
+      "reason": "Reject disposal of the agent-owned borrowed result while its NavigationAgent is alive; caller-owned query results retain ordinary disposal.",
+      "adr": "ADR 0003; ADR 0097"
     }
   ],
   "statusGroups": [
@@ -1139,12 +1459,10 @@
       "godot": [
         "NavigationServer2D::enum_value:ProcessInfo.INFO_AGENT_COUNT",
         "NavigationServer2D::enum_value:ProcessInfo.INFO_OBSTACLE_COUNT",
-        "NavigationServer2D::method:agent_create()",
         "NavigationServer2D::method:agent_get_avoidance_enabled(RID:)",
         "NavigationServer2D::method:agent_get_avoidance_layers(RID:)",
         "NavigationServer2D::method:agent_get_avoidance_mask(RID:)",
         "NavigationServer2D::method:agent_get_avoidance_priority(RID:)",
-        "NavigationServer2D::method:agent_get_map(RID:)",
         "NavigationServer2D::method:agent_get_max_neighbors(RID:)",
         "NavigationServer2D::method:agent_get_max_speed(RID:)",
         "NavigationServer2D::method:agent_get_neighbor_distance(RID:)",
@@ -1155,13 +1473,11 @@
         "NavigationServer2D::method:agent_get_time_horizon_obstacles(RID:)",
         "NavigationServer2D::method:agent_get_velocity(RID:)",
         "NavigationServer2D::method:agent_has_avoidance_callback(RID:)",
-        "NavigationServer2D::method:agent_is_map_changed(RID:)",
         "NavigationServer2D::method:agent_set_avoidance_callback(RID:,Callable:)",
         "NavigationServer2D::method:agent_set_avoidance_enabled(RID:,bool:)",
         "NavigationServer2D::method:agent_set_avoidance_layers(RID:,int:)",
         "NavigationServer2D::method:agent_set_avoidance_mask(RID:,int:)",
         "NavigationServer2D::method:agent_set_avoidance_priority(RID:,float:)",
-        "NavigationServer2D::method:agent_set_map(RID:,RID:)",
         "NavigationServer2D::method:agent_set_max_neighbors(RID:,int:)",
         "NavigationServer2D::method:agent_set_max_speed(RID:,float:)",
         "NavigationServer2D::method:agent_set_neighbor_distance(RID:,float:)",
@@ -1243,13 +1559,6 @@
         "NavigationServer2D::method:map_force_update(RID:)"
       ],
       "reason": "ADR 0004 pinned ed1daf0bf001b61586d9930840f2f1394092c079 deprecated metadata: This method is no longer supported, as it is incompatible with asynchronous updates. It can only be used in a single-threaded context, at your own risk. No implementation trigger or alias."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationServer2D::method:map_get_agents(RID:)"
-      ],
-      "reason": "ADR 0097 trigger: operation-specific navigation kernel beyond authored map/region topology: map_get_agents. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
     },
     {
       "state": "Blocked",
@@ -1427,6 +1736,98 @@
       "reason": "Iterative RDP preserves endpoints/order and strict epsilon boundary, supports empty/singleton/duplicate/long paths, clamps negative finite epsilon and rejects nonfinite values; NavigationQueryTests exercises 4000-point depth and query integration (ADR 0097).",
       "godot": [
         "NavigationServer2D::method:simplify_path(PackedVector2Array:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "NavigationAgentTests exercises getter-driven following, signed strict waypoint/target thresholds and inclusive reachability/off-path reload, equal target submission, copied paths, real map version reload/layers, typed optional metadata and directional live link owners, callback ordering/reentry/failure recovery, World/lifetime and fresh-process scene storage; native GPU and compatibility consumers execute link teleport and target completion. Shared map/query topology parity remains on their owning rows (ADR 0097).",
+      "godot": [
+        "NavigationAgent2D::method:distance_to_target()",
+        "NavigationAgent2D::method:get_current_navigation_path()",
+        "NavigationAgent2D::method:get_current_navigation_path_index()",
+        "NavigationAgent2D::method:get_current_navigation_result()",
+        "NavigationAgent2D::method:get_final_position()",
+        "NavigationAgent2D::method:get_navigation_layer_value(int:)",
+        "NavigationAgent2D::method:get_navigation_map()",
+        "NavigationAgent2D::method:get_next_path_position()",
+        "NavigationAgent2D::method:get_path_length()",
+        "NavigationAgent2D::method:get_rid()",
+        "NavigationAgent2D::method:is_navigation_finished()",
+        "NavigationAgent2D::method:is_target_reachable()",
+        "NavigationAgent2D::method:is_target_reached()",
+        "NavigationAgent2D::method:set_navigation_layer_value(int:,bool:)",
+        "NavigationAgent2D::method:set_navigation_map(RID:)",
+        "NavigationAgent2D::property:navigation_layers",
+        "NavigationAgent2D::property:path_desired_distance",
+        "NavigationAgent2D::property:path_max_distance",
+        "NavigationAgent2D::property:path_metadata_flags",
+        "NavigationAgent2D::property:path_postprocessing",
+        "NavigationAgent2D::property:path_return_max_length",
+        "NavigationAgent2D::property:path_return_max_radius",
+        "NavigationAgent2D::property:path_search_max_distance",
+        "NavigationAgent2D::property:path_search_max_polygons",
+        "NavigationAgent2D::property:pathfinding_algorithm",
+        "NavigationAgent2D::property:simplify_epsilon",
+        "NavigationAgent2D::property:simplify_path",
+        "NavigationAgent2D::property:target_desired_distance",
+        "NavigationAgent2D::property:target_position",
+        "NavigationAgent2D::signal:link_reached(Dictionary:)",
+        "NavigationAgent2D::signal:navigation_finished()",
+        "NavigationAgent2D::signal:path_changed()",
+        "NavigationAgent2D::signal:target_reached()",
+        "NavigationAgent2D::signal:waypoint_reached(Dictionary:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0097 trigger: shared planar agent/obstacle RVO/ORCA avoidance kernel with neighbor selection, radius/speed/time-horizon/layer-mask/priority controls, paused map registration, velocity submission/forced reset and typed computed-velocity dispatch. Path-following agent and map identities already execute; these avoidance controls are not exposed as inert fields.",
+      "godot": [
+        "NavigationAgent2D::method:get_avoidance_layer_value(int:)",
+        "NavigationAgent2D::method:get_avoidance_mask_value(int:)",
+        "NavigationAgent2D::method:set_avoidance_layer_value(int:,bool:)",
+        "NavigationAgent2D::method:set_avoidance_mask_value(int:,bool:)",
+        "NavigationAgent2D::method:set_velocity_forced(Vector2:)",
+        "NavigationAgent2D::property:avoidance_enabled",
+        "NavigationAgent2D::property:avoidance_layers",
+        "NavigationAgent2D::property:avoidance_mask",
+        "NavigationAgent2D::property:avoidance_priority",
+        "NavigationAgent2D::property:max_neighbors",
+        "NavigationAgent2D::property:max_speed",
+        "NavigationAgent2D::property:neighbor_distance",
+        "NavigationAgent2D::property:radius",
+        "NavigationAgent2D::property:time_horizon_agents",
+        "NavigationAgent2D::property:time_horizon_obstacles",
+        "NavigationAgent2D::property:velocity",
+        "NavigationAgent2D::signal:velocity_computed(Vector2:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0097 trigger: agent debug path producer plus retained NavigationServer debug settings, real canvas draw lifetime and custom/default color/line/point-size consumers on both rendering backends.",
+      "godot": [
+        "NavigationAgent2D::property:debug_enabled",
+        "NavigationAgent2D::property:debug_path_custom_color",
+        "NavigationAgent2D::property:debug_path_custom_line_width",
+        "NavigationAgent2D::property:debug_path_custom_point_size",
+        "NavigationAgent2D::property:debug_use_custom"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0097 executable direct Entity-parent path follower, typed waypoints/link transitions, target lifecycle, complete implemented query controls, stable agent RID/map membership and source storage. Remaining own rows have exact separate avoidance or canvas-debug producer prerequisites; headless, fresh-process and both hardware backend tests exercise current behavior.",
+      "godot": [
+        "class:NavigationAgent2D"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "NavigationAgentTests verifies real caller/scene agent identity, copied map membership, consumed committed-version change, invalid and borrowed identities, map release, World transfer, exit/reentry and rendered follower consumer. Avoidance fields/callbacks have their own explicit kernel dependency.",
+      "godot": [
+        "NavigationServer2D::method:agent_create()",
+        "NavigationServer2D::method:agent_get_map(RID:)",
+        "NavigationServer2D::method:agent_is_map_changed(RID:)",
+        "NavigationServer2D::method:agent_set_map(RID:,RID:)",
+        "NavigationServer2D::method:map_get_agents(RID:)"
       ]
     }
   ]

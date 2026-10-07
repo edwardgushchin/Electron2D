@@ -85,7 +85,8 @@
     "NavigationRegion2D": "NavigationRegion",
     "NavigationLink2D": "NavigationLink",
     "NavigationPathQueryParameters2D": "NavigationPathQueryParameters",
-    "NavigationPathQueryResult2D": "NavigationPathQueryResult"
+    "NavigationPathQueryResult2D": "NavigationPathQueryResult",
+    "NavigationAgent2D": "NavigationAgent"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

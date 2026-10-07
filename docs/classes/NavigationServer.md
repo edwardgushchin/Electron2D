@@ -2,13 +2,13 @@
 
 Last updated: 2026-10-07
 
-- Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs), [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs), [NavigationServer.Query.cs](../../src/Servers/Navigation/NavigationServer.Query.cs)
+- Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs), [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs), [NavigationServer.Query.cs](../../src/Servers/Navigation/NavigationServer.Query.cs), [NavigationServer.Agents.cs](../../src/Servers/Navigation/NavigationServer.Agents.cs)
 - Inherits: [ElectronObject](ElectronObject.md)
 - Component: [Authored navigation maps](../components/navigation-maps.md)
 
 ## Description
 
-Permanent retained navigation service with static map/region/link lifecycle, staged settings, committed queries and MapChanged publication.
+Permanent retained navigation service with static map/region/link/agent lifecycle, staged settings, committed queries and MapChanged publication.
 
 The [navigation contract](../components/navigation-maps.md) defines staged versus committed state, world coordinates and ownership. Static server operations serialize configuration; scene node mutations follow the scene owner thread. Resource arrays and returned paths are copied. The current topology/query profile has explicit coverage limits.
 
@@ -33,7 +33,7 @@ NavigationServer.FreeRID(map);
 
 | Member | Contract |
 | --- | --- |
-| [`public static void FreeRID(RID rid)`](#freerid) | Releases a caller-owned map or region; scene/world identities retain their owning lifetime. |
+| [`public static void FreeRID(RID rid)`](#freerid) | Releases a caller-owned map, region, link or agent; scene/world identities retain their owning lifetime. |
 | [`public static RID[] GetMaps()`](#getmaps) | Returns copied live map identities. |
 | [`public static RID MapCreate()`](#mapcreate) | Creates a caller-owned, initially inactive navigation map. |
 | [`public static Vector2 MapGetClosestPoint(RID map, Vector2 point)`](#mapgetclosestpoint) | Projects a finite world point onto the committed map, or returns zero for empty topology. |
@@ -82,7 +82,7 @@ NavigationServer.FreeRID(map);
 <a id="freerid"></a>
 ### `public static void FreeRID(RID rid)`
 
-Releases a caller-owned map or region; scene/world identities retain their owning lifetime.
+Releases a caller-owned map, region, link or agent; scene/world identities retain their owning lifetime.
 
 `rid`: Live caller-owned navigation map or region RID.
 
@@ -760,3 +760,62 @@ Returns a copied path with points removed by iterative Ramer-Douglas-Peucker sim
 ## Verification and limits
 
 [NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining raster/search equivalence, baking, async and avoidance prerequisites.
+
+## Agent identities and map membership
+
+Stable caller/scene agent identities support real map registration and version consumption; they are independent of the pending avoidance kernel.
+
+## Methods and extension points
+
+| Member | Contract |
+| --- | --- |
+| [`public static RID AgentCreate()`](#agentcreate) | Creates a caller-owned navigation agent identity detached from every map. |
+| [`public static RID AgentGetMap(RID agent)`](#agentgetmap) | Returns the agent's current map membership. |
+| [`public static bool AgentIsMapChanged(RID agent)`](#agentismapchanged) | Returns and consumes whether the assigned map's committed version differs from the last observed version. |
+| [`public static void AgentSetMap(RID agent, RID map)`](#agentsetmap) | Assigns an agent to a live map; an empty RID detaches it. |
+| [`public static RID[] MapGetAgents(RID map)`](#mapgetagents) | Returns copied staged agent memberships, including scene-owned agents. |
+
+## Member descriptions
+
+<a id="agentcreate"></a>
+### `public static RID AgentCreate()`
+
+Creates a caller-owned navigation agent identity detached from every map. Live agent RID requiring FreeRID.
+
+<a id="agentgetmap"></a>
+### `public static RID AgentGetMap(RID agent)`
+
+Returns the agent's current map membership. Assigned map or empty.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentismapchanged"></a>
+### `public static bool AgentIsMapChanged(RID agent)`
+
+Returns and consumes whether the assigned map's committed version differs from the last observed version. False for a detached agent; otherwise whether the iteration changed.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentsetmap"></a>
+### `public static void AgentSetMap(RID agent, RID map)`
+
+Assigns an agent to a live map; an empty RID detaches it.
+
+`agent`: Live agent RID.
+
+`map`: Live map RID or empty.
+
+`ArgumentException`: A required RID is absent, stale or of another kind.
+
+<a id="mapgetagents"></a>
+### `public static RID[] MapGetAgents(RID map)`
+
+Returns copied staged agent memberships, including scene-owned agents. Independent agent RID array.
+
+`map`: Live map RID.
+
+`ArgumentException`: The map RID is absent, stale or of another kind.

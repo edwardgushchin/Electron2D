@@ -28,7 +28,7 @@ public sealed partial class SceneTree
     internal void UnregisterPhysicsArea(Area area) { EnsureOwnerThread(); area.Space?.Remove(area); }
     internal void RebindViewportWorld(Viewport viewport)
     {
-        var nodes = new List<CanvasItem>(); Collect(viewport); List<Exception>? errors = null;
+        var nodes = new List<CanvasItem>(); List<NavigationAgent>? agents = null; Collect(viewport); List<Exception>? errors = null;
         // Remove joints first, then move all colliders, then register joints against their final worlds.
         foreach (var item in nodes) if (item is Joint joint) try { UnregisterPhysicsJoint(joint); } catch (Exception e) { CollectException(ref errors, e); }
         foreach (var item in nodes)
@@ -43,8 +43,9 @@ public sealed partial class SceneTree
         }
         foreach (var item in nodes) if (item is Joint joint && !joint.IsDisposed && ReferenceEquals(joint.Tree, this)) try { RegisterPhysicsJoint(joint); } catch (Exception e) { CollectException(ref errors, e); }
         foreach (var item in nodes) if (!item.IsDisposed && ReferenceEquals(item.Tree, this)) try { item.DispatchNotification(CanvasItem.NotificationWorldChanged); } catch (Exception e) { CollectException(ref errors, e); }
+        if (agents is not null) foreach (var agent in agents) if (!agent.IsDisposed && ReferenceEquals(agent.Tree, this)) try { agent.RebindWorld(); } catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("World replacement committed with physics callback failures.", errors);
-        void Collect(Node node) { for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) { var child = node.GetChild(i, includeInternal: true); if (child is Viewport) continue; if (child is CanvasItem item) nodes.Add(item); Collect(child); } }
+        void Collect(Node node) { for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) { var child = node.GetChild(i, includeInternal: true); if (child is Viewport) continue; if (child is CanvasItem item) nodes.Add(item); if (child is NavigationAgent agent) (agents ??= []).Add(agent); Collect(child); } }
     }
     private void StepPhysicsWorlds(double delta, ref List<Exception>? errors)
     {

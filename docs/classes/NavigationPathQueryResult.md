@@ -144,3 +144,20 @@ Resets all arrays and length to their initial values.
 ## Verification and limits
 
 [NavigationQueryTests](../../tests/Electron2D.Tests/NavigationQueryTests.cs) checks every query control, copied arrays, enum/flag validation, result transaction/reset, completion failure/nesting and zero-allocation scalar/reset cycles. Its rendered host uses result link/owner metadata to execute one teleport and reach real goal pixels. Arrays, path scratch and topology changes allocate; no whole-frame/native allocation or large-map performance claim follows. [ADR 0097](../decisions/navigation.md#adr-0097) owns typed adaptations and the exact remaining raster/search equivalence on query coverage.
+
+NavigationAgent retains a borrowed result of the same type. Consumer disposal rejects while its agent is alive. Internal immutable snapshots support allocation-free following; public copied setters remain usable and externally replaced paths safely trigger a fresh agent query.
+
+## Borrowed result lifetime extension
+
+## Methods and extension points
+
+| Member | Contract |
+| --- | --- |
+| [`protected override void ValidateDisposal()`](#validatedisposal) | Typed inherited lifecycle/discovery hook. |
+
+## Member descriptions
+
+<a id="validatedisposal"></a>
+### `protected override void ValidateDisposal()`
+
+Typed inherited lifecycle/discovery hook.

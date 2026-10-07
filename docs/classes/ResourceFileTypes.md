@@ -113,3 +113,5 @@ The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu
 ## CPU particle graph schemas
 
 Built-in factories now include CPUParticles, scalar Curve, Gradient and CanvasItemMaterial. Their stored schemas reconstruct particle configuration, scalar point snapshots, ramp arrays and sheet/blend settings in a fresh process. Native particle state and delegates are omitted; the generic initial-velocity curve and ordinary curve aliases remain typed resource references. Other unregistered concrete resource types keep their explicit application registration prerequisites.
+
+NavigationAgent is a registered typed Node factory. Fourteen source descriptors persist through PackedScene fresh-process reconstruction; agent RID, runtime map override, current query result and progression state are not archive fields.

@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Stores one atomically published typed path and its optional parallel point metadata.</summary>
 /// <remarks>Caller-owned reusable result. Public arrays are copied both ways; setters remain independent source fields.
-/// A successful query publishes all selected arrays/length together, before its optional callback. Reset clears arrays and length.</remarks>
+/// A successful query publishes all selected arrays/length together, before its optional callback. Reset clears arrays and length. Agent-borrowed instances reject consumer disposal while the owning agent is alive.</remarks>
 public sealed class NavigationPathQueryResult : ElectronObject
 {
     /// <summary>Primitive owning a returned path point.</summary>
@@ -11,6 +11,8 @@ public sealed class NavigationPathQueryResult : ElectronObject
         Region = 0, /// <summary>Off-surface navigation link.</summary>
         Link = 1
     }
+    private readonly NavigationAgent? _owner;
+    internal NavigationPathQueryResult(NavigationAgent owner) => _owner = owner;
     private readonly object _gate = new();
     private NavigationPathQueryData _data = NavigationPathQueryData.Empty;
     /// <summary>Creates an empty result with zero path length.</summary>
@@ -46,7 +48,10 @@ public sealed class NavigationPathQueryResult : ElectronObject
     /// <exception cref="ObjectDisposedException">This result is disposed.</exception>
     public void Reset() => Publish(NavigationPathQueryData.Empty);
     internal void Publish(NavigationPathQueryData data) { lock (_gate) { ThrowIfDisposed(); _data = data; } }
+    internal NavigationPathQueryData Snapshot() { lock (_gate) { ThrowIfDisposed(); return _data; } }
     internal void EnsureQueryable() { lock (_gate) ThrowIfDisposed(); }
+    /// <inheritdoc />
+    protected override void ValidateDisposal() { if (_owner is { IsDisposed: false }) throw new InvalidOperationException("The result is owned by its navigation agent."); base.ValidateDisposal(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) lock (_gate) _data = NavigationPathQueryData.Empty; base.Dispose(disposing); }
     /// <inheritdoc />

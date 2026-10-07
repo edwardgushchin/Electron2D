@@ -8,16 +8,17 @@ public sealed partial class NavigationServer
     /// <summary>Creates a caller-owned enabled navigation region with no map or geometry.</summary>
     /// <returns>Creates a caller-owned enabled navigation region with no map or geometry.</returns>
     public static RID RegionCreate() => Shared.CreateRegion();
-    /// <summary>Releases a caller-owned map, region or link; scene/world identities retain their owning lifetime.</summary>
+    /// <summary>Releases a caller-owned map, region, link or agent; scene/world identities retain their owning lifetime.</summary>
     /// <exception cref="ArgumentException">The RID is absent or stale.</exception>
     /// <exception cref="InvalidOperationException">The RID is borrowed from a scene/resource owner.</exception>
-    /// <param name="rid">Live caller-owned navigation map, region or link RID.</param>
+    /// <param name="rid">Live caller-owned navigation map, region, link or agent RID.</param>
     public static void FreeRID(RID rid)
     {
         lock (Shared._gate)
         {
             if (Shared._maps.TryGetValue(rid, out var map)) { if (map.Owner is not null) throw new InvalidOperationException("World maps are resource-owned."); Shared.ReleaseWorldMap(rid); return; }
             if (Shared._links.ContainsKey(rid)) { var link = Shared.Link(rid); if (link.Scene is not null) throw new InvalidOperationException("Scene links are node-owned."); Shared.ReleaseSceneLink(rid); return; }
+            if (Shared._agents.ContainsKey(rid)) { var agent = Shared.Agent(rid); if (agent.Scene is not null) throw new InvalidOperationException("Scene agents are node-owned."); Shared.ReleaseSceneAgent(rid); return; }
             var region = Shared.Region(rid); if (region.Scene is not null) throw new InvalidOperationException("Scene regions are node-owned."); Shared.ReleaseSceneRegion(rid);
         }
     }

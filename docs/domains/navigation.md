@@ -27,7 +27,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and fu
 - Links are directional for travel and undirected for segment existence. A path pays the destination point's weight on each edge. Disabled points are excluded from path expansion and closest-segment queries unless a point query explicitly includes them.
 - A path callback may inspect graph state, but search re-entry, mutation and disposal are rejected. Concurrent callers coordinate access externally.
 - Grid region and cell geometry are finite and bounded to managed arrays. Jumping intentionally ignores individual cell weights, matching its separate search mode. Both graph types reject search re-entry, mutation and disposal from callbacks.
-- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; baking, links and avoidance retain their own exact prerequisites.
+- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; baking and avoidance retain their own exact prerequisites.
 
 ## Verification and limits
 
@@ -49,4 +49,6 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and fu
 
 NavigationLink and owned server links now provide directed/bidirectional off-surface travel, finite strict-radius attachment and weighted routes. [The map contract](../components/navigation-maps.md#links-across-separated-surfaces) records transforms, source storage, publication, typed query metadata and remaining raster/search equivalence.
 
-[Typed query objects](../components/navigation-maps.md#typed-query-objects-and-transition-metadata) now supply copied filters, real search/output controls, transition provenance and completion. The native consumer performs a metadata-driven link action; agent/avoidance and bake producers retain separate prerequisites.
+[Typed query objects](../components/navigation-maps.md#typed-query-objects-and-transition-metadata) now supply copied filters, real search/output controls, transition provenance and completion. The native consumer performs a metadata-driven link action; avoidance, agent debug and bake producers retain separate prerequisites.
+
+[NavigationAgent](../classes/NavigationAgent.md) now supplies getter-driven Entity-parent movement targets, typed waypoint/link events, target completion, real server agent map membership and fresh-process source settings. [Its contract](../components/navigation-maps.md#agent-path-following) separates managed checks and actual GPU/compatibility rendered consumers from pending avoidance/debug prerequisites.
