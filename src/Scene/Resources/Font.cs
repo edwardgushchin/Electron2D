@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Electron2D;
 
-/// <summary>Shapes, measures and draws scalable text with ordered fallback fonts.</summary>
+/// <summary>Shapes, measures and draws scalable or authored bitmap text with ordered fallback fonts.</summary>
 /// <remarks>Text positions specify the baseline. Fonts borrow fallback resources and forward their changes and
 /// disposal. Layout caches and resource state are synchronized; canvas drawing still requires its owning thread
 /// and recording scope. Active reads retain native source snapshots; layouts retry changing state at most

@@ -158,3 +158,7 @@ The executable [multiline editing component](../components/multiline-editing.md)
 [Graph authoring](../components/graph-authoring.md) connects GraphElement, GraphNode, GraphFrame and GraphEdit through current canvas, font, input and scene storage. Typed ports, request-driven wiring, keyboard/remapped commands, nested frames and graph-scaled popup input execute; semantic accessibility, editor authoring and foreign/native allocation gates remain explicit.
 
 [FontVariation](../classes/FontVariation.md) and Font.FindVariation supply independent native font instances: copied axis coordinates, collection faces, synthetic outlines, spacing, baseline and selected/custom palettes. Font metadata exposes validated axis bounds and predefined palettes. RichTextLabel consumes these instances through its full font-tag options. [Text](../components/text.md) records ownership, storage and the local verification boundary.
+
+## Bitmap/indexed font integration
+
+[Bitmap font authoring](../components/bitmap-fonts.md) connects FontFile indexed image/glyph/kerning/metric records and matching configured FontVariation resources to the existing HarfBuzz and common canvas/control path. Copied pixel UV regions preserve clipping and recorded image snapshots; authored publication retires native data after active readers finish. Text/binary v3 import, typed archive/fresh-process restoration and current Linux GPU/compatibility prepared output are exercised. Source policies and other platform/native-allocator gates remain explicit.

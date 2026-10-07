@@ -3704,6 +3704,326 @@
       "godot": "Font::method:get_supported_variation_list()",
       "electron2d": "method:Electron2D.Font.GetSupportedVariationList()",
       "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontFile::method:clear_cache()",
+      "electron2d": "method:Electron2D.FontFile.ClearCache()",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:clear_glyphs(int:,Vector2i:)",
+      "electron2d": "method:Electron2D.FontFile.ClearGlyphs(System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:clear_kerning_map(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.ClearKerningMap(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:clear_size_cache(int:)",
+      "electron2d": "method:Electron2D.FontFile.ClearSizeCache(System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:clear_textures(int:,Vector2i:)",
+      "electron2d": "method:Electron2D.FontFile.ClearTextures(System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_cache_ascent(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetCacheAscent(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_cache_count()",
+      "electron2d": "method:Electron2D.FontFile.GetCacheCount()",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_cache_descent(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetCacheDescent(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_cache_scale(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetCacheScale(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_cache_underline_position(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetCacheUnderlinePosition(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_cache_underline_thickness(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetCacheUnderlineThickness(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_char_from_glyph_index(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetCharFromGlyphIndex(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_embolden(int:)",
+      "electron2d": "method:Electron2D.FontFile.GetEmbolden(System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_extra_baseline_offset(int:)",
+      "electron2d": "method:Electron2D.FontFile.GetExtraBaselineOffset(System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_extra_spacing(int:,int:TextServer.SpacingType)",
+      "electron2d": "method:Electron2D.FontFile.GetExtraSpacing(System.Int32,Electron2D.TextSpacingType)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_face_index(int:)",
+      "electron2d": "method:Electron2D.FontFile.GetFaceIndex(System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_glyph_advance(int:,int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetGlyphAdvance(System.Int32,System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_glyph_index(int:,int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetGlyphIndex(System.Int32,System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_glyph_list(int:,Vector2i:)",
+      "electron2d": "method:Electron2D.FontFile.GetGlyphList(System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_glyph_offset(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetGlyphOffset(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_glyph_size(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetGlyphSize(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_glyph_texture_idx(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetGlyphTextureIndex(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_glyph_uv_rect(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetGlyphUVRect(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_kerning(int:,int:,Vector2i:)",
+      "electron2d": "method:Electron2D.FontFile.GetKerning(System.Int32,System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_kerning_list(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetKerningList(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_size_cache_list(int:)",
+      "electron2d": "method:Electron2D.FontFile.GetSizeCacheList(System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_texture_count(int:,Vector2i:)",
+      "electron2d": "method:Electron2D.FontFile.GetTextureCount(System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_texture_image(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetTextureImage(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_texture_offsets(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.GetTextureOffsets(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_transform(int:)",
+      "electron2d": "method:Electron2D.FontFile.GetTransform(System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:get_variation_coordinates(int:)",
+      "electron2d": "method:Electron2D.FontFile.GetVariationCoordinates(System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:load_bitmap_font(String:)",
+      "electron2d": "method:Electron2D.FontFile.LoadBitmapFont(System.String)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:remove_cache(int:)",
+      "electron2d": "method:Electron2D.FontFile.RemoveCache(System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:remove_glyph(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.RemoveGlyph(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:remove_kerning(int:,int:,Vector2i:)",
+      "electron2d": "method:Electron2D.FontFile.RemoveKerning(System.Int32,System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:remove_size_cache(int:,Vector2i:)",
+      "electron2d": "method:Electron2D.FontFile.RemoveSizeCache(System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:remove_texture(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.RemoveTexture(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:render_glyph(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.FontFile.RenderGlyph(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:render_range(int:,Vector2i:,int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.RenderRange(System.Int32,Electron2D.Vector2i,System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_cache_ascent(int:,int:,float:)",
+      "electron2d": "method:Electron2D.FontFile.SetCacheAscent(System.Int32,System.Int32,System.Single)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_cache_descent(int:,int:,float:)",
+      "electron2d": "method:Electron2D.FontFile.SetCacheDescent(System.Int32,System.Int32,System.Single)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_cache_scale(int:,int:,float:)",
+      "electron2d": "method:Electron2D.FontFile.SetCacheScale(System.Int32,System.Int32,System.Single)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_cache_underline_position(int:,int:,float:)",
+      "electron2d": "method:Electron2D.FontFile.SetCacheUnderlinePosition(System.Int32,System.Int32,System.Single)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_cache_underline_thickness(int:,int:,float:)",
+      "electron2d": "method:Electron2D.FontFile.SetCacheUnderlineThickness(System.Int32,System.Int32,System.Single)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_embolden(int:,float:)",
+      "electron2d": "method:Electron2D.FontFile.SetEmbolden(System.Int32,System.Single)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_extra_baseline_offset(int:,float:)",
+      "electron2d": "method:Electron2D.FontFile.SetExtraBaselineOffset(System.Int32,System.Single)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_extra_spacing(int:,int:TextServer.SpacingType,int:)",
+      "electron2d": "method:Electron2D.FontFile.SetExtraSpacing(System.Int32,Electron2D.TextSpacingType,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_face_index(int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.SetFaceIndex(System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_glyph_advance(int:,int:,int:,Vector2:)",
+      "electron2d": "method:Electron2D.FontFile.SetGlyphAdvance(System.Int32,System.Int32,System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_glyph_offset(int:,Vector2i:,int:,Vector2:)",
+      "electron2d": "method:Electron2D.FontFile.SetGlyphOffset(System.Int32,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_glyph_size(int:,Vector2i:,int:,Vector2:)",
+      "electron2d": "method:Electron2D.FontFile.SetGlyphSize(System.Int32,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_glyph_texture_idx(int:,Vector2i:,int:,int:)",
+      "electron2d": "method:Electron2D.FontFile.SetGlyphTextureIndex(System.Int32,Electron2D.Vector2i,System.Int32,System.Int32)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_glyph_uv_rect(int:,Vector2i:,int:,Rect2:)",
+      "electron2d": "method:Electron2D.FontFile.SetGlyphUVRect(System.Int32,Electron2D.Vector2i,System.Int32,Electron2D.Rect2)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_kerning(int:,int:,Vector2i:,Vector2:)",
+      "electron2d": "method:Electron2D.FontFile.SetKerning(System.Int32,System.Int32,Electron2D.Vector2i,Electron2D.Vector2)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_texture_image(int:,Vector2i:,int:,Image:)",
+      "electron2d": "method:Electron2D.FontFile.SetTextureImage(System.Int32,Electron2D.Vector2i,System.Int32,Electron2D.Image)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_texture_offsets(int:,Vector2i:,int:,PackedInt32Array:)",
+      "electron2d": "method:Electron2D.FontFile.SetTextureOffsets(System.Int32,Electron2D.Vector2i,System.Int32,System.Int32[])",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_transform(int:,Transform2D:)",
+      "electron2d": "method:Electron2D.FontFile.SetTransform(System.Int32,Electron2D.Transform)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::method:set_variation_coordinates(int:,Dictionary:)",
+      "electron2d": "method:Electron2D.FontFile.SetVariationCoordinates(System.Int32,System.Collections.Generic.Dictionary<System.UInt32, System.Single>)",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::property:fixed_size",
+      "electron2d": "property:Electron2D.FontFile.FixedSize()",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::property:fixed_size_scale_mode",
+      "electron2d": "property:Electron2D.FontFile.FixedSizeScaleMode()",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "TextServer::enum:FixedSizeScaleMode",
+      "electron2d": "T:Electron2D.FixedSizeScaleMode",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FixedSizeScaleMode.FIXED_SIZE_SCALE_DISABLE",
+      "electron2d": "enumValue:Electron2D.FixedSizeScaleMode.Disable()",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FixedSizeScaleMode.FIXED_SIZE_SCALE_ENABLED",
+      "electron2d": "enumValue:Electron2D.FixedSizeScaleMode.Enabled()",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "TextServer::enum_value:FixedSizeScaleMode.FIXED_SIZE_SCALE_INTEGER_ONLY",
+      "electron2d": "enumValue:Electron2D.FixedSizeScaleMode.IntegerOnly()",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
     }
   ],
   "statusGroups": [
@@ -3738,7 +4058,6 @@
         "Font::method:has_char(int:)",
         "Font::method:set_cache_capacity(int:,int:)",
         "Font::property:fallbacks",
-        "FontFile::method:load_dynamic_font(String:)",
         "FontFile::property:data",
         "FontFile::property:font_name",
         "FontFile::property:font_stretch",
@@ -3879,184 +4198,9 @@
     },
     {
       "state": "Partial",
-      "reason": "Dynamic font bytes/loading, selected raster settings and metadata execute. Remaining applicable mechanisms: mutable indexed glyph/size/kerning/texture caches, bitmap font import, variation/embolden/transform/spacing state, support overrides, automatic system fallback, antialiasing/bitmap/autohinter/mipmap/fixed-size modes and MSDF rendering. No inert settings or success stubs are exposed.",
+      "reason": "FontFile executes scalable/bitmap loading, indexed glyph/size/texture/kerning/instance authoring and real shared shaping/rendering/storage. Remaining applicable mechanisms: non-SFNT Type 1 sources and source policies: language/script overrides, automatic system fallback, antialiasing/embedded-bitmap/autohinter/mipmap modes and MSDF. Exact dependencies stay on their own rows; no inert settings are exposed.",
       "godot": [
         "class:FontFile"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation clear_cache is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:clear_cache()"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation clear_glyphs is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:clear_glyphs(int:,Vector2i:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation clear_kerning_map is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:clear_kerning_map(int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation clear_size_cache is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:clear_size_cache(int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation clear_textures is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:clear_textures(int:,Vector2i:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_cache_ascent is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_cache_ascent(int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_cache_count is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_cache_count()"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_cache_descent is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_cache_descent(int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_cache_scale is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_cache_scale(int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_cache_underline_position is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_cache_underline_position(int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_cache_underline_thickness is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_cache_underline_thickness(int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_char_from_glyph_index is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_char_from_glyph_index(int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_embolden is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_embolden(int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_extra_baseline_offset is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_extra_baseline_offset(int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_extra_spacing is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_extra_spacing(int:,int:TextServer.SpacingType)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_face_index is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_face_index(int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_glyph_advance is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_glyph_advance(int:,int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_glyph_index is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_glyph_index(int:,int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_glyph_list is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_glyph_list(int:,Vector2i:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_glyph_offset is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_glyph_offset(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_glyph_size is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_glyph_size(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_glyph_texture_idx is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_glyph_texture_idx(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_glyph_uv_rect is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_glyph_uv_rect(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_kerning is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_kerning(int:,int:,Vector2i:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_kerning_list is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_kerning_list(int:,int:)"
       ]
     },
     {
@@ -4071,237 +4215,6 @@
         "FontFile::method:remove_script_support_override(String:)",
         "FontFile::method:set_language_support_override(String:,bool:)",
         "FontFile::method:set_script_support_override(String:,bool:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_size_cache_list is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_size_cache_list(int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_texture_count is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_texture_count(int:,Vector2i:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_texture_image is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_texture_image(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_texture_offsets is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_texture_offsets(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_transform is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_transform(int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation get_variation_coordinates is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:get_variation_coordinates(int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Bitmap font file parsing and import into executable glyph/texture/kerning state are not implemented. The canvas and Font resource foundations now exist; implement the bitmap-font authoring/loading slice.",
-      "godot": [
-        "FontFile::method:load_bitmap_font(String:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation remove_cache is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:remove_cache(int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation remove_glyph is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:remove_glyph(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation remove_kerning is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:remove_kerning(int:,int:,Vector2i:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation remove_size_cache is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:remove_size_cache(int:,Vector2i:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation remove_texture is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:remove_texture(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation render_glyph is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:render_glyph(int:,Vector2i:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation render_range is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:render_range(int:,Vector2i:,int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_cache_ascent is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_cache_ascent(int:,int:,float:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_cache_descent is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_cache_descent(int:,int:,float:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_cache_scale is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_cache_scale(int:,int:,float:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_cache_underline_position is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_cache_underline_position(int:,int:,float:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_cache_underline_thickness is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_cache_underline_thickness(int:,int:,float:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_embolden is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_embolden(int:,float:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_extra_baseline_offset is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_extra_baseline_offset(int:,float:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_extra_spacing is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_extra_spacing(int:,int:TextServer.SpacingType,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_face_index is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_face_index(int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_glyph_advance is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_glyph_advance(int:,int:,int:,Vector2:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_glyph_offset is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_glyph_offset(int:,Vector2i:,int:,Vector2:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_glyph_size is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_glyph_size(int:,Vector2i:,int:,Vector2:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_glyph_texture_idx is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_glyph_texture_idx(int:,Vector2i:,int:,int:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_glyph_uv_rect is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_glyph_uv_rect(int:,Vector2i:,int:,Rect2:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_kerning is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_kerning(int:,int:,Vector2i:,Vector2:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_texture_image is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_texture_image(int:,Vector2i:,int:,Image:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_texture_offsets is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_texture_offsets(int:,Vector2i:,int:,PackedInt32Array:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_transform is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_transform(int:,Transform2D:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable indexed font-cache or glyph/texture authoring operation set_variation_coordinates is not implemented. Internal on-demand face/glyph caches are not public cache-index records; implement mutable size/glyph/kerning/texture/variation state with its real renderer integration.",
-      "godot": [
-        "FontFile::method:set_variation_coordinates(int:,Dictionary:)"
       ]
     },
     {
@@ -4323,20 +4236,6 @@
       "reason": "Applicable raster/cache policy disable_embedded_bitmaps is not implemented. Add the real FreeType or canvas behavior, source defaults and lifetime tests; no passive compatibility property is exposed.",
       "godot": [
         "FontFile::property:disable_embedded_bitmaps"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable raster/cache policy fixed_size is not implemented. Add the real FreeType or canvas behavior, source defaults and lifetime tests; no passive compatibility property is exposed.",
-      "godot": [
-        "FontFile::property:fixed_size"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Applicable raster/cache policy fixed_size_scale_mode is not implemented. Add the real FreeType or canvas behavior, source defaults and lifetime tests; no passive compatibility property is exposed.",
-      "godot": [
-        "FontFile::property:fixed_size_scale_mode"
       ]
     },
     {
@@ -5140,6 +5039,83 @@
         "FontVariation::property:variation_opentype",
         "FontVariation::property:variation_transform"
       ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate.",
+      "godot": [
+        "FontFile::method:clear_cache()",
+        "FontFile::method:clear_glyphs(int:,Vector2i:)",
+        "FontFile::method:clear_kerning_map(int:,int:)",
+        "FontFile::method:clear_size_cache(int:)",
+        "FontFile::method:clear_textures(int:,Vector2i:)",
+        "FontFile::method:get_cache_ascent(int:,int:)",
+        "FontFile::method:get_cache_count()",
+        "FontFile::method:get_cache_descent(int:,int:)",
+        "FontFile::method:get_cache_scale(int:,int:)",
+        "FontFile::method:get_cache_underline_position(int:,int:)",
+        "FontFile::method:get_cache_underline_thickness(int:,int:)",
+        "FontFile::method:get_char_from_glyph_index(int:,int:)",
+        "FontFile::method:get_embolden(int:)",
+        "FontFile::method:get_extra_baseline_offset(int:)",
+        "FontFile::method:get_extra_spacing(int:,int:TextServer.SpacingType)",
+        "FontFile::method:get_face_index(int:)",
+        "FontFile::method:get_glyph_advance(int:,int:,int:)",
+        "FontFile::method:get_glyph_index(int:,int:,int:)",
+        "FontFile::method:get_glyph_list(int:,Vector2i:)",
+        "FontFile::method:get_glyph_offset(int:,Vector2i:,int:)",
+        "FontFile::method:get_glyph_size(int:,Vector2i:,int:)",
+        "FontFile::method:get_glyph_texture_idx(int:,Vector2i:,int:)",
+        "FontFile::method:get_glyph_uv_rect(int:,Vector2i:,int:)",
+        "FontFile::method:get_kerning(int:,int:,Vector2i:)",
+        "FontFile::method:get_kerning_list(int:,int:)",
+        "FontFile::method:get_size_cache_list(int:)",
+        "FontFile::method:get_texture_count(int:,Vector2i:)",
+        "FontFile::method:get_texture_image(int:,Vector2i:,int:)",
+        "FontFile::method:get_texture_offsets(int:,Vector2i:,int:)",
+        "FontFile::method:get_transform(int:)",
+        "FontFile::method:get_variation_coordinates(int:)",
+        "FontFile::method:load_bitmap_font(String:)",
+        "FontFile::method:remove_cache(int:)",
+        "FontFile::method:remove_glyph(int:,Vector2i:,int:)",
+        "FontFile::method:remove_kerning(int:,int:,Vector2i:)",
+        "FontFile::method:remove_size_cache(int:,Vector2i:)",
+        "FontFile::method:remove_texture(int:,Vector2i:,int:)",
+        "FontFile::method:render_glyph(int:,Vector2i:,int:)",
+        "FontFile::method:render_range(int:,Vector2i:,int:,int:)",
+        "FontFile::method:set_cache_ascent(int:,int:,float:)",
+        "FontFile::method:set_cache_descent(int:,int:,float:)",
+        "FontFile::method:set_cache_scale(int:,int:,float:)",
+        "FontFile::method:set_cache_underline_position(int:,int:,float:)",
+        "FontFile::method:set_cache_underline_thickness(int:,int:,float:)",
+        "FontFile::method:set_embolden(int:,float:)",
+        "FontFile::method:set_extra_baseline_offset(int:,float:)",
+        "FontFile::method:set_extra_spacing(int:,int:TextServer.SpacingType,int:)",
+        "FontFile::method:set_face_index(int:,int:)",
+        "FontFile::method:set_glyph_advance(int:,int:,int:,Vector2:)",
+        "FontFile::method:set_glyph_offset(int:,Vector2i:,int:,Vector2:)",
+        "FontFile::method:set_glyph_size(int:,Vector2i:,int:,Vector2:)",
+        "FontFile::method:set_glyph_texture_idx(int:,Vector2i:,int:,int:)",
+        "FontFile::method:set_glyph_uv_rect(int:,Vector2i:,int:,Rect2:)",
+        "FontFile::method:set_kerning(int:,int:,Vector2i:,Vector2:)",
+        "FontFile::method:set_texture_image(int:,Vector2i:,int:,Image:)",
+        "FontFile::method:set_texture_offsets(int:,Vector2i:,int:,PackedInt32Array:)",
+        "FontFile::method:set_transform(int:,Transform2D:)",
+        "FontFile::method:set_variation_coordinates(int:,Dictionary:)",
+        "FontFile::property:fixed_size",
+        "FontFile::property:fixed_size_scale_mode",
+        "TextServer::enum:FixedSizeScaleMode",
+        "TextServer::enum_value:FixedSizeScaleMode.FIXED_SIZE_SCALE_DISABLE",
+        "TextServer::enum_value:FixedSizeScaleMode.FIXED_SIZE_SCALE_ENABLED",
+        "TextServer::enum_value:FixedSizeScaleMode.FIXED_SIZE_SCALE_INTEGER_ONLY"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "SFNT TTF/OTF/TTC and WOFF/WOFF2 loading validates/executes native shaping and rasterization. Applicable Type 1 PFB/PFM sources remain unsupported: NativeFontPrecision requires SFNT table-backed HarfBuzz fonts. Trigger: first non-SFNT native font source slice must add FreeType nominal mapping/kerning callbacks and matching fixtures/formats without bypassing shared shaping or source rollback. Bitmap BMFont uses the separate implemented loader.",
+      "godot": [
+        "FontFile::method:load_dynamic_font(String:)"
+      ]
     }
   ],
   "extras": [
@@ -5597,6 +5573,11 @@
       "electron2d": "property:Electron2D.FontVariationAxis.Minimum()",
       "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
       "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontFile.GetSpacing(Electron2D.TextSpacingType)",
+      "reason": "Concrete dispatch of inherited Font.GetSpacing using the primary indexed FontFile cache. No independent capability.",
+      "adr": "docs/decisions/rendering.md#adr-0046"
     }
   ]
 }

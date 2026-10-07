@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 namespace Electron2D;
 
 internal readonly record struct FontMetrics(float Ascent, float Descent, float Height, float UnderlinePosition, float UnderlineThickness);
-internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vector2 Size, bool Colored = false);
+internal readonly record struct FontGlyph(Texture? Texture, Vector2 Offset, Vector2 Size, bool Colored = false, Rect2? Region = null);
 
 // Immutable source bytes and portable glyph textures; mutable native state is confined to FontThread.
-internal sealed class FontData : IDisposable
+internal sealed partial class FontData : IDisposable
 {
-    private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters }
+    private enum Operation { Create, Dispose, Metrics, Index, Advance, Shape, Glyph, Characters, Kerning }
     private readonly object _gate = new();
     private byte[] _bytes = [];
     private readonly Action _execute;
@@ -29,6 +29,9 @@ internal sealed class FontData : IDisposable
     private Operation _operation;
     private int _size, _outline, _phase, _offset, _count, _textLength;
     private uint _scalar, _selector, _glyph, _script, _indexResult;
+    private Vector2i _pair;
+    private Vector2 _kerningResult;
+    private readonly Dictionary<(Vector2i Pair, int Size), Vector2> _kernings = [];
     private bool _vertical;
     private float _oversampling, _advanceResult;
     private string _language = string.Empty;
@@ -39,7 +42,8 @@ internal sealed class FontData : IDisposable
     private FontGlyph _glyphResult;
 
     internal object Gate => _gate;
-    internal bool HasData => _bytes.Length > 0;
+    private readonly bool _bitmapData;
+    internal bool HasData => _bytes.Length > 0 || _bitmapData;
     internal string FamilyName { get; set; } = string.Empty;
     internal string StyleName { get; set; } = string.Empty;
     internal int FontWeight { get; set; } = 400;
@@ -55,10 +59,10 @@ internal sealed class FontData : IDisposable
     internal int GlyphCount { get; private set; }
     internal int UnitsPerEm { get; private set; }
 
-    internal FontData(byte[] immutableData, int faceIndex = 0, FontInstance? instance = null)
+    internal FontData(byte[] immutableData, int faceIndex = 0, FontInstance? instance = null, FontCache? authored = null)
     {
         ArgumentNullException.ThrowIfNull(immutableData);
-        _bytes = immutableData; _faceIndex = faceIndex; _instance = instance; _execute = Execute;
+        _bitmapData = immutableData.Length == 0 && authored is { Sizes.Count: > 0 }; Authored = authored; _bytes = immutableData; _faceIndex = faceIndex; _instance = instance; _execute = Execute;
         if (HasData)
         {
             if ((!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() && !OperatingSystem.IsBrowser()) ||
@@ -71,7 +75,9 @@ internal sealed class FontData : IDisposable
     {
         lock (_gate)
         {
-            Check(); var result = new FontData(_bytes, instance.FaceIndex, instance);
+            Check(); var cache = Authored?.Clone();
+            if (cache != null && _bytes.Length > 0 && !Authored!.Matches(instance)) cache.Sizes.Clear();
+            var result = new FontData(_bytes, instance.FaceIndex, instance, cache);
             try
             {
                 result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
@@ -102,7 +108,7 @@ internal sealed class FontData : IDisposable
         {
             Check(); if (!HasData) return default;
             if (_metrics.TryGetValue(fontSize, out var metrics)) return metrics;
-            _size = fontSize; Run(Operation.Metrics); _metrics.Add(fontSize, _metricsResult); return _metricsResult;
+            _size = fontSize; Run(Operation.Metrics); _metricsResult = AuthoredMetrics(fontSize, _metricsResult); _metrics.Add(fontSize, _metricsResult); return _metricsResult;
         }
     }
     internal uint GetGlyphIndex(uint scalar, uint variationSelector = 0)
@@ -121,6 +127,7 @@ internal sealed class FontData : IDisposable
         lock (_gate)
         {
             Check(); if (!HasData) return 0;
+            if (SelectAuthored(fontSize)?.Advances.TryGetValue(glyph, out var authoredAdvance) == true) return (vertical ? authoredAdvance.Y : authoredAdvance.X) * BitmapScale(fontSize);
             var key = (glyph, fontSize, vertical); if (_advances.TryGetValue(key, out var advance)) return advance;
             _glyph = glyph; _size = fontSize; _vertical = vertical; Run(Operation.Advance); _advances.Add(key, _advanceResult); return _advanceResult;
         }
@@ -155,6 +162,8 @@ internal sealed class FontData : IDisposable
         lock (_gate)
         {
             Check();
+            if (TryAuthoredGlyph(glyph, fontSize, outline, out var authoredGlyph)) { rasterPosition = position; return authoredGlyph; }
+            if (_bytes.Length == 0) { rasterPosition = position; return default; }
             var requested = oversampling > 0 ? oversampling : Oversampling > 0 ? Oversampling : 1;
             var factor = (int)(Math.Clamp(requested, .1f, 100f) * 64) / 64f;
             var border = Math.Max(0, outline);
@@ -187,8 +196,8 @@ internal sealed class FontData : IDisposable
             case Operation.Create:
                 try
                 {
-                    _precision = new NativeFontPrecision(_bytes, _faceIndex);
-                    if (_instance != null) _precision.ConfigureInstance(_instance);
+                    _precision = _bytes.Length > 0 ? new NativeFontPrecision(_bytes, _faceIndex) : new NativeFontPrecision(Authored!);
+                    if (_instance != null && _bytes.Length > 0) _precision.ConfigureInstance(_instance);
                     VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
                     FamilyName = _precision.FamilyName; StyleName = _precision.StyleName; FaceCount = _precision.FaceCount; GlyphCount = _precision.GlyphCount; UnitsPerEm = _precision.UnitsPerEm;
                     FontStyle = (_precision.FaceStyleFlags & 2) != 0 ? FontStyle.Bold : 0;
@@ -209,7 +218,8 @@ internal sealed class FontData : IDisposable
             case Operation.Index: _indexResult = _precision!.GetGlyphIndex(_scalar, _selector); break;
             case Operation.Advance:
                 _precision!.SetSize(_size); _advanceResult = _precision.GetGlyphAdvance(_glyph, _vertical) / (_vertical ? -64f : 64f);
-                if (!_vertical) _advanceResult += (_instance?.Embolden ?? 0) * _size / 64f; break;
+                if (!_vertical) _advanceResult += (_bytes.Length > 0 ? _instance?.Embolden ?? 0 : 0) * _size / 64f; break;
+            case Operation.Kerning: _precision!.SetSize(_size); _kerningResult = _precision.GetKerning((uint)_pair.X, (uint)_pair.Y); break;
             case Operation.Characters: _characters = _precision!.GetSupportedChars(); break;
             case Operation.Shape:
                 _precision!.SetSize(_size);
@@ -225,7 +235,16 @@ internal sealed class FontData : IDisposable
                     if (glyph.GlyphIndex == 0) { _shapeOutput.Add(glyph); continue; }
                     var x = subpixel ? glyph.XOffset : Round26(glyph.XOffset / 64d + (horizontal ? remainder : 0));
                     var y = Round26(glyph.YOffset / 64d + (horizontal ? 0 : remainder));
-                    var advance = (horizontal ? glyph.XAdvance : glyph.YAdvance) / 64d + (horizontal ? (_instance?.Embolden ?? 0) * _size / 64d : 0);
+                    var advance = (horizontal ? glyph.XAdvance : glyph.YAdvance) / 64d + (horizontal ? (_bytes.Length > 0 ? _instance?.Embolden ?? 0 : 0) * _size / 64d : 0);
+                    if (SelectAuthored(_size) is { } cache)
+                    {
+                        if (_bytes.Length > 0 && cache.Advances.TryGetValue(glyph.GlyphIndex, out var authoredAdvance)) advance = horizontal ? authoredAdvance.X : -authoredAdvance.Y;
+                        if (_shapeOutput.Count > 0 && cache.Kerning.TryGetValue(new((int)_shapeOutput[^1].GlyphIndex, (int)glyph.GlyphIndex), out var kerning))
+                        {
+                            var previous = _shapeOutput[^1]; var delta = checked((int)Math.Round((horizontal ? kerning.X : -kerning.Y) * BitmapScale(_size) * 64));
+                            _shapeOutput[^1] = horizontal ? previous with { XAdvance = previous.XAdvance + delta } : previous with { YAdvance = previous.YAdvance + delta };
+                        }
+                    }
                     var adjusted = subpixel ? checked((int)Math.Round(advance * 64)) : Round26(remainder + advance);
                     if (!subpixel && KeepRoundingRemainders) remainder += advance - adjusted / 64d;
                     var baseline = _instance?.BaselineOffset ?? 0; var shift = checked((int)Math.Round(baseline * _precision.Height * 64d));
@@ -240,10 +259,12 @@ internal sealed class FontData : IDisposable
         _precision!.SetSize(_size * _oversampling);
         var raster = _precision.Rasterize(_glyph, Hinting, _phase, checked((int)(_outline * _oversampling) * 16));
         if (raster.Width == 0 || raster.Height == 0) return default;
+        if (Authored != null && _oversampling == 1 && _phase == 0) return CacheRaster(_glyph, new(_size, _outline), raster);
         using var image = Image.CreateFromData(raster.Width, raster.Height, false, Image.Format.Rgba8, raster.Pixels);
         var texture = ImageTexture.CreateFromImage(image); texture.RetainRendererCache = true;
-        return new(texture, new Vector2(raster.Left, -raster.Top) / _oversampling,
+        var result = new FontGlyph(texture, new Vector2(raster.Left, -raster.Top) / _oversampling,
             new Vector2(raster.Width, raster.Height) / _oversampling, raster.Colored);
+        return result;
     }
     private static int Round26(double value) => checked((int)Math.Round(value, MidpointRounding.AwayFromZero) * 64);
     private void ReleaseNative()
@@ -252,7 +273,7 @@ internal sealed class FontData : IDisposable
         // Recorded canvas commands retain immutable CPU pixels independently of the native face.
         // Retired snapshots follow ordinary renderer eviction and need no native font ownership.
         foreach (var glyph in _glyphs.Values) if (glyph.Texture is { } texture) texture.RetainRendererCache = false;
-        _glyphs.Clear();
+        Authored?.RetireTextures(); _glyphs.Clear();
         try { _precision?.Dispose(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         finally

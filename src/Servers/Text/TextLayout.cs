@@ -741,9 +741,11 @@ internal sealed partial class TextLayout
             if (clipRect is { } clip)
             {
                 var clipped = rect.Intersection(clip); if (!clipped.HasArea()) return;
-                var scale = glyph.Texture.GetSize() / glyph.Size;
-                canvas.DrawTextureRectRegion(glyph.Texture, clipped, new Rect2((clipped.Position - rect.Position) * scale, clipped.Size * scale), color, clipUV: false);
+                var region = glyph.Region ?? new Rect2(Vector2.Zero, glyph.Texture.GetSize());
+                var scale = region.Size / glyph.Size;
+                canvas.DrawTextureRectRegion(glyph.Texture, clipped, new Rect2(region.Position + (clipped.Position - rect.Position) * scale, clipped.Size * scale), color, clipUV: false);
             }
+            else if (glyph.Region is { } region) canvas.DrawTextureRectRegion(glyph.Texture, rect, region, color, clipUV: false);
             else canvas.DrawTextureRect(glyph.Texture, rect, false, color);
         }
     }

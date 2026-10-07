@@ -66,7 +66,9 @@ public partial class FontVariation : Font
                 var cursor = source; for (var depth = 0; cursor is FontVariation variation; depth++) { if (depth >= 64 || ReferenceEquals(cursor, this)) throw new InvalidOperationException("Cyclic or excessive font base chain."); cursor = variation.ResolveBase(); }
                 if (!_dirty) return _data;
                 FontData? created = null;
-                if (cursor?.PrimaryData is { } baseData) created = baseData.CreateVariation(new(_face, _coordinates, _embolden, _transform, _baseline, _palette, _colors));
+                var instance = new FontInstance(_face, _coordinates, _embolden, _transform, _baseline, _palette, _colors);
+                if (cursor is FontFile file) created = file.CreateVariationData(instance, _spacing);
+                else if (cursor?.PrimaryData is { } baseData) created = baseData.CreateVariation(instance);
                 _data = created; _dirty = false; return _data;
             }
         }

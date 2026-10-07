@@ -1,6 +1,6 @@
 # FontData
 
-Last updated: 2026-10-05
+Last updated: 2026-10-07
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
@@ -13,3 +13,7 @@ Owns immutable encoded bytes, one native precision face, metadata, prepared metr
 Used through [Font](Font.md), [FontFile](FontFile.md) and canvas/Label consumers. These helpers do not add a public compatibility API. The [text component](../components/text.md#verification-boundaries) distinguishes source, managed, native pixel, allocation and platform evidence. [ADR 0046](../decisions/rendering.md#adr-0046) owns the backend and integration boundary.
 
 Nonempty data accepts the packaged desktop and Android process architectures, including Windows/Android x86 and Android ARM32, iOS/tvOS ARM64 and x64 simulator hosts, and browser Wasm32 with static native references. A matching native library and working host remain required; accepting the architecture does not establish target execution. The browser test host executes public WOFF2 resources, precision/raster fixtures and dictionary layout on its nonthreaded owner.
+
+## Bitmap/indexed font integration
+
+[Bitmap font authoring](../components/bitmap-fonts.md) connects FontFile indexed image/glyph/kerning/metric records and matching configured FontVariation resources to the existing HarfBuzz and common canvas/control path. Copied pixel UV regions preserve clipping and recorded image snapshots; authored publication retires native data after active readers finish. Text/binary v3 import, typed archive/fresh-process restoration and current Linux GPU/compatibility prepared output are exercised. Source policies and other platform/native-allocator gates remain explicit.

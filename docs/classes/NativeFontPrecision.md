@@ -1,6 +1,6 @@
 # NativeFontPrecision
 
-Last updated: 2026-10-05
+Last updated: 2026-10-07
 
 - Declaration: `internal sealed unsafe partial class NativeFontPrecision : IDisposable`
 - Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
@@ -63,3 +63,7 @@ iOS/tvOS select static FreeType/HarfBuzz executable imports rather than desktop 
 [NativeFontPrecisionTests](../../tests/Electron2D.Tests/NativeFontPrecisionTests.cs) verifies independent FreeType C metrics, WOFF2 loading, metadata, table ownership, real cmap enumeration, ligature features, combining clusters, Arabic shaping/run context/tatweel flags, vertical origins, corrupt data, owner-thread guards and lifetime. Twelve independent C raster profiles verify complete pixel hashes and bearings across four quarter-pixel phases, all three hinting modes and multiple stroke radii; tests also verify transform restoration and empty/invalid glyph paths.
 
 Sixty-four measured shaping/size/metric/raster-bound-query cycles after sixty-four warmup cycles allocate zero managed bytes. This excludes cache-miss Rasterize output allocations. ABI and native execution are verified on Linux x64; other platforms, all color-font formats, native allocator counts and whole-application performance remain separate gates. [FontFileTests](../../tests/Electron2D.Tests/FontFileTests.cs) verifies the public resource integration. See [ADR 0046](../decisions/rendering.md#adr-0046).
+
+## Bitmap/indexed font integration
+
+[Bitmap font authoring](../components/bitmap-fonts.md) connects FontFile indexed image/glyph/kerning/metric records and matching configured FontVariation resources to the existing HarfBuzz and common canvas/control path. Copied pixel UV regions preserve clipping and recorded image snapshots; authored publication retires native data after active readers finish. Text/binary v3 import, typed archive/fresh-process restoration and current Linux GPU/compatibility prepared output are exercised. Source policies and other platform/native-allocator gates remain explicit.

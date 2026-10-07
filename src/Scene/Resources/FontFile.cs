@@ -30,11 +30,12 @@ public enum FontSubpixelPositioning
     QuarterMaxSize = 16
 }
 
-/// <summary>Owns scalable font bytes, shaping configuration and independent native glyph caches.</summary>
+/// <summary>Owns scalable or bitmap font data, authored indexed caches and independent shaping/raster instances.</summary>
 /// <remarks>Data and file replacement validate a new face before committing it. Successful data or OpenType
 /// replacement invalidates cached text and emits Changed; metadata-only assignments are silent.
+/// Bitmap loading and manual indexed authoring share ordinary Font measurement, clipping and drawing.
 /// Fallback resources remain borrowed. A newly constructed empty font does not initialize native libraries.</remarks>
-public class FontFile : Font
+public partial class FontFile : Font
 {
     private const int MaximumFontBytes = 64 * 1024 * 1024;
     private byte[] _bytes = [];
@@ -43,7 +44,7 @@ public class FontFile : Font
     private Dictionary<string, int> _featureOverrides = new(StringComparer.Ordinal);
     internal override FontData? PrimaryData
     {
-        get { lock (FontGate) { ThrowIfDisposed(); EnsureLoadedLocked(); return _fontData; } }
+        get { lock (FontGate) { ThrowIfDisposed(); EnsureLoadedLocked(); EnsurePrimaryCacheLocked(); return _fontData; } }
     }
     private static readonly PropertyDescriptor[] FileProperties =
     [
@@ -58,6 +59,8 @@ public class FontFile : Font
         new PropertyDescriptor<FontFile, bool>(nameof(KeepRoundingRemainders), font => font.KeepRoundingRemainders, (font, value) => font.KeepRoundingRemainders = value, _ => true, stored: true),
         new PropertyDescriptor<FontFile, float>(nameof(Oversampling), font => font.Oversampling, (font, value) => font.Oversampling = value, _ => 0, stored: true),
         new PropertyDescriptor<FontFile, bool>(nameof(ModulateColorGlyphs), font => font.ModulateColorGlyphs, (font, value) => font.ModulateColorGlyphs = value, _ => false, stored: true),
+        new PropertyDescriptor<FontFile, int>(nameof(FixedSize), font => font.FixedSize, (font, value) => font.FixedSize = value, _ => 0, stored: true),
+        new PropertyDescriptor<FontFile, FixedSizeScaleMode>(nameof(FixedSizeScaleMode), font => font.FixedSizeScaleMode, (font, value) => font.FixedSizeScaleMode = value, _ => global::Electron2D.FixedSizeScaleMode.Disable, stored: true),
         new PropertyDescriptor<FontFile, Dictionary<string, int>>(nameof(OpenTypeFeatureOverrides), font => font.OpenTypeFeatureOverrides, (font, value) => font.OpenTypeFeatureOverrides = value, _ => new(StringComparer.Ordinal), stored: true)
     ];
 
@@ -203,7 +206,7 @@ public class FontFile : Font
             lock (FontGate)
             {
                 ThrowIfDisposed();
-                lock (_fontData!.Gate) { _featureOverrides = snapshot; _fontData.OpenTypeFeatures = compiled; InvalidateFontStateLocked(); }
+                lock (_fontData!.Gate) { _featureOverrides = snapshot; _fontData.OpenTypeFeatures = compiled; foreach (var data in _cacheData.Values) lock (data.Gate) data.OpenTypeFeatures = compiled; InvalidateFontStateLocked(); }
             }
             EmitChanged();
         }
@@ -240,7 +243,7 @@ public class FontFile : Font
             lock (_fontData!.Gate)
             {
                 if (EqualityComparer<T>.Default.Equals(getter(_fontData), value)) return;
-                setter(_fontData, value); InvalidateFontStateLocked();
+                setter(_fontData, value); foreach (var data in _cacheData.Values) lock (data.Gate) setter(data, value); InvalidateFontStateLocked();
             }
         }
         EmitChanged();
@@ -268,9 +271,9 @@ public class FontFile : Font
             {
                 ThrowIfDisposed();
                 if (!reset) CopyConfiguration(_fontData!, replacement);
-                else replacement.SubpixelPositioning = FontSubpixelPositioning.Disabled;
+                else { replacement.SubpixelPositioning = FontSubpixelPositioning.Disabled; _fixedSize = 0; _fixedScaleMode = global::Electron2D.FixedSizeScaleMode.Disable; }
                 replacement.OpenTypeFeatures = _fontData!.OpenTypeFeatures;
-                previous = _fontData; _fontData = replacement; _bytes = bytes; _deferred = false; InvalidateFontStateLocked();
+                previous = _fontData; ClearAuthoredLocked(); _fontData = replacement; _bytes = bytes; _deferred = false; InvalidateFontStateLocked();
             }
         }
         catch { replacement.Dispose(); throw; }
@@ -291,19 +294,20 @@ public class FontFile : Font
         if (failure is not null) ExceptionDispatchInfo.Capture(failure).Throw();
     }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(FileProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(FileProperties).Append(CacheProperty);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => GetType() == typeof(FontFile) ? new FontFile() : base.CreateDuplicateInstance();
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        byte[] bytes; Dictionary<string, int> features; bool deferred;
+        byte[] bytes, cacheSnapshot; Dictionary<string, int> features; bool deferred; int fixedSize; FixedSizeScaleMode scaleMode;
         (FontHinting Hinting, FontSubpixelPositioning Subpixel, bool Remainders, float Oversampling, bool Modulate,
             string Name, string Style, FontStyle Flags, int Weight, int Stretch) settings;
         lock (FontGate)
         {
-            ThrowIfDisposed(); bytes = (byte[])_bytes.Clone(); features = new(_featureOverrides, StringComparer.Ordinal); deferred = _deferred;
+            ThrowIfDisposed(); fixedSize = _fixedSize; scaleMode = _fixedScaleMode; bytes = (byte[])_bytes.Clone(); features = new(_featureOverrides, StringComparer.Ordinal); deferred = _deferred;
+            cacheSnapshot = SaveCaches();
             var data = _fontData!;
             settings = (data.Hinting, data.SubpixelPositioning, data.KeepRoundingRemainders, data.Oversampling,
                 data.ModulateColorGlyphs, data.FamilyName, data.StyleName, data.FontStyle, data.FontWeight, data.FontStretch);
@@ -321,12 +325,13 @@ public class FontFile : Font
             base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
             lock (copy.FontGate)
             {
-                copy.ThrowIfDisposed(); previous = copy._fontData; copy._fontData = replacement; copy._bytes = bytes;
-                copy._featureOverrides = features; copy._deferred = deferred; copy.InvalidateFontStateLocked();
+                copy.ThrowIfDisposed(); previous = copy._fontData; copy.ClearAuthoredLocked(); copy._fontData = replacement; copy._bytes = bytes;
+                copy._fixedSize = fixedSize; copy._fixedScaleMode = scaleMode; copy._featureOverrides = features; copy._deferred = deferred; copy.InvalidateFontStateLocked();
             }
         }
         catch { replacement.Dispose(); throw; }
         copy.FinishReplacement(previous);
+        if (cacheSnapshot.Length > 0) copy.RestoreCaches(cacheSnapshot);
     }
     /// <inheritdoc />
     protected override void OnResetState()
@@ -338,7 +343,7 @@ public class FontFile : Font
     protected override void Dispose(bool disposing)
     {
         FontData? data;
-        lock (FontGate) { data = _fontData; _fontData = null; _bytes = []; _deferred = false; _featureOverrides.Clear(); }
+        lock (FontGate) { data = _fontData; ClearAuthoredLocked(); _fontData = null; _bytes = []; _deferred = false; _featureOverrides.Clear(); }
         try { data?.Dispose(); }
         finally { base.Dispose(disposing); }
     }

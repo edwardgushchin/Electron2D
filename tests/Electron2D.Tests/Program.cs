@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE_CHILD") is { } fontCachePath) { FontCacheTests.RunChild(fontCachePath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE_HOST") == "1") { FontCacheTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE") == "1") { FontCacheTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_CHILD") is { } scriptPath) { ScriptTests.RunChild(scriptPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_HOST") == "1") { ScriptTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT") == "1") { ScriptTests.Run(); return; }
@@ -436,6 +439,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT") == "1")
     UnicodeTextTests.Run(); NativeTextBreakTests.Run(); TextCaseTests.Run(); TextHelperTests.Run(); LabelSettingsTests.Run();
     NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
     FontFileTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+    FontCacheTests.Run();
     FontLifetimeTests.Run(FontTestFixtures.OpenSans);
     FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
     LabelTests.Run(FontTestFixtures.OpenSans);
@@ -630,6 +634,7 @@ TextHelperTests.Run();
 LabelSettingsTests.Run();
 NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 FontFileTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+FontCacheTests.Run();
 FontLifetimeTests.Run(FontTestFixtures.OpenSans);
 FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 LabelTests.Run(FontTestFixtures.OpenSans);

@@ -32,7 +32,8 @@ public sealed class ResourceLoader : ElectronObject
     private static List<ResourceFormatLoader> FileLoaders => Runtime._fileLoaders;
     /// <inheritdoc />
     protected override void ValidateDisposal() => throw new InvalidOperationException("The resource-loading service is permanent.");
-    private static readonly string[] FontExtensions = ["ttf", "otf", "woff", "woff2", "ttc", "otc"];
+    private static bool IsBitmapFont(string path) => System.IO.Path.GetExtension(path).Equals(".fnt", StringComparison.OrdinalIgnoreCase) || System.IO.Path.GetExtension(path).Equals(".font", StringComparison.OrdinalIgnoreCase);
+    private static readonly string[] FontExtensions = ["ttf", "otf", "woff", "woff2", "ttc", "otc", "fnt", "font"];
     private static readonly string[] ImageExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg"];
 
     /// <summary>Registers a borrowed typed file loader without duplicating identity.</summary><param name="formatLoader">Live format extension.</param><param name="atFront">Whether it precedes existing extensions.</param>
@@ -41,7 +42,7 @@ public sealed class ResourceLoader : ElectronObject
     public static void RemoveResourceFormatLoader(ResourceFormatLoader formatLoader) { ArgumentNullException.ThrowIfNull(formatLoader); lock (LoadGate) FileLoaders.RemoveAll(item => ReferenceEquals(item, formatLoader)); }
     private static ResourceFormatLoader[] LoaderSnapshot() { lock (LoadGate) return FileLoaders.Where(l => !l.IsDisposed).ToArray(); }
     /// <summary>Returns external dependency tokens from a recognized format.</summary><param name="path">Source file.</param><param name="addTypes">Whether to append stable type IDs.</param><returns>Copied ordered dependencies.</returns>
-    public static string[] GetDependencies(string path, bool addTypes = false) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetDependencies(path, addTypes); return []; }
+    public static string[] GetDependencies(string path, bool addTypes = false) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetDependencies(path, addTypes); return IsBitmapFont(path) ? FontFile.BitmapDependencies(path, addTypes) : []; }
     /// <summary>Reports the UID stored by a recognized file format.</summary><param name="path">Source file.</param><returns>UID or InvalidID.</returns>
     public static long GetResourceUID(string path) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetResourceUID(path); return ResourceUID.InvalidID; }
 
@@ -127,10 +128,10 @@ public sealed class ResourceLoader : ElectronObject
             {
                 if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is FontFile font)
                 {
-                    font.LoadDynamicFont(path); return (TResource)(Resource)font;
+                    if (IsBitmapFont(path)) font.LoadBitmapFont(path); else font.LoadDynamicFont(path); return (TResource)(Resource)font;
                 }
                 var createdFont = new FontFile();
-                try { createdFont.LoadDynamicFont(path); loaded = createdFont; }
+                try { if (IsBitmapFont(path)) createdFont.LoadBitmapFont(path); else createdFont.LoadDynamicFont(path); loaded = createdFont; }
                 catch { createdFont.Dispose(); throw; }
             }
             else

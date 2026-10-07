@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 ## Responsibility
 
@@ -157,3 +157,7 @@ AudioBusLayout and all 27 concrete audio-effect schemas now use the existing typ
 [FontVariation](../classes/FontVariation.md) and Font.FindVariation supply independent native font instances: copied axis coordinates, collection faces, synthetic outlines, spacing, baseline and selected/custom palettes. Font metadata exposes validated axis bounds and predefined palettes. RichTextLabel consumes these instances through its full font-tag options. [Text](../components/text.md) records ownership, storage and the local verification boundary.
 
 [Compiled C# source assets](../components/scripting.md) register exact project Node/Resource factories and typed schemas, validate portable-PDB source/type association, load/save Script resources, and reconstruct actual user classes through scene archives. Project callbacks retain ordinary lifecycle and source-resource disposal does not unload their compiled class. RichTextLabel consumes owned compiled effect instances. Live reassignment, implementation reload/migration, scene RPC and foreign target source-symbol prerequisites remain explicit dependencies.
+
+## Bitmap/indexed font integration
+
+[Bitmap font authoring](../components/bitmap-fonts.md) connects FontFile indexed image/glyph/kerning/metric records and matching configured FontVariation resources to the existing HarfBuzz and common canvas/control path. Copied pixel UV regions preserve clipping and recorded image snapshots; authored publication retires native data after active readers finish. Text/binary v3 import, typed archive/fresh-process restoration and current Linux GPU/compatibility prepared output are exercised. Source policies and other platform/native-allocator gates remain explicit.

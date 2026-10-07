@@ -93,6 +93,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         if (!float.IsFinite(pixels) || pixels <= 0 || pixels * 64d > int.MaxValue)
             throw new ArgumentOutOfRangeException(nameof(pixels));
         if (_size == pixels) return;
+        if (_bitmap != null) { SetBitmapSize(pixels); return; }
         var size = checked((int)Math.Round(pixels * 64d));
         if (size == 0) throw new ArgumentOutOfRangeException(nameof(pixels));
         CheckFT(FTSetCharSize(_face, new CLong(size), new CLong(size), 72, 72));
@@ -157,13 +158,22 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     {
         EnsureOwner();
         if (!Rune.IsValid(scalar) || variationSelector != 0 && !Rune.IsValid(variationSelector)) throw new ArgumentOutOfRangeException(nameof(scalar));
+        if (_bitmap != null) return variationSelector == 0 && _bitmap.HasGlyph(scalar) ? scalar : 0;
         return variationSelector == 0 ? FTGetCharIndex(_face, new CULong(scalar)) : FTGetCharVariantIndex(_face, new CULong(scalar), new CULong(variationSelector));
     }
 
+    internal Vector2 GetKerning(uint left, uint right)
+    {
+        EnsureOwner(); if (_bitmap != null) return Vector2.Zero;
+        if (left >= GlyphCount || right >= GlyphCount) throw new ArgumentOutOfRangeException(nameof(left));
+        CheckFT(FTGetKerning(_face, left, right, 0, out var delta)); return new(delta.X.Value / 64f, delta.Y.Value / 64f);
+    }
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Get_Kerning"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTGetKerning(nint face, uint left, uint right, uint mode, out FTVector delta);
     internal int GetGlyphAdvance(uint glyph, bool vertical = false)
     {
         EnsureOwner();
         if (glyph >= GlyphCount) throw new ArgumentOutOfRangeException(nameof(glyph));
+        if (_bitmap != null) return BitmapAdvance(glyph, vertical);
         CheckFT(FTGetAdvance(_face, glyph, NoHinting | (vertical ? VerticalLayout : 0), out var advance));
         return ConvertAdvance(advance.Value, vertical);
     }
@@ -184,6 +194,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     {
         EnsureOwner();
         if (glyph >= GlyphCount) throw new ArgumentOutOfRangeException(nameof(glyph));
+        if (_bitmap != null) return BitmapBounds(glyph);
         CheckFT(FTLoadGlyph(_face, glyph, flags));
         var metrics = ((GlyphSlotRecord*)((FaceRecord*)_face)->Glyph)->Metrics;
         return new Rect2(metrics.BearingX.Value / 64f, -metrics.BearingY.Value / 64f, metrics.Width.Value / 64f, metrics.Height.Value / 64f);
@@ -192,6 +203,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     internal byte[] GetSFNTTable(uint tag)
     {
         EnsureOwner();
+        if (_bitmap != null) return [];
         CULong size = default;
         var error = FTLoadSFNTTable(_face, new CULong(tag), default, null, ref size);
         if (error == 0x8E) return []; // The optional table is absent.
@@ -205,6 +217,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     internal string GetSupportedChars()
     {
         EnsureOwner();
+        if (_bitmap != null) return BitmapCharacters();
         var result = new StringBuilder();
         Span<char> encoded = stackalloc char[2];
         var character = FTGetFirstChar(_face, out var glyph);
@@ -221,13 +234,13 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
 
     private void EnsureOwner()
     {
-        ObjectDisposedException.ThrowIf(_face == 0, this);
+        ObjectDisposedException.ThrowIf(_font == 0, this);
         if (Environment.CurrentManagedThreadId != _ownerThread) throw new InvalidOperationException("Font precision operations must run on their creating text thread.");
     }
 
     public void Dispose()
     {
-        if (_face == 0) return;
+        if (_font == 0) return;
         EnsureOwner();
         Release();
         GC.SuppressFinalize(this);
@@ -243,6 +256,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         if (_hbFace != 0) HBFaceDestroy(_hbFace);
         if (_face != 0) FTDoneFace(_face);
         if (_library != 0) FTDone(_library);
+        if (_bitmapHandle.IsAllocated) _bitmapHandle.Free();
         NativeMemory.Free(_callbacks);
         NativeMemory.Free(_data);
         _buffer = _font = _parentFont = _hbFace = _face = _library = 0;
@@ -266,6 +280,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     {
         try
         {
+            if (state->Bitmap != 0) return BitmapOwner(state).BitmapAdvance(glyph, vertical);
             var error = FTGetAdvance(state->Face, glyph, NoHinting | (vertical ? VerticalLayout : 0), out var advance);
             if (error != 0) { state->Error = error; return 0; }
             return ConvertAdvance(advance.Value, vertical);
@@ -279,6 +294,12 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         var state = (CallbackState*)data;
         try
         {
+            if (state->Bitmap != 0)
+            {
+                var bounds = BitmapOwner(state).BitmapBounds(glyph);
+                extents->XBearing = checked((int)(bounds.Position.X * 64)); extents->YBearing = checked((int)(-bounds.Position.Y * 64));
+                extents->Width = checked((int)(bounds.Size.X * 64)); extents->Height = checked((int)(-bounds.Size.Y * 64)); return 1;
+            }
             var error = FTLoadGlyph(state->Face, glyph, NoHinting);
             if (error != 0) { state->Error = error; return 0; }
             var metrics = ((GlyphSlotRecord*)((FaceRecord*)state->Face)->Glyph)->Metrics;
@@ -328,7 +349,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static void FreeTable(nint data) => NativeMemory.Free((void*)data);
 
-    [StructLayout(LayoutKind.Sequential)] private struct CallbackState { internal nint Face; internal int Error; }
+    [StructLayout(LayoutKind.Sequential)] private struct CallbackState { internal nint Face, Bitmap; internal int Error; }
     [StructLayout(LayoutKind.Sequential)] private struct Generic { internal nint Data, Finalizer; }
     // C long fields/arguments follow LLP64, LP64 and ILP32. Return scalar registers, not struct-return ABI.
     private static CULong CharResult(nuint value) => new(OperatingSystem.IsWindows() ? (nuint)(uint)value : value);
