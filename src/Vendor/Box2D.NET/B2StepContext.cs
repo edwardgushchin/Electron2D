@@ -26,6 +26,7 @@ namespace Box2D.NET
             bulletBodyCount = default;
             joints = default;
             contacts = default;
+            generatedManifolds = null;
             simdContactConstraints = default;
             activeColorCount = workerCount = 0;
             stages = default;
@@ -81,6 +82,7 @@ namespace Box2D.NET
         // despite being an array of pointers, these are contiguous sub-arrays corresponding
         // to constraint graph colors
         public ArraySegment<B2ContactSim> contacts;
+        internal B2Manifold[] generatedManifolds;
 
         public ArraySegment<B2ContactConstraintSIMD> simdContactConstraints;
         public int activeColorCount;

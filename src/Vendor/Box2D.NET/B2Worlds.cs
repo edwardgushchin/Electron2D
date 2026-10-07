@@ -437,7 +437,8 @@ namespace Box2D.NET
 
                     // This updates solid contacts
                     bool touching =
-                        b2UpdateContact(world, contactSim, shapeA, transformA, centerOffsetA, shapeB, transformB, centerOffsetB);
+                        b2UpdateContact(world, contactSim, shapeA, transformA, centerOffsetA, shapeB, transformB, centerOffsetB,
+                            stepContext.generatedManifolds, contactIndex);
 
                     // State changes that affect island connectivity. Also affects contact events.
                     if (touching == true && wasTouching == false)
@@ -579,6 +580,7 @@ namespace Box2D.NET
             }
 
             // Task should take at least 40us on a 4GHz CPU (10K cycles)
+            world.generateManifolds?.Invoke(context, contactCount);
             int minRange = 64;
             object userCollideTask = world.enqueueTaskFcn(b2CollideTask, contactCount, minRange, context, world.userTaskContext);
             world.taskCount += 1;
@@ -589,6 +591,7 @@ namespace Box2D.NET
 
             b2FreeArenaItem(world.arena, contactSims);
             context.contacts = null;
+            context.generatedManifolds = null;
             contactSims = null;
 
             // Serially update contact state

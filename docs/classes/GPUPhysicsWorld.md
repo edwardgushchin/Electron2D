@@ -4,16 +4,24 @@ Last updated: 2026-10-07
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
+integration, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/48-byte solver uniforms have matching compute layouts.
 Contact/joint records occupy 176/160 bytes. GPU/transfer buffers grow together
 before use and retain their capacity.
+
+`GenerateManifolds` packs geometry once per referenced shape, current pair
+transforms and fat-proxy overlap, then generates all contact points in one
+compute submission. Its packed shape/pair/result records occupy 144/48/80
+bytes. The complete result is validated before reaching material, pre-solve,
+warm-start and contact-transition processing in the managed world. Chain
+segments are rejected explicitly; broad-phase pairs and sensor queries still
+belong to the CPU path.
 
 `Integrate` requires the live world owner. It packs awake states, submits the
 integration kernel, waits for the submission fence, verifies every returned

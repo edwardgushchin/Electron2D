@@ -52,7 +52,7 @@ The current geometry profile accepts translated/rotated bodies and areas with un
 
 GPU physics is being developed under [ADR 0054](../decisions/physics.md#adr-0054)
 alongside the retained CPU compatibility backend. The internal compute host
-currently executes integration and contact/revolute/wheel constraints; the public world still
+currently executes integration, circle/capsule/segment/polygon manifolds and contact/revolute/wheel constraints; the public world still
 selects CPU. [The implementation status](../components/gpu-physics.md) separates
 these executing stages from the required full GPU world and startup fallback.
 

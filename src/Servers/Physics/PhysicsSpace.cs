@@ -51,6 +51,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         var world = b2GetWorldFromId(_worldID);
         world.integrateBodyStage = null!;
         world.solveConstraints = gpu.Solve;
+        world.generateManifolds = gpu.GenerateManifolds;
         return gpu;
     }
     private Vector2 _defaultGravity;
@@ -484,6 +485,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _tasks.Dispose();
         b2GetWorldFromId(_worldID).integrateBodyStage = null!;
         b2GetWorldFromId(_worldID).solveConstraints = null!;
+        b2GetWorldFromId(_worldID).generateManifolds = null!;
         _gpuWorld?.Dispose();
         foreach (var joint in _joints) joint.DetachBackend();
         _joints.Clear();

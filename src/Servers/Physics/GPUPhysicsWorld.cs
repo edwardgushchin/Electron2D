@@ -5,7 +5,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-// GPU integration and constraints execute here; collision/preparation and sleep/CCD
+// GPU integration, manifolds and constraints execute here; pairs/preparation and sleep/CCD
 // still use the compatibility world until their GPU stages are connected.
 internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {
@@ -21,7 +21,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate, _solve;
+    private readonly RenderHandle _device, _integrate, _solve, _collide;
     private readonly Storage<Body> _bodyStorage;
     private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -32,7 +32,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
     internal GPUPhysicsWorld()
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null, solve = null;
+        RenderHandle? device = null, integrate = null, solve = null, collide = null;
         try
         {
             device = RenderingServer.Service?.RetainComputeDevice() ??
@@ -41,11 +41,13 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             Driver = SDL.GetGPUDeviceDriver(Device) ?? "unknown";
             _integrate = integrate = CreatePipeline("PhysicsIntegrate.comp.spv");
             _solve = solve = CreatePipeline("PhysicsSolve.comp.spv");
+            _collide = collide = CreatePipeline("PhysicsCollide.comp.spv");
             _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
+            _geometryStorage = new(this); _pairStorage = new(this); _manifoldStorage = new(this);
         }
         catch
         {
-            solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
             throw;
         }
     }
@@ -164,6 +166,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         if (_disposed) return;
         EnsureOwner();
         _disposed = true;
+        _geometryStorage.Dispose(); _pairStorage.Dispose(); _manifoldStorage.Dispose(); _collide.Dispose();
         _bodyStorage.Dispose(); _contactStorage.Dispose(); _jointStorage.Dispose(); _solve.Dispose(); _integrate.Dispose(); _device.Dispose();
         SDL.QuitSubSystem(SDL.InitFlags.Video);
     }

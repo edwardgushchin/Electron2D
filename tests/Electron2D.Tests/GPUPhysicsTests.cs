@@ -8,7 +8,9 @@ internal static partial class GPUPhysicsTests
         using var gpu = new GPUPhysicsWorld();
         foreach (var count in new[] { 1, 63, 64, 65, 4097, 65536 }) VerifyIntegration(gpu, count);
         VerifyConstraints(gpu);
+        VerifyManifolds(gpu);
         VerifyWorld(false); VerifyWorld(true);
+        VerifyWorld(true, true);
         VerifyDeviceLifetime("gpu");
         VerifyDeviceLifetime("compatibility");
         Console.WriteLine($"GPU integration passed on {gpu.Driver}: forces, damping, locks, speed limits, rotations and dispatch boundaries.");
@@ -93,7 +95,7 @@ internal static partial class GPUPhysicsTests
             throw new InvalidOperationException($"GPU integration differs: CPU {expected}, GPU {actual}.");
     }
 
-    private static void VerifyWorld(bool solver)
+    private static void VerifyWorld(bool solver, bool collisionFailure = false)
     {
         var cpuSpace = PhysicsServer.SpaceCreate(); var gpuSpace = PhysicsServer.SpaceCreate();
         var circle = PhysicsServer.CircleShapeCreate(); var rectangle = PhysicsServer.RectangleShapeCreate();
@@ -122,10 +124,13 @@ internal static partial class GPUPhysicsTests
             using var view = PhysicsServer.BodyGetDirectState(gpuBody)!;
             if (gpu.DispatchCount == 0 || callbacks == 0 || view.GetContactCount() == 0)
                 throw new InvalidOperationException("The ordinary physics world must execute GPU kernels, callbacks and contact capture.");
+            if (solver && gpu.CollisionSubmissionCount == 0)
+                throw new InvalidOperationException("The GPU world must generate live contact manifolds.");
             using var query = new PhysicsPointQueryParameters { Position = view.Transform.Origin };
             if (!PhysicsServer.SpaceGetDirectState(gpuSpace).IntersectPoint(query).Any(hit => hit.ColliderRID == gpuBody))
                 throw new InvalidOperationException("GPU-published body poses must reach direct queries.");
-            if (solver) Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).solveConstraints = _ => throw new IOException("injected GPU failure");
+            if (collisionFailure) Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).generateManifolds = (_, _) => throw new IOException("injected GPU collision failure");
+            else if (solver) Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).solveConstraints = _ => throw new IOException("injected GPU failure");
             else Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).integrateBodyStage = (_, _) => throw new IOException("injected GPU failure");
             PhysicsServer.BodySetLinearVelocity(gpuBody, new(10, 0));
             try { PhysicsServer.SpaceStep(gpuSpace, 1d / 60); throw new Exception("GPU failure was not reported."); }

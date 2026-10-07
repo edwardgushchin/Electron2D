@@ -27,4 +27,6 @@ Local boundary and compiler adaptations:
 
 13. An optional internal world callback replaces body integration stages during GPU-world development. The CPU path retains its existing stages. The integration-only numeric entry uses one worker; whole GPU solving runs on the owner while CPU collision stages retain workers. No backend callback is public. The GPU solve callback follows retained CPU constraint preparation and publishes accumulated contact/joint impulses before ordinary finalization. Typed arena abort and scheduler draining clear temporary step ownership after a failed GPU interval, allowing world disposal without replay.
 
+14. An optional owner-thread manifold batch callback supplies computed geometry to the unchanged material/pre-solve/warm-start/contact-transition path. The CPU path still computes its own manifolds when the callback is absent. Step reset and collision teardown clear the supplied array. The GPU shader adapts the pinned circle/capsule/segment/polygon equations, retains MIT attribution and does not currently accept chain segments.
+
 The library remains an internal backend. Electron2D public signatures use only Electron2D-owned types. Review every upstream update against this pinned version, license, internalization and integration tests before replacing these files.
