@@ -1,6 +1,6 @@
 # C# scripting decisions
 
-Last updated: 2026-10-01
+Last updated: 2026-10-07
 
 This bounded document owns the C# execution model and script-resource identity. [The decision index](index.md) routes other work; implemented behavior remains in class/component/domain documents and [coverage](../coverage/index.md).
 
@@ -9,7 +9,7 @@ Decisions in this log: [0091](#adr-0091).
 <a id="adr-0091"></a>
 ## ADR 0091: Use compiled C# nodes and one concrete Script resource
 
-Last updated: 2026-10-01
+Last updated: 2026-10-07
 
 - Status: Accepted by the user on 2026-10-01.
 - Scope: C# gameplay code, script resource naming/roles, project/editor integration and reference API adaptation.
@@ -39,6 +39,14 @@ The reference engine separates Script and CSharpScript resources and binds manag
 - Compiled C# node execution does not require a Script wrapper per frame. Do not add an empty resource solely to reserve its name or hide Node execution behind an otherwise unused resource API. Introduce the resource with an actual loader/editor/authoring path and positive, failure, lifetime and fresh-process reconstruction evidence.
 - A scene's serialized type/script identity resolves to registered typed construction and property codecs. Serialized names are data addresses, not a universal `Get/Set/Call`, `Variant`, general `object` or `dynamic` value system. The concrete file format, registry schema, public signatures and build/error policy belong to their executable slices.
 
+#### Compiled source asset contract
+
+- Register one primary `.cs` document per project Node/Resource type with its stable portable type ID, static exact construction factory and explicit typed property descriptors. Abstract project bases have metadata registration without a factory. Reuse ResourceFileTypes construction/storage rather than a second object system. Registration belongs to the host's explicit startup/build integration; project code remains in the consumer assembly.
+- Prove the selected source/type association using matching compiled assembly/module identity and portable PDB type documents or method sequence points. Preserve compiler document checksums for every partial-type document. Loading checks all source documents against the compiled checksums and rejects missing, changed, unknown or incompatible associations before cache replacement. File-backed portable-symbol availability is a concrete prerequisite; no AOT/browser or source-free registration is inferred from desktop execution.
+- Script.SourceCode is editable resource text; assigning or saving it does not change the loaded CLR type. Source saving is an atomic UTF-8 operation. Rebuild and restart supplies a new compiled class cohort; no Reload success or keep-state/hot migration is claimed from source refresh. Resource duplication/archive storage preserve source text and stable registered class identity. Constructed objects own their ordinary state/lifecycle and keep executing compiled callbacks after Script disposal; registration retains the loaded compiled types for the process lifetime.
+- Typed New uses the exact registered factory or a direct caller-supplied C# constructor expression, preserving typed constructor arguments without variadic Variant invocation. Validate the actual constructed type and its user property schema, disposing a returned incompatible instance. Project metadata uses CLR method/event/type information and explicit typed descriptors; constant queries select an exact value type. A property-default query receives a typed descriptor and a compatible live owner context, retaining the lifetime of borrowed resource defaults. Metadata queries are explicit cold operations, not per-frame dispatch.
+- ToolAttribute and GlobalClassAttribute describe compiled project class roles/names; they do not install an editor execution scheduler. RichTextLabel may instantiate a compatible registered Resource Script as its owned RichTextEffect and use the ordinary virtual effect hook. The original Script stays borrowed and is not consulted per glyph.
+
 #### Live attachment and rebuild boundaries
 
 - A CLR instance does not change its runtime type when a script is selected. A scene loader may construct a `Player` from the selected identity; it must not claim that an existing CharacterBody object became that CLR subtype while keeping the same managed instance.
@@ -53,9 +61,9 @@ The Script resource enters a real code-as-asset consumer: source/compiled-type a
 
 ### Current implementation and verification boundary
 
-This record changes architecture/coverage mapping only. Existing Node callbacks, exact-type packed-scene factories and typed property descriptors execute. PackedScene remains in-memory; public Script resources, file-based script/scene loading, project type registration/editor discovery and live script attachment are not implemented. The existing ScriptChanged notification is a reserved typed contract, not a working attachment service. No runtime class, SDK dependency, command, generator or hot-reload behavior is introduced by this ADR.
+The compiled-source asset slice now provides a concrete Script resource, explicit project Node/Resource registrations, portable-PDB source association, typed metadata/defaults/factories, `.cs` loading/atomic saving and archive identity. It creates actual user classes through existing file factories and ordinary callbacks; RichTextLabel consumes compiled effect resources. Checks and platform limits are recorded in [the scripting component](../components/scripting.md).
 
-The [Script](../coverage/classes/Script.md) and [CSharpScript](../coverage/classes/CSharpScript.md) source pages retain all pinned declarations and their current gaps. Resource/type-catalog/authoring work triggers the first Script slice; live owner binding and networking/RPC have their own dependencies. The engine inventory must not gain a Script production row until its source exists. Platform and allocation claims require their ordinary checks under ADRs 0021 and 0014.
+Live GetScript/SetScript binding/replacement, implementation Reload and keep-state migration remain unimplemented obligations. RPC metadata requires the scene multiplayer/RPC contract. Deprecated instance_has is excluded with its pinned replacement evidence under ADR 0004. No alternate CSharpScript production type or per-frame wrapper is introduced.
 
 ### Consequences
 

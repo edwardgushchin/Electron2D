@@ -1,3 +1,4 @@
+using UnicodeScript = Electron2D.TextFormatting.Unicode.Script;
 using Electron2D.TextFormatting.Unicode;
 
 namespace Electron2D;
@@ -41,7 +42,7 @@ internal static class TextScript
     ];
 
     /// <summary>Gets the four-byte ISO 15924 tag expected by the shaping backend.</summary>
-    internal static uint ToTag(Script script)
+    internal static uint ToTag(UnicodeScript script)
     {
         var tags = Tags;
         if ((uint)script >= (uint)tags.Length) throw new ArgumentOutOfRangeException(nameof(script));
@@ -49,17 +50,17 @@ internal static class TextScript
     }
 
     /// <summary>Reports whether a script names a specific writing system.</summary>
-    internal static bool IsStrong(Script script) => script is not (Script.Unknown or Script.Common or Script.Inherited);
+    internal static bool IsStrong(UnicodeScript script) => script is not (UnicodeScript.Unknown or UnicodeScript.Common or UnicodeScript.Inherited);
 
     /// <summary>Reports whether a scalar can join a run of the supplied script.</summary>
     /// <remarks>Explicit Script_Extensions restrict even Common and Inherited characters. Without
     /// such a restriction, Common and Inherited can adopt the surrounding run's script. Choosing
     /// that run and preserving grapheme boundaries belong to the layout itemizer.</remarks>
-    internal static bool IsCompatible(uint scalar, Script script)
+    internal static bool IsCompatible(uint scalar, UnicodeScript script)
     {
         var codepoint = new Codepoint(scalar);
         if (codepoint.HasScriptExtension(script)) return true;
         var primary = codepoint.Script;
-        return primary is Script.Common or Script.Inherited && codepoint.HasScriptExtension(primary);
+        return primary is UnicodeScript.Common or UnicodeScript.Inherited && codepoint.HasScriptExtension(primary);
     }
 }

@@ -72,3 +72,5 @@ Gets or sets this effect's tag identifier.
 ## Verification and limits
 
 See the rich-text component for actual tests, native artifacts, prepared allocation bounds and exact missing dependencies.
+
+Compiled Script source assets may construct registered RichTextEffect subclasses. RichTextLabel owns an effect created through InstallEffect(Script), while directly installed effect objects remain borrowed. Exact duplicate factories preserve BBCode through the inherited effect copy hook without invoking Resource’s exact-base-only validation.

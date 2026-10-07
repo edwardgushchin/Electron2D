@@ -275,6 +275,7 @@ public sealed partial class ThemeDB
         ["SceneState"] = ["SceneState", "ElectronObject"],
         ["SceneTree"] = ["SceneTree", "MainLoop", "ElectronObject"],
         ["SceneTreeTimer"] = ["SceneTreeTimer", "ElectronObject"],
+        ["Script"] = ["Script", "Resource", "ElectronObject"],
         ["ScrollBar"] = ["ScrollBar", "Range", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["ScrollContainer"] = ["ScrollContainer", "Container", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["SegmentShape"] = ["SegmentShape", "Shape", "Resource", "ElectronObject"],

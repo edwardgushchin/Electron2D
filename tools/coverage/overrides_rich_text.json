@@ -1094,6 +1094,11 @@
       "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_VIRTUAL",
       "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Virtual()",
       "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:install_effect(Variant:)",
+      "electron2d": "method:Electron2D.RichTextLabel.InstallEffect(Electron2D.Script)",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
     }
   ],
   "extras": [
@@ -1500,29 +1505,29 @@
       "godot": [
         "RichTextLabel::method:append_text(String:)"
       ],
-      "state": "Partial",
-      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
+      "state": "Implemented",
+      "reason": "Styled native FontVariation font tags, tables/images/links/effects and compiled source-associated C# Script effect installation execute. Script resource construction uses the exact registered RichTextEffect class and ordinary virtual glyph callbacks, with label-owned retirement. Native/foreign/physical limits are documented separately."
     },
     {
       "godot": [
         "RichTextLabel::method:install_effect(Variant:)"
       ],
-      "state": "Partial",
-      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
+      "state": "Implemented",
+      "reason": "Styled native FontVariation font tags, tables/images/links/effects and compiled source-associated C# Script effect installation execute. Script resource construction uses the exact registered RichTextEffect class and ordinary virtual glyph callbacks, with label-owned retirement. Native/foreign/physical limits are documented separately."
     },
     {
       "godot": [
         "RichTextLabel::method:parse_bbcode(String:)"
       ],
-      "state": "Partial",
-      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
+      "state": "Implemented",
+      "reason": "Styled native FontVariation font tags, tables/images/links/effects and compiled source-associated C# Script effect installation execute. Script resource construction uses the exact registered RichTextEffect class and ordinary virtual glyph callbacks, with label-owned retirement. Native/foreign/physical limits are documented separately."
     },
     {
       "godot": [
         "RichTextLabel::method:reload_effects()"
       ],
-      "state": "Partial",
-      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
+      "state": "Implemented",
+      "reason": "Styled native FontVariation font tags, tables/images/links/effects and compiled source-associated C# Script effect installation execute. Script resource construction uses the exact registered RichTextEffect class and ordinary virtual glyph callbacks, with label-owned retirement. Native/foreign/physical limits are documented separately."
     },
     {
       "godot": [
@@ -1535,22 +1540,22 @@
       "godot": [
         "RichTextLabel::property:bbcode_enabled"
       ],
-      "state": "Partial",
-      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
+      "state": "Implemented",
+      "reason": "Styled native FontVariation font tags, tables/images/links/effects and compiled source-associated C# Script effect installation execute. Script resource construction uses the exact registered RichTextEffect class and ordinary virtual glyph callbacks, with label-owned retirement. Native/foreign/physical limits are documented separately."
     },
     {
       "godot": [
         "RichTextLabel::property:custom_effects"
       ],
-      "state": "Partial",
-      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
+      "state": "Implemented",
+      "reason": "Styled native FontVariation font tags, tables/images/links/effects and compiled source-associated C# Script effect installation execute. Script resource construction uses the exact registered RichTextEffect class and ordinary virtual glyph callbacks, with label-owned retirement. Native/foreign/physical limits are documented separately."
     },
     {
       "godot": [
         "RichTextLabel::property:text"
       ],
-      "state": "Partial",
-      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
+      "state": "Implemented",
+      "reason": "Styled native FontVariation font tags, tables/images/links/effects and compiled source-associated C# Script effect installation execute. Script resource construction uses the exact registered RichTextEffect class and ordinary virtual glyph callbacks, with label-owned retirement. Native/foreign/physical limits are documented separately."
     },
     {
       "godot": [

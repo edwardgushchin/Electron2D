@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Loads supported resource files through the engine's typed resource path cache.</summary>
 /// <remarks>Supported resources include registered typed archives/format extensions, image textures, dynamic fonts,
-/// WAV/MP3/Ogg audio and certificate/private-key files. Static operations use a permanent retained service.
+/// WAV/MP3/Ogg audio, compiled C# source assets and certificate/private-key files. Static operations use a permanent retained service.
 /// The returned resource belongs to the caller and is cached weakly while it remains live. Synchronous load
 /// operations serialize cache decisions. File roots own newly decoded dependency graphs; the weak cache owns no resources.</remarks>
 public sealed class ResourceLoader : ElectronObject
@@ -26,7 +26,7 @@ public sealed class ResourceLoader : ElectronObject
     internal static readonly ResourceLoader Runtime = new();
     internal readonly ResourceFileRegistry FileTypes = new();
     private readonly object _loadGate = new();
-    private readonly List<ResourceFormatLoader> _fileLoaders = [new ResourceArchiveLoader()];
+    private readonly List<ResourceFormatLoader> _fileLoaders = [new ResourceArchiveLoader(), new ScriptSourceLoader()];
     private ResourceLoader() { }
     private static object LoadGate => Runtime._loadGate;
     private static List<ResourceFormatLoader> FileLoaders => Runtime._fileLoaders;

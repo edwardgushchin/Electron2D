@@ -669,7 +669,26 @@
       "godot": "Input::enum_value:CursorShape.CURSOR_WAIT",
       "electron2d": "enumValue:Electron2D.CursorShape.Wait()",
       "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
-    }
+    },
+    {"godot": "Script::method:can_instantiate()", "electron2d": "method:Electron2D.Script.CanInstantiate()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:get_base_script()", "electron2d": "method:Electron2D.Script.GetBaseScript()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:get_global_name()", "electron2d": "method:Electron2D.Script.GetGlobalName()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:get_instance_base_type()", "electron2d": "method:Electron2D.Script.GetInstanceBaseType()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:get_property_default_value(StringName:)", "electron2d": "method:Electron2D.Script.GetPropertyDefaultValue`2(PropertyDescriptor<TOwner, TValue>,TOwner)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:get_script_constant_map()", "electron2d": "method:Electron2D.Script.GetScriptConstantMap`1()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:get_script_method_list()", "electron2d": "method:Electron2D.Script.GetScriptMethodList()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:get_script_property_list()", "electron2d": "method:Electron2D.Script.GetScriptPropertyList()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:get_script_signal_list()", "electron2d": "method:Electron2D.Script.GetScriptSignalList()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:has_script_method(StringName:)", "electron2d": "method:Electron2D.Script.HasScriptMethod(System.String)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:has_script_signal(StringName:)", "electron2d": "method:Electron2D.Script.HasScriptSignal(System.String)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:has_source_code()", "electron2d": "method:Electron2D.Script.HasSourceCode()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:is_abstract()", "electron2d": "method:Electron2D.Script.IsAbstract()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::method:is_tool()", "electron2d": "method:Electron2D.Script.IsTool()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "Script::property:source_code", "electron2d": "property:Electron2D.Script.SourceCode()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "class:Script", "electron2d": "T:Electron2D.Script", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "class:CSharpScript", "electron2d": "T:Electron2D.Script", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "CSharpScript::method:new()", "electron2d": "method:Electron2D.Script.New`1()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {"godot": "CSharpScript::method:new()", "electron2d": "method:Electron2D.Script.New`1(Func<T>)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."}
   ],
   "extras": [
     {"electron2d": "T:Electron2D.JoypadInfo", "reason": "Typed projection of the platform-info dictionary returned by Input.GetJoyInfo; omits unavailable platform-specific fields.", "adr": "docs/decisions/input.md#adr-0038"},
@@ -1219,35 +1238,23 @@
     {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectFilePath()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
     {"electron2d": "property:Electron2D.ProjectSettingsRegistry.ProjectRoot()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
     {"electron2d": "property:Electron2D.ProjectSettingsRegistry.UserDataRoot()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
-    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.Version()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"}
+    {"electron2d": "property:Electron2D.ProjectSettingsRegistry.Version()", "reason": "Independent typed project-settings registry used by tools and unopened projects; its retained state also backs the static runtime service.", "adr": "ADR 0019 / ADR 0095"},
+    {"electron2d": "T:Electron2D.GlobalClassAttribute", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "T:Electron2D.ToolAttribute", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "constructor:Electron2D.GlobalClassAttribute..ctor()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "constructor:Electron2D.Script..ctor()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "constructor:Electron2D.ToolAttribute..ctor()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "method:Electron2D.Script.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "method:Electron2D.Script.CreateDuplicateInstance()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "method:Electron2D.Script.Dispose(System.Boolean)", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "method:Electron2D.Script.GetPropertyDescriptors()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "method:Electron2D.Script.RegisterAbstract`1(System.String,System.String,Electron2D.PropertyDescriptor[])", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "method:Electron2D.Script.RegisterNode`1(System.String,System.String,Func<TNode>,Electron2D.PropertyDescriptor[])", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "method:Electron2D.Script.RegisterResource`1(System.String,System.String,Func<TResource>,Electron2D.PropertyDescriptor[])", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "property:Electron2D.Script.CompiledType()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {"electron2d": "property:Electron2D.Script.CompiledTypeID()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"}
   ],
   "statusGroups": [
-    {
-      "godot": [
-        "class:CSharpScript",
-        "CSharpScript::method:new()",
-        "class:Script",
-        "Script::method:can_instantiate()",
-        "Script::method:get_base_script()",
-        "Script::method:get_global_name()",
-        "Script::method:get_instance_base_type()",
-        "Script::method:get_property_default_value(StringName:)",
-        "Script::method:get_script_constant_map()",
-        "Script::method:get_script_method_list()",
-        "Script::method:get_script_property_list()",
-        "Script::method:get_script_signal_list()",
-        "Script::method:has_script_method(StringName:)",
-        "Script::method:has_script_signal(StringName:)",
-        "Script::method:has_source_code()",
-        "Script::method:instance_has(Object:)",
-        "Script::method:is_abstract()",
-        "Script::method:is_tool()",
-        "Script::method:reload(bool:)",
-        "Script::property:source_code"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0091 maps Script and CSharpScript to one future concrete C# Script : Resource, preserving applicable inherited/own capabilities and typed creation without a provider subclass. Trigger: first real script-resource loader/editor/authoring slice with compiled-type registration, source/build association, usable typed metadata, factories and lifetime/failure verification. Ordinary Node callbacks do not implement this resource API; no production Script exists."
-    },
     {
       "godot": [
         "Object::method:get_script()"
@@ -1262,74 +1269,541 @@
       "state": "Blocked",
       "reason": "Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted."
     },
-    {"godot": ["Input::method:get_connected_joypads()", "Input::method:get_joy_guid(int:)", "Input::method:get_joy_name(int:)", "Input::method:is_joy_known(int:)", "Input::method:has_joy_light(int:)", "Input::method:has_joy_vibration(int:)", "Input::method:get_joy_vibration_duration(int:)", "Input::method:get_joy_vibration_remaining_duration(int:)", "Input::method:get_joy_vibration_strength(int:)", "Input::method:is_joy_vibrating(int:)", "Input::method:set_joy_light(int:,Color:)", "Input::method:start_joy_vibration(int:,float:,float:,float:)", "Input::method:stop_joy_vibration(int:)", "Input::property:ignore_joypad_on_unfocused_application", "Input::method:should_ignore_device(int:,int:)", "ProjectSettings::property:input_devices/joypads/ignore_joypad_on_unfocused_application"], "state": "Implemented", "reason": "The SDL joystick/gamepad host owns native handles and stable logical IDs; Input retains typed metadata and vibration state. Virtual-controller tests cover initial/hotplug discovery, known/raw mapping, GUID/name/capabilities, two-motor rumble including zero/expired duration, LED callbacks, unfocused suppression, ignored vendor/product IDs, project startup and per-device state on dummy and Linux Wayland. Physical hardware and other platforms remain unverified."},
-    {"godot": ["Input::method:add_joy_mapping(String:,bool:)", "Input::method:remove_joy_mapping(String:)"], "state": "Partial", "reason": "A persistent typed SDL mapping overlay upgrades connected or future raw joysticks and restores raw delivery after removal without changing logical IDs; virtual tests pass on dummy and Wayland. Full SDL2 binding-string parser diagnostics, global database precedence and platform mapping variants remain to audit."},
-    {"godot": ["Input::method:get_joy_info(int:)"], "state": "Partial", "reason": "JoypadInfo supplies raw name, vendor/product IDs and optional serial through SDL for mapped and raw devices. Steam Input and XInput platform-specific indices are not available in the current typed projection; Windows/macOS/iOS and physical-device values remain to verify."},
-    {"godot": ["Input::signal:joy_connection_changed(int:,bool:)"], "state": "Partial", "reason": "Connection changes commit metadata and per-device state before owner-thread callbacks; initial and hotplug virtual devices and callback failure continuation are verified. The pinned signal is deferred on the main thread, while the typed event is synchronous during the display pump; exact cross-platform timing remains to reconcile."},
-    {"godot": ["class:WeakRef"], "state": "Implemented", "reason": "ADR 0050 supplies a typed ElectronObject weak-reference wrapper with ordinary managed disposal; WeakRefTests verifies target identity, disposal and collection."},
-    {"godot": ["WeakRef::method:get_ref()"], "state": "Implemented", "reason": "ADR 0050 returns the same live object or null after target disposal or collection; WeakRefTests checks identity, null, deterministic disposal and GC collection."},
-    {"godot": ["@GlobalScope::method:weakref(Variant:)"], "state": "Implemented", "reason": "ADR 0050 projects the object-or-null factory into a typed constructor; non-object values cannot satisfy the generic engine-object constraint. WeakRefTests checks live, null and disposed construction."},
-    {"godot": ["FileAccess::method:get_var(bool:)", "FileAccess::method:store_var(Variant:,bool:)"], "state": "Excluded", "reason": "Variant value serialization and optional engine-object reconstruction have no FileAccess replacement under the typed C# boundary (ADRs 0001 and 0020)."},
-    {"godot": ["class:XMLParser"], "state": "Implemented", "reason": "All own enum and member rows are executable and audited against the pinned byte/token cursor under ADR 0049. XMLParserTests covers opening, getters, malformed markup/entities/UTF-8, EOF, seek and nested skip; invalid Unicode values outside the managed string range follow the explicit decision boundary."},
-    {"godot": ["XMLParser::enum:NodeType"], "state": "Implemented", "reason": "The seven token identities and pinned numeric values 0-6 are asserted by XMLParserTests and matched to the native header."},
-    {"godot": ["XMLParser::method:get_attribute_count()", "XMLParser::method:get_attribute_name(int:)", "XMLParser::method:get_attribute_value(int:)", "XMLParser::method:get_named_attribute_value(String:)", "XMLParser::method:get_named_attribute_value_safe(String:)", "XMLParser::method:has_attribute(String:)"], "state": "Implemented", "reason": "Pinned getters retain ordered attributes on text/comment/CDATA/unknown tokens, clear them on opening/closing elements, return the first duplicate by name, and return empty with diagnostics for invalid required lookup/index. XMLParserTests checks these transitions, case sensitivity and safe lookup."},
-    {"godot": ["XMLParser::method:get_current_line()", "XMLParser::method:get_node_data()", "XMLParser::method:get_node_name()", "XMLParser::method:get_node_offset()", "XMLParser::method:get_node_type()", "XMLParser::method:is_empty()"], "state": "Implemented", "reason": "XMLParserTests checks unopened/default state, all token identities, text versus markup content and trace errors on wrong-token getters, UTF-8 byte offsets, consumed newline count, self-closing state and retained closing token at EOF. C# long widens the byte offset without changing its value."},
-    {"godot": ["XMLParser::method:open(String:)", "XMLParser::method:open_buffer(PackedByteArray:)"], "state": "Implemented", "reason": "Pinned open methods copy input and reset byte cursor/line while leaving prior token and attributes observable until reading; invalid/empty input preserves the old source. XMLParserTests checks caller-buffer isolation, ordinary and directory-backed virtual files, empty/missing file failures and reopening. C# exceptions replace numeric Error results under the Core I/O boundary."},
-    {"godot": ["XMLParser::method:read()", "XMLParser::method:seek(int:)", "XMLParser::method:skip_section()"], "state": "Implemented", "reason": "ADR 0049 maps numeric Error/EOF to bool and C# exceptions and preserves the pinned permissive byte cursor. XMLParserTests checks final-byte EOF, short whitespace success without a new token, NUL, malformed attributes/CDATA/declarations/closing tags, entity and UTF-8 recovery, byte/line offset after seek, invalid seek rollback, and skip from nested, empty, text and unfinished sections."},
-    {"godot": ["class:ConfigFile"], "state": "Implemented", "reason": "All seventeen own methods are executable and audited under ADR 0018 typed storage, text and ordinary-path adaptations. VerifyConfigFiles covers state, text, plain and both authenticated persistence modes, including independent envelope decoding, failures and cleanup; native encryption-format interoperability is excluded by the decision."},
-    {"godot": ["ConfigFile::method:clear()", "ConfigFile::method:erase_section(String:)", "ConfigFile::method:erase_section_key(String:,String:)", "ConfigFile::method:get_section_keys(String:)", "ConfigFile::method:get_sections()", "ConfigFile::method:get_value(String:,String:,Variant:)", "ConfigFile::method:has_section(String:)", "ConfigFile::method:has_section_key(String:,String:)", "ConfigFile::method:set_value(String:,String:,Variant:)"], "state": "Implemented", "reason": "ADR 0018 accepts typed keys, snapshot values, exceptions and concurrent managed access. Pinned config_file.cpp state transitions match Clear, lookup/fallback, insertion order, sectionless priority, null removal and last-key section removal; VerifyConfigFiles covers empty names, round-trip, replacement, snapshot enumeration, reinsertion, absence and wrong-type errors."},
-    {"godot": ["ConfigFile::method:encode_to_text()", "ConfigFile::method:parse(String:)"], "state": "Implemented", "reason": "ADR 0018 defines the typed JSON-token text adaptation. VerifyConfigText checks LF encoding, complex/empty quoted names, BOM/CRLF/full-line comments, duplicate-section merge, stable order, empty input, exact round-trip and atomic rollback for malformed headers, names, assignments and values. The pinned ConfigFile text container and merge roles are preserved."},
-    {"godot": ["ConfigFile::method:load(String:)", "ConfigFile::method:save(String:)"], "state": "Implemented", "reason": "ADR 0018 accepts ordinary OS paths, C# exceptions, strict UTF-8 and atomic same-directory replacement. VerifyConfigFiles checks BOM/CRLF load, merge, malformed/missing/invalid-UTF8 rollback, empty save, overwrite, no-BOM LF bytes, missing-directory/directory-target failures and temporary cleanup. Crash durability and other filesystems remain platform verification limits."},
-    {"godot": ["ConfigFile::method:load_encrypted(String:,PackedByteArray:)", "ConfigFile::method:load_encrypted_pass(String:,String:)", "ConfigFile::method:save_encrypted(String:,PackedByteArray:)", "ConfigFile::method:save_encrypted_pass(String:,String:)"], "state": "Implemented", "reason": "ADR 0018 accepts the versioned typed AES-256-GCM envelope in place of external encrypted-file format. VerifyConfigFiles checks independent PBKDF2/AES-GCM decoding, 32-byte raw keys, 600000 SHA-256 iterations, fresh 16-byte salt/12-byte nonce, authenticated header/tag/ciphertext, wrong credentials/modes, malformed headers, authenticated invalid text/UTF-8, merge rollback and temporary cleanup. SaveEncryptedPass now clears owned key/salt/plaintext buffers even when snapshot creation fails."},
-    {"godot": ["TranslationServer::method:find_translations(String:,bool:)", "TranslationServer::method:has_translation_for_locale(String:,bool:)", "TranslationServer::method:get_translation_object(String:)"], "state": "Partial", "reason": "Managed main-domain queries use normalized exact or positive-score locale matching; reference alias/default-script tables and editor behavior remain unaudited (ADR 0007)."},
-    {"godot": ["InputMap::signal:project_settings_loaded()"], "state": "Implemented", "reason": "InputActionSettingsTests verifies synchronous delivery after committed replacement and pressed-state invalidation, no delivery on validation failure, and a throwing subscriber observing committed state (ADR 0038)."},
-    {"godot": ["class:JSON"], "state": "Implemented", "reason": "All nine own members are executable and audited under the typed document boundary of ADR 0048. JsonTests covers state, parsing, diagnostics, formatting, conversion and failure paths; native object reconstruction is excluded by the decision."},
-    {"godot": ["JSON::method:parse(String:,bool:)", "JSON::method:parse_string(String:)"], "state": "Implemented", "reason": "Both methods share the token grammar and 1024-depth limit; JsonTests checks permissive/invalid syntax, Unicode pairs, numeric edge values, state rollback, diagnostics and null ambiguity. The 18-digit numeric conversion matched 5008 pinned-source samples bit for bit. ADR 0048 accepts safe exponent overflow and deterministic document reset."},
-    {"godot": ["JSON::method:stringify(Variant:,String:,bool:,bool:)"], "state": "Implemented", "reason": "JsonTests checks integer/floating text, key order, escapes, indentation, nonfinite values, precision and 1024-depth ellipsis/diagnostic behavior. The managed binary-to-decimal path matched pinned output on 100,000 binary doubles and 10,000 widened floats with zero differences in both precision modes. JSON-only trees and trace diagnostics are accepted ADR 0048 adaptations."},
-    {"godot": ["JSON::method:get_error_line()", "JSON::method:get_error_message()"], "state": "Implemented", "reason": "The shared parser reports pinned token, Unicode and structural messages with literal-line counting. JsonTests checks representative failure families, success reset and duplicated diagnostics; ADR 0048 accepts deterministic managed reset after success and Data assignment."},
-    {"godot": ["JSON::property:data", "JSON::method:get_parsed_text()"], "state": "Implemented", "reason": "ADR 0048 accepts managed document ownership and deterministic source/diagnostic reset. JsonTests checks live getter mutation, deep-copy assignment and duplication, null roots, retained success/failure source, reset and disposal against the pinned state behavior."},
-    {"godot": ["JSON::method:from_native(Variant:,bool:)", "JSON::method:to_native(Variant:,bool:)"], "state": "Implemented", "reason": "ADR 0048 maps native conversion to explicitly typed schemas and excludes untyped/engine-object conversion. JsonTests checks scalar and math round trips, model and tree isolation, null/default roots, schema failures and rejected types."},
-    {"godot": ["class:FastNoiseLite", "FastNoiseLite::enum:CellularDistanceFunction", "FastNoiseLite::enum:CellularReturnType", "FastNoiseLite::enum:DomainWarpFractalType", "FastNoiseLite::enum:DomainWarpType", "FastNoiseLite::enum:FractalType", "FastNoiseLite::enum:NoiseType", "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_EUCLIDEAN", "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_EUCLIDEAN_SQUARED", "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_HYBRID", "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_MANHATTAN", "FastNoiseLite::enum_value:CellularReturnType.RETURN_CELL_VALUE", "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE", "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2", "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_ADD", "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_DIV", "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_MUL", "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_SUB", "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_INDEPENDENT", "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_NONE", "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_PROGRESSIVE", "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_BASIC_GRID", "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_SIMPLEX", "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_SIMPLEX_REDUCED", "FastNoiseLite::enum_value:FractalType.FRACTAL_FBM", "FastNoiseLite::enum_value:FractalType.FRACTAL_NONE", "FastNoiseLite::enum_value:FractalType.FRACTAL_PING_PONG", "FastNoiseLite::enum_value:FractalType.FRACTAL_RIDGED", "FastNoiseLite::enum_value:NoiseType.TYPE_CELLULAR", "FastNoiseLite::enum_value:NoiseType.TYPE_PERLIN", "FastNoiseLite::enum_value:NoiseType.TYPE_SIMPLEX", "FastNoiseLite::enum_value:NoiseType.TYPE_SIMPLEX_SMOOTH", "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE", "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE_CUBIC", "FastNoiseLite::property:cellular_distance_function", "FastNoiseLite::property:cellular_jitter", "FastNoiseLite::property:cellular_return_type", "FastNoiseLite::property:domain_warp_amplitude", "FastNoiseLite::property:domain_warp_enabled", "FastNoiseLite::property:domain_warp_fractal_gain", "FastNoiseLite::property:domain_warp_fractal_lacunarity", "FastNoiseLite::property:domain_warp_fractal_octaves", "FastNoiseLite::property:domain_warp_fractal_type", "FastNoiseLite::property:domain_warp_frequency", "FastNoiseLite::property:domain_warp_type", "FastNoiseLite::property:fractal_gain", "FastNoiseLite::property:fractal_lacunarity", "FastNoiseLite::property:fractal_octaves", "FastNoiseLite::property:fractal_ping_pong_strength", "FastNoiseLite::property:fractal_type", "FastNoiseLite::property:fractal_weighted_strength", "FastNoiseLite::property:frequency", "FastNoiseLite::property:noise_type", "FastNoiseLite::property:offset", "FastNoiseLite::property:seed"], "state": "Implemented", "reason": "The complete 2D generator configures the pinned FastNoiseLite 1.1.1 algorithms, exposes all applicable settings and numeric modes, and emits the observed resource notifications. C++ reference vectors, copying and NoiseTexture integration pass in FastNoiseLiteTests; Vector2 offset preserves XY only. Retained Sprite pixels pass on Linux Wayland compatibility and GPU backends; other platforms remain unchecked."},
-    {"godot": ["Noise::method:get_image_3d(int:,int:,int:,bool:,bool:)", "Noise::method:get_noise_3d(float:,float:,float:)", "Noise::method:get_noise_3dv(Vector3:)", "Noise::method:get_seamless_image_3d(int:,int:,int:,bool:,float:,bool:)"], "state": "Excluded", "reason": "Three-dimensional noise samples and image volumes are outside the strict 2D product boundary (ADR 0004)."},
-    {"godot": ["Noise::method:get_noise_2dv(Vector2:)"], "state": "Implemented", "reason": "The vector overload delegates coordinates to the concrete 2D sampler; NoiseTests checks dispatch and disposed access."},
-    {"godot": ["Noise::method:get_image(int:,int:,bool:,bool:,bool:)"], "state": "Partial", "reason": "The 2D path samples a concrete subclass into L8, supports normalization, inversion and finite-value rejection in NoiseTests. The 3D-space option is excluded; exact large-value pixel parity and a concrete built-in sampler remain to verify."},
-    {"godot": ["Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)"], "state": "Partial", "reason": "The 2D overlap/quadrant blend executes for L8 and RGBA8 and is checked in NoiseTests. Pixel-for-pixel parity for arbitrary skirts and derived source formats remains unverified; the 3D-space option is excluded."},
-    {"godot": ["Input::enum:MouseMode", "Input::enum_value:MouseMode.MOUSE_MODE_VISIBLE", "Input::enum_value:MouseMode.MOUSE_MODE_HIDDEN", "Input::enum_value:MouseMode.MOUSE_MODE_CAPTURED", "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED", "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED_HIDDEN", "Input::enum_value:MouseMode.MOUSE_MODE_MAX"], "state": "Implemented", "reason": "The shared MouseMode type has exact pinned values and serves both Input and DisplayServer. Native Wayland tests verify the five selectable modes."},
-    {"godot": ["Input::enum:CursorShape", "Input::method:get_current_cursor_shape()"], "state": "Implemented", "reason": "All 17 cursor identities match the pinned values. Native Wayland tests select every shape and verify Input observes direct DisplayServer changes."},
-    {"godot": ["Input::property:mouse_mode"], "state": "Implemented", "reason": "Input delegates read/write to the active DisplayServer. Native Wayland tests verify all five selectable modes, SDL relative/grab/visibility state, repeated setting and no-host failure."},
-    {"godot": ["Input::method:set_custom_mouse_cursor(Resource:,int:Input.CursorShape,Vector2:)"], "state": "Partial", "reason": "Image and readable Texture pixels are copied into an SDL cursor with per-shape slots, size/hotspot validation and null reset; native tests cover Image and errors. AnimatedTexture first-frame semantics and other backends remain unaudited."},
-    {"godot": ["Input::method:set_default_cursor_shape(int:Input.CursorShape)"], "state": "Partial", "reason": "Stores the viewport default separately from the current native shape and refreshes hovered Control overrides immediately. The pinned synthetic mouse-motion event on default changes and complete nested viewport GUI routing remain absent."},
-    {"godot": ["Input::method:warp_mouse(Vector2:)"], "state": "Partial", "reason": "Finite coordinates truncate to native client pixels and delegate to DisplayServer; Wayland correctly rejects unsupported warp. Supported backend movement/clipping has not been natively verified."},
-    {"godot": ["TranslationDomain::method:add_translation(Translation:)", "TranslationDomain::method:clear()", "TranslationDomain::method:remove_translation(Translation:)", "TranslationDomain::method:has_translation(Translation:)", "TranslationDomain::method:get_translations()"], "state": "Implemented", "reason": "Borrowed catalog registration, identity deduplication, snapshot query, removal and disposal were checked in TranslationDomainTests; returned arrays are independent."},
-    {"godot": ["TranslationDomain::property:enabled", "TranslationDomain::property:pseudolocalization_accents_enabled", "TranslationDomain::property:pseudolocalization_double_vowels_enabled", "TranslationDomain::property:pseudolocalization_enabled", "TranslationDomain::property:pseudolocalization_fake_bidi_enabled", "TranslationDomain::property:pseudolocalization_override_enabled", "TranslationDomain::property:pseudolocalization_skip_placeholders_enabled", "TranslationDomain::property:pseudolocalization_prefix", "TranslationDomain::property:pseudolocalization_suffix"], "state": "Implemented", "reason": "The domain stores the pinned defaults and typed setter values; TranslationDomainTests checks configuration and lookup effects. BIDI and Unicode transform fidelity is classified on pseudolocalize itself."},
-    {"godot": ["TranslationDomain::method:find_translations(String:,bool:)", "TranslationDomain::method:has_translation_for_locale(String:,bool:)", "TranslationDomain::method:get_translation_object(String:)", "TranslationDomain::method:get_locale_override()", "TranslationDomain::method:set_locale_override(String:)", "TranslationDomain::method:translate(StringName:,StringName:)", "TranslationDomain::method:translate_plural(StringName:,StringName:,int:,StringName:)"], "state": "Partial", "reason": "Executable domain lookup, override, scored catalog selection and configured fallback are tested; reference alias/default-script normalization and plural-rule parity remain unaudited."},
-    {"godot": ["TranslationDomain::method:pseudolocalize(StringName:)", "TranslationDomain::property:pseudolocalization_expansion_ratio"], "state": "Partial", "reason": "Singular transforms and expansion are executable and tested, but exact code-point, placeholder, BIDI and expansion rounding parity remains unaudited."},
-    {"godot": ["Translation::method:get_message_count()", "Translation::method:get_message_list()", "Translation::method:get_translated_message_list()"], "state": "Implemented", "reason": "Counts contextual entries, returns EOT-prefixed context keys and flattens every translated plural form into independent arrays; VerifyTranslations checks each operation. Enumeration order is unspecified in both hash-backed catalogs."},
-    {"godot": ["class:OptimizedTranslation", "OptimizedTranslation::method:generate(Translation:)"], "state": "Partial", "reason": "Generate creates an in-memory hash-keyed Brotli catalog, discards source text and contextual entries, resolves singular compressed values and duplicates independently. VerifyTranslations covers lookup, registration, copying, empty generation and disposal. The pinned Smaz binary representation, editor-only generation gate and asset-file persistence are absent; the shared runtime/editor assembly currently permits explicit generation at runtime."},
     {
-      "godot": ["RegEx::method:clear()", "RegEx::method:get_pattern()", "RegEx::method:is_valid()"],
+      "godot": [
+        "Input::method:get_connected_joypads()",
+        "Input::method:get_joy_guid(int:)",
+        "Input::method:get_joy_name(int:)",
+        "Input::method:is_joy_known(int:)",
+        "Input::method:has_joy_light(int:)",
+        "Input::method:has_joy_vibration(int:)",
+        "Input::method:get_joy_vibration_duration(int:)",
+        "Input::method:get_joy_vibration_remaining_duration(int:)",
+        "Input::method:get_joy_vibration_strength(int:)",
+        "Input::method:is_joy_vibrating(int:)",
+        "Input::method:set_joy_light(int:,Color:)",
+        "Input::method:start_joy_vibration(int:,float:,float:,float:)",
+        "Input::method:stop_joy_vibration(int:)",
+        "Input::property:ignore_joypad_on_unfocused_application",
+        "Input::method:should_ignore_device(int:,int:)",
+        "ProjectSettings::property:input_devices/joypads/ignore_joypad_on_unfocused_application"
+      ],
+      "state": "Implemented",
+      "reason": "The SDL joystick/gamepad host owns native handles and stable logical IDs; Input retains typed metadata and vibration state. Virtual-controller tests cover initial/hotplug discovery, known/raw mapping, GUID/name/capabilities, two-motor rumble including zero/expired duration, LED callbacks, unfocused suppression, ignored vendor/product IDs, project startup and per-device state on dummy and Linux Wayland. Physical hardware and other platforms remain unverified."
+    },
+    {
+      "godot": [
+        "Input::method:add_joy_mapping(String:,bool:)",
+        "Input::method:remove_joy_mapping(String:)"
+      ],
+      "state": "Partial",
+      "reason": "A persistent typed SDL mapping overlay upgrades connected or future raw joysticks and restores raw delivery after removal without changing logical IDs; virtual tests pass on dummy and Wayland. Full SDL2 binding-string parser diagnostics, global database precedence and platform mapping variants remain to audit."
+    },
+    {
+      "godot": [
+        "Input::method:get_joy_info(int:)"
+      ],
+      "state": "Partial",
+      "reason": "JoypadInfo supplies raw name, vendor/product IDs and optional serial through SDL for mapped and raw devices. Steam Input and XInput platform-specific indices are not available in the current typed projection; Windows/macOS/iOS and physical-device values remain to verify."
+    },
+    {
+      "godot": [
+        "Input::signal:joy_connection_changed(int:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "Connection changes commit metadata and per-device state before owner-thread callbacks; initial and hotplug virtual devices and callback failure continuation are verified. The pinned signal is deferred on the main thread, while the typed event is synchronous during the display pump; exact cross-platform timing remains to reconcile."
+    },
+    {
+      "godot": [
+        "class:WeakRef"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0050 supplies a typed ElectronObject weak-reference wrapper with ordinary managed disposal; WeakRefTests verifies target identity, disposal and collection."
+    },
+    {
+      "godot": [
+        "WeakRef::method:get_ref()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0050 returns the same live object or null after target disposal or collection; WeakRefTests checks identity, null, deterministic disposal and GC collection."
+    },
+    {
+      "godot": [
+        "@GlobalScope::method:weakref(Variant:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0050 projects the object-or-null factory into a typed constructor; non-object values cannot satisfy the generic engine-object constraint. WeakRefTests checks live, null and disposed construction."
+    },
+    {
+      "godot": [
+        "FileAccess::method:get_var(bool:)",
+        "FileAccess::method:store_var(Variant:,bool:)"
+      ],
+      "state": "Excluded",
+      "reason": "Variant value serialization and optional engine-object reconstruction have no FileAccess replacement under the typed C# boundary (ADRs 0001 and 0020)."
+    },
+    {
+      "godot": [
+        "class:XMLParser"
+      ],
+      "state": "Implemented",
+      "reason": "All own enum and member rows are executable and audited against the pinned byte/token cursor under ADR 0049. XMLParserTests covers opening, getters, malformed markup/entities/UTF-8, EOF, seek and nested skip; invalid Unicode values outside the managed string range follow the explicit decision boundary."
+    },
+    {
+      "godot": [
+        "XMLParser::enum:NodeType"
+      ],
+      "state": "Implemented",
+      "reason": "The seven token identities and pinned numeric values 0-6 are asserted by XMLParserTests and matched to the native header."
+    },
+    {
+      "godot": [
+        "XMLParser::method:get_attribute_count()",
+        "XMLParser::method:get_attribute_name(int:)",
+        "XMLParser::method:get_attribute_value(int:)",
+        "XMLParser::method:get_named_attribute_value(String:)",
+        "XMLParser::method:get_named_attribute_value_safe(String:)",
+        "XMLParser::method:has_attribute(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned getters retain ordered attributes on text/comment/CDATA/unknown tokens, clear them on opening/closing elements, return the first duplicate by name, and return empty with diagnostics for invalid required lookup/index. XMLParserTests checks these transitions, case sensitivity and safe lookup."
+    },
+    {
+      "godot": [
+        "XMLParser::method:get_current_line()",
+        "XMLParser::method:get_node_data()",
+        "XMLParser::method:get_node_name()",
+        "XMLParser::method:get_node_offset()",
+        "XMLParser::method:get_node_type()",
+        "XMLParser::method:is_empty()"
+      ],
+      "state": "Implemented",
+      "reason": "XMLParserTests checks unopened/default state, all token identities, text versus markup content and trace errors on wrong-token getters, UTF-8 byte offsets, consumed newline count, self-closing state and retained closing token at EOF. C# long widens the byte offset without changing its value."
+    },
+    {
+      "godot": [
+        "XMLParser::method:open(String:)",
+        "XMLParser::method:open_buffer(PackedByteArray:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned open methods copy input and reset byte cursor/line while leaving prior token and attributes observable until reading; invalid/empty input preserves the old source. XMLParserTests checks caller-buffer isolation, ordinary and directory-backed virtual files, empty/missing file failures and reopening. C# exceptions replace numeric Error results under the Core I/O boundary."
+    },
+    {
+      "godot": [
+        "XMLParser::method:read()",
+        "XMLParser::method:seek(int:)",
+        "XMLParser::method:skip_section()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0049 maps numeric Error/EOF to bool and C# exceptions and preserves the pinned permissive byte cursor. XMLParserTests checks final-byte EOF, short whitespace success without a new token, NUL, malformed attributes/CDATA/declarations/closing tags, entity and UTF-8 recovery, byte/line offset after seek, invalid seek rollback, and skip from nested, empty, text and unfinished sections."
+    },
+    {
+      "godot": [
+        "class:ConfigFile"
+      ],
+      "state": "Implemented",
+      "reason": "All seventeen own methods are executable and audited under ADR 0018 typed storage, text and ordinary-path adaptations. VerifyConfigFiles covers state, text, plain and both authenticated persistence modes, including independent envelope decoding, failures and cleanup; native encryption-format interoperability is excluded by the decision."
+    },
+    {
+      "godot": [
+        "ConfigFile::method:clear()",
+        "ConfigFile::method:erase_section(String:)",
+        "ConfigFile::method:erase_section_key(String:,String:)",
+        "ConfigFile::method:get_section_keys(String:)",
+        "ConfigFile::method:get_sections()",
+        "ConfigFile::method:get_value(String:,String:,Variant:)",
+        "ConfigFile::method:has_section(String:)",
+        "ConfigFile::method:has_section_key(String:,String:)",
+        "ConfigFile::method:set_value(String:,String:,Variant:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0018 accepts typed keys, snapshot values, exceptions and concurrent managed access. Pinned config_file.cpp state transitions match Clear, lookup/fallback, insertion order, sectionless priority, null removal and last-key section removal; VerifyConfigFiles covers empty names, round-trip, replacement, snapshot enumeration, reinsertion, absence and wrong-type errors."
+    },
+    {
+      "godot": [
+        "ConfigFile::method:encode_to_text()",
+        "ConfigFile::method:parse(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0018 defines the typed JSON-token text adaptation. VerifyConfigText checks LF encoding, complex/empty quoted names, BOM/CRLF/full-line comments, duplicate-section merge, stable order, empty input, exact round-trip and atomic rollback for malformed headers, names, assignments and values. The pinned ConfigFile text container and merge roles are preserved."
+    },
+    {
+      "godot": [
+        "ConfigFile::method:load(String:)",
+        "ConfigFile::method:save(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0018 accepts ordinary OS paths, C# exceptions, strict UTF-8 and atomic same-directory replacement. VerifyConfigFiles checks BOM/CRLF load, merge, malformed/missing/invalid-UTF8 rollback, empty save, overwrite, no-BOM LF bytes, missing-directory/directory-target failures and temporary cleanup. Crash durability and other filesystems remain platform verification limits."
+    },
+    {
+      "godot": [
+        "ConfigFile::method:load_encrypted(String:,PackedByteArray:)",
+        "ConfigFile::method:load_encrypted_pass(String:,String:)",
+        "ConfigFile::method:save_encrypted(String:,PackedByteArray:)",
+        "ConfigFile::method:save_encrypted_pass(String:,String:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0018 accepts the versioned typed AES-256-GCM envelope in place of external encrypted-file format. VerifyConfigFiles checks independent PBKDF2/AES-GCM decoding, 32-byte raw keys, 600000 SHA-256 iterations, fresh 16-byte salt/12-byte nonce, authenticated header/tag/ciphertext, wrong credentials/modes, malformed headers, authenticated invalid text/UTF-8, merge rollback and temporary cleanup. SaveEncryptedPass now clears owned key/salt/plaintext buffers even when snapshot creation fails."
+    },
+    {
+      "godot": [
+        "TranslationServer::method:find_translations(String:,bool:)",
+        "TranslationServer::method:has_translation_for_locale(String:,bool:)",
+        "TranslationServer::method:get_translation_object(String:)"
+      ],
+      "state": "Partial",
+      "reason": "Managed main-domain queries use normalized exact or positive-score locale matching; reference alias/default-script tables and editor behavior remain unaudited (ADR 0007)."
+    },
+    {
+      "godot": [
+        "InputMap::signal:project_settings_loaded()"
+      ],
+      "state": "Implemented",
+      "reason": "InputActionSettingsTests verifies synchronous delivery after committed replacement and pressed-state invalidation, no delivery on validation failure, and a throwing subscriber observing committed state (ADR 0038)."
+    },
+    {
+      "godot": [
+        "class:JSON"
+      ],
+      "state": "Implemented",
+      "reason": "All nine own members are executable and audited under the typed document boundary of ADR 0048. JsonTests covers state, parsing, diagnostics, formatting, conversion and failure paths; native object reconstruction is excluded by the decision."
+    },
+    {
+      "godot": [
+        "JSON::method:parse(String:,bool:)",
+        "JSON::method:parse_string(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "Both methods share the token grammar and 1024-depth limit; JsonTests checks permissive/invalid syntax, Unicode pairs, numeric edge values, state rollback, diagnostics and null ambiguity. The 18-digit numeric conversion matched 5008 pinned-source samples bit for bit. ADR 0048 accepts safe exponent overflow and deterministic document reset."
+    },
+    {
+      "godot": [
+        "JSON::method:stringify(Variant:,String:,bool:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "JsonTests checks integer/floating text, key order, escapes, indentation, nonfinite values, precision and 1024-depth ellipsis/diagnostic behavior. The managed binary-to-decimal path matched pinned output on 100,000 binary doubles and 10,000 widened floats with zero differences in both precision modes. JSON-only trees and trace diagnostics are accepted ADR 0048 adaptations."
+    },
+    {
+      "godot": [
+        "JSON::method:get_error_line()",
+        "JSON::method:get_error_message()"
+      ],
+      "state": "Implemented",
+      "reason": "The shared parser reports pinned token, Unicode and structural messages with literal-line counting. JsonTests checks representative failure families, success reset and duplicated diagnostics; ADR 0048 accepts deterministic managed reset after success and Data assignment."
+    },
+    {
+      "godot": [
+        "JSON::property:data",
+        "JSON::method:get_parsed_text()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0048 accepts managed document ownership and deterministic source/diagnostic reset. JsonTests checks live getter mutation, deep-copy assignment and duplication, null roots, retained success/failure source, reset and disposal against the pinned state behavior."
+    },
+    {
+      "godot": [
+        "JSON::method:from_native(Variant:,bool:)",
+        "JSON::method:to_native(Variant:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0048 maps native conversion to explicitly typed schemas and excludes untyped/engine-object conversion. JsonTests checks scalar and math round trips, model and tree isolation, null/default roots, schema failures and rejected types."
+    },
+    {
+      "godot": [
+        "class:FastNoiseLite",
+        "FastNoiseLite::enum:CellularDistanceFunction",
+        "FastNoiseLite::enum:CellularReturnType",
+        "FastNoiseLite::enum:DomainWarpFractalType",
+        "FastNoiseLite::enum:DomainWarpType",
+        "FastNoiseLite::enum:FractalType",
+        "FastNoiseLite::enum:NoiseType",
+        "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_EUCLIDEAN",
+        "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_EUCLIDEAN_SQUARED",
+        "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_HYBRID",
+        "FastNoiseLite::enum_value:CellularDistanceFunction.DISTANCE_MANHATTAN",
+        "FastNoiseLite::enum_value:CellularReturnType.RETURN_CELL_VALUE",
+        "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE",
+        "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2",
+        "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_ADD",
+        "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_DIV",
+        "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_MUL",
+        "FastNoiseLite::enum_value:CellularReturnType.RETURN_DISTANCE2_SUB",
+        "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_INDEPENDENT",
+        "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_NONE",
+        "FastNoiseLite::enum_value:DomainWarpFractalType.DOMAIN_WARP_FRACTAL_PROGRESSIVE",
+        "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_BASIC_GRID",
+        "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_SIMPLEX",
+        "FastNoiseLite::enum_value:DomainWarpType.DOMAIN_WARP_SIMPLEX_REDUCED",
+        "FastNoiseLite::enum_value:FractalType.FRACTAL_FBM",
+        "FastNoiseLite::enum_value:FractalType.FRACTAL_NONE",
+        "FastNoiseLite::enum_value:FractalType.FRACTAL_PING_PONG",
+        "FastNoiseLite::enum_value:FractalType.FRACTAL_RIDGED",
+        "FastNoiseLite::enum_value:NoiseType.TYPE_CELLULAR",
+        "FastNoiseLite::enum_value:NoiseType.TYPE_PERLIN",
+        "FastNoiseLite::enum_value:NoiseType.TYPE_SIMPLEX",
+        "FastNoiseLite::enum_value:NoiseType.TYPE_SIMPLEX_SMOOTH",
+        "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE",
+        "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE_CUBIC",
+        "FastNoiseLite::property:cellular_distance_function",
+        "FastNoiseLite::property:cellular_jitter",
+        "FastNoiseLite::property:cellular_return_type",
+        "FastNoiseLite::property:domain_warp_amplitude",
+        "FastNoiseLite::property:domain_warp_enabled",
+        "FastNoiseLite::property:domain_warp_fractal_gain",
+        "FastNoiseLite::property:domain_warp_fractal_lacunarity",
+        "FastNoiseLite::property:domain_warp_fractal_octaves",
+        "FastNoiseLite::property:domain_warp_fractal_type",
+        "FastNoiseLite::property:domain_warp_frequency",
+        "FastNoiseLite::property:domain_warp_type",
+        "FastNoiseLite::property:fractal_gain",
+        "FastNoiseLite::property:fractal_lacunarity",
+        "FastNoiseLite::property:fractal_octaves",
+        "FastNoiseLite::property:fractal_ping_pong_strength",
+        "FastNoiseLite::property:fractal_type",
+        "FastNoiseLite::property:fractal_weighted_strength",
+        "FastNoiseLite::property:frequency",
+        "FastNoiseLite::property:noise_type",
+        "FastNoiseLite::property:offset",
+        "FastNoiseLite::property:seed"
+      ],
+      "state": "Implemented",
+      "reason": "The complete 2D generator configures the pinned FastNoiseLite 1.1.1 algorithms, exposes all applicable settings and numeric modes, and emits the observed resource notifications. C++ reference vectors, copying and NoiseTexture integration pass in FastNoiseLiteTests; Vector2 offset preserves XY only. Retained Sprite pixels pass on Linux Wayland compatibility and GPU backends; other platforms remain unchecked."
+    },
+    {
+      "godot": [
+        "Noise::method:get_image_3d(int:,int:,int:,bool:,bool:)",
+        "Noise::method:get_noise_3d(float:,float:,float:)",
+        "Noise::method:get_noise_3dv(Vector3:)",
+        "Noise::method:get_seamless_image_3d(int:,int:,int:,bool:,float:,bool:)"
+      ],
+      "state": "Excluded",
+      "reason": "Three-dimensional noise samples and image volumes are outside the strict 2D product boundary (ADR 0004)."
+    },
+    {
+      "godot": [
+        "Noise::method:get_noise_2dv(Vector2:)"
+      ],
+      "state": "Implemented",
+      "reason": "The vector overload delegates coordinates to the concrete 2D sampler; NoiseTests checks dispatch and disposed access."
+    },
+    {
+      "godot": [
+        "Noise::method:get_image(int:,int:,bool:,bool:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "The 2D path samples a concrete subclass into L8, supports normalization, inversion and finite-value rejection in NoiseTests. The 3D-space option is excluded; exact large-value pixel parity and a concrete built-in sampler remain to verify."
+    },
+    {
+      "godot": [
+        "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "The 2D overlap/quadrant blend executes for L8 and RGBA8 and is checked in NoiseTests. Pixel-for-pixel parity for arbitrary skirts and derived source formats remains unverified; the 3D-space option is excluded."
+    },
+    {
+      "godot": [
+        "Input::enum:MouseMode",
+        "Input::enum_value:MouseMode.MOUSE_MODE_VISIBLE",
+        "Input::enum_value:MouseMode.MOUSE_MODE_HIDDEN",
+        "Input::enum_value:MouseMode.MOUSE_MODE_CAPTURED",
+        "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED",
+        "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED_HIDDEN",
+        "Input::enum_value:MouseMode.MOUSE_MODE_MAX"
+      ],
+      "state": "Implemented",
+      "reason": "The shared MouseMode type has exact pinned values and serves both Input and DisplayServer. Native Wayland tests verify the five selectable modes."
+    },
+    {
+      "godot": [
+        "Input::enum:CursorShape",
+        "Input::method:get_current_cursor_shape()"
+      ],
+      "state": "Implemented",
+      "reason": "All 17 cursor identities match the pinned values. Native Wayland tests select every shape and verify Input observes direct DisplayServer changes."
+    },
+    {
+      "godot": [
+        "Input::property:mouse_mode"
+      ],
+      "state": "Implemented",
+      "reason": "Input delegates read/write to the active DisplayServer. Native Wayland tests verify all five selectable modes, SDL relative/grab/visibility state, repeated setting and no-host failure."
+    },
+    {
+      "godot": [
+        "Input::method:set_custom_mouse_cursor(Resource:,int:Input.CursorShape,Vector2:)"
+      ],
+      "state": "Partial",
+      "reason": "Image and readable Texture pixels are copied into an SDL cursor with per-shape slots, size/hotspot validation and null reset; native tests cover Image and errors. AnimatedTexture first-frame semantics and other backends remain unaudited."
+    },
+    {
+      "godot": [
+        "Input::method:set_default_cursor_shape(int:Input.CursorShape)"
+      ],
+      "state": "Partial",
+      "reason": "Stores the viewport default separately from the current native shape and refreshes hovered Control overrides immediately. The pinned synthetic mouse-motion event on default changes and complete nested viewport GUI routing remain absent."
+    },
+    {
+      "godot": [
+        "Input::method:warp_mouse(Vector2:)"
+      ],
+      "state": "Partial",
+      "reason": "Finite coordinates truncate to native client pixels and delegate to DisplayServer; Wayland correctly rejects unsupported warp. Supported backend movement/clipping has not been natively verified."
+    },
+    {
+      "godot": [
+        "TranslationDomain::method:add_translation(Translation:)",
+        "TranslationDomain::method:clear()",
+        "TranslationDomain::method:remove_translation(Translation:)",
+        "TranslationDomain::method:has_translation(Translation:)",
+        "TranslationDomain::method:get_translations()"
+      ],
+      "state": "Implemented",
+      "reason": "Borrowed catalog registration, identity deduplication, snapshot query, removal and disposal were checked in TranslationDomainTests; returned arrays are independent."
+    },
+    {
+      "godot": [
+        "TranslationDomain::property:enabled",
+        "TranslationDomain::property:pseudolocalization_accents_enabled",
+        "TranslationDomain::property:pseudolocalization_double_vowels_enabled",
+        "TranslationDomain::property:pseudolocalization_enabled",
+        "TranslationDomain::property:pseudolocalization_fake_bidi_enabled",
+        "TranslationDomain::property:pseudolocalization_override_enabled",
+        "TranslationDomain::property:pseudolocalization_skip_placeholders_enabled",
+        "TranslationDomain::property:pseudolocalization_prefix",
+        "TranslationDomain::property:pseudolocalization_suffix"
+      ],
+      "state": "Implemented",
+      "reason": "The domain stores the pinned defaults and typed setter values; TranslationDomainTests checks configuration and lookup effects. BIDI and Unicode transform fidelity is classified on pseudolocalize itself."
+    },
+    {
+      "godot": [
+        "TranslationDomain::method:find_translations(String:,bool:)",
+        "TranslationDomain::method:has_translation_for_locale(String:,bool:)",
+        "TranslationDomain::method:get_translation_object(String:)",
+        "TranslationDomain::method:get_locale_override()",
+        "TranslationDomain::method:set_locale_override(String:)",
+        "TranslationDomain::method:translate(StringName:,StringName:)",
+        "TranslationDomain::method:translate_plural(StringName:,StringName:,int:,StringName:)"
+      ],
+      "state": "Partial",
+      "reason": "Executable domain lookup, override, scored catalog selection and configured fallback are tested; reference alias/default-script normalization and plural-rule parity remain unaudited."
+    },
+    {
+      "godot": [
+        "TranslationDomain::method:pseudolocalize(StringName:)",
+        "TranslationDomain::property:pseudolocalization_expansion_ratio"
+      ],
+      "state": "Partial",
+      "reason": "Singular transforms and expansion are executable and tested, but exact code-point, placeholder, BIDI and expansion rounding parity remains unaudited."
+    },
+    {
+      "godot": [
+        "Translation::method:get_message_count()",
+        "Translation::method:get_message_list()",
+        "Translation::method:get_translated_message_list()"
+      ],
+      "state": "Implemented",
+      "reason": "Counts contextual entries, returns EOT-prefixed context keys and flattens every translated plural form into independent arrays; VerifyTranslations checks each operation. Enumeration order is unspecified in both hash-backed catalogs."
+    },
+    {
+      "godot": [
+        "class:OptimizedTranslation",
+        "OptimizedTranslation::method:generate(Translation:)"
+      ],
+      "state": "Partial",
+      "reason": "Generate creates an in-memory hash-keyed Brotli catalog, discards source text and contextual entries, resolves singular compressed values and duplicates independently. VerifyTranslations covers lookup, registration, copying, empty generation and disposal. The pinned Smaz binary representation, editor-only generation gate and asset-file persistence are absent; the shared runtime/editor assembly currently permits explicit generation at runtime."
+    },
+    {
+      "godot": [
+        "RegEx::method:clear()",
+        "RegEx::method:get_pattern()",
+        "RegEx::method:is_valid()"
+      ],
       "state": "Implemented",
       "reason": "The managed state transition and empty/valid results were compared with the pinned implementation and tested."
     },
     {
-      "godot": ["RegExMatch::property:subject"],
+      "godot": [
+        "RegExMatch::property:subject"
+      ],
       "state": "Implemented",
       "reason": "The result retains the full original source string, including when end limits matching."
     },
     {
-      "godot": ["class:RegEx", "RegEx::method:compile(String:,bool:)", "RegEx::method:create_from_string(String:,bool:)", "RegEx::method:get_group_count()", "RegEx::method:get_names()"],
+      "godot": [
+        "class:RegEx",
+        "RegEx::method:compile(String:,bool:)",
+        "RegEx::method:create_from_string(String:,bool:)",
+        "RegEx::method:get_group_count()",
+        "RegEx::method:get_names()"
+      ],
       "state": "Partial",
       "reason": "The .NET dialect differs from the pinned PCRE2 dialect; named capture ordering/duplicates and malformed-pattern behavior need parity work. Managed exceptions replace numeric errors."
     },
     {
-      "godot": ["RegEx::method:search(String:,int:,int:)", "RegEx::method:search_all(String:,int:,int:)", "RegEx::method:sub(String:,String:,bool:,int:,int:)"],
+      "godot": [
+        "RegEx::method:search(String:,int:,int:)",
+        "RegEx::method:search_all(String:,int:,int:)",
+        "RegEx::method:sub(String:,String:,bool:,int:,int:)"
+      ],
       "state": "Partial",
       "reason": "Search and replacement execute, but .NET syntax, replacement tokens and UTF-16 positions differ from PCRE2/code-point behavior."
     },
     {
-      "godot": ["class:RegExMatch", "RegExMatch::method:get_end(Variant:)", "RegExMatch::method:get_group_count()", "RegExMatch::method:get_start(Variant:)", "RegExMatch::method:get_string(Variant:)", "RegExMatch::property:names", "RegExMatch::property:strings"],
+      "godot": [
+        "class:RegExMatch",
+        "RegExMatch::method:get_end(Variant:)",
+        "RegExMatch::method:get_group_count()",
+        "RegExMatch::method:get_start(Variant:)",
+        "RegExMatch::method:get_string(Variant:)",
+        "RegExMatch::property:names",
+        "RegExMatch::property:strings"
+      ],
       "state": "Partial",
       "reason": "Typed int/string accessors work, but .NET group numbering for mixed captures, duplicate names and UTF-16 positions need PCRE2/code-point parity."
+    },
+    {
+      "godot": [
+        "Script::method:can_instantiate()",
+        "Script::method:get_base_script()",
+        "Script::method:get_global_name()",
+        "Script::method:get_instance_base_type()",
+        "Script::method:get_property_default_value(StringName:)",
+        "Script::method:get_script_constant_map()",
+        "Script::method:get_script_method_list()",
+        "Script::method:get_script_property_list()",
+        "Script::method:get_script_signal_list()",
+        "Script::method:has_script_method(StringName:)",
+        "Script::method:has_script_signal(StringName:)",
+        "Script::method:has_source_code()",
+        "Script::method:is_abstract()",
+        "Script::method:is_tool()",
+        "Script::property:source_code",
+        "CSharpScript::method:new()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."
+    },
+    {
+      "godot": [
+        "class:Script",
+        "class:CSharpScript"
+      ],
+      "state": "Partial",
+      "reason": "Compiled source/type assets, metadata, typed construction, ordinary callbacks and fresh-process file integration execute under ADR 0091. Implementation Reload/keep-state requires a compiled generation/lifetime/restart or hot-migration contract; RPC metadata requires the high-level scene RPC contract. Live object GetScript/SetScript obligations remain separate; no type-changing identity claim is made."
+    },
+    {
+      "godot": [
+        "Script::method:reload(bool:)"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0091 selects rebuild/restart. Reload needs executable project build diagnostics plus loaded class/cohort replacement and keep-state/live instance lifetime/migration. Source cache Replace refreshes metadata/text only and cannot change an existing CLR type; no always-success reload stub is exposed."
+    },
+    {
+      "godot": [
+        "Script::method:instance_has(Object:)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned Script.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares instance_has deprecated=\"Compare this script with [method Object.get_script] instead.\" Do not expose a deprecated mirror. Modern typed object-script identity remains the explicit live binding dependency under ADR 0091."
     }
   ]
 }

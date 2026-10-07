@@ -1,3 +1,4 @@
+using Script = Electron2D.TextFormatting.Unicode.Script;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;

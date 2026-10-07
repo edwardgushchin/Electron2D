@@ -18,6 +18,7 @@ public static partial class ResourceFileTypes
         RegisterResource("Resource", CreateResource);
         RegisterResource("PackedScene", CreatePackedScene);
         RegisterResource("FontVariation", CreateFontVariation);
+        RegisterResource("Script", CreateScript);
         RegisterResource("PhysicsMaterial", CreatePhysicsMaterial);
         RegisterResource("ColorPalette", CreateColorPalette);
         RegisterResource("SyntaxHighlighter", CreateSyntaxHighlighter);
@@ -50,6 +51,7 @@ public static partial class ResourceFileTypes
     private static Resource CreateResource() => new();
     private static PackedScene CreatePackedScene() => new();
     private static FontVariation CreateFontVariation() => new();
+    private static Script CreateScript() => new();
     private static PhysicsMaterial CreatePhysicsMaterial() => new();
     private static ColorPalette CreateColorPalette() => new();
     private static Sprite CreateSprite() => new();

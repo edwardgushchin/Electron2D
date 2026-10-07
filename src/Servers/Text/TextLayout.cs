@@ -1,3 +1,4 @@
+using UnicodeScript = Electron2D.TextFormatting.Unicode.Script;
 using System.Buffers;
 using System.Text;
 using Electron2D.TextFormatting.Unicode;
@@ -25,7 +26,7 @@ internal sealed partial class TextLayout
     private int[] _utf16 = [], _clusterEnds = [];
     private float[] _advances = [];
     private sbyte[] _levels = [], _paragraphLevels = [];
-    private Script[] _scripts = [];
+    private UnicodeScript[] _scripts = [];
     private FontData?[] _faces = [];
     private bool[] _grapheme = [], _breaks = [], _wordBoundaries = [], _wordEnds = [], _nonprinting = [];
     private readonly List<NativeShapedGlyph> _shaped = [];
@@ -40,7 +41,7 @@ internal sealed partial class TextLayout
     private int _active;
     private long _builtFontGeneration = -1;
     internal bool IsBusy => _active != 0;
-    private readonly record struct Run(int Start, int End, FontData? Face, Script Script, sbyte Level);
+    private readonly record struct Run(int Start, int End, FontData? Face, UnicodeScript Script, sbyte Level);
     private readonly record struct Glyph(FontData? Face, uint Index, int Start, int End, float Advance, Vector2 Offset,
         uint Flags, bool Space, bool Tab, int Repeat = 1, bool Virtual = false, bool Missing = false, bool Elongation = false, int Size = 0, int ObjectIndex = -1, float ObjectAscent = 0, float ObjectDescent = 0)
     {
@@ -161,10 +162,10 @@ internal sealed partial class TextLayout
             }
             start = end;
         }
-        var previous = Script.Common;
+        var previous = UnicodeScript.Common;
         for (var i = 0; i < _count; i++)
         {
-            if (IsHardBreak(_scalars[i])) { previous = Script.Common; continue; }
+            if (IsHardBreak(_scalars[i])) { previous = UnicodeScript.Common; continue; }
             if (TextScript.IsStrong(_scripts[i])) { previous = _scripts[i]; continue; }
             if (TextScript.IsStrong(previous) && TextScript.IsCompatible(_scalars[i], previous)) { _scripts[i] = previous; continue; }
             for (var next = i + 1; next < _count && !IsHardBreak(_scalars[next]); next++)

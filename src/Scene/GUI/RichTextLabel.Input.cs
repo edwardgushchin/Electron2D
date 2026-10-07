@@ -47,5 +47,17 @@ public partial class RichTextLabel
     /// <inheritdoc />
     protected override void ValidateDisposal() { if (_drawing || _building || _publishing) throw new InvalidOperationException("Active rich-text layout cannot dispose its owner."); base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposingRich = true; StopWorker(); Finished = null; MetaClicked = MetaHoverStarted = MetaHoverEnded = null; _effects = []; ReleaseFX(); _stack.Clear(); _drawParagraphs.Clear(); _lines.Clear(); _fontVersions.Clear(); _main.Paragraphs.Clear(); _renderRoot.Paragraphs.Clear(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing)
+    {
+        try
+        {
+            if (disposing)
+            {
+                _disposingRich = true; StopWorker(); Finished = null; MetaClicked = MetaHoverStarted = MetaHoverEnded = null; _effects = [];
+                try { ReleaseFX(); }
+                finally { try { RetireScriptEffects(all: true); } finally { _stack.Clear(); _drawParagraphs.Clear(); _lines.Clear(); _fontVersions.Clear(); _main.Paragraphs.Clear(); _renderRoot.Paragraphs.Clear(); } }
+            }
+        }
+        finally { base.Dispose(disposing); }
+    }
 }

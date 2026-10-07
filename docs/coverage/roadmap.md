@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1374 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1369 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 967 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -49,7 +49,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 8 |
-| [RichTextLabel](classes/RichTextLabel.md) | 0 | 8 |
 | [Area2D](classes/Area2D.md) | 0 | 7 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
@@ -85,6 +84,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [PhysicsDirectSpaceState2D](classes/PhysicsDirectSpaceState2D.md) | 0 | 1 |
 | [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | 0 | 1 |
 | [RayCast2D](classes/RayCast2D.md) | 0 | 1 |
+| [RichTextLabel](classes/RichTextLabel.md) | 0 | 1 |
 | [ShapeCast2D](classes/ShapeCast2D.md) | 0 | 1 |
 | [Timer](classes/Timer.md) | 0 | 1 |
 
@@ -109,7 +109,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
-| ADR 0091 maps Script and CSharpScript to one future concrete C# Script : Resource, preserving applicable inherited/own capabilities and typed creation without a provider subclass. Trigger: first real script-resource loader/editor/authoring slice with compiled-type registration, source/build association, usable typed metadata, factories and lifetime/failure verification. Ordinary Node callbacks do not implement this resource API; no production Script exists. | 2 |
 | Skeleton: trigger is the typed 2D bone hierarchy, rest/pose transforms and skinning integration. | 2 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |

@@ -1458,3 +1458,5 @@ Gets or sets the reveal fraction.
 See the rich-text component for actual tests, native artifacts, prepared allocation bounds and exact missing dependencies.
 
 Font tags now create independent FontVariation spans borrowing generic Font resources, including spacing, embolden, collection face, slant, variable coordinates and feature options with their documented aliases. See [Text](../components/text.md) for the native instance and cache contract. Script resource installation remains its own dependency.
+
+`public RichTextEffect InstallEffect(Script script)` constructs an exact registered compiled RichTextEffect subtype through the Script asset. The returned instance belongs to the label; CustomEffects removal and label teardown dispose it. Script stays borrowed and its disposal does not stop the effect’s ordinary virtual callback. Constructor/type/schema failures are reported; metadata/source loading remains a cold operation. The direct RichTextEffect overload keeps borrowed ownership.

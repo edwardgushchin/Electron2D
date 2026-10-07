@@ -143,7 +143,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CSGShape3D](classes/CSGShape3D.md) | GeometryInstance3D | Excluded | 21 |
 | [CSGSphere3D](classes/CSGSphere3D.md) | CSGPrimitive3D | Excluded | 5 |
 | [CSGTorus3D](classes/CSGTorus3D.md) | CSGPrimitive3D | Excluded | 6 |
-| [CSharpScript](classes/CSharpScript.md) | Script | Blocked | 1 |
+| [CSharpScript](classes/CSharpScript.md) | Script | Partial | 1 |
 | [Callable](classes/Callable.md) | — | Excluded | 26 |
 | [CallbackTweener](classes/CallbackTweener.md) | Tweener | Implemented | 1 |
 | [Camera2D](classes/Camera2D.md) | Node2D | Partial | 46 |
@@ -750,7 +750,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SceneState](classes/SceneState.md) | RefCounted | Partial | 28 |
 | [SceneTree](classes/SceneTree.md) | MainLoop | Partial | 51 |
 | [SceneTreeTimer](classes/SceneTreeTimer.md) | RefCounted | Implemented | 2 |
-| [Script](classes/Script.md) | Resource | Blocked | 18 |
+| [Script](classes/Script.md) | Resource | Partial | 18 |
 | [ScriptBacktrace](classes/ScriptBacktrace.md) | RefCounted | Blocked | 16 |
 | [ScriptCreateDialog](classes/ScriptCreateDialog.md) | ConfirmationDialog | Blocked | 5 |
 | [ScriptEditor](classes/ScriptEditor.md) | PanelContainer | Blocked | 18 |

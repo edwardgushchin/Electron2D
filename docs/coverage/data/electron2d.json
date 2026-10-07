@@ -4148,6 +4148,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.GlobalClassAttribute",
+    "kind": "type",
+    "declaringType": "Electron2D.GlobalClassAttribute",
+    "name": "GlobalClassAttribute",
+    "signature": "public sealed class Electron2D.GlobalClassAttribute",
+    "visibility": "public",
+    "baseType": "System.Attribute",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Gradient",
     "kind": "type",
     "declaringType": "Electron2D.Gradient",
@@ -7685,6 +7698,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Script",
+    "kind": "type",
+    "declaringType": "Electron2D.Script",
+    "name": "Script",
+    "signature": "public sealed class Electron2D.Script",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ScrollBar",
     "kind": "type",
     "declaringType": "Electron2D.ScrollBar",
@@ -9011,6 +9039,19 @@
     "interfaces": [
       "System.IDisposable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ToolAttribute",
+    "kind": "type",
+    "declaringType": "Electron2D.ToolAttribute",
+    "name": "ToolAttribute",
+    "signature": "public sealed class Electron2D.ToolAttribute",
+    "visibility": "public",
+    "baseType": "System.Attribute",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -13810,6 +13851,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.GlobalClassAttribute..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GlobalClassAttribute",
+    "name": ".ctor",
+    "signature": "public GlobalClassAttribute()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Gradient..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Gradient",
@@ -16069,6 +16123,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Script..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Script",
+    "name": ".ctor",
+    "signature": "public Script()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.ScrollBar..ctor(System.Boolean)",
     "kind": "constructor",
     "declaringType": "Electron2D.ScrollBar",
@@ -16717,6 +16784,19 @@
     "declaringType": "Electron2D.Timer",
     "name": ".ctor",
     "signature": "public Timer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ToolAttribute..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ToolAttribute",
+    "name": ".ctor",
+    "signature": "public ToolAttribute()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -113958,6 +114038,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RichTextLabel.InstallEffect(Electron2D.Script)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "InstallEffect",
+    "signature": "public Electron2D.RichTextEffect InstallEffect(Electron2D.Script script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "script",
+        "type": "Electron2D.Script",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RichTextEffect",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RichTextLabel.InvalidateParagraph(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RichTextLabel",
@@ -117098,6 +117197,424 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.CanInstantiate()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "CanInstantiate",
+    "signature": "public System.Boolean CanInstantiate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetBaseScript()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetBaseScript",
+    "signature": "public Electron2D.Script GetBaseScript()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Script",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetGlobalName()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetGlobalName",
+    "signature": "public System.String GetGlobalName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetInstanceBaseType()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetInstanceBaseType",
+    "signature": "public System.Type GetInstanceBaseType()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Type",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetPropertyDefaultValue\u00602(PropertyDescriptor\u003CTOwner, TValue\u003E,TOwner)",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetPropertyDefaultValue",
+    "signature": "public TValue GetPropertyDefaultValue\u003CTOwner, TValue\u003E(PropertyDescriptor\u003CTOwner, TValue\u003E property, TOwner owner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "owner",
+        "type": "TOwner",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetScriptConstantMap\u00601()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetScriptConstantMap",
+    "signature": "public Dictionary\u003CSystem.String, TValue\u003E GetScriptConstantMap\u003CTValue\u003E()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Dictionary\u003CSystem.String, TValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetScriptMethodList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetScriptMethodList",
+    "signature": "public System.Reflection.MethodInfo[] GetScriptMethodList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Reflection.MethodInfo[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetScriptPropertyList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetScriptPropertyList",
+    "signature": "public Electron2D.PropertyDescriptor[] GetScriptPropertyList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PropertyDescriptor[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.GetScriptSignalList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "GetScriptSignalList",
+    "signature": "public System.Reflection.EventInfo[] GetScriptSignalList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Reflection.EventInfo[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.HasScriptMethod(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "HasScriptMethod",
+    "signature": "public System.Boolean HasScriptMethod(System.String methodName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "methodName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.HasScriptSignal(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "HasScriptSignal",
+    "signature": "public System.Boolean HasScriptSignal(System.String signalName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "signalName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.HasSourceCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "HasSourceCode",
+    "signature": "public System.Boolean HasSourceCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.IsAbstract()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "IsAbstract",
+    "signature": "public System.Boolean IsAbstract()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.IsTool()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "IsTool",
+    "signature": "public System.Boolean IsTool()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.New\u00601()",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "New",
+    "signature": "public T New\u003CT\u003E()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.New\u00601(Func\u003CT\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "New",
+    "signature": "public T New\u003CT\u003E(Func\u003CT\u003E constructor)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "constructor",
+        "type": "Func\u003CT\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.RegisterAbstract\u00601(System.String,System.String,Electron2D.PropertyDescriptor[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "RegisterAbstract",
+    "signature": "public static System.Void RegisterAbstract\u003CT\u003E(System.String id, System.String sourcePath, Electron2D.PropertyDescriptor[] properties)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "properties",
+        "type": "Electron2D.PropertyDescriptor[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.RegisterNode\u00601(System.String,System.String,Func\u003CTNode\u003E,Electron2D.PropertyDescriptor[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "RegisterNode",
+    "signature": "public static System.Void RegisterNode\u003CTNode\u003E(System.String id, System.String sourcePath, Func\u003CTNode\u003E factory, Electron2D.PropertyDescriptor[] properties)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CTNode\u003E",
+        "default": null
+      },
+      {
+        "name": "properties",
+        "type": "Electron2D.PropertyDescriptor[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.RegisterResource\u00601(System.String,System.String,Func\u003CTResource\u003E,Electron2D.PropertyDescriptor[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "RegisterResource",
+    "signature": "public static System.Void RegisterResource\u003CTResource\u003E(System.String id, System.String sourcePath, Func\u003CTResource\u003E factory, Electron2D.PropertyDescriptor[] properties)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CTResource\u003E",
+        "default": null
+      },
+      {
+        "name": "properties",
+        "type": "Electron2D.PropertyDescriptor[]",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -168146,6 +168663,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Script.CompiledType()",
+    "kind": "property",
+    "declaringType": "Electron2D.Script",
+    "name": "CompiledType",
+    "signature": "public System.Type CompiledType { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Type",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Script.CompiledTypeID()",
+    "kind": "property",
+    "declaringType": "Electron2D.Script",
+    "name": "CompiledTypeID",
+    "signature": "public System.String CompiledTypeID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Script.SourceCode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Script",
+    "name": "SourceCode",
+    "signature": "public System.String SourceCode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

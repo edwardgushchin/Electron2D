@@ -940,3 +940,7 @@ CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [C
 
 | [Resources](domains/resources.md) | [Text](components/text.md) | [FontVariation](classes/FontVariation.md) | [FontVariation.cs](../src/Scene/Resources/FontVariation.cs) | Current | Independent native font instances and rich font-tag consumer. |
 | [Rendering](domains/rendering.md) | [Text](components/text.md) | [FontVariationAxis](classes/FontVariationAxis.md) | [FontInstance.cs](../src/Servers/Text/FontInstance.cs) | Current | Typed font axis design bounds. |
+
+| [Resources](domains/resources.md) | [Scripting](components/scripting.md) | [Script](classes/Script.md) | [Script.cs](../src/Core/IO/Script.cs) | Current | Compiled source/type assets, typed metadata/factories and fresh-process class reconstruction. |
+| [Resources](domains/resources.md) | [Scripting](components/scripting.md) | [ToolAttribute](classes/ToolAttribute.md) | [Script.cs](../src/Core/IO/Script.cs) | Current | Compiled project tool-class declaration. |
+| [Resources](domains/resources.md) | [Scripting](components/scripting.md) | [GlobalClassAttribute](classes/GlobalClassAttribute.md) | [Script.cs](../src/Core/IO/Script.cs) | Current | Compiled global script-class name declaration. |
