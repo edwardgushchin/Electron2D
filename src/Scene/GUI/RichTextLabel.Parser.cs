@@ -17,6 +17,7 @@ public partial class RichTextLabel
     /// <summary>Replaces runtime content with parsed markup.</summary><param name="bbcode">Nonnull markup.</param>
     public void ParseBBCode(string bbcode) { ArgumentNullException.ThrowIfNull(bbcode); MutableRich(); Clear(); AppendText(bbcode); }
     /// <summary>Appends markup; closing tags may only close tags opened in this append call.</summary><param name="bbcode">Nonnull markup.</param>
+    /// <remarks>Font tags create owned variation spans borrowing Font resources, with spacing, synthetic outline, collection face, design coordinates and feature options.</remarks>
     public void AppendText(string bbcode)
     {
         MutableRich(); ArgumentNullException.ThrowIfNull(bbcode); bbcode = bbcode.Replace("\r\n", "\n"); var opened = new Stack<(string Name, int Depth)>(); var at = 0;
@@ -47,8 +48,8 @@ public partial class RichTextLabel
                 case "outline_color": PushOutlineColor(Color.FromString(value, Colors.Black)); break;
                 case "outline_size": if (int.TryParse(value, out var outline) && outline >= 0) PushOutlineSize(outline); else handled = false; break;
                 case "font_size": if (int.TryParse(value, out var fontSize) && fontSize > 0) PushFontSize(fontSize); else handled = false; break;
-                case "opentype_features": case "otf": var featureFont = (_format.Font ?? GetThemeFont(_format.Role switch { FontRole.Bold => "bold_font", FontRole.Italics => "italics_font", FontRole.BoldItalics => "bold_italics_font", FontRole.Mono => "mono_font", _ => "normal_font" })) as FontFile; if (featureFont == null) { handled = false; break; } PushFeatureFont(featureFont, value, 0); break;
-                case "font": try { var fontPath = Arg("name", Arg("n", value)); var font = fontPath.Length > 0 ? ResourceLoader.Load<FontFile>(fontPath) : _format.Font as FontFile ?? GetThemeFont("normal_font") as FontFile; if (font == null) { handled = false; break; } var size = (int)Number("size", Number("s", 0)); if (arguments.ContainsKey("opentype_features") || arguments.ContainsKey("otf")) PushFeatureFont(font, Arg("opentype_features", Arg("otf")), size); else PushFont(font, size); } catch (IOException) { handled = false; } break;
+                case "opentype_features": case "otf": var featureFont = CurrentMarkupFont(); if (featureFont == null) { handled = false; break; } PushVariationFont(featureFont, new() { ["otf"] = value }, 0); break;
+                case "font": try { var fontPath = Arg("name", Arg("n", value)); var font = fontPath.Length > 0 ? ResourceLoader.Load<Font>(fontPath) : CurrentMarkupFont(); if (font == null) { handled = false; break; } PushVariationFont(font, arguments, (int)Number("size", Number("s", 0))); } catch (IOException) { handled = false; } break;
                 case "lang": PushLanguage(value); break;
                 case "hint": PushHint(value); break;
                 case "url": var url = value; if (url.Length == 0) { var stop = bbcode.IndexOf("[/url]", at, StringComparison.Ordinal); url = stop < 0 ? bbcode[at..] : bbcode[at..stop]; } PushMeta(url, Arg("underline", "always") switch { "never" => MetaUnderline.Never, "on_hover" => MetaUnderline.OnHover, _ => MetaUnderline.Always }, Arg("tooltip")); break;
@@ -64,7 +65,7 @@ public partial class RichTextLabel
                 case "cell": if (_table == null) { handled = false; break; } PushCell(); if (value.Length > 0 && int.TryParse(value, out var expand)) SetTableColumnExpand((_table.Cells.Count - 1) % _table.Columns.Length, true, Math.Max(1, expand)); if (arguments.ContainsKey("name")) SetTableColumnName((_table.Cells.Count - 1) % _table.Columns.Length, Arg("name")); if (arguments.ContainsKey("minsize") || arguments.ContainsKey("maxsize")) { var min = ParseNumbers(Arg("minsize")); var max = ParseNumbers(Arg("maxsize")); SetCellSizeOverride(min.Length == 2 ? new(min[0], min[1]) : default, max.Length == 2 ? new(max[0], max[1]) : default); } if (arguments.ContainsKey("expand")) SetTableColumnExpand((_table.Cells.Count - 1) % _table.Columns.Length, true, (int)Number("expand", 1)); if (arguments.ContainsKey("border")) SetCellBorderColor(Tint("border", Colors.Transparent)); if (arguments.ContainsKey("bg")) { var colors = Arg("bg").Split(','); SetCellRowBackgroundColor(Color.FromString(colors[0], Colors.Transparent), Color.FromString(colors.Length > 1 ? colors[1] : colors[0], Colors.Transparent)); } if (arguments.ContainsKey("padding")) { var pads = ParseNumbers(Arg("padding")); if (pads.Length == 4) SetCellPadding(new(pads[0], pads[1], pads[2], pads[3])); } break;
                 case "img": var imageEnd = bbcode.IndexOf("[/img]", at, StringComparison.Ordinal); if (imageEnd < 0) { handled = false; break; } var path = bbcode[at..imageEnd]; try { var texture = ResourceLoader.Load<Texture>(path); var dimensions = value.Split('x'); var widthText = Arg("width", dimensions[0]); var heightText = Arg("height", dimensions.Length > 1 ? dimensions[1] : ""); var regionValues = ParseNumbers(Arg("region")); var crop = regionValues.Length == 4 ? new Rect2(regionValues[0], regionValues[1], regionValues[2], regionValues[3]) : default; AddImage(texture, ParseDimension(widthText), ParseDimension(heightText), Tint("color", Colors.White), ParseInlineAlignment(Arg("align", "center")), crop, pad: Arg("pad") == "true", tooltip: Arg("tooltip"), widthUnit: DimensionUnit(widthText), heightUnit: DimensionUnit(heightText), altText: Arg("alt")); at = imageEnd + 6; paired = false; } catch (IOException) { handled = false; } break;
                 case "hr": AddHR((int)Number("width", 90), (int)Number("height", 2), Tint("color", Colors.White), Arg("align") switch { "left" => HorizontalAlignment.Left, "right" => HorizontalAlignment.Right, _ => HorizontalAlignment.Center }, !Arg("width").EndsWith("px", StringComparison.Ordinal), Arg("height").EndsWith('%')); paired = false; break;
-                case "dropcap": var capEnd = bbcode.IndexOf("[/dropcap]", at, StringComparison.Ordinal); if (capEnd < 0) { handled = false; break; } var cap = bbcode[at..capEnd]; var capFont = Arg("font").Length > 0 ? ResourceLoader.Load<FontFile>(Arg("font")) : GetThemeFont("normal_font")!; PushDropcap(cap, capFont, (int)Number("font_size", 64), color: Tint("color", GetThemeColor("default_color")), outlineSize: (int)Number("outline_size", 0), outlineColor: Tint("outline_color", Colors.Transparent)); at = capEnd + 10; paired = false; break;
+                case "dropcap": var capEnd = bbcode.IndexOf("[/dropcap]", at, StringComparison.Ordinal); if (capEnd < 0) { handled = false; break; } var cap = bbcode[at..capEnd]; var capFont = Arg("font").Length > 0 ? ResourceLoader.Load<Font>(Arg("font")) : GetThemeFont("normal_font")!; PushDropcap(cap, capFont, (int)Number("font_size", 64), color: Tint("color", GetThemeColor("default_color")), outlineSize: (int)Number("outline_size", 0), outlineColor: Tint("outline_color", Colors.Transparent)); at = capEnd + 10; paired = false; break;
                 case "fade": case "shake": case "wave": case "tornado": case "rainbow": case "pulse": PushFX(name, ParseExpressionsForValues(tokens.Skip(1).ToArray())); break;
                 default: var custom = _effects.FirstOrDefault(e => !e.IsDisposed && e.BBCode == name); if (custom != null) PushCustomFX(custom, ParseExpressionsForValues(tokens.Skip(1).ToArray())); else handled = false; break;
             }
@@ -72,7 +73,28 @@ public partial class RichTextLabel
         }
         Changed();
     }
-    private void PushFeatureFont(FontFile source, string features, int size) { var font = (FontFile)source.Duplicate(); var map = font.OpenTypeFeatureOverrides; foreach (var entry in features.Split(',')) { var pair = entry.Trim().Split('='); if (pair[0].Length > 0) map[pair[0]] = pair.Length > 1 && int.TryParse(pair[1], out var n) ? n : 1; } font.OpenTypeFeatureOverrides = map; _ownedFonts.Add(font); PushFont(font, size); }
+    private Font? CurrentMarkupFont() => _format.Font ?? GetThemeFont(_format.Role switch { FontRole.Bold => "bold_font", FontRole.Italics => "italics_font", FontRole.BoldItalics => "bold_italics_font", FontRole.Mono => "mono_font", _ => "normal_font" });
+    private void PushVariationFont(Font source, Dictionary<string, string> arguments, int size)
+    {
+        var font = new FontVariation { BaseFont = source };
+        try
+        {
+            string Arg(string key, string alias) => arguments.GetValueOrDefault(key, arguments.GetValueOrDefault(alias, ""));
+            int Integer(string key, string alias) => int.TryParse(Arg(key, alias), NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : 0;
+            float Number(string key, string alias) => float.TryParse(Arg(key, alias), NumberStyles.Float, CultureInfo.InvariantCulture, out var value) && float.IsFinite(value) ? value : 0;
+            font.SpacingGlyph = Integer("glyph_spacing", "gl"); font.SpacingSpace = Integer("space_spacing", "sp");
+            font.SpacingTop = Integer("top_spacing", "top"); font.SpacingBottom = Integer("bottom_spacing", "bt");
+            font.VariationEmbolden = Number("embolden", "emb"); font.VariationFaceIndex = Math.Max(0, Integer("face_index", "fi"));
+            var slant = Number("slant", "sln"); font.VariationTransform = new(new(1, Math.Clamp(slant, -32767, 32767)), new(0, 1), default);
+            var features = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var entry in Arg("opentype_features", "otf").Split(',')) { var pair = entry.Trim().Split('='); if (pair[0].Length > 0) features[pair[0]] = pair.Length > 1 && int.TryParse(pair[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var n) ? n : 1; }
+            font.OpenTypeFeatures = features;
+            var coordinates = new Dictionary<uint, float>();
+            foreach (var entry in Arg("opentype_variation", "otv").Split(',')) { var pair = entry.Trim().Split('='); if (pair.Length == 2 && pair[0].Length > 0 && float.TryParse(pair[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var n) && float.IsFinite(n)) coordinates[OpenTypeFeatureTags.Resolve(pair[0].Trim())] = n; }
+            font.VariationOpenType = coordinates; _ownedFonts.Add(font); PushFont(font, size);
+        }
+        catch { _ownedFonts.Remove(font); font.Dispose(); throw; }
+    }
     private static int FindTagEnd(string text, int from) { var quote = '\0'; for (var i = from; i < text.Length; i++) { var c = text[i]; if (quote != '\0') { if (c == quote) quote = '\0'; } else if (c is '\'' or '"') quote = c; else if (c == ']') return i; } return -1; }
     private static string Unquote(string text) => text.Length >= 2 && (text[0] is '\'' or '"') && text[^1] == text[0] ? text[1..^1] : text;
     private static List<string> SplitTag(string text) { var result = new List<string>(); var start = 0; var quote = '\0'; for (var i = 0; i <= text.Length; i++) { var c = i < text.Length ? text[i] : ' '; if (quote != '\0') { if (c == quote) quote = '\0'; continue; } if (c is '\'' or '"') quote = c; if (char.IsWhiteSpace(c)) { if (i > start) result.Add(text[start..i]); start = i + 1; } } return result; }

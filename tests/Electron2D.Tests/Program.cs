@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_VARIATION_CHILD") is { } variationPath) { FontVariationTests.RunChild(variationPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_VARIATION_HOST") == "1") { FontVariationTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_VARIATION") == "1") { FontVariationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GRAPH_CHILD") is { } graphPath) { GraphTests.RunChild(graphPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GRAPH_HOST") == "1") { GraphTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GRAPH") == "1") { GraphTests.Run(); return; }
@@ -577,6 +580,7 @@ TextEditTests.Run();
 TreeTests.Run();
 CodeEditTests.Run();
 RichTextTests.Run();
+FontVariationTests.Run();
 GraphTests.Run();
 NetworkingTests.Run();
 UPNPTests.Run();

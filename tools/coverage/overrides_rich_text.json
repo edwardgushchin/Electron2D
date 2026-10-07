@@ -1494,35 +1494,35 @@
         "class:RichTextLabel"
       ],
       "state": "Partial",
-      "reason": "Rich document, current native canvases and typed C# effects execute. Advanced variable-font font tags require FontVariation coordinates, spacing/embolden/face/transform and per-instance cache identity under ADR 0046; semantic table/image names require AccessibilityServer; editor import/authoring needs ADR 0090. Physical and foreign-platform acceptance remain unverified."
+      "reason": "Rich document, current native canvases, advanced FontVariation font tags and typed C# effects execute. Semantic table/image names require AccessibilityServer; editor import/authoring needs ADR 0090. Physical and foreign-platform acceptance remain separate."
     },
     {
       "godot": [
         "RichTextLabel::method:append_text(String:)"
       ],
       "state": "Partial",
-      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
     },
     {
       "godot": [
         "RichTextLabel::method:install_effect(Variant:)"
       ],
       "state": "Partial",
-      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
     },
     {
       "godot": [
         "RichTextLabel::method:parse_bbcode(String:)"
       ],
       "state": "Partial",
-      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
     },
     {
       "godot": [
         "RichTextLabel::method:reload_effects()"
       ],
       "state": "Partial",
-      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
     },
     {
       "godot": [
@@ -1536,21 +1536,21 @@
         "RichTextLabel::property:bbcode_enabled"
       ],
       "state": "Partial",
-      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
     },
     {
       "godot": [
         "RichTextLabel::property:custom_effects"
       ],
       "state": "Partial",
-      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
     },
     {
       "godot": [
         "RichTextLabel::property:text"
       ],
       "state": "Partial",
-      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+      "reason": "Styles, native FontVariation tags including spacing/embolden/slant/face/coordinates, text, images/tables, links, builtin effects and typed installed C# effects execute. ResourceLoader still needs compiled source/assembly-associated Script providers under ADR 0091 for source script effect installation."
     },
     {
       "godot": [

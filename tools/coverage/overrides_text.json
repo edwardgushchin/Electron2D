@@ -3604,6 +3604,106 @@
       "godot": "TextEdit::theme_item:wrap_offset",
       "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
       "reason": "Executable multiline editing/highlighting slice under ADRs 0004/0038/0046/0051/0083: scalar document edits, multicaret selections, grouped/versioned undo, Unicode shaping/wrapping, gutters, scrollbars/minimap, native committed/preedit input, typed clipboard/commands, highlighter transitions/regions and independent persisted scene instances. TextEditTests exercises boundary/history/observer/resource/storage/input paths and current Linux GPU/compatibility rendered pixels; 64 prepared selection/render frames allocate zero managed bytes. Cold document snapshots/parsing and native event copies are outside that interval. Physical IME, native semantic/virtual keyboard, other-target and editor-authoring acceptance retain their own gates."
+    },
+    {
+      "godot": "class:FontVariation",
+      "electron2d": "T:Electron2D.FontVariation",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::method:set_spacing(int:TextServer.SpacingType,int:)",
+      "electron2d": "method:Electron2D.FontVariation.SetSpacing(Electron2D.TextSpacingType,System.Int32)",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:base_font",
+      "electron2d": "property:Electron2D.FontVariation.BaseFont()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:baseline_offset",
+      "electron2d": "property:Electron2D.FontVariation.BaselineOffset()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:opentype_features",
+      "electron2d": "property:Electron2D.FontVariation.OpenTypeFeatures()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:palette_custom_colors",
+      "electron2d": "property:Electron2D.FontVariation.PaletteCustomColors()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:palette_index",
+      "electron2d": "property:Electron2D.FontVariation.PaletteIndex()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:spacing_bottom",
+      "electron2d": "property:Electron2D.FontVariation.SpacingBottom()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:spacing_glyph",
+      "electron2d": "property:Electron2D.FontVariation.SpacingGlyph()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:spacing_space",
+      "electron2d": "property:Electron2D.FontVariation.SpacingSpace()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:spacing_top",
+      "electron2d": "property:Electron2D.FontVariation.SpacingTop()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:variation_embolden",
+      "electron2d": "property:Electron2D.FontVariation.VariationEmbolden()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:variation_face_index",
+      "electron2d": "property:Electron2D.FontVariation.VariationFaceIndex()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:variation_opentype",
+      "electron2d": "property:Electron2D.FontVariation.VariationOpenType()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "FontVariation::property:variation_transform",
+      "electron2d": "property:Electron2D.FontVariation.VariationTransform()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "Font::method:find_variation(Dictionary:,int:,float:,Transform2D:,int:,int:,int:,int:,float:,int:,PackedColorArray:)",
+      "electron2d": "method:Electron2D.Font.FindVariation(System.Collections.Generic.Dictionary<System.UInt32, System.Single>,System.Int32,System.Single,System.Nullable<Electron2D.Transform>,System.Int32,System.Int32,System.Int32,System.Int32,System.Single,System.Int32,Electron2D.Color[])",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "Font::method:get_palette_colors(int:)",
+      "electron2d": "method:Electron2D.Font.GetPaletteColors(System.Int32)",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "Font::method:get_palette_count()",
+      "electron2d": "method:Electron2D.Font.GetPaletteCount()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "Font::method:get_palette_name(int:)",
+      "electron2d": "method:Electron2D.Font.GetPaletteName(System.Int32)",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
+    },
+    {
+      "godot": "Font::method:get_supported_variation_list()",
+      "electron2d": "method:Electron2D.Font.GetSupportedVariationList()",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -3702,14 +3802,14 @@
     },
     {
       "state": "Partial",
-      "reason": "Executable font shaping/measurement/drawing and explicit fallback are integrated. Remaining applicable mechanisms: variable-font instances, font RID service, OpenType name/feature/variation metadata, color-palette APIs, language/script support queries. These are tracked on their member rows; native availability is not a parity claim.",
+      "reason": "Executable font measurement/drawing, borrowed fallback and typed variation instances/axis/palette metadata execute. Remaining applicable members: public TextServer RID service, OpenType name/feature metadata and language/script support queries; exact member dependencies remain recorded.",
       "godot": [
         "class:Font"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The native foundation exists, but typed variation instance creation, variation coordinates, embolden/transform/spacing/baseline/palette configuration and public font identity are not implemented. Implement this connected variable-font instance slice; do not report empty variation data as support.",
+      "state": "Implemented",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate.",
       "godot": [
         "Font::method:find_variation(Dictionary:,int:,float:,Transform2D:,int:,int:,int:,int:,float:,int:,PackedColorArray:)"
       ]
@@ -3722,22 +3822,22 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable font metadata/support query is not implemented: get_palette_colors. FreeType/HarfBuzz and Unicode data are present; add the typed query and verify actual tables/coverage instead of retaining the obsolete first-font dependency blocker.",
+      "state": "Implemented",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate.",
       "godot": [
         "Font::method:get_palette_colors(int:)"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable font metadata/support query is not implemented: get_palette_count. FreeType/HarfBuzz and Unicode data are present; add the typed query and verify actual tables/coverage instead of retaining the obsolete first-font dependency blocker.",
+      "state": "Implemented",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate.",
       "godot": [
         "Font::method:get_palette_count()"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable font metadata/support query is not implemented: get_palette_name. FreeType/HarfBuzz and Unicode data are present; add the typed query and verify actual tables/coverage instead of retaining the obsolete first-font dependency blocker.",
+      "state": "Implemented",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate.",
       "godot": [
         "Font::method:get_palette_name(int:)"
       ]
@@ -3757,8 +3857,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Applicable font metadata/support query is not implemented: get_supported_variation_list. FreeType/HarfBuzz and Unicode data are present; add the typed query and verify actual tables/coverage instead of retaining the obsolete first-font dependency blocker.",
+      "state": "Implemented",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate.",
       "godot": [
         "Font::method:get_supported_variation_list()"
       ]
@@ -5019,6 +5119,27 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: a DisplayServer virtual-keyboard show/hide/session service and native symbol-picker request/result service for a concrete target. The first executable target integration must add these properties and exercise focus/touch presentation or picker insertion; inert enable flags are not shipped."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0046: independent typed FontVariation resources execute native FT/HB design coordinates, collection faces, synthetic outline strength/matrix, spacing/baseline, CPAL palettes, borrowed source/fallback retirement and fresh-process storage. Rich font tags consume generic borrowed Font instances. FontVariationTests verifies native pixels/metrics and 64 prepared render intervals with zero managed bytes on both current Linux Wayland backends. Foreign targets, native allocation counts and owner acceptance remain separate.",
+      "godot": [
+        "class:FontVariation",
+        "FontVariation::method:set_spacing(int:TextServer.SpacingType,int:)",
+        "FontVariation::property:base_font",
+        "FontVariation::property:baseline_offset",
+        "FontVariation::property:opentype_features",
+        "FontVariation::property:palette_custom_colors",
+        "FontVariation::property:palette_index",
+        "FontVariation::property:spacing_bottom",
+        "FontVariation::property:spacing_glyph",
+        "FontVariation::property:spacing_space",
+        "FontVariation::property:spacing_top",
+        "FontVariation::property:variation_embolden",
+        "FontVariation::property:variation_face_index",
+        "FontVariation::property:variation_opentype",
+        "FontVariation::property:variation_transform"
+      ]
     }
   ],
   "extras": [
@@ -5371,6 +5492,111 @@
       "electron2d": "method:Electron2D.TextEdit.OnTextInput(System.String)",
       "reason": "Typed constructor or inherited owner/lifecycle/render/input/storage extension point for the multiline editor and syntax resources.",
       "adr": "ADR 0004/0038/0046/0083"
+    },
+    {
+      "electron2d": "T:Electron2D.FontVariationAxis",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.FontVariation..ctor()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.FontVariationAxis..ctor(System.Single,System.Single,System.Single)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariation.CreateDuplicateInstance()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariation.Dispose(System.Boolean)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariation.GetOpenTypeFeatures()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariation.GetPropertyDescriptors()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariation.GetSpacing(Electron2D.TextSpacingType)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariation.OnResetState()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariation.SetVariationOpenType(System.Collections.Generic.Dictionary<System.String, System.Single>)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariationAxis.Deconstruct(ref System.Single,ref System.Single,ref System.Single)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariationAxis.Equals(Electron2D.FontVariationAxis)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariationAxis.Equals(System.Object)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariationAxis.GetHashCode()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.FontVariationAxis.ToString()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "operator:Electron2D.FontVariationAxis.op_Equality(Electron2D.FontVariationAxis,Electron2D.FontVariationAxis)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "operator:Electron2D.FontVariationAxis.op_Inequality(Electron2D.FontVariationAxis,Electron2D.FontVariationAxis)",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "property:Electron2D.FontVariationAxis.Default()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "property:Electron2D.FontVariationAxis.Maximum()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
+    },
+    {
+      "electron2d": "property:Electron2D.FontVariationAxis.Minimum()",
+      "reason": "Typed native font axis data, readable coordinate setter, independent resource construction and inherited Font/resource extension contracts.",
+      "adr": "ADR 0004/0014/0046"
     }
   ]
 }

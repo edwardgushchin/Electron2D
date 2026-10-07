@@ -14,6 +14,10 @@ internal sealed class FontData : IDisposable
     private byte[] _bytes = [];
     private readonly Action _execute;
     private readonly int _faceIndex;
+    private readonly FontInstance? _instance;
+    internal Dictionary<uint, FontVariationAxis> VariationAxes { get; private set; } = [];
+    internal Color[][] Palettes { get; private set; } = [];
+    internal string[] PaletteNames { get; private set; } = [];
     private NativeFontPrecision? _precision;
     private bool _disposed, _retired;
     private int _readers;
@@ -51,16 +55,29 @@ internal sealed class FontData : IDisposable
     internal int GlyphCount { get; private set; }
     internal int UnitsPerEm { get; private set; }
 
-    internal FontData(byte[] immutableData, int faceIndex = 0)
+    internal FontData(byte[] immutableData, int faceIndex = 0, FontInstance? instance = null)
     {
         ArgumentNullException.ThrowIfNull(immutableData);
-        _bytes = immutableData; _faceIndex = faceIndex; _execute = Execute;
+        _bytes = immutableData; _faceIndex = faceIndex; _instance = instance; _execute = Execute;
         if (HasData)
         {
             if ((!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS() && !OperatingSystem.IsBrowser()) ||
                 RuntimeInformation.ProcessArchitecture is not (Architecture.X64 or Architecture.Arm64) && !(OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X86) && !(OperatingSystem.IsAndroid() && RuntimeInformation.ProcessArchitecture is Architecture.X86 or Architecture.Arm) && !(OperatingSystem.IsBrowser() && RuntimeInformation.ProcessArchitecture == Architecture.Wasm))
                 throw new PlatformNotSupportedException("Native font assets require a packaged desktop, mobile or browser runtime.");
             Run(Operation.Create);
+        }
+    }
+    internal FontData CreateVariation(FontInstance instance)
+    {
+        lock (_gate)
+        {
+            Check(); var result = new FontData(_bytes, instance.FaceIndex, instance);
+            try
+            {
+                result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
+                result.OpenTypeFeatures = OpenTypeFeatures; return result;
+            }
+            catch { result.Dispose(); throw; }
         }
     }
     private void Check() => ObjectDisposedException.ThrowIf(_disposed, this);
@@ -171,6 +188,8 @@ internal sealed class FontData : IDisposable
                 try
                 {
                     _precision = new NativeFontPrecision(_bytes, _faceIndex);
+                    if (_instance != null) _precision.ConfigureInstance(_instance);
+                    VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
                     FamilyName = _precision.FamilyName; StyleName = _precision.StyleName; FaceCount = _precision.FaceCount; GlyphCount = _precision.GlyphCount; UnitsPerEm = _precision.UnitsPerEm;
                     FontStyle = (_precision.FaceStyleFlags & 2) != 0 ? FontStyle.Bold : 0;
                     if ((_precision.FaceStyleFlags & 1) != 0) FontStyle |= FontStyle.Italic;
@@ -189,7 +208,8 @@ internal sealed class FontData : IDisposable
                 _precision!.SetSize(_size); _metricsResult = new(_precision.Ascent, _precision.Descent, _precision.Height, _precision.UnderlinePosition, _precision.UnderlineThickness); break;
             case Operation.Index: _indexResult = _precision!.GetGlyphIndex(_scalar, _selector); break;
             case Operation.Advance:
-                _precision!.SetSize(_size); _advanceResult = _precision.GetGlyphAdvance(_glyph, _vertical) / (_vertical ? -64f : 64f); break;
+                _precision!.SetSize(_size); _advanceResult = _precision.GetGlyphAdvance(_glyph, _vertical) / (_vertical ? -64f : 64f);
+                if (!_vertical) _advanceResult += (_instance?.Embolden ?? 0) * _size / 64f; break;
             case Operation.Characters: _characters = _precision!.GetSupportedChars(); break;
             case Operation.Shape:
                 _precision!.SetSize(_size);
@@ -205,10 +225,11 @@ internal sealed class FontData : IDisposable
                     if (glyph.GlyphIndex == 0) { _shapeOutput.Add(glyph); continue; }
                     var x = subpixel ? glyph.XOffset : Round26(glyph.XOffset / 64d + (horizontal ? remainder : 0));
                     var y = Round26(glyph.YOffset / 64d + (horizontal ? 0 : remainder));
-                    var advance = (horizontal ? glyph.XAdvance : glyph.YAdvance) / 64d;
-                    var adjusted = subpixel ? glyph.XAdvance : Round26(remainder + advance);
+                    var advance = (horizontal ? glyph.XAdvance : glyph.YAdvance) / 64d + (horizontal ? (_instance?.Embolden ?? 0) * _size / 64d : 0);
+                    var adjusted = subpixel ? checked((int)Math.Round(advance * 64)) : Round26(remainder + advance);
                     if (!subpixel && KeepRoundingRemainders) remainder += advance - adjusted / 64d;
-                    _shapeOutput.Add(glyph with { XOffset = x, YOffset = y, XAdvance = horizontal ? adjusted : glyph.XAdvance, YAdvance = horizontal ? glyph.YAdvance : adjusted });
+                    var baseline = _instance?.BaselineOffset ?? 0; var shift = checked((int)Math.Round(baseline * _precision.Height * 64d));
+                    _shapeOutput.Add(glyph with { XOffset = x + (horizontal ? 0 : shift), YOffset = y - (horizontal ? shift : 0), XAdvance = horizontal ? adjusted : glyph.XAdvance, YAdvance = horizontal ? glyph.YAdvance : adjusted });
                 }
                 break;
             case Operation.Glyph: _glyphResult = RasterGlyph(); break;

@@ -9,9 +9,13 @@ namespace Electron2D;
 /// sixty-four times. Already recorded glyph pixels survive data replacement independently of native faces.</remarks>
 public abstract class Font : Resource
 {
-    private static readonly object FallbackMutationGate = new();
+    internal static readonly object FallbackMutationGate = new();
     internal object FontGate { get; } = new();
     internal abstract FontData? PrimaryData { get; }
+    internal virtual Font? BaseDependency => null;
+    internal virtual NativeFontFeature[]? GetShapingFeatures(FontData source) => null;
+    internal Font?[] LocalFallbacks => _fallbacks;
+    internal virtual Font?[] EffectiveFallbacks => _fallbacks;
     private Font?[] _fallbacks = [];
     private readonly Action<Resource> _fallbackChanged;
     private readonly Action<ElectronObject> _fallbackDisposed;
@@ -45,7 +49,7 @@ public abstract class Font : Resource
             ArgumentNullException.ThrowIfNull(value); var copy = (Font?[])value.Clone();
             lock (FallbackMutationGate)
             {
-                foreach (var font in copy) if (font is not null) ValidateFallback(font, this, 0);
+                foreach (var font in copy) if (font is not null) ValidateFallback(font, this, 1);
                 lock (FontGate) { ThrowIfDisposed(); UnsubscribeFallbacks(); _fallbacks = copy; SubscribeFallbacks(); ClearLayoutCaches(); }
             }
             EmitChanged();
@@ -111,10 +115,51 @@ public abstract class Font : Resource
     /// <summary>Returns this font's span-level OpenType feature overrides.</summary>
     /// <returns>An independent empty dictionary for a scalable font; file-level feature defaults are stored separately.</returns>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public Dictionary<string, int> GetOpenTypeFeatures()
+    public virtual Dictionary<string, int> GetOpenTypeFeatures()
     {
         ThrowIfDisposed(); return new(StringComparer.Ordinal);
     }
+
+    /// <summary>Creates a caller-owned font variation borrowing this font and using independent native caches.</summary>
+    /// <param name="variationCoordinates">Optional copied numeric OpenType design coordinates.</param>
+    /// <param name="faceIndex">Nonnegative collection face index.</param><param name="strength">Finite synthetic embolden strength.</param>
+    /// <param name="transform">Optional finite outline basis; translation is ignored.</param>
+    /// <param name="spacingTop">Extra top pixels.</param><param name="spacingBottom">Extra bottom pixels.</param>
+    /// <param name="spacingSpace">Extra space width.</param><param name="spacingGlyph">Extra glyph width.</param>
+    /// <param name="baselineOffset">Finite fraction of native ascent plus descent.</param><param name="paletteIndex">Predefined palette index, clamped during realization.</param>
+    /// <param name="customColors">Optional copied palette colors; transparent black preserves entries.</param>
+    /// <returns>A new resource that the caller must dispose.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A configuration value is invalid.</exception>
+    /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
+    public FontVariation FindVariation(Dictionary<uint, float>? variationCoordinates = null, int faceIndex = 0, float strength = 0,
+        Transform? transform = null, int spacingTop = 0, int spacingBottom = 0, int spacingSpace = 0, int spacingGlyph = 0,
+        float baselineOffset = 0, int paletteIndex = 0, Color[]? customColors = null)
+    {
+        ThrowIfDisposed(); var result = new FontVariation();
+        try
+        {
+            result.BaseFont = this; result.VariationOpenType = variationCoordinates ?? []; result.VariationFaceIndex = faceIndex;
+            result.VariationEmbolden = strength; result.VariationTransform = transform ?? Transform.Identity;
+            result.SpacingTop = spacingTop; result.SpacingBottom = spacingBottom; result.SpacingSpace = spacingSpace; result.SpacingGlyph = spacingGlyph;
+            result.BaselineOffset = baselineOffset; result.PaletteIndex = paletteIndex; result.PaletteCustomColors = customColors ?? []; return result;
+        }
+        catch { result.Dispose(); throw; }
+    }
+
+    /// <summary>Copies the primary face's OpenType axis design bounds.</summary><returns>Numeric tag keys with minimum, maximum and default coordinates. Keys retain the four-byte OpenType tags.</returns>
+    /// <exception cref="ObjectDisposedException">The font or required source is disposed.</exception>
+    public Dictionary<uint, FontVariationAxis> GetSupportedVariationList() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData is { } data ? new(data.VariationAxes) : []; } }
+    /// <summary>Returns the primary face's predefined palette count.</summary><returns>Zero without color palette data.</returns>
+    /// <exception cref="ObjectDisposedException">The font or required source is disposed.</exception>
+    public int GetPaletteCount() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.Palettes.Length ?? 0; } }
+    /// <summary>Copies a predefined palette, independently of instance overrides.</summary><param name="index">Valid palette index.</param><returns>Caller-owned colors.</returns>
+    /// <exception cref="ObjectDisposedException">The font or required source is disposed.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The palette index is outside the available range.</exception>
+    public Color[] GetPaletteColors(int index) { lock (FontGate) { ThrowIfDisposed(); var palettes = PrimaryData?.Palettes ?? []; if ((uint)index >= (uint)palettes.Length) throw new ArgumentOutOfRangeException(nameof(index)); return (Color[])palettes[index].Clone(); } }
+    /// <summary>Reads a predefined palette's optional SFNT name.</summary><param name="index">Valid palette index.</param><returns>Palette name, or an empty string when unnamed.</returns>
+    /// <exception cref="ObjectDisposedException">The font or required source is disposed.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The palette index is outside the available range.</exception>
+    public string GetPaletteName(int index) { lock (FontGate) { ThrowIfDisposed(); var names = PrimaryData?.PaletteNames ?? []; if ((uint)index >= (uint)names.Length) throw new ArgumentOutOfRangeException(nameof(index)); return names[index]; } }
 
     /// <summary>Tests whether this font or a fallback contains a Unicode scalar.</summary>
     /// <param name="character">A Unicode scalar value.</param><returns>Whether a glyph is available.</returns>
@@ -465,8 +510,15 @@ public abstract class Font : Resource
             font.ThrowIfDisposed(); _dependencies.Add(font); _dependencyGenerations.Add(font._generation);
             var data = font.PrimaryData;
             if (data is { HasData: true } && !_sources.Contains(data)) _sources.Add(data);
-            foreach (var fallback in font._fallbacks) if (fallback is not null) CollectSources(fallback, depth + 1);
+            if (font.BaseDependency is { } dependency) CollectDependency(dependency, depth + 1);
+            foreach (var fallback in font.EffectiveFallbacks) if (fallback is not null) CollectSources(fallback, depth + 1);
         }
+    }
+    private void CollectDependency(Font font, int depth)
+    {
+        if (depth > 64) throw new InvalidOperationException("Font base depth exceeds sixty-four levels.");
+        if (_dependencies.Contains(font)) return;
+        lock (font.FontGate) { font.ThrowIfDisposed(); _dependencies.Add(font); _dependencyGenerations.Add(font._generation); if (font.BaseDependency is { } parent) CollectDependency(parent, depth + 1); }
     }
     private FontData? FindSource(uint character)
     {
@@ -494,10 +546,10 @@ public abstract class Font : Resource
         if (!Rune.IsValid(character)) throw new ArgumentOutOfRangeException(nameof(character));
     }
     internal static void ValidateSize(int size) { ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size); }
-    private static void ValidateFallback(Font font, Font target, int depth)
+    internal static void ValidateFallback(Font font, Font target, int depth)
     {
         if (ReferenceEquals(font, target) || depth > 64) throw new ArgumentException("Font fallback graphs must be acyclic and at most sixty-four levels deep.", "value");
-        lock (font.FontGate) { font.ThrowIfDisposed(); foreach (var child in font._fallbacks) if (child is not null) ValidateFallback(child, target, depth + 1); }
+        lock (font.FontGate) { font.ThrowIfDisposed(); if (font.BaseDependency is { } parent) ValidateFallback(parent, target, depth + 1); foreach (var child in font._fallbacks) if (child is not null) ValidateFallback(child, target, depth + 1); }
     }
     private void SubscribeFallbacks()
     {

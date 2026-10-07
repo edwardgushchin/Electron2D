@@ -37,7 +37,7 @@ Vector2 size = font.GetStringSize("Hello العربية");
 | `public int GetFontStretch()` | [GetFontStretch](#getfontstretch): Returns the primary face's width as a percentage of normal width. |
 | `public int GetFaceCount()` | [GetFaceCount](#getfacecount): Returns the number of faces in the primary font collection. |
 | `public virtual int GetSpacing(TextSpacingType spacing)` | [GetSpacing](#getspacing): Returns additional spacing supplied by this font. |
-| `public Dictionary<string, int> GetOpenTypeFeatures()` | [GetOpenTypeFeatures](#getopentypefeatures): Returns this font's span-level OpenType feature overrides. |
+| `public virtual Dictionary<string, int> GetOpenTypeFeatures()` | [GetOpenTypeFeatures](#getopentypefeatures): Returns this font's span-level OpenType feature overrides. |
 | `public bool HasChar(int character)` | [HasChar](#haschar): Tests whether this font or a fallback contains a Unicode scalar. |
 | `public string GetSupportedChars()` | [GetSupportedChars](#getsupportedchars): Returns all supported Unicode characters, preserving face order and removing duplicates. |
 | `public Vector2 GetCharSize(int character, int fontSize)` | [GetCharSize](#getcharsize): Measures one character without kerning or contextual shaping. |
@@ -54,6 +54,20 @@ Vector2 size = font.GetStringSize("Hello العربية");
 | `protected override void OnResetState()` | [OnResetState](#onresetstate): Inherited resource graph hook. |
 | `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | [CopyCustomStateTo](#copycustomstateto): Inherited resource graph hook. |
 | `protected override void Dispose(bool disposing)` | [Dispose](#dispose): Inherited resource graph hook. |
+
+## Font instances and metadata
+
+<a id="findvariation"></a>
+`public FontVariation FindVariation(Dictionary<uint, float>? variationCoordinates = null, int faceIndex = 0, float strength = 0, Transform? transform = null, int spacingTop = 0, int spacingBottom = 0, int spacingSpace = 0, int spacingGlyph = 0, float baselineOffset = 0, int paletteIndex = 0, Color[]? customColors = null)` creates a caller-owned [FontVariation](FontVariation.md) borrowing this Font. Configuration uses that resource's validation, independent cache identity and lazy realization. Dispose the returned instance. Invalid configuration fails while constructing the resource; an unavailable face fails when it is realized. Native handles remain internal.
+
+| Signature | Contract |
+| --- | --- |
+| `public Dictionary<uint, FontVariationAxis> GetSupportedVariationList()` | Copies primary-face axis tags and validated minimum/maximum/default design bounds. Empty without axes. |
+| `public int GetPaletteCount()` | Predefined primary-face palette count; zero without CPAL data. |
+| `public Color[] GetPaletteColors(int index)` | Copies predefined colors independently of instance overrides; invalid index fails. |
+| `public string GetPaletteName(int index)` | Optional SFNT palette name; empty when unnamed; invalid index fails. |
+
+All metadata queries reject disposed resources and realize the selected primary face lazily. Snapshots are independent cold allocations. Font.GetOpenTypeFeatures returns empty span settings for FontFile; FontVariation returns its copied span overrides. File-level feature defaults remain separate.
 
 ## Member descriptions
 
@@ -223,7 +237,7 @@ Errors: `ArgumentOutOfRangeException` — The spacing category is invalid.; `Obj
 <a id="getopentypefeatures"></a>
 ### GetOpenTypeFeatures
 
-`public Dictionary<string, int> GetOpenTypeFeatures()`
+`public virtual Dictionary<string, int> GetOpenTypeFeatures()`
 
 Returns this font's span-level OpenType feature overrides.
 
@@ -405,4 +419,4 @@ Uses the inherited [Resource graph/lifecycle contract](Resource.md) for the conc
 
 ## Verification and limits
 
-[FontTests](../../tests/Electron2D.Tests/FontTests.cs) exercises real metrics, ligatures, BiDi, fallbacks, wrapping, justification, character bounds, all six draw entrypoints, native-thread dispatch, graph copying, callback failure and warmed reuse. [FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) supplies the native pixel gate. Empty text, missing glyphs, invalid scalars and disposed resources have explicit checks. Cache misses, public snapshots and first glyph rasterization may allocate; prepared measured paths are checked separately. Public TextServer RID services, font variation/discovery, bitmap/cache authoring and unsupported platforms remain exact [coverage](../coverage/classes/Font.md) gaps. Native allocator counts and owner acceptance are not inferred from managed tests.
+[FontTests](../../tests/Electron2D.Tests/FontTests.cs) exercises real metrics, ligatures, BiDi, fallbacks, wrapping, justification, character bounds, all six draw entrypoints, native-thread dispatch, graph copying, callback failure and warmed reuse. [FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) supplies the native pixel gate. Empty text, missing glyphs, invalid scalars and disposed resources have explicit checks. Cache misses, public snapshots and first glyph rasterization may allocate; prepared measured paths are checked separately. Public TextServer RID services, font discovery, bitmap/cache authoring and unsupported platforms remain exact [coverage](../coverage/classes/Font.md) gaps. Native allocator counts and owner acceptance are not inferred from managed tests.

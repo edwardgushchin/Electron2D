@@ -937,3 +937,6 @@ CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [C
 | [Scene](domains/scene.md) | [Graph authoring](components/graph-authoring.md) | [GraphEdit.PanningSchemeMode](classes/GraphEdit.PanningSchemeMode.md) | [source](../src/Scene/GUI/GraphEdit.cs) | Current | Executable graph authoring; ownership and limits in the component. |
 | [Scene](domains/scene.md) | [Graph authoring](components/graph-authoring.md) | [GraphConnection](classes/GraphConnection.md) | [source](../src/Scene/GUI/GraphEdit.cs) | Current | Executable graph authoring; ownership and limits in the component. |
 | [Scene](domains/scene.md) | [Graph authoring](components/graph-authoring.md) | [GraphSlotMetadata](classes/GraphSlotMetadata.md) | [source](../src/Scene/GUI/GraphNode.cs) | Current | Executable graph authoring; ownership and limits in the component. |
+
+| [Resources](domains/resources.md) | [Text](components/text.md) | [FontVariation](classes/FontVariation.md) | [FontVariation.cs](../src/Scene/Resources/FontVariation.cs) | Current | Independent native font instances and rich font-tag consumer. |
+| [Rendering](domains/rendering.md) | [Text](components/text.md) | [FontVariationAxis](classes/FontVariationAxis.md) | [FontInstance.cs](../src/Servers/Text/FontInstance.cs) | Current | Typed font axis design bounds. |

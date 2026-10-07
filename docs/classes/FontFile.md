@@ -1,6 +1,6 @@
 # FontFile
 
-Last updated: 2026-10-05
+Last updated: 2026-10-07
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -76,8 +76,10 @@ All twelve properties have typed stored descriptors. Data precedes metadata/sett
 
 [FontFileTests](../../tests/Electron2D.Tests/FontFileTests.cs) passes defaults, readable/raw feature equivalence, native glyph effects, negative-feature omission, deferred realization, data/file rollback, 64 MiB limits, metadata, callback ordering/failures, exact copies, graph aliases and typed descriptors. Sixty-four measured scalar configuration cycles after sixty-four warmup cycles allocate zero managed bytes. [NativeFontPrecisionTests](../../tests/Electron2D.Tests/NativeFontPrecisionTests.cs) adds exact metric and raster oracles. These focused results are Linux x64 checks; they do not establish other native platforms, all font/color formats or owner visual acceptance.
 
-Bitmap font parsing/cache authoring, system font discovery/fallback, variable axes/emboldening/transforms, palettes and MSDF retain their own executable integration dependencies. See [coverage](../coverage/classes/FontFile.md), [ADR 0046](../decisions/rendering.md#adr-0046) and [NativeFontPrecision](NativeFontPrecision.md).
+Indexed bitmap/glyph/size/variation/palette cache authoring, system font discovery/fallback and MSDF retain their own executable integration dependencies. Typed FontVariation instances and copied primary-face axis/palette metadata execute separately. See [coverage](../coverage/classes/FontFile.md), [ADR 0046](../decisions/rendering.md#adr-0046) and [NativeFontPrecision](NativeFontPrecision.md).
 
 ## Typed file integration
 
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+Font now exposes copied axis ranges and predefined palette metadata. [FontVariation](FontVariation.md) and Font.FindVariation borrow the encoded source to create independent coordinates, collection face, outline/baseline and palette instances. These resource instances do not implement FontFile mutable indexed cache authoring.

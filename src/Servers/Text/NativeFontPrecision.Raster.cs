@@ -23,6 +23,7 @@ internal sealed unsafe partial class NativeFontPrecision
         {
             CheckFT(FTLoadGlyph(_face, glyph, flags));
             var slot = (GlyphSlotRecord*)((FaceRecord*)_face)->Glyph;
+            ApplyOutlineVariation(slot);
             var radiusPixels = outlineRadius26Dot6 / 64d;
             if (slot->Metrics.Width.Value / 64d + radiusPixels * 2 > 16384 || slot->Metrics.Height.Value / 64d + radiusPixels * 2 > 16384)
                 throw new InvalidOperationException("Font raster dimensions exceed the canvas texture range.");

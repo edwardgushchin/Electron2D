@@ -303,7 +303,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [FoldableGroup](classes/FoldableGroup.md) | Resource | Blocked | 5 |
 | [Font](classes/Font.md) | Resource | Partial | 36 |
 | [FontFile](classes/FontFile.md) | Font | Partial | 89 |
-| [FontVariation](classes/FontVariation.md) | Font | Blocked | 14 |
+| [FontVariation](classes/FontVariation.md) | Font | Implemented | 14 |
 | [FramebufferCacheRD](classes/FramebufferCacheRD.md) | Object | Excluded | 1 |
 | [GDExtension](classes/GDExtension.md) | Resource | Blocked | 7 |
 | [GDExtensionManager](classes/GDExtensionManager.md) | Object | Blocked | 16 |

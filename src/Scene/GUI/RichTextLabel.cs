@@ -81,7 +81,7 @@ public partial class RichTextLabel : Control
     private sealed class FX
     { internal string Kind = ""; internal RichTextEffect? Effect; internal RichTextEffectEnvironment Env = new(); internal FX? Parent; internal double Started; internal int Start; internal readonly OwnedGlyphState State = new(); internal Vector2 PreviousOffset; internal int PreviousScalar = -1; internal uint Seed = (uint)Random.Shared.Next(); }
     private sealed class OwnedGlyphState : CharFXTransform { internal bool Released; protected override void ValidateDisposal() { if (!Released) throw new InvalidOperationException("Glyph state belongs to its effect block."); base.ValidateDisposal(); } }
-    private readonly List<FontFile> _ownedFonts = [];
+    private readonly List<Font> _ownedFonts = [];
     private readonly HashSet<FX> _ownedFX = [];
     private void ReleaseFX() { foreach (var font in _ownedFonts) font.Dispose(); _ownedFonts.Clear(); foreach (var fx in _ownedFX) { fx.State.Released = true; fx.State.Dispose(); } _ownedFX.Clear(); }
     private void PruneOwnedState()

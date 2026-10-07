@@ -271,9 +271,14 @@ internal sealed partial class TextLayout
             }
         }
         var ascent = 0f; var descent = 0f;
-        var sources = _font.GetSources(); var lastSource = start < end && sources.Count > 0 ? 0 : -1;
+        var sources = _font.GetSources(); var lastSource = _options.Styles is null && start < end && sources.Count > 0 ? 0 : -1;
         for (var i = start; i < end; i++)
-            lastSource = Math.Max(lastSource, _faces[i] is null ? sources.Count - 1 : sources.IndexOf(_faces[i]!));
+            if (_options.Styles is null) lastSource = Math.Max(lastSource, _faces[i] is null ? sources.Count - 1 : sources.IndexOf(_faces[i]!));
+            else
+            {
+                var style = StyleAt(i);
+                ascent = Math.Max(ascent, style.Font.GetAscent(style.Size)); descent = Math.Max(descent, style.Font.GetDescent(style.Size));
+            }
         for (var i = 0; i <= lastSource; i++)
         {
             var metrics = sources[i].GetMetrics(Key.FontSize); ascent = Math.Max(ascent, metrics.Ascent); descent = Math.Max(descent, metrics.Descent);
@@ -289,12 +294,14 @@ internal sealed partial class TextLayout
                 continue;
             }
             if (glyph.Face is null) continue; var metrics = glyph.Face.GetMetrics(GlyphSize(glyph));
-            ascent = Math.Max(ascent, metrics.Ascent); descent = Math.Max(descent, metrics.Descent);
+            var styleFont = StyleAt(glyph.Start).Font;
+            ascent = Math.Max(ascent, metrics.Ascent + (_options.Styles is null ? 0 : styleFont.GetSpacing(TextSpacingType.Top)));
+            descent = Math.Max(descent, metrics.Descent + (_options.Styles is null ? 0 : styleFont.GetSpacing(TextSpacingType.Bottom)));
             if (Key.Orientation == TextOrientation.Horizontal) { ascent = Math.Max(ascent, -glyph.Offset.Y); descent = Math.Max(descent, glyph.Offset.Y); }
             else { var halfAdvance = MathF.Round(glyph.Face.GetGlyphAdvance(glyph.Index, GlyphSize(glyph)) * .5f, MidpointRounding.AwayFromZero); ascent = Math.Max(ascent, halfAdvance); descent = Math.Max(descent, halfAdvance); }
         }
         if (ascent == 0 && descent == 0) { ascent = _font.GetAscent(Key.FontSize); descent = _font.GetDescent(Key.FontSize); }
-        else { ascent += _font.GetSpacing(TextSpacingType.Top); descent += _font.GetSpacing(TextSpacingType.Bottom); }
+        else if (_options.Styles is null) { ascent += _font.GetSpacing(TextSpacingType.Top); descent += _font.GetSpacing(TextSpacingType.Bottom); }
         var paragraphLevel = start < _count ? _paragraphLevels[start] : Key.Direction == TextDirection.RTL ? 1 : 0;
         var width = LayoutAdvance(); var glyphStart = _rawGlyphs.Count; _rawGlyphs.AddRange(_lineGlyphs);
         _lines.Add(new(start, end, glyphStart, _lineGlyphs.Count, width, ascent, descent, 0, paragraphEnd, paragraphLevel));
@@ -382,7 +389,7 @@ internal sealed partial class TextLayout
                 ? (run.Level & 1) == 0 ? NativeTextDirection.TTB : NativeTextDirection.BTT
                 : (run.Level & 1) == 0 ? NativeTextDirection.LTR : NativeTextDirection.RTL;
             _shaped.Clear(); run.Face.Shape(_shapeScalars, run.Start - start, run.End - run.Start, runStyle.Size, direction,
-                TextScript.ToTag(run.Script), runStyle.Language, _shaped, textLength: length);
+                TextScript.ToTag(run.Script), runStyle.Language, _shaped, features: runStyle.Font.GetShapingFeatures(run.Face), textLength: length);
             for (var i = run.Start; i < run.End; i++) _clusterEnds[i] = run.End;
             foreach (var shaped in _shaped)
             {
@@ -393,8 +400,13 @@ internal sealed partial class TextLayout
             var nextCluster = run.End;
             for (var i = run.End - 1; i >= run.Start; i--)
                 if (_clusterEnds[i] == i) { _clusterEnds[i] = nextCluster; nextCluster = i; }
-            foreach (var shaped in _shaped)
+            var spacingEnd = _count;
+            while (spacingEnd > 0 && (_scalars[spacingEnd - 1] is 10 or 11 or 12 or 13 or 0x85 or 0x2028 or 0x2029 || IsIgnorable(spacingEnd - 1))) spacingEnd--;
+            var lastAdvance = _shaped.Count;
+            if (run.End >= spacingEnd) for (var i = _shaped.Count - 1; i >= 0; i--) { lastAdvance = i; if ((Key.Orientation == TextOrientation.Vertical ? _shaped[i].YAdvance : _shaped[i].XAdvance) != 0) break; }
+            for (var shapedIndex = 0; shapedIndex < _shaped.Count; shapedIndex++)
             {
+                var shaped = _shaped[shapedIndex];
                 var cluster = start + (int)shaped.Cluster; var clusterEnd = _clusterEnds[cluster];
                 var advance = (Key.Orientation == TextOrientation.Vertical ? -shaped.YAdvance : shaped.XAdvance) / 64f;
                 var space = IsSpace(_scalars[cluster]);
@@ -404,7 +416,12 @@ internal sealed partial class TextLayout
                     continue;
                 }
                 if (shaped.GlyphIndex == 0) advance = 0;
-                if (advance != 0) advance += runStyle.Font.GetSpacing(space ? TextSpacingType.Space : TextSpacingType.Glyph);
+                if (advance != 0)
+                {
+                    var spaceSpacing = space ? runStyle.Font.GetSpacing(TextSpacingType.Space) : 0;
+                    var extraSpacing = spaceSpacing != 0 ? spaceSpacing : runStyle.Font.GetSpacing(TextSpacingType.Glyph);
+                    if (shapedIndex < lastAdvance) advance += extraSpacing;
+                }
                 _lineGlyphs.Add(new(run.Face, shaped.GlyphIndex, cluster, clusterEnd, advance,
                     shaped.GlyphIndex == 0 ? Vector2.Zero : new(shaped.XOffset / 64f, -shaped.YOffset / 64f), shaped.Flags, space, false, Size: runStyle.Size));
             }

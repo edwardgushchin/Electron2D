@@ -14,3 +14,5 @@ Pinned source revision: `ed1daf0bf001b61586d9930840f2f1394092c079`. Files are co
 These fixtures and their accompanying licenses are test-only and are not embedded in Electron2D.dll or application publishes. The Open Sans fixture uses the engine's embedded resource.
 
 `ColorTest.ttf` is an engine-authored COLR/CPAL fixture under the repository MIT license: glyph A consists of adjacent red/blue rectangles. Rebuild it with `python3 tools/coverage/generate_color_font.py` (fontTools 4.65.0 was used). It contains no third-party font outlines.
+
+`VariationTest.ttf`, `PaletteTest.ttf` and `CollectionTest.ttc` are engine-authored rectangular-outline fixtures under the repository MIT license. They exercise one wght design axis (100..900), two named COLR/CPAL palettes and two collection faces. Rebuild with `python3 -B tools/coverage/generate_variation_font.py`; repeated generation produces identical bytes. They contain no third-party outlines.

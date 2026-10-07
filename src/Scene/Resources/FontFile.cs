@@ -245,7 +245,7 @@ public class FontFile : Font
         }
         EmitChanged();
     }
-    private static NativeFontFeature[] CompileFeatures(Dictionary<string, int> features)
+    internal static NativeFontFeature[] CompileFeatures(Dictionary<string, int> features)
     {
         var result = new NativeFontFeature[features.Count(static pair => pair.Value >= 0)]; var index = 0;
         foreach (var pair in features)

@@ -82,7 +82,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             finally { HBFontFuncsDestroy(funcs); }
             _buffer = HBBufferCreate();
             if (_buffer == 0 || HBBufferAllocationSuccessful(_buffer) == 0) throw new OutOfMemoryException();
-            SetSize(16);
+            SetSize(16); ReadVariationMetadata();
         }
         catch { Release(); throw; }
     }
@@ -374,6 +374,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         internal uint Format;
         internal RasterBitmap Bitmap;
         internal int BitmapLeft, BitmapTop;
+        internal FTOutline Outline;
     }
     [StructLayout(LayoutKind.Sequential)] private struct HBGlyphExtents { internal int XBearing, YBearing, Width, Height; }
     [StructLayout(LayoutKind.Sequential)] private struct GlyphInfo { internal uint Codepoint, Mask, Cluster, Var1, Var2; }

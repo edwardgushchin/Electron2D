@@ -1456,3 +1456,5 @@ Gets or sets the reveal fraction.
 ## Verification and limits
 
 See the rich-text component for actual tests, native artifacts, prepared allocation bounds and exact missing dependencies.
+
+Font tags now create independent FontVariation spans borrowing generic Font resources, including spacing, embolden, collection face, slant, variable coordinates and feature options with their documented aliases. See [Text](../components/text.md) for the native instance and cache contract. Script resource installation remains its own dependency.
