@@ -7,6 +7,13 @@ managed CPU compatibility backend. Implementation is in progress. The existing
 public physics API still selects CPU; no production GPU/fallback selector has
 been exposed yet.
 
+The required selector lets a game developer deliberately choose CPU/Box2D.NET
+or GPU for the application's goals. CPU is a first-class backend even on a
+GPU-capable device. Automatic startup fallback is a separate configurable
+policy; requested and actual selection must be observable. Physics backend
+choice is independent of the renderer. Live migration of an existing world
+is not yet implemented or claimed.
+
 `GPUPhysicsWorld` executes velocity/delta-pose integration and the colored and
 overflow contact solver: warm start, speculative/soft bias, one/two contact
 points, friction, tangent speed, rolling resistance and restitution. Revolute
