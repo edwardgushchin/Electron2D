@@ -52,6 +52,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         world.integrateBodyStage = null!;
         world.solveConstraints = gpu.Solve;
         world.generateManifolds = gpu.GenerateManifolds;
+        world.findBroadPhasePairs = gpu.FindBroadPhasePairs;
         return gpu;
     }
     private Vector2 _defaultGravity;
@@ -491,6 +492,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         b2GetWorldFromId(_worldID).integrateBodyStage = null!;
         b2GetWorldFromId(_worldID).solveConstraints = null!;
         b2GetWorldFromId(_worldID).generateManifolds = null!;
+        b2GetWorldFromId(_worldID).findBroadPhasePairs = null!;
         _gpuWorld?.Dispose();
         foreach (var joint in _joints) joint.DetachBackend();
         _joints.Clear();

@@ -21,6 +21,22 @@ and wheel constraints execute on GPU, including springs, motors and limits.
 These implement the current PinJoint and GrooveJoint backend constraint roles.
 The spring-joint force preflight/application still belongs to CPU world setup.
 
+Broad-phase AABB traversal now runs on GPU before manifold generation. The owner
+packs the current static/kinematic/dynamic trees as 32-byte threaded nodes and
+32-byte moved-proxy queries. Escape links preserve the existing child2-first
+visitation order without a shader stack limit. Dynamic queries visit kinematic,
+static and dynamic trees; other proxies visit only the dynamic tree. Fat bounds
+and zero-category pruning match the CPU search. The GPU emits real candidate
+proxy keys; it does not receive CPU-generated overlap pairs.
+
+Each query retains a power-of-two candidate capacity. A normal batch uses one
+submission/readback; overflow reports the full count and repeats the unchanged
+GPU query after growing storage, before invoking any pair filters or creating
+contacts. There is no density cap or truncated-pair fallback. Existing-pair and
+moved-pair deduplication, shape/body/joint/user filters, contact creation and tree
+maintenance remain managed. Buffers and per-shape capacity hints retain their peak
+size; new topology/capacity can allocate outside the warmed checks.
+
 Contact geometry is generated on GPU for all nine registered pair families
 among circles, capsules, two-sided segments and convex polygons (up to eight
 vertices, including rounded polygons). SAT, edge clipping and vertex contacts
@@ -70,8 +86,8 @@ managed preflight. Solved contact impulses publish directly to their manifolds,
 without a CPU SIMD preparation/store pass. Joint frames and coefficients publish
 with impulses for subsequent queries and finalization.
 
-The solver and manifold callbacks run on the world owner. CPU pair generation,
-sleep/CCD finalization and queries remain in the managed
+The tree, solver and manifold callbacks run on the world owner. Tree maintenance,
+pair filtering/contact creation, sleep/CCD finalization and queries remain in the managed
 backend; large worlds retain CPU contact-update workers. There is no production
 backend selector yet. A GPU failure drains pending CPU tasks, releases scratch
 ownership and rejects replay while permitting world disposal. This hybrid stage
@@ -187,7 +203,7 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: GPU broad phase, chain manifolds, GPU contact transitions without full manifold/history readback, spring
+Remaining work: GPU tree maintenance and pair filtering/contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -217,3 +233,45 @@ sleep reset, cap bounds/ties and zero warmed all-thread managed allocation. One 
 GPU run passed all physics checks and then aborted inside GTK/libdecor while opening
 a renderer-lifetime test window; a fresh identical run passed completely. This
 intermittent native-window failure was not fixed by the contact change.
+
+The broad-phase oracle compares final pairs and custom-filter callback order against
+CPU tree queries at 0, 1, 63, 64, 65, 257 and 4,097 bodies. It includes all body
+modes, compound shapes, sensors, 64-bit masks, positive/negative groups, joint veto,
+existing pairs, single/both moved proxies, destroyed/reused slots, refiltering,
+teleport and tree rebuild. A fully overlapping 257-body case forces GPU output
+and the shared pair arena beyond their original estimates. Forty warmup passes
+precede sixteen measured unchanged-topology passes with zero all-thread managed
+bytes. Pair-stage failure after a completed GPU query poisons the world, rejects
+replay and still permits disposal. These checks are also available through
+`ELECTRON2D_TEST_GPU_BROAD_PHASE=1`.
+
+Four sequential maximum-Smash runs of the same final binary compared GPU tree
+traversal with the existing CPU worker traversal (GPU solver/manifolds in both).
+Each used 65,537 bodies, 32 warmup and 64 measured headless ticks. Run order was
+GPU A, CPU A, CPU B, GPU B; no build, formatter or other test ran concurrently.
+
+| Pair traversal | Whole step mean | Step p95 | Pair stage mean | All-thread managed bytes |
+| --- | ---: | ---: | ---: | ---: |
+| GPU A | 176.47 ms | 274.19 ms | 20.29 ms | 0 |
+| CPU A | 165.50 ms | 255.79 ms | 11.00 ms | 0 |
+| CPU B | 161.18 ms | 245.59 ms | 10.71 ms | 0 |
+| GPU B | 172.90 ms | 263.16 ms | 19.29 ms | 0 |
+
+All four final state hashes were
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`,
+with the same 6,425→41,122 awake-body progression. This hybrid GPU stage is
+slower than CPU pair traversal on this host. Full-tree packing/transfer,
+readback and serial managed filtering/contact creation remain on the path;
+these timings do not isolate GPU execution or prove which individual cost
+accounts for the difference. The initial exact-count/two-submission version
+was replaced by retained per-query capacities to avoid a mandatory second
+fence; that change alone does not establish a speedup. The unmodified baseline
+at `266ecc05` averaged 188.80 ms (pairs 13.18 ms), illustrating why the final
+same-binary repeated comparison is the relevant result.
+
+The test-only `ELECTRON2D_SANDBOX_PROFILE_CPU_PAIRS=1` selects CPU traversal for
+this comparison; it does not add public backend selection or recovery fallback.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-pairs-final-{a,b}.json`;
+initial evidence is `profile-Release-gpu-pairs-before.json` and
+`profile-Release-gpu-pairs-initial.json`. Shader binary SHA-256:
+`265c455c256b04207dc1b9655b90997eb483f72c9d24ae2ef524bc65a85a9855`.

@@ -45,6 +45,8 @@ internal static partial class PhysicsSandboxTests
             {
                 var gpuSpace = scene.Colliders.OfType<PhysicsBody>().First().Space!;
                 gpu = gpuSpace.EnableGPUSolver();
+                if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_CPU_PAIRS") == "1")
+                    Box2D.NET.B2Worlds.b2GetWorldFromId(gpuSpace.WorldID).findBroadPhasePairs = null!;
                 if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_UPLOAD_MANIFOLDS") == "1")
                     Box2D.NET.B2Worlds.b2GetWorldFromId(gpuSpace.WorldID).solveConstraints = context =>
                     {

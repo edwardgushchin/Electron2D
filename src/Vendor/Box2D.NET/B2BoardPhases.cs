@@ -421,12 +421,19 @@ namespace Box2D.NET
             b2AtomicStoreInt(ref b2_probeCount, 0);
 #endif
 
-            int minRange = 64;
-            object userPairTask = world.enqueueTaskFcn(b2FindPairsTask, moveCount, minRange, world, world.userTaskContext);
-            if (userPairTask != null)
+            if (world.findBroadPhasePairs != null)
             {
-                world.finishTaskFcn(userPairTask, world.userTaskContext);
-                world.taskCount += 1;
+                world.findBroadPhasePairs(world);
+            }
+            else
+            {
+                int minRange = 64;
+                object userPairTask = world.enqueueTaskFcn(b2FindPairsTask, moveCount, minRange, world, world.userTaskContext);
+                if (userPairTask != null)
+                {
+                    world.finishTaskFcn(userPairTask, world.userTaskContext);
+                    world.taskCount += 1;
+                }
             }
 
             // todo_erin could start tree rebuild here

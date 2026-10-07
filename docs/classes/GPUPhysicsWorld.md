@@ -4,17 +4,26 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
+integration, broad-phase tree traversal, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
 Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
 inputs and optional 80-byte geometry overrides. GPU/transfer buffers grow together
 before use and retain their capacity.
+
+`FindBroadPhasePairs` packs the three current trees into threaded pre-order and
+executes moved-proxy fat-AABB queries on GPU. Node and query records are each
+32 bytes; returned candidates are 4-byte proxy keys. Per-query retained capacities
+permit a single warmed submission. Overflow returns its full count and grows/retries
+the immutable query before publishing candidates to the shared pair filter. CPU
+pair and custom-filter order is preserved, including deleted/reused proxy slots.
+`BroadPhaseCandidateCount` and `BroadPhaseRetryCount` describe the latest query batch.
+No moved proxies means no submission. Tree maintenance and filtering remain CPU.
 
 `GenerateManifolds` packs geometry once per referenced shape, current pair
 transforms and fat-proxy overlap, then generates all contact points in one
@@ -24,8 +33,8 @@ warm-start reuse execute on GPU. Current contacts read the retained previous
 solver buffer; cold/stale contacts upload 32-byte histories. Empty histories
 need no upload. The complete result is validated before reaching material,
 pre-solve and contact-transition processing in the managed world. Chain
-segments are rejected explicitly; broad-phase pairs and sensor queries still
-belong to the CPU path.
+segments are rejected explicitly; tree maintenance, pair filters/contact creation
+and sensor queries still belong to the CPU path.
 
 `Integrate` requires the live world owner. It packs awake states, submits the
 integration kernel, waits for the submission fence, verifies every returned

@@ -5,8 +5,8 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-// GPU integration, manifolds and constraints execute here; pairs and sleep/CCD
-// still use the compatibility world until their GPU stages are connected.
+// GPU tree traversal, integration, manifolds and constraints execute here;
+// tree maintenance, pair filtering and sleep/CCD still use the shared world.
 internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -21,7 +21,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate, _solve, _collide;
+    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase;
     private readonly Storage<Body> _bodyStorage;
     private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -32,7 +32,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
     internal GPUPhysicsWorld()
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null, solve = null, collide = null;
+        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null;
         try
         {
             device = RenderingServer.Service?.RetainComputeDevice() ??
@@ -42,14 +42,16 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _integrate = integrate = CreatePipeline("PhysicsIntegrate.comp.spv");
             _solve = solve = CreatePipeline("PhysicsSolve.comp.spv");
             _collide = collide = CreatePipeline("PhysicsCollide.comp.spv");
+            _broadPhase = broadPhase = CreatePipeline("PhysicsBroadPhase.comp.spv");
             _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
             _contactInputStorage = new(this); _fallbackManifoldStorage = new(this);
             _historyStorage = new(this); _matchedStorage = new(this);
             _geometryStorage = new(this); _pairStorage = new(this); _manifoldStorage = new(this);
+            _treeStorage = new(this); _treeQueryStorage = new(this); _treeCandidateStorage = new(this);
         }
         catch
         {
-            collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
             throw;
         }
     }
@@ -168,6 +170,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         if (_disposed) return;
         EnsureOwner();
         _disposed = true; _manifoldContext = null; _solvedWorld = null;
+        _treeStorage.Dispose(); _treeQueryStorage.Dispose(); _treeCandidateStorage.Dispose(); _broadPhase.Dispose();
         _historyStorage.Dispose(); _matchedStorage.Dispose();
         _geometryStorage.Dispose(); _pairStorage.Dispose(); _manifoldStorage.Dispose(); _collide.Dispose();
         _contactInputStorage.Dispose(); _fallbackManifoldStorage.Dispose();

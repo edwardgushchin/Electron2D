@@ -33,4 +33,6 @@ Local boundary and compiler adaptations:
 
 16. Scalar/SIMD contact constraints accumulate signed tangential impulse across warm starting and all solve substeps, alongside the existing normal sum. Manifold points publish both totals. Contact simulations record their native solve epoch through creation/copy/CPU store and GPU publication; sleeping retained manifolds cannot be mistaken for a new solve. Electron2D combines reported feature impulses across internal kinematic intervals and uses bounded depth-priority snapshots. GPU working records retain their layout by using reserved endpoint-vector fourth components for the two tangent totals.
 
+17. An optional owner-thread broad-phase callback replaces only the tree-query task. The common move-result arena, filters/deduplication and deterministic contact creation stay shared. GPU traversal returns candidates in the CPU tree order and retries capacity overflow before publishing. Callback teardown/reset releases the GPU host reference. CPU worlds retain the original worker traversal when the callback is absent.
+
 The library remains an internal backend. Electron2D public signatures use only Electron2D-owned types. Review every upstream update against this pinned version, license, internalization and integration tests before replacing these files.
