@@ -44,6 +44,15 @@ internal sealed partial class PhysicsSpace : IDisposable
         b2GetWorldFromId(_worldID).integrateBodyStage = gpu.Integrate;
         return _gpuWorld = gpu;
     }
+
+    internal GPUPhysicsWorld EnableGPUSolver()
+    {
+        var gpu = EnableGPUIntegration();
+        var world = b2GetWorldFromId(_worldID);
+        world.integrateBodyStage = null!;
+        world.solveConstraints = gpu.Solve;
+        return gpu;
+    }
     private Vector2 _defaultGravity;
     private readonly int _ownerThreadID = Environment.CurrentManagedThreadId;
     internal PhysicsAreaFields DefaultAreaFields { get; }
@@ -410,7 +419,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             var hasKinematicBodies = PrepareBodyStates(delta);
             _contactStep++;
             var world = b2GetWorldFromId(_worldID);
-            world.workerCount = _gpuWorld is null && world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks.WorkerCount : 1;
+            world.workerCount = (_gpuWorld is null || world.solveConstraints is not null) && world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks.WorkerCount : 1;
             RecordStepPhase(2, ref profileMark);
             StepKinematicPaths(delta, hasKinematicBodies);
             RecordStepPhase(3, ref profileMark);
@@ -474,6 +483,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
         _tasks.Dispose();
         b2GetWorldFromId(_worldID).integrateBodyStage = null!;
+        b2GetWorldFromId(_worldID).solveConstraints = null!;
         _gpuWorld?.Dispose();
         foreach (var joint in _joints) joint.DetachBackend();
         _joints.Clear();

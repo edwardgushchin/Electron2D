@@ -2,22 +2,25 @@
 
 Last updated: 2026-10-07
 
-**Declaration:** `internal sealed unsafe class GPUPhysicsWorld : IDisposable`
+**Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration. It retains the rendering device when available or creates a
+integration, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
-80-byte body records and 32-byte step uniforms have matching compute layouts.
-GPU/transfer buffers grow together before use and retain their capacity.
+80-byte body records and 32-byte integration/48-byte solver uniforms have matching compute layouts.
+Contact/joint records occupy 176/160 bytes. GPU/transfer buffers grow together
+before use and retain their capacity.
 
 `Integrate` requires the live world owner. It packs awake states, submits the
 integration kernel, waits for the submission fence, verifies every returned
 pose/velocity is finite, then publishes the result into the managed query mirror.
-`Dispose` releases buffers, pipeline, device reference and video reference on
+`Solve` retains states across all four substeps, preserves colored/overflow
+ordering, then publishes poses and accumulated contact/joint impulses after one
+submission fence. `Dispose` releases buffers, pipelines, device reference and video reference on
 that owner; repeated disposal is inert. Partial native-resource creation releases
 already created resources before throwing. No handles or backend types are public.
 
@@ -25,6 +28,6 @@ already created resources before throwing. No handles or backend types are publi
 
 [GPUPhysicsTests](../../tests/Electron2D.Tests/GPUPhysicsTests.cs) selects real SDL
 compute execution through `ELECTRON2D_TEST_GPU_PHYSICS=1`. CPU integration is the
-numeric comparison source. Current tests do not establish a full GPU solver,
+numeric comparison source. Current tests do not establish a full GPU physics world,
 cross-device determinism or sustained application frame rate. See the component
 status for remaining world stages and backend selection/fallback work.

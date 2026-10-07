@@ -1,13 +1,14 @@
 using Box2D.NET;
 using Electron2D;
 
-internal static class GPUPhysicsTests
+internal static partial class GPUPhysicsTests
 {
     internal static void Run()
     {
         using var gpu = new GPUPhysicsWorld();
         foreach (var count in new[] { 1, 63, 64, 65, 4097, 65536 }) VerifyIntegration(gpu, count);
-        VerifyWorld();
+        VerifyConstraints(gpu);
+        VerifyWorld(false); VerifyWorld(true);
         VerifyDeviceLifetime("gpu");
         VerifyDeviceLifetime("compatibility");
         Console.WriteLine($"GPU integration passed on {gpu.Driver}: forces, damping, locks, speed limits, rotations and dispatch boundaries.");
@@ -16,17 +17,22 @@ internal static class GPUPhysicsTests
     private static B2StepContext Context(int count)
     {
         var world = new B2World { gravity = new(1.25f, 9.8f) };
-        world.solverSets.data = [new(), new(), new()];
+        world.solverSets.data = [new(), new(), new()]; world.solverSets.count = world.solverSets.capacity = 3;
         world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.count = count;
-        return new B2StepContext
+        var result = new B2StepContext
         {
             world = world,
             h = 1f / 240,
             inv_dt = 60,
+            inv_h = 240,
+            subStepCount = 4,
             maxLinearVelocity = 400,
             states = new B2BodyState[count],
             sims = new B2BodySim[count]
         };
+        world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.data = result.states;
+        world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.data = result.sims;
+        return result;
     }
 
     private static void VerifyIntegration(GPUPhysicsWorld gpu, int count)
@@ -87,7 +93,7 @@ internal static class GPUPhysicsTests
             throw new InvalidOperationException($"GPU integration differs: CPU {expected}, GPU {actual}.");
     }
 
-    private static void VerifyWorld()
+    private static void VerifyWorld(bool solver)
     {
         var cpuSpace = PhysicsServer.SpaceCreate(); var gpuSpace = PhysicsServer.SpaceCreate();
         var circle = PhysicsServer.CircleShapeCreate(); var rectangle = PhysicsServer.RectangleShapeCreate();
@@ -105,7 +111,7 @@ internal static class GPUPhysicsTests
                 PhysicsServer.BodySetSpace(floor, space); PhysicsServer.BodySetSpace(body, space);
                 PhysicsServer.SpaceSetActive(space, true);
             }
-            var world = PhysicsServer.Service.GetSceneSpace(gpuSpace); var gpu = world.EnableGPUIntegration();
+            var world = PhysicsServer.Service.GetSceneSpace(gpuSpace); var gpu = solver ? world.EnableGPUSolver() : world.EnableGPUIntegration();
             var callbacks = 0; PhysicsServer.BodySetForceIntegrationCallback(gpuBody, _ => callbacks++);
             for (var tick = 0; tick < 120; tick++)
             {
@@ -119,7 +125,8 @@ internal static class GPUPhysicsTests
             using var query = new PhysicsPointQueryParameters { Position = view.Transform.Origin };
             if (!PhysicsServer.SpaceGetDirectState(gpuSpace).IntersectPoint(query).Any(hit => hit.ColliderRID == gpuBody))
                 throw new InvalidOperationException("GPU-published body poses must reach direct queries.");
-            Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).integrateBodyStage = (_, _) => throw new IOException("injected GPU failure");
+            if (solver) Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).solveConstraints = _ => throw new IOException("injected GPU failure");
+            else Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).integrateBodyStage = (_, _) => throw new IOException("injected GPU failure");
             PhysicsServer.BodySetLinearVelocity(gpuBody, new(10, 0));
             try { PhysicsServer.SpaceStep(gpuSpace, 1d / 60); throw new Exception("GPU failure was not reported."); }
             catch (AggregateException ex) when (ex.InnerExceptions.Any(e => e is IOException)) { }

@@ -1888,9 +1888,13 @@ public enum b2SolverBlockType
 
                     workerContext[i].context = stepContext;
                     workerContext[i].workerIndex = i;
-                    workerContext[i].userTask = world.enqueueTaskFcn(SolverTask, 1, 1, workerContext[i], world.userTaskContext);
-                    world.taskCount += 1;
-                    world.activeTaskCount += workerContext[i].userTask == null ? 0 : 1;
+                    workerContext[i].userTask = null;
+                    if (world.solveConstraints == null)
+                    {
+                        workerContext[i].userTask = world.enqueueTaskFcn(SolverTask, 1, 1, workerContext[i], world.userTaskContext);
+                        world.taskCount += 1;
+                        world.activeTaskCount += workerContext[i].userTask == null ? 0 : 1;
+                    }
                 }
 
                 // Finish island split
@@ -1901,6 +1905,19 @@ public enum b2SolverBlockType
                 }
 
                 world.splitIslandId = B2_NULL_INDEX;
+
+                if (world.solveConstraints != null)
+                {
+                    ulong gpuPrepareTicks = b2GetTicks();
+                    b2PrepareJointsTask(0, awakeJointCount, stepContext);
+                    b2PrepareContactsTask(0, simdContactCount, stepContext);
+                    b2PrepareOverflowJoints(stepContext);
+                    b2PrepareOverflowContacts(stepContext);
+                    world.profile.prepareConstraints += b2GetMillisecondsAndReset(ref gpuPrepareTicks);
+                    world.solveConstraints(stepContext);
+                    b2StoreOverflowImpulses(stepContext);
+                    b2StoreImpulsesTask(0, simdContactCount, stepContext);
+                }
 
                 // Finish constraint solve
                 for (int i = 0; i < workerCount; ++i)

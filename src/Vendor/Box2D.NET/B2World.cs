@@ -13,6 +13,7 @@ namespace Box2D.NET
     internal class B2World
     {
         internal System.Action<B2SolverStageType, B2StepContext> integrateBodyStage;
+        internal System.Action<B2StepContext> solveConstraints;
         internal readonly B2StepContext reusableStepContext = new B2StepContext();
         internal readonly ArraySegment<B2SolverBlock>[] reusableGraphColorBlocks = new ArraySegment<B2SolverBlock>[B2Constants.B2_GRAPH_COLOR_COUNT];
         public B2ArenaAllocator arena;

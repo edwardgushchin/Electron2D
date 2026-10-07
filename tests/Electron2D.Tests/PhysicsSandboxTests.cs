@@ -27,6 +27,8 @@ internal static partial class PhysicsSandboxTests
             if (current is not null) { root.RemoveChild(current); current.Dispose(); }
             current = new PhysicsScene(index, font);
             root.AddChild(current);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1")
+                current.Colliders.OfType<PhysicsBody>().First().Space!.EnableGPUSolver();
         }
         for (var index = 0; index < SandboxWindow.SceneNames.Length; index++)
         {

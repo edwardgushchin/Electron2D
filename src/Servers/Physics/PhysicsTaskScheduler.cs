@@ -78,6 +78,12 @@ internal sealed class PhysicsTaskScheduler : IDisposable
         if (job.Failure is { } failure) throw new InvalidOperationException("Physics worker failed.", failure);
     }
 
+    internal void Drain()
+    {
+        foreach (var job in _jobs)
+            if (job.InUse) { job.Done.WaitOne(); job.InUse = false; }
+    }
+
     private void Run(int index)
     {
         while (true)

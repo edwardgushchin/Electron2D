@@ -5,9 +5,9 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-// GPU integration is the first executing stage of the GPU world. Collision and constraints
-// still use the compatibility solver until their GPU kernels are connected.
-internal sealed unsafe class GPUPhysicsWorld : IDisposable
+// GPU integration and constraints execute here; collision/preparation and sleep/CCD
+// still use the compatibility world until their GPU stages are connected.
+internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
     private struct Body
@@ -21,9 +21,9 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate;
-    private RenderHandle? _bodies, _upload, _download;
-    private Body[] _data = [];
+    private readonly RenderHandle _device, _integrate, _solve;
+    private readonly Storage<Body> _bodyStorage;
+    private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
     private bool _disposed;
     internal string Driver { get; }
@@ -32,24 +32,20 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
     internal GPUPhysicsWorld()
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null;
+        RenderHandle? device = null, integrate = null, solve = null;
         try
         {
             device = RenderingServer.Service?.RetainComputeDevice() ??
                 new RenderHandle(SDL.CreateGPUDevice(ShaderCompiler.GetFormats(), false, null), SDL.DestroyGPUDevice);
             _device = device;
             Driver = SDL.GetGPUDeviceDriver(Device) ?? "unknown";
-            using var source = typeof(GPUPhysicsWorld).Assembly.GetManifestResourceStream("Electron2D.PhysicsShaders.PhysicsIntegrate.comp.spv")
-                ?? throw new InvalidOperationException("The physics integration shader is missing.");
-            using var bytes = new MemoryStream();
-            source.CopyTo(bytes);
-            integrate = new RenderHandle(ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray()),
-                handle => SDL.ReleaseGPUComputePipeline(Device, handle), _device);
-            _integrate = integrate;
+            _integrate = integrate = CreatePipeline("PhysicsIntegrate.comp.spv");
+            _solve = solve = CreatePipeline("PhysicsSolve.comp.spv");
+            _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
         }
         catch
         {
-            integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
             throw;
         }
     }
@@ -64,28 +60,12 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU physics requires the world owner thread.");
     }
 
-    private void Reserve(int count)
+    private RenderHandle CreatePipeline(string name)
     {
-        if (count <= _data.Length) return;
-        var capacity = checked((int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(64, count)));
-        var size = checked((uint)(capacity * sizeof(Body)));
-        var info = new SDL.GPUBufferCreateInfo { Size = size, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite };
-        using var replacement = new BufferReplacement();
-        replacement.Bodies = new(SDL.CreateGPUBuffer(Device, in info), handle => SDL.ReleaseGPUBuffer(Device, handle), _device);
-        var transfer = new SDL.GPUTransferBufferCreateInfo { Size = size, Usage = SDL.GPUTransferBufferUsage.Upload };
-        replacement.Upload = new(SDL.CreateGPUTransferBuffer(Device, in transfer), handle => SDL.ReleaseGPUTransferBuffer(Device, handle), _device);
-        transfer.Usage = SDL.GPUTransferBufferUsage.Download;
-        replacement.Download = new(SDL.CreateGPUTransferBuffer(Device, in transfer), handle => SDL.ReleaseGPUTransferBuffer(Device, handle), _device);
-        var data = new Body[capacity];
-        _bodies?.Dispose(); _upload?.Dispose(); _download?.Dispose();
-        (_bodies, _upload, _download, _data) = (replacement.Bodies, replacement.Upload, replacement.Download, data);
-        replacement.Bodies = replacement.Upload = replacement.Download = null;
-    }
-
-    private sealed class BufferReplacement : IDisposable
-    {
-        internal RenderHandle? Bodies, Upload, Download;
-        public void Dispose() { Bodies?.Dispose(); Upload?.Dispose(); Download?.Dispose(); }
+        using var source = typeof(GPUPhysicsWorld).Assembly.GetManifestResourceStream("Electron2D.PhysicsShaders." + name)
+            ?? throw new InvalidOperationException("The physics shader is missing: " + name);
+        using var bytes = new MemoryStream(); source.CopyTo(bytes);
+        return new(ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray()), handle => SDL.ReleaseGPUComputePipeline(Device, handle), _device);
     }
 
     internal void Integrate(B2SolverStageType stage, B2StepContext context)
@@ -95,7 +75,20 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
         if (count == 0) return;
         if (stage is not (B2SolverStageType.b2_stageIntegrateVelocities or B2SolverStageType.b2_stageIntegratePositions))
             throw new ArgumentOutOfRangeException(nameof(stage));
-        Reserve(count);
+        _bodyStorage.Reserve(count);
+        PackBodies(context, count);
+        var settings = new Step
+        {
+            Values = new(context.world.gravity.X, context.world.gravity.Y, context.h, context.maxLinearVelocity),
+            Control = new(B2Constants.B2_MAX_ROTATION * context.inv_dt,
+                stage == B2SolverStageType.b2_stageIntegrateVelocities ? 0 : 1, count, 0)
+        };
+        Dispatch(count, in settings);
+        PublishBodies(context, count);
+    }
+
+    private void PackBodies(B2StepContext context, int count)
+    {
         for (var i = 0; i < count; i++)
         {
             var state = context.states[i]; var sim = context.sims[i];
@@ -108,13 +101,10 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
                 Flags = new(sim.flags, 0, 0, 0)
             };
         }
-        var settings = new Step
-        {
-            Values = new(context.world.gravity.X, context.world.gravity.Y, context.h, context.maxLinearVelocity),
-            Control = new(B2Constants.B2_MAX_ROTATION * context.inv_dt,
-                stage == B2SolverStageType.b2_stageIntegrateVelocities ? 0 : 1, count, 0)
-        };
-        Dispatch(count, in settings);
+    }
+
+    private void PublishBodies(B2StepContext context, int count)
+    {
         // Validate the complete result before publishing it into the live CPU query/state mirror.
         for (var i = 0; i < count; i++)
         {
@@ -134,11 +124,6 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
 
     private void Dispatch(int count, in Step settings)
     {
-        var size = checked((uint)(count * sizeof(Body)));
-        var mapped = SDL.MapGPUTransferBuffer(Device, _upload!.DangerousGetHandle(), true);
-        if (mapped == 0) throw Failure("map the body upload buffer");
-        try { fixed (Body* source = _data) Buffer.MemoryCopy(source, (void*)mapped, size, size); }
-        finally { SDL.UnmapGPUTransferBuffer(Device, _upload.DangerousGetHandle()); }
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw Failure("acquire integration commands");
         nint fence = 0;
@@ -146,11 +131,10 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
         {
             var copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin the body upload");
-            SDL.UploadToGPUBuffer(copy, new SDL.GPUTransferBufferLocation { TransferBuffer = _upload.DangerousGetHandle() },
-                new SDL.GPUBufferRegion { Buffer = _bodies!.DangerousGetHandle(), Size = size }, true);
+            _bodyStorage.Upload(copy, count);
             SDL.EndGPUCopyPass(copy);
             Span<SDL.GPUStorageBufferReadWriteBinding> binding = stackalloc SDL.GPUStorageBufferReadWriteBinding[1];
-            binding[0] = new() { Buffer = _bodies.DangerousGetHandle() };
+            binding[0] = new() { Buffer = _bodyStorage.Handle };
             var compute = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, binding, 1);
             if (compute == 0) throw Failure("begin body integration");
             SDL.BindGPUComputePipeline(compute, _integrate.DangerousGetHandle());
@@ -159,17 +143,13 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
             SDL.EndGPUComputePass(compute);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin the body readback");
-            SDL.DownloadFromGPUBuffer(copy, new SDL.GPUBufferRegion { Buffer = _bodies.DangerousGetHandle(), Size = size },
-                new SDL.GPUTransferBufferLocation { TransferBuffer = _download!.DangerousGetHandle() });
+            _bodyStorage.Download(copy, count);
             SDL.EndGPUCopyPass(copy);
             var submitted = command; command = 0;
             fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
             if (fence == 0) throw Failure("submit body integration");
             Check(SDL.WaitForGPUFences(Device, true, new ReadOnlySpan<nint>(&fence, 1), 1), "wait for body integration");
-            mapped = SDL.MapGPUTransferBuffer(Device, _download!.DangerousGetHandle(), false);
-            if (mapped == 0) throw Failure("map integrated bodies");
-            try { fixed (Body* destination = _data) Buffer.MemoryCopy((void*)mapped, destination, size, size); }
-            finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
+            _bodyStorage.Read(count);
             DispatchCount++;
         }
         finally
@@ -184,7 +164,7 @@ internal sealed unsafe class GPUPhysicsWorld : IDisposable
         if (_disposed) return;
         EnsureOwner();
         _disposed = true;
-        _bodies?.Dispose(); _upload?.Dispose(); _download?.Dispose(); _integrate.Dispose(); _device.Dispose();
+        _bodyStorage.Dispose(); _contactStorage.Dispose(); _jointStorage.Dispose(); _solve.Dispose(); _integrate.Dispose(); _device.Dispose();
         SDL.QuitSubSystem(SDL.InitFlags.Video);
     }
 }

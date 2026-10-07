@@ -17,7 +17,7 @@ One owner-thread Box2D world shared by scene bodies/Areas/joints and caller-owne
 | `bool IsActive { get; private set; }`, `SetActive(bool active)` | Local interval policy, owner/solver guard; SceneTree sets true on registration. |
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
 | `Step(double delta)` | Gate on local/global activity/nonzero delta; prepare fields/body states/joints, solve native intervals, capture state and dispatch callbacks/events. |
-| `EnableGPUIntegration()` | Internal development entry for GPU velocity/pose stages; retains one compute host and uses one solver worker. Other world stages remain CPU. |
+| `EnableGPUIntegration()`, `EnableGPUSolver()` | Internal development entries for numeric integration and whole constraint solving. GPU solver runs on the owner; CPU collision stages retain workers. Broad phase/collision, preparation and sleep/CCD remain CPU. |
 | `LastStep`, cached body-state callback list | Last actual interval and generation-aware delivery; skipped intervals retain data. |
 | `Add` / `Remove` scene/server objects | Native membership, dependent joint/monitor lifetime and identity. |
 | `GetJointWorldBody()` | Hidden shape-free world anchor for single-body server pin. |
