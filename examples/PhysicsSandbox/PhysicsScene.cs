@@ -502,7 +502,6 @@ internal sealed partial class PhysicsScene : Entity
             }
         if (bounds is not { } rect) return;
         rect = rect.Grow(5 / PresentationZoom);
-        c.DrawRect(rect.Grow(2 / PresentationZoom), Ink, false, 1 / PresentationZoom);
         c.DrawRect(rect, Pink, false, 2 / PresentationZoom);
         var label = rect.Position + new Vector2(0, -10 / PresentationZoom);
         const int size = 13;
