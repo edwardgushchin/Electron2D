@@ -8,9 +8,13 @@ internal sealed class CanvasPolygon
     internal int VertexCount;
     internal int IndexCount;
     private int[] _remaining = [];
+    private CanvasSkeletonSkin? _skin;
+    private bool _skinEnabled;
+    internal void SetSkin(Polygon owner, ReadOnlySpan<int> source) { (_skin ??= new()).Set(owner, source, VertexCount); _skinEnabled = true; }
 
     internal void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive)
     {
+        _skinEnabled = false;
         if (Vertices.Length < points.Length) Array.Resize(ref Vertices, points.Length);
         VertexCount = points.Length;
         for (var i = 0; i < points.Length; i++)
@@ -28,6 +32,7 @@ internal sealed class CanvasPolygon
 
     internal void SetTriangles(ReadOnlySpan<CanvasVertex> triangles)
     {
+        _skinEnabled = false;
         if (Vertices.Length < triangles.Length) Array.Resize(ref Vertices, triangles.Length);
         if (Indices.Length < triangles.Length) Array.Resize(ref Indices, triangles.Length);
         VertexCount = IndexCount = triangles.Length;
@@ -54,9 +59,10 @@ internal sealed class CanvasPolygon
 
     internal void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)
     {
+        var skinned = _skinEnabled && _skin?.Prepare(Vertices, VertexCount) == true;
         if (VertexCount >= 3)
         {
-            for (var i = 0; i < IndexCount; i++) output.Add(TransformVertex(Vertices[Indices[i]], transform, modulation, snap));
+            for (var i = 0; i < IndexCount; i++) output.Add(TransformVertex(skinned ? Vertices[Indices[i]] with { Position = _skin!.Position(Indices[i]) } : Vertices[Indices[i]], transform, modulation, snap));
             return;
         }
         var a = TransformVertex(Vertices[0], transform, modulation, snap);

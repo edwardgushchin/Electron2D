@@ -10,6 +10,10 @@ Last updated: 2026-10-07
 - **Namespace:** `Electron2D`
 - **Declaration:** `public class Entity : CanvasItem`
 
+## Skeletal inheritors
+
+[Skeleton](Skeleton.md) and [Bone](Bone.md) retain Entity pose descriptors and inherited canvas behavior. Bone tracks ordinary authored transforms independently of temporary modification writes, letting the existing AnimationPlayer target Position/Rotation/Scale without a new animation binding API.
+
 ## Description
 
 A concrete spatial canvas item with engine-owned Vector2 and Transform values. Provides local/global position, rotation, scale and skew, spatial helpers and an identity default transform. It can be an empty spatial parent. Hierarchy, lifecycle and processing are inherited from Node; drawing, visibility, Z and materials come from CanvasItem. A neutral parent resets the canvas transform chain. [Control](Control.md) is a sibling under CanvasItem with its own rectangular placement model.

@@ -1,6 +1,6 @@
 # PropertyDescriptor
 
-Last updated: 2026-10-05
+Last updated: 2026-10-07
 
 **Inherits:** —
 
@@ -11,6 +11,10 @@ Last updated: 2026-10-05
 - **Declaration:** `public abstract class PropertyDescriptor`
 
 > Describes a typed property exposed to Electron2D tooling.
+
+## Scene-owned skeletal copies
+
+An internal AlwaysDuplicateResource policy on the Skeleton stack descriptor selects force duplication through the existing scene resource session. It is schema metadata, with no public dynamic selector, and ensures independent executable modifications for each instantiated rig.
 
 ## Description
 

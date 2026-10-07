@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Skeletal scene execution
+
+[Skeletal animation](../components/skeletal-animation.md) adds Skeleton/Bone, authored/rest pose separation, automatic endpoints, phase-aware overrides and executable LookAt stacks. Existing AnimationPlayer and canvas inheritance provide actual animation consumers; scene membership/path revisions prepare weak Polygon/target bindings. Editor/advanced IK/physical bone integration remain exact coverage dependencies.
+
 ## Responsibility
 
 Scene owns Electron2D's primary Node-based game-object model, reusable typed in-memory scenes, and the active [`MainLoop`](../classes/MainLoop.md) implementation that delivers lifecycle, frame, pause, deferred-work, and deletion phases. A game object, composed subsystem, or complete world is represented by a Node hierarchy; the same hierarchy can be packed and instantiated for reuse. It is a 2D-only runtime domain for Windows, macOS, Linux (X11/Wayland), Android, iOS, Android TV, tvOS, and Web and compiles into the single `Electron2D.dll` assembly.

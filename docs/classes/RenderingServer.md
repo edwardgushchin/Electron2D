@@ -9,6 +9,10 @@ Last updated: 2026-10-07
 
 Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
 
+## Borrowed skeletal identity
+
+Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon skin replay. FreeRID rejects it on an active owner rather than disposing a scene node. Caller-created palette storage and arbitrary canvas attachment are separately blocked until their actual typed producer/consumer and ownership integration; no server-owned skeleton facade is exposed here.
+
 ## Description
 
 `public static bool IsAvailable { get; }` reports whether an active object is published. It is an observation, not a lifetime reservation; false means ordinary service calls and event subscription changes throw `InvalidOperationException`.

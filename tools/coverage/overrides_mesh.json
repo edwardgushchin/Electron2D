@@ -920,7 +920,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: first 2D skeleton/bone-weight mesh renderer with verified skin storage and deformations (ADR 0092).",
+      "reason": "Trigger: typed MeshSurfaceData bone indices/weights and packed skin regions, including four/eight influence schema, copied byte updates and actual Mesh-bound palette drawing. Skeleton/Bone and Polygon four-influence skinning already execute; they do not expose Mesh skin channels (ADR 0092).",
       "godot": [
         "ArrayMesh::method:surface_update_skin_region(int:,int:,PackedByteArray:)",
         "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_8_BONE_WEIGHTS",

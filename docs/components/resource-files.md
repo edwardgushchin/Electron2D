@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Independent skeletal scene resources
+
+Built-in Skeleton/Bone and stack/LookAt schemas restore authored rigs. A hidden versioned Polygon bone-record blob validates all paths/counts/finite weights before replacement. Scene stack descriptors force independent graph copies using the existing resource session, retain aliases and transfer encoded/copy-created resources to ordinary scene-owned lifetime. Fresh-process SkeletonTests loads and actually aims the bone.
+
 ## Scope and owned types
 
 ResourceSaver and ResourceUID are permanent retained services with static operations. ResourceLoader now retains its ordered file-extension state on the same service model. ResourceFormatSaver/ResourceFormatLoader are ordinary caller-owned extensions; registration borrows them. ResourceFileTypes registers compiled factories and value codecs on retained ResourceLoader registry state. SaverFlags controls dependency paths, embedding, temporary paths, editor omission, byte order, compression and committed subresource paths.

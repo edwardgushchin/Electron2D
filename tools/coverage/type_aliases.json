@@ -68,7 +68,12 @@
     "StreamPeerExtension": "StreamPeer",
     "PacketPeerExtension": "PacketPeer",
     "MultiplayerPeerExtension": "MultiplayerPeer",
-    "MultiplayerAPIExtension": "MultiplayerAPI"
+    "MultiplayerAPIExtension": "MultiplayerAPI",
+    "Skeleton2D": "Skeleton",
+    "Bone2D": "Bone",
+    "SkeletonModification2D": "SkeletonModification",
+    "SkeletonModificationStack2D": "SkeletonModificationStack",
+    "SkeletonModification2DLookAt": "SkeletonModificationLookAt"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "networking")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -353,7 +353,7 @@ def reason_for_type(item, lookup):
         ({"RayCast2D", "ShapeCast2D"},
          "scene query nodes consuming the typed direct-space ray/shape query slice"),
         ({"PhysicalBone2D"},
-         "first 2D skeleton bone and physics-body ownership integration"),
+         "actual PhysicsBody-to-Bone synchronization, simulation ownership, joint/pose reset and native physics execution over the implemented Skeleton/Bone hierarchy"),
         ({"ImageFormatLoader", "ImageFormatLoaderExtension"},
          "first public image-decoder plugin and format-discovery slice beyond the internal six-codec Image path (ADR 0039)"),
         ({"ResourceSaver"},
@@ -376,7 +376,7 @@ def reason_for_type(item, lookup):
          "first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028)"),
         ({"CharFXTransform"}, "first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028)"),
         ({"SkeletonModification2D", "SkeletonModification2DCCDIK", "SkeletonModification2DFABRIK", "SkeletonModification2DJiggle", "SkeletonModification2DLookAt", "SkeletonModification2DPhysicalBones", "SkeletonModification2DStackHolder", "SkeletonModification2DTwoBoneIK", "SkeletonModificationStack2D"},
-         "first 2D skeletal animation and inverse-kinematics slice"),
+         "concrete typed skeletal solver over the implemented bone/rest/pose palette and modification stack: CCD/FABRIK/TwoBoneIK iterative constraints, jiggle state/reset, child-stack execution or physics-body pose synchronization as owned by each family (ADRs 0028/0092)"),
         ({"CSharpScript", "Script", "ScriptBacktrace", "ScriptExtension", "ScriptLanguage", "ScriptLanguageExtension", "Expression", "GDExtension", "GDExtensionManager", "GodotInstance"},
          "an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001)"),
         ({"OS", "Time", "Performance", "EngineDebugger", "EngineProfiler", "Logger", "MovieWriter", "StatusIndicator"},

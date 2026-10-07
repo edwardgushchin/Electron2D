@@ -10,6 +10,10 @@ Last updated: 2026-10-07
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class CanvasItem : Node`
 
+## Skeletal presentation
+
+Internal GetInterpolatedGlobalVisualTransform composes the existing per-item physics presentation poses through the actual canvas-parent chain (including TopLevel). Polygon skinning uses it with the same frame fraction as ordinary canvas replay. Internal AttachLastPolygonSkin connects only the just-recorded retained polygon; no new public generic drawing selector is introduced.
+
 ## Description
 
 The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model; Control supplies a rectangular layout model in the separate UI branch. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.

@@ -1,0 +1,583 @@
+{
+  "mappings": [
+    {
+      "godot": "class:Bone2D",
+      "electron2d": "T:Electron2D.Bone",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:apply_rest()",
+      "electron2d": "method:Electron2D.Bone.ApplyRest()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:get_autocalculate_length_and_angle()",
+      "electron2d": "method:Electron2D.Bone.GetAutocalculateLengthAndAngle()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:get_bone_angle()",
+      "electron2d": "method:Electron2D.Bone.GetBoneAngle()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:get_index_in_skeleton()",
+      "electron2d": "method:Electron2D.Bone.GetIndexInSkeleton()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:get_length()",
+      "electron2d": "method:Electron2D.Bone.GetLength()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:get_skeleton_rest()",
+      "electron2d": "method:Electron2D.Bone.GetSkeletonRest()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:set_autocalculate_length_and_angle(bool:)",
+      "electron2d": "method:Electron2D.Bone.SetAutocalculateLengthAndAngle(System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:set_bone_angle(float:)",
+      "electron2d": "method:Electron2D.Bone.SetBoneAngle(System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::method:set_length(float:)",
+      "electron2d": "method:Electron2D.Bone.SetLength(System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Bone2D::property:rest",
+      "electron2d": "property:Electron2D.Bone.Rest()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "class:Skeleton2D",
+      "electron2d": "T:Electron2D.Skeleton",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::method:execute_modifications(float:,int:)",
+      "electron2d": "method:Electron2D.Skeleton.ExecuteModifications(System.Double,Electron2D.ProcessPhase)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::method:get_bone(int:)",
+      "electron2d": "method:Electron2D.Skeleton.GetBone(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::method:get_bone_count()",
+      "electron2d": "method:Electron2D.Skeleton.GetBoneCount()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::method:get_bone_local_pose_override(int:)",
+      "electron2d": "method:Electron2D.Skeleton.GetBoneLocalPoseOverride(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::method:get_modification_stack()",
+      "electron2d": "method:Electron2D.Skeleton.GetModificationStack()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::method:get_skeleton()",
+      "electron2d": "method:Electron2D.Skeleton.GetSkeleton()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::method:set_bone_local_pose_override(int:,Transform2D:,float:,bool:)",
+      "electron2d": "method:Electron2D.Skeleton.SetBoneLocalPoseOverride(System.Int32,Electron2D.Transform,System.Single,System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::method:set_modification_stack(SkeletonModificationStack2D:)",
+      "electron2d": "method:Electron2D.Skeleton.SetModificationStack(Electron2D.SkeletonModificationStack)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Skeleton2D::signal:bone_setup_changed()",
+      "electron2d": "event:Electron2D.Skeleton.BoneSetupChanged()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "class:SkeletonModification2D",
+      "electron2d": "T:Electron2D.SkeletonModification",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2D::method:_execute(float:)",
+      "electron2d": "method:Electron2D.SkeletonModification.OnExecute(System.Double)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2D::method:_setup_modification(SkeletonModificationStack2D:)",
+      "electron2d": "method:Electron2D.SkeletonModification.OnSetupModification(Electron2D.SkeletonModificationStack)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2D::method:clamp_angle(float:,float:,float:,bool:)",
+      "electron2d": "method:Electron2D.SkeletonModification.ClampAngle(System.Single,System.Single,System.Single,System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2D::method:get_is_setup()",
+      "electron2d": "method:Electron2D.SkeletonModification.GetIsSetup()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2D::method:get_modification_stack()",
+      "electron2d": "method:Electron2D.SkeletonModification.GetModificationStack()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2D::method:set_is_setup(bool:)",
+      "electron2d": "method:Electron2D.SkeletonModification.SetIsSetup(System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2D::property:enabled",
+      "electron2d": "property:Electron2D.SkeletonModification.Enabled()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2D::property:execution_mode",
+      "electron2d": "property:Electron2D.SkeletonModification.ExecutionMode()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "class:SkeletonModification2DLookAt",
+      "electron2d": "T:Electron2D.SkeletonModificationLookAt",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:get_additional_rotation()",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.GetAdditionalRotation()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:get_constraint_angle_invert()",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.GetConstraintAngleInvert()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:get_constraint_angle_max()",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.GetConstraintAngleMax()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:get_constraint_angle_min()",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.GetConstraintAngleMin()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:get_enable_constraint()",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.GetEnableConstraint()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:set_additional_rotation(float:)",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.SetAdditionalRotation(System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:set_constraint_angle_invert(bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.SetConstraintAngleInvert(System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:set_constraint_angle_max(float:)",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.SetConstraintAngleMax(System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:set_constraint_angle_min(float:)",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.SetConstraintAngleMin(System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::method:set_enable_constraint(bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.SetEnableConstraint(System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::property:bone2d_node",
+      "electron2d": "property:Electron2D.SkeletonModificationLookAt.BoneNode()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::property:bone_index",
+      "electron2d": "property:Electron2D.SkeletonModificationLookAt.BoneIndex()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModification2DLookAt::property:target_nodepath",
+      "electron2d": "property:Electron2D.SkeletonModificationLookAt.TargetNodePath()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "class:SkeletonModificationStack2D",
+      "electron2d": "T:Electron2D.SkeletonModificationStack",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:add_modification(SkeletonModification2D:)",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.AddModification(Electron2D.SkeletonModification)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:delete_modification(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.DeleteModification(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:enable_all_modifications(bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.EnableAllModifications(System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:execute(float:,int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.Execute(System.Double,Electron2D.ProcessPhase)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:get_is_setup()",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.GetIsSetup()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:get_modification(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.GetModification(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:get_skeleton()",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.GetSkeleton()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:set_modification(int:,SkeletonModification2D:)",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.SetModification(System.Int32,Electron2D.SkeletonModification)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::method:setup()",
+      "electron2d": "method:Electron2D.SkeletonModificationStack.Setup()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::property:enabled",
+      "electron2d": "property:Electron2D.SkeletonModificationStack.Enabled()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::property:modification_count",
+      "electron2d": "property:Electron2D.SkeletonModificationStack.ModificationCount()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "SkeletonModificationStack2D::property:strength",
+      "electron2d": "property:Electron2D.SkeletonModificationStack.Strength()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::method:add_bone(NodePath:,PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.Polygon.AddBone(System.String,System.Single[])",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::method:clear_bones()",
+      "electron2d": "method:Electron2D.Polygon.ClearBones()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::method:erase_bone(int:)",
+      "electron2d": "method:Electron2D.Polygon.EraseBone(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::method:get_bone_count()",
+      "electron2d": "method:Electron2D.Polygon.GetBoneCount()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::method:get_bone_path(int:)",
+      "electron2d": "method:Electron2D.Polygon.GetBonePath(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::method:get_bone_weights(int:)",
+      "electron2d": "method:Electron2D.Polygon.GetBoneWeights(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::method:set_bone_path(int:,NodePath:)",
+      "electron2d": "method:Electron2D.Polygon.SetBonePath(System.Int32,System.String)",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::method:set_bone_weights(int:,PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.Polygon.SetBoneWeights(System.Int32,System.Single[])",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": "Polygon2D::property:skeleton",
+      "electron2d": "property:Electron2D.Polygon.Skeleton()",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.Bone..ctor()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Skeleton..ctor()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModification..ctor()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModificationLookAt..ctor()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModificationStack..ctor()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.Bone.CreateSceneInstanceFactory()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.Bone.GetConfigurationWarnings()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.Bone.GetPropertyDescriptors()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.Bone.OnNotification(System.Int32)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.Skeleton.CreateSceneInstanceFactory()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.Skeleton.Dispose(System.Boolean)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.Skeleton.GetPropertyDescriptors()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.Skeleton.OnNotification(System.Int32)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModification.CopyModificationState(Electron2D.SkeletonModification)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModification.Dispose(System.Boolean)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModification.EnsureModificationMutable()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModification.GetPropertyDescriptors()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModification.OnResetState()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.CreateDuplicateInstance()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.GetPropertyDescriptors()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.OnExecute(System.Double)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.OnResetState()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationLookAt.OnSetupModification(Electron2D.SkeletonModificationStack)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStack.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStack.CreateDuplicateInstance()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStack.Dispose(System.Boolean)",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStack.GetPropertyDescriptors()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "property:Electron2D.SkeletonModificationLookAt.ConstraintInLocalSpace()",
+      "reason": "Reviewed constructors and inherited scene/resource schema, setup, copy/reset/disposal callbacks for the concrete skeletal family. EnsureModificationMutable and CopyModificationState support real typed extensions; ConstraintInLocalSpace projects the pinned LookAt stored constraint_in_localspace default true (header), without dynamic property names.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:SkeletonModification2D"
+      ],
+      "state": "Partial",
+      "reason": "All runtime callbacks, setup/phase/configuration and angle constraints execute. Only editor gizmo callbacks/state require the first actual editor canvas-gizmo owner; no inert runtime switch."
+    },
+    {
+      "godot": [
+        "Bone2D::method:apply_rest()",
+        "Bone2D::method:get_autocalculate_length_and_angle()",
+        "Bone2D::method:get_bone_angle()",
+        "Bone2D::method:get_index_in_skeleton()",
+        "Bone2D::method:get_length()",
+        "Bone2D::method:get_skeleton_rest()",
+        "Bone2D::method:set_autocalculate_length_and_angle(bool:)",
+        "Bone2D::method:set_bone_angle(float:)",
+        "Bone2D::method:set_length(float:)",
+        "Bone2D::property:rest",
+        "class:Bone2D",
+        "Skeleton2D::method:execute_modifications(float:,int:)",
+        "Skeleton2D::method:get_bone(int:)",
+        "Skeleton2D::method:get_bone_count()",
+        "Skeleton2D::method:get_bone_local_pose_override(int:)",
+        "Skeleton2D::method:get_modification_stack()",
+        "Skeleton2D::method:get_skeleton()",
+        "Skeleton2D::method:set_bone_local_pose_override(int:,Transform2D:,float:,bool:)",
+        "Skeleton2D::method:set_modification_stack(SkeletonModificationStack2D:)",
+        "Skeleton2D::signal:bone_setup_changed()",
+        "class:Skeleton2D",
+        "SkeletonModification2D::method:_execute(float:)",
+        "SkeletonModification2D::method:_setup_modification(SkeletonModificationStack2D:)",
+        "SkeletonModification2D::method:clamp_angle(float:,float:,float:,bool:)",
+        "SkeletonModification2D::method:get_is_setup()",
+        "SkeletonModification2D::method:get_modification_stack()",
+        "SkeletonModification2D::method:set_is_setup(bool:)",
+        "SkeletonModification2D::property:enabled",
+        "SkeletonModification2D::property:execution_mode",
+        "SkeletonModification2DLookAt::method:get_additional_rotation()",
+        "SkeletonModification2DLookAt::method:get_constraint_angle_invert()",
+        "SkeletonModification2DLookAt::method:get_constraint_angle_max()",
+        "SkeletonModification2DLookAt::method:get_constraint_angle_min()",
+        "SkeletonModification2DLookAt::method:get_enable_constraint()",
+        "SkeletonModification2DLookAt::method:set_additional_rotation(float:)",
+        "SkeletonModification2DLookAt::method:set_constraint_angle_invert(bool:)",
+        "SkeletonModification2DLookAt::method:set_constraint_angle_max(float:)",
+        "SkeletonModification2DLookAt::method:set_constraint_angle_min(float:)",
+        "SkeletonModification2DLookAt::method:set_enable_constraint(bool:)",
+        "SkeletonModification2DLookAt::property:bone2d_node",
+        "SkeletonModification2DLookAt::property:bone_index",
+        "SkeletonModification2DLookAt::property:target_nodepath",
+        "class:SkeletonModification2DLookAt",
+        "SkeletonModificationStack2D::method:add_modification(SkeletonModification2D:)",
+        "SkeletonModificationStack2D::method:delete_modification(int:)",
+        "SkeletonModificationStack2D::method:enable_all_modifications(bool:)",
+        "SkeletonModificationStack2D::method:execute(float:,int:)",
+        "SkeletonModificationStack2D::method:get_is_setup()",
+        "SkeletonModificationStack2D::method:get_modification(int:)",
+        "SkeletonModificationStack2D::method:get_skeleton()",
+        "SkeletonModificationStack2D::method:set_modification(int:,SkeletonModification2D:)",
+        "SkeletonModificationStack2D::method:setup()",
+        "SkeletonModificationStack2D::property:enabled",
+        "SkeletonModificationStack2D::property:modification_count",
+        "SkeletonModificationStack2D::property:strength",
+        "class:SkeletonModificationStack2D",
+        "Polygon2D::method:add_bone(NodePath:,PackedFloat32Array:)",
+        "Polygon2D::method:clear_bones()",
+        "Polygon2D::method:erase_bone(int:)",
+        "Polygon2D::method:get_bone_count()",
+        "Polygon2D::method:get_bone_path(int:)",
+        "Polygon2D::method:get_bone_weights(int:)",
+        "Polygon2D::method:set_bone_path(int:,NodePath:)",
+        "Polygon2D::method:set_bone_weights(int:,PackedFloat32Array:)",
+        "Polygon2D::property:skeleton"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0014/0028/0092: executable borrowed scene bone/rest/pose hierarchy, stable weak palette identity, weighted retained Polygon deformation, typed ProcessPhase execution, ordered modification stack and concrete LookAt with constraints. AnimationPlayer, fresh-process scene archives, callbacks/owner guards and native GPU/compatibility pixels execute; 128 managed and 64 native prepared intervals measure zero managed allocation, with native/foreign/editor/IK limits stated separately."
+    },
+    {
+      "godot": [
+        "SkeletonModification2D::method:_draw_editor_gizmo()",
+        "SkeletonModification2D::method:get_editor_draw_gizmo()",
+        "SkeletonModification2D::method:set_editor_draw_gizmo(bool:)"
+      ],
+      "state": "Blocked",
+      "reason": "Requires the actual editor canvas-gizmo registration/drawing owner, refresh lifecycle and visible authoring host; trigger its first editor skeletal authoring integration under ADR 0090. Runtime skeletal execution is already implemented."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:canvas_item_attach_skeleton(RID:,RID:)",
+        "RenderingServer::method:skeleton_allocate_data(RID:,int:,bool:)",
+        "RenderingServer::method:skeleton_bone_get_transform_2d(RID:,int:)",
+        "RenderingServer::method:skeleton_bone_set_transform_2d(RID:,int:,Transform2D:)",
+        "RenderingServer::method:skeleton_create()",
+        "RenderingServer::method:skeleton_get_bone_count(RID:)",
+        "RenderingServer::method:skeleton_set_base_transform_2d(RID:,Transform2D:)"
+      ],
+      "state": "Blocked",
+      "reason": "Requires caller-owned typed 2D palette allocation/get/set/base transform, borrowed/owned RID lifetime and arbitrary retained canvas attachment with an actual weighted draw consumer. The executable scene-owned Skeleton.GetSkeleton RID and Polygon palette do not supply mutable server storage; trigger its first full server palette/attachment slice under ADRs 0028/0092."
+    }
+  ]
+}

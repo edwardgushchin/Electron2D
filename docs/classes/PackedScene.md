@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-05
+Last updated: 2026-10-07
 
 **Inherits:** [Resource](Resource.md)
 
@@ -11,6 +11,10 @@ Last updated: 2026-10-05
 - **Declaration:** `public sealed class PackedScene : Resource`
 
 > Stores a reusable in-memory node hierarchy and creates independent runtime instances from it.
+
+## Skeletal resource restoration
+
+RestoreProperties honors the internal force-copy descriptor for a Skeleton stack using the existing SceneDuplicationScope. Repeated scene instances receive independent stacks and modifications, while aliases within each stack remain shared. Copied resources join normal instance-owned cleanup; failures follow the existing rollback path. SkeletonTests verifies in-memory and fresh-process file restoration with actual LookAt execution.
 
 ## Description
 

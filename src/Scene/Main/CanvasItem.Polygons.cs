@@ -67,6 +67,8 @@ public abstract partial class CanvasItem
         _polygonCount++;
     }
 
+    internal void AttachLastPolygonSkin(Polygon owner, ReadOnlySpan<int> source) => _polygons![_polygonCount - 1].SetSkin(owner, source);
+
     private void RecordPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture, bool primitive)
     {
         EnsureDrawing();

@@ -1,12 +1,116 @@
 # Polygon
 
-Last updated: 2026-09-23
+Last updated: 2026-10-07
 
-- Declaration: `public class Polygon : Entity`
-- Source: [Polygon.cs](../../src/Scene/2D/Polygon.cs)
+- Declaration: `public partial class Polygon : Entity`
+- Source: [Polygon.cs](../../src/Scene/2D/Polygon.cs), [skin](../../src/Scene/2D/Polygon.Skin.cs)
 - Inherits: [Entity](Entity.md)
 - Inherited by: no production type currently
 - Component: [Canvas rendering](../components/canvas-rendering.md)
+
+## Skeletal deformation
+
+The [skeletal component](../components/skeletal-animation.md) adds Skeleton, a relative borrowed rig path, and copied bone path/weight authoring. Paths resolve relative to the rig. Records with mismatched source counts or missing bones do not contribute; four strongest positive influences normalize per point and zero sums preserve input. The retained skin uses live/interpolated poses without retriangulating; inversion ignores it. Ordinary forced redraws reuse point, UV, color and contour scratch arrays. Versioned stored bone records restore atomically. Both current native backends execute skin positions while keeping original color/UV/materials and triangulation.
+
+## Properties
+
+| Signature | Contract |
+| --- | --- |
+| `public System.String Skeleton { get; set; }` | [Gets or sets the scene path of the borrowed skeleton.](#skeleton) |
+
+## Methods and protected extension points
+
+| Signature | Contract |
+| --- | --- |
+| `public System.Void AddBone(System.String path, System.Single[] weights)` | [Appends a bone path and copied per-source-vertex weights.](#addbone) |
+| `public System.Void ClearBones()` | [Inherited lifecycle/schema override.](#clearbones) |
+| `public System.Void EraseBone(System.Int32 index)` | [Removes an indexed record and compacts later records.](#erasebone) |
+| `public System.Int32 GetBoneCount()` | [Inherited lifecycle/schema override.](#getbonecount) |
+| `public System.String GetBonePath(System.Int32 index)` | [Returns a record's path relative to the skeleton.](#getbonepath) |
+| `public System.Single[] GetBoneWeights(System.Int32 index)` | [Returns an independent copy of a record's weights.](#getboneweights) |
+| `public System.Void SetBonePath(System.Int32 index, System.String path)` | [Replaces a record path.](#setbonepath) |
+| `public System.Void SetBoneWeights(System.Int32 index, System.Single[] weights)` | [Replaces a record's copied weights.](#setboneweights) |
+
+## Member descriptions
+
+### AddBone
+
+`public System.Void AddBone(System.String path, System.Single[] weights)`
+
+Appends a bone path and copied per-source-vertex weights.
+
+Weights must match the selected source point count to participate; mismatched records remain authored. Entries are bounded to 4096.
+
+- `path`: Path relative to the selected skeleton.
+- `weights`: Finite weights; nonpositive values do not contribute. At most four strongest positive influences survive per vertex.
+
+### ClearBones
+
+`public System.Void ClearBones()`
+
+Inherited lifecycle/schema override; see the linked base type.
+
+### EraseBone
+
+`public System.Void EraseBone(System.Int32 index)`
+
+Removes an indexed record and compacts later records.
+
+- `index`: Valid record index.
+
+### GetBoneCount
+
+`public System.Int32 GetBoneCount()`
+
+Inherited lifecycle/schema override; see the linked base type.
+
+### GetBonePath
+
+`public System.String GetBonePath(System.Int32 index)`
+
+Returns a record's path relative to the skeleton.
+
+The authored path.
+
+- `index`: Valid record index.
+
+### GetBoneWeights
+
+`public System.Single[] GetBoneWeights(System.Int32 index)`
+
+Returns an independent copy of a record's weights.
+
+Copied finite weights.
+
+- `index`: Valid record index.
+
+### SetBonePath
+
+`public System.Void SetBonePath(System.Int32 index, System.String path)`
+
+Replaces a record path.
+
+- `index`: Valid record index.
+- `path`: Scene path relative to the skeleton.
+
+### SetBoneWeights
+
+`public System.Void SetBoneWeights(System.Int32 index, System.Single[] weights)`
+
+Replaces a record's copied weights.
+
+- `index`: Valid record index.
+- `weights`: Finite values; mismatched counts do not contribute.
+
+### Skeleton
+
+`public System.String Skeleton { get; set; }`
+
+Gets or sets the scene path of the borrowed skeleton.
+
+Empty initially. Paths resolve relative to this polygon; missing or detached skeletons leave its geometry undeformed.
+
+Inverted polygons ignore skinning. Bone paths are relative to the selected Skeleton.
 
 ## Description
 

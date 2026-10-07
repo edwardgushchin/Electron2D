@@ -826,6 +826,8 @@ public class Resource : ElectronObject
             return source.ResourceLocalToScene ? _session.DuplicateRoot(source) : source;
         }
 
+        internal Resource ResolveForced(Resource source) { ArgumentNullException.ThrowIfNull(source); source.ThrowIfDisposed(); return _session.TryGetDuplicate(source, out var duplicate) ? duplicate : _session.DuplicateRoot(source); }
+
         internal void SetupLocalResources()
         {
             List<Exception>? errors = null;

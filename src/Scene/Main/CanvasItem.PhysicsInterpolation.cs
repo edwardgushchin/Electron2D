@@ -37,6 +37,8 @@ public abstract partial class CanvasItem
         return _interpolationPrevious.InterpolateWith(_interpolationCurrent, Math.Clamp(fraction, 0f, 1f));
     }
 
+    internal Transform GetInterpolatedGlobalVisualTransform(float fraction) => GetParentItem() is { } parent ? parent.GetInterpolatedGlobalVisualTransform(fraction) * GetInterpolatedVisualTransform(fraction) : GetInterpolatedVisualTransform(fraction);
+
     private void ResetInterpolationSnapshot()
     {
         if (_multiMeshes is not null) for (var i = 0; i < _multiMeshCount; i++) _multiMeshes[i].ResetInterpolation();

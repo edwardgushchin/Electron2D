@@ -393,7 +393,7 @@ public sealed class PackedScene : Resource
                     $"Stored property '{property.Name}' is not available with the captured schema on {stored.Factory.RuntimeType.Name}.");
             }
 
-            descriptor.RestoreStoredValue(node, property.Value, resources.Resolve);
+            descriptor.RestoreStoredValue(node, property.Value, descriptor.AlwaysDuplicateResource ? resources.ResolveForced : resources.Resolve);
         }
     }
 

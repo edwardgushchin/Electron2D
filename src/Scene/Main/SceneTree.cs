@@ -1193,8 +1193,10 @@ public sealed partial class SceneTree : MainLoop
             NodeConfigurationWarningChanged?.Invoke(this, node);
     }
 
+    internal ulong PathRevision { get; private set; }
     internal void NotifyNodeRenamed(Node node)
     {
+        PathRevision++;
         InvalidateMultiplayerPaths();
         List<Exception>? errors = null;
 
@@ -1219,7 +1221,7 @@ public sealed partial class SceneTree : MainLoop
         ThrowCollected("One or more node-renamed tree events failed.", errors);
     }
 
-    internal void NotifyTreeChanged() { InvalidateMultiplayerPaths(); TreeChanged?.Invoke(this); }
+    internal void NotifyTreeChanged() { PathRevision++; InvalidateMultiplayerPaths(); TreeChanged?.Invoke(this); }
 
     private void RunFrame(double delta, double unscaledDelta, bool physics)
     {

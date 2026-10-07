@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Skeletal graph resources
+
+[Modification stacks](../components/skeletal-animation.md) own copied slot storage and borrow modifications. Scene binding is exclusive and transient. PackedScene force-copies the complete stack graph per rig through existing alias-preserving sessions; typed built-in schemas persist concrete LookAt settings and copied Polygon bone records. Arbitrary custom extensions require explicit registration/copy contracts.
+
 ## Responsibility
 
 Shader import retains logical bool and boolean vectors/arrays in validated SPIR-V metadata. Materials expose bool scalars and int vector masks; raw unsigned fields retain their numeric types. Both source languages and compatible external artifacts share reflection and backend checks. See [the boolean contract](../components/shader-materials.md#boolean-type-information).

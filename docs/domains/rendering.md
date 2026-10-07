@@ -4,6 +4,10 @@ Last updated: 2026-10-07
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
+## Skeletal canvas consumer
+
+The [skeletal component](../components/skeletal-animation.md) prepares inverse-rest/current presentation palettes and retained strongest-four Polygon deformation for both native triangle backends. Weak scene palette identity remains borrowed; same viewport/CanvasLayer space and TopLevel/interpolation apply. General Mesh skin channels and server-owned palette attachment are still absent with exact triggers.
+
 ## Responsibility
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

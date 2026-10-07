@@ -6,6 +6,10 @@ Last updated: 2026-10-07
 
 **Inherits:** None (static registry or enum).
 
+## Skeletal registrations
+
+Built-in exact factories/descriptors include Skeleton, Bone, SkeletonModificationStack and SkeletonModificationLookAt. A typed nullable SkeletonModification array codec preserves modification slots/aliases. Rest, constraints and copied Polygon bone records persist, while transient bindings/palette/overrides do not. Custom derived modification resources still require explicit registered factories and copy/schema contracts.
+
 ## Description
 
 Registers stable compiled factories and typed portable value codecs for resource/scene files.

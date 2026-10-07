@@ -1,6 +1,10 @@
 # Two-dimensional mesh surfaces
 
-Last updated: 2026-10-03
+Last updated: 2026-10-07
+
+## Executable skeletal polygons
+
+The [skeletal component](skeletal-animation.md) now supplies actual bone/rest/pose palettes and weighted retained Polygon deformation. General MeshSurfaceData bone/weight channels, packed skin regions and four/eight-influence Mesh consumers remain their own exact slice. Existing ArrayMesh channel selectors continue rejecting unavailable storage; the working Polygon path does not claim those channels.
 
 ## Scope
 

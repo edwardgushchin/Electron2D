@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -11,6 +11,10 @@ Last updated: 2026-10-06
 - **Declaration:** `public class Resource : ElectronObject`
 
 > Provides reusable data, change notification, path identity, and typed duplication for engine assets.
+
+## Forced scene resource graphs
+
+The existing internal SceneDuplicationScope now resolves forced subresource copies through its shared DuplicationSession, preserving aliases and tracking created resources for PackedScene-owned cleanup. Skeleton uses this only for its stack graph so each instance has independent mutable scene binding even under shallow copying.
 
 ## Description
 

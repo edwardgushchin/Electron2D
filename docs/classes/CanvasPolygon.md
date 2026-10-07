@@ -1,10 +1,14 @@
 # CanvasPolygon
 
-Last updated: 2026-09-23
+Last updated: 2026-10-07
 
 - Declaration: `internal sealed class CanvasPolygon`
 - Source: [CanvasPolygon.cs](../../src/Servers/Rendering/CanvasPolygon.cs)
 - Component: [Canvas rendering](../components/canvas-rendering.md#polygon-commands)
+
+## Prepared skin replay
+
+AttachSkin retains an optional [CanvasSkeletonSkin](CanvasSkeletonSkin.md) helper/source map after normal Polygon recording. Set clears activation for a reused slot, then the current owner reattaches it. Append preflights deformed local positions and expands the existing indices; this changes position only. Missing/disabled bindings use original vertices. Ordinary pose replay and prepared forced recording reuse arrays; inversion remains the existing cold contour path.
 
 ## Description
 

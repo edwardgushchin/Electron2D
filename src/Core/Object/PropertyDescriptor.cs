@@ -55,6 +55,7 @@ public abstract class PropertyDescriptor
     /// <summary>Gets whether packed scenes should store this property when its owner is a node.</summary>
     /// <value><see langword="true"/> only for an explicitly storage-enabled writable descriptor.</value>
     public bool IsStored { get; }
+    internal bool AlwaysDuplicateResource { get; init; }
 
     /// <summary>Determines whether a compatible live owner's value currently differs from its revert value.</summary>
     /// <param name="owner">The owner whose property is inspected.</param>

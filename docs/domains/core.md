@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Skeletal schema policy
+
+The existing PropertyDescriptor/Resource scene-copy machinery now supports an internal force-subresource policy, used by Skeleton stacks to prevent shared mutable scene bindings. Existing DuplicationSession tracking retains aliases, rollback and instance-owned lifetime; no new public selector or reflection path is added.
+
 ## Responsibility
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

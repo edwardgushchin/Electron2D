@@ -113,7 +113,7 @@ public sealed partial class RenderingServer
 
     internal void FreeRIDCore(RID rid)
     {
-        EnsureTextureChange(); if (RenderingMultiMeshRegistry.Contains(rid)) { var resource = RenderingMultiMeshRegistry.Owned(rid, this); _ownedMultiMeshRIDs.Remove(rid); RenderingMultiMeshRegistry.Remove(rid); resource.Dispose(); return; }
+        EnsureTextureChange(); if (RenderingSkeletonRegistry.Contains(rid)) throw new InvalidOperationException("Skeleton identities remain scene-owned."); if (RenderingMultiMeshRegistry.Contains(rid)) { var resource = RenderingMultiMeshRegistry.Owned(rid, this); _ownedMultiMeshRIDs.Remove(rid); RenderingMultiMeshRegistry.Remove(rid); resource.Dispose(); return; }
         if (RenderingMeshRegistry.Contains(rid)) { var mesh = RenderingMeshRegistry.Owned(rid, this); _ownedMeshRIDs.Remove(rid); RenderingMeshRegistry.Remove(rid); mesh.Dispose(); return; }
         var texture = RenderingTextureRegistry.Owned(rid, this);
         _ownedTextureRIDs.Remove(rid); RenderingTextureRegistry.Remove(rid); texture.Released = true; texture.Dispose();

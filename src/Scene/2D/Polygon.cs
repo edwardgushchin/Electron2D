@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Draws a filled polygon from local vertices, optional contours, colors and texture coordinates.</summary>
 /// <remarks>The texture is borrowed. Vertex and contour arrays are copied in both directions; edits request a retained-canvas redraw.</remarks>
-public class Polygon : Entity
+public partial class Polygon : Entity
 {
     private static readonly PropertyDescriptor[] PolygonProperties =
     [
@@ -22,6 +22,8 @@ public class Polygon : Entity
     ];
 
     private Vector2[] _vertices = [], _uv = [];
+    private Vector2[] _drawPoints = [], _drawUV = [], _contourPoints = [], _contourUV = [];
+    private Color[] _contourColors = [];
     private int[][] _polygons = [];
     private Color[] _vertexColors = [];
     private Color _color = Colors.White;
@@ -195,51 +197,45 @@ public class Polygon : Entity
         if (_vertices.Length < 3) return;
         var length = _invertEnabled || _polygons.Length == 0 ? Math.Max(0, _vertices.Length - _internalVertexCount) : _vertices.Length;
         if (length < 3) return;
-        var points = new Vector2[length];
-        for (var i = 0; i < length; i++) points[i] = _vertices[i] + _offset;
-        if (_invertEnabled) points = InvertContour(points, _invertBorder);
+        if (_drawPoints.Length < length) Array.Resize(ref _drawPoints, length);
+        for (var i = 0; i < length; i++) _drawPoints[i] = _vertices[i] + _offset;
+        ReadOnlySpan<Vector2> points = _drawPoints.AsSpan(0, length);
+        if (_invertEnabled) points = InvertContour(points.ToArray(), _invertBorder);
         length = points.Length;
-        var colors = _vertexColors.Length == length ? _vertexColors : [_color];
-        Vector2[] uvs = [];
+        Span<Color> uniform = stackalloc Color[1]; uniform[0] = _color;
+        ReadOnlySpan<Color> colors = _vertexColors.Length == length ? _vertexColors : uniform;
+        ReadOnlySpan<Vector2> uvs = default;
         if (_texture is { } texture)
         {
             var size = texture.GetSize();
-            if (!size.IsFinite() || size.X <= 0 || size.Y <= 0)
-                throw new InvalidOperationException("Polygon texture dimensions must be positive and finite.");
-            uvs = new Vector2[length];
+            if (!size.IsFinite() || size.X <= 0 || size.Y <= 0) throw new InvalidOperationException("Polygon texture dimensions must be positive and finite.");
+            if (_drawUV.Length < length) Array.Resize(ref _drawUV, length);
             var transform = new Transform(_textureRotation, _textureOffset);
-            for (var i = 0; i < length; i++)
-            {
-                var source = _uv.Length == length ? _uv[i] : points[i];
-                uvs[i] = (transform * (source * _textureScale)) / size;
-            }
+            for (var i = 0; i < length; i++) { var source = _uv.Length == length ? _uv[i] : points[i]; _drawUV[i] = (transform * (source * _textureScale)) / size; }
+            uvs = _drawUV.AsSpan(0, length);
         }
-
         if (_invertEnabled || _polygons.Length == 0)
         {
-            DrawPolygon(points, colors, uvs, _texture);
-            return;
+            DrawPolygon(points, colors, uvs, _texture); if (!_invertEnabled) AttachLastPolygonSkin(this, default); return;
         }
         foreach (var contour in _polygons)
         {
             if (contour.Length < 3) continue;
-            var contourPoints = new Vector2[contour.Length];
-            var contourColors = new Color[contour.Length];
-            var contourUV = _texture is null ? [] : new Vector2[contour.Length];
+            if (_contourPoints.Length < contour.Length) Array.Resize(ref _contourPoints, contour.Length);
+            if (_contourColors.Length < contour.Length) Array.Resize(ref _contourColors, contour.Length);
+            if (_texture is not null && _contourUV.Length < contour.Length) Array.Resize(ref _contourUV, contour.Length);
             for (var i = 0; i < contour.Length; i++)
             {
-                var index = contour[i];
-                if ((uint)index >= (uint)length) throw new ArgumentOutOfRangeException(nameof(Polygons), "A contour index is outside Vertices.");
-                contourPoints[i] = points[index];
-                contourColors[i] = colors.Length == 1 ? colors[0] : colors[index];
-                if (_texture is not null) contourUV[i] = uvs[index];
+                var index = contour[i]; if ((uint)index >= (uint)length) throw new ArgumentOutOfRangeException(nameof(Polygons), "A contour index is outside Vertices.");
+                _contourPoints[i] = points[index]; _contourColors[i] = colors.Length == 1 ? colors[0] : colors[index]; if (_texture is not null) _contourUV[i] = uvs[index];
             }
-            DrawPolygon(contourPoints, contourColors, contourUV, _texture);
+            DrawPolygon(_contourPoints.AsSpan(0, contour.Length), _contourColors.AsSpan(0, contour.Length), _texture is null ? default : _contourUV.AsSpan(0, contour.Length), _texture);
+            AttachLastPolygonSkin(this, contour);
         }
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(PolygonProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(PolygonProperties).Concat(SkinProperties);
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Polygon) ? CreatePolygon : base.CreateSceneInstanceFactory();
@@ -250,7 +246,7 @@ public class Polygon : Entity
     protected override void Dispose(bool disposing)
     {
         if (disposing && _texture is not null) _texture.Changed -= TextureChanged;
-        _texture = null;
+        _texture = null; _skinTree = null; _skinSkeleton = null; _bones.Clear();
         base.Dispose(disposing);
     }
 

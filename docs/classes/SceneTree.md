@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -13,6 +13,10 @@ Last updated: 2026-10-06
 > Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
 AnimatedSprite uses the existing internal idle lane and tree pause/process policy. Worker SpriteFrames changes remain pending until owner-thread reconciliation; they do not dispatch scene callbacks from a worker. No new public scheduling API is introduced.
+
+## Prepared skeletal path bindings
+
+An internal PathRevision increments before tree-change and rename callback delivery. Skeleton/Polygon/LookAt weak path bindings observe that revision, so membership or a failed public callback cannot preserve a stale path. Existing scene-owner mutation and notification behavior remains the binding authority.
 
 ## Description
 

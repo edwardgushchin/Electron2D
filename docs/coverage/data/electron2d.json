@@ -2341,6 +2341,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Bone",
+    "kind": "type",
+    "declaringType": "Electron2D.Bone",
+    "name": "Bone",
+    "signature": "public class Electron2D.Bone",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.BoxContainer",
     "kind": "type",
     "declaringType": "Electron2D.BoxContainer",
@@ -8025,6 +8040,66 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Skeleton",
+    "kind": "type",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "Skeleton",
+    "signature": "public class Electron2D.Skeleton",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SkeletonModification",
+    "kind": "type",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "SkeletonModification",
+    "signature": "public abstract class Electron2D.SkeletonModification",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SkeletonModificationLookAt",
+    "kind": "type",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "SkeletonModificationLookAt",
+    "signature": "public sealed class Electron2D.SkeletonModificationLookAt",
+    "visibility": "public",
+    "baseType": "Electron2D.SkeletonModification",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SkeletonModificationStack",
+    "kind": "type",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "SkeletonModificationStack",
+    "signature": "public sealed class Electron2D.SkeletonModificationStack",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Slider",
     "kind": "type",
     "declaringType": "Electron2D.Slider",
@@ -12915,6 +12990,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Bone..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Bone",
+    "name": ".ctor",
+    "signature": "public Bone()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.BoxContainer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.BoxContainer",
@@ -16384,6 +16472,58 @@
     "declaringType": "Electron2D.Shortcut",
     "name": ".ctor",
     "signature": "public Shortcut()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Skeleton..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Skeleton",
+    "name": ".ctor",
+    "signature": "public Skeleton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SkeletonModification..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": ".ctor",
+    "signature": "protected SkeletonModification()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SkeletonModificationLookAt..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": ".ctor",
+    "signature": "public SkeletonModificationLookAt()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SkeletonModificationStack..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": ".ctor",
+    "signature": "public SkeletonModificationStack()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39203,6 +39343,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Skeleton.BoneSetupChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "BoneSetupChanged",
+    "signature": "public event System.Action BoneSetupChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Slider.DragEnded()",
     "kind": "event",
     "declaringType": "Electron2D.Slider",
@@ -59745,6 +59898,199 @@
       {
         "name": "bit",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.ApplyRest()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "ApplyRest",
+    "signature": "public System.Void ApplyRest()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.GetAutocalculateLengthAndAngle()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "GetAutocalculateLengthAndAngle",
+    "signature": "public System.Boolean GetAutocalculateLengthAndAngle()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.GetBoneAngle()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "GetBoneAngle",
+    "signature": "public System.Single GetBoneAngle()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.GetIndexInSkeleton()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "GetIndexInSkeleton",
+    "signature": "public System.Int32 GetIndexInSkeleton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.GetLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "GetLength",
+    "signature": "public System.Single GetLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.GetSkeletonRest()",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "GetSkeletonRest",
+    "signature": "public Electron2D.Transform GetSkeletonRest()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.SetAutocalculateLengthAndAngle(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "SetAutocalculateLengthAndAngle",
+    "signature": "public System.Void SetAutocalculateLengthAndAngle(System.Boolean autoCalculate)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "autoCalculate",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.SetBoneAngle(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "SetBoneAngle",
+    "signature": "public System.Void SetBoneAngle(System.Single angle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "angle",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Bone.SetLength(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Bone",
+    "name": "SetLength",
+    "signature": "public System.Void SetLength(System.Single length)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "length",
+        "type": "System.Single",
         "default": null
       }
     ],
@@ -107125,6 +107471,43 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Polygon.AddBone(System.String,System.Single[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Polygon",
+    "name": "AddBone",
+    "signature": "public System.Void AddBone(System.String path, System.Single[] weights)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "weights",
+        "type": "System.Single[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Polygon.ClearBones()",
+    "kind": "method",
+    "declaringType": "Electron2D.Polygon",
+    "name": "ClearBones",
+    "signature": "public System.Void ClearBones()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Polygon.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Polygon",
@@ -107157,6 +107540,76 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Polygon.EraseBone(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Polygon",
+    "name": "EraseBone",
+    "signature": "public System.Void EraseBone(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Polygon.GetBoneCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.Polygon",
+    "name": "GetBoneCount",
+    "signature": "public System.Int32 GetBoneCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Polygon.GetBonePath(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Polygon",
+    "name": "GetBonePath",
+    "signature": "public System.String GetBonePath(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Polygon.GetBoneWeights(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Polygon",
+    "name": "GetBoneWeights",
+    "signature": "public System.Single[] GetBoneWeights(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Polygon.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.Polygon",
@@ -107179,6 +107632,54 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Polygon.SetBonePath(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Polygon",
+    "name": "SetBonePath",
+    "signature": "public System.Void SetBonePath(System.Int32 index, System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Polygon.SetBoneWeights(System.Int32,System.Single[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Polygon",
+    "name": "SetBoneWeights",
+    "signature": "public System.Void SetBoneWeights(System.Int32 index, System.Single[] weights)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "weights",
+        "type": "System.Single[]",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -121568,6 +122069,941 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.ExecuteModifications(System.Double,Electron2D.ProcessPhase)",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "ExecuteModifications",
+    "signature": "public System.Void ExecuteModifications(System.Double delta, Electron2D.ProcessPhase executionMode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "executionMode",
+        "type": "Electron2D.ProcessPhase",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.GetBone(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "GetBone",
+    "signature": "public Electron2D.Bone GetBone(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Bone",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.GetBoneCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "GetBoneCount",
+    "signature": "public System.Int32 GetBoneCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.GetBoneLocalPoseOverride(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "GetBoneLocalPoseOverride",
+    "signature": "public Electron2D.Transform GetBoneLocalPoseOverride(System.Int32 boneIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "boneIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.GetModificationStack()",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "GetModificationStack",
+    "signature": "public Electron2D.SkeletonModificationStack GetModificationStack()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SkeletonModificationStack",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.GetSkeleton()",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "GetSkeleton",
+    "signature": "public Electron2D.RID GetSkeleton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.SetBoneLocalPoseOverride(System.Int32,Electron2D.Transform,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "SetBoneLocalPoseOverride",
+    "signature": "public System.Void SetBoneLocalPoseOverride(System.Int32 boneIndex, Electron2D.Transform overridePose, System.Single strength, System.Boolean persistent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "boneIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "overridePose",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "strength",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "persistent",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Skeleton.SetModificationStack(Electron2D.SkeletonModificationStack)",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "SetModificationStack",
+    "signature": "public System.Void SetModificationStack(Electron2D.SkeletonModificationStack modificationStack)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "modificationStack",
+        "type": "Electron2D.SkeletonModificationStack",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.ClampAngle(System.Single,System.Single,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "ClampAngle",
+    "signature": "public System.Single ClampAngle(System.Single angle, System.Single min, System.Single max, System.Boolean invert)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "angle",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "min",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "max",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "invert",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.CopyModificationState(Electron2D.SkeletonModification)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "CopyModificationState",
+    "signature": "protected System.Void CopyModificationState(Electron2D.SkeletonModification target)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.SkeletonModification",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.EnsureModificationMutable()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "EnsureModificationMutable",
+    "signature": "protected System.Void EnsureModificationMutable()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.GetIsSetup()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "GetIsSetup",
+    "signature": "public System.Boolean GetIsSetup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.GetModificationStack()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "GetModificationStack",
+    "signature": "public Electron2D.SkeletonModificationStack GetModificationStack()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SkeletonModificationStack",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.OnExecute(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "OnExecute",
+    "signature": "protected abstract System.Void OnExecute(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.OnSetupModification(Electron2D.SkeletonModificationStack)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "OnSetupModification",
+    "signature": "protected virtual System.Void OnSetupModification(Electron2D.SkeletonModificationStack modificationStack)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "modificationStack",
+        "type": "Electron2D.SkeletonModificationStack",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.SetIsSetup(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "SetIsSetup",
+    "signature": "public System.Void SetIsSetup(System.Boolean isSetup)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "isSetup",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.GetAdditionalRotation()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "GetAdditionalRotation",
+    "signature": "public System.Single GetAdditionalRotation()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.GetConstraintAngleInvert()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "GetConstraintAngleInvert",
+    "signature": "public System.Boolean GetConstraintAngleInvert()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.GetConstraintAngleMax()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "GetConstraintAngleMax",
+    "signature": "public System.Single GetConstraintAngleMax()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.GetConstraintAngleMin()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "GetConstraintAngleMin",
+    "signature": "public System.Single GetConstraintAngleMin()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.GetEnableConstraint()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "GetEnableConstraint",
+    "signature": "public System.Boolean GetEnableConstraint()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.OnExecute(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "OnExecute",
+    "signature": "protected override System.Void OnExecute(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.OnSetupModification(Electron2D.SkeletonModificationStack)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "OnSetupModification",
+    "signature": "protected override System.Void OnSetupModification(Electron2D.SkeletonModificationStack modificationStack)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "modificationStack",
+        "type": "Electron2D.SkeletonModificationStack",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.SetAdditionalRotation(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "SetAdditionalRotation",
+    "signature": "public System.Void SetAdditionalRotation(System.Single rotation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rotation",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.SetConstraintAngleInvert(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "SetConstraintAngleInvert",
+    "signature": "public System.Void SetConstraintAngleInvert(System.Boolean invert)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "invert",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.SetConstraintAngleMax(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "SetConstraintAngleMax",
+    "signature": "public System.Void SetConstraintAngleMax(System.Single angle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "angle",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.SetConstraintAngleMin(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "SetConstraintAngleMin",
+    "signature": "public System.Void SetConstraintAngleMin(System.Single angle)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "angle",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationLookAt.SetEnableConstraint(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "SetEnableConstraint",
+    "signature": "public System.Void SetEnableConstraint(System.Boolean enableConstraint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enableConstraint",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.AddModification(Electron2D.SkeletonModification)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "AddModification",
+    "signature": "public System.Void AddModification(Electron2D.SkeletonModification modification)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "modification",
+        "type": "Electron2D.SkeletonModification",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.DeleteModification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "DeleteModification",
+    "signature": "public System.Void DeleteModification(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.EnableAllModifications(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "EnableAllModifications",
+    "signature": "public System.Void EnableAllModifications(System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.Execute(System.Double,Electron2D.ProcessPhase)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "Execute",
+    "signature": "public System.Void Execute(System.Double delta, Electron2D.ProcessPhase executionMode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "executionMode",
+        "type": "Electron2D.ProcessPhase",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.GetIsSetup()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "GetIsSetup",
+    "signature": "public System.Boolean GetIsSetup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.GetModification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "GetModification",
+    "signature": "public Electron2D.SkeletonModification GetModification(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.SkeletonModification",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.GetSkeleton()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "GetSkeleton",
+    "signature": "public Electron2D.Skeleton GetSkeleton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Skeleton",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.SetModification(System.Int32,Electron2D.SkeletonModification)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "SetModification",
+    "signature": "public System.Void SetModification(System.Int32 index, Electron2D.SkeletonModification modification)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "modification",
+        "type": "Electron2D.SkeletonModification",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.Setup()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "Setup",
+    "signature": "public System.Void Setup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -154368,6 +155804,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Bone.Rest()",
+    "kind": "property",
+    "declaringType": "Electron2D.Bone",
+    "name": "Rest",
+    "signature": "public Electron2D.Transform Rest { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.BoxContainer.Alignment()",
     "kind": "property",
     "declaringType": "Electron2D.BoxContainer",
@@ -168603,6 +170052,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Polygon.Skeleton()",
+    "kind": "property",
+    "declaringType": "Electron2D.Polygon",
+    "name": "Skeleton",
+    "signature": "public System.String Skeleton { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Polygon.Texture()",
     "kind": "property",
     "declaringType": "Electron2D.Polygon",
@@ -172630,6 +174092,123 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.InputEvent[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModification.Enabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "Enabled",
+    "signature": "public System.Boolean Enabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModification.ExecutionMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "ExecutionMode",
+    "signature": "public Electron2D.ProcessPhase ExecutionMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProcessPhase",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationLookAt.BoneIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "BoneIndex",
+    "signature": "public System.Int32 BoneIndex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationLookAt.BoneNode()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "BoneNode",
+    "signature": "public System.String BoneNode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationLookAt.ConstraintInLocalSpace()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "ConstraintInLocalSpace",
+    "signature": "public System.Boolean ConstraintInLocalSpace { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationLookAt.TargetNodePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "TargetNodePath",
+    "signature": "public System.String TargetNodePath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationStack.Enabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "Enabled",
+    "signature": "public System.Boolean Enabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationStack.ModificationCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "ModificationCount",
+    "signature": "public System.Int32 ModificationCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationStack.Strength()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "Strength",
+    "signature": "public System.Single Strength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {
