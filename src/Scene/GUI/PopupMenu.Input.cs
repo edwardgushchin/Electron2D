@@ -91,7 +91,7 @@ public partial class PopupMenu
         _pendingSubmenu = index; var delay = Parent is PopupMenu parent ? parent._submenuDelay : _submenuDelay;
         if (_activeSubmenu is { Visible: true } child)
         {
-            var pointer = (Vector2)Position + _scroll.Position + _view.Position + _lastPointer; var left = child.Position.X < Position.X; var x = left ? child.Position.X + child.Size.X : child.Position.X; var top = (new Vector2(x, child.Position.Y) - pointer).Rotated(left ? -MathF.PI / 2 : MathF.PI / 2); var bottom = (new Vector2(x, child.Position.Y + child.Size.Y) - pointer).Rotated(left ? MathF.PI / 2 : -MathF.PI / 2); var toward = top.Dot(relative) > 0 && bottom.Dot(relative) > 0;
+            var pointer = (Vector2)Position + (_scroll.Position + _view.Position + _lastPointer) * _graphScale; var left = child.Position.X < Position.X; var x = left ? child.Position.X + child.Size.X : child.Position.X; var top = (new Vector2(x, child.Position.Y) - pointer).Rotated(left ? -MathF.PI / 2 : MathF.PI / 2); var bottom = (new Vector2(x, child.Position.Y + child.Size.Y) - pointer).Rotated(left ? MathF.PI / 2 : -MathF.PI / 2); var toward = top.Dot(relative) > 0 && bottom.Dot(relative) > 0;
             if (toward) { if (_suspendRemaining <= 0) _suspendRemaining = .5; _submenuTimer.Stop(); return; }
             CloseSubmenu();
         }
@@ -102,9 +102,9 @@ public partial class PopupMenu
     private void OpenSubmenu(int index, bool keyboard)
     {
         var item = Get(index); var child = GetItemSubmenuNode(index); if (child is null) throw new InvalidOperationException("Submenu is unavailable."); if (child.Visible) return;
-        CloseSubmenu(); Measure(); child.Exclusive = false; child.SubmenuPopupDelay = _submenuDelay; child.Measure(); var childSize = child._minimum.Ceil(); var area = GetUsableParentRect();
+        CloseSubmenu(); Measure(); child.Exclusive = false; child.SubmenuPopupDelay = _submenuDelay; child.ApplyGraphScale(_graphScale); child.Measure(); var childSize = (child._minimum * _graphScale).Ceil(); var area = GetUsableParentRect();
         var x = IsLayoutRTL() ? Position.X - (int)childSize.X : Position.X + Size.X; if (x + childSize.X > area.End.X) x = Position.X - (int)childSize.X; if (x < area.Position.X) x = Position.X + Size.X;
-        var y = Position.Y + (int)(_scroll.Position.Y + item.Rect.Position.Y - _scroll.ScrollVertical - child.GetThemeStyleBox("panel")!.GetMargin(Side.Top));
+        var y = Position.Y + (int)((_scroll.Position.Y + item.Rect.Position.Y - _scroll.ScrollVertical - child.GetThemeStyleBox("panel")!.GetMargin(Side.Top)) * _graphScale);
         _activeSubmenu = child; child._parentMenu = this; child.Popup(new(new(x, y), (Vector2i)childSize)); if (keyboard) { child._focused = -1; child.Navigate(1); }
         child._view.QueueRedraw();
     }

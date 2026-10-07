@@ -75,7 +75,7 @@ public partial class PopupMenu
         var entries = 0; foreach (var item in _items) if (!item.Separator) entries++; _searchVisible = _searchEnabled && entries >= _searchMinimum;
         var searchHeight = _searchVisible ? _search.GetCombinedMinimumSize().Y + GetThemeConstant("search_bar_separation") : 0;
         _minimum = _style.GetMinimumSize() + new Vector2(Math.Max(_contentWidth, _searchVisible ? _search.GetCombinedMinimumSize().X : 0), _totalHeight + searchHeight);
-        if (Embedder is { } host) _minimum.Y = Math.Min(_minimum.Y, host.GetVisibleRect().Size.Y);
+        if (Embedder is { } host) _minimum.Y = Math.Min(_minimum.Y, host.GetVisibleRect().Size.Y / _graphScale);
         _dirty = false;
     }
     private static string AcceleratorText(Key accelerator) { using var input = new InputEventKey { Keycode = (Key)((int)accelerator & (int)KeyModifierMask.CodeMask), ShiftPressed = ((int)accelerator & (int)KeyModifierMask.Shift) != 0, ControlPressed = ((int)accelerator & (int)KeyModifierMask.Control) != 0, AltPressed = ((int)accelerator & (int)KeyModifierMask.Alt) != 0, MetaPressed = ((int)accelerator & (int)KeyModifierMask.Meta) != 0 }; return input.AsText(); }
@@ -88,8 +88,8 @@ public partial class PopupMenu
         {
             Measure(); ShadowInsets(Visible);
             if (Visible && _contentRect is not null && Size != _expandedSize) _contentRect = null;
-            _panel.AddThemeStyleBoxOverride("panel", _style); _panel.Position = _shadowStart; _panel.Size = ((Vector2)Size - _shadowStart - _shadowEnd).Max(Vector2.Zero);
-            var inset = _style.GetOffset() + _shadowStart; var area = ((Vector2)Size - _style.GetMinimumSize() - _shadowStart - _shadowEnd).Max(Vector2.Zero);
+            _panel.AddThemeStyleBoxOverride("panel", _style); _panel.Position = _shadowStart; _panel.Size = ((Vector2)Size / _graphScale - _shadowStart - _shadowEnd).Max(Vector2.Zero);
+            var inset = _style.GetOffset() + _shadowStart; var area = ((Vector2)Size / _graphScale - _style.GetMinimumSize() - _shadowStart - _shadowEnd).Max(Vector2.Zero);
             _search.RightIcon = GetThemeIcon("search"); _search.Visible = _searchVisible; var height = _searchVisible ? _search.GetCombinedMinimumSize().Y : 0;
             _search.Position = inset; _search.Size = new(area.X, height); if (_searchVisible) height += GetThemeConstant("search_bar_separation");
             _scroll.Position = inset + new Vector2(0, height); _scroll.Size = new(area.X, Math.Max(0, area.Y - height)); _view.CustomMinimumSize = new(_contentWidth, _totalHeight);
@@ -98,12 +98,12 @@ public partial class PopupMenu
         finally { _arranging = false; }
     }
     /// <inheritdoc />
-    protected override Vector2 OnGetContentsMinimumSize() { if (_view is null) return Vector2.Zero; Measure(); return _minimum; }
+    protected override Vector2 OnGetContentsMinimumSize() { if (_view is null) return Vector2.Zero; Measure(); return _minimum * _graphScale; }
     internal override void PreparePopup()
     {
-        base.PreparePopup(); _search.Text = ""; FilterChanged(""); Measure(); var width = _shrinkWidth ? Math.Max(1, (int)MathF.Ceiling(_minimum.X)) : Size.X; var height = _shrinkHeight ? Math.Max(1, (int)MathF.Ceiling(_minimum.Y)) : Size.Y; Size = new(width, height);
+        ApplyGraphScale(GraphScaleFromOwner()); base.PreparePopup(); _search.Text = ""; FilterChanged(""); Measure(); var width = _shrinkWidth ? Math.Max(1, (int)MathF.Ceiling(_minimum.X * _graphScale)) : Size.X; var height = _shrinkHeight ? Math.Max(1, (int)MathF.Ceiling(_minimum.Y * _graphScale)) : Size.Y; Size = new(width, height);
     }
-    internal override void AdjustPopup() { base.AdjustPopup(); Measure(); _contentRect = new(Position, Size); ShadowInsets(true); _expandedSize = Size + (Vector2i)(_shadowStart + _shadowEnd); _arranging = true; try { Position -= (Vector2i)_shadowStart; Size = _expandedSize; } finally { _arranging = false; } Arrange(); }
+    internal override void AdjustPopup() { base.AdjustPopup(); Measure(); _contentRect = new(Position, Size); ShadowInsets(true); _expandedSize = Size + (Vector2i)((_shadowStart + _shadowEnd) * _graphScale); _arranging = true; try { Position -= (Vector2i)(_shadowStart * _graphScale); Size = _expandedSize; } finally { _arranging = false; } Arrange(); }
     private static MouseButtonMask InitialButtonMask() { MouseButtonMask mask = 0; for (var i = 1; i <= 9; i++) if (Input.IsMouseButtonPressed((MouseButton)i)) mask |= (MouseButtonMask)(1u << (i - 1)); return mask; }
     private void VisibilityUpdated()
     {

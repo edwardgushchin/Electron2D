@@ -14,8 +14,16 @@ public static partial class ResourceFileTypes
     private static PopupMenu CreatePopupMenuFileNode() => new();
     private static Popup CreatePopupFileNode() => new Popup();
     private static PopupPanel CreatePopupPanelFileNode() => new PopupPanel();
+    private static GraphElement CreateGraphElementFileNode() => new();
+    private static GraphNode CreateGraphNodeFileNode() => new();
+    private static GraphFrame CreateGraphFrameFileNode() => new();
+    private static GraphEdit CreateGraphEditFileNode() => new();
     private static void RegisterBuiltInNodes()
     {
+        RegisterNode("GraphElement", CreateGraphElementFileNode);
+        RegisterNode("GraphNode", CreateGraphNodeFileNode);
+        RegisterNode("GraphFrame", CreateGraphFrameFileNode);
+        RegisterNode("GraphEdit", CreateGraphEditFileNode);
         RegisterNode("SpinBox", CreateSpinBoxFileNode);
         RegisterNode("ColorPicker", CreateColorPickerFileNode);
         RegisterNode("ColorPickerButton", CreateColorPickerButtonFileNode);

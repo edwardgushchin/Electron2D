@@ -4181,6 +4181,130 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.GraphConnection",
+    "kind": "type",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "GraphConnection",
+    "signature": "public struct Electron2D.GraphConnection",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.GraphConnection\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GraphEdit",
+    "kind": "type",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GraphEdit",
+    "signature": "public class Electron2D.GraphEdit",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GraphEdit.GridPatternMode",
+    "kind": "type",
+    "declaringType": "Electron2D.GraphEdit.GridPatternMode",
+    "name": "GridPatternMode",
+    "signature": "public enum Electron2D.GraphEdit.GridPatternMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GraphEdit.PanningSchemeMode",
+    "kind": "type",
+    "declaringType": "Electron2D.GraphEdit.PanningSchemeMode",
+    "name": "PanningSchemeMode",
+    "signature": "public enum Electron2D.GraphEdit.PanningSchemeMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GraphElement",
+    "kind": "type",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "GraphElement",
+    "signature": "public class Electron2D.GraphElement",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GraphFrame",
+    "kind": "type",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "GraphFrame",
+    "signature": "public class Electron2D.GraphFrame",
+    "visibility": "public",
+    "baseType": "Electron2D.GraphElement",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GraphNode",
+    "kind": "type",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GraphNode",
+    "signature": "public class Electron2D.GraphNode",
+    "visibility": "public",
+    "baseType": "Electron2D.GraphElement",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.GraphSlotMetadata",
+    "kind": "type",
+    "declaringType": "Electron2D.GraphSlotMetadata",
+    "name": "GraphSlotMetadata",
+    "signature": "public sealed class Electron2D.GraphSlotMetadata",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.GridContainer",
     "kind": "type",
     "declaringType": "Electron2D.GridContainer",
@@ -13653,6 +13777,97 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.GraphConnection..ctor(System.String,System.Int32,System.String,System.Int32,System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": ".ctor",
+    "signature": "public GraphConnection(System.String FromNode, System.Int32 FromPort, System.String ToNode, System.Int32 ToPort, System.Boolean KeepAlive = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "FromNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "FromPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "ToNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "ToPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "KeepAlive",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GraphEdit..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": ".ctor",
+    "signature": "public GraphEdit()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GraphElement..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GraphElement",
+    "name": ".ctor",
+    "signature": "public GraphElement()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GraphFrame..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": ".ctor",
+    "signature": "public GraphFrame()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GraphNode..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GraphNode",
+    "name": ".ctor",
+    "signature": "public GraphNode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.GridContainer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.GridContainer",
@@ -22671,6 +22886,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Gradient.ColorSpace",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.GraphEdit.GridPatternMode.Dots()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GraphEdit.GridPatternMode",
+    "name": "Dots",
+    "signature": "public const Electron2D.GraphEdit.GridPatternMode Dots = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GraphEdit.GridPatternMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.GraphEdit.GridPatternMode.Lines()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GraphEdit.GridPatternMode",
+    "name": "Lines",
+    "signature": "public const Electron2D.GraphEdit.GridPatternMode Lines = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GraphEdit.GridPatternMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.GraphEdit.PanningSchemeMode.ScrollPans()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GraphEdit.PanningSchemeMode",
+    "name": "ScrollPans",
+    "signature": "public const Electron2D.GraphEdit.PanningSchemeMode ScrollPans = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GraphEdit.PanningSchemeMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.GraphEdit.PanningSchemeMode.ScrollZooms()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.GraphEdit.PanningSchemeMode",
+    "name": "ScrollZooms",
+    "signature": "public const Electron2D.GraphEdit.PanningSchemeMode ScrollZooms = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GraphEdit.PanningSchemeMode",
     "value": "0"
   },
   {
@@ -36841,6 +37108,396 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.BeginNodeMove()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "BeginNodeMove",
+    "signature": "public event System.Action BeginNodeMove",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.ConnectionDragEnded()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectionDragEnded",
+    "signature": "public event System.Action ConnectionDragEnded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.ConnectionDragStarted()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectionDragStarted",
+    "signature": "public event System.Action\u003CSystem.String, System.Int32, System.Boolean\u003E ConnectionDragStarted",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.Int32, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.ConnectionFromEmpty()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectionFromEmpty",
+    "signature": "public event System.Action\u003CSystem.String, System.Int32, Electron2D.Vector2\u003E ConnectionFromEmpty",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.Int32, Electron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.ConnectionRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectionRequest",
+    "signature": "public event System.Action\u003CSystem.String, System.Int32, System.String, System.Int32\u003E ConnectionRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.Int32, System.String, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.ConnectionToEmpty()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectionToEmpty",
+    "signature": "public event System.Action\u003CSystem.String, System.Int32, Electron2D.Vector2\u003E ConnectionToEmpty",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.Int32, Electron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.CopyNodesRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "CopyNodesRequest",
+    "signature": "public event System.Action CopyNodesRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.CutNodesRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "CutNodesRequest",
+    "signature": "public event System.Action CutNodesRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.DeleteNodesRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "DeleteNodesRequest",
+    "signature": "public event System.Action\u003CSystem.ReadOnlyMemory\u003CSystem.String\u003E\u003E DeleteNodesRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.ReadOnlyMemory\u003CSystem.String\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.DisconnectionRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "DisconnectionRequest",
+    "signature": "public event System.Action\u003CSystem.String, System.Int32, System.String, System.Int32\u003E DisconnectionRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.Int32, System.String, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.DuplicateNodesRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "DuplicateNodesRequest",
+    "signature": "public event System.Action DuplicateNodesRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.EndNodeMove()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "EndNodeMove",
+    "signature": "public event System.Action EndNodeMove",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.FrameRectChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "FrameRectChanged",
+    "signature": "public event System.Action\u003CElectron2D.GraphFrame, Electron2D.Rect2\u003E FrameRectChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.GraphFrame, Electron2D.Rect2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.GraphElementsLinkedToFrameRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GraphElementsLinkedToFrameRequest",
+    "signature": "public event System.Action\u003CSystem.ReadOnlyMemory\u003CSystem.String\u003E, System.String\u003E GraphElementsLinkedToFrameRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.ReadOnlyMemory\u003CSystem.String\u003E, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.NodeDeselected()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "NodeDeselected",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E NodeDeselected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.NodeSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "NodeSelected",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E NodeSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.PasteNodesRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "PasteNodesRequest",
+    "signature": "public event System.Action PasteNodesRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.PopupRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "PopupRequest",
+    "signature": "public event System.Action\u003CElectron2D.Vector2\u003E PopupRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphEdit.ScrollOffsetChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ScrollOffsetChanged",
+    "signature": "public event System.Action\u003CElectron2D.Vector2\u003E ScrollOffsetChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphElement.DeleteRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "DeleteRequest",
+    "signature": "public event System.Action DeleteRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphElement.Dragged()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "Dragged",
+    "signature": "public event System.Action\u003CElectron2D.Vector2, Electron2D.Vector2\u003E Dragged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2, Electron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphElement.NodeDeselected()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "NodeDeselected",
+    "signature": "public event System.Action NodeDeselected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphElement.NodeSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "NodeSelected",
+    "signature": "public event System.Action NodeSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphElement.PositionOffsetChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "PositionOffsetChanged",
+    "signature": "public event System.Action PositionOffsetChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphElement.RaiseRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "RaiseRequest",
+    "signature": "public event System.Action RaiseRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphElement.ResizeEnd()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "ResizeEnd",
+    "signature": "public event System.Action\u003CElectron2D.Vector2\u003E ResizeEnd",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphElement.ResizeRequest()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "ResizeRequest",
+    "signature": "public event System.Action\u003CElectron2D.Vector2\u003E ResizeRequest",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphFrame.AutoshrinkChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "AutoshrinkChanged",
+    "signature": "public event System.Action AutoshrinkChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphNode.SlotSizesChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SlotSizesChanged",
+    "signature": "public event System.Action SlotSizesChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.GraphNode.SlotUpdated()",
+    "kind": "event",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SlotUpdated",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E SlotUpdated",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
     "value": null
   },
   {
@@ -78392,6 +79049,2023 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphConnection.Deconstruct(ref System.String,ref System.Int32,ref System.String,ref System.Int32,ref System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out System.String FromNode, out System.Int32 FromPort, out System.String ToNode, out System.Int32 ToPort, out System.Boolean KeepAlive)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "FromNode",
+        "type": "ref System.String",
+        "default": null
+      },
+      {
+        "name": "FromPort",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "ToNode",
+        "type": "ref System.String",
+        "default": null
+      },
+      {
+        "name": "ToPort",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "KeepAlive",
+        "type": "ref System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphConnection.Equals(Electron2D.GraphConnection)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.GraphConnection other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.GraphConnection",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphConnection.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphConnection.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphConnection.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.AddValidConnectionType(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "AddValidConnectionType",
+    "signature": "public System.Void AddValidConnectionType(System.Int32 fromType, System.Int32 toType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromType",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toType",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.AddValidLeftDisconnectType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "AddValidLeftDisconnectType",
+    "signature": "public System.Void AddValidLeftDisconnectType(System.Int32 type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.AddValidRightDisconnectType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "AddValidRightDisconnectType",
+    "signature": "public System.Void AddValidRightDisconnectType(System.Int32 type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.ArrangeNodes()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ArrangeNodes",
+    "signature": "public System.Void ArrangeNodes()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.AttachGraphElementToFrame(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "AttachGraphElementToFrame",
+    "signature": "public System.Void AttachGraphElementToFrame(System.String element, System.String frame)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "element",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "frame",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.ClearConnections()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ClearConnections",
+    "signature": "public System.Void ClearConnections()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.ConnectNode(System.String,System.Int32,System.String,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectNode",
+    "signature": "public System.Void ConnectNode(System.String fromNode, System.Int32 fromPort, System.String toNode, System.Int32 toPort, System.Boolean keepAlive = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fromPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "toPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "keepAlive",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.DetachGraphElementFromFrame(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "DetachGraphElementFromFrame",
+    "signature": "public System.Void DetachGraphElementFromFrame(System.String element)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "element",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.DisconnectNode(System.String,System.Int32,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "DisconnectNode",
+    "signature": "public System.Void DisconnectNode(System.String fromNode, System.Int32 fromPort, System.String toNode, System.Int32 toPort)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fromPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "toPort",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.ForceConnectionDragEnd()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ForceConnectionDragEnd",
+    "signature": "public System.Void ForceConnectionDragEnd()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetAttachedNodesOfFrame(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetAttachedNodesOfFrame",
+    "signature": "public System.String[] GetAttachedNodesOfFrame(System.String frame)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "frame",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetClosestConnectionAtPoint(Electron2D.Vector2,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetClosestConnectionAtPoint",
+    "signature": "public System.Nullable\u003CElectron2D.GraphConnection\u003E GetClosestConnectionAtPoint(Electron2D.Vector2 point, System.Single maxDistance = 4f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "maxDistance",
+        "type": "System.Single",
+        "default": "4f"
+      }
+    ],
+    "returnType": "System.Nullable\u003CElectron2D.GraphConnection\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetConnectionCount(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetConnectionCount",
+    "signature": "public System.Int32 GetConnectionCount(System.String fromNode, System.Int32 fromPort)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fromPort",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetConnectionLine(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetConnectionLine",
+    "signature": "public Electron2D.Vector2[] GetConnectionLine(Electron2D.Vector2 fromNode, Electron2D.Vector2 toNode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromNode",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "toNode",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetConnectionListFromNode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetConnectionListFromNode",
+    "signature": "public Electron2D.GraphConnection[] GetConnectionListFromNode(System.String node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.GraphConnection[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetConnectionsIntersectingWithRect(Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetConnectionsIntersectingWithRect",
+    "signature": "public Electron2D.GraphConnection[] GetConnectionsIntersectingWithRect(Electron2D.Rect2 rect)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.GraphConnection[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetElementFrame(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetElementFrame",
+    "signature": "public Electron2D.GraphFrame GetElementFrame(System.String element)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "element",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.GraphFrame",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetMenuHBox()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetMenuHBox",
+    "signature": "public Electron2D.HBoxContainer GetMenuHBox()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HBoxContainer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.IsNodeConnected(System.String,System.Int32,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "IsNodeConnected",
+    "signature": "public System.Boolean IsNodeConnected(System.String fromNode, System.Int32 fromPort, System.String toNode, System.Int32 toPort)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fromPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "toPort",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.IsValidConnectionType(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "IsValidConnectionType",
+    "signature": "public System.Boolean IsValidConnectionType(System.Int32 fromType, System.Int32 toType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromType",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toType",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.OnGetConnectionLine(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "OnGetConnectionLine",
+    "signature": "protected virtual Electron2D.Vector2[] OnGetConnectionLine(Electron2D.Vector2 fromPosition, Electron2D.Vector2 toPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "toPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.OnIsInInputHotzone(Electron2D.GraphNode,System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "OnIsInInputHotzone",
+    "signature": "protected virtual System.Boolean OnIsInInputHotzone(Electron2D.GraphNode node, System.Int32 port, Electron2D.Vector2 mousePosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.GraphNode",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mousePosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.OnIsInOutputHotzone(Electron2D.GraphNode,System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "OnIsInOutputHotzone",
+    "signature": "protected virtual System.Boolean OnIsInOutputHotzone(Electron2D.GraphNode node, System.Int32 port, Electron2D.Vector2 mousePosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.GraphNode",
+        "default": null
+      },
+      {
+        "name": "port",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mousePosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.OnIsNodeHoverValid(System.String,System.Int32,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "OnIsNodeHoverValid",
+    "signature": "protected virtual System.Boolean OnIsNodeHoverValid(System.String fromNode, System.Int32 fromPort, System.String toNode, System.Int32 toPort)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fromPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "toPort",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.RemoveValidConnectionType(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "RemoveValidConnectionType",
+    "signature": "public System.Void RemoveValidConnectionType(System.Int32 fromType, System.Int32 toType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromType",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toType",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.RemoveValidLeftDisconnectType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "RemoveValidLeftDisconnectType",
+    "signature": "public System.Void RemoveValidLeftDisconnectType(System.Int32 type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.RemoveValidRightDisconnectType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "RemoveValidRightDisconnectType",
+    "signature": "public System.Void RemoveValidRightDisconnectType(System.Int32 type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.SetConnectionActivity(System.String,System.Int32,System.String,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "SetConnectionActivity",
+    "signature": "public System.Void SetConnectionActivity(System.String fromNode, System.Int32 fromPort, System.String toNode, System.Int32 toPort, System.Single amount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fromPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toNode",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "toPort",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "amount",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.SetSelected(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "SetSelected",
+    "signature": "public System.Void SetSelected(Electron2D.Node node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphEdit.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphElement.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphElement.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphElement.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphElement.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphElement.OnGetCursorShape(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "OnGetCursorShape",
+    "signature": "protected override Electron2D.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphElement.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphElement.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphElement.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphFrame.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphFrame.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphFrame.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphFrame.GetTitlebarHBox()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "GetTitlebarHBox",
+    "signature": "public Electron2D.HBoxContainer GetTitlebarHBox()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HBoxContainer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphFrame.HasPoint(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "HasPoint",
+    "signature": "protected override System.Boolean HasPoint(Electron2D.Vector2 point)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphFrame.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphFrame.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.ClearAllSlots()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "ClearAllSlots",
+    "signature": "public System.Void ClearAllSlots()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.ClearSlot(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "ClearSlot",
+    "signature": "public System.Void ClearSlot(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetInputPortColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetInputPortColor",
+    "signature": "public Electron2D.Color GetInputPortColor(System.Int32 portIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "portIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetInputPortCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetInputPortCount",
+    "signature": "public System.Int32 GetInputPortCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetInputPortPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetInputPortPosition",
+    "signature": "public Electron2D.Vector2 GetInputPortPosition(System.Int32 portIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "portIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetInputPortSlot(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetInputPortSlot",
+    "signature": "public System.Int32 GetInputPortSlot(System.Int32 portIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "portIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetInputPortType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetInputPortType",
+    "signature": "public System.Int32 GetInputPortType(System.Int32 portIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "portIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetOutputPortColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetOutputPortColor",
+    "signature": "public Electron2D.Color GetOutputPortColor(System.Int32 portIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "portIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetOutputPortCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetOutputPortCount",
+    "signature": "public System.Int32 GetOutputPortCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetOutputPortPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetOutputPortPosition",
+    "signature": "public Electron2D.Vector2 GetOutputPortPosition(System.Int32 portIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "portIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetOutputPortSlot(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetOutputPortSlot",
+    "signature": "public System.Int32 GetOutputPortSlot(System.Int32 portIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "portIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetOutputPortType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetOutputPortType",
+    "signature": "public System.Int32 GetOutputPortType(System.Int32 portIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "portIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetSlotColorLeft(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetSlotColorLeft",
+    "signature": "public Electron2D.Color GetSlotColorLeft(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetSlotColorRight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetSlotColorRight",
+    "signature": "public Electron2D.Color GetSlotColorRight(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetSlotCustomIconLeft(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetSlotCustomIconLeft",
+    "signature": "public Electron2D.Texture GetSlotCustomIconLeft(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetSlotCustomIconRight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetSlotCustomIconRight",
+    "signature": "public Electron2D.Texture GetSlotCustomIconRight(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetSlotMetadataLeft(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetSlotMetadataLeft",
+    "signature": "public Electron2D.GraphSlotMetadata GetSlotMetadataLeft(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.GraphSlotMetadata",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetSlotMetadataRight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetSlotMetadataRight",
+    "signature": "public Electron2D.GraphSlotMetadata GetSlotMetadataRight(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.GraphSlotMetadata",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetSlotTypeLeft(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetSlotTypeLeft",
+    "signature": "public System.Int32 GetSlotTypeLeft(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetSlotTypeRight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetSlotTypeRight",
+    "signature": "public System.Int32 GetSlotTypeRight(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.GetTitlebarHBox()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "GetTitlebarHBox",
+    "signature": "public Electron2D.HBoxContainer GetTitlebarHBox()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HBoxContainer",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.IsSlotDrawStylebox(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "IsSlotDrawStylebox",
+    "signature": "public System.Boolean IsSlotDrawStylebox(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.IsSlotEnabledLeft(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "IsSlotEnabledLeft",
+    "signature": "public System.Boolean IsSlotEnabledLeft(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.IsSlotEnabledRight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "IsSlotEnabledRight",
+    "signature": "public System.Boolean IsSlotEnabledRight(System.Int32 slotIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.OnDrawPort(System.Int32,Electron2D.Vector2i,System.Boolean,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "OnDrawPort",
+    "signature": "protected virtual System.Void OnDrawPort(System.Int32 slotIndex, Electron2D.Vector2i position, System.Boolean left, Electron2D.Color color)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "left",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlot(System.Int32,System.Boolean,System.Int32,Electron2D.Color,System.Boolean,System.Int32,Electron2D.Color,Electron2D.Texture,Electron2D.Texture,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlot",
+    "signature": "public System.Void SetSlot(System.Int32 slotIndex, System.Boolean enableLeftPort, System.Int32 typeLeft, Electron2D.Color colorLeft, System.Boolean enableRightPort, System.Int32 typeRight, Electron2D.Color colorRight, Electron2D.Texture customIconLeft = null, Electron2D.Texture customIconRight = null, System.Boolean drawStylebox = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enableLeftPort",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "typeLeft",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "colorLeft",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "enableRightPort",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "typeRight",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "colorRight",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "customIconLeft",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      },
+      {
+        "name": "customIconRight",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      },
+      {
+        "name": "drawStylebox",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotColorLeft(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotColorLeft",
+    "signature": "public System.Void SetSlotColorLeft(System.Int32 slotIndex, Electron2D.Color value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotColorRight(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotColorRight",
+    "signature": "public System.Void SetSlotColorRight(System.Int32 slotIndex, Electron2D.Color value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotCustomIconLeft(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotCustomIconLeft",
+    "signature": "public System.Void SetSlotCustomIconLeft(System.Int32 slotIndex, Electron2D.Texture value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotCustomIconRight(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotCustomIconRight",
+    "signature": "public System.Void SetSlotCustomIconRight(System.Int32 slotIndex, Electron2D.Texture value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotDrawStylebox(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotDrawStylebox",
+    "signature": "public System.Void SetSlotDrawStylebox(System.Int32 slotIndex, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotEnabledLeft(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotEnabledLeft",
+    "signature": "public System.Void SetSlotEnabledLeft(System.Int32 slotIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotEnabledRight(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotEnabledRight",
+    "signature": "public System.Void SetSlotEnabledRight(System.Int32 slotIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotMetadataLeft\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotMetadataLeft",
+    "signature": "public System.Void SetSlotMetadataLeft\u003CT\u003E(System.Int32 slotIndex, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotMetadataRight\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotMetadataRight",
+    "signature": "public System.Void SetSlotMetadataRight\u003CT\u003E(System.Int32 slotIndex, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotTypeLeft(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotTypeLeft",
+    "signature": "public System.Void SetSlotTypeLeft(System.Int32 slotIndex, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphNode.SetSlotTypeRight(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SetSlotTypeRight",
+    "signature": "public System.Void SetSlotTypeRight(System.Int32 slotIndex, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "slotIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GraphSlotMetadata.TryGet\u00601(ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.GraphSlotMetadata",
+    "name": "TryGet",
+    "signature": "public System.Boolean TryGet\u003CT\u003E(out T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -140397,6 +143071,54 @@
     "value": null
   },
   {
+    "id": "operator:Electron2D.GraphConnection.op_Equality(Electron2D.GraphConnection,Electron2D.GraphConnection)",
+    "kind": "operator",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.GraphConnection left, Electron2D.GraphConnection right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.GraphConnection",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.GraphConnection",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.GraphConnection.op_Inequality(Electron2D.GraphConnection,Electron2D.GraphConnection)",
+    "kind": "operator",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.GraphConnection left, Electron2D.GraphConnection right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.GraphConnection",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.GraphConnection",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "operator:Electron2D.ImageMetrics.op_Equality(Electron2D.ImageMetrics,Electron2D.ImageMetrics)",
     "kind": "operator",
     "declaringType": "Electron2D.ImageMetrics",
@@ -155042,6 +157764,591 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.GraphConnection.FromNode()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "FromNode",
+    "signature": "public System.String FromNode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphConnection.FromPort()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "FromPort",
+    "signature": "public System.Int32 FromPort { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphConnection.KeepAlive()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "KeepAlive",
+    "signature": "public System.Boolean KeepAlive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphConnection.ToNode()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "ToNode",
+    "signature": "public System.String ToNode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphConnection.ToPort()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphConnection",
+    "name": "ToPort",
+    "signature": "public System.Int32 ToPort { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ConnectionLinesAntialiased()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectionLinesAntialiased",
+    "signature": "public System.Boolean ConnectionLinesAntialiased { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ConnectionLinesCurvature()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectionLinesCurvature",
+    "signature": "public System.Single ConnectionLinesCurvature { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ConnectionLinesThickness()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ConnectionLinesThickness",
+    "signature": "public System.Single ConnectionLinesThickness { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.Connections()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "Connections",
+    "signature": "public Electron2D.GraphConnection[] Connections { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GraphConnection[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.GridPattern()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "GridPattern",
+    "signature": "public Electron2D.GraphEdit.GridPatternMode GridPattern { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GraphEdit.GridPatternMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.MinimapEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "MinimapEnabled",
+    "signature": "public System.Boolean MinimapEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.MinimapOpacity()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "MinimapOpacity",
+    "signature": "public System.Single MinimapOpacity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.MinimapSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "MinimapSize",
+    "signature": "public Electron2D.Vector2 MinimapSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.PanningScheme()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "PanningScheme",
+    "signature": "public Electron2D.GraphEdit.PanningSchemeMode PanningScheme { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.GraphEdit.PanningSchemeMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.RightDisconnects()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "RightDisconnects",
+    "signature": "public System.Boolean RightDisconnects { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ScrollOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ScrollOffset",
+    "signature": "public Electron2D.Vector2 ScrollOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ShowArrangeButton()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ShowArrangeButton",
+    "signature": "public System.Boolean ShowArrangeButton { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ShowGrid()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ShowGrid",
+    "signature": "public System.Boolean ShowGrid { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ShowGridButtons()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ShowGridButtons",
+    "signature": "public System.Boolean ShowGridButtons { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ShowMenu()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ShowMenu",
+    "signature": "public System.Boolean ShowMenu { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ShowMinimapButton()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ShowMinimapButton",
+    "signature": "public System.Boolean ShowMinimapButton { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ShowZoomButtons()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ShowZoomButtons",
+    "signature": "public System.Boolean ShowZoomButtons { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ShowZoomLabel()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ShowZoomLabel",
+    "signature": "public System.Boolean ShowZoomLabel { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.SnappingDistance()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "SnappingDistance",
+    "signature": "public System.Int32 SnappingDistance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.SnappingEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "SnappingEnabled",
+    "signature": "public System.Boolean SnappingEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.TypeNames()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "TypeNames",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.Int32, System.String\u003E TypeNames { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.Int32, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.Zoom()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "Zoom",
+    "signature": "public System.Single Zoom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ZoomMax()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ZoomMax",
+    "signature": "public System.Single ZoomMax { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ZoomMin()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ZoomMin",
+    "signature": "public System.Single ZoomMin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphEdit.ZoomStep()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphEdit",
+    "name": "ZoomStep",
+    "signature": "public System.Single ZoomStep { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphElement.Draggable()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "Draggable",
+    "signature": "public System.Boolean Draggable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphElement.PositionOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "PositionOffset",
+    "signature": "public Electron2D.Vector2 PositionOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphElement.Resizable()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "Resizable",
+    "signature": "public System.Boolean Resizable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphElement.ScalingMenus()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "ScalingMenus",
+    "signature": "public System.Boolean ScalingMenus { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphElement.Selectable()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "Selectable",
+    "signature": "public System.Boolean Selectable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphElement.Selected()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphElement",
+    "name": "Selected",
+    "signature": "public System.Boolean Selected { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphFrame.AutoshrinkEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "AutoshrinkEnabled",
+    "signature": "public System.Boolean AutoshrinkEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphFrame.AutoshrinkMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "AutoshrinkMargin",
+    "signature": "public System.Int32 AutoshrinkMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphFrame.DragMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "DragMargin",
+    "signature": "public System.Int32 DragMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphFrame.TintColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "TintColor",
+    "signature": "public Electron2D.Color TintColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphFrame.TintColorEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "TintColorEnabled",
+    "signature": "public System.Boolean TintColorEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphFrame.Title()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphFrame",
+    "name": "Title",
+    "signature": "public System.String Title { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphNode.IgnoreInvalidConnectionType()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "IgnoreInvalidConnectionType",
+    "signature": "public System.Boolean IgnoreInvalidConnectionType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphNode.SlotsFocusMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "SlotsFocusMode",
+    "signature": "public Electron2D.FocusMode SlotsFocusMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FocusMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GraphNode.Title()",
+    "kind": "property",
+    "declaringType": "Electron2D.GraphNode",
+    "name": "Title",
+    "signature": "public System.String Title { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.GridContainer.Columns()",
     "kind": "property",
     "declaringType": "Electron2D.GridContainer",
@@ -161196,6 +164503,58 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "InputUIFocusPrev",
     "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIFocusPrev { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIGraphDelete()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIGraphDelete",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIGraphDelete { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIGraphDuplicate()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIGraphDuplicate",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIGraphDuplicate { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIGraphFollowLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIGraphFollowLeft",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIGraphFollowLeft { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIGraphFollowRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIGraphFollowRight",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIGraphFollowRight { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

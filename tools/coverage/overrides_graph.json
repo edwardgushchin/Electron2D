@@ -1,0 +1,1426 @@
+{
+  "mappings": [
+    {
+      "godot": "class:GraphElement",
+      "electron2d": "T:Electron2D.GraphElement",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::property:draggable",
+      "electron2d": "property:Electron2D.GraphElement.Draggable()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::property:position_offset",
+      "electron2d": "property:Electron2D.GraphElement.PositionOffset()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::property:resizable",
+      "electron2d": "property:Electron2D.GraphElement.Resizable()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::property:scaling_menus",
+      "electron2d": "property:Electron2D.GraphElement.ScalingMenus()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::property:selectable",
+      "electron2d": "property:Electron2D.GraphElement.Selectable()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::property:selected",
+      "electron2d": "property:Electron2D.GraphElement.Selected()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::signal:delete_request()",
+      "electron2d": "event:Electron2D.GraphElement.DeleteRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::signal:dragged(Vector2:,Vector2:)",
+      "electron2d": "event:Electron2D.GraphElement.Dragged()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::signal:node_deselected()",
+      "electron2d": "event:Electron2D.GraphElement.NodeDeselected()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::signal:node_selected()",
+      "electron2d": "event:Electron2D.GraphElement.NodeSelected()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::signal:position_offset_changed()",
+      "electron2d": "event:Electron2D.GraphElement.PositionOffsetChanged()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::signal:raise_request()",
+      "electron2d": "event:Electron2D.GraphElement.RaiseRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::signal:resize_end(Vector2:)",
+      "electron2d": "event:Electron2D.GraphElement.ResizeEnd()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::signal:resize_request(Vector2:)",
+      "electron2d": "event:Electron2D.GraphElement.ResizeRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphElement::theme_item:resizer",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "class:GraphNode",
+      "electron2d": "T:Electron2D.GraphNode",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:_draw_port(int:,Vector2i:,bool:,Color:)",
+      "electron2d": "method:Electron2D.GraphNode.OnDrawPort(System.Int32,Electron2D.Vector2i,System.Boolean,Electron2D.Color)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:clear_all_slots()",
+      "electron2d": "method:Electron2D.GraphNode.ClearAllSlots()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:clear_slot(int:)",
+      "electron2d": "method:Electron2D.GraphNode.ClearSlot(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_input_port_color(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetInputPortColor(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_input_port_count()",
+      "electron2d": "method:Electron2D.GraphNode.GetInputPortCount()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_input_port_position(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetInputPortPosition(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_input_port_slot(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetInputPortSlot(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_input_port_type(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetInputPortType(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_output_port_color(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetOutputPortColor(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_output_port_count()",
+      "electron2d": "method:Electron2D.GraphNode.GetOutputPortCount()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_output_port_position(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetOutputPortPosition(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_output_port_slot(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetOutputPortSlot(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_output_port_type(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetOutputPortType(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_slot_color_left(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetSlotColorLeft(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_slot_color_right(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetSlotColorRight(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_slot_custom_icon_left(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetSlotCustomIconLeft(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_slot_custom_icon_right(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetSlotCustomIconRight(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_slot_metadata_left(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetSlotMetadataLeft(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_slot_metadata_right(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetSlotMetadataRight(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_slot_type_left(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetSlotTypeLeft(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_slot_type_right(int:)",
+      "electron2d": "method:Electron2D.GraphNode.GetSlotTypeRight(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:get_titlebar_hbox()",
+      "electron2d": "method:Electron2D.GraphNode.GetTitlebarHBox()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:is_slot_draw_stylebox(int:)",
+      "electron2d": "method:Electron2D.GraphNode.IsSlotDrawStylebox(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:is_slot_enabled_left(int:)",
+      "electron2d": "method:Electron2D.GraphNode.IsSlotEnabledLeft(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:is_slot_enabled_right(int:)",
+      "electron2d": "method:Electron2D.GraphNode.IsSlotEnabledRight(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot(int:,bool:,int:,Color:,bool:,int:,Color:,Texture2D:,Texture2D:,bool:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlot(System.Int32,System.Boolean,System.Int32,Electron2D.Color,System.Boolean,System.Int32,Electron2D.Color,Electron2D.Texture,Electron2D.Texture,System.Boolean)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_color_left(int:,Color:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotColorLeft(System.Int32,Electron2D.Color)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_color_right(int:,Color:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotColorRight(System.Int32,Electron2D.Color)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_custom_icon_left(int:,Texture2D:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotCustomIconLeft(System.Int32,Electron2D.Texture)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_custom_icon_right(int:,Texture2D:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotCustomIconRight(System.Int32,Electron2D.Texture)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_draw_stylebox(int:,bool:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotDrawStylebox(System.Int32,System.Boolean)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_enabled_left(int:,bool:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotEnabledLeft(System.Int32,System.Boolean)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_enabled_right(int:,bool:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotEnabledRight(System.Int32,System.Boolean)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_metadata_left(int:,Variant:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotMetadataLeft`1(System.Int32,T)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_metadata_right(int:,Variant:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotMetadataRight`1(System.Int32,T)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_type_left(int:,int:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotTypeLeft(System.Int32,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::method:set_slot_type_right(int:,int:)",
+      "electron2d": "method:Electron2D.GraphNode.SetSlotTypeRight(System.Int32,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::property:ignore_invalid_connection_type",
+      "electron2d": "property:Electron2D.GraphNode.IgnoreInvalidConnectionType()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::property:mouse_filter",
+      "electron2d": "property:Electron2D.Control.MouseFilter()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::property:slots_focus_mode",
+      "electron2d": "property:Electron2D.GraphNode.SlotsFocusMode()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::property:title",
+      "electron2d": "property:Electron2D.GraphNode.Title()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::signal:slot_sizes_changed()",
+      "electron2d": "event:Electron2D.GraphNode.SlotSizesChanged()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::signal:slot_updated(int:)",
+      "electron2d": "event:Electron2D.GraphNode.SlotUpdated()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:panel_focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:panel_selected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:port",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:port_h_offset",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:resizer_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:slot",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:slot_selected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:titlebar",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphNode::theme_item:titlebar_selected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "class:GraphFrame",
+      "electron2d": "T:Electron2D.GraphFrame",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::method:get_titlebar_hbox()",
+      "electron2d": "method:Electron2D.GraphFrame.GetTitlebarHBox()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::property:autoshrink_enabled",
+      "electron2d": "property:Electron2D.GraphFrame.AutoshrinkEnabled()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::property:autoshrink_margin",
+      "electron2d": "property:Electron2D.GraphFrame.AutoshrinkMargin()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::property:drag_margin",
+      "electron2d": "property:Electron2D.GraphFrame.DragMargin()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::property:mouse_filter",
+      "electron2d": "property:Electron2D.Control.MouseFilter()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::property:tint_color",
+      "electron2d": "property:Electron2D.GraphFrame.TintColor()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::property:tint_color_enabled",
+      "electron2d": "property:Electron2D.GraphFrame.TintColorEnabled()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::property:title",
+      "electron2d": "property:Electron2D.GraphFrame.Title()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::signal:autoshrink_changed()",
+      "electron2d": "event:Electron2D.GraphFrame.AutoshrinkChanged()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::theme_item:panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::theme_item:panel_selected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::theme_item:resizer_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::theme_item:titlebar",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphFrame::theme_item:titlebar_selected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "class:GraphEdit",
+      "electron2d": "T:Electron2D.GraphEdit",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::enum:GridPattern",
+      "electron2d": "T:Electron2D.GraphEdit.GridPatternMode",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::enum:PanningScheme",
+      "electron2d": "T:Electron2D.GraphEdit.PanningSchemeMode",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::enum_value:GridPattern.GRID_PATTERN_DOTS",
+      "electron2d": "enumValue:Electron2D.GraphEdit.GridPatternMode.Dots()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::enum_value:GridPattern.GRID_PATTERN_LINES",
+      "electron2d": "enumValue:Electron2D.GraphEdit.GridPatternMode.Lines()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::enum_value:PanningScheme.SCROLL_PANS",
+      "electron2d": "enumValue:Electron2D.GraphEdit.PanningSchemeMode.ScrollPans()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::enum_value:PanningScheme.SCROLL_ZOOMS",
+      "electron2d": "enumValue:Electron2D.GraphEdit.PanningSchemeMode.ScrollZooms()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:_get_connection_line(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.GraphEdit.OnGetConnectionLine(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:_is_in_input_hotzone(Object:,int:,Vector2:)",
+      "electron2d": "method:Electron2D.GraphEdit.OnIsInInputHotzone(Electron2D.GraphNode,System.Int32,Electron2D.Vector2)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:_is_in_output_hotzone(Object:,int:,Vector2:)",
+      "electron2d": "method:Electron2D.GraphEdit.OnIsInOutputHotzone(Electron2D.GraphNode,System.Int32,Electron2D.Vector2)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:_is_node_hover_valid(StringName:,int:,StringName:,int:)",
+      "electron2d": "method:Electron2D.GraphEdit.OnIsNodeHoverValid(System.String,System.Int32,System.String,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:add_valid_connection_type(int:,int:)",
+      "electron2d": "method:Electron2D.GraphEdit.AddValidConnectionType(System.Int32,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:add_valid_left_disconnect_type(int:)",
+      "electron2d": "method:Electron2D.GraphEdit.AddValidLeftDisconnectType(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:add_valid_right_disconnect_type(int:)",
+      "electron2d": "method:Electron2D.GraphEdit.AddValidRightDisconnectType(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:arrange_nodes()",
+      "electron2d": "method:Electron2D.GraphEdit.ArrangeNodes()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:attach_graph_element_to_frame(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.GraphEdit.AttachGraphElementToFrame(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:clear_connections()",
+      "electron2d": "method:Electron2D.GraphEdit.ClearConnections()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:connect_node(StringName:,int:,StringName:,int:,bool:)",
+      "electron2d": "method:Electron2D.GraphEdit.ConnectNode(System.String,System.Int32,System.String,System.Int32,System.Boolean)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:detach_graph_element_from_frame(StringName:)",
+      "electron2d": "method:Electron2D.GraphEdit.DetachGraphElementFromFrame(System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:disconnect_node(StringName:,int:,StringName:,int:)",
+      "electron2d": "method:Electron2D.GraphEdit.DisconnectNode(System.String,System.Int32,System.String,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:force_connection_drag_end()",
+      "electron2d": "method:Electron2D.GraphEdit.ForceConnectionDragEnd()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:get_attached_nodes_of_frame(StringName:)",
+      "electron2d": "method:Electron2D.GraphEdit.GetAttachedNodesOfFrame(System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:get_closest_connection_at_point(Vector2:,float:)",
+      "electron2d": "method:Electron2D.GraphEdit.GetClosestConnectionAtPoint(Electron2D.Vector2,System.Single)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:get_connection_count(StringName:,int:)",
+      "electron2d": "method:Electron2D.GraphEdit.GetConnectionCount(System.String,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:get_connection_line(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.GraphEdit.GetConnectionLine(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:get_connection_list_from_node(StringName:)",
+      "electron2d": "method:Electron2D.GraphEdit.GetConnectionListFromNode(System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:get_connections_intersecting_with_rect(Rect2:)",
+      "electron2d": "method:Electron2D.GraphEdit.GetConnectionsIntersectingWithRect(Electron2D.Rect2)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:get_element_frame(StringName:)",
+      "electron2d": "method:Electron2D.GraphEdit.GetElementFrame(System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:get_menu_hbox()",
+      "electron2d": "method:Electron2D.GraphEdit.GetMenuHBox()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:is_node_connected(StringName:,int:,StringName:,int:)",
+      "electron2d": "method:Electron2D.GraphEdit.IsNodeConnected(System.String,System.Int32,System.String,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:is_valid_connection_type(int:,int:)",
+      "electron2d": "method:Electron2D.GraphEdit.IsValidConnectionType(System.Int32,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:remove_valid_connection_type(int:,int:)",
+      "electron2d": "method:Electron2D.GraphEdit.RemoveValidConnectionType(System.Int32,System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:remove_valid_left_disconnect_type(int:)",
+      "electron2d": "method:Electron2D.GraphEdit.RemoveValidLeftDisconnectType(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:remove_valid_right_disconnect_type(int:)",
+      "electron2d": "method:Electron2D.GraphEdit.RemoveValidRightDisconnectType(System.Int32)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:set_connection_activity(StringName:,int:,StringName:,int:,float:)",
+      "electron2d": "method:Electron2D.GraphEdit.SetConnectionActivity(System.String,System.Int32,System.String,System.Int32,System.Single)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::method:set_selected(Node:)",
+      "electron2d": "method:Electron2D.GraphEdit.SetSelected(Electron2D.Node)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:clip_contents",
+      "electron2d": "property:Electron2D.Control.ClipContents()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:connection_lines_antialiased",
+      "electron2d": "property:Electron2D.GraphEdit.ConnectionLinesAntialiased()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:connection_lines_curvature",
+      "electron2d": "property:Electron2D.GraphEdit.ConnectionLinesCurvature()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:connection_lines_thickness",
+      "electron2d": "property:Electron2D.GraphEdit.ConnectionLinesThickness()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:connections",
+      "electron2d": "property:Electron2D.GraphEdit.Connections()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:grid_pattern",
+      "electron2d": "property:Electron2D.GraphEdit.GridPattern()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:minimap_enabled",
+      "electron2d": "property:Electron2D.GraphEdit.MinimapEnabled()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:minimap_opacity",
+      "electron2d": "property:Electron2D.GraphEdit.MinimapOpacity()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:minimap_size",
+      "electron2d": "property:Electron2D.GraphEdit.MinimapSize()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:panning_scheme",
+      "electron2d": "property:Electron2D.GraphEdit.PanningScheme()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:right_disconnects",
+      "electron2d": "property:Electron2D.GraphEdit.RightDisconnects()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:scroll_offset",
+      "electron2d": "property:Electron2D.GraphEdit.ScrollOffset()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:show_arrange_button",
+      "electron2d": "property:Electron2D.GraphEdit.ShowArrangeButton()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:show_grid",
+      "electron2d": "property:Electron2D.GraphEdit.ShowGrid()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:show_grid_buttons",
+      "electron2d": "property:Electron2D.GraphEdit.ShowGridButtons()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:show_menu",
+      "electron2d": "property:Electron2D.GraphEdit.ShowMenu()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:show_minimap_button",
+      "electron2d": "property:Electron2D.GraphEdit.ShowMinimapButton()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:show_zoom_buttons",
+      "electron2d": "property:Electron2D.GraphEdit.ShowZoomButtons()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:show_zoom_label",
+      "electron2d": "property:Electron2D.GraphEdit.ShowZoomLabel()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:snapping_distance",
+      "electron2d": "property:Electron2D.GraphEdit.SnappingDistance()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:snapping_enabled",
+      "electron2d": "property:Electron2D.GraphEdit.SnappingEnabled()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:type_names",
+      "electron2d": "property:Electron2D.GraphEdit.TypeNames()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:zoom",
+      "electron2d": "property:Electron2D.GraphEdit.Zoom()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:zoom_max",
+      "electron2d": "property:Electron2D.GraphEdit.ZoomMax()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:zoom_min",
+      "electron2d": "property:Electron2D.GraphEdit.ZoomMin()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::property:zoom_step",
+      "electron2d": "property:Electron2D.GraphEdit.ZoomStep()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:begin_node_move()",
+      "electron2d": "event:Electron2D.GraphEdit.BeginNodeMove()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:connection_drag_ended()",
+      "electron2d": "event:Electron2D.GraphEdit.ConnectionDragEnded()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:connection_drag_started(StringName:,int:,bool:)",
+      "electron2d": "event:Electron2D.GraphEdit.ConnectionDragStarted()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:connection_from_empty(StringName:,int:,Vector2:)",
+      "electron2d": "event:Electron2D.GraphEdit.ConnectionFromEmpty()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:connection_request(StringName:,int:,StringName:,int:)",
+      "electron2d": "event:Electron2D.GraphEdit.ConnectionRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:connection_to_empty(StringName:,int:,Vector2:)",
+      "electron2d": "event:Electron2D.GraphEdit.ConnectionToEmpty()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:copy_nodes_request()",
+      "electron2d": "event:Electron2D.GraphEdit.CopyNodesRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:cut_nodes_request()",
+      "electron2d": "event:Electron2D.GraphEdit.CutNodesRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:delete_nodes_request(StringName[]:)",
+      "electron2d": "event:Electron2D.GraphEdit.DeleteNodesRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:disconnection_request(StringName:,int:,StringName:,int:)",
+      "electron2d": "event:Electron2D.GraphEdit.DisconnectionRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:duplicate_nodes_request()",
+      "electron2d": "event:Electron2D.GraphEdit.DuplicateNodesRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:end_node_move()",
+      "electron2d": "event:Electron2D.GraphEdit.EndNodeMove()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:frame_rect_changed(GraphFrame:,Rect2:)",
+      "electron2d": "event:Electron2D.GraphEdit.FrameRectChanged()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:graph_elements_linked_to_frame_request(Array:,StringName:)",
+      "electron2d": "event:Electron2D.GraphEdit.GraphElementsLinkedToFrameRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:node_deselected(Node:)",
+      "electron2d": "event:Electron2D.GraphEdit.NodeDeselected()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:node_selected(Node:)",
+      "electron2d": "event:Electron2D.GraphEdit.NodeSelected()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:paste_nodes_request()",
+      "electron2d": "event:Electron2D.GraphEdit.PasteNodesRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:popup_request(Vector2:)",
+      "electron2d": "event:Electron2D.GraphEdit.PopupRequest()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::signal:scroll_offset_changed(Vector2:)",
+      "electron2d": "event:Electron2D.GraphEdit.ScrollOffsetChanged()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:activity",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:connection_hover_thickness",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:connection_hover_tint_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:connection_rim_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:connection_valid_target_tint_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:grid_major",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:grid_minor",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:grid_toggle",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:layout",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:menu_panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:minimap_toggle",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:panel_focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:port_hotzone_inner_extent",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:port_hotzone_outer_extent",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:selection_fill",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:selection_stroke",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:snapping_toggle",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:zoom_in",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:zoom_out",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "GraphEdit::theme_item:zoom_reset",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_graph_delete",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIGraphDelete()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Platform feature overrides use the existing typed registry; macOS follow shortcuts use Alt."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_graph_duplicate",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIGraphDuplicate()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Platform feature overrides use the existing typed registry; macOS follow shortcuts use Alt."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_graph_follow_left",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIGraphFollowLeft()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Platform feature overrides use the existing typed registry; macOS follow shortcuts use Alt."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_graph_follow_left.macos",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIGraphFollowLeft()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Platform feature overrides use the existing typed registry; macOS follow shortcuts use Alt."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_graph_follow_right",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIGraphFollowRight()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Platform feature overrides use the existing typed registry; macOS follow shortcuts use Alt."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_graph_follow_right.macos",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIGraphFollowRight()",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate. Platform feature overrides use the existing typed registry; macOS follow shortcuts use Alt."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.GraphConnection",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "T:Electron2D.GraphSlotMetadata",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.GraphConnection..ctor(System.String,System.Int32,System.String,System.Int32,System.Boolean)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.GraphEdit..ctor()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.GraphElement..ctor()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.GraphFrame..ctor()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.GraphNode..ctor()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphConnection.Deconstruct(ref System.String,ref System.Int32,ref System.String,ref System.Int32,ref System.Boolean)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphConnection.Equals(Electron2D.GraphConnection)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphConnection.Equals(System.Object)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphConnection.GetHashCode()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphConnection.ToString()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphEdit.CreateSceneInstanceFactory()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphEdit.Dispose(System.Boolean)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphEdit.GetPropertyDescriptors()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphEdit.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphEdit.OnNotification(System.Int32)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphEdit.ValidateDisposal()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphElement.CreateSceneInstanceFactory()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphElement.Dispose(System.Boolean)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphElement.GetPropertyDescriptors()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphElement.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphElement.OnGetCursorShape(Electron2D.Vector2)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphElement.OnGetMinimumSize()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphElement.OnNotification(System.Int32)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphElement.ValidateDisposal()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphFrame.CreateSceneInstanceFactory()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphFrame.Dispose(System.Boolean)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphFrame.GetPropertyDescriptors()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphFrame.HasPoint(Electron2D.Vector2)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphFrame.OnGetMinimumSize()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphFrame.OnNotification(System.Int32)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphNode.CreateSceneInstanceFactory()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphNode.Dispose(System.Boolean)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphNode.GetPropertyDescriptors()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphNode.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphNode.OnGetMinimumSize()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphNode.OnNotification(System.Int32)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.GraphSlotMetadata.TryGet`1(ref T)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "operator:Electron2D.GraphConnection.op_Equality(Electron2D.GraphConnection,Electron2D.GraphConnection)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "operator:Electron2D.GraphConnection.op_Inequality(Electron2D.GraphConnection,Electron2D.GraphConnection)",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.GraphConnection.FromNode()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.GraphConnection.FromPort()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.GraphConnection.KeepAlive()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.GraphConnection.ToNode()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.GraphConnection.ToPort()",
+      "reason": "Typed immutable directed-connection dictionary projection, exact borrowed slot metadata, default construction or inherited scene/input/drawing/storage lifecycle for the graph authoring concept. No universal runtime Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0051/0083"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:GraphElement",
+        "GraphElement::property:draggable",
+        "GraphElement::property:position_offset",
+        "GraphElement::property:resizable",
+        "GraphElement::property:scaling_menus",
+        "GraphElement::property:selectable",
+        "GraphElement::property:selected",
+        "GraphElement::signal:delete_request()",
+        "GraphElement::signal:dragged(Vector2:,Vector2:)",
+        "GraphElement::signal:node_deselected()",
+        "GraphElement::signal:node_selected()",
+        "GraphElement::signal:position_offset_changed()",
+        "GraphElement::signal:raise_request()",
+        "GraphElement::signal:resize_end(Vector2:)",
+        "GraphElement::signal:resize_request(Vector2:)",
+        "GraphElement::theme_item:resizer",
+        "GraphNode::method:_draw_port(int:,Vector2i:,bool:,Color:)",
+        "GraphNode::method:clear_all_slots()",
+        "GraphNode::method:clear_slot(int:)",
+        "GraphNode::method:get_input_port_color(int:)",
+        "GraphNode::method:get_input_port_count()",
+        "GraphNode::method:get_input_port_position(int:)",
+        "GraphNode::method:get_input_port_slot(int:)",
+        "GraphNode::method:get_input_port_type(int:)",
+        "GraphNode::method:get_output_port_color(int:)",
+        "GraphNode::method:get_output_port_count()",
+        "GraphNode::method:get_output_port_position(int:)",
+        "GraphNode::method:get_output_port_slot(int:)",
+        "GraphNode::method:get_output_port_type(int:)",
+        "GraphNode::method:get_slot_color_left(int:)",
+        "GraphNode::method:get_slot_color_right(int:)",
+        "GraphNode::method:get_slot_custom_icon_left(int:)",
+        "GraphNode::method:get_slot_custom_icon_right(int:)",
+        "GraphNode::method:get_slot_metadata_left(int:)",
+        "GraphNode::method:get_slot_metadata_right(int:)",
+        "GraphNode::method:get_slot_type_left(int:)",
+        "GraphNode::method:get_slot_type_right(int:)",
+        "GraphNode::method:get_titlebar_hbox()",
+        "GraphNode::method:is_slot_draw_stylebox(int:)",
+        "GraphNode::method:is_slot_enabled_left(int:)",
+        "GraphNode::method:is_slot_enabled_right(int:)",
+        "GraphNode::method:set_slot(int:,bool:,int:,Color:,bool:,int:,Color:,Texture2D:,Texture2D:,bool:)",
+        "GraphNode::method:set_slot_color_left(int:,Color:)",
+        "GraphNode::method:set_slot_color_right(int:,Color:)",
+        "GraphNode::method:set_slot_custom_icon_left(int:,Texture2D:)",
+        "GraphNode::method:set_slot_custom_icon_right(int:,Texture2D:)",
+        "GraphNode::method:set_slot_draw_stylebox(int:,bool:)",
+        "GraphNode::method:set_slot_enabled_left(int:,bool:)",
+        "GraphNode::method:set_slot_enabled_right(int:,bool:)",
+        "GraphNode::method:set_slot_metadata_left(int:,Variant:)",
+        "GraphNode::method:set_slot_metadata_right(int:,Variant:)",
+        "GraphNode::method:set_slot_type_left(int:,int:)",
+        "GraphNode::method:set_slot_type_right(int:,int:)",
+        "GraphNode::property:ignore_invalid_connection_type",
+        "GraphNode::property:mouse_filter",
+        "GraphNode::property:title",
+        "GraphNode::signal:slot_sizes_changed()",
+        "GraphNode::signal:slot_updated(int:)",
+        "GraphNode::theme_item:panel",
+        "GraphNode::theme_item:panel_focus",
+        "GraphNode::theme_item:panel_selected",
+        "GraphNode::theme_item:port",
+        "GraphNode::theme_item:port_h_offset",
+        "GraphNode::theme_item:resizer_color",
+        "GraphNode::theme_item:separation",
+        "GraphNode::theme_item:slot",
+        "GraphNode::theme_item:slot_selected",
+        "GraphNode::theme_item:titlebar",
+        "GraphNode::theme_item:titlebar_selected",
+        "class:GraphFrame",
+        "GraphFrame::method:get_titlebar_hbox()",
+        "GraphFrame::property:autoshrink_enabled",
+        "GraphFrame::property:autoshrink_margin",
+        "GraphFrame::property:drag_margin",
+        "GraphFrame::property:mouse_filter",
+        "GraphFrame::property:tint_color",
+        "GraphFrame::property:tint_color_enabled",
+        "GraphFrame::property:title",
+        "GraphFrame::signal:autoshrink_changed()",
+        "GraphFrame::theme_item:panel",
+        "GraphFrame::theme_item:panel_selected",
+        "GraphFrame::theme_item:resizer_color",
+        "GraphFrame::theme_item:titlebar",
+        "GraphFrame::theme_item:titlebar_selected",
+        "class:GraphEdit",
+        "GraphEdit::enum:GridPattern",
+        "GraphEdit::enum:PanningScheme",
+        "GraphEdit::enum_value:GridPattern.GRID_PATTERN_DOTS",
+        "GraphEdit::enum_value:GridPattern.GRID_PATTERN_LINES",
+        "GraphEdit::enum_value:PanningScheme.SCROLL_PANS",
+        "GraphEdit::enum_value:PanningScheme.SCROLL_ZOOMS",
+        "GraphEdit::method:_get_connection_line(Vector2:,Vector2:)",
+        "GraphEdit::method:_is_in_input_hotzone(Object:,int:,Vector2:)",
+        "GraphEdit::method:_is_in_output_hotzone(Object:,int:,Vector2:)",
+        "GraphEdit::method:_is_node_hover_valid(StringName:,int:,StringName:,int:)",
+        "GraphEdit::method:add_valid_connection_type(int:,int:)",
+        "GraphEdit::method:add_valid_left_disconnect_type(int:)",
+        "GraphEdit::method:add_valid_right_disconnect_type(int:)",
+        "GraphEdit::method:arrange_nodes()",
+        "GraphEdit::method:attach_graph_element_to_frame(StringName:,StringName:)",
+        "GraphEdit::method:clear_connections()",
+        "GraphEdit::method:connect_node(StringName:,int:,StringName:,int:,bool:)",
+        "GraphEdit::method:detach_graph_element_from_frame(StringName:)",
+        "GraphEdit::method:disconnect_node(StringName:,int:,StringName:,int:)",
+        "GraphEdit::method:force_connection_drag_end()",
+        "GraphEdit::method:get_attached_nodes_of_frame(StringName:)",
+        "GraphEdit::method:get_closest_connection_at_point(Vector2:,float:)",
+        "GraphEdit::method:get_connection_count(StringName:,int:)",
+        "GraphEdit::method:get_connection_line(Vector2:,Vector2:)",
+        "GraphEdit::method:get_connection_list_from_node(StringName:)",
+        "GraphEdit::method:get_connections_intersecting_with_rect(Rect2:)",
+        "GraphEdit::method:get_element_frame(StringName:)",
+        "GraphEdit::method:get_menu_hbox()",
+        "GraphEdit::method:is_node_connected(StringName:,int:,StringName:,int:)",
+        "GraphEdit::method:is_valid_connection_type(int:,int:)",
+        "GraphEdit::method:remove_valid_connection_type(int:,int:)",
+        "GraphEdit::method:remove_valid_left_disconnect_type(int:)",
+        "GraphEdit::method:remove_valid_right_disconnect_type(int:)",
+        "GraphEdit::method:set_connection_activity(StringName:,int:,StringName:,int:,float:)",
+        "GraphEdit::method:set_selected(Node:)",
+        "GraphEdit::property:clip_contents",
+        "GraphEdit::property:connection_lines_antialiased",
+        "GraphEdit::property:connection_lines_curvature",
+        "GraphEdit::property:connection_lines_thickness",
+        "GraphEdit::property:connections",
+        "GraphEdit::property:focus_mode",
+        "GraphEdit::property:grid_pattern",
+        "GraphEdit::property:minimap_enabled",
+        "GraphEdit::property:minimap_opacity",
+        "GraphEdit::property:minimap_size",
+        "GraphEdit::property:panning_scheme",
+        "GraphEdit::property:right_disconnects",
+        "GraphEdit::property:scroll_offset",
+        "GraphEdit::property:show_arrange_button",
+        "GraphEdit::property:show_grid",
+        "GraphEdit::property:show_grid_buttons",
+        "GraphEdit::property:show_menu",
+        "GraphEdit::property:show_minimap_button",
+        "GraphEdit::property:show_zoom_buttons",
+        "GraphEdit::property:show_zoom_label",
+        "GraphEdit::property:snapping_distance",
+        "GraphEdit::property:snapping_enabled",
+        "GraphEdit::property:type_names",
+        "GraphEdit::property:zoom",
+        "GraphEdit::property:zoom_max",
+        "GraphEdit::property:zoom_min",
+        "GraphEdit::property:zoom_step",
+        "GraphEdit::signal:begin_node_move()",
+        "GraphEdit::signal:connection_drag_ended()",
+        "GraphEdit::signal:connection_drag_started(StringName:,int:,bool:)",
+        "GraphEdit::signal:connection_from_empty(StringName:,int:,Vector2:)",
+        "GraphEdit::signal:connection_request(StringName:,int:,StringName:,int:)",
+        "GraphEdit::signal:connection_to_empty(StringName:,int:,Vector2:)",
+        "GraphEdit::signal:copy_nodes_request()",
+        "GraphEdit::signal:cut_nodes_request()",
+        "GraphEdit::signal:delete_nodes_request(StringName[]:)",
+        "GraphEdit::signal:disconnection_request(StringName:,int:,StringName:,int:)",
+        "GraphEdit::signal:duplicate_nodes_request()",
+        "GraphEdit::signal:end_node_move()",
+        "GraphEdit::signal:frame_rect_changed(GraphFrame:,Rect2:)",
+        "GraphEdit::signal:graph_elements_linked_to_frame_request(Array:,StringName:)",
+        "GraphEdit::signal:node_deselected(Node:)",
+        "GraphEdit::signal:node_selected(Node:)",
+        "GraphEdit::signal:paste_nodes_request()",
+        "GraphEdit::signal:popup_request(Vector2:)",
+        "GraphEdit::signal:scroll_offset_changed(Vector2:)",
+        "GraphEdit::theme_item:activity",
+        "GraphEdit::theme_item:connection_hover_thickness",
+        "GraphEdit::theme_item:connection_hover_tint_color",
+        "GraphEdit::theme_item:connection_rim_color",
+        "GraphEdit::theme_item:connection_valid_target_tint_color",
+        "GraphEdit::theme_item:grid_major",
+        "GraphEdit::theme_item:grid_minor",
+        "GraphEdit::theme_item:grid_toggle",
+        "GraphEdit::theme_item:layout",
+        "GraphEdit::theme_item:menu_panel",
+        "GraphEdit::theme_item:minimap_toggle",
+        "GraphEdit::theme_item:panel",
+        "GraphEdit::theme_item:panel_focus",
+        "GraphEdit::theme_item:port_hotzone_inner_extent",
+        "GraphEdit::theme_item:port_hotzone_outer_extent",
+        "GraphEdit::theme_item:selection_fill",
+        "GraphEdit::theme_item:selection_stroke",
+        "GraphEdit::theme_item:snapping_toggle",
+        "GraphEdit::theme_item:zoom_in",
+        "GraphEdit::theme_item:zoom_out",
+        "GraphEdit::theme_item:zoom_reset",
+        "ProjectSettings::property:input/ui_graph_delete",
+        "ProjectSettings::property:input/ui_graph_duplicate",
+        "ProjectSettings::property:input/ui_graph_follow_left",
+        "ProjectSettings::property:input/ui_graph_follow_left.macos",
+        "ProjectSettings::property:input/ui_graph_follow_right",
+        "ProjectSettings::property:input/ui_graph_follow_right.macos"
+      ],
+      "state": "Implemented",
+      "reason": "Executable graph authoring under ADRs 0004/0014/0038/0051/0083: compressed typed ports/rows, request-driven wiring, selection/drag/zoom/grid/minimap, deterministic arrangement, logical nested frames, borrowed metadata/icons, keyboard/remappable actions, graph-scaled popup input and registered scene/value storage. Native current Linux GPU/compatibility and prepared allocations are documented in graph-authoring; semantic accessibility, editor and foreign acceptance remain separate."
+    },
+    {
+      "godot": [
+        "class:GraphNode",
+        "GraphNode::property:focus_mode",
+        "GraphNode::property:slots_focus_mode"
+      ],
+      "state": "Partial",
+      "reason": "Titled ports, keyboard rows/wiring/follow, selection/layout/drawing and scene configuration execute. The default Accessibility focus mode and semantic port/type/action nodes require the existing Control accessibility-session gate plus AccessibilityServer graph providers; ordinary All focus and remapped actions execute now. Concrete editor graph-resource authoring and foreign/physical acceptance remain separate."
+    }
+  ]
+}

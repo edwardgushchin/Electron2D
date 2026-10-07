@@ -601,7 +601,8 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>Thirty nonnegative seconds initially; sampled on ConnectToHost.</value>
     public static ProjectSetting<int> UDSConnectTimeoutSeconds { get; } = new("network/limits/unix/connect_timeout_seconds", 30, value => value >= 0);
 
-    private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
+    private static ProjectSettings SharedInstance => ServiceHolder.Value;
+    private static class ServiceHolder { internal static readonly ProjectSettings Value = CreateSharedInstance(); }
 
     internal static ProjectSettings Service => SharedInstance;
 

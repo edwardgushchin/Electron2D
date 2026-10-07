@@ -3,7 +3,7 @@
 <a id="adr-0051"></a>
 ## ADR 0051: Public enum identities and declaring owners
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 ### Status
 
@@ -28,6 +28,8 @@ The following other selected names remain exact public type identities. Listed t
 - `FileAccess.CompressionMode` → `FileCompressionMode`; `FileAccess.ModeFlags` → `FileAccessModeFlags`; `FileAccess.UnixPermissionFlags` → `UnixPermissionFlags`; `Node.ProcessMode` → `ProcessMode`; `PackedScene.GenEditState` → `PackedSceneEditState`; `Resource.DeepDuplicateMode` → `DeepDuplicateMode`; `SceneTree.GroupCallFlags` → `GroupCallFlags`.
 - `Gradient.InterpolationMode` → `InterpolationMode`; `GradientTexture2D.Fill` → `FillEnum`; `GradientTexture2D.Repeat` → `Repeat`; `Camera2D.AnchorMode` → `AnchorMode`; `Line2D.LineCapMode` → `LineCapMode`; `Line2D.LineJointMode` → `LineJointMode`; `Line2D.LineTextureMode` → `LineTextureMode`.
 - `FastNoiseLite.NoiseType` → `NoiseType`; `FastNoiseLite.FractalType` → `FractalType`; `FastNoiseLite.CellularDistanceFunction` → `CellularDistanceFunction`; `FastNoiseLite.CellularReturnType` → `CellularReturnType`; `FastNoiseLite.DomainWarpType` → `DomainWarpType`; `FastNoiseLite.DomainWarpFractalType` → `DomainWarpFractalType`.
+
+GraphEdit keeps the applicable `GridPattern` and `PanningScheme` properties. Its distinct owner-specific enum domains are `GraphEdit.GridPatternMode` (Lines/Dots) and `GraphEdit.PanningSchemeMode` (ScrollZooms/ScrollPans); the Mode suffix avoids C# member/type name collisions without moving or merging these unrelated domains.
 
 The owning class keeps its applicable property names. Enum numeric values and observable behavior do not change with location. Do not ship former type spellings, compatibility aliases or duplicate public mirrors. Keep the bidirectional coverage mappings, source XML, consumers and class pages synchronized with these identities. When a new enum is proposed, compare its meaning and valid values with existing public enums before declaring a new type.
 

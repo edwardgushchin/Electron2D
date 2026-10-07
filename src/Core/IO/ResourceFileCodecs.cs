@@ -110,6 +110,9 @@ internal static class ResourceFileCodecs
         Nullable<double>();
         Nullable<Color>();
         Nullable<Vector2>();
+        Add<GraphConnection>((s, v) => { ResourceArchiveStrings.Write(s, v.FromNode); s.Put32(v.FromPort); ResourceArchiveStrings.Write(s, v.ToNode); s.Put32(v.ToPort); s.PutU8(v.KeepAlive ? (byte)1 : (byte)0); }, s => { var from = ResourceArchiveStrings.Read(s); var fp = s.Get32(); var to = ResourceArchiveStrings.Read(s); var tp = s.Get32(); var alive = s.GetU8(); if (alive > 1 || fp < 0 || tp < 0 || from.Length == 0 || to.Length == 0) throw new InvalidDataException("Invalid graph connection."); return new(from, fp, to, tp, alive == 1); });
+        Arrays<GraphConnection>();
+        Add<Dictionary<int, string>>((s, v) => { s.Put32(v.Count); foreach (var pair in v.OrderBy(p => p.Key)) { s.Put32(pair.Key); ResourceArchiveStrings.Write(s, pair.Value); } }, s => { var count = s.Get32(); if (count < 0 || count > 1048576) throw new InvalidDataException("Graph type-name count exceeds file budget."); var result = new Dictionary<int, string>(); for (var i = 0; i < count; i++) if (!result.TryAdd(s.Get32(), ResourceArchiveStrings.Read(s))) throw new InvalidDataException("Duplicate graph type identifier."); return result; });
         Arrays<string>();
         Arrays<float>();
         Arrays<int>();

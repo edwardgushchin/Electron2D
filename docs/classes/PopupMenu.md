@@ -1202,3 +1202,5 @@ Occurs after an item mutation commits.
 [Dropdown choices](../components/dropdown-choices.md) add OptionButton as an executable Button/PopupMenu consumer with three arrow theme keys and an exact scene/file factory. Selected item translation uses the shared Button text path. Disposed borrowed button icons read as null and clear on owner processing, avoiding the internal-process/deferred-cleanup race. Public shared-owner signatures remain unchanged.
 
 The string-path submenu declarations were removed under ADR 0004 because their pinned source metadata is deprecated. Use the node-based AddSubmenuNodeItem/GetItemSubmenuNode/SetItemSubmenuNode family; coverage retains those three source rows as Excluded.
+
+Under a GraphElement with ScalingMenus enabled, popup content and routed pointer coordinates follow GraphEdit.Zoom through the existing viewport canvas transform. The physical popup footprint, shadows and submenu placement scale with it; ordinary menus retain scale one. See [graph authoring](../components/graph-authoring.md).

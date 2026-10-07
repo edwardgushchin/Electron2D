@@ -1322,3 +1322,12 @@ The [code-authoring slice](../components/code-authoring.md) registers typed Inpu
 | `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextIndent { get;  }` | Defines the default ui_text_indent keyboard action. |
 | `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextNewlineAbove { get;  }` | Defines the default ui_text_newline_above keyboard action. |
 | `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextNewlineBlank { get;  }` | Defines the default ui_text_newline_blank keyboard action. |
+
+Graph controls consume the permanent `InputUIGraphDuplicate`, `InputUIGraphDelete`, `InputUIGraphFollowLeft` and `InputUIGraphFollowRight` settings through InputMap. The registry is initialized after all typed definitions, including definitions in partial source files. Follow shortcuts use Alt on macOS and CommandOrControl elsewhere; feature overrides retain the existing registry protocol.
+
+| Graph action declaration | Default |
+| --- | --- |
+| `public static ProjectSetting<InputActionSettings> InputUIGraphDuplicate { get; }` | CommandOrControl+D |
+| `public static ProjectSetting<InputActionSettings> InputUIGraphDelete { get; }` | Delete |
+| `public static ProjectSetting<InputActionSettings> InputUIGraphFollowLeft { get; }` | Alt+Left on macOS; CommandOrControl+Left elsewhere |
+| `public static ProjectSetting<InputActionSettings> InputUIGraphFollowRight { get; }` | Alt+Right on macOS; CommandOrControl+Right elsewhere |

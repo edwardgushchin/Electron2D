@@ -133,6 +133,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(InputUITextToggleInsertMode, isBasic: false);
 
         RegisterInternal(InputUITextSelectAll, isBasic: false);
+        RegisterInternal(InputUIGraphDuplicate, isBasic: false);
+        RegisterInternal(InputUIGraphDelete, isBasic: false);
+        RegisterInternal(InputUIGraphFollowLeft, isBasic: false);
+        RegisterInternal(InputUIGraphFollowRight, isBasic: false);
         RegisterInternal(InputUICopy, isBasic: false);
         RegisterInternal(InputUICut, isBasic: false);
         RegisterInternal(InputUIPaste, isBasic: false);
@@ -1213,6 +1217,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, InputUITextToggleInsertMode) ||
 
         ReferenceEquals(setting, InputUITextSelectAll) ||
+        ReferenceEquals(setting, InputUIGraphDuplicate) ||
+        ReferenceEquals(setting, InputUIGraphDelete) ||
+        ReferenceEquals(setting, InputUIGraphFollowLeft) ||
+        ReferenceEquals(setting, InputUIGraphFollowRight) ||
         ReferenceEquals(setting, InputUICopy) ||
         ReferenceEquals(setting, InputUICut) ||
         ReferenceEquals(setting, InputUIPaste) ||

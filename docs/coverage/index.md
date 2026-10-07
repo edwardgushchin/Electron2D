@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-07
 
+The [graph authoring slice](../components/graph-authoring.md) connects GraphElement/GraphNode/GraphFrame/GraphEdit with typed compressed ports, request-driven wiring, nested logical frames, pointer/keyboard authoring, navigation/minimap/menu and fresh registered scene/value storage. Current native rendered and prepared allocation evidence is separate from semantic accessibility, concrete editor operations and foreign/physical acceptance.
+
 The executable [multiline editing slice](../components/multiline-editing.md) connects TextEdit, SyntaxHighlighter and CodeHighlighter, with grouped/scalar/multicaret edits, native SDL commit/preedit and clipboard, wrapped/theme/gutter/minimap drawing, independent stored highlighters and fresh-process scenes. GPU/compatibility checks and 64 prepared frames per backend establish the current Linux profile; native keyboard/picker and semantic/editor/foreign gates stay explicit. The [hierarchical cells slice](../components/hierarchical-cells.md) now consumes that host through Tree/TreeItem, with complete own cell/hierarchy APIs, embedded editing and fresh stored columns. Independent native popup windows, semantic service and editor-authoring gates remain explicit.
 
 

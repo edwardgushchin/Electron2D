@@ -350,10 +350,10 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Gradient](classes/Gradient.md) | Resource | Implemented | 21 |
 | [GradientTexture1D](classes/GradientRampTexture.md) | Texture2D | Implemented | 4 |
 | [GradientTexture2D](classes/GradientTexture.md) | Texture2D | Implemented | 18 |
-| [GraphEdit](classes/GraphEdit.md) | Control | Blocked | 102 |
-| [GraphElement](classes/GraphElement.md) | Container | Blocked | 15 |
-| [GraphFrame](classes/GraphFrame.md) | GraphElement | Blocked | 14 |
-| [GraphNode](classes/GraphNode.md) | GraphElement | Blocked | 55 |
+| [GraphEdit](classes/GraphEdit.md) | Control | Implemented | 102 |
+| [GraphElement](classes/GraphElement.md) | Container | Implemented | 15 |
+| [GraphFrame](classes/GraphFrame.md) | GraphElement | Implemented | 14 |
+| [GraphNode](classes/GraphNode.md) | GraphElement | Partial | 55 |
 | [GridContainer](classes/GridContainer.md) | Container | Implemented | 3 |
 | [GridMap](classes/GridMap.md) | Node3D | Excluded | 50 |
 | [GridMapEditorPlugin](classes/GridMapEditorPlugin.md) | EditorPlugin | Excluded | 8 |
