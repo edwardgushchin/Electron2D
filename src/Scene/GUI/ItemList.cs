@@ -25,19 +25,6 @@ public partial class ItemList : Control
         Toggle = 2
     }
 
-    /// <summary>Selects eligible directional hints for the list's vertical scroll range.</summary>
-    public enum ScrollHintMode
-    {
-        /// <summary>Hides directional hints.</summary>
-        Disabled = 0,
-        /// <summary>Allows hints at both reachable vertical edges.</summary>
-        Both = 1,
-        /// <summary>Allows the top hint only.</summary>
-        Top = 2,
-        /// <summary>Allows the bottom hint only.</summary>
-        Bottom = 3
-    }
-
     private sealed class Item
     {
         internal string Text = string.Empty;
@@ -293,4 +280,17 @@ public partial class ItemList : Control
     {
         if ((uint)index >= (uint)_items.Count) throw new ArgumentOutOfRangeException(nameof(index));
     }
+}
+
+/// <summary>Selects eligible directional hints for the list's vertical scroll range.</summary>
+public enum VerticalScrollHintMode
+{
+    /// <summary>Hides directional hints.</summary>
+    Disabled = 0,
+    /// <summary>Allows hints at both reachable vertical edges.</summary>
+    Both = 1,
+    /// <summary>Allows the top hint only.</summary>
+    Top = 2,
+    /// <summary>Allows the bottom hint only.</summary>
+    Bottom = 3
 }

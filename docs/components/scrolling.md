@@ -1,6 +1,6 @@
 # GUI scrolling
 
-Last updated: 2026-09-30
+Last updated: 2026-10-07
 
 This component owns [ScrollBar](../classes/ScrollBar.md), [HScrollBar](../classes/HScrollBar.md), [VScrollBar](../classes/VScrollBar.md) and [ScrollContainer](../classes/ScrollContainer.md). The bars consume typed Range bounds and ThemeDB styles; ScrollContainer clips ordinary content, positions owned bars and hints, handles wheel/pan/touch input, and follows descendant focus. It uses the existing canvas renderer and root viewport input route on both current Linux Wayland backends. Five implementation children remain in the real hierarchy for processing and drawing but are hidden from ordinary child queries and PackedScene capture.
 
@@ -9,3 +9,5 @@ The component depends on [scene hierarchy](scene-hierarchy.md) for internal-chil
 [ScrollInternalNodeTests](../../tests/Electron2D.Tests/ScrollInternalNodeTests.cs), [ScrollBarTests](../../tests/Electron2D.Tests/ScrollBarTests.cs), [ScrollContainerTests](../../tests/Electron2D.Tests/ScrollContainerTests.cs), and [ScrollThemeTests](../../tests/Electron2D.Tests/ScrollThemeTests.cs) verify managed hierarchy, layout, input, focus, hints, theme resources, packing and edge cases. [ScrollRenderingTests](../../tests/Electron2D.Tests/ScrollRenderingTests.cs) verifies clipped and shifted pixels on Linux Wayland GPU and compatibility, with 64 warmed active scroll/layout/render frames allocating zero managed bytes. Native allocations, other platforms, broader UI composition and owner visual acceptance remain unverified.
 
 [ItemList](../classes/ItemList.md) builds on the same bars, typed theme lookup and root GUI route. It shapes and draws selectable text/icon rows, stores indexed item fields in PackedScene, and exposes typed runtime metadata. ItemListTests covers model, resource changes, RTL hit testing, selection, search, theme defaults and packing; ItemListRenderingTests verifies selected pixels and own-content clipping on Linux Wayland GPU and compatibility. Mixed automatic sizing and two-axis overflow, full keyboard/signal ordering, callback reentry and native allocation remain open verification limits.
+
+[Tree](hierarchical-cells.md) consumes the same owned bars for retained row/column scrolling. Tree and ItemList use one [VerticalScrollHintMode](../classes/VerticalScrollHintMode.md) because their direction/value/presentation policies are identical; ScrollContainer keeps its separate two-axis identity.

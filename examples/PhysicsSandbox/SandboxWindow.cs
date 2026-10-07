@@ -2,12 +2,12 @@ using System.Globalization;
 
 namespace Electron2D.Examples.PhysicsSandbox;
 
-/// <summary>Hosts eleven interactive physics stories in the editor splash's 1152 by 800 client area.</summary>
+/// <summary>Hosts twelve interactive physics stories in the editor splash's 1152 by 800 client area.</summary>
 internal sealed partial class SandboxWindow : Window
 {
     internal static readonly Vector2i ClientSize = new(1152, 800);
     internal static readonly Rect2 Playfield = new(24, 156, 836, 536);
-    internal static readonly string[] SceneNames = ["Collision warehouse", "Marble delivery", "Clockwork playground", "Gravity garden", "Rooftop courier", "Radar rescue", "Orbital tug", "Shape atelier", "Physics stress test", "Gravity Defied", "Angry birds"];
+    internal static readonly string[] SceneNames = ["Collision warehouse", "Marble delivery", "Clockwork playground", "Gravity garden", "Rooftop courier", "Radar rescue", "Orbital tug", "Shape atelier", "Physics stress test", "Gravity Defied", "Angry birds", "Smash"];
     internal static readonly string[] Stories =
     [
         "Pull the towers apart, launch a heavy ball, then rebuild the warehouse.",
@@ -20,9 +20,11 @@ internal sealed partial class SandboxWindow : Window
         "Morph a live compound shape and explore the independent physics world.",
         "Stir up to 1,024 real particles and tune the physical world.",
         "Ride over ramps and gaps. Balance the motorcycle and reach the flag.",
-        "Pull the bird back, aim and release. Knock three blush targets off the towers."
+        "Pull the bird back, aim and release. Knock three blush targets off the towers.",
+        "Drive a heavy block through a sleeping wall. Watch the impact scatter real fragments in zero gravity."
     ];
     private readonly List<Resource> _styles = [];
+    private readonly int _previousPhysicsBudget = Engine.MaxPhysicsStepsPerFrame;
     private readonly Font _regular;
     private readonly Label _story;
     private readonly Label _help;
@@ -39,6 +41,7 @@ internal sealed partial class SandboxWindow : Window
 
     internal SandboxWindow(Font regular, Font semibold)
     {
+        Engine.MaxPhysicsStepsPerFrame = 1;
         _regular = regular;
         Name = "PhysicsSandbox"; Title = "PhysicsSandbox — Electron2D";
         Size = MinSize = MaxSize = ClientSize; Unresizable = true; GUIEmbedSubwindows = true;
@@ -96,9 +99,9 @@ internal sealed partial class SandboxWindow : Window
             c.DrawString(regular, new(894, 111), _paused ? "PAUSED · step = 1/60 s" : "LIVE · fixed simulation", fontSize: 12, modulate: _paused ? PhysicsScene.Pink : PhysicsScene.Blush);
             text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.ContactEvents} contact events", out count);
             PhysicsScene.DrawReadout(c, regular, new(894, 733), text[..count], 14, PhysicsScene.Muted);
-            if (SceneIndex is 1 or 4 or 6 or 9 or 10)
+            if (SceneIndex is 1 or 4 or 6 or 9 or 10 or 11)
             {
-                text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.Score} {SceneIndex switch { 9 => "finish reached", 10 => "targets down / 3", 4 => "parcels / 4", 6 => "cargo docked", _ => "marbles delivered" }}", out count);
+                text.TryWrite(CultureInfo.InvariantCulture, $"{Scene.Score} {SceneIndex switch { 9 => "finish reached", 10 => "targets down / 3", 11 => "fragments moved", 4 => "parcels / 4", 6 => "cargo docked", _ => "marbles delivered" }}", out count);
                 PhysicsScene.DrawReadout(c, regular, new(894, 753), text[..count], 14, PhysicsScene.Blush);
             }
         };
@@ -123,11 +126,12 @@ internal sealed partial class SandboxWindow : Window
 
     private void FrameScene()
     {
-        var zoom = SceneIndex switch { 0 => 1.05f, 1 => .85f, 8 => 1, 9 => 3f, 10 => .95f, _ => .9f };
+        var zoom = SceneIndex switch { 0 => 1.05f, 1 => .85f, 8 => 1, 11 => 1 / PhysicsScene.SmashScale, 9 => 3f, 10 => .95f, _ => .9f };
         var width = Playfield.Size.X / zoom; var height = Playfield.Size.Y / zoom;
-        var center = SceneIndex switch { 0 => 582f, 8 => 576f, 10 => 480f, 4 or 5 or 6 or 9 => Scene.CameraTarget.X, _ => 576 };
-        var x = Math.Clamp(center - width / 2, 36, 1116 - width);
+        var center = SceneIndex switch { 0 => 582f, 8 or 11 => 576f, 10 => 480f, 4 or 5 or 6 or 9 => Scene.CameraTarget.X, _ => 576 };
+        var x = SceneIndex == 11 ? 576 * PhysicsScene.SmashScale - width / 2 : Math.Clamp(center - width / 2, 36, 1116 - width);
         var bottom = SceneIndex == 9 ? Math.Min(629, Scene.CameraTarget.Y + 100) : 629;
+        if (SceneIndex == 11) bottom *= PhysicsScene.SmashScale;
         var view = new Rect2(x, bottom - height, width, height);
         _worldLayer.Transform = new Transform(0, new Vector2(zoom, zoom), 0, Playfield.Position - view.Position * zoom);
         _stageClip.Position = view.Position; _stageClip.Size = view.Size; Scene.Position = -view.Position; Scene.PresentationZoom = zoom;
@@ -203,6 +207,6 @@ internal sealed partial class SandboxWindow : Window
     }
     protected override void Dispose(bool disposing)
     {
-        base.Dispose(disposing); if (disposing) { foreach (var style in _styles) style.Dispose(); _styles.Clear(); }
+        base.Dispose(disposing); if (disposing) { Engine.MaxPhysicsStepsPerFrame = _previousPhysicsBudget; foreach (var style in _styles) style.Dispose(); _styles.Clear(); }
     }
 }

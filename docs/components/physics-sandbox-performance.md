@@ -10,7 +10,28 @@ The test-only [profiler](../../tests/Electron2D.Tests/PhysicsSandboxTests.Profil
 
 `GC.GetAllocatedBytesForCurrentThread()` brackets every measured fixed step and full scene/render-owner frame. Render callbacks are bracketed separately. The maximum on every frame, rather than a rounded mean, must be exactly zero. Report serialization, test instrumentation and scene transitions are outside those intervals. The test-only profile window requests no activation when shown; native mouse/keyboard events are disabled during measurement and their previous states are restored afterwards. Native GUI hover is cleared with queued native motion before warmup; pointer queries are moved through the scene API. Construction, new bodies, configuration edits, fresh native input-event construction, tooltips, readback and native/GPU allocations are not covered by the zero-byte result. Mouse-event creation remains an allocating runtime path. This result is a prepared simulation/UI budget, not a global zero-allocation guarantee for all interactions.
 
-## Current scene drawing
+## Smash allocation fixes
+
+Smash creates 9,600 fragments by default and permits 65,536 real bodies plus its block. World preparation previously reserved whole-world buffers in each dormant solver slot; it now uses bounded 16-body/32-contact/four-joint initial capacities and retains each island's high-water storage. Uninstrumented membership additions avoid repeated monitor scans, and departure cleanup visits configured contact subjects. Fragment parents, shapes and materials share 128-body groups, bounding sibling checks and resource event fan-out.
+
+A native trace identified a 5,088-byte growth when a 16-body/20-contact island first slept; the small dormant budget covers that observed topology. The large diagnostic then exposed about 3.5 MB per step/frame. EventPipe allocation sampling identified B2BodyMoveEvent arrays: exact-size growth followed each increase in awake body count. World construction now reserves those events for the rounded body capacity. A separate dense-query regression exceeds the former 16-pairs-per-moving-proxy estimate; broad phase also retains peak requested/overflow demand for arena reuse. Cold larger topologies still require explicit preparation/warmup outside the measurement interval.
+
+The sandbox temporarily permits at most one fixed interval per rendered frame and restores the previous engine budget on disposal. Overload slows simulation rather than monopolizing frames with several catch-up intervals; nominal 60 Hz does not guarantee real-time simulation under overload.
+
+## Current Smash measurements
+
+Release/Linux x64/Wayland GPU, tiered compilation disabled, a 60 FPS cap and one maximum physics step per frame. The 9,600-fragment fixed trial uses 1,600 warmup ticks/256 samples; its separate native trial uses 768 warmup frames/192 samples. The 65,536-fragment fixed trial uses 384 warmup ticks/256 samples. A 128-tick large warmup was insufficient: it included a later scratch/cache growth of 3,468,184 bytes across its measured interval. Those cold results are not a zero-byte pass.
+
+| Fragments + block | Fixed mean / p95 ms | Native FPS | Native render mean ms | Fixed bytes / maximum owner-frame bytes |
+| --- | ---: | ---: | ---: | ---: |
+| 9,600 + 1 | 29.947 / 34.181 | 20.0 | 10.348 | 0 / 0 |
+| 65,536 + 1 | 303.356 / 337.070 | 2.1 | 127.058 | 0 / 0 |
+
+Evidence is split into `profile-Release-smash-acceptance.json` (fixed default), `profile-Release-smash-window-acceptance.json` (native default), `profile-Release-smash-max-prepared.json` (fixed maximum), and `profile-Release-smash-max-window.json` (native maximum). Native and fixed trials have independent scene lifetimes/warmup. The maximum is an overload test, not a usable 60 FPS promise. The large fixed trial ran alongside functional verification, so its timing is descriptive rather than an isolated throughput result. Rendering/readback, fresh input, configuration and larger unprepared topologies keep the limits described above.
+
+Reproduce with the existing profile switch, `ELECTRON2D_SANDBOX_PROFILE_SCENE=11`, `ELECTRON2D_SANDBOX_SMASH_COUNT=9600` or `65536`, and a distinct profile tag. `ELECTRON2D_SANDBOX_PROFILE_HEADLESS=1` selects fixed-only; `ELECTRON2D_SANDBOX_PROFILE_NATIVE_ONLY=1` selects native-only. The maximum fixed acceptance uses `ELECTRON2D_SANDBOX_PROFILE_WARMUP=384`; native maximum uses `ELECTRON2D_SANDBOX_PROFILE_NATIVE_WARMUP=128`.
+
+## Previous scene drawing
 
 After removing the diagnostic layer, a focused Release run on runtime `92dab95f` measured the warehouse at 0.109 ms per fixed tick and 58.8 FPS, and 1,024 active stress particles at 1.801 ms per fixed tick and 49.5 FPS. Both cases passed 256 fixed ticks and 192 native frames with exactly zero maximum managed frame and render bytes after the standard warmup. Evidence: `bin/physics-sandbox/profile-Release-no-debug.json`. This checks the revised single-trial profiler and the current scene/UI drawing; the other nine native performance profiles and the long settling gate were not rerun for this removal. All eleven scenes passed interactive capture checks in both renderers.
 

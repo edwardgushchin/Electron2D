@@ -12,10 +12,13 @@ internal static partial class PhysicsSandboxTests
         VerifySolverArrayReuse();
         VerifySolverVectorArithmetic();
         VerifySleepingStorage();
+        VerifyBroadphasePairReuse();
         using var font = new FontFile();
         font.LoadDynamicFont(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
+        var previousBudget = Engine.MaxPhysicsStepsPerFrame;
         using (var configured = new SandboxWindow(font, font))
-            Check(configured.Size == new Vector2i(1152, 800) && configured.Unresizable && configured.MinSize == configured.MaxSize, "Splash client dimensions.");
+            Check(configured.Size == new Vector2i(1152, 800) && configured.Unresizable && configured.MinSize == configured.MaxSize && Engine.MaxPhysicsStepsPerFrame == 1, "Splash client dimensions and responsive fixed-step frame budget.");
+        Check(Engine.MaxPhysicsStepsPerFrame == previousBudget, "Window teardown restores the engine physics-frame budget.");
         using var root = new SubViewport { Size = SandboxWindow.ClientSize };
         using var tree = new SceneTree(root);
         PhysicsScene? current = null;
@@ -30,6 +33,8 @@ internal static partial class PhysicsSandboxTests
             Switch(index);
             var scene = current!;
             var initial = scene.BodyCount;
+            if (index == 11) Console.WriteLine("Smash: standard wall attached; checking collision propagation.");
+            if (index == 11) Check(initial == PhysicsScene.SmashDefaultCount + 1 && scene.WorldGravity == 0 && scene.Bodies[0].LinearVelocity.X == 600 * PhysicsScene.SmashScale, "Smash starts a real heavy block against 9,600 fragments in zero gravity.");
             Check(scene.SelectedBody is null, "Every new story starts without selection: " + index);
             Check(scene.GetChildren().All(n => n.Name != "PhysicsDebug"), "Stories have no diagnostic collision layer.");
             Check(PhysicsServer.AreaGetGravity(scene.GetWorld()!.Space) == scene.WorldGravity &&
@@ -37,6 +42,7 @@ internal static partial class PhysicsSandboxTests
                 PhysicsServer.AreaGetAngularDamp(scene.GetWorld()!.Space) == scene.WorldAngularDamp, "Story parameters configure actual world defaults.");
             for (var i = 0; i < 180; i++) { PhysicsTick(tree); tree.ProcessFrame(1d / 60); }
             Check(scene.PhysicsSteps == 180 && scene.Bodies.All(b => b.Position.IsFinite() && b.LinearVelocity.IsFinite()), "Every story advances finite real physics: " + index);
+            if (index == 11) Check(scene.Score > 50 && scene.ContactEvents > 30, "The heavy block scatters fragments through real contact propagation.");
             if (index == 0) Check(initial == 72 && scene.ContactEvents > 30, "Warehouse starts with 72 crates and real collision callbacks.");
             for (var action = 0; action < 3; action++)
             {
@@ -130,8 +136,42 @@ internal static partial class PhysicsSandboxTests
         Check(!bird.Freeze && bird.LinearVelocity.X > 100 && bird.LinearVelocity.Y < 0, "Slingshot launches a real dynamic bird.");
         for (var i = 0; i < 240; i++) PhysicsTick(tree);
         Check(current.ContactEvents > 0 && bird.Position.DistanceTo(new(160, 526)) > 150, "The projectile travels and generates real tower/floor contacts.");
-        for (var i = 0; i < 12; i++) Switch(i % SandboxWindow.SceneNames.Length);
-        Console.WriteLine("PhysicsSandbox passed: eleven stories, finite simulation, all 33 actions, pause/step, grabbing, freeze and repeated scene/RID cleanup.");
+        Switch(11);
+        var oldPiece = current!.Bodies[^1];
+        current.SetSmashPopulation(64);
+        Check(current.BodyCount == 65 && oldPiece.IsDisposed && current.SelectedBody is null, "Smash population removes actual bodies without selecting one.");
+        current.SetSmashPopulation(128);
+        Check(current.BodyCount == 129 && current.Bodies.All(b => b.Sleeping), "Rebuilt Smash is ready with a sleeping wall and block.");
+        var colorPiece = current.Bodies[1];
+        Check(current.GetSmashColor(colorPiece) == PhysicsScene.SmashSleepingColor, "Sleeping fragments use the muted state color.");
+        colorPiece.Sleeping = false; colorPiece.LinearVelocity = Vector2.Zero;
+        Check(current.GetSmashColor(colorPiece) == PhysicsScene.Pink, "Awake slow fragments use pink.");
+        colorPiece.LinearVelocity = new(200 * PhysicsScene.SmashScale, 0);
+        Check(current.GetSmashColor(colorPiece) == PhysicsScene.Apricot, "Fast fragments use apricot based on step travel and size.");
+        current.SetStoryParameter(800 * PhysicsScene.SmashScale); current.Act(0);
+        Check(current.Bodies[0].LinearVelocity == new Vector2(800 * PhysicsScene.SmashScale, 0), "Smash impact-speed control drives actual block velocity.");
+        for (var i = 0; i < 120; i++) PhysicsTick(tree);
+        Check(current.Score >= 16 && current.ContactEvents > 0, "Smash wakes and scatters the resized wall.");
+        current.Act(2);
+        Check(current.Score == 0 && current.Bodies.All(b => b.LinearVelocity.IsZeroApprox()), "Rebuilding clears motion and score without replacing bodies.");
+        Console.WriteLine("Smash: checking maximum wall construction and teardown.");
+        current.SetSmashPopulation(PhysicsScene.SmashMaximumCount);
+        Check(current.BodyCount == PhysicsScene.SmashMaximumCount + 1, "Smash maximum consists of 65,536 real fragments and one block.");
+        var largeWorld = Box2D.NET.B2Worlds.b2GetWorldFromId(Box2D.NET.B2Bodies.b2Body_GetWorld(current.Bodies[0].BackendID));
+        Check(largeWorld.bodyMoveEvents.capacity >= current.BodyCount, "Body movement events are prepared before a large sleeping wall wakes.");
+        var dormantSlots = largeWorld.solverSets.data.AsSpan(3, largeWorld.solverSets.count - 3);
+        long dormantBodies = 0, dormantContacts = 0;
+        foreach (var set in dormantSlots) { dormantBodies += set.bodySims.capacity; dormantContacts += set.contactSims.capacity; }
+        Check(dormantBodies <= dormantSlots.Length * 16L + current.BodyCount * 2L &&
+            dormantContacts <= dormantSlots.Length * 32L + current.BodyCount * 8L,
+            "Independent sleeping fragments prepare linear dormant storage, without full-world copies per island.");
+        current.Act(0);
+        for (var i = 0; i < 32; i++) PhysicsTick(tree);
+        Check(current.Bodies.All(b => b.Position.IsFinite() && b.LinearVelocity.IsFinite()), "Maximum Smash load preserves finite solver state.");
+        var removedMaximumPiece = current.Bodies[^1]; current.SetSmashPopulation(64);
+        Check(removedMaximumPiece.IsDisposed && current.BodyCount == 65, "Maximum population can shrink and release all removed bodies.");
+        for (var i = 0; i < SandboxWindow.SceneNames.Length; i++) Switch(i % SandboxWindow.SceneNames.Length);
+        Console.WriteLine("PhysicsSandbox passed: twelve stories, finite simulation, all 36 actions, pause/step, grabbing, freeze and repeated scene/RID cleanup.");
     }
 
     private static void VerifySolverArrayReuse()
@@ -194,8 +234,28 @@ internal static partial class PhysicsSandboxTests
         Check(retained.All(s => s.bodySims.data is null && s.contactSims.data is null), "World teardown releases live and inactive cached solver arrays.");
     }
 
+    private static void VerifyBroadphasePairReuse()
+    {
+        using var root = new SubViewport();
+        using var shape = new CircleShape { Radius = 20 };
+        RigidBody? first = null;
+        for (var i = 0; i < 96; i++)
+        {
+            var body = new RigidBody { Name = "Pair" + i, Position = new(100, 100), CanSleep = false };
+            body.AddChild(new CollisionShape { Shape = shape }); root.AddChild(body); first ??= body;
+        }
+        using var tree = new SceneTree(root);
+        PhysicsServer.AreaSetGravity(first!.GetWorld()!.Space, 0);
+        PhysicsTick(tree);
+        var world = Box2D.NET.B2Worlds.b2GetWorldFromId(first.Space!.WorldID);
+        var needed = Box2D.NET.B2Atomics.b2AtomicLoadInt(ref world.broadPhase.movePairIndex);
+        Check(needed > 16 * 96 && world.broadPhase.movePairCapacity >= needed,
+            "Dense broad-phase queries retain overflow pair demand for subsequent arena reuse.");
+    }
+
     internal static void RunNative()
     {
+        const int framesPerScene = 180;
         using var regular = new FontFile();
         regular.LoadDynamicFont(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
         using var semibold = new FontFile();
@@ -221,8 +281,8 @@ internal static partial class PhysicsSandboxTests
         post = () =>
         {
             frame++;
-            var scene = (frame - 1) / 80;
-            var phase = (frame - 1) % 80;
+            var scene = (frame - 1) / framesPerScene;
+            var phase = (frame - 1) % framesPerScene;
             if (scene >= SandboxWindow.SceneNames.Length) { window.Tree!.Quit(); return; }
             if (phase == 0) { window.SwitchScene(scene); Check(window.Scene.SelectedBody is null, "New native story has no selection."); }
             if (scene == 0 && phase == 2) NativeClick(UI("SceneSelector"));
@@ -316,7 +376,7 @@ internal static partial class PhysicsSandboxTests
             if (phase == 40) NativeClick(UI("Inspector0"));
             if (phase == 42)
             {
-                Check(window.GetNode<CanvasLayer>("Interface").GetChildren().OfType<HSlider>().Count() == 11, "Every story has native world/object/story sliders.");
+                Check(window.GetNode<CanvasLayer>("Interface").GetChildren().OfType<HSlider>().Count() == 12, "Every story has native world/object/story sliders.");
                 NativeClick(UI("Parameter0", .75f));
             }
             if (phase == 44)
@@ -356,15 +416,48 @@ internal static partial class PhysicsSandboxTests
             if (scene == 10 && phase == 50) NativeMotion(window.Scene.GetGlobalTransformWithCanvas() * new Vector2(80, 580));
             if (scene == 10 && phase == 52) NativeButton(window.Scene.GetGlobalTransformWithCanvas() * new Vector2(80, 580), false);
             if (scene == 10 && phase == 54) Check(!window.Scene.Bodies[^1].Freeze && window.Scene.Bodies[^1].LinearVelocity.X > 100, "Native pull/release launches the bird through the solver.");
+            if (scene == 11 && phase == 48)
+            {
+                window.Scene.WorldGravity = 0; window.Scene.Act(2);
+                NativeClick(UI("Inspector2"));
+            }
+            if (scene == 11 && phase == 49) NativeClick(UI("Parameter10", .8f));
+            if (scene == 11 && phase == 50)
+            {
+                Check(window.Scene.StoryParameter > 750 && window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter11").Visible, "Smash has live impact speed and fragment-count controls.");
+                NativeClick(UI("Parameter11", .05f));
+            }
+            if (scene == 11 && phase == 52)
+            {
+                Check(window.Scene.SmashFragmentCount is >= 64 and <= 4096 && window.Scene.BodyCount == window.Scene.SmashFragmentCount + 1, "Native Smash population control changes real body count.");
+                using var controls = RenderingServer.Service!.Readback();
+                controls.SavePNG(System.IO.Path.Combine(directory, "12-controls.png"));
+                NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.Bodies[1].GlobalPosition);
+            }
+            if (scene == 11 && phase == 54)
+            {
+                Check(window.Scene.SelectedBody == window.Scene.Bodies[1] && Math.Abs(window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter4").Value - .0045) < .00001, "Fragment mass is shown without clamping.");
+                NativeClick(UI("Parameter4", .1f));
+            }
+            if (scene == 11 && phase == 56) Check(window.Scene.Bodies[1].Mass > 1, "Native object slider edits a Smash fragment's physical mass.");
+            if (scene == 11 && phase == 58) NativeClick(new(200, 210));
+            if (scene == 11 && phase == 60) Check(window.Scene.SelectedBody is null, "Empty Smash field click clears selection.");
+            if (scene == 11 && phase == 62) { window.Scene.SetSmashPopulation(PhysicsScene.SmashDefaultCount); window.Scene.Act(0); }
+            if (scene == 11 && phase == 170)
+            {
+                Check(window.Scene.Score > 50 && window.Scene.Bodies.All(b => b.Position.IsFinite()), "The rendered full-load impact scatters real fragments.");
+                using var impact = RenderingServer.Service!.Readback();
+                impact.SavePNG(System.IO.Path.Combine(directory, "12-impact.png"));
+            }
             if (phase == 60)
                 Check(window.Scene.Bodies.All(b => b.Position.IsFinite() && b.LinearVelocity.IsFinite()), "Rendered actions preserve finite state.");
-            if (frame == SandboxWindow.SceneNames.Length * 80 - 2) RenderingServer.FramePostDraw -= post;
-            if (frame == SandboxWindow.SceneNames.Length * 80 - 2) window.Tree!.Quit();
+            if (frame == SandboxWindow.SceneNames.Length * framesPerScene - 2) RenderingServer.FramePostDraw -= post;
+            if (frame == SandboxWindow.SceneNames.Length * framesPerScene - 2) window.Tree!.Quit();
         };
         window.Ready += _ => RenderingServer.FramePostDraw += post;
-        try { var code = Engine.Run(window); Check(code == 0 && frame >= SandboxWindow.SceneNames.Length * 80 - 2, $"All native scenes finish: code={code}, frame={frame}."); }
+        try { var code = Engine.Run(window); Check(code == 0 && frame >= SandboxWindow.SceneNames.Length * framesPerScene - 2, $"All native scenes finish: code={code}, frame={frame}."); }
         finally { if (RenderingServer.IsAvailable) RenderingServer.FramePostDraw -= post; }
-        Console.WriteLine($"PhysicsSandbox native {backend} passed: 1152x800, eleven scenes, scene captures and rendered actions. {directory}");
+        Console.WriteLine($"PhysicsSandbox native {backend} passed: 1152x800, twelve scenes, scene captures and rendered actions. {directory}");
     }
 
     private static void PhysicsTick(SceneTree tree)

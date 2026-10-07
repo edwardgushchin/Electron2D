@@ -17,6 +17,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     private const ulong AbsorbentMaterial = 2;
 
     private readonly List<PhysicsBody> _bodies = [];
+    private readonly List<RigidBody> _contactBodies = [];
     private readonly List<Joint> _joints = [];
     private readonly List<PhysicsJointRuntime> _jointRuntimes = [];
     private B2BodyId _jointWorldBody;
@@ -122,7 +123,15 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         var objects = _bodies.Count + _areas.Count + _serverColliders.Count;
         var shapes = 0; var contactEvents = 0;
-        foreach (var body in _bodies) { shapes += body.BackendShapes.Count; if (body is RigidBody rigid) contactEvents += checked(rigid.MaxContactsReported * 4); }
+        _contactBodies.Clear();
+        foreach (var body in _bodies)
+        {
+            shapes += body.BackendShapes.Count;
+            if (body is not RigidBody rigid) continue;
+            var limit = rigid.MaxContactsReported;
+            contactEvents += checked(limit * 4);
+            if (limit > 0 || rigid.ContactMonitor) _contactBodies.Add(rigid);
+        }
         foreach (var area in _areas) shapes += area.BackendShapes.Count;
         foreach (var collider in _serverColliders) shapes += collider.BackendShapes.Count;
         var overlapEvents = 0; var serverEvents = 0;
@@ -155,11 +164,12 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         var world = b2GetWorldFromId(_worldID);
         var count = world.bodyIdPool.nextIndex;
+        var capacity = (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(8, count));
+        if (capacity <= _preparedBodyCapacity && count <= _preparedSleepCapacity) return;
         var sleeping = 0;
         foreach (var body in world.bodies.data.AsSpan(0, world.bodies.count))
             if (body.id >= 0 && body.type == B2BodyType.b2_dynamicBody && body.enableSleep) sleeping++;
         var sleepCapacity = sleeping == 0 ? 0 : (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)sleeping);
-        var capacity = (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(8, count));
         if (capacity <= _preparedBodyCapacity && sleepCapacity <= _preparedSleepCapacity) return;
         _preparedBodyCapacity = Math.Max(_preparedBodyCapacity, capacity);
         _preparedSleepCapacity = Math.Max(_preparedSleepCapacity, sleepCapacity);
@@ -177,18 +187,21 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
         var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
         Box2D.NET.B2Arrays.b2Array_Reserve(ref awake.bodyStates, capacity);
+        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.bodyMoveEvents, capacity);
         // ponytail: Four contacts per body is the prepared graph budget; larger topologies need explicit capacity preparation.
         var contacts = checked(capacity * 4);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.contacts, contacts);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.contactIdPool.freeArray, contacts);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.islands, capacity);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.islandIdPool.freeArray, capacity);
-        foreach (var set in world.solverSets.data.AsSpan(0, world.solverSets.count))
+        for (var i = 0; i < world.solverSets.count; i++)
         {
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.bodySims, set.setIndex >= 0 ? capacity : sleepCapacity);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.contactSims, set.setIndex >= 0 ? contacts : sleepCapacity * 4);
+            var set = world.solverSets.data[i];
+            // ponytail: Dormant budget is 16 bodies/32 contacts; larger island topologies need explicit preparation.
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.bodySims, i < 3 ? capacity : 16);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.contactSims, i < 3 ? contacts : 32);
             Box2D.NET.B2Arrays.b2Array_Reserve(ref set.jointSims, 4);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.islandSims, set.setIndex >= 0 ? capacity : sleepCapacity);
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.islandSims, i < 3 ? capacity : 1);
         }
         foreach (var task in world.taskContexts.data.AsSpan(0, world.taskContexts.count))
         {
@@ -214,7 +227,9 @@ internal sealed partial class PhysicsSpace : IDisposable
         body.AttachBackend(this);
         _bodies.Add(body);
         PrepareSolverCapacity();
-        PrepareMonitoringCapacity();
+        if (_areas.Count == 0 && _serverColliders.Count == 0 && (body is not RigidBody rigid || rigid.MaxContactsReported == 0))
+            _sleepEvents.EnsureCapacity(_bodies.Count);
+        else PrepareMonitoringCapacity();
         foreach (var joint in _joints) joint.BodyArrived();
         PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
     }
@@ -224,15 +239,15 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Physics bodies cannot leave a world while it is stepping.");
         PhysicsServer.Service.EnsureJointBodyMembershipChange(body.PhysicsRID);
-        if (!_bodies.Remove(body)) return;
+        if (_bodies.Count > 0 && ReferenceEquals(_bodies[^1], body)) _bodies.RemoveAt(_bodies.Count - 1);
+        else if (!_bodies.Remove(body)) return;
         foreach (var runtime in _jointRuntimes) runtime.BodyLeaving(body.PhysicsRID);
         foreach (var joint in _joints) joint.BodyLeaving(body);
-        if (body is RigidBody departing) departing.CaptureBackendSleep();
+        if (body is RigidBody departing) { _contactBodies.Remove(departing); departing.CaptureBackendSleep(); }
         body.DetachBackend();
         PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
         if (body is RigidBody removed) removed.ClearContactState();
-        foreach (var other in _bodies)
-            if (other is RigidBody rigid) rigid.ForgetContact(body, _contactEvents);
+        foreach (var rigid in _contactBodies) rigid.ForgetContact(body, _contactEvents);
         foreach (var area in _areas) area.Forget(body, _overlapEvents);
         ForgetAreaMonitors(body.PhysicsRID);
         DispatchEvents();
@@ -414,6 +429,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var collider in _serverColliders)
             if (!collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
         _bodies.Clear();
+        _contactBodies.Clear();
         _areas.Clear();
         _serverColliders.Clear();
         _fieldAreas.Clear();

@@ -412,7 +412,7 @@ namespace Box2D.NET
 
             // todo these could be in the step context
             bp.moveResults = b2AllocateArenaItem<B2MoveResult>(alloc, moveCount, "move results");
-            bp.movePairCapacity = 16 * moveCount;
+            bp.movePairCapacity = Math.Max(bp.movePairCapacity, 16 * moveCount);
             bp.movePairs = b2AllocateArenaItem<B2MovePair>(alloc, bp.movePairCapacity, "move pairs");
             b2AtomicStoreInt(ref bp.movePairIndex, 0);
 
@@ -484,6 +484,8 @@ namespace Box2D.NET
 
             b2FreeArenaItem(alloc, bp.movePairs);
             bp.movePairs = null;
+            // Retain overflow demand so later dense queries reuse arena storage instead of heap pair nodes.
+            bp.movePairCapacity = Math.Max(bp.movePairCapacity, b2AtomicLoadInt(ref bp.movePairIndex));
             b2FreeArenaItem(alloc, bp.moveResults);
             bp.moveResults = null;
 

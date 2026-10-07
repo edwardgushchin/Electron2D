@@ -28,12 +28,13 @@ internal static partial class PhysicsSandboxTests
         var path = System.IO.Path.GetFullPath($"bin/physics-sandbox/profile-{configuration}-{tag}.json");
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
         var physics = new List<object>();
-        foreach (var index in indices)
+        foreach (var index in Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_NATIVE_ONLY") == "1" ? [] : indices)
         {
             var constructionStart = GC.GetAllocatedBytesForCurrentThread();
             using var root = new SubViewport { Size = SandboxWindow.ClientSize };
             var scene = new PhysicsScene(index, font);
             if (index == 8) scene.SetStoryParameter(stressCount);
+            if (index == 11) scene.SetSmashPopulation(int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_SMASH_COUNT") ?? "9600"));
             root.AddChild(scene);
             using var tree = new SceneTree(root);
             var constructionBytes = GC.GetAllocatedBytesForCurrentThread() - constructionStart;
@@ -85,6 +86,7 @@ internal static partial class PhysicsSandboxTests
                 if (trial == indices.Length) { window.Tree!.Quit(); return; }
                 window.SwitchScene(indices[trial]);
                 if (window.Scene.Index == 8) window.Scene.SetStoryParameter(stressCount);
+                if (window.Scene.Index == 11) window.Scene.SetSmashPopulation(int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_SMASH_COUNT") ?? "9600"));
                 Exercise(window.Scene, 0);
                 ClearProfileHover();
             }
@@ -100,13 +102,18 @@ internal static partial class PhysicsSandboxTests
                 if (bytes.Max() != 0) failures.Add($"Native {trial}: max {bytes.Max()} bytes/frame, render max {renderBytes.Max()}.");
                 Console.WriteLine($"Profile {trial}: {1000 / mean:0.0} FPS, {bytes.Average():0.0} B/frame, max {bytes.Max()}, render {renderBytes.Average():0.0}");
                 native.Add(new { scene = SandboxWindow.SceneNames[indices[trial]], bodies = window.Scene.BodyCount, fps = 1000 / mean, frameMS = mean, frameP95MS = Percentile(times), renderMS = renders.Average(), renderP95MS = Percentile(renders), bytesPerFrame = bytes.Average(), renderBytesPerFrame = renderBytes.Average(), maxBytesPerFrame = bytes.Max(), maxRenderBytesPerFrame = renderBytes.Max() });
+                if (window.Scene.Index == 11)
+                {
+                    using var capture = RenderingServer.Service!.Readback();
+                    capture.SavePNG(System.IO.Path.ChangeExtension(path, ".png"));
+                }
             }
             frame++; previous = Stopwatch.GetTimestamp(); previousBytes = GC.GetAllocatedBytesForCurrentThread();
         };
         window.Ready += _ => { nativeInput = SuppressProfileInput(); RenderingServer.FramePreDraw += pre; RenderingServer.FramePostDraw += post; };
         try { Check(RunProfileWindow(window) == 0 && frame >= indices.Length * trialFrames, "Complete native performance profile."); }
         finally { RestoreProfileInput(nativeInput); if (RenderingServer.IsAvailable) { RenderingServer.FramePreDraw -= pre; RenderingServer.FramePostDraw -= post; } }
-        File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, optimized, platform = System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier, backend = "gpu", maxFPS = 60, warmupPhysics = warmup, physicsSamples = 256, warmupNative = nativeWarmup, nativeSamples, thread = "scene/render owner", physics, native }, new JsonSerializerOptions { WriteIndented = true }));
+        File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, optimized, platform = System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier, backend = "gpu", maxFPS = 60, maxPhysicsStepsPerFrame = 1, warmupPhysics = warmup, physicsSamples = 256, warmupNative = nativeWarmup, nativeSamples, thread = "scene/render owner", physics, native }, new JsonSerializerOptions { WriteIndented = true }));
         Console.WriteLine("PhysicsSandbox performance profile: " + path);
         Check(failures.Count == 0, "Zero managed allocation budget: " + string.Join("; ", failures));
     }
@@ -184,12 +191,13 @@ internal static partial class PhysicsSandboxTests
 
     private static void Exercise(PhysicsScene scene, int frame)
     {
-        scene.SetPointer(scene.GetGlobalTransformWithCanvas() * new Vector2(570 + 270 * MathF.Sin(frame * .08f), 380 + 160 * MathF.Cos(frame * .06f)));
-        if (frame == 0 && scene.Index is 9 or 10) scene.Act(scene.Index == 9 ? 1 : 0);
+        var scale = scene.Index == 11 ? PhysicsScene.SmashScale : 1;
+        scene.SetPointer(scene.GetGlobalTransformWithCanvas() * (new Vector2(570 + 270 * MathF.Sin(frame * .08f), 380 + 160 * MathF.Cos(frame * .06f)) * scale));
+        if (frame == 0 && scene.Index is 9 or 10 or 11) scene.Act(scene.Index == 9 ? 1 : 0);
         if (frame % 48 == 0 && scene.Bodies.Count > 0)
         {
             var body = scene.Bodies[0];
-            body.ApplyCentralImpulse(new Vector2(frame % 96 == 0 ? 80 : -80, -40));
+            body.ApplyCentralImpulse(new Vector2(frame % 96 == 0 ? 80 : -80, -40) * scale);
         }
     }
 

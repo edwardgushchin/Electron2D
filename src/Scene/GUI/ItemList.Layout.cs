@@ -10,7 +10,7 @@ public partial class ItemList
     private bool _sameColumnWidth, _autoWidth, _autoHeight, _wraparoundItems = true;
     private float _autoWidthValue, _autoHeightValue;
     private TextOverrunBehavior _textOverrunBehavior = TextOverrunBehavior.TrimEllipsis;
-    private ScrollHintMode _hintMode;
+    private VerticalScrollHintMode _hintMode;
     private bool _tileScrollHint;
 
     /// <summary>Gets or sets a fixed item-column width, with zero selecting measured widths.</summary>
@@ -67,7 +67,7 @@ public partial class ItemList
 
     /// <summary>Gets or sets which reachable vertical edges show the themed scroll hint.</summary>
     /// <value>Disabled initially.</value>
-    public ScrollHintMode HintMode
+    public VerticalScrollHintMode HintMode
     {
         get { ThrowIfDisposed(); return _hintMode; }
         set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_hintMode == value) return; _hintMode = value; QueueRedraw(); }
@@ -392,14 +392,14 @@ public partial class ItemList
                 DrawStyleBox(cursor, rect);
             }
         }
-        if (_hintMode != ScrollHintMode.Disabled)
+        if (_hintMode != VerticalScrollHintMode.Disabled)
         {
             var texture = GetThemeIcon("scroll_hint") ?? throw new InvalidOperationException("ItemList requires its scroll hint icon.");
             var color = GetThemeColor("scroll_hint_color");
             var hintHeight = texture.GetSize().Y;
-            if (_vBar.Value > 1 && _hintMode is ScrollHintMode.Both or ScrollHintMode.Top)
+            if (_vBar.Value > 1 && _hintMode is VerticalScrollHintMode.Both or VerticalScrollHintMode.Top)
                 DrawTextureRect(texture, new(0, 0, Size.X, hintHeight), _tileScrollHint, color);
-            if (_vBar.Value < _vBar.MaxValue - _vBar.Page - 1 && _hintMode is ScrollHintMode.Both or ScrollHintMode.Bottom)
+            if (_vBar.Value < _vBar.MaxValue - _vBar.Page - 1 && _hintMode is VerticalScrollHintMode.Both or VerticalScrollHintMode.Bottom)
                 DrawTextureRect(texture, new(0, Size.Y - hintHeight, Size.X, -hintHeight), _tileScrollHint, color);
         }
         if (HasFocus(true) && GetThemeStyleBox("focus") is { } focus)

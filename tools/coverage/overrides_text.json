@@ -5019,14 +5019,6 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: a DisplayServer virtual-keyboard show/hide/session service and native symbol-picker request/result service for a concrete target. The first executable target integration must add these properties and exercise focus/touch presentation or picker insertion; inert enable flags are not shipped."
-    },
-    {
-      "godot": [
-        "class:Tree",
-        "class:TreeItem"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: executable TreeItem-owned hierarchy/cell model plus Tree column layout, selection and cell-edit integration. TextEdit multiline cell host is now present (pinned tree.cpp dependency at 4595-4617/7499-7525); the first Tree slice must connect it with retained Range/PopupMenu/LineEdit cell editors and real GUI routing. Standalone hierarchy stubs do not satisfy the dependency."
     }
   ],
   "extras": [

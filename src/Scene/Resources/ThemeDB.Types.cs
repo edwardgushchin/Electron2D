@@ -312,6 +312,8 @@ public sealed partial class ThemeDB
         ["Timer"] = ["Timer", "Node", "ElectronObject"],
         ["Translation"] = ["Translation", "Resource", "ElectronObject"],
         ["TranslationDomain"] = ["TranslationDomain", "ElectronObject"],
+        ["Tree"] = ["Tree", "Control", "CanvasItem", "Node", "ElectronObject"],
+        ["TreeItem"] = ["TreeItem", "ElectronObject"],
         ["Tween"] = ["Tween", "ElectronObject"],
         ["Tweener"] = ["Tweener", "ElectronObject"],
         ["UDPServer"] = ["UDPServer", "ElectronObject"],

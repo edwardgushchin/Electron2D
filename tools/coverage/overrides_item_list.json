@@ -184,6 +184,31 @@
       "godot": "ItemList::theme_item:v_separation",
       "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
       "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::enum:ScrollHintMode",
+      "electron2d": "T:Electron2D.VerticalScrollHintMode",
+      "reason": "ADR 0051: Tree and ItemList share the exact vertical Disabled/Both/Top/Bottom policy and values under one enum identity."
+    },
+    {
+      "godot": "ItemList::enum_value:ScrollHintMode.SCROLL_HINT_MODE_DISABLED",
+      "electron2d": "enumValue:Electron2D.VerticalScrollHintMode.Disabled()",
+      "reason": "ADR 0051: one shared vertical scroll hint policy."
+    },
+    {
+      "godot": "ItemList::enum_value:ScrollHintMode.SCROLL_HINT_MODE_BOTH",
+      "electron2d": "enumValue:Electron2D.VerticalScrollHintMode.Both()",
+      "reason": "ADR 0051: one shared vertical scroll hint policy."
+    },
+    {
+      "godot": "ItemList::enum_value:ScrollHintMode.SCROLL_HINT_MODE_TOP",
+      "electron2d": "enumValue:Electron2D.VerticalScrollHintMode.Top()",
+      "reason": "ADR 0051: one shared vertical scroll hint policy."
+    },
+    {
+      "godot": "ItemList::enum_value:ScrollHintMode.SCROLL_HINT_MODE_BOTTOM",
+      "electron2d": "enumValue:Electron2D.VerticalScrollHintMode.Bottom()",
+      "reason": "ADR 0051: one shared vertical scroll hint policy."
     }
   ],
   "extras": [

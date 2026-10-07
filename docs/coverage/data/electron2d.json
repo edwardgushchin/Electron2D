@@ -4995,24 +4995,6 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.ItemList.ScrollHintMode",
-    "kind": "type",
-    "declaringType": "Electron2D.ItemList.ScrollHintMode",
-    "name": "ScrollHintMode",
-    "signature": "public enum Electron2D.ItemList.ScrollHintMode",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
     "id": "T:Electron2D.ItemList.SelectMode",
     "kind": "type",
     "declaringType": "Electron2D.ItemList.SelectMode",
@@ -8695,6 +8677,90 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Tree",
+    "kind": "type",
+    "declaringType": "Electron2D.Tree",
+    "name": "Tree",
+    "signature": "public class Electron2D.Tree",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Tree.SelectMode",
+    "kind": "type",
+    "declaringType": "Electron2D.Tree.SelectMode",
+    "name": "SelectMode",
+    "signature": "public enum Electron2D.Tree.SelectMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TreeDropModeFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.TreeDropModeFlags",
+    "name": "TreeDropModeFlags",
+    "signature": "public enum Electron2D.TreeDropModeFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TreeItem",
+    "kind": "type",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "TreeItem",
+    "signature": "public sealed class Electron2D.TreeItem",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TreeItem.TreeCellMode",
+    "kind": "type",
+    "declaringType": "Electron2D.TreeItem.TreeCellMode",
+    "name": "TreeCellMode",
+    "signature": "public enum Electron2D.TreeItem.TreeCellMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Tween",
     "kind": "type",
     "declaringType": "Electron2D.Tween",
@@ -9099,6 +9165,24 @@
     "declaringType": "Electron2D.VerticalAlignment",
     "name": "VerticalAlignment",
     "signature": "public enum Electron2D.VerticalAlignment",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VerticalScrollHintMode",
+    "kind": "type",
+    "declaringType": "Electron2D.VerticalScrollHintMode",
+    "name": "VerticalScrollHintMode",
+    "signature": "public enum Electron2D.VerticalScrollHintMode",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -16114,6 +16198,19 @@
     "declaringType": "Electron2D.TranslationDomain",
     "name": ".ctor",
     "signature": "public TranslationDomain()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Tree..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Tree",
+    "name": ".ctor",
+    "signature": "public Tree()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -24619,58 +24716,6 @@
     "value": "0"
   },
   {
-    "id": "enumValue:Electron2D.ItemList.ScrollHintMode.Both()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ItemList.ScrollHintMode",
-    "name": "Both",
-    "signature": "public const Electron2D.ItemList.ScrollHintMode Both = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ItemList.ScrollHintMode",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.ItemList.ScrollHintMode.Bottom()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ItemList.ScrollHintMode",
-    "name": "Bottom",
-    "signature": "public const Electron2D.ItemList.ScrollHintMode Bottom = 3",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ItemList.ScrollHintMode",
-    "value": "3"
-  },
-  {
-    "id": "enumValue:Electron2D.ItemList.ScrollHintMode.Disabled()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ItemList.ScrollHintMode",
-    "name": "Disabled",
-    "signature": "public const Electron2D.ItemList.ScrollHintMode Disabled = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ItemList.ScrollHintMode",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.ItemList.ScrollHintMode.Top()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ItemList.ScrollHintMode",
-    "name": "Top",
-    "signature": "public const Electron2D.ItemList.ScrollHintMode Top = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ItemList.ScrollHintMode",
-    "value": "2"
-  },
-  {
     "id": "enumValue:Electron2D.ItemList.SelectMode.Multi()",
     "kind": "enumValue",
     "declaringType": "Electron2D.ItemList.SelectMode",
@@ -32354,6 +32399,149 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.Tree.SelectMode.Multi()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Tree.SelectMode",
+    "name": "Multi",
+    "signature": "public const Electron2D.Tree.SelectMode Multi = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Tree.SelectMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Tree.SelectMode.Row()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Tree.SelectMode",
+    "name": "Row",
+    "signature": "public const Electron2D.Tree.SelectMode Row = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Tree.SelectMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Tree.SelectMode.Single()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Tree.SelectMode",
+    "name": "Single",
+    "signature": "public const Electron2D.Tree.SelectMode Single = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Tree.SelectMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TreeDropModeFlags.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TreeDropModeFlags",
+    "name": "Disabled",
+    "signature": "public const Electron2D.TreeDropModeFlags Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeDropModeFlags",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TreeDropModeFlags.Inbetween()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TreeDropModeFlags",
+    "name": "Inbetween",
+    "signature": "public const Electron2D.TreeDropModeFlags Inbetween = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeDropModeFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TreeDropModeFlags.OnItem()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TreeDropModeFlags",
+    "name": "OnItem",
+    "signature": "public const Electron2D.TreeDropModeFlags OnItem = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeDropModeFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TreeItem.TreeCellMode.Check()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TreeItem.TreeCellMode",
+    "name": "Check",
+    "signature": "public const Electron2D.TreeItem.TreeCellMode Check = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem.TreeCellMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TreeItem.TreeCellMode.Custom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TreeItem.TreeCellMode",
+    "name": "Custom",
+    "signature": "public const Electron2D.TreeItem.TreeCellMode Custom = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem.TreeCellMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.TreeItem.TreeCellMode.Icon()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TreeItem.TreeCellMode",
+    "name": "Icon",
+    "signature": "public const Electron2D.TreeItem.TreeCellMode Icon = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem.TreeCellMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.TreeItem.TreeCellMode.Range()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TreeItem.TreeCellMode",
+    "name": "Range",
+    "signature": "public const Electron2D.TreeItem.TreeCellMode Range = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem.TreeCellMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TreeItem.TreeCellMode.String()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TreeItem.TreeCellMode",
+    "name": "String",
+    "signature": "public const Electron2D.TreeItem.TreeCellMode String = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem.TreeCellMode",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.Tween.EaseType.In()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Tween.EaseType",
@@ -33314,6 +33502,58 @@
     "parameters": [],
     "returnType": "Electron2D.VerticalAlignment",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VerticalScrollHintMode.Both()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VerticalScrollHintMode",
+    "name": "Both",
+    "signature": "public const Electron2D.VerticalScrollHintMode Both = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VerticalScrollHintMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VerticalScrollHintMode.Bottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VerticalScrollHintMode",
+    "name": "Bottom",
+    "signature": "public const Electron2D.VerticalScrollHintMode Bottom = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VerticalScrollHintMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.VerticalScrollHintMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VerticalScrollHintMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.VerticalScrollHintMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VerticalScrollHintMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VerticalScrollHintMode.Top()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VerticalScrollHintMode",
+    "name": "Top",
+    "signature": "public const Electron2D.VerticalScrollHintMode Top = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VerticalScrollHintMode",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy16X()",
@@ -36693,6 +36933,201 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.Timer\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.ButtonClicked()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "ButtonClicked",
+    "signature": "public event System.Action\u003CElectron2D.TreeItem, System.Int32, System.Int32, Electron2D.MouseButton\u003E ButtonClicked",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.TreeItem, System.Int32, System.Int32, Electron2D.MouseButton\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.CellSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "CellSelected",
+    "signature": "public event System.Action CellSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.CheckPropagatedToItem()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "CheckPropagatedToItem",
+    "signature": "public event System.Action\u003CElectron2D.TreeItem, System.Int32\u003E CheckPropagatedToItem",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.TreeItem, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.ColumnTitleClicked()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "ColumnTitleClicked",
+    "signature": "public event System.Action\u003CSystem.Int32, Electron2D.MouseButton\u003E ColumnTitleClicked",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32, Electron2D.MouseButton\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.CustomItemClicked()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "CustomItemClicked",
+    "signature": "public event System.Action\u003CElectron2D.MouseButton\u003E CustomItemClicked",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.MouseButton\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.CustomPopupEdited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "CustomPopupEdited",
+    "signature": "public event System.Action\u003CSystem.Boolean\u003E CustomPopupEdited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.EmptyClicked()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "EmptyClicked",
+    "signature": "public event System.Action\u003CElectron2D.Vector2, Electron2D.MouseButton\u003E EmptyClicked",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2, Electron2D.MouseButton\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.ItemActivated()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "ItemActivated",
+    "signature": "public event System.Action ItemActivated",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.ItemCollapsed()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "ItemCollapsed",
+    "signature": "public event System.Action\u003CElectron2D.TreeItem\u003E ItemCollapsed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.TreeItem\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.ItemEdited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "ItemEdited",
+    "signature": "public event System.Action ItemEdited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.ItemIconDoubleClicked()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "ItemIconDoubleClicked",
+    "signature": "public event System.Action ItemIconDoubleClicked",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.ItemMouseSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "ItemMouseSelected",
+    "signature": "public event System.Action\u003CElectron2D.Vector2, Electron2D.MouseButton\u003E ItemMouseSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Vector2, Electron2D.MouseButton\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.ItemSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "ItemSelected",
+    "signature": "public event System.Action ItemSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.MultiSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "MultiSelected",
+    "signature": "public event System.Action\u003CElectron2D.TreeItem, System.Int32, System.Boolean\u003E MultiSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.TreeItem, System.Int32, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Tree.NothingSelected()",
+    "kind": "event",
+    "declaringType": "Electron2D.Tree",
+    "name": "NothingSelected",
+    "signature": "public event System.Action NothingSelected",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -122681,6 +123116,3371 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Tree.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.CreateItem(Electron2D.TreeItem,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "CreateItem",
+    "signature": "public Electron2D.TreeItem CreateItem(Electron2D.TreeItem parent = null, System.Int32 index = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parent",
+        "type": "Electron2D.TreeItem",
+        "default": "null"
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.DeselectAll()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "DeselectAll",
+    "signature": "public System.Void DeselectAll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.EditSelected(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "EditSelected",
+    "signature": "public System.Boolean EditSelected(System.Boolean forceEdit = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "forceEdit",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.EnsureCursorIsVisible()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "EnsureCursorIsVisible",
+    "signature": "public System.Void EnsureCursorIsVisible()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetButtonIDAtPosition(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetButtonIDAtPosition",
+    "signature": "public System.Int32 GetButtonIDAtPosition(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetColumnAtPosition(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetColumnAtPosition",
+    "signature": "public System.Int32 GetColumnAtPosition(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetColumnExpandRatio(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetColumnExpandRatio",
+    "signature": "public System.Int32 GetColumnExpandRatio(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetColumnTitle(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetColumnTitle",
+    "signature": "public System.String GetColumnTitle(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetColumnTitleAlignment(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetColumnTitleAlignment",
+    "signature": "public Electron2D.HorizontalAlignment GetColumnTitleAlignment(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.HorizontalAlignment",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetColumnTitleDirection(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetColumnTitleDirection",
+    "signature": "public Electron2D.TextDirection GetColumnTitleDirection(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetColumnTitleLanguage(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetColumnTitleLanguage",
+    "signature": "public System.String GetColumnTitleLanguage(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetColumnTitleTooltipText(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetColumnTitleTooltipText",
+    "signature": "public System.String GetColumnTitleTooltipText(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetColumnWidth(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetColumnWidth",
+    "signature": "public System.Int32 GetColumnWidth(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetCustomDrawingCanvasItem()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetCustomDrawingCanvasItem",
+    "signature": "public Electron2D.CanvasItem GetCustomDrawingCanvasItem()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetCustomPopupRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetCustomPopupRect",
+    "signature": "public Electron2D.Rect2 GetCustomPopupRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetDropSectionAtPosition(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetDropSectionAtPosition",
+    "signature": "public System.Int32 GetDropSectionAtPosition(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetEdited()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetEdited",
+    "signature": "public Electron2D.TreeItem GetEdited()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetEditedColumn()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetEditedColumn",
+    "signature": "public System.Int32 GetEditedColumn()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetItemAreaRect(Electron2D.TreeItem,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetItemAreaRect",
+    "signature": "public Electron2D.Rect2 GetItemAreaRect(Electron2D.TreeItem item, System.Int32 column = -1, System.Int32 buttonIndex = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.TreeItem",
+        "default": null
+      },
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetItemAtPosition(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetItemAtPosition",
+    "signature": "public Electron2D.TreeItem GetItemAtPosition(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetNextSelected(Electron2D.TreeItem)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetNextSelected",
+    "signature": "public Electron2D.TreeItem GetNextSelected(Electron2D.TreeItem from)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.TreeItem",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetPressedButton()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetPressedButton",
+    "signature": "public System.Int32 GetPressedButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetRoot()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetRoot",
+    "signature": "public Electron2D.TreeItem GetRoot()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetScroll()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetScroll",
+    "signature": "public Electron2D.Vector2 GetScroll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetSelected()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetSelected",
+    "signature": "public Electron2D.TreeItem GetSelected()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.GetSelectedColumn()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "GetSelectedColumn",
+    "signature": "public System.Int32 GetSelectedColumn()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.IsColumnClippingContent(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "IsColumnClippingContent",
+    "signature": "public System.Boolean IsColumnClippingContent(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.IsColumnExpanding(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "IsColumnExpanding",
+    "signature": "public System.Boolean IsColumnExpanding(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.OnGetTooltip(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "OnGetTooltip",
+    "signature": "protected override System.String OnGetTooltip(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.ScrollToItem(Electron2D.TreeItem,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "ScrollToItem",
+    "signature": "public System.Void ScrollToItem(Electron2D.TreeItem item, System.Boolean centerOnItem = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.TreeItem",
+        "default": null
+      },
+      {
+        "name": "centerOnItem",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnClipContent(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnClipContent",
+    "signature": "public System.Void SetColumnClipContent(System.Int32 column, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnCustomMinimumWidth(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnCustomMinimumWidth",
+    "signature": "public System.Void SetColumnCustomMinimumWidth(System.Int32 column, System.Int32 minWidth)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "minWidth",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnExpand(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnExpand",
+    "signature": "public System.Void SetColumnExpand(System.Int32 column, System.Boolean expand)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "expand",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnExpandRatio(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnExpandRatio",
+    "signature": "public System.Void SetColumnExpandRatio(System.Int32 column, System.Int32 ratio)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "ratio",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnTitle(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnTitle",
+    "signature": "public System.Void SetColumnTitle(System.Int32 column, System.String title)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnTitleAlignment(System.Int32,Electron2D.HorizontalAlignment)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnTitleAlignment",
+    "signature": "public System.Void SetColumnTitleAlignment(System.Int32 column, Electron2D.HorizontalAlignment titleAlignment)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "titleAlignment",
+        "type": "Electron2D.HorizontalAlignment",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnTitleDirection(System.Int32,Electron2D.TextDirection)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnTitleDirection",
+    "signature": "public System.Void SetColumnTitleDirection(System.Int32 column, Electron2D.TextDirection direction)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "direction",
+        "type": "Electron2D.TextDirection",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnTitleLanguage(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnTitleLanguage",
+    "signature": "public System.Void SetColumnTitleLanguage(System.Int32 column, System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetColumnTitleTooltipText(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetColumnTitleTooltipText",
+    "signature": "public System.Void SetColumnTitleTooltipText(System.Int32 column, System.String tooltipText)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "tooltipText",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Tree.SetSelected(Electron2D.TreeItem,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Tree",
+    "name": "SetSelected",
+    "signature": "public System.Void SetSelected(Electron2D.TreeItem item, System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.TreeItem",
+        "default": null
+      },
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.AddButton(System.Int32,Electron2D.Texture,System.Int32,System.Boolean,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "AddButton",
+    "signature": "public System.Void AddButton(System.Int32 column, Electron2D.Texture button, System.Int32 id = -1, System.Boolean disabled = false, System.String tooltipText = \u0022\u0022, System.String description = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "button",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "tooltipText",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.AddChild(Electron2D.TreeItem)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "AddChild",
+    "signature": "public System.Void AddChild(Electron2D.TreeItem child)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "child",
+        "type": "Electron2D.TreeItem",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.CallRecursive(System.Action\u003CElectron2D.TreeItem\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "CallRecursive",
+    "signature": "public System.Void CallRecursive(System.Action\u003CElectron2D.TreeItem\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callback",
+        "type": "System.Action\u003CElectron2D.TreeItem\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.ClearButtons()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "ClearButtons",
+    "signature": "public System.Void ClearButtons()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.ClearCustomBGColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "ClearCustomBGColor",
+    "signature": "public System.Void ClearCustomBGColor(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.ClearCustomColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "ClearCustomColor",
+    "signature": "public System.Void ClearCustomColor(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.CreateChild(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "CreateChild",
+    "signature": "public Electron2D.TreeItem CreateChild(System.Int32 index = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.Deselect(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "Deselect",
+    "signature": "public System.Void Deselect(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.EraseButton(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "EraseButton",
+    "signature": "public System.Void EraseButton(System.Int32 column, System.Int32 buttonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetAutoTranslateMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetAutoTranslateMode",
+    "signature": "public Electron2D.NodeAutoTranslateMode GetAutoTranslateMode(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetAutowrapMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetAutowrapMode",
+    "signature": "public Electron2D.TextAutowrapMode GetAutowrapMode(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextAutowrapMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetAutowrapTrimFlags(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetAutowrapTrimFlags",
+    "signature": "public Electron2D.TextLineBreakFlags GetAutowrapTrimFlags(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextLineBreakFlags",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetButton(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetButton",
+    "signature": "public Electron2D.Texture GetButton(System.Int32 column, System.Int32 buttonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetButtonByID(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetButtonByID",
+    "signature": "public System.Int32 GetButtonByID(System.Int32 column, System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetButtonColor(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetButtonColor",
+    "signature": "public Electron2D.Color GetButtonColor(System.Int32 column, System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetButtonCount(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetButtonCount",
+    "signature": "public System.Int32 GetButtonCount(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetButtonID(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetButtonID",
+    "signature": "public System.Int32 GetButtonID(System.Int32 column, System.Int32 buttonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetButtonTooltipText(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetButtonTooltipText",
+    "signature": "public System.String GetButtonTooltipText(System.Int32 column, System.Int32 buttonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetCellMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetCellMode",
+    "signature": "public Electron2D.TreeItem.TreeCellMode GetCellMode(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TreeItem.TreeCellMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetChild(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetChild",
+    "signature": "public Electron2D.TreeItem GetChild(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetChildCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetChildCount",
+    "signature": "public System.Int32 GetChildCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetChildren()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetChildren",
+    "signature": "public Electron2D.TreeItem[] GetChildren()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetCustomBGColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetCustomBGColor",
+    "signature": "public Electron2D.Color GetCustomBGColor(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetCustomColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetCustomColor",
+    "signature": "public Electron2D.Color GetCustomColor(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetCustomDrawCallback(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetCustomDrawCallback",
+    "signature": "public System.Action\u003CElectron2D.TreeItem, Electron2D.Rect2\u003E GetCustomDrawCallback(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Action\u003CElectron2D.TreeItem, Electron2D.Rect2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetCustomFont(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetCustomFont",
+    "signature": "public Electron2D.Font GetCustomFont(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Font",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetCustomFontSize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetCustomFontSize",
+    "signature": "public System.Int32 GetCustomFontSize(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetCustomStyleBox(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetCustomStyleBox",
+    "signature": "public Electron2D.StyleBox GetCustomStyleBox(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.StyleBox",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetDescription(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetDescription",
+    "signature": "public System.String GetDescription(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetExpandRight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetExpandRight",
+    "signature": "public System.Boolean GetExpandRight(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetFirstChild()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetFirstChild",
+    "signature": "public Electron2D.TreeItem GetFirstChild()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetIcon(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetIcon",
+    "signature": "public Electron2D.Texture GetIcon(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetIconMaxWidth(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetIconMaxWidth",
+    "signature": "public System.Int32 GetIconMaxWidth(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetIconModulate(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetIconModulate",
+    "signature": "public Electron2D.Color GetIconModulate(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetIconOverlay(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetIconOverlay",
+    "signature": "public Electron2D.Texture GetIconOverlay(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetIconRegion(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetIconRegion",
+    "signature": "public Electron2D.Rect2 GetIconRegion(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetIndex()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetIndex",
+    "signature": "public System.Int32 GetIndex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetLanguage(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetLanguage",
+    "signature": "public System.String GetLanguage(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetMetadata\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetMetadata",
+    "signature": "public T GetMetadata\u003CT\u003E(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetNext()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetNext",
+    "signature": "public Electron2D.TreeItem GetNext()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetNextInTree(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetNextInTree",
+    "signature": "public Electron2D.TreeItem GetNextInTree(System.Boolean wrap = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "wrap",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetNextVisible(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetNextVisible",
+    "signature": "public Electron2D.TreeItem GetNextVisible(System.Boolean wrap = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "wrap",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetParent()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetParent",
+    "signature": "public Electron2D.TreeItem GetParent()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetPrev()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetPrev",
+    "signature": "public Electron2D.TreeItem GetPrev()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetPrevInTree(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetPrevInTree",
+    "signature": "public Electron2D.TreeItem GetPrevInTree(System.Boolean wrap = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "wrap",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetPrevVisible(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetPrevVisible",
+    "signature": "public Electron2D.TreeItem GetPrevVisible(System.Boolean wrap = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "wrap",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.TreeItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetRange(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetRange",
+    "signature": "public System.Double GetRange(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetRangeConfig(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetRangeConfig",
+    "signature": "public System.ValueTuple\u003CSystem.Double, System.Double, System.Double, System.Boolean\u003E GetRangeConfig(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CSystem.Double, System.Double, System.Double, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetStructuredTextBIDIOverride(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetStructuredTextBIDIOverride",
+    "signature": "public Electron2D.StructuredTextParser GetStructuredTextBIDIOverride(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.StructuredTextParser",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetStructuredTextBIDIOverrideOptions(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetStructuredTextBIDIOverrideOptions",
+    "signature": "public System.String[] GetStructuredTextBIDIOverrideOptions(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetSuffix(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetSuffix",
+    "signature": "public System.String GetSuffix(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetText(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetText",
+    "signature": "public System.String GetText(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetTextAlignment(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetTextAlignment",
+    "signature": "public Electron2D.HorizontalAlignment GetTextAlignment(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.HorizontalAlignment",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetTextDirection(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetTextDirection",
+    "signature": "public Electron2D.TextDirection GetTextDirection(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetTextOverrunBehavior(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetTextOverrunBehavior",
+    "signature": "public Electron2D.TextOverrunBehavior GetTextOverrunBehavior(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextOverrunBehavior",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetTooltipText(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetTooltipText",
+    "signature": "public System.String GetTooltipText(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.GetTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "GetTree",
+    "signature": "public Electron2D.Tree GetTree()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Tree",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsAcceptingChildren()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsAcceptingChildren",
+    "signature": "public System.Boolean IsAcceptingChildren()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsAnyCollapsed(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsAnyCollapsed",
+    "signature": "public System.Boolean IsAnyCollapsed(System.Boolean onlyVisible = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "onlyVisible",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsButtonDisabled(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsButtonDisabled",
+    "signature": "public System.Boolean IsButtonDisabled(System.Int32 column, System.Int32 buttonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsChecked(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsChecked",
+    "signature": "public System.Boolean IsChecked(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsCustomSetAsButton(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsCustomSetAsButton",
+    "signature": "public System.Boolean IsCustomSetAsButton(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsEditMultiline(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsEditMultiline",
+    "signature": "public System.Boolean IsEditMultiline(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsEditable(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsEditable",
+    "signature": "public System.Boolean IsEditable(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsIndeterminate(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsIndeterminate",
+    "signature": "public System.Boolean IsIndeterminate(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsSelectable(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsSelectable",
+    "signature": "public System.Boolean IsSelectable(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsSelected(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsSelected",
+    "signature": "public System.Boolean IsSelected(System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.IsVisibleInTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "IsVisibleInTree",
+    "signature": "public System.Boolean IsVisibleInTree()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.MoveAfter(Electron2D.TreeItem)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "MoveAfter",
+    "signature": "public System.Void MoveAfter(Electron2D.TreeItem item)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.TreeItem",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.MoveBefore(Electron2D.TreeItem)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "MoveBefore",
+    "signature": "public System.Void MoveBefore(Electron2D.TreeItem item)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.TreeItem",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.PropagateCheck(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "PropagateCheck",
+    "signature": "public System.Void PropagateCheck(System.Int32 column, System.Boolean emitSignal = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "emitSignal",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.RemoveChild(Electron2D.TreeItem)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "RemoveChild",
+    "signature": "public System.Void RemoveChild(Electron2D.TreeItem child)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "child",
+        "type": "Electron2D.TreeItem",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.Select(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "Select",
+    "signature": "public System.Void Select(System.Int32 column, System.Boolean setAsCursor = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "setAsCursor",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetAcceptChildren(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetAcceptChildren",
+    "signature": "public System.Void SetAcceptChildren(System.Boolean allowed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "allowed",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetAutoTranslateMode(System.Int32,Electron2D.NodeAutoTranslateMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetAutoTranslateMode",
+    "signature": "public System.Void SetAutoTranslateMode(System.Int32 column, Electron2D.NodeAutoTranslateMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.NodeAutoTranslateMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetAutowrapMode(System.Int32,Electron2D.TextAutowrapMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetAutowrapMode",
+    "signature": "public System.Void SetAutowrapMode(System.Int32 column, Electron2D.TextAutowrapMode autowrapMode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "autowrapMode",
+        "type": "Electron2D.TextAutowrapMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetAutowrapTrimFlags(System.Int32,Electron2D.TextLineBreakFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetAutowrapTrimFlags",
+    "signature": "public System.Void SetAutowrapTrimFlags(System.Int32 column, Electron2D.TextLineBreakFlags flags)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.TextLineBreakFlags",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetButton(System.Int32,System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetButton",
+    "signature": "public System.Void SetButton(System.Int32 column, System.Int32 buttonIndex, Electron2D.Texture button)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "button",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetButtonColor(System.Int32,System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetButtonColor",
+    "signature": "public System.Void SetButtonColor(System.Int32 column, System.Int32 buttonIndex, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetButtonDescription(System.Int32,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetButtonDescription",
+    "signature": "public System.Void SetButtonDescription(System.Int32 column, System.Int32 buttonIndex, System.String description)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetButtonDisabled(System.Int32,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetButtonDisabled",
+    "signature": "public System.Void SetButtonDisabled(System.Int32 column, System.Int32 buttonIndex, System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetButtonTooltipText(System.Int32,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetButtonTooltipText",
+    "signature": "public System.Void SetButtonTooltipText(System.Int32 column, System.Int32 buttonIndex, System.String tooltip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "buttonIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "tooltip",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCellMode(System.Int32,Electron2D.TreeItem.TreeCellMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCellMode",
+    "signature": "public System.Void SetCellMode(System.Int32 column, Electron2D.TreeItem.TreeCellMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.TreeItem.TreeCellMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetChecked(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetChecked",
+    "signature": "public System.Void SetChecked(System.Int32 column, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCollapsedRecursive(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCollapsedRecursive",
+    "signature": "public System.Void SetCollapsedRecursive(System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCustomAsButton(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCustomAsButton",
+    "signature": "public System.Void SetCustomAsButton(System.Int32 column, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCustomBGColor(System.Int32,Electron2D.Color,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCustomBGColor",
+    "signature": "public System.Void SetCustomBGColor(System.Int32 column, Electron2D.Color color, System.Boolean justOutline = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "justOutline",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCustomColor(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCustomColor",
+    "signature": "public System.Void SetCustomColor(System.Int32 column, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCustomDrawCallback(System.Int32,System.Action\u003CElectron2D.TreeItem, Electron2D.Rect2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCustomDrawCallback",
+    "signature": "public System.Void SetCustomDrawCallback(System.Int32 column, System.Action\u003CElectron2D.TreeItem, Electron2D.Rect2\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CElectron2D.TreeItem, Electron2D.Rect2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCustomFont(System.Int32,Electron2D.Font)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCustomFont",
+    "signature": "public System.Void SetCustomFont(System.Int32 column, Electron2D.Font font)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "font",
+        "type": "Electron2D.Font",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCustomFontSize(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCustomFontSize",
+    "signature": "public System.Void SetCustomFontSize(System.Int32 column, System.Int32 fontSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetCustomStyleBox(System.Int32,Electron2D.StyleBox)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetCustomStyleBox",
+    "signature": "public System.Void SetCustomStyleBox(System.Int32 column, Electron2D.StyleBox styleBox)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "styleBox",
+        "type": "Electron2D.StyleBox",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetDescription(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetDescription",
+    "signature": "public System.Void SetDescription(System.Int32 column, System.String description)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetEditMultiline(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetEditMultiline",
+    "signature": "public System.Void SetEditMultiline(System.Int32 column, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetEditable(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetEditable",
+    "signature": "public System.Void SetEditable(System.Int32 column, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetExpandRight(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetExpandRight",
+    "signature": "public System.Void SetExpandRight(System.Int32 column, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetIcon(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetIcon",
+    "signature": "public System.Void SetIcon(System.Int32 column, Electron2D.Texture texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetIconMaxWidth(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetIconMaxWidth",
+    "signature": "public System.Void SetIconMaxWidth(System.Int32 column, System.Int32 width)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetIconModulate(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetIconModulate",
+    "signature": "public System.Void SetIconModulate(System.Int32 column, Electron2D.Color modulate)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetIconOverlay(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetIconOverlay",
+    "signature": "public System.Void SetIconOverlay(System.Int32 column, Electron2D.Texture texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetIconRegion(System.Int32,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetIconRegion",
+    "signature": "public System.Void SetIconRegion(System.Int32 column, Electron2D.Rect2 region)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "region",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetIndeterminate(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetIndeterminate",
+    "signature": "public System.Void SetIndeterminate(System.Int32 column, System.Boolean indeterminate)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "indeterminate",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetLanguage(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetLanguage",
+    "signature": "public System.Void SetLanguage(System.Int32 column, System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetMetadata\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetMetadata",
+    "signature": "public System.Void SetMetadata\u003CT\u003E(System.Int32 column, T metadata)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "metadata",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetRange(System.Int32,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetRange",
+    "signature": "public System.Void SetRange(System.Int32 column, System.Double value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetRangeConfig(System.Int32,System.Double,System.Double,System.Double,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetRangeConfig",
+    "signature": "public System.Void SetRangeConfig(System.Int32 column, System.Double min, System.Double max, System.Double step, System.Boolean expr = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "min",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "max",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "step",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "expr",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetSelectable(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetSelectable",
+    "signature": "public System.Void SetSelectable(System.Int32 column, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetStructuredTextBIDIOverride(System.Int32,Electron2D.StructuredTextParser)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetStructuredTextBIDIOverride",
+    "signature": "public System.Void SetStructuredTextBIDIOverride(System.Int32 column, Electron2D.StructuredTextParser parser)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "parser",
+        "type": "Electron2D.StructuredTextParser",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetStructuredTextBIDIOverrideOptions(System.Int32,System.String[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetStructuredTextBIDIOverrideOptions",
+    "signature": "public System.Void SetStructuredTextBIDIOverrideOptions(System.Int32 column, System.String[] args)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "args",
+        "type": "System.String[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetSuffix(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetSuffix",
+    "signature": "public System.Void SetSuffix(System.Int32 column, System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetText(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetText",
+    "signature": "public System.Void SetText(System.Int32 column, System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetTextAlignment(System.Int32,Electron2D.HorizontalAlignment)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetTextAlignment",
+    "signature": "public System.Void SetTextAlignment(System.Int32 column, Electron2D.HorizontalAlignment alignment)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "alignment",
+        "type": "Electron2D.HorizontalAlignment",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetTextDirection(System.Int32,Electron2D.TextDirection)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetTextDirection",
+    "signature": "public System.Void SetTextDirection(System.Int32 column, Electron2D.TextDirection direction)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "direction",
+        "type": "Electron2D.TextDirection",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetTextOverrunBehavior(System.Int32,Electron2D.TextOverrunBehavior)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetTextOverrunBehavior",
+    "signature": "public System.Void SetTextOverrunBehavior(System.Int32 column, Electron2D.TextOverrunBehavior behavior)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "behavior",
+        "type": "Electron2D.TextOverrunBehavior",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.SetTooltipText(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "SetTooltipText",
+    "signature": "public System.Void SetTooltipText(System.Int32 column, System.String tooltip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "tooltip",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.UncollapseTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "UncollapseTree",
+    "signature": "public System.Void UncollapseTree()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TreeItem.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Tween.BindNode(Electron2D.Node)",
     "kind": "method",
     "declaringType": "Electron2D.Tween",
@@ -147228,12 +151028,12 @@
     "kind": "property",
     "declaringType": "Electron2D.ItemList",
     "name": "HintMode",
-    "signature": "public Electron2D.ItemList.ScrollHintMode HintMode { get; set; }",
+    "signature": "public Electron2D.VerticalScrollHintMode HintMode { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.ItemList.ScrollHintMode",
+    "returnType": "Electron2D.VerticalScrollHintMode",
     "value": null
   },
   {
@@ -157655,6 +161455,266 @@
     "declaringType": "Electron2D.TranslationServer",
     "name": "PseudolocalizationEnabled",
     "signature": "public static System.Boolean PseudolocalizationEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.AllowRMBSelect()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "AllowRMBSelect",
+    "signature": "public System.Boolean AllowRMBSelect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.AllowReselect()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "AllowReselect",
+    "signature": "public System.Boolean AllowReselect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.AllowSearch()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "AllowSearch",
+    "signature": "public System.Boolean AllowSearch { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.AutoTooltip()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "AutoTooltip",
+    "signature": "public System.Boolean AutoTooltip { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.ColumnTitlesVisible()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "ColumnTitlesVisible",
+    "signature": "public System.Boolean ColumnTitlesVisible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.Columns()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "Columns",
+    "signature": "public System.Int32 Columns { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.DropModeFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "DropModeFlags",
+    "signature": "public Electron2D.TreeDropModeFlags DropModeFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TreeDropModeFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.EnableDragUnfolding()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "EnableDragUnfolding",
+    "signature": "public System.Boolean EnableDragUnfolding { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.EnableRecursiveFolding()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "EnableRecursiveFolding",
+    "signature": "public System.Boolean EnableRecursiveFolding { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.HideFolding()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "HideFolding",
+    "signature": "public System.Boolean HideFolding { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.HideRoot()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "HideRoot",
+    "signature": "public System.Boolean HideRoot { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.HintMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "HintMode",
+    "signature": "public Electron2D.VerticalScrollHintMode HintMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VerticalScrollHintMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.ScrollHorizontalEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "ScrollHorizontalEnabled",
+    "signature": "public System.Boolean ScrollHorizontalEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.ScrollVerticalEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "ScrollVerticalEnabled",
+    "signature": "public System.Boolean ScrollVerticalEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.SelectionMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "SelectionMode",
+    "signature": "public Electron2D.Tree.SelectMode SelectionMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Tree.SelectMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Tree.TileScrollHint()",
+    "kind": "property",
+    "declaringType": "Electron2D.Tree",
+    "name": "TileScrollHint",
+    "signature": "public System.Boolean TileScrollHint { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TreeItem.Collapsed()",
+    "kind": "property",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "Collapsed",
+    "signature": "public System.Boolean Collapsed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TreeItem.CustomMinimumHeight()",
+    "kind": "property",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "CustomMinimumHeight",
+    "signature": "public System.Int32 CustomMinimumHeight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TreeItem.DisableFolding()",
+    "kind": "property",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "DisableFolding",
+    "signature": "public System.Boolean DisableFolding { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TreeItem.Visible()",
+    "kind": "property",
+    "declaringType": "Electron2D.TreeItem",
+    "name": "Visible",
+    "signature": "public System.Boolean Visible { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

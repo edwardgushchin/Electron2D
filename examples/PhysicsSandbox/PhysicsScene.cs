@@ -33,7 +33,7 @@ internal sealed partial class PhysicsScene : Entity
     internal float WorldGravity { get => _worldGravity; set { _worldGravity = value; ApplyWorldParameters(); } }
     internal float WorldLinearDamp { get => _worldLinearDamp; set { _worldLinearDamp = value; ApplyWorldParameters(); } }
     internal float WorldAngularDamp { get => _worldAngularDamp; set { _worldAngularDamp = value; ApplyWorldParameters(); } }
-    internal int BodyLimit => Index == 8 ? 1024 : 160;
+    internal int BodyLimit => Index switch { 8 => 1024, 11 => SmashMaximumCount + 1, _ => 160 };
     private readonly Entity _selection;
     private readonly HashSet<CollisionObject> _boundaries = [];
     private readonly Dictionary<CollisionObject, int> _numbers = [];
@@ -47,6 +47,8 @@ internal sealed partial class PhysicsScene : Entity
         get
         {
             if (SelectedBody is not { } body) return "Select an object";
+            if (body == _smashBlock) return "Smash block";
+            if (Index == 11) return "Fragment";
             if (body == _bird) return "Projectile";
             if (body == _chassis) return "Motorcycle frame";
             if (body is RigidBody wheel && _wheels.Contains(wheel)) return "Driven wheel";
@@ -95,7 +97,7 @@ internal sealed partial class PhysicsScene : Entity
     internal PhysicsScene(int index, Font font)
     {
         Index = index;
-        _flashes.EnsureCapacity(BodyLimit);
+        _flashes.EnsureCapacity(Index == 11 ? 1 : BodyLimit);
         _font = font;
         Name = "Story";
         PhysicsProcessEnabled = ProcessEnabled = UnhandledInputEnabled = true;
@@ -117,6 +119,7 @@ internal sealed partial class PhysicsScene : Entity
             case 8: BuildStress(); break;
             case 9: BuildBike(); break;
             case 10: BuildBirds(); break;
+            case 11: BuildSmash(); break;
             default: throw new ArgumentOutOfRangeException(nameof(index));
         }
         _selection = new Entity { Name = "SelectedObject", ZIndex = 30 };
@@ -144,16 +147,30 @@ internal sealed partial class PhysicsScene : Entity
     {
         body.Name = "Body" + ++_serial;
         _numbers[body] = _serial;
-        body.PhysicsInterpolationMode = PhysicsInterpolationMode.On;
+        var batch = Index == 11 && body is RigidBody && shape is RectangleShape rectangle && rectangle.Size.X < 64 * SmashScale;
+        body.PhysicsInterpolationMode = batch ? PhysicsInterpolationMode.Off : PhysicsInterpolationMode.On;
+        body.Visible = !batch;
         body.Position = position;
         body.AddChild(new CollisionShape { Name = "Geometry", Shape = shape });
         Colliders.Add(body);
         _colors[body] = color;
-        body.Draw += c => DrawCollider(c, body, _colors[body]);
-        AddChild(body);
+        if (!batch) body.Draw += c => DrawCollider(c, body, _colors[body]);
+        if (batch)
+        {
+            // ponytail: 128-child groups bound insertion work; remove after indexed child-name lookup.
+            var group = _smashPieces.Count / 128;
+            if (group == _smashGroups.Count)
+            {
+                var parent = new Entity { Name = "Fragments" + group };
+                _smashGroups.Add(parent); AddChild(parent);
+            }
+            _smashGroups[group].AddChild(body);
+        }
+        else AddChild(body);
         if (body is RigidBody rigid)
         {
             Bodies.Add(rigid);
+            if (batch) return body;
             rigid.ContactMonitor = true;
             rigid.MaxContactsReported = 8;
             rigid.BodyShapeEntered += (_, _, _, _) => { ContactEvents++; if (Index != 8) { _flashes[rigid] = _time + .12; rigid.QueueRedraw(); } };
@@ -177,11 +194,13 @@ internal sealed partial class PhysicsScene : Entity
 
     private void Enclose()
     {
-        var half = Index == 8 ? 420 : 540;
-        _boundaries.Add(Solid(Box(half * 2, 18), new(576, 638), Border));
-        _boundaries.Add(Solid(Box(18, 432), new(576 - half + 2, 420), Border));
-        _boundaries.Add(Solid(Box(18, 432), new(576 + half - 2, 420), Border));
-        _boundaries.Add(Solid(Box(half * 2, 12), new(576, Index == 0 ? 90 : 190), Border));
+        var scale = Index == 11 ? SmashScale : 1;
+        var half = Index is 8 or 11 ? 420 : 540;
+        var height = Index == 11 ? 536 : 432; var centerY = Index == 11 ? 367 : 420;
+        _boundaries.Add(Solid(Box(half * 2 * scale, 18 * scale), new Vector2(576, 638) * scale, Border));
+        _boundaries.Add(Solid(Box(18 * scale, height * scale), new Vector2(576 - half + 2, centerY) * scale, Border));
+        _boundaries.Add(Solid(Box(18 * scale, height * scale), new Vector2(576 + half - 2, centerY) * scale, Border));
+        _boundaries.Add(Solid(Box(half * 2 * scale, 12 * scale), new Vector2(576, Index switch { 0 => 90, 11 => 94, _ => 190 }) * scale, Border));
     }
 
     private Area Sensor(Shape shape, Vector2 position, Color color)
@@ -255,7 +274,8 @@ internal sealed partial class PhysicsScene : Entity
             if (_flashes.TryGetValue(body, out var until) && _time > until) { _flashes.Remove(body); body.QueueRedraw(); }
         }
         _selection.QueueRedraw();
-        if (Index is 3 or 5 or 6 or 7 or 9 or 10) _storyVisual.QueueRedraw();
+        if (Index == 11) _smashBlock?.QueueRedraw();
+        if (Index is 3 or 5 or 6 or 7 or 9 or 10 or 11) _storyVisual.QueueRedraw();
         foreach (var (rid, visual, _) in _serverBodies) visual.Transform = PhysicsServer.BodyGetTransform(rid);
     }
 
@@ -374,6 +394,7 @@ internal sealed partial class PhysicsScene : Entity
     private void Spawn(Vector2 point)
     {
         if (Index == 8) { SetPopulation(_particles.Count + 64); return; }
+        if (Index == 11) { if (_smashPieces.Count < SmashMaximumCount) SetSmashPopulation(_smashPieces.Count + 64); return; }
         if (BodyCount >= BodyLimit) { Observation = "160-body limit reached. Reset the story to start a new experiment."; return; }
         point = point.Clamp(new Vector2(65, 218), new Vector2(1080, 605));
         var body = Dynamic(Index is 1 or 3 ? Circle(14) : Box(34, 34), point, _serial % 2 == 0 ? Pink : Apricot);
@@ -383,8 +404,9 @@ internal sealed partial class PhysicsScene : Entity
 
     private void DrawStage(CanvasItem c)
     {
-        c.DrawRect(new(-2000, -2000, 6000, 5000), Paper);
-        c.DrawLine(new(36, 629), new(1116, 629), Muted, 2);
+        var scale = Index == 11 ? SmashScale : 1;
+        c.DrawRect(new(-2000 * scale, -2000 * scale, 6000 * scale, 5000 * scale), Paper);
+        c.DrawLine(new(36 * scale, 629 * scale), new(1116 * scale, 629 * scale), Muted, 2 * scale);
     }
 
     private void DrawCollider(CanvasItem c, CollisionObject body, Color color)
@@ -393,7 +415,8 @@ internal sealed partial class PhysicsScene : Entity
         if (Index == 9 && (body == _chassis || body is RigidBody wheel && _wheels.Contains(wheel))) return;
         if (body is RigidBody rigid)
         {
-            if (_flashes.ContainsKey(rigid)) color = color.Lerp(Ink, .18f);
+            if (Index == 11) color = GetSmashColor(rigid);
+            else if (_flashes.ContainsKey(rigid)) color = color.Lerp(Ink, .18f);
             else if (rigid.Sleeping) color = color.Lerp(Paper, .35f);
         }
         if (!_shapeOwners.TryGetValue(body, out var owners)) _shapeOwners.Add(body, owners = body.GetShapeOwners());

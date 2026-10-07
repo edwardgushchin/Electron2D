@@ -7,10 +7,10 @@ internal sealed partial class SandboxWindow
     private readonly CanvasLayer _ui, _worldLayer;
     private readonly List<HSlider> _parameters = [];
     private readonly List<string> _parameterNames = [];
-    private readonly float[] _defaults = new float[11];
+    private readonly float[] _defaults = new float[12];
     private readonly Dictionary<PhysicsBody, float[]> _objectDefaults = [];
     private readonly Button[] _tabs = new Button[3];
-    private readonly string[] _units = ["u/s²", "s⁻¹", "s⁻¹", "×", "kg", "", "", "×", "s⁻¹", "s⁻¹", ""];
+    private readonly string[] _units = ["u/s²", "s⁻¹", "s⁻¹", "×", "kg", "", "", "×", "s⁻¹", "s⁻¹", "", "bodies"];
     private Entity _parameterReadout = null!;
     private PhysicsBody? _parameterBody;
     private bool _syncingParameters;
@@ -34,9 +34,9 @@ internal sealed partial class SandboxWindow
             tab.Size = new(72, 34); tab.ToggleMode = true; tab.Pressed += () => ShowParameters(group);
         }
         _tabs[1].TooltipText = "Selected body · K freeze · H mode · Z sleep · L lock · Q/E torque · C lift · V policy";
-        Parameter("Gravity", 0, 2200, 10); Parameter("Linear damping", 0, 8, .1); Parameter("Angular damping", 0, 8, .1); Parameter("Time scale", .25, 2, .05);
-        Parameter("Mass", .1, 20, .1); Parameter("Friction", 0, 1.5, .05); Parameter("Bounce", 0, 1, .05); Parameter("Gravity scale", 0, 3, .1);
-        Parameter("Linear damping", 0, 8, .01); Parameter("Angular damping", 0, 8, .01); Parameter("Scene power", 0, 1, .05);
+        Parameter("Gravity", 0, 2200, 10); Parameter("Linear damping", 0, 8, .01); Parameter("Angular damping", 0, 8, .1); Parameter("Time scale", .25, 2, .05);
+        Parameter("Mass", .0001, 20, .0001); Parameter("Friction", 0, 1.5, .05); Parameter("Bounce", 0, 1, .05); Parameter("Gravity scale", 0, 3, .1);
+        Parameter("Linear damping", 0, 8, .01); Parameter("Angular damping", 0, 8, .01); Parameter("Scene power", 0, 1, .05); Parameter("Fragment count", 64, PhysicsScene.SmashMaximumCount, 64);
         _parameterReadout = new Entity { Name = "ParameterValues" };
         _parameterReadout.Draw += c =>
         {
@@ -58,11 +58,11 @@ internal sealed partial class SandboxWindow
                 c.DrawString(font, new(896, y + 14), _parameterNames[i], fontSize: 14, modulate: slider.Editable ? PhysicsScene.Ink : PhysicsScene.Muted);
                 if (slider.Editable) WriteValue(text, slider.Value, i, out count); else { text[0] = '—'; count = 1; }
                 DrawRight(c, font, new(1112, y + 14), text[..count], 14, color);
-                slider.MinValue.TryFormat(text, out count, "0.##", CultureInfo.InvariantCulture);
+                slider.MinValue.TryFormat(text, out count, "0.####", CultureInfo.InvariantCulture);
                 PhysicsScene.DrawReadout(c, font, new(896, y + 55), text[..count], 11, PhysicsScene.Muted);
-                slider.MaxValue.TryFormat(text, out count, "0.##", CultureInfo.InvariantCulture);
+                slider.MaxValue.TryFormat(text, out count, "0.####", CultureInfo.InvariantCulture);
                 DrawRight(c, font, new(1112, y + 55), text[..count], 11, PhysicsScene.Muted);
-                text.TryWrite(CultureInfo.InvariantCulture, $"default {_defaults[i]:0.##}", out count);
+                text.TryWrite(CultureInfo.InvariantCulture, $"default {_defaults[i]:0.####}", out count);
                 PhysicsScene.DrawReadout(c, font, new(951, y + 55), text[..count], 11, PhysicsScene.Muted);
                 var ratio = (float)Math.Clamp((_defaults[i] - slider.MinValue) / (slider.MaxValue - slider.MinValue), 0, 1);
                 var x = 904 + 200 * ratio;
@@ -82,8 +82,14 @@ internal sealed partial class SandboxWindow
             }
             else if (_parameterGroup == 2)
             {
-                c.DrawString(font, new(896, 390), SceneIndex switch { 8 => "Particles always stay awake.", 9 => "Torque drives both wheels.", 10 => "Power changes launch speed.", _ => "Changes the scene's main action." }, fontSize: 13, modulate: PhysicsScene.Muted);
-                c.DrawString(font, new(896, 415), "Reset restores the experiment.", fontSize: 13, modulate: PhysicsScene.Muted);
+                var y = SceneIndex == 11 ? 450 : 390;
+                c.DrawString(font, new(896, y), SceneIndex switch { 8 => "Particles always stay awake.", 9 => "Torque drives both wheels.", 10 => "Power changes launch speed.", 11 => "Launch wakes the sleeping wall.", _ => "Changes the scene's main action." }, fontSize: 13, modulate: PhysicsScene.Muted);
+                c.DrawString(font, new(896, y + 25), "Reset restores the experiment.", fontSize: 13, modulate: PhysicsScene.Muted);
+                if (SceneIndex == 11)
+                {
+                    c.DrawString(font, new(896, y + 65), "Muted: asleep · Pink: awake", fontSize: 13, modulate: PhysicsScene.Ink);
+                    c.DrawString(font, new(896, y + 90), "Apricot: fast for its size", fontSize: 13, modulate: PhysicsScene.Apricot);
+                }
             }
         };
         _ui.AddChild(_parameterReadout);
@@ -96,7 +102,7 @@ internal sealed partial class SandboxWindow
     }
     private void WriteValue(Span<char> text, double value, int index, out int count)
     {
-        var format = index == 0 || index == 10 && SceneIndex is 8 or 9 ? "0" : "0.##";
+        var format = index == 0 || index == 11 || index == 10 && SceneIndex is 8 or 9 or 11 ? "0" : index == 4 ? "0.####" : "0.##";
         value.TryFormat(text, out count, format, CultureInfo.InvariantCulture);
         var unit = _units[index];
         if (unit.Length == 0) return;
@@ -104,12 +110,12 @@ internal sealed partial class SandboxWindow
         unit.AsSpan().CopyTo(text[count..]); count += unit.Length;
     }
     private static int Group(int index) => index < 4 ? 0 : index < 10 ? 1 : 2;
-    private static float Row(int index) => 292 + (index < 4 ? index : index < 10 ? index - 4 : 0) * 60;
+    private static float Row(int index) => 292 + (index < 4 ? index : index < 10 ? index - 4 : index - 10) * 60;
     internal void ShowParameters(int group)
     {
         _parameterGroup = group;
         for (var i = 0; i < 3; i++) _tabs[i].SetPressedNoSignal(i == group);
-        for (var i = 0; i < _parameters.Count; i++) _parameters[i].Visible = Group(i) == group && (group != 1 || _parameterBody is not null);
+        for (var i = 0; i < _parameters.Count; i++) _parameters[i].Visible = Group(i) == group && (group != 1 || _parameterBody is not null) && (i != 11 || SceneIndex == 11);
         _parameterReadout.QueueRedraw();
     }
     private Texture Thumb(Color color)
@@ -151,6 +157,7 @@ internal sealed partial class SandboxWindow
             case 8: if (_parameterBody is RigidBody linear) linear.LinearDamp = value; break;
             case 9: if (_parameterBody is RigidBody angular) angular.AngularDamp = value; break;
             case 10: Scene.SetStoryParameter(value); break;
+            case 11: Scene.SetSmashPopulation((int)value); break;
         }
         _parameterReadout.QueueRedraw();
     }
@@ -165,7 +172,7 @@ internal sealed partial class SandboxWindow
     {
         _objectDefaults.Clear();
         foreach (var body in Scene.Colliders.OfType<PhysicsBody>()) _objectDefaults.Add(body, ObjectValues(body));
-        _defaults[0] = Scene.WorldGravity; _defaults[1] = Scene.WorldLinearDamp; _defaults[2] = Scene.WorldAngularDamp; _defaults[3] = 1; _defaults[10] = Scene.StoryParameter;
+        _defaults[0] = Scene.WorldGravity; _defaults[1] = Scene.WorldLinearDamp; _defaults[2] = Scene.WorldAngularDamp; _defaults[3] = 1; _defaults[10] = Scene.StoryParameter; _defaults[11] = Scene.SmashFragmentCount;
     }
     private void SyncParameters()
     {
@@ -188,8 +195,9 @@ internal sealed partial class SandboxWindow
                 initial.CopyTo(_defaults, 4);
             }
             _parameterNames[10] = Scene.StoryParameterName;
-            _units[10] = SceneIndex switch { 8 => "bodies", 9 => "kg·u²/s²", 2 => "kg/s²", 3 => "u/s²", 6 => "kg·u/s²", 5 => "u", _ => "×" };
+            _units[10] = SceneIndex switch { 8 => "bodies", 9 => "kg·u²/s²", 2 => "kg/s²", 3 => "u/s²", 6 => "kg·u/s²", 5 => "u", 11 => "u/s", _ => "×" };
             _parameters[10].MinValue = Scene.StoryParameterMin; _parameters[10].MaxValue = Scene.StoryParameterMax; _parameters[10].Step = Scene.StoryParameterStep; _parameters[10].SetValueNoSignal(Scene.StoryParameter);
+            _parameters[11].SetValueNoSignal(Scene.SmashFragmentCount);
             _parameterReadout.QueueRedraw();
         }
         finally { _syncingParameters = false; }

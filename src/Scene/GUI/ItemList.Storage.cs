@@ -20,7 +20,7 @@ public partial class ItemList
         new PropertyDescriptor<ItemList, bool>(nameof(AllowReselect), list => list.AllowReselect, (list, value) => list.AllowReselect = value, _ => false, stored: true),
         new PropertyDescriptor<ItemList, bool>(nameof(AllowRMBSelect), list => list.AllowRMBSelect, (list, value) => list.AllowRMBSelect = value, _ => false, stored: true),
         new PropertyDescriptor<ItemList, bool>(nameof(AllowSearch), list => list.AllowSearch, (list, value) => list.AllowSearch = value, _ => true, stored: true),
-        new PropertyDescriptor<ItemList, ScrollHintMode>(nameof(HintMode), list => list.HintMode, (list, value) => list.HintMode = value, _ => ScrollHintMode.Disabled, stored: true),
+        new PropertyDescriptor<ItemList, VerticalScrollHintMode>(nameof(HintMode), list => list.HintMode, (list, value) => list.HintMode = value, _ => VerticalScrollHintMode.Disabled, stored: true),
         new PropertyDescriptor<ItemList, bool>(nameof(TileScrollHint), list => list.TileScrollHint, (list, value) => list.TileScrollHint = value, _ => false, stored: true),
         new PropertyDescriptor<ItemList, bool>(nameof(ClipContents), list => list.ClipContents, (list, value) => list.ClipContents = value, _ => true, stored: true),
         new PropertyDescriptor<ItemList, FocusMode>(nameof(FocusMode), list => list.FocusMode, (list, value) => list.FocusMode = value, _ => FocusMode.All, stored: true)

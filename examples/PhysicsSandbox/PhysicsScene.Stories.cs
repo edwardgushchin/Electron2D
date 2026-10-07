@@ -277,6 +277,7 @@ internal sealed partial class PhysicsScene
             case 8: ActStress(action); break;
             case 9: ActBike(action); break;
             case 10: ActBirds(action); break;
+            case 11: ActSmash(action); break;
             case 0:
                 if (action == 0) Spawn(new(576, 250));
                 else if (action == 1 && BodyCount < 160)

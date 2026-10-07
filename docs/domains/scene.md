@@ -208,3 +208,5 @@ The [embedded popup window slice](../components/popup-windows.md) composes Windo
 [Color authoring](../components/color-authoring.md) connects spatial/numeric color editing, local swatches, typed palette files, owned popup buttons and completed application-viewport sampling. Native external capture and semantic/foreign-target gates remain separate.
 
 The executable [multiline editing component](../components/multiline-editing.md) connects TextEdit documents, typed syntax resources, existing font/Control rendering, scene storage and input. Its cold/warm and target limits are recorded with the exercised workflow.
+
+[Hierarchical cells](../components/hierarchical-cells.md) now connect Tree/TreeItem ownership, columns, typed metadata, checks/ranges/buttons, ordinary GUI input, embedded cell editors and real canvas drawing. Stored column configuration reloads in a fresh process; runtime item graphs and semantic/native/editor gates retain their explicit limits.
