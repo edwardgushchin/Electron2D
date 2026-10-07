@@ -182,6 +182,7 @@ public sealed partial class SceneTree : MainLoop
             }
             _tweens.Clear();
             ClearPendingWork();
+            ReleasePhysicsWorlds(ref errors);
             FinalizeMultiplayer(ref errors);
             ClearEventSubscribers();
             throw new AggregateException("SceneTree activation failed and was rolled back.", errors!);
@@ -1045,13 +1046,7 @@ public sealed partial class SceneTree : MainLoop
             CollectException(ref errors, error);
         }
 
-        try { _physicsSpace?.Dispose(); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        finally { PhysicsServer.Service.UnregisterSceneSpace(_physicsSpaceRID); _physicsSpaceRID = default; }
-        _physicsSpace = null;
-        try { _physicsWorld?.Dispose(); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        _physicsWorld = null;
+        ReleasePhysicsWorlds(ref errors);
 
         FinalizeMultiplayer(ref errors);
         DisposePendingScenes(ref errors);
@@ -1282,11 +1277,7 @@ public sealed partial class SceneTree : MainLoop
                 }
             }
 
-            if (physics && _physicsSpace is { } physicsSpace)
-            {
-                try { physicsSpace.Step(delta); }
-                catch (Exception error) { CollectException(ref errors, error); }
-            }
+            if (physics) StepPhysicsWorlds(delta, ref errors);
 
             if (!physics) FlushTransformNotifications(ref errors);
             ProcessTimers(delta, unscaledDelta, physics, ref errors);

@@ -26,7 +26,7 @@ public abstract partial class Viewport
         {
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentException("Canvas transform must be finite.", nameof(value));
-            _canvasTransform = value;
+            _canvasTransform = value; PublishWorldViewTransform();
             if (Tree is { IsPhysicsInterpolationActive: true, IsInPhysicsFrame: false }) ResetCanvasInterpolationSnapshot();
         }
     }

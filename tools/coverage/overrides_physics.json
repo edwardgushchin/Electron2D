@@ -578,7 +578,7 @@
     {
       "godot": "CanvasItem::method:get_world_2d()",
       "electron2d": "method:Electron2D.CanvasItem.GetWorld()",
-      "reason": "Typed scene-tree world access; independent viewport world changes remain a separate scene/renderer dependency."
+      "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap retains its exact separate backend prerequisite."
     },
     {
       "godot": "CollisionObject2D::method:get_rid()",
@@ -1079,6 +1079,26 @@
       "godot": "CharacterBody2D::method:get_last_slide_collision()",
       "electron2d": "method:Electron2D.CharacterBody.GetLastSlideCollision(Electron2D.KinematicCollision)",
       "reason": "Reusable caller-owned output preserves the final slide snapshot and clears the result on a miss under ADRs 0014 and 0063."
+    },
+    {
+      "godot": "World2D::property:canvas",
+      "electron2d": "property:Electron2D.World.Canvas()",
+      "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap retains its exact separate backend prerequisite."
+    },
+    {
+      "godot": "Viewport::property:world_2d",
+      "electron2d": "property:Electron2D.Viewport.World()",
+      "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap retains its exact separate backend prerequisite."
+    },
+    {
+      "godot": "Viewport::method:find_world_2d()",
+      "electron2d": "method:Electron2D.Viewport.FindWorld()",
+      "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap retains its exact separate backend prerequisite."
+    },
+    {
+      "godot": "CanvasItem::constant:NOTIFICATION_WORLD_2D_CHANGED",
+      "electron2d": "constant:Electron2D.CanvasItem.NotificationWorldChanged()",
+      "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap retains its exact separate backend prerequisite."
     }
   ],
   "extras": [
@@ -1830,6 +1850,21 @@
       "electron2d": "method:Electron2D.Shape.ValidateDisposal()",
       "reason": "Existing resource lifetime guard protects geometry borrowed from an owned server shape RID; rejecting separate disposal preserves the resource and RID owner.",
       "adr": "ADR 0088"
+    },
+    {
+      "electron2d": "constructor:Electron2D.World..ctor()",
+      "reason": "Managed creation of a caller-owned logical canvas and lazy physics world under the complete runtime identity/lifetime contract.",
+      "adr": "ADRs 0014/0028/0063"
+    },
+    {
+      "electron2d": "method:Electron2D.World.Dispose(System.Boolean)",
+      "reason": "Managed wrapper-reference release, scene leases and deterministic final unbound native ownership cleanup.",
+      "adr": "ADRs 0014/0028/0063"
+    },
+    {
+      "electron2d": "method:Electron2D.World.ValidateDisposal()",
+      "reason": "Rejects off-thread/locked final physics runtime destruction before disposal state begins changing.",
+      "adr": "ADRs 0014/0028/0063"
     }
   ],
   "statusGroups": [
@@ -2326,7 +2361,7 @@
         "class:World2D"
       ],
       "state": "Partial",
-      "reason": "SceneTree-shared Space and DirectSpaceState execute; Canvas and NavigationMap still require renderer/navigation resource ownership (ADR 0063)."
+      "reason": "Canvas, shared/independent physics spaces, query views, World resource lifetime and viewport replacement execute in WorldTests under ADRs 0028/0063. NavigationMap remains dependency-blocked on the real navigation map/region/polygon/avoidance backend, registration and release under ADR 0052."
     },
     {
       "godot": [
@@ -2334,14 +2369,14 @@
         "World2D::property:direct_space_state"
       ],
       "state": "Implemented",
-      "reason": "The live SceneTree world exposes one stable physics-space RID and the same typed direct query view returned by PhysicsServer (ADR 0063, PhysicsQueryTests)."
+      "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap retains its exact separate backend prerequisite."
     },
     {
       "godot": [
         "World2D::property:navigation_map"
       ],
       "state": "Blocked",
-      "reason": "Trigger: renderer canvas RID and navigation-map RID lifetimes must be attached to the same World; physics space identity alone does not implement those server domains (ADRs 0028, 0052 and 0063)."
+      "reason": "Trigger: implement the NavigationServer map/region/polygon/avoidance backend, register a real map per World runtime and release it with the same lifetime (ADRs 0052/0063). Canvas and physics identities now execute; they do not substitute for map ownership."
     },
     {
       "godot": [
@@ -3198,11 +3233,15 @@
       "reason": "Trigger: distinct per-body Disabled/CastRay/CastShape integration, with ray-versus-full-shape sweeps and preservation of other bodies' native CCD policy (ADR 0054). Box2D bullet alone cannot represent the three branches. These values/properties/server methods enter the first complete per-body CCD slice; world activation does not implement them."
     },
     {
+      "state": "Implemented",
       "godot": [
+        "CanvasItem::constant:NOTIFICATION_WORLD_2D_CHANGED",
+        "CanvasItem::method:get_world_2d()",
+        "Viewport::method:find_world_2d()",
+        "Viewport::property:world_2d",
         "World2D::property:canvas"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: integrate a stable World-owned rendering canvas with executable default-viewport World binding/replacement and shared-world identity/lifetime. Owned/layer canvases and multi-viewport attachment now execute under ADR 0028, but current viewport-owned independent default canvases do not satisfy the SceneTree-shared physics World canvas member (ADR 0063)."
+      "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap retains its exact separate backend prerequisite."
     }
   ]
 }

@@ -203,7 +203,7 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public void DrawTextureRectRegion(Texture texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect2-electron2d-rect2-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
 | [`public void ForceUpdateTransform()`](#forceupdatetransform) | Immediately delivers this item's pending global notification. |
 | [`public Transform GetGlobalTransform()`](#m-electron2d-canvasitem-getglobaltransform) | Returns the transform composed through the direct canvas-parent chain. |
-| [`public World? GetWorld()`](#getworld) | Returns the SceneTree's shared physics world, or null while detached. |
+| [`public World? GetWorld()`](#getworld) | Returns the selected viewport canvas/physics world, or null while detached. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-canvasitem-getpropertydescriptors) | Extends neutral descriptors with visibility, ordering, top-level state, modulation and borrowed materials. |
 | [`public abstract Transform GetTransform()`](#m-electron2d-canvasitem-gettransform) | Returns the local transform supplied by this item's placement model. |
 | [`public void Hide()`](#m-electron2d-canvasitem-hide) | Sets `CanvasItem.Visible` to `false`. |
@@ -738,7 +738,7 @@ Stretches a source region of a borrowed texture over a local rectangle during ca
 <a id="getworld"></a>
 ### `public World? GetWorld()`
 
-An attached item receives its SceneTree's shared [World](World.md) on the owner thread, creating the registered physics space lazily when necessary. A detached item returns null; disposed access throws. The world exposes a stable space RID and direct ray/point view. Independent viewport world assignment and world-change notification remain incomplete under [ADR 0063](../decisions/physics.md#adr-0063); this method is Partial in [coverage](../coverage/classes/CanvasItem.md).
+An attached item receives its nearest viewport's selected [World](World.md), or the SceneTree fallback in a viewport-free scene. Detached access returns null. World.Canvas, Space and DirectSpaceState share runtime identity. NotificationWorldChanged (36) follows committed viewport replacement in parent-first order, excludes independent nested viewports and continues after observer failures. See [the world contract](../components/worlds.md) and [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs).
 
 <a id="m-electron2d-canvasitem-getglobaltransform"></a>
 ### `public Transform GetGlobalTransform()`
@@ -1320,3 +1320,5 @@ Native indexed triangle and primitive commands replay through existing storage. 
 ## Shader and material RID integration
 
 [The program RID contract](../components/shader-materials.md#shader-and-material-identities) documents caller-owned create/set/query/free operations and borrowed resource identities. `CanvasItemSetMaterial` changes native material state independently of authored `Material`; its matching source setter republishes the authored reference. Shader replacement and typed uniform/texture updates reuse retained commands.
+
+`public const int NotificationWorldChanged = 36` reports committed world association; GetWorld observes the new canvas and physics space when it is delivered.

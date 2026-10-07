@@ -471,3 +471,7 @@ SubViewportContainerTests verifies typed defaults/packing/invalid writes, size p
 ## CPU particle quads
 
 [CPU particles](cpu-particles.md) execute seeded scene simulation and record ordinary canvas quads, phase/lifetime custom channels and live sprite-sheet sampling. World commands use the captured viewport/layer basis rather than the emitter pose, preserving already emitted positions and singular-emitter output. Both current native backends render the baseline; arbitrary custom-data shaders retain GPU-only capability rules. Existing vertex/batch preparation and native texture/material lifetime are reused.
+
+## Default world canvas ownership
+
+[World integration](worlds.md) replaces independent viewport-owned default canvases with the canvas of each selected runtime World. Independent defaults preserve existing target isolation; assigning the same World shares canvas content, while each viewport keeps its own view transform. Old attachments are disconnected during replacement, and same-field CanvasTransform assignments republish native view overrides. Owned/layer graph identities retain their own lifetime.

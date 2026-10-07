@@ -169,7 +169,7 @@ public sealed class AudioStreamEmitter : Entity
         var left = (1 - pan) * multiplier; var right = pan * multiplier;
         if (!float.IsFinite(left) || !float.IsFinite(right)) throw new ArithmeticException("Spatial audio gain exceeds finite output.");
         if (queryArea && _areaMask != 0 && Tree is { } tree)
-            _player.Bus = tree.ResolveSpatialAudioBus(position, _areaMask, _bus);
+            _player.Bus = tree.ResolveSpatialAudioBus(this, position, _areaMask, _bus);
         else if (_areaMask == 0) _player.Bus = _bus;
         _player.ConfigureSpatial(left, right);
     }

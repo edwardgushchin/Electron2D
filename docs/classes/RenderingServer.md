@@ -1061,3 +1061,7 @@ See [canvas lifetime and replay contract](../components/canvas-rendering.md#call
 | `static void CanvasItemSetMaterial(RID, RID)` | Bind either live material kind to native canvas state; empty selects ordinary canvas colors. |
 
 Generic parameter operations require `T : unmanaged` and the reflected element contract. Wrong identity/type/name/array length and invalid values reject; owner/submission/shutdown guards cover the complete family. See [RenderingServer.Programs.API.cs](../../src/Servers/Rendering/RenderingServer.Programs.API.cs) for per-member XML and [RenderingProgramTests](../../tests/Electron2D.Tests/RenderingProgramTests.cs) for native evidence.
+
+## Viewport world integration
+
+[Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.

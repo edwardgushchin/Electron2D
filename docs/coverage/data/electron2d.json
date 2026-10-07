@@ -10562,6 +10562,19 @@
     "value": "31"
   },
   {
+    "id": "constant:Electron2D.CanvasItem.NotificationWorldChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "NotificationWorldChanged",
+    "signature": "public const System.Int32 NotificationWorldChanged = 36",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "36"
+  },
+  {
     "id": "constant:Electron2D.Container.NotificationPreSortChildren()",
     "kind": "constant",
     "declaringType": "Electron2D.Container",
@@ -17964,6 +17977,19 @@
     "declaringType": "Electron2D.Window",
     "name": ".ctor",
     "signature": "public Window()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.World..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.World",
+    "name": ".ctor",
+    "signature": "public World()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -148625,6 +148651,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.FindWorld()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "FindWorld",
+    "signature": "public Electron2D.World FindWorld()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.World",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GUIGetHoveredControl()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -151392,6 +151431,38 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.World.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.World",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.World.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.World",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -183057,6 +183128,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Viewport.World()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "World",
+    "signature": "public Electron2D.World World { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.World",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ViewportTexture.HasAlpha()",
     "kind": "property",
     "declaringType": "Electron2D.ViewportTexture",
@@ -183626,6 +183710,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.World.Canvas()",
+    "kind": "property",
+    "declaringType": "Electron2D.World",
+    "name": "Canvas",
+    "signature": "public Electron2D.RID Canvas { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {

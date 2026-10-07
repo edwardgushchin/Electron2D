@@ -4282,20 +4282,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "First World scene/physics ownership integration must implement world access and transition notification together; no world identity or physics/render registration is currently provided.",
-      "godot": [
-        "CanvasItem::constant:NOTIFICATION_WORLD_2D_CHANGED"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "SceneTree-shared physics world and direct state execute under ADR 0063; independent viewport world assignment and world-change notification still require the viewport/canvas integration.",
-      "godot": [
-        "CanvasItem::method:get_world_2d()"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "First Font/TextServer or DPITexture oversampling integration must implement scale inheritance, invalidation, resource reference accounting and raster output together; ordinary texture scaling is not oversampling.",
       "godot": [
         "CanvasItem::enum:OversamplingWithScale",

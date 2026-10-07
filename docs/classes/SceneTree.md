@@ -946,3 +946,7 @@ Requires a current scene with a file path. Decode failure preserves the current 
 Embedded Window routing descends recursively to the final focused or pointer target, releasing intermediate transformed events. Command-menu hover uses the shared canvas-order/clipping hit test beneath the active popup. MenuButtonTests verifies nested Window command/choice input and related hover gates.
 
 FileDialog regression checks exercise teardown with an active embedded-window tooltip. CancelTooltip clears its presenter state while a closing tree relies on recursive root ownership for attached layer disposal, avoiding a new deletion request after work queues close. Detached tooltip layers retain direct cleanup.
+
+## Viewport world integration
+
+[Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.

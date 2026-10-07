@@ -111,6 +111,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_stepping) throw new InvalidOperationException("A physics space cannot be queried while stepping.");
     }
 
+    internal void EnsureWorldBindingChange() { EnsureQueryAccess(); if (_dispatchingBodyStates) throw new InvalidOperationException("World binding cannot change while live body state callbacks are being dispatched."); }
+
     internal void PrepareForQuery()
     {
         EnsureQueryAccess();

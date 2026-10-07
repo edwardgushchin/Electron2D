@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Inherits:** [Node](Node.md)
 
@@ -535,3 +535,9 @@ SizeChanged and owned viewport texture-size callbacks use allocation-free delega
 ## Server canvas integration
 
 The viewport owns its borrowed default canvas and supports simultaneous attachments of caller-owned/layer canvases through RenderingServer. Attachment transforms/stacking are independent per destination; source getters keep authored state. See [the executable canvas contract](../components/canvas-rendering.md#caller-owned-canvases-and-items).
+
+## Viewport world integration
+
+[Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.
+
+`World? World { get; set; }` starts with an independent default; null resets it, and an explicit resource is borrowed. `World? FindWorld()` returns the current valid world. World association is discoverable and not stored. Off-owner, capture/submission, live physics callback and cross-tree binding changes reject before publication.

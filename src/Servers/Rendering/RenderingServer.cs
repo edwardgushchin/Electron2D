@@ -229,7 +229,7 @@ public sealed partial class RenderingServer : ElectronObject
                 if (node.RenderCanvas() is not { } canvas || !canvas.View(viewport, out var canvasTransform, out var canvasLayer, out var sublayer, _interpolationFraction)) continue;
                 _canvasStacking = ((long)canvasLayer << 32) + (uint)(sublayer ^ int.MinValue);
                 _canvasTooltipOverlay = SceneTree.IsTooltipNode(node);
-                _canvasID = canvas.DefaultViewport is not null ? 0 : (ulong)canvas.RID.GetID();
+                _canvasID = ReferenceEquals(canvas, viewport.DefaultCanvasRuntime) ? 0 : (ulong)canvas.RID.GetID();
                 _canvasBasis = framebufferTransform * canvasTransform;
                 OrderCanvas(node, _canvasBasis);
             }

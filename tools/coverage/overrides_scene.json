@@ -9346,7 +9346,6 @@
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_DISABLED",
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_MAX",
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_ONCE",
-        "Viewport::method:find_world_2d()",
         "Viewport::method:get_oversampling()",
         "Viewport::method:get_positional_shadow_atlas_quadrant_subdiv(int:)",
         "Viewport::method:get_render_info(int:Viewport.RenderInfoType,int:Viewport.RenderInfo)",
@@ -9380,8 +9379,7 @@
         "Viewport::property:use_xr",
         "Viewport::property:vrs_mode",
         "Viewport::property:vrs_texture",
-        "Viewport::property:vrs_update_mode",
-        "Viewport::property:world_2d"
+        "Viewport::property:vrs_update_mode"
       ]
     },
     {

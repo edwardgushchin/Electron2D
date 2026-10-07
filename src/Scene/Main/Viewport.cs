@@ -94,6 +94,7 @@ public abstract partial class Viewport : Node
         {
             RenderingOwner?.ReleaseViewport(this);
             ReleaseViewportRID();
+            ReleaseViewportWorld();
             TextureSizeUpdated = null;
             _texture = null;
             SizeChanged = null;

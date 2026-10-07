@@ -3,8 +3,7 @@ namespace Electron2D;
 public abstract partial class Viewport
 {
     private RID _viewportRID;
-    private RenderingCanvasRuntime? _defaultCanvasRuntime;
-    internal RenderingCanvasRuntime DefaultCanvasRuntime => _defaultCanvasRuntime ??= RenderingCanvasRegistry.Register(viewport: this);
+    internal RenderingCanvasRuntime DefaultCanvasRuntime => FindWorld()!.Runtime.Canvas;
     private static readonly object ViewportRIDGate = new();
     private static readonly Dictionary<RID, WeakReference<Viewport>> ViewportRIDs = [];
     private static readonly List<RID> StaleViewportRIDs = [];
@@ -32,7 +31,7 @@ public abstract partial class Viewport
     {
         lock (ViewportRIDGate) { if (ViewportRIDs.TryGetValue(rid, out var entry) && entry.TryGetTarget(out var viewport) && !viewport.IsDisposed) return viewport; ViewportRIDs.Remove(rid); throw new ArgumentException("The RID does not identify a live viewport.", nameof(rid)); }
     }
-    private void ReleaseViewportRID() { if (_defaultCanvasRuntime is { } canvas) RenderingCanvasRegistry.Remove(canvas.RID); _defaultCanvasRuntime = null; lock (ViewportRIDGate) { ViewportRIDs.Remove(_viewportRID); _viewportRID = default; } }
+    private void ReleaseViewportRID() { lock (ViewportRIDGate) { ViewportRIDs.Remove(_viewportRID); _viewportRID = default; } }
     private ViewportTexture? _texture;
     internal RenderingServer? RenderingOwner;
     internal event Action? TextureSizeUpdated;

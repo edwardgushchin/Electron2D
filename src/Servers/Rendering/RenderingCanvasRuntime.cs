@@ -6,17 +6,17 @@ internal sealed class RenderingCanvasRuntime
     internal readonly RenderingServer? Owner;
     internal RenderingServer? SessionOwner;
     internal readonly WeakReference<CanvasLayer>? Layer;
-    internal readonly WeakReference<Viewport>? DefaultViewport;
+    internal readonly WeakReference<WorldRuntime>? World;
     internal Color Modulate = Colors.White;
     internal readonly Dictionary<RID, Attachment> Attachments = [];
     internal readonly Dictionary<RID, Vector2> Mirroring = [];
     internal sealed class Attachment { internal bool Attached = true; internal Transform? Transform; internal int? Layer, Sublayer; }
-    internal RenderingCanvasRuntime(RID rid, RenderingServer? owner = null, CanvasLayer? layer = null, Viewport? viewport = null) { RID = rid; Owner = owner; if (layer is not null) Layer = new(layer); if (viewport is not null) DefaultViewport = new(viewport); }
-    internal bool Alive => Owner is not null || Layer is not null && Layer.TryGetTarget(out var layer) && !layer.IsDisposed || DefaultViewport is not null && DefaultViewport.TryGetTarget(out var viewport) && !viewport.IsDisposed;
+    internal RenderingCanvasRuntime(RID rid, RenderingServer? owner = null, CanvasLayer? layer = null, WorldRuntime? world = null) { RID = rid; Owner = owner; if (layer is not null) Layer = new(layer); if (world is not null) World = new(world); }
+    internal bool Alive => World is not null && World.TryGetTarget(out var world) && world.Alive || Owner is not null || Layer is not null && Layer.TryGetTarget(out var layer) && !layer.IsDisposed;
     internal bool View(Viewport viewport, out Transform transform, out int layer, out int sublayer, float fraction = 1f)
     {
         var rid = viewport.GetViewportRID(); Attachments.TryGetValue(rid, out var attachment); var sceneLayer = Layer is not null && Layer.TryGetTarget(out var l) && !l.IsDisposed ? l : null;
-        var primary = sceneLayer is not null ? ReferenceEquals(sceneLayer.CanvasViewport, viewport) : DefaultViewport is not null && DefaultViewport.TryGetTarget(out var v) && ReferenceEquals(v, viewport);
+        var primary = sceneLayer is not null ? ReferenceEquals(sceneLayer.CanvasViewport, viewport) : World is not null && World.TryGetTarget(out var world) ? ReferenceEquals(viewport.FindWorld()?.Runtime, world) : false;
         transform = attachment?.Transform is { } custom ? viewport.GetFinalTransform() * custom : (primary ? viewport.GetCanvasRenderTransform(sceneLayer, fraction) : viewport.GetFinalTransform());
         layer = attachment?.Layer ?? (primary ? sceneLayer?.Layer ?? 0 : 0); sublayer = attachment?.Sublayer ?? (primary ? sceneLayer?.GetIndex(includeInternal: true) ?? 0 : 0);
         return Alive && (attachment?.Attached ?? primary);
@@ -31,9 +31,9 @@ internal static class RenderingCanvasRegistry
     private static readonly Dictionary<RID, RenderingCanvasRuntime> Items = [];
     private static readonly List<RID> Stale = [];
     private static int _registrations;
-    internal static RenderingCanvasRuntime Register(RenderingServer? owner = null, CanvasLayer? layer = null, Viewport? viewport = null)
+    internal static RenderingCanvasRuntime Register(RenderingServer? owner = null, CanvasLayer? layer = null, WorldRuntime? world = null)
     {
-        var rid = RID.Allocate(); var value = new RenderingCanvasRuntime(rid, owner, layer, viewport);
+        var rid = RID.Allocate(); var value = new RenderingCanvasRuntime(rid, owner, layer, world);
         lock (Gate) { if (++_registrations == 256) { _registrations = 0; foreach (var pair in Items) if (!pair.Value.Alive) Stale.Add(pair.Key); foreach (var old in Stale) Items.Remove(old); Stale.Clear(); } Items.Add(rid, value); }
         return value;
     }
