@@ -9,7 +9,7 @@ Last updated: 2026-10-07
 
 A getter-driven path follower for its direct Entity parent, with retained query/result versions, optional typed waypoint/link metadata, target progression, real map membership and node-owned RID.
 
-Inherits [Node](Node.md), not Entity: the parent supplies spatial movement. Set TargetPosition, call GetNextPathPosition from parent physics processing, and move the parent yourself. This slice provides path following and link actions; avoidance and debug rendering retain exact coverage prerequisites. No avoidance field is stored without a real consumer.
+Inherits [Node](Node.md), not Entity: the parent supplies spatial movement. Set TargetPosition, call GetNextPathPosition from parent physics processing, and move the parent yourself. This slice provides path following and link actions; debug rendering retains its exact coverage prerequisite. Avoidance controls execute through the shared ORCA kernel.
 
 Equal target assignments reset the request. Map/layer changes repath active targets. Other query settings take effect at the next query. Desired thresholds accept finite signed values and use strict comparisons; reachability is inclusive, off-path reload is inclusive. Empty routes remain unfinished; an unreachable final waypoint finishes without reaching the requested target. Completed requests do not repeat events. Internal snapshots avoid public array copies during warmed following updates.
 
@@ -567,3 +567,244 @@ Attached access follows the tree owner thread and disposed access rejects. Advan
 ## Verification
 
 [NavigationAgentTests](../../tests/Electron2D.Tests/NavigationAgentTests.cs) verifies managed progression, source persistence in a fresh process, metadata-driven native link actions and target pixels. See the component contract for tested backend and allocation limits.
+
+## Reciprocal avoidance
+
+AvoidanceEnabled registers weak scene velocity delivery. Desired Velocity and SetVelocityForced are submitted at the next positive physics-boundary step for an active target; source Velocity stays independent of safe output. The direct Entity parent supplies position and pause state. Path completion resets both preferred and simulation velocity. Callbacks can move the parent or stage next-step settings; recursive synchronization/stepping and node disposal during velocity delivery reject. All participants publish before any callback, and failures do not prevent subsequent deliveries.
+
+## Properties
+
+| Member | Contract |
+| --- | --- |
+| [`public bool AvoidanceEnabled { get; set; }`](#avoidanceenabled) | Gets or changes whether reciprocal avoidance participates. |
+| [`public uint AvoidanceLayers { get; set; }`](#avoidancelayers) | Gets or changes 32-bit layers visible to other masks. |
+| [`public uint AvoidanceMask { get; set; }`](#avoidancemask) | Gets or changes 32-bit mask selecting other participants. |
+| [`public float AvoidancePriority { get; set; }`](#avoidancepriority) | Gets or changes priority in the interval zero through one. |
+| [`public int MaxNeighbors { get; set; }`](#maxneighbors) | Gets or changes maximum selected neighbors; nonpositive disables neighbor selection. |
+| [`public float MaxSpeed { get; set; }`](#maxspeed) | Gets or changes finite nonnegative output speed cap. |
+| [`public float NeighborDistance { get; set; }`](#neighbordistance) | Gets or changes finite nonnegative neighbor search radius. |
+| [`public float Radius { get; set; }`](#radius) | Gets or changes finite nonnegative avoidance disc radius. |
+| [`public float TimeHorizonAgents { get; set; }`](#timehorizonagents) | Gets or changes finite nonnegative agent prediction horizon. |
+| [`public float TimeHorizonObstacles { get; set; }`](#timehorizonobstacles) | Gets or changes finite nonnegative contour prediction horizon. |
+| [`public Vector2 Velocity { get; set; }`](#velocity) | Gets or submits finite desired velocity for the next avoidance boundary of an active target request. |
+
+## Events
+
+| Member | Contract |
+| --- | --- |
+| [`public event Action<Vector2> VelocityComputed`](#velocitycomputed) | Occurs after the current step publishes all avoidance outputs, before physics simulation. |
+
+## Methods and extension points
+
+| Member | Contract |
+| --- | --- |
+| [`public bool GetAvoidanceLayerValue(int layerNumber)`](#getavoidancelayervalue) | Returns an avoidance layer bit using one-based indices. |
+| [`public bool GetAvoidanceMaskValue(int layerNumber)`](#getavoidancemaskvalue) | Returns an avoidance mask bit using one-based indices. |
+| [`public void SetAvoidanceLayerValue(int layerNumber, bool value)`](#setavoidancelayervalue) | Changes an avoidance layer bit using one-based indices. |
+| [`public void SetAvoidanceMaskValue(int layerNumber, bool value)`](#setavoidancemaskvalue) | Changes an avoidance mask bit using one-based indices. |
+| [`public void SetVelocityForced(Vector2 velocity)`](#setvelocityforced) | Submits a finite simulation velocity replacement for the next active-request boundary after teleporting. |
+
+## Member descriptions
+
+<a id="avoidanceenabled"></a>
+### `public bool AvoidanceEnabled { get; set; }`
+
+Gets or changes whether reciprocal avoidance participates. False initially; enabling registers typed velocity delivery.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is off-owner or during path navigation delivery.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="avoidancelayers"></a>
+### `public uint AvoidanceLayers { get; set; }`
+
+Gets or changes 32-bit layers visible to other masks. Default 1u; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="avoidancemask"></a>
+### `public uint AvoidanceMask { get; set; }`
+
+Gets or changes 32-bit mask selecting other participants. Default 1u; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="avoidancepriority"></a>
+### `public float AvoidancePriority { get; set; }`
+
+Gets or changes priority in the interval zero through one. Default 1f; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+`ArgumentOutOfRangeException`: Value is outside its finite range.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="maxneighbors"></a>
+### `public int MaxNeighbors { get; set; }`
+
+Gets or changes maximum selected neighbors; nonpositive disables neighbor selection. Default 10; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="maxspeed"></a>
+### `public float MaxSpeed { get; set; }`
+
+Gets or changes finite nonnegative output speed cap. Default 100f; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+`ArgumentOutOfRangeException`: Value is outside its finite range.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="neighbordistance"></a>
+### `public float NeighborDistance { get; set; }`
+
+Gets or changes finite nonnegative neighbor search radius. Default 500f; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+`ArgumentOutOfRangeException`: Value is outside its finite range.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="radius"></a>
+### `public float Radius { get; set; }`
+
+Gets or changes finite nonnegative avoidance disc radius. Default 10f; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+`ArgumentOutOfRangeException`: Value is outside its finite range.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="timehorizonagents"></a>
+### `public float TimeHorizonAgents { get; set; }`
+
+Gets or changes finite nonnegative agent prediction horizon. Default 1f; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+`ArgumentOutOfRangeException`: Value is outside its finite range.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="timehorizonobstacles"></a>
+### `public float TimeHorizonObstacles { get; set; }`
+
+Gets or changes finite nonnegative contour prediction horizon. Default 0f; retained node source independent of direct server edits.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+`ArgumentOutOfRangeException`: Value is outside its finite range.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="velocity"></a>
+### `public Vector2 Velocity { get; set; }`
+
+Gets or submits finite desired velocity for the next avoidance boundary of an active target request. Zero initially; retained wanted velocity, independent of computed safe velocity.
+
+`ArgumentException`: Velocity is nonfinite.
+
+`ObjectDisposedException`: The agent is disposed.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="velocitycomputed"></a>
+### `public event Action<Vector2> VelocityComputed`
+
+Occurs after the current step publishes all avoidance outputs, before physics simulation. Handlers may submit next-step velocity and move the parent. Every handler is attempted; exceptions aggregate after delivery. Disposal during this event rejects.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="getavoidancelayervalue"></a>
+### `public bool GetAvoidanceLayerValue(int layerNumber)`
+
+Returns an avoidance layer bit using one-based indices. Whether the bit is set.
+
+`layerNumber`: Index one through thirty-two.
+
+`ArgumentOutOfRangeException`: The index is outside one through thirty-two.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="getavoidancemaskvalue"></a>
+### `public bool GetAvoidanceMaskValue(int layerNumber)`
+
+Returns an avoidance mask bit using one-based indices. Whether the bit is set.
+
+`layerNumber`: Index one through thirty-two.
+
+`ArgumentOutOfRangeException`: The index is outside one through thirty-two.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="setavoidancelayervalue"></a>
+### `public void SetAvoidanceLayerValue(int layerNumber, bool value)`
+
+Changes an avoidance layer bit using one-based indices.
+
+`layerNumber`: Index one through thirty-two.
+
+`value`: New bit state.
+
+`ArgumentOutOfRangeException`: The index is outside one through thirty-two.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="setavoidancemaskvalue"></a>
+### `public void SetAvoidanceMaskValue(int layerNumber, bool value)`
+
+Changes an avoidance mask bit using one-based indices.
+
+`layerNumber`: Index one through thirty-two.
+
+`value`: New bit state.
+
+`ArgumentOutOfRangeException`: The index is outside one through thirty-two.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.
+
+<a id="setvelocityforced"></a>
+### `public void SetVelocityForced(Vector2 velocity)`
+
+Submits a finite simulation velocity replacement for the next active-request boundary after teleporting.
+
+`velocity`: Forced world velocity; desired velocity is retained separately.
+
+`ArgumentException`: Velocity is nonfinite.
+
+`InvalidOperationException`: Source mutation is unavailable.
+
+Attached access follows the tree owner thread and disposed access rejects. Advancing getters require an attached direct Entity parent and reject reentry. Observer failures aggregate after delivered transitions. Agent source mutation and disposal reject during delivery; parent movement remains available.

@@ -13,3 +13,5 @@ Stable caller/node RID, weak scene owner, staged map membership and consumed las
 ## Verification
 
 [NavigationAgentTests](../../tests/Electron2D.Tests/NavigationAgentTests.cs) exercises membership, version consumption, teardown and scene following.
+
+Shared avoidance settings/current/preferred velocity, reusable neighbor/edge/linear-program buffers and callback delivery versions now drive the ORCA kernel. The scene callback belongs to this state and dereferences the weak node at delivery; it does not retain a detached enabled node. All outputs publish together before any observer.

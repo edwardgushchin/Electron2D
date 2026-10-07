@@ -22,7 +22,8 @@ public sealed partial class NavigationServer
     /// <summary>Assigns an agent to a live map; an empty RID detaches it.</summary>
     /// <param name="agent">Live agent RID.</param><param name="map">Live map RID or empty.</param>
     /// <exception cref="ArgumentException">A required RID is absent, stale or of another kind.</exception>
-    public static void AgentSetMap(RID agent, RID map) { lock (Shared._gate) { var value = Shared.Agent(agent); if (map.IsValid()) Shared.Map(map); value.Map = map; } }
+    /// <exception cref="InvalidOperationException">The destination map belongs to another scene tree.</exception>
+    public static void AgentSetMap(RID agent, RID map) { lock (Shared._gate) { var value = Shared.Agent(agent); if (map.IsValid()) { Shared.Map(map); Shared.ValidateSceneMap(map, value.Scene is not null && value.Scene.TryGetTarget(out var node) ? node.Tree : null); } value.Map = map; } }
     /// <summary>Returns the agent's current map membership.</summary>
     /// <param name="agent">Live agent RID.</param><returns>Assigned map or empty.</returns>
     /// <exception cref="ArgumentException">The agent RID is absent, stale or of another kind.</exception>
@@ -45,4 +46,18 @@ internal sealed class NavigationAgentState(RID rid, NavigationAgent? scene)
     internal readonly WeakReference<NavigationAgent>? Scene = scene is null ? null : new(scene);
     internal RID Map;
     internal ulong LastIteration;
+    internal bool AvoidanceEnabled, Paused;
+    internal uint AvoidanceLayers = 1, AvoidanceMask = 1;
+    internal int MaxNeighbors = 10;
+    internal float NeighborDistance = 500, Radius = 10, MaxSpeed = 100, TimeHorizonAgents = 1, TimeHorizonObstacles, Priority = 1;
+    internal Vector2 Position, Velocity, PreferredVelocity, SolvedVelocity;
+    internal NavigationAvoidance.V SimulationPosition, CurrentVelocity;
+    internal Action<Vector2>? Callback, Delivery;
+    private Action<Vector2>? _sceneCallback;
+    internal Action<Vector2> SceneCallback => _sceneCallback ??= DispatchSceneVelocity;
+    private void DispatchSceneVelocity(Vector2 velocity) { if (Scene is not null && Scene.TryGetTarget(out var node) && !node.IsDisposed) node.DeliverVelocity(velocity); }
+    internal RID DeliveryMap;
+    internal readonly List<NavigationAvoidance.Neighbor> Neighbors = [];
+    internal readonly List<(double Distance, NavigationAvoidance.Edge Edge)> Edges = [];
+    internal readonly List<NavigationAvoidance.Line> Lines = [], ProjectedLines = [];
 }

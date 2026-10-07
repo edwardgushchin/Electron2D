@@ -68,7 +68,7 @@ def check(publish: Path, application_licenses=()) -> None:
     source = ROOT / "licence"
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
-    assert len(expected) == 67, f"Expected 67 license and notice files, found {len(expected)}"
+    assert len(expected) == 71, f"Expected 71 license and notice files, found {len(expected)}"
     extra = {p.name: p for p in application_licenses}
     assert len(extra) == len(application_licenses) and not expected.intersection(extra), "Duplicate application notice names"
     assert {p.name for p in delivered.iterdir() if p.is_file()} == expected | extra.keys(), "Unexpected published license files"

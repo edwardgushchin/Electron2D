@@ -1258,7 +1258,11 @@ public sealed partial class SceneTree : MainLoop
             CaptureScheduledNodes(physics);
             _scheduledNodes.Sort();
 
-            if (physics) try { NavigationServer.Service.SynchronizeCore(); } catch (Exception error) { CollectException(ref errors, error); }
+            if (physics)
+            {
+                try { NavigationServer.Service.SynchronizeCore(); } catch (Exception error) { CollectException(ref errors, error); }
+                try { NavigationServer.Service.StepAvoidance(delta, this); } catch (Exception error) { CollectException(ref errors, error); }
+            }
 
             foreach (var item in _scheduledNodes)
             {

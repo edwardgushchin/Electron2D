@@ -914,6 +914,371 @@
       "godot": "NavigationServer2D::method:map_get_agents(RID:)",
       "electron2d": "method:Electron2D.NavigationServer.MapGetAgents(Electron2D.RID)",
       "reason": "ADR 0097 stable caller/node agent RID membership, map teardown and consumed committed version observation; static retained service with real scene follower consumer."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_avoidance_layer_value(int:)",
+      "electron2d": "method:Electron2D.NavigationAgent.GetAvoidanceLayerValue(System.Int32)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::method:get_avoidance_mask_value(int:)",
+      "electron2d": "method:Electron2D.NavigationAgent.GetAvoidanceMaskValue(System.Int32)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::method:set_avoidance_layer_value(int:,bool:)",
+      "electron2d": "method:Electron2D.NavigationAgent.SetAvoidanceLayerValue(System.Int32,System.Boolean)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::method:set_avoidance_mask_value(int:,bool:)",
+      "electron2d": "method:Electron2D.NavigationAgent.SetAvoidanceMaskValue(System.Int32,System.Boolean)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::method:set_velocity_forced(Vector2:)",
+      "electron2d": "method:Electron2D.NavigationAgent.SetVelocityForced(Electron2D.Vector2)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:avoidance_enabled",
+      "electron2d": "property:Electron2D.NavigationAgent.AvoidanceEnabled()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:avoidance_layers",
+      "electron2d": "property:Electron2D.NavigationAgent.AvoidanceLayers()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:avoidance_mask",
+      "electron2d": "property:Electron2D.NavigationAgent.AvoidanceMask()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:avoidance_priority",
+      "electron2d": "property:Electron2D.NavigationAgent.AvoidancePriority()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:max_neighbors",
+      "electron2d": "property:Electron2D.NavigationAgent.MaxNeighbors()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:max_speed",
+      "electron2d": "property:Electron2D.NavigationAgent.MaxSpeed()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:neighbor_distance",
+      "electron2d": "property:Electron2D.NavigationAgent.NeighborDistance()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:radius",
+      "electron2d": "property:Electron2D.NavigationAgent.Radius()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:time_horizon_agents",
+      "electron2d": "property:Electron2D.NavigationAgent.TimeHorizonAgents()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:time_horizon_obstacles",
+      "electron2d": "property:Electron2D.NavigationAgent.TimeHorizonObstacles()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::property:velocity",
+      "electron2d": "property:Electron2D.NavigationAgent.Velocity()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationAgent2D::signal:velocity_computed(Vector2:)",
+      "electron2d": "event:Electron2D.NavigationAgent.VelocityComputed()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::method:get_avoidance_layer_value(int:)",
+      "electron2d": "method:Electron2D.NavigationObstacle.GetAvoidanceLayerValue(System.Int32)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::method:get_navigation_map()",
+      "electron2d": "method:Electron2D.NavigationObstacle.GetNavigationMap()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::method:get_rid()",
+      "electron2d": "method:Electron2D.NavigationObstacle.GetRID()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::method:set_avoidance_layer_value(int:,bool:)",
+      "electron2d": "method:Electron2D.NavigationObstacle.SetAvoidanceLayerValue(System.Int32,System.Boolean)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::method:set_navigation_map(RID:)",
+      "electron2d": "method:Electron2D.NavigationObstacle.SetNavigationMap(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::property:avoidance_enabled",
+      "electron2d": "property:Electron2D.NavigationObstacle.AvoidanceEnabled()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::property:avoidance_layers",
+      "electron2d": "property:Electron2D.NavigationObstacle.AvoidanceLayers()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::property:radius",
+      "electron2d": "property:Electron2D.NavigationObstacle.Radius()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::property:velocity",
+      "electron2d": "property:Electron2D.NavigationObstacle.Velocity()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationObstacle2D::property:vertices",
+      "electron2d": "property:Electron2D.NavigationObstacle.Vertices()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_avoidance_enabled(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetAvoidanceEnabled(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_avoidance_layers(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetAvoidanceLayers(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_avoidance_mask(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetAvoidanceMask(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_avoidance_priority(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetAvoidancePriority(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_max_neighbors(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetMaxNeighbors(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_max_speed(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetMaxSpeed(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_neighbor_distance(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetNeighborDistance(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_paused(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetPaused(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_position(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetPosition(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_radius(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetRadius(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_time_horizon_agents(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetTimeHorizonAgents(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_time_horizon_obstacles(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetTimeHorizonObstacles(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_get_velocity(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentGetVelocity(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_has_avoidance_callback(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentHasAvoidanceCallback(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_avoidance_callback(RID:,Callable:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetAvoidanceCallback(Electron2D.RID,System.Action<Electron2D.Vector2>)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_avoidance_enabled(RID:,bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetAvoidanceEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_avoidance_layers(RID:,int:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetAvoidanceLayers(Electron2D.RID,System.UInt32)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_avoidance_mask(RID:,int:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetAvoidanceMask(Electron2D.RID,System.UInt32)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_avoidance_priority(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetAvoidancePriority(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_max_neighbors(RID:,int:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetMaxNeighbors(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_max_speed(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetMaxSpeed(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_neighbor_distance(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetNeighborDistance(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_paused(RID:,bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetPaused(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_position(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetPosition(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_radius(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetRadius(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_time_horizon_agents(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetTimeHorizonAgents(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_time_horizon_obstacles(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetTimeHorizonObstacles(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_velocity(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetVelocity(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:agent_set_velocity_forced(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.NavigationServer.AgentSetVelocityForced(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_create()",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleCreate()",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_get_avoidance_enabled(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleGetAvoidanceEnabled(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_get_avoidance_layers(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleGetAvoidanceLayers(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_get_map(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleGetMap(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_get_paused(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleGetPaused(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_get_position(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleGetPosition(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_get_radius(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleGetRadius(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_get_velocity(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleGetVelocity(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_get_vertices(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleGetVertices(Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_set_avoidance_enabled(RID:,bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleSetAvoidanceEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_set_avoidance_layers(RID:,int:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleSetAvoidanceLayers(Electron2D.RID,System.UInt32)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_set_map(RID:,RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleSetMap(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_set_paused(RID:,bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleSetPaused(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_set_position(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleSetPosition(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_set_radius(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleSetRadius(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_set_velocity(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleSetVelocity(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
+    },
+    {
+      "godot": "NavigationServer2D::method:obstacle_set_vertices(RID:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.NavigationServer.ObstacleSetVertices(Electron2D.RID,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADR 0097 dimensionless typed scene/server avoidance, shared ORCA controls and Action<Vector2> velocity delivery; static retained service and node-owned RID lifetimes."
     }
   ],
   "extras": [
@@ -1206,6 +1571,51 @@
       "electron2d": "method:Electron2D.NavigationPathQueryResult.ValidateDisposal()",
       "reason": "Reject disposal of the agent-owned borrowed result while its NavigationAgent is alive; caller-owned query results retain ordinary disposal.",
       "adr": "ADR 0003; ADR 0097"
+    },
+    {
+      "electron2d": "constructor:Electron2D.NavigationObstacle..ctor()",
+      "reason": "Typed C# scene construction/source property discovery, warnings and inherited lifetime hooks for the actual ORCA obstacle/agent consumers; runtime identities are node-owned.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationObstacle.CreateSceneInstanceFactory()",
+      "reason": "Typed C# scene construction/source property discovery, warnings and inherited lifetime hooks for the actual ORCA obstacle/agent consumers; runtime identities are node-owned.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationObstacle.Dispose(System.Boolean)",
+      "reason": "Typed C# scene construction/source property discovery, warnings and inherited lifetime hooks for the actual ORCA obstacle/agent consumers; runtime identities are node-owned.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationObstacle.GetConfigurationWarnings()",
+      "reason": "Typed C# scene construction/source property discovery, warnings and inherited lifetime hooks for the actual ORCA obstacle/agent consumers; runtime identities are node-owned.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationObstacle.GetPropertyDescriptors()",
+      "reason": "Typed C# scene construction/source property discovery, warnings and inherited lifetime hooks for the actual ORCA obstacle/agent consumers; runtime identities are node-owned.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationObstacle.OnEnterTree()",
+      "reason": "Typed C# scene construction/source property discovery, warnings and inherited lifetime hooks for the actual ORCA obstacle/agent consumers; runtime identities are node-owned.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationObstacle.OnExitTree()",
+      "reason": "Typed C# scene construction/source property discovery, warnings and inherited lifetime hooks for the actual ORCA obstacle/agent consumers; runtime identities are node-owned.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationObstacle.OnNotification(System.Int32)",
+      "reason": "Typed C# scene construction/source property discovery, warnings and inherited lifetime hooks for the actual ORCA obstacle/agent consumers; runtime identities are node-owned.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationServer.Step(System.Double)",
+      "reason": "Explicit typed library-host entry point for the same physics-boundary navigation synchronization and ORCA simulation, on caller maps unbound to a SceneTree; not a separate game-facing simulation backend.",
+      "adr": "ADR 0004; ADR 0090; ADR 0097"
     }
   ],
   "statusGroups": [
@@ -1300,7 +1710,7 @@
         "class:NavigationRegion2D",
         "class:NavigationServer2D"
       ],
-      "reason": "ADR 0097: authored convex regions, owned maps, staged immutable iterations and real scene path following execute. Full raster/nonmanifold topology, baking/source parsing, async work and avoidance retain the operation-specific prerequisites below."
+      "reason": "ADR 0097 authored regions/maps/links, typed query controls, direct-parent agents and shared managed ORCA agent/obstacle avoidance execute. Remaining raster/nonmanifold/search equivalence, source parsing/baking, async work, random-area sampling and full committed profiling retain exact operation-specific producer dependencies."
     },
     {
       "state": "Implemented",
@@ -1442,69 +1852,19 @@
     {
       "state": "Blocked",
       "godot": [
-        "NavigationServer2D::enum:ProcessInfo",
         "NavigationServer2D::enum_value:ProcessInfo.INFO_ACTIVE_MAPS",
         "NavigationServer2D::enum_value:ProcessInfo.INFO_EDGE_CONNECTION_COUNT",
         "NavigationServer2D::enum_value:ProcessInfo.INFO_EDGE_COUNT",
         "NavigationServer2D::enum_value:ProcessInfo.INFO_EDGE_FREE_COUNT",
         "NavigationServer2D::enum_value:ProcessInfo.INFO_EDGE_MERGE_COUNT",
         "NavigationServer2D::enum_value:ProcessInfo.INFO_POLYGON_COUNT",
-        "NavigationServer2D::enum_value:ProcessInfo.INFO_REGION_COUNT",
-        "NavigationServer2D::method:get_process_info(int:NavigationServer2D.ProcessInfo)"
+        "NavigationServer2D::enum_value:ProcessInfo.INFO_REGION_COUNT"
       ],
       "reason": "ADR 0097 trigger: consistent navigation process counters across map/region/link/agent/obstacle lifecycle. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
     },
     {
       "state": "Blocked",
       "godot": [
-        "NavigationServer2D::enum_value:ProcessInfo.INFO_AGENT_COUNT",
-        "NavigationServer2D::enum_value:ProcessInfo.INFO_OBSTACLE_COUNT",
-        "NavigationServer2D::method:agent_get_avoidance_enabled(RID:)",
-        "NavigationServer2D::method:agent_get_avoidance_layers(RID:)",
-        "NavigationServer2D::method:agent_get_avoidance_mask(RID:)",
-        "NavigationServer2D::method:agent_get_avoidance_priority(RID:)",
-        "NavigationServer2D::method:agent_get_max_neighbors(RID:)",
-        "NavigationServer2D::method:agent_get_max_speed(RID:)",
-        "NavigationServer2D::method:agent_get_neighbor_distance(RID:)",
-        "NavigationServer2D::method:agent_get_paused(RID:)",
-        "NavigationServer2D::method:agent_get_position(RID:)",
-        "NavigationServer2D::method:agent_get_radius(RID:)",
-        "NavigationServer2D::method:agent_get_time_horizon_agents(RID:)",
-        "NavigationServer2D::method:agent_get_time_horizon_obstacles(RID:)",
-        "NavigationServer2D::method:agent_get_velocity(RID:)",
-        "NavigationServer2D::method:agent_has_avoidance_callback(RID:)",
-        "NavigationServer2D::method:agent_set_avoidance_callback(RID:,Callable:)",
-        "NavigationServer2D::method:agent_set_avoidance_enabled(RID:,bool:)",
-        "NavigationServer2D::method:agent_set_avoidance_layers(RID:,int:)",
-        "NavigationServer2D::method:agent_set_avoidance_mask(RID:,int:)",
-        "NavigationServer2D::method:agent_set_avoidance_priority(RID:,float:)",
-        "NavigationServer2D::method:agent_set_max_neighbors(RID:,int:)",
-        "NavigationServer2D::method:agent_set_max_speed(RID:,float:)",
-        "NavigationServer2D::method:agent_set_neighbor_distance(RID:,float:)",
-        "NavigationServer2D::method:agent_set_paused(RID:,bool:)",
-        "NavigationServer2D::method:agent_set_position(RID:,Vector2:)",
-        "NavigationServer2D::method:agent_set_radius(RID:,float:)",
-        "NavigationServer2D::method:agent_set_time_horizon_agents(RID:,float:)",
-        "NavigationServer2D::method:agent_set_time_horizon_obstacles(RID:,float:)",
-        "NavigationServer2D::method:agent_set_velocity(RID:,Vector2:)",
-        "NavigationServer2D::method:agent_set_velocity_forced(RID:,Vector2:)",
-        "NavigationServer2D::method:obstacle_create()",
-        "NavigationServer2D::method:obstacle_get_avoidance_enabled(RID:)",
-        "NavigationServer2D::method:obstacle_get_avoidance_layers(RID:)",
-        "NavigationServer2D::method:obstacle_get_map(RID:)",
-        "NavigationServer2D::method:obstacle_get_paused(RID:)",
-        "NavigationServer2D::method:obstacle_get_position(RID:)",
-        "NavigationServer2D::method:obstacle_get_radius(RID:)",
-        "NavigationServer2D::method:obstacle_get_velocity(RID:)",
-        "NavigationServer2D::method:obstacle_get_vertices(RID:)",
-        "NavigationServer2D::method:obstacle_set_avoidance_enabled(RID:,bool:)",
-        "NavigationServer2D::method:obstacle_set_avoidance_layers(RID:,int:)",
-        "NavigationServer2D::method:obstacle_set_map(RID:,RID:)",
-        "NavigationServer2D::method:obstacle_set_paused(RID:,bool:)",
-        "NavigationServer2D::method:obstacle_set_position(RID:,Vector2:)",
-        "NavigationServer2D::method:obstacle_set_radius(RID:,float:)",
-        "NavigationServer2D::method:obstacle_set_velocity(RID:,Vector2:)",
-        "NavigationServer2D::method:obstacle_set_vertices(RID:,PackedVector2Array:)",
         "NavigationServer2D::signal:avoidance_debug_changed()"
       ],
       "reason": "ADR 0097 trigger: typed agent/obstacle storage and reciprocal-velocity avoidance simulation with physics-lane callback delivery. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
@@ -1780,7 +2140,29 @@
     },
     {
       "state": "Blocked",
-      "reason": "ADR 0097 trigger: shared planar agent/obstacle RVO/ORCA avoidance kernel with neighbor selection, radius/speed/time-horizon/layer-mask/priority controls, paused map registration, velocity submission/forced reset and typed computed-velocity dispatch. Path-following agent and map identities already execute; these avoidance controls are not exposed as inert fields.",
+      "reason": "ADR 0097 trigger: agent debug path producer plus retained NavigationServer debug settings, real canvas draw lifetime and custom/default color/line/point-size consumers on both rendering backends.",
+      "godot": [
+        "NavigationAgent2D::property:debug_enabled",
+        "NavigationAgent2D::property:debug_path_custom_color",
+        "NavigationAgent2D::property:debug_path_custom_line_width",
+        "NavigationAgent2D::property:debug_path_custom_point_size",
+        "NavigationAgent2D::property:debug_use_custom"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "NavigationAgentTests verifies real caller/scene agent identity, copied map membership, consumed committed-version change, invalid and borrowed identities, map release, World transfer, exit/reentry and rendered follower consumer. Avoidance fields/callbacks have their own explicit kernel dependency.",
+      "godot": [
+        "NavigationServer2D::method:agent_create()",
+        "NavigationServer2D::method:agent_get_map(RID:)",
+        "NavigationServer2D::method:agent_is_map_changed(RID:)",
+        "NavigationServer2D::method:agent_set_map(RID:,RID:)",
+        "NavigationServer2D::method:map_get_agents(RID:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0097 shared managed ORCA kernel and stable agent/obstacle state, typed callbacks, deterministic masks/priority/nearest neighbors, speed/radius/horizons, moving discs and oriented static contours. NavigationAvoidanceTests covers numerical/zero/coincident edges, fresh-process scenes, pause/World/lifetime, callback failure/reentry, 2000 prepared zero-allocation pair cycles and 144 velocities compared to an independent pinned C++ solver. GPU and compatibility games execute actual safe-velocity movement around an obstacle with target pixels. Bake/debug/profiling have separate producers.",
       "godot": [
         "NavigationAgent2D::method:get_avoidance_layer_value(int:)",
         "NavigationAgent2D::method:get_avoidance_mask_value(int:)",
@@ -1798,36 +2180,95 @@
         "NavigationAgent2D::property:time_horizon_agents",
         "NavigationAgent2D::property:time_horizon_obstacles",
         "NavigationAgent2D::property:velocity",
-        "NavigationAgent2D::signal:velocity_computed(Vector2:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "ADR 0097 trigger: agent debug path producer plus retained NavigationServer debug settings, real canvas draw lifetime and custom/default color/line/point-size consumers on both rendering backends.",
-      "godot": [
-        "NavigationAgent2D::property:debug_enabled",
-        "NavigationAgent2D::property:debug_path_custom_color",
-        "NavigationAgent2D::property:debug_path_custom_line_width",
-        "NavigationAgent2D::property:debug_path_custom_point_size",
-        "NavigationAgent2D::property:debug_use_custom"
+        "NavigationAgent2D::signal:velocity_computed(Vector2:)",
+        "NavigationObstacle2D::method:get_avoidance_layer_value(int:)",
+        "NavigationObstacle2D::method:get_navigation_map()",
+        "NavigationObstacle2D::method:get_rid()",
+        "NavigationObstacle2D::method:set_avoidance_layer_value(int:,bool:)",
+        "NavigationObstacle2D::method:set_navigation_map(RID:)",
+        "NavigationObstacle2D::property:avoidance_enabled",
+        "NavigationObstacle2D::property:avoidance_layers",
+        "NavigationObstacle2D::property:radius",
+        "NavigationObstacle2D::property:velocity",
+        "NavigationObstacle2D::property:vertices",
+        "NavigationServer2D::method:agent_get_avoidance_enabled(RID:)",
+        "NavigationServer2D::method:agent_get_avoidance_layers(RID:)",
+        "NavigationServer2D::method:agent_get_avoidance_mask(RID:)",
+        "NavigationServer2D::method:agent_get_avoidance_priority(RID:)",
+        "NavigationServer2D::method:agent_get_max_neighbors(RID:)",
+        "NavigationServer2D::method:agent_get_max_speed(RID:)",
+        "NavigationServer2D::method:agent_get_neighbor_distance(RID:)",
+        "NavigationServer2D::method:agent_get_paused(RID:)",
+        "NavigationServer2D::method:agent_get_position(RID:)",
+        "NavigationServer2D::method:agent_get_radius(RID:)",
+        "NavigationServer2D::method:agent_get_time_horizon_agents(RID:)",
+        "NavigationServer2D::method:agent_get_time_horizon_obstacles(RID:)",
+        "NavigationServer2D::method:agent_get_velocity(RID:)",
+        "NavigationServer2D::method:agent_has_avoidance_callback(RID:)",
+        "NavigationServer2D::method:agent_set_avoidance_callback(RID:,Callable:)",
+        "NavigationServer2D::method:agent_set_avoidance_enabled(RID:,bool:)",
+        "NavigationServer2D::method:agent_set_avoidance_layers(RID:,int:)",
+        "NavigationServer2D::method:agent_set_avoidance_mask(RID:,int:)",
+        "NavigationServer2D::method:agent_set_avoidance_priority(RID:,float:)",
+        "NavigationServer2D::method:agent_set_max_neighbors(RID:,int:)",
+        "NavigationServer2D::method:agent_set_max_speed(RID:,float:)",
+        "NavigationServer2D::method:agent_set_neighbor_distance(RID:,float:)",
+        "NavigationServer2D::method:agent_set_paused(RID:,bool:)",
+        "NavigationServer2D::method:agent_set_position(RID:,Vector2:)",
+        "NavigationServer2D::method:agent_set_radius(RID:,float:)",
+        "NavigationServer2D::method:agent_set_time_horizon_agents(RID:,float:)",
+        "NavigationServer2D::method:agent_set_time_horizon_obstacles(RID:,float:)",
+        "NavigationServer2D::method:agent_set_velocity(RID:,Vector2:)",
+        "NavigationServer2D::method:agent_set_velocity_forced(RID:,Vector2:)",
+        "NavigationServer2D::method:obstacle_create()",
+        "NavigationServer2D::method:obstacle_get_avoidance_enabled(RID:)",
+        "NavigationServer2D::method:obstacle_get_avoidance_layers(RID:)",
+        "NavigationServer2D::method:obstacle_get_map(RID:)",
+        "NavigationServer2D::method:obstacle_get_paused(RID:)",
+        "NavigationServer2D::method:obstacle_get_position(RID:)",
+        "NavigationServer2D::method:obstacle_get_radius(RID:)",
+        "NavigationServer2D::method:obstacle_get_velocity(RID:)",
+        "NavigationServer2D::method:obstacle_get_vertices(RID:)",
+        "NavigationServer2D::method:obstacle_set_avoidance_enabled(RID:,bool:)",
+        "NavigationServer2D::method:obstacle_set_avoidance_layers(RID:,int:)",
+        "NavigationServer2D::method:obstacle_set_map(RID:,RID:)",
+        "NavigationServer2D::method:obstacle_set_paused(RID:,bool:)",
+        "NavigationServer2D::method:obstacle_set_position(RID:,Vector2:)",
+        "NavigationServer2D::method:obstacle_set_radius(RID:,float:)",
+        "NavigationServer2D::method:obstacle_set_velocity(RID:,Vector2:)",
+        "NavigationServer2D::method:obstacle_set_vertices(RID:,PackedVector2Array:)"
       ]
     },
     {
       "state": "Partial",
-      "reason": "ADR 0097 executable direct Entity-parent path follower, typed waypoints/link transitions, target lifecycle, complete implemented query controls, stable agent RID/map membership and source storage. Remaining own rows have exact separate avoidance or canvas-debug producer prerequisites; headless, fresh-process and both hardware backend tests exercise current behavior.",
+      "reason": "ADR 0097 path following plus executable shared ORCA agent avoidance, typed velocity/waypoint delivery, source descriptors and stable RID/map ownership. Own avoidance rows execute; five debug path settings retain the exact canvas/debug-default producer prerequisite. NavigationAgentTests/NavigationAvoidanceTests exercise both hardware consumers, headless and fresh-process state.",
       "godot": [
         "class:NavigationAgent2D"
       ]
     },
     {
-      "state": "Implemented",
-      "reason": "NavigationAgentTests verifies real caller/scene agent identity, copied map membership, consumed committed-version change, invalid and borrowed identities, map release, World transfer, exit/reentry and rendered follower consumer. Avoidance fields/callbacks have their own explicit kernel dependency.",
+      "state": "Partial",
+      "reason": "ADR 0097 Entity-based borrowed obstacle identity, transformed moving disc/static oriented contour, layers/enabled/velocity and map/pause/World lifecycle execute in the shared ORCA simulation, fresh scene archives and both hardware path consumers. AffectNavigationMesh/CarveNavigationMesh require the source-geometry baking collector and contour carving/postprocessing kernel; no inert bake fields are exposed.",
       "godot": [
-        "NavigationServer2D::method:agent_create()",
-        "NavigationServer2D::method:agent_get_map(RID:)",
-        "NavigationServer2D::method:agent_is_map_changed(RID:)",
-        "NavigationServer2D::method:agent_set_map(RID:,RID:)",
-        "NavigationServer2D::method:map_get_agents(RID:)"
+        "class:NavigationObstacle2D"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0097 exact trigger: source-geometry parser must collect this obstacle outline into baking exclusion/carve data, then navigation polygon offset/clearance and simplification must consume the affect/carve distinction. The obstacle avoidance disc/contour producer already executes; these bake switches remain absent until that consumer is implemented.",
+      "godot": [
+        "NavigationObstacle2D::property:affect_navigation_mesh",
+        "NavigationObstacle2D::property:carve_navigation_mesh"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0097 exact trigger: complete committed map profiling snapshot and ProcessInfo enum family, including polygon/edge/merge/connection/free-edge counters under the topology acceptance profile. Actual agent/obstacle state and ORCA simulation are already implemented; expose all shared counter identities together rather than unsupported constant counters.",
+      "godot": [
+        "NavigationServer2D::enum:ProcessInfo",
+        "NavigationServer2D::enum_value:ProcessInfo.INFO_AGENT_COUNT",
+        "NavigationServer2D::enum_value:ProcessInfo.INFO_OBSTACLE_COUNT",
+        "NavigationServer2D::method:get_process_info(int:NavigationServer2D.ProcessInfo)"
       ]
     }
   ]

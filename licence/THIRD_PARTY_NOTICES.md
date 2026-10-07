@@ -14,6 +14,7 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | Box2D.NET managed backend | MIT | [LICENSE](Box2D.NET-LICENSE.txt) |
 | Clipper2 managed geometry | BSL-1.0 | [LICENSE](Clipper2-LICENSE.txt) |
 | FastNoiseLite managed algorithm | MIT | [LICENSE](FastNoiseLite-LICENSE.txt) |
+| Adapted RVO2 ORCA avoidance | Apache-2.0 | [RVO2](RVO2-LICENSE.txt) |
 | Adapted PCG32 algorithm | Apache-2.0 | [PCG32-LICENSE](PCG32-LICENSE.txt) |
 | Adapted PolyPartition algorithm | MIT | [PolyPartition-LICENSE](PolyPartition-LICENSE.txt) |
 | Flat canvas style geometry and default theme icons | MIT | [CanvasStyleGeometry-LICENSE](CanvasStyleGeometry-LICENSE.txt) |

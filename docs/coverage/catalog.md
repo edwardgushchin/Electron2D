@@ -476,7 +476,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [NavigationMeshGenerator](classes/NavigationMeshGenerator.md) | Object | Excluded | 4 |
 | [NavigationMeshSourceGeometryData2D](classes/NavigationMeshSourceGeometryData2D.md) | Resource | Blocked | 16 |
 | [NavigationMeshSourceGeometryData3D](classes/NavigationMeshSourceGeometryData3D.md) | Resource | Excluded | 16 |
-| [NavigationObstacle2D](classes/NavigationObstacle2D.md) | Node2D | Blocked | 12 |
+| [NavigationObstacle2D](classes/NavigationObstacle2D.md) | Node2D | Partial | 12 |
 | [NavigationObstacle3D](classes/NavigationObstacle3D.md) | Node3D | Excluded | 14 |
 | [NavigationPathQueryParameters2D](classes/NavigationPathQueryParameters2D.md) | RefCounted | Implemented | 27 |
 | [NavigationPathQueryParameters3D](classes/NavigationPathQueryParameters3D.md) | RefCounted | Excluded | 27 |

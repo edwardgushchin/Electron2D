@@ -763,7 +763,7 @@ Returns a copied path with points removed by iterative Ramer-Douglas-Peucker sim
 
 ## Agent identities and map membership
 
-Stable caller/scene agent identities support real map registration and version consumption; they are independent of the pending avoidance kernel.
+Stable caller/scene agent identities support real map registration and version consumption; they feed the same avoidance kernel.
 
 ## Methods and extension points
 
@@ -819,3 +819,546 @@ Returns copied staged agent memberships, including scene-owned agents. Independe
 `map`: Live map RID.
 
 `ArgumentException`: The map RID is absent, stale or of another kind.
+
+## Reciprocal avoidance operations
+
+The [shared kernel](../components/navigation-maps.md#reciprocal-agent-and-obstacle-avoidance) supplies real desired/forced/current velocity and obstacle state. Step is the typed caller-map batch projection of the same scene physics boundary. Registered callbacks run on the stepping thread after simultaneous publication; bound scene maps cannot be advanced by a second owner.
+
+## Methods and extension points
+
+| Member | Contract |
+| --- | --- |
+| [`public static bool AgentGetAvoidanceEnabled(RID agent)`](#agentgetavoidanceenabled) | Returns whether reciprocal avoidance participates for the agent. |
+| [`public static uint AgentGetAvoidanceLayers(RID agent)`](#agentgetavoidancelayers) | Returns 32-bit layers visible to other participant masks for the agent. |
+| [`public static uint AgentGetAvoidanceMask(RID agent)`](#agentgetavoidancemask) | Returns 32-bit mask selecting other participants for the agent. |
+| [`public static float AgentGetAvoidancePriority(RID agent)`](#agentgetavoidancepriority) | Returns priority from zero through one; higher priority ignores lower for the agent. |
+| [`public static int AgentGetMaxNeighbors(RID agent)`](#agentgetmaxneighbors) | Returns maximum selected neighbors; nonpositive disables agent neighbors for the agent. |
+| [`public static float AgentGetMaxSpeed(RID agent)`](#agentgetmaxspeed) | Returns finite nonnegative output speed cap for the agent. |
+| [`public static float AgentGetNeighborDistance(RID agent)`](#agentgetneighbordistance) | Returns finite nonnegative neighbor search radius for the agent. |
+| [`public static bool AgentGetPaused(RID agent)`](#agentgetpaused) | Returns whether simulation and callback delivery are paused for the agent. |
+| [`public static Vector2 AgentGetPosition(RID agent)`](#agentgetposition) | Returns finite world-space source position for the agent. |
+| [`public static float AgentGetRadius(RID agent)`](#agentgetradius) | Returns finite nonnegative avoidance disc radius for the agent. |
+| [`public static float AgentGetTimeHorizonAgents(RID agent)`](#agentgettimehorizonagents) | Returns finite nonnegative agent prediction horizon for the agent. |
+| [`public static float AgentGetTimeHorizonObstacles(RID agent)`](#agentgettimehorizonobstacles) | Returns finite nonnegative contour prediction horizon for the agent. |
+| [`public static Vector2 AgentGetVelocity(RID agent)`](#agentgetvelocity) | Returns finite desired velocity before stepping or computed velocity after stepping for the agent. |
+| [`public static bool AgentHasAvoidanceCallback(RID agent)`](#agenthasavoidancecallback) | Returns whether the agent has a registered avoidance callback. |
+| [`public static void AgentSetAvoidanceCallback(RID agent, Action<Vector2> callback)`](#agentsetavoidancecallback) | Sets or clears typed velocity delivery after committed avoidance publication. |
+| [`public static void AgentSetAvoidanceEnabled(RID agent, bool value)`](#agentsetavoidanceenabled) | Sets whether reciprocal avoidance participates for the agent. |
+| [`public static void AgentSetAvoidanceLayers(RID agent, uint value)`](#agentsetavoidancelayers) | Sets 32-bit layers visible to other participant masks for the agent. |
+| [`public static void AgentSetAvoidanceMask(RID agent, uint value)`](#agentsetavoidancemask) | Sets 32-bit mask selecting other participants for the agent. |
+| [`public static void AgentSetAvoidancePriority(RID agent, float value)`](#agentsetavoidancepriority) | Sets priority from zero through one; higher priority ignores lower for the agent. |
+| [`public static void AgentSetMaxNeighbors(RID agent, int value)`](#agentsetmaxneighbors) | Sets maximum selected neighbors; nonpositive disables agent neighbors for the agent. |
+| [`public static void AgentSetMaxSpeed(RID agent, float value)`](#agentsetmaxspeed) | Sets finite nonnegative output speed cap for the agent. |
+| [`public static void AgentSetNeighborDistance(RID agent, float value)`](#agentsetneighbordistance) | Sets finite nonnegative neighbor search radius for the agent. |
+| [`public static void AgentSetPaused(RID agent, bool value)`](#agentsetpaused) | Sets whether simulation and callback delivery are paused for the agent. |
+| [`public static void AgentSetPosition(RID agent, Vector2 value)`](#agentsetposition) | Sets finite world-space source position for the agent. |
+| [`public static void AgentSetRadius(RID agent, float value)`](#agentsetradius) | Sets finite nonnegative avoidance disc radius for the agent. |
+| [`public static void AgentSetTimeHorizonAgents(RID agent, float value)`](#agentsettimehorizonagents) | Sets finite nonnegative agent prediction horizon for the agent. |
+| [`public static void AgentSetTimeHorizonObstacles(RID agent, float value)`](#agentsettimehorizonobstacles) | Sets finite nonnegative contour prediction horizon for the agent. |
+| [`public static void AgentSetVelocity(RID agent, Vector2 value)`](#agentsetvelocity) | Sets finite desired velocity before stepping or computed velocity after stepping for the agent. |
+| [`public static void AgentSetVelocityForced(RID agent, Vector2 velocity)`](#agentsetvelocityforced) | Replaces the internal simulation velocity after teleporting without changing the desired velocity. |
+| [`public static RID ObstacleCreate()`](#obstaclecreate) | Creates a caller-owned enabled obstacle with zero radius and empty contour. |
+| [`public static bool ObstacleGetAvoidanceEnabled(RID obstacle)`](#obstaclegetavoidanceenabled) | Returns participation in avoidance. |
+| [`public static uint ObstacleGetAvoidanceLayers(RID obstacle)`](#obstaclegetavoidancelayers) | Returns 32-bit layers visible to agent masks. |
+| [`public static RID ObstacleGetMap(RID obstacle)`](#obstaclegetmap) | Returns current obstacle map membership. |
+| [`public static bool ObstacleGetPaused(RID obstacle)`](#obstaclegetpaused) | Returns whether participation is paused. |
+| [`public static Vector2 ObstacleGetPosition(RID obstacle)`](#obstaclegetposition) | Returns finite world-space translation. |
+| [`public static float ObstacleGetRadius(RID obstacle)`](#obstaclegetradius) | Returns finite nonnegative moving-disc radius. |
+| [`public static Vector2 ObstacleGetVelocity(RID obstacle)`](#obstaclegetvelocity) | Returns finite moving-disc velocity; static contours remain stationary predictions. |
+| [`public static Vector2[] ObstacleGetVertices(RID obstacle)`](#obstaclegetvertices) | Returns a copied oriented local obstacle contour. |
+| [`public static void ObstacleSetAvoidanceEnabled(RID obstacle, bool value)`](#obstaclesetavoidanceenabled) | Sets participation in avoidance. |
+| [`public static void ObstacleSetAvoidanceLayers(RID obstacle, uint value)`](#obstaclesetavoidancelayers) | Sets 32-bit layers visible to agent masks. |
+| [`public static void ObstacleSetMap(RID obstacle, RID map)`](#obstaclesetmap) | Assigns a live map; empty detaches the obstacle. |
+| [`public static void ObstacleSetPaused(RID obstacle, bool value)`](#obstaclesetpaused) | Sets whether participation is paused. |
+| [`public static void ObstacleSetPosition(RID obstacle, Vector2 value)`](#obstaclesetposition) | Sets finite world-space translation. |
+| [`public static void ObstacleSetRadius(RID obstacle, float value)`](#obstaclesetradius) | Sets finite nonnegative moving-disc radius. |
+| [`public static void ObstacleSetVelocity(RID obstacle, Vector2 value)`](#obstaclesetvelocity) | Sets finite moving-disc velocity; static contours remain stationary predictions. |
+| [`public static void ObstacleSetVertices(RID obstacle, System.ReadOnlySpan<Vector2> vertices)`](#obstaclesetvertices) | Sets a copied simple oriented local contour; empty or one point creates no static segments. |
+| [`public static void Step(System.Double delta)`](#step) | Synchronizes topology and advances avoidance on caller maps unbound to a SceneTree. |
+
+## Member descriptions
+
+<a id="agentgetavoidanceenabled"></a>
+### `public static bool AgentGetAvoidanceEnabled(RID agent)`
+
+Returns whether reciprocal avoidance participates for the agent. Current value, initially false.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetavoidancelayers"></a>
+### `public static uint AgentGetAvoidanceLayers(RID agent)`
+
+Returns 32-bit layers visible to other participant masks for the agent. Current value, initially 1u.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetavoidancemask"></a>
+### `public static uint AgentGetAvoidanceMask(RID agent)`
+
+Returns 32-bit mask selecting other participants for the agent. Current value, initially 1u.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetavoidancepriority"></a>
+### `public static float AgentGetAvoidancePriority(RID agent)`
+
+Returns priority from zero through one; higher priority ignores lower for the agent. Current value, initially 1f.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetmaxneighbors"></a>
+### `public static int AgentGetMaxNeighbors(RID agent)`
+
+Returns maximum selected neighbors; nonpositive disables agent neighbors for the agent. Current value, initially 10.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetmaxspeed"></a>
+### `public static float AgentGetMaxSpeed(RID agent)`
+
+Returns finite nonnegative output speed cap for the agent. Current value, initially 100f.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetneighbordistance"></a>
+### `public static float AgentGetNeighborDistance(RID agent)`
+
+Returns finite nonnegative neighbor search radius for the agent. Current value, initially 500f.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetpaused"></a>
+### `public static bool AgentGetPaused(RID agent)`
+
+Returns whether simulation and callback delivery are paused for the agent. Current value, initially false.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetposition"></a>
+### `public static Vector2 AgentGetPosition(RID agent)`
+
+Returns finite world-space source position for the agent. Current value, initially Vector2.Zero.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetradius"></a>
+### `public static float AgentGetRadius(RID agent)`
+
+Returns finite nonnegative avoidance disc radius for the agent. Current value, initially 10f.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgettimehorizonagents"></a>
+### `public static float AgentGetTimeHorizonAgents(RID agent)`
+
+Returns finite nonnegative agent prediction horizon for the agent. Current value, initially 1f.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgettimehorizonobstacles"></a>
+### `public static float AgentGetTimeHorizonObstacles(RID agent)`
+
+Returns finite nonnegative contour prediction horizon for the agent. Current value, initially 0f.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agentgetvelocity"></a>
+### `public static Vector2 AgentGetVelocity(RID agent)`
+
+Returns finite desired velocity before stepping or computed velocity after stepping for the agent. Current value, initially Vector2.Zero.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is absent, stale or of another kind.
+
+<a id="agenthasavoidancecallback"></a>
+### `public static bool AgentHasAvoidanceCallback(RID agent)`
+
+Returns whether the agent has a registered avoidance callback. True when a typed handler is assigned.
+
+`agent`: Live agent RID.
+
+`ArgumentException`: The agent RID is invalid.
+
+<a id="agentsetavoidancecallback"></a>
+### `public static void AgentSetAvoidanceCallback(RID agent, Action<Vector2> callback)`
+
+Sets or clears typed velocity delivery after committed avoidance publication.
+
+`agent`: Live agent RID.
+
+`callback`: Calling-thread handler or null to clear.
+
+`ArgumentException`: The agent RID is invalid.
+
+<a id="agentsetavoidanceenabled"></a>
+### `public static void AgentSetAvoidanceEnabled(RID agent, bool value)`
+
+Sets whether reciprocal avoidance participates for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default false.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+<a id="agentsetavoidancelayers"></a>
+### `public static void AgentSetAvoidanceLayers(RID agent, uint value)`
+
+Sets 32-bit layers visible to other participant masks for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 1u.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+<a id="agentsetavoidancemask"></a>
+### `public static void AgentSetAvoidanceMask(RID agent, uint value)`
+
+Sets 32-bit mask selecting other participants for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 1u.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+<a id="agentsetavoidancepriority"></a>
+### `public static void AgentSetAvoidancePriority(RID agent, float value)`
+
+Sets priority from zero through one; higher priority ignores lower for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 1f.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+`ArgumentOutOfRangeException`: The setting is outside its finite accepted range.
+
+<a id="agentsetmaxneighbors"></a>
+### `public static void AgentSetMaxNeighbors(RID agent, int value)`
+
+Sets maximum selected neighbors; nonpositive disables agent neighbors for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 10.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+<a id="agentsetmaxspeed"></a>
+### `public static void AgentSetMaxSpeed(RID agent, float value)`
+
+Sets finite nonnegative output speed cap for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 100f.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+`ArgumentOutOfRangeException`: The setting is outside its finite accepted range.
+
+<a id="agentsetneighbordistance"></a>
+### `public static void AgentSetNeighborDistance(RID agent, float value)`
+
+Sets finite nonnegative neighbor search radius for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 500f.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+`ArgumentOutOfRangeException`: The setting is outside its finite accepted range.
+
+<a id="agentsetpaused"></a>
+### `public static void AgentSetPaused(RID agent, bool value)`
+
+Sets whether simulation and callback delivery are paused for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default false.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+<a id="agentsetposition"></a>
+### `public static void AgentSetPosition(RID agent, Vector2 value)`
+
+Sets finite world-space source position for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default Vector2.Zero.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+<a id="agentsetradius"></a>
+### `public static void AgentSetRadius(RID agent, float value)`
+
+Sets finite nonnegative avoidance disc radius for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 10f.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+`ArgumentOutOfRangeException`: The setting is outside its finite accepted range.
+
+<a id="agentsettimehorizonagents"></a>
+### `public static void AgentSetTimeHorizonAgents(RID agent, float value)`
+
+Sets finite nonnegative agent prediction horizon for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 1f.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+`ArgumentOutOfRangeException`: The setting is outside its finite accepted range.
+
+<a id="agentsettimehorizonobstacles"></a>
+### `public static void AgentSetTimeHorizonObstacles(RID agent, float value)`
+
+Sets finite nonnegative contour prediction horizon for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default 0f.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+`ArgumentOutOfRangeException`: The setting is outside its finite accepted range.
+
+<a id="agentsetvelocity"></a>
+### `public static void AgentSetVelocity(RID agent, Vector2 value)`
+
+Sets finite desired velocity before stepping or computed velocity after stepping for the agent.
+
+`agent`: Live agent RID.
+
+`value`: New setting; default Vector2.Zero.
+
+`ArgumentException`: The agent RID is invalid or a vector is nonfinite.
+
+<a id="agentsetvelocityforced"></a>
+### `public static void AgentSetVelocityForced(RID agent, Vector2 velocity)`
+
+Replaces the internal simulation velocity after teleporting without changing the desired velocity.
+
+`agent`: Live agent RID.
+
+`velocity`: Finite forced simulation velocity.
+
+`ArgumentException`: The RID or vector is invalid.
+
+<a id="obstaclecreate"></a>
+### `public static RID ObstacleCreate()`
+
+Creates a caller-owned enabled obstacle with zero radius and empty contour. Live obstacle RID requiring FreeRID.
+
+<a id="obstaclegetavoidanceenabled"></a>
+### `public static bool ObstacleGetAvoidanceEnabled(RID obstacle)`
+
+Returns participation in avoidance. Current setting, initially true.
+
+`obstacle`: Live obstacle RID.
+
+`ArgumentException`: The RID is invalid.
+
+<a id="obstaclegetavoidancelayers"></a>
+### `public static uint ObstacleGetAvoidanceLayers(RID obstacle)`
+
+Returns 32-bit layers visible to agent masks. Current setting, initially 1u.
+
+`obstacle`: Live obstacle RID.
+
+`ArgumentException`: The RID is invalid.
+
+<a id="obstaclegetmap"></a>
+### `public static RID ObstacleGetMap(RID obstacle)`
+
+Returns current obstacle map membership. Map or empty.
+
+`obstacle`: Live obstacle RID.
+
+`ArgumentException`: The RID is invalid.
+
+<a id="obstaclegetpaused"></a>
+### `public static bool ObstacleGetPaused(RID obstacle)`
+
+Returns whether participation is paused. Current setting, initially false.
+
+`obstacle`: Live obstacle RID.
+
+`ArgumentException`: The RID is invalid.
+
+<a id="obstaclegetposition"></a>
+### `public static Vector2 ObstacleGetPosition(RID obstacle)`
+
+Returns finite world-space translation. Current setting, initially Vector2.Zero.
+
+`obstacle`: Live obstacle RID.
+
+`ArgumentException`: The RID is invalid.
+
+<a id="obstaclegetradius"></a>
+### `public static float ObstacleGetRadius(RID obstacle)`
+
+Returns finite nonnegative moving-disc radius. Current setting, initially 0f.
+
+`obstacle`: Live obstacle RID.
+
+`ArgumentException`: The RID is invalid.
+
+<a id="obstaclegetvelocity"></a>
+### `public static Vector2 ObstacleGetVelocity(RID obstacle)`
+
+Returns finite moving-disc velocity; static contours remain stationary predictions. Current setting, initially Vector2.Zero.
+
+`obstacle`: Live obstacle RID.
+
+`ArgumentException`: The RID is invalid.
+
+<a id="obstaclegetvertices"></a>
+### `public static Vector2[] ObstacleGetVertices(RID obstacle)`
+
+Returns a copied oriented local obstacle contour. Independent offset array.
+
+`obstacle`: Live obstacle RID.
+
+`ArgumentException`: The RID is invalid.
+
+<a id="obstaclesetavoidanceenabled"></a>
+### `public static void ObstacleSetAvoidanceEnabled(RID obstacle, bool value)`
+
+Sets participation in avoidance.
+
+`obstacle`: Live obstacle RID.
+
+`value`: New setting.
+
+`ArgumentException`: The RID or vector is invalid.
+
+<a id="obstaclesetavoidancelayers"></a>
+### `public static void ObstacleSetAvoidanceLayers(RID obstacle, uint value)`
+
+Sets 32-bit layers visible to agent masks.
+
+`obstacle`: Live obstacle RID.
+
+`value`: New setting.
+
+`ArgumentException`: The RID or vector is invalid.
+
+<a id="obstaclesetmap"></a>
+### `public static void ObstacleSetMap(RID obstacle, RID map)`
+
+Assigns a live map; empty detaches the obstacle.
+
+`obstacle`: Live obstacle RID.
+
+`map`: Live map RID or empty.
+
+`ArgumentException`: A required RID is invalid.
+
+`InvalidOperationException`: A scene map belongs to another tree.
+
+<a id="obstaclesetpaused"></a>
+### `public static void ObstacleSetPaused(RID obstacle, bool value)`
+
+Sets whether participation is paused.
+
+`obstacle`: Live obstacle RID.
+
+`value`: New setting.
+
+`ArgumentException`: The RID or vector is invalid.
+
+<a id="obstaclesetposition"></a>
+### `public static void ObstacleSetPosition(RID obstacle, Vector2 value)`
+
+Sets finite world-space translation.
+
+`obstacle`: Live obstacle RID.
+
+`value`: New setting.
+
+`ArgumentException`: The RID or vector is invalid.
+
+<a id="obstaclesetradius"></a>
+### `public static void ObstacleSetRadius(RID obstacle, float value)`
+
+Sets finite nonnegative moving-disc radius.
+
+`obstacle`: Live obstacle RID.
+
+`value`: New setting.
+
+`ArgumentException`: The RID or vector is invalid.
+
+`ArgumentOutOfRangeException`: Value is negative or nonfinite.
+
+<a id="obstaclesetvelocity"></a>
+### `public static void ObstacleSetVelocity(RID obstacle, Vector2 value)`
+
+Sets finite moving-disc velocity; static contours remain stationary predictions.
+
+`obstacle`: Live obstacle RID.
+
+`value`: New setting.
+
+`ArgumentException`: The RID or vector is invalid.
+
+<a id="obstaclesetvertices"></a>
+### `public static void ObstacleSetVertices(RID obstacle, System.ReadOnlySpan<Vector2> vertices)`
+
+Sets a copied simple oriented local contour; empty or one point creates no static segments.
+
+`obstacle`: Live obstacle RID.
+
+`vertices`: Finite offsets from obstacle Position. Two points create a two-sided wall; winding controls larger contours.
+
+`ArgumentException`: The RID or contour is invalid, duplicated or self-intersecting.
+
+<a id="step"></a>
+### `public static void Step(System.Double delta)`
+
+Synchronizes topology and advances avoidance on caller maps unbound to a SceneTree. Bound scene maps advance at their own physics boundary. All outputs publish before callbacks; callbacks may stage future state but recursive stepping or synchronization rejects.
+
+`delta`: Finite nonnegative float-representable duration in seconds. Zero only synchronizes; no callbacks occur.
+
+`ArgumentOutOfRangeException`: Duration is negative, nonfinite or outside the float timestep range.
+
+`InvalidOperationException`: Stepping or synchronization is reentered.
+
+`AggregateException`: Observers fail after completed publication.

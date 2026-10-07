@@ -956,3 +956,7 @@ FileDialog regression checks exercise teardown with an active embedded-window to
 World.NavigationMap now lazily owns an active borrowed map in the same runtime lifetime as canvas/physics. Scene NavigationRegion nodes and server-owned regions use that same map storage; the physics lane commits staged topology. NavigationServer is available through Engine named-service lookup. [The navigation contract](../components/navigation-maps.md) records implemented behavior and remaining dependencies.
 
 Viewport World replacement also rebinds direct Entity-parent NavigationAgent map memberships through the retained navigation service. These nonspatial nodes participate without being CanvasItem types; nested viewports retain their own selection boundary.
+
+The positive physics boundary prepares scene agent/obstacle positions and source submissions, solves/publishes shared ORCA velocities and dispatches callbacks before physics calculations. Topology observer failure is collected without skipping this independent avoidance lane; all callback failures remain aggregated by the frame. Paused parents/obstacles and foreign-bound maps are excluded.
+
+Pause/process-mode notifications update NavigationAgent pause state immediately. NavigationObstacle detaches runtime map membership while paused and restores the prior membership on resume; source map selection remains separate.

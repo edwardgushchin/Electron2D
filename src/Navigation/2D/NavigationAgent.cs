@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>Call GetNextPathPosition from the parent's physics processing and move that parent yourself.
 /// The agent owns a stable borrowed RID and retained result; getters that advance navigation reject reentry.
 /// Events run after each state transition, deliver all subscribers and aggregate failures after the update.</remarks>
-public sealed class NavigationAgent : Node
+public sealed partial class NavigationAgent : Node
 {
     private readonly RID _rid;
     private readonly NavigationPathQueryParameters _query = new();
@@ -225,8 +225,8 @@ public sealed class NavigationAgent : Node
                     if (_lastReached) break;
                 }
             if (Distance(origin, _target) < _targetDesiredDistance)
-            { _targetReached = true; Deliver(TargetReached, ref errors); if (_invalidated) return; _finished = true; _submitted = false; Deliver(NavigationFinished, ref errors); }
-            else if (_lastReached && !Reachable()) { _finished = true; _submitted = false; Deliver(NavigationFinished, ref errors); }
+            { _targetReached = true; Deliver(TargetReached, ref errors); if (_invalidated) return; _finished = true; _submitted = false; StopAvoidance(); Deliver(NavigationFinished, ref errors); }
+            else if (_lastReached && !Reachable()) { _finished = true; _submitted = false; StopAvoidance(); Deliver(NavigationFinished, ref errors); }
         }
         finally { _updating = false; if (_invalidated) { _invalidated = false; Repath(); } if (errors is not null) throw new AggregateException("Navigation transitions completed with observer failures.", errors); }
     }
@@ -252,18 +252,18 @@ public sealed class NavigationAgent : Node
     /// <inheritdoc />
     protected override void OnExitTree() { try { NavigationServer.AgentSetMap(_rid, default); if (_submitted) Repath(); } finally { base.OnExitTree(); } }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (IsInsideTree && what == CanvasItem.NotificationWorldChanged) PublishMap(); }
+    protected override void OnNotification(int what) { base.OnNotification(what); if (IsInsideTree && what == CanvasItem.NotificationWorldChanged) PublishMap(); else if (IsInsideTree && what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) NavigationServer.AgentSetPaused(_rid, Parent is not Entity parent || !parent.CanProcess()); }
     /// <inheritdoc />
     protected override void ValidateMutation() { base.ValidateMutation(); if (_updating) throw new InvalidOperationException("Agent mutation cannot occur during navigation delivery."); }
     /// <inheritdoc />
-    protected override void ValidateDisposal() { base.ValidateDisposal(); if (_updating) throw new InvalidOperationException("Agent disposal cannot occur during navigation delivery."); }
+    protected override void ValidateDisposal() { base.ValidateDisposal(); if (_updating || _deliveringVelocity) throw new InvalidOperationException("Agent disposal cannot occur during navigation delivery."); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) { NavigationServer.Service.ReleaseSceneAgent(_rid); _query.Dispose(); _result.Dispose(); } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateAgentNode;
     private static NavigationAgent CreateAgentNode() => new();
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AgentProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AgentProperties).Concat(AvoidanceProperties);
     private static readonly PropertyDescriptor[] AgentProperties =
     [
         new PropertyDescriptor<NavigationAgent,uint>(nameof(NavigationLayers),n=>n.NavigationLayers,(n,v)=>n.NavigationLayers=v,_=>1u,stored:true),
