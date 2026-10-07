@@ -15,3 +15,5 @@ Immutable committed cells/portals, projection, weighted corridor search and funn
 [NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) exercises the concrete geometry/query/lifetime consumers. The [Authored navigation maps](../components/navigation-maps.md) contract records limits.
 
 Synthetic link cells and point portals participate in weighted corridors; surface projection and closest-reachable region selection exclude them. Attachment uses nearest region surfaces strictly inside the configured map radius.
+
+The shared Query kernel consumes filters/search budgets and produces primitive provenance, three output modes, RDP and length/radius clips. MapGetPath delegates to the same kernel with metadata disabled.

@@ -6127,6 +6127,108 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.NavigationPathQueryParameters",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "NavigationPathQueryParameters",
+    "signature": "public sealed class Electron2D.NavigationPathQueryParameters",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "name": "PathMetadataFlags",
+    "signature": "public enum Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "name": "PathPostProcessing",
+    "signature": "public enum Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm",
+    "name": "PathfindingAlgorithm",
+    "signature": "public enum Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationPathQueryResult",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "NavigationPathQueryResult",
+    "signature": "public sealed class Electron2D.NavigationPathQueryResult",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationPathQueryResult.PathSegmentType",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPathQueryResult.PathSegmentType",
+    "name": "PathSegmentType",
+    "signature": "public enum Electron2D.NavigationPathQueryResult.PathSegmentType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NavigationPolygon",
     "kind": "type",
     "declaringType": "Electron2D.NavigationPolygon",
@@ -15175,6 +15277,32 @@
     "declaringType": "Electron2D.NavigationLink",
     "name": ".ctor",
     "signature": "public NavigationLink()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.NavigationPathQueryParameters..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": ".ctor",
+    "signature": "public NavigationPathQueryParameters()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.NavigationPathQueryResult..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": ".ctor",
+    "signature": "public NavigationPathQueryResult()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -31159,6 +31287,149 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.MultiplayerConnectionStatus",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeAll()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "name": "IncludeAll",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathMetadataFlags IncludeAll = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeNone()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "name": "IncludeNone",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathMetadataFlags IncludeNone = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeOwners()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "name": "IncludeOwners",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathMetadataFlags IncludeOwners = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeRIDs()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "name": "IncludeRIDs",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathMetadataFlags IncludeRIDs = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeTypes()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "name": "IncludeTypes",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathMetadataFlags IncludeTypes = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathPostProcessing.CorridorFunnel()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "name": "CorridorFunnel",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathPostProcessing CorridorFunnel = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathPostProcessing.EdgeCentered()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "name": "EdgeCentered",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathPostProcessing EdgeCentered = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathPostProcessing.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "name": "None",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathPostProcessing None = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm.AStar()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm",
+    "name": "AStar",
+    "signature": "public const Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm AStar = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryResult.PathSegmentType.Link()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryResult.PathSegmentType",
+    "name": "Link",
+    "signature": "public const Electron2D.NavigationPathQueryResult.PathSegmentType Link = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryResult.PathSegmentType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPathQueryResult.PathSegmentType.Region()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPathQueryResult.PathSegmentType",
+    "name": "Region",
+    "signature": "public const Electron2D.NavigationPathQueryResult.PathSegmentType Region = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryResult.PathSegmentType",
     "value": "0"
   },
   {
@@ -99440,6 +99711,83 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationPathQueryParameters.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPathQueryParameters.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPathQueryResult.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPathQueryResult.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPathQueryResult.Reset()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "Reset",
+    "signature": "public System.Void Reset()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationPolygon.AddPolygon(System.ReadOnlySpan\u003CSystem.Int32\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationPolygon",
@@ -100585,6 +100933,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.QueryPath(Electron2D.NavigationPathQueryParameters,Electron2D.NavigationPathQueryResult,System.Action)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "QueryPath",
+    "signature": "public static System.Void QueryPath(Electron2D.NavigationPathQueryParameters parameters, Electron2D.NavigationPathQueryResult result, System.Action callback = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameters",
+        "type": "Electron2D.NavigationPathQueryParameters",
+        "default": null
+      },
+      {
+        "name": "result",
+        "type": "Electron2D.NavigationPathQueryResult",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.RegionCreate()",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -101030,6 +101407,30 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.SimplifyPath(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "SimplifyPath",
+    "signature": "public static Electron2D.Vector2[] SimplifyPath(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E path, System.Single epsilon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "epsilon",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
     "value": null
   },
   {
@@ -174243,6 +174644,266 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.Algorithm()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "Algorithm",
+    "signature": "public Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm Algorithm { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.ExcludedRegions()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "ExcludedRegions",
+    "signature": "public Electron2D.RID[] ExcludedRegions { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.IncludedRegions()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "IncludedRegions",
+    "signature": "public Electron2D.RID[] IncludedRegions { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.Map()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "Map",
+    "signature": "public Electron2D.RID Map { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.MetadataFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "MetadataFlags",
+    "signature": "public Electron2D.NavigationPathQueryParameters.PathMetadataFlags MetadataFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.NavigationLayers()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "NavigationLayers",
+    "signature": "public System.UInt32 NavigationLayers { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.PathReturnMaxLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "PathReturnMaxLength",
+    "signature": "public System.Single PathReturnMaxLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.PathReturnMaxRadius()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "PathReturnMaxRadius",
+    "signature": "public System.Single PathReturnMaxRadius { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.PathSearchMaxDistance()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "PathSearchMaxDistance",
+    "signature": "public System.Single PathSearchMaxDistance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.PathSearchMaxPolygons()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "PathSearchMaxPolygons",
+    "signature": "public System.Int32 PathSearchMaxPolygons { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.PostProcessing()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "PostProcessing",
+    "signature": "public Electron2D.NavigationPathQueryParameters.PathPostProcessing PostProcessing { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.SimplifyEpsilon()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "SimplifyEpsilon",
+    "signature": "public System.Single SimplifyEpsilon { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.SimplifyPath()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "SimplifyPath",
+    "signature": "public System.Boolean SimplifyPath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.StartPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "StartPosition",
+    "signature": "public Electron2D.Vector2 StartPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryParameters.TargetPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryParameters",
+    "name": "TargetPosition",
+    "signature": "public Electron2D.Vector2 TargetPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryResult.Path()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "Path",
+    "signature": "public Electron2D.Vector2[] Path { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryResult.PathLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "PathLength",
+    "signature": "public System.Single PathLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryResult.PathOwnerIDs()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "PathOwnerIDs",
+    "signature": "public System.UInt64[] PathOwnerIDs { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryResult.PathRIDs()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "PathRIDs",
+    "signature": "public Electron2D.RID[] PathRIDs { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPathQueryResult.PathTypes()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPathQueryResult",
+    "name": "PathTypes",
+    "signature": "public Electron2D.NavigationPathQueryResult.PathSegmentType[] PathTypes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPathQueryResult.PathSegmentType[]",
     "value": null
   },
   {

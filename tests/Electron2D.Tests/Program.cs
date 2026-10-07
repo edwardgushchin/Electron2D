@@ -26,6 +26,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 NativeLibraryTests.Run();
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES_HOST") == "1") { RenderingPrimitiveTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES") == "1") { RenderingPrimitiveTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_QUERY_HOST") == "1") { NavigationQueryTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_QUERY") == "1") { NavigationQueryTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_LINK_CHILD") is { } linkChild) { NavigationLinkTests.RunChild(linkChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_LINK_HOST") == "1") { NavigationLinkTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_LINKS") == "1") { NavigationLinkTests.Run(); return; }
@@ -655,6 +657,7 @@ RenderingPrimitiveTests.Run();
 RenderingCanvasTests.Run();
 NavigationTests.Run();
 NavigationLinkTests.Run();
+NavigationQueryTests.Run();
 WorldTests.Run();
 RenderingProgramTests.Run();
 MeshSkinTests.Run();

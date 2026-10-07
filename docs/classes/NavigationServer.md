@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-07
 
-- Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs), [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs)
+- Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs), [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs), [NavigationServer.Query.cs](../../src/Servers/Navigation/NavigationServer.Query.cs)
 - Inherits: [ElectronObject](ElectronObject.md)
 - Component: [Authored navigation maps](../components/navigation-maps.md)
 
@@ -716,6 +716,47 @@ Stages the finite nonnegative endpoint attachment radius, initially four world u
 
 Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
 
+## Typed query operations
+
+Queries capture settings and one map iteration, then publish selected arrays and length before the optional callback. Missing map/object lifetime errors preserve the previous result; completion failure occurs after publication. Read the [query contract](../components/navigation-maps.md#typed-query-objects-and-transition-metadata).
+
+## Methods and extension points
+
+| Member | Contract |
+| --- | --- |
+| [`public static void QueryPath(NavigationPathQueryParameters parameters, NavigationPathQueryResult result, Action? callback = null)`](#querypath) | Queries one committed map using a captured parameter snapshot and atomically replaces the supplied result. |
+| [`public static Vector2[] SimplifyPath(ReadOnlySpan<Vector2> path, float epsilon)`](#simplifypath) | Returns a copied path with points removed by iterative Ramer-Douglas-Peucker simplification. |
+
+## Member descriptions
+
+<a id="querypath"></a>
+### `public static void QueryPath(NavigationPathQueryParameters parameters, NavigationPathQueryResult result, Action? callback = null)`
+
+Queries one committed map using a captured parameter snapshot and atomically replaces the supplied result. Callbacks may mutate settings/results and run nested queries. Callback exceptions propagate after publication. Required map identity resolves at query time; invalid input or disposed objects preserve the previous result.
+
+`parameters`: Caller-owned typed settings; copied filter arrays remain stable during the query.
+
+`result`: Caller-owned result receiving selected arrays and length together.
+
+`callback`: Optional zero-argument completion invoked on this calling thread after publication, outside gates.
+
+`ArgumentNullException`: A required object is null.
+
+`ArgumentException`: The captured map is absent, stale or of another kind.
+
+`ObjectDisposedException`: A parameter/result object is disposed.
+
+<a id="simplifypath"></a>
+### `public static Vector2[] SimplifyPath(ReadOnlySpan<Vector2> path, float epsilon)`
+
+Returns a copied path with points removed by iterative Ramer-Douglas-Peucker simplification. Independent ordered points retaining endpoints, including empty and singleton paths.
+
+`path`: Finite world-space points; never mutated.
+
+`epsilon`: Finite world-distance tolerance; negative values clamp to zero.
+
+`ArgumentOutOfRangeException`: An input point or epsilon is nonfinite.
+
 ## Verification and limits
 
-[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining raster, baking, async, query and avoidance prerequisites.
+[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining raster/search equivalence, baking, async and avoidance prerequisites.

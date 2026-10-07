@@ -162,7 +162,7 @@ public sealed partial class NavigationServer
     /// <param name="region">Live navigation region RID.</param>
     /// <param name="ownerID">Logical scene owner instance identity; zero means no associated owner.</param>
     /// <exception cref="ArgumentException">A required RID is absent, stale or belongs to another resource kind.</exception>
-    public static void RegionSetOwnerID(RID region, ulong ownerID) { lock (Shared._gate) Shared.Region(region).OwnerID = ownerID; }
+    public static void RegionSetOwnerID(RID region, ulong ownerID) { lock (Shared._gate) { var value = Shared.Region(region); if (value.OwnerID == ownerID) return; value.OwnerID = ownerID; value.Dirty = true; Shared.Dirty(value.Map); } }
     /// <summary>Returns the region's staged logical owner identity.</summary>
     /// <param name="region">Live navigation region RID.</param>
     /// <returns>Returns the region's staged logical owner identity.</returns>

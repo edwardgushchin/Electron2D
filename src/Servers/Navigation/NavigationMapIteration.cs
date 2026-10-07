@@ -1,8 +1,8 @@
 namespace Electron2D;
 
-internal sealed class NavigationMapIteration
+internal sealed partial class NavigationMapIteration
 {
-    internal sealed record Cell(RID Region, uint Layers, float EnterCost, float TravelCost, bool Connect, Vector2[] Vertices, Vector2 Center, bool IsLink = false);
+    internal sealed record Cell(RID Region, uint Layers, float EnterCost, float TravelCost, bool Connect, Vector2[] Vertices, Vector2 Center, bool IsLink = false, ulong OwnerID = 0, RID LinkStartRegion = default, RID LinkEndRegion = default);
     internal readonly record struct Portal(int Target, Vector2 A, Vector2 B);
     internal static readonly NavigationMapIteration Empty = new([], []);
     internal readonly Cell[] Cells;
@@ -16,7 +16,7 @@ internal sealed class NavigationMapIteration
             var points = new Vector2[polygon.Length]; var center = Vector2.Zero;
             for (var i = 0; i < points.Length; i++) { points[i] = region.Transform * region.Geometry.Vertices[polygon[i]]; if (!points[i].IsFinite()) throw new ArgumentException("Navigation transform produces nonfinite geometry."); center += points[i] / points.Length; }
             NavigationPolygon.ValidatePolygon(points, Enumerable.Range(0, points.Length).ToArray());
-            cells.Add(new(region.RID, region.Layers, region.EnterCost, region.TravelCost, region.UseEdgeConnections, points, center));
+            cells.Add(new(region.RID, region.Layers, region.EnterCost, region.TravelCost, region.UseEdgeConnections, points, center, OwnerID: region.OwnerID));
         }
         return new(cells.ToArray(), []);
     }
@@ -64,7 +64,7 @@ internal sealed class NavigationMapIteration
             var start = Attach(link.Start, out var from); var end = Attach(link.End, out var to);
             if (start < 0 || end < 0) continue;
             var index = cells.Count;
-            cells.Add(new(link.RID, link.Layers, link.EnterCost, link.TravelCost, false, [from, from, to, to], from * .5f + to * .5f, IsLink: true));
+            cells.Add(new(link.RID, link.Layers, link.EnterCost, link.TravelCost, false, [from, from, to, to], from * .5f + to * .5f, IsLink: true, OwnerID: link.OwnerID, LinkStartRegion: cells[start].Region, LinkEndRegion: cells[end].Region));
             allEdges.Add([]);
             allEdges[start].Add(new(index, from, from)); allEdges[index].Add(new(end, to, to));
             if (link.Bidirectional) { allEdges[end].Add(new(index, to, to)); allEdges[index].Add(new(start, from, from)); }
@@ -100,60 +100,6 @@ internal sealed class NavigationMapIteration
         return best;
     }
     internal (Vector2 Point, RID Owner) Closest(Vector2 point) { var index = Project(point, uint.MaxValue, out var p); return (p, index < 0 ? default : Cells[index].Region); }
-    internal Vector2[] Path(Vector2 origin, Vector2 destination, bool optimize, uint layers)
-    {
-        var start = Project(origin, layers, out var from); var finish = Project(destination, layers, out var to);
-        if (start < 0 || finish < 0) return [];
-        if (start == finish) return from == to ? [from] : [from, to];
-        var distance = new double[Cells.Length]; Array.Fill(distance, double.PositiveInfinity); distance[start] = 0;
-        var parent = new int[Cells.Length]; Array.Fill(parent, -1); var entry = new Vector2[Cells.Length]; entry[start] = from; var previous = new Portal[Cells.Length];
-        var queue = new PriorityQueue<(int Cell, double Cost), (double Total, double NegativeCost, int Order)>(); queue.Enqueue((start, 0), (Math.Sqrt(DistanceSquared(from, to)) * Cells[start].TravelCost, 0, start));
-        var best = start; var remaining = DistanceSquared(Closest(Cells[start], to), to);
-        while (queue.TryDequeue(out var current, out _))
-        {
-            var index = current.Cell; if (current.Cost != distance[index]) continue;
-            var d = Cells[index].IsLink ? double.PositiveInfinity : DistanceSquared(Closest(Cells[index], to), to); if (d < remaining) { remaining = d; best = index; }
-            if (index == finish) { best = finish; break; }
-            foreach (var portal in Edges[index])
-            {
-                var next = portal.Target; if ((Cells[next].Layers & layers) == 0) continue;
-                var point = ClosestSegment(entry[index], portal.A, portal.B);
-                var cost = current.Cost + Math.Sqrt(DistanceSquared(entry[index], point)) * Cells[index].TravelCost + (Cells[index].Region != Cells[next].Region ? Cells[next].EnterCost : 0);
-                if (cost >= distance[next]) continue;
-                distance[next] = cost; entry[next] = point; parent[next] = index; previous[next] = portal; queue.Enqueue((next, cost), (cost + Math.Sqrt(DistanceSquared(point, to)) * Cells[next].TravelCost, -cost, next));
-            }
-        }
-        to = Closest(Cells[best], to); if (best == start) return from == to ? [from] : [from, to];
-        var corridor = new List<(Vector2 Left, Vector2 Right)>(); var at = best;
-        while (at != start)
-        {
-            var edge = previous[at]; var mid = edge.A * .5f + edge.B * .5f; var fromCenter = Cells[parent[at]].Center; var toCenter = Cells[at].Center;
-            corridor.Add((((double)toCenter.X - fromCenter.X) * ((double)edge.A.Y - mid.Y) - ((double)toCenter.Y - fromCenter.Y) * ((double)edge.A.X - mid.X)) >= 0 ? (edge.A, edge.B) : (edge.B, edge.A)); at = parent[at];
-        }
-        corridor.Reverse();
-        if (!optimize) { var path = new List<Vector2> { from }; foreach (var p in corridor) AddDistinct(path, p.Left * .5f + p.Right * .5f); AddDistinct(path, to); return path.ToArray(); }
-        return Funnel(from, to, corridor);
-    }
-    private static void AddDistinct(List<Vector2> path, Vector2 point) { if (path.Count == 0 || path[^1] != point) path.Add(point); }
-    private static Vector2[] Funnel(Vector2 from, Vector2 to, List<(Vector2 Left, Vector2 Right)> portals)
-    {
-        portals.Add((to, to)); var result = new List<Vector2> { from }; var apex = from; var left = from; var right = from; var apexIndex = 0; var leftIndex = 0; var rightIndex = 0;
-        for (var i = 0; i < portals.Count; i++)
-        {
-            var nextLeft = portals[i].Left; var nextRight = portals[i].Right;
-            if (-Area(apex, right, nextRight) <= 0)
-            {
-                if (apex == right || -Area(apex, left, nextRight) > 0) { right = nextRight; rightIndex = i; }
-                else { AddDistinct(result, left); apex = left; apexIndex = leftIndex; left = right = apex; leftIndex = rightIndex = apexIndex; i = apexIndex; continue; }
-            }
-            if (-Area(apex, left, nextLeft) >= 0)
-            {
-                if (apex == left || -Area(apex, right, nextLeft) < 0) { left = nextLeft; leftIndex = i; }
-                else { AddDistinct(result, right); apex = right; apexIndex = rightIndex; left = right = apex; leftIndex = rightIndex = apexIndex; i = apexIndex; }
-            }
-        }
-        AddDistinct(result, to); return result.ToArray();
-    }
     internal Rect2 Bounds(RID region)
     {
         var found = false; var minimum = Vector2.Zero; var maximum = Vector2.Zero;

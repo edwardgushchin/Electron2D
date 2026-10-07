@@ -529,6 +529,196 @@
       "godot": "NavigationServer2D::method:map_set_link_connection_radius(RID:,float:)",
       "electron2d": "method:Electron2D.NavigationServer.MapSetLinkConnectionRadius(Electron2D.RID,System.Single)",
       "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum:PathMetadataFlags",
+      "electron2d": "T:Electron2D.NavigationPathQueryParameters.PathMetadataFlags",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum:PathPostProcessing",
+      "electron2d": "T:Electron2D.NavigationPathQueryParameters.PathPostProcessing",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum:PathfindingAlgorithm",
+      "electron2d": "T:Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_ALL",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeAll()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_NONE",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeNone()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_OWNERS",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeOwners()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_RIDS",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeRIDs()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_TYPES",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathMetadataFlags.IncludeTypes()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathPostProcessing.PATH_POSTPROCESSING_CORRIDORFUNNEL",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathPostProcessing.CorridorFunnel()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathPostProcessing.PATH_POSTPROCESSING_EDGECENTERED",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathPostProcessing.EdgeCentered()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathPostProcessing.PATH_POSTPROCESSING_NONE",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathPostProcessing.None()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::enum_value:PathfindingAlgorithm.PATHFINDING_ALGORITHM_ASTAR",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryParameters.PathfindingAlgorithm.AStar()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:excluded_regions",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.ExcludedRegions()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:included_regions",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.IncludedRegions()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:map",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.Map()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:metadata_flags",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.MetadataFlags()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:navigation_layers",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.NavigationLayers()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:path_postprocessing",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.PostProcessing()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:path_return_max_length",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.PathReturnMaxLength()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:path_return_max_radius",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.PathReturnMaxRadius()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:path_search_max_distance",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.PathSearchMaxDistance()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:path_search_max_polygons",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.PathSearchMaxPolygons()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:pathfinding_algorithm",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.Algorithm()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:simplify_epsilon",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.SimplifyEpsilon()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:simplify_path",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.SimplifyPath()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:start_position",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.StartPosition()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryParameters2D::property:target_position",
+      "electron2d": "property:Electron2D.NavigationPathQueryParameters.TargetPosition()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::enum:PathSegmentType",
+      "electron2d": "T:Electron2D.NavigationPathQueryResult.PathSegmentType",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::enum_value:PathSegmentType.PATH_SEGMENT_TYPE_LINK",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryResult.PathSegmentType.Link()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::enum_value:PathSegmentType.PATH_SEGMENT_TYPE_REGION",
+      "electron2d": "enumValue:Electron2D.NavigationPathQueryResult.PathSegmentType.Region()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::method:reset()",
+      "electron2d": "method:Electron2D.NavigationPathQueryResult.Reset()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::property:path",
+      "electron2d": "property:Electron2D.NavigationPathQueryResult.Path()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::property:path_length",
+      "electron2d": "property:Electron2D.NavigationPathQueryResult.PathLength()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::property:path_owner_ids",
+      "electron2d": "property:Electron2D.NavigationPathQueryResult.PathOwnerIDs()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::property:path_rids",
+      "electron2d": "property:Electron2D.NavigationPathQueryResult.PathRIDs()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationPathQueryResult2D::property:path_types",
+      "electron2d": "property:Electron2D.NavigationPathQueryResult.PathTypes()",
+      "reason": "ADR 0097 dimensionless typed query objects; Algorithm/PostProcessing avoid C# nested member collisions, flags/types retain pinned enum numeric identities, arrays use owned typed copies and RID/ulong scene identities."
+    },
+    {
+      "godot": "NavigationServer2D::method:query_path(NavigationPathQueryParameters2D:,NavigationPathQueryResult2D:,Callable:)",
+      "electron2d": "method:Electron2D.NavigationServer.QueryPath(Electron2D.NavigationPathQueryParameters,Electron2D.NavigationPathQueryResult,System.Action)",
+      "reason": "ADR 0097 static typed query over one committed map, atomic caller result, optional zero-argument Action completion; iterative RDP consumes finite copied world points."
+    },
+    {
+      "godot": "NavigationServer2D::method:simplify_path(PackedVector2Array:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.SimplifyPath(System.ReadOnlySpan<Electron2D.Vector2>,System.Single)",
+      "reason": "ADR 0097 static typed query over one committed map, atomic caller result, optional zero-argument Action completion; iterative RDP consumes finite copied world points."
     }
   ],
   "extras": [
@@ -666,6 +856,36 @@
       "electron2d": "method:Electron2D.NavigationLink.OnNotification(System.Int32)",
       "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
       "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "constructor:Electron2D.NavigationPathQueryParameters..ctor()",
+      "reason": "Typed C# constructor and inherited ElectronObject disposal/discovered property schema for reusable query settings/results; not a Resource archive or manual reference-count facade.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationPathQueryParameters.Dispose(System.Boolean)",
+      "reason": "Typed C# constructor and inherited ElectronObject disposal/discovered property schema for reusable query settings/results; not a Resource archive or manual reference-count facade.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationPathQueryParameters.GetPropertyDescriptors()",
+      "reason": "Typed C# constructor and inherited ElectronObject disposal/discovered property schema for reusable query settings/results; not a Resource archive or manual reference-count facade.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "constructor:Electron2D.NavigationPathQueryResult..ctor()",
+      "reason": "Typed C# constructor and inherited ElectronObject disposal/discovered property schema for reusable query settings/results; not a Resource archive or manual reference-count facade.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationPathQueryResult.Dispose(System.Boolean)",
+      "reason": "Typed C# constructor and inherited ElectronObject disposal/discovered property schema for reusable query settings/results; not a Resource archive or manual reference-count facade.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationPathQueryResult.GetPropertyDescriptors()",
+      "reason": "Typed C# constructor and inherited ElectronObject disposal/discovered property schema for reusable query settings/results; not a Resource archive or manual reference-count facade.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
     }
   ],
   "statusGroups": [
@@ -760,7 +980,7 @@
         "class:NavigationRegion2D",
         "class:NavigationServer2D"
       ],
-      "reason": "ADR 0097: authored convex regions, owned maps, staged immutable iterations and real scene path following execute. Full raster/nonmanifold topology, baking/source parsing, typed query metadata, async work and avoidance retain the operation-specific prerequisites below."
+      "reason": "ADR 0097: authored convex regions, owned maps, staged immutable iterations and real scene path following execute. Full raster/nonmanifold topology, baking/source parsing, async work and avoidance retain the operation-specific prerequisites below."
     },
     {
       "state": "Implemented",
@@ -1059,13 +1279,6 @@
     {
       "state": "Blocked",
       "godot": [
-        "NavigationServer2D::method:query_path(NavigationPathQueryParameters2D:,NavigationPathQueryResult2D:,Callable:)"
-      ],
-      "reason": "ADR 0097 trigger: typed path-query parameters/result resources including algorithm, corridor metadata, limits and completion callback. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
         "NavigationServer2D::method:region_get_connection_pathway_end(RID:,int:)",
         "NavigationServer2D::method:region_get_connection_pathway_start(RID:,int:)",
         "NavigationServer2D::method:region_get_connections_count(RID:)"
@@ -1085,13 +1298,6 @@
         "NavigationServer2D::method:set_active(bool:)"
       ],
       "reason": "ADR 0097 trigger: process-wide simulation activation integrated with physics lane and retained map query state. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationServer2D::method:simplify_path(PackedVector2Array:,float:)"
-      ],
-      "reason": "ADR 0097 trigger: executable path simplification with validated epsilon and corner preservation. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
     },
     {
       "state": "Implemented",
@@ -1157,6 +1363,70 @@
       "reason": "All own applicable source properties/methods execute on NavigationLink : Entity and the shared link RID store, with rendered off-surface route following. Typed exceptions replace invalid-data logging/clamping; global transform publication uses the existing pre-sync boundary under ADR 0097. Editor debug drawings remain inherited/tooling producer work, not an unimplemented own public declaration.",
       "godot": [
         "class:NavigationLink2D"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0097 reusable typed query object with every own applicable enum/property or reset operation, copied arrays, atomic snapshots/publication, lifetime and typed discovery. NavigationQueryTests verifies consumers and rendered metadata-driven link action; map kernel parity remains on QueryPath/MapGetPath rows.",
+      "godot": [
+        "class:NavigationPathQueryParameters2D",
+        "class:NavigationPathQueryResult2D"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "NavigationQueryTests exercises defaults, copied input/output arrays, include/exclude precedence and both link regions, all flags and output modes, actual search budgets/length-circle clips/RDP, owner-version publication, callback failure/reentry, reset/lifetime and typed descriptors. Accepted fixes: Reset also clears length; include-only links check both included endpoints; collinear transition markers retain provenance (ADR 0097).",
+      "godot": [
+        "NavigationPathQueryParameters2D::enum:PathMetadataFlags",
+        "NavigationPathQueryParameters2D::enum:PathPostProcessing",
+        "NavigationPathQueryParameters2D::enum:PathfindingAlgorithm",
+        "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_ALL",
+        "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_NONE",
+        "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_OWNERS",
+        "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_RIDS",
+        "NavigationPathQueryParameters2D::enum_value:PathMetadataFlags.PATH_METADATA_INCLUDE_TYPES",
+        "NavigationPathQueryParameters2D::enum_value:PathPostProcessing.PATH_POSTPROCESSING_CORRIDORFUNNEL",
+        "NavigationPathQueryParameters2D::enum_value:PathPostProcessing.PATH_POSTPROCESSING_EDGECENTERED",
+        "NavigationPathQueryParameters2D::enum_value:PathPostProcessing.PATH_POSTPROCESSING_NONE",
+        "NavigationPathQueryParameters2D::enum_value:PathfindingAlgorithm.PATHFINDING_ALGORITHM_ASTAR",
+        "NavigationPathQueryParameters2D::property:excluded_regions",
+        "NavigationPathQueryParameters2D::property:included_regions",
+        "NavigationPathQueryParameters2D::property:map",
+        "NavigationPathQueryParameters2D::property:metadata_flags",
+        "NavigationPathQueryParameters2D::property:navigation_layers",
+        "NavigationPathQueryParameters2D::property:path_postprocessing",
+        "NavigationPathQueryParameters2D::property:path_return_max_length",
+        "NavigationPathQueryParameters2D::property:path_return_max_radius",
+        "NavigationPathQueryParameters2D::property:path_search_max_distance",
+        "NavigationPathQueryParameters2D::property:path_search_max_polygons",
+        "NavigationPathQueryParameters2D::property:pathfinding_algorithm",
+        "NavigationPathQueryParameters2D::property:simplify_epsilon",
+        "NavigationPathQueryParameters2D::property:simplify_path",
+        "NavigationPathQueryParameters2D::property:start_position",
+        "NavigationPathQueryParameters2D::property:target_position",
+        "NavigationPathQueryResult2D::enum:PathSegmentType",
+        "NavigationPathQueryResult2D::enum_value:PathSegmentType.PATH_SEGMENT_TYPE_LINK",
+        "NavigationPathQueryResult2D::enum_value:PathSegmentType.PATH_SEGMENT_TYPE_REGION",
+        "NavigationPathQueryResult2D::method:reset()",
+        "NavigationPathQueryResult2D::property:path",
+        "NavigationPathQueryResult2D::property:path_length",
+        "NavigationPathQueryResult2D::property:path_owner_ids",
+        "NavigationPathQueryResult2D::property:path_rids",
+        "NavigationPathQueryResult2D::property:path_types"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed query controls, provenance arrays and real metadata-driven rendered link actions execute in NavigationQueryTests. Remaining query dependency: exact pinned quantized raster/nonmanifold ownership, cost/tie/search fallback equivalence; no query setting is inert.",
+      "godot": [
+        "NavigationServer2D::method:query_path(NavigationPathQueryParameters2D:,NavigationPathQueryResult2D:,Callable:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Iterative RDP preserves endpoints/order and strict epsilon boundary, supports empty/singleton/duplicate/long paths, clamps negative finite epsilon and rejects nonfinite values; NavigationQueryTests exercises 4000-point depth and query integration (ADR 0097).",
+      "godot": [
+        "NavigationServer2D::method:simplify_path(PackedVector2Array:,float:)"
       ]
     }
   ]
