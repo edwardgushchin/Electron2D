@@ -162,8 +162,8 @@ public partial class TextEdit : Control
     public event Action? GutterRemoved;
     /// <summary>Reports a clicked logical line and gutter index.</summary>
     public event Action<int, int>? GutterClicked;
-    private void EnsureTextMutable() { EnsureMutable(); if (_drawing || _building) throw new InvalidOperationException("An active text editor cannot mutate its document or layout."); }
-    private void CheckTextEdit() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
+    internal void EnsureTextMutable() { EnsureMutable(); if (_drawing || _building || _codeOverlayDrawing) throw new InvalidOperationException("An active text editor cannot mutate its document or layout."); }
+    internal void CheckTextEdit() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     internal void InvalidateTextLayout() { if (IsDisposed || _disposing) return; _layoutDirty = true; QueueRedraw(); if (_scrollFitContentHeight || _scrollFitContentWidth) UpdateMinimumSize(); }
     private void ResourceChanged(Resource _) { if (!IsDisposed) Interlocked.Exchange(ref _resourcePending, 1); }
     private void ResourceDisposed(ElectronObject resource) => ResourceChanged((Resource)resource);
@@ -183,8 +183,8 @@ public partial class TextEdit : Control
     private static string Normalize(string text) => text.Replace("\r", "");
     private Line AtLine(int line) { CheckTextEdit(); if ((uint)line >= _lines.Count) throw new ArgumentOutOfRangeException(nameof(line)); return _lines[line]; }
     private Caret AtCaret(int caret) { CheckTextEdit(); if ((uint)caret >= _carets.Count) throw new ArgumentOutOfRangeException(nameof(caret)); return _carets[caret]; }
-    private static int ScalarIndex(string text, int column) { var index = 0; foreach (var rune in text.EnumerateRunes()) { if (column-- <= 0) break; index += rune.Utf16SequenceLength; } return index; }
-    private static string Slice(string text, int from, int to) { var begin = ScalarIndex(text, from); return text.Substring(begin, ScalarIndex(text, to) - begin); }
+    internal static int ScalarIndex(string text, int column) { var index = 0; foreach (var rune in text.EnumerateRunes()) { if (column-- <= 0) break; index += rune.Utf16SequenceLength; } return index; }
+    internal static string Slice(string text, int from, int to) { var begin = ScalarIndex(text, from); return text.Substring(begin, ScalarIndex(text, to) - begin); }
     private int Offset(Vector2i position) { var offset = 0; for (var i = 0; i < position.Y; i++) offset += _lines[i].Scalars + 1; return offset + position.X; }
     private Vector2i PositionAt(int offset) { for (var i = 0; i < _lines.Count; i++) { if (offset <= _lines[i].Scalars) return new(Math.Max(0, offset), i); offset -= _lines[i].Scalars + 1; } return new(_lines[^1].Scalars, _lines.Count - 1); }
     private Vector2i ClampPosition(Vector2i position) { var line = Math.Clamp(position.Y, 0, _lines.Count - 1); return new(Math.Clamp(position.X, 0, _lines[line].Scalars), line); }

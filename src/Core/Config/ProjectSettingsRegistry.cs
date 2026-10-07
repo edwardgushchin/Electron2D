@@ -120,6 +120,14 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(InputUITextSubmit, isBasic: false);
         RegisterInternal(TextEditUndoStackMaxSize, isBasic: false);
         RegisterInternal(InputUITextNewline, isBasic: false);
+        RegisterInternal(InputUITextCompletionQuery, isBasic: false);
+        RegisterInternal(InputUITextIndent, isBasic: false);
+        RegisterInternal(InputUITextDedent, isBasic: false);
+        RegisterInternal(InputUITextCompletionAccept, isBasic: false);
+        RegisterInternal(InputUITextCompletionReplace, isBasic: false);
+        RegisterInternal(InputUITextNewlineBlank, isBasic: false);
+        RegisterInternal(InputUITextNewlineAbove, isBasic: false);
+
         RegisterInternal(InputUITextCaretDocumentStart, isBasic: false);
         RegisterInternal(InputUITextCaretDocumentEnd, isBasic: false);
         RegisterInternal(InputUITextToggleInsertMode, isBasic: false);
@@ -1192,6 +1200,14 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, InputUITextSubmit) ||
         ReferenceEquals(setting, TextEditUndoStackMaxSize) ||
         ReferenceEquals(setting, InputUITextNewline) ||
+        ReferenceEquals(setting, InputUITextCompletionQuery) ||
+        ReferenceEquals(setting, InputUITextIndent) ||
+        ReferenceEquals(setting, InputUITextDedent) ||
+        ReferenceEquals(setting, InputUITextCompletionAccept) ||
+        ReferenceEquals(setting, InputUITextCompletionReplace) ||
+        ReferenceEquals(setting, InputUITextNewlineBlank) ||
+        ReferenceEquals(setting, InputUITextNewlineAbove) ||
+
         ReferenceEquals(setting, InputUITextCaretDocumentStart) ||
         ReferenceEquals(setting, InputUITextCaretDocumentEnd) ||
         ReferenceEquals(setting, InputUITextToggleInsertMode) ||

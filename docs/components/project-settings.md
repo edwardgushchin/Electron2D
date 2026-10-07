@@ -89,3 +89,5 @@ DebugPathsColor defines debug/shapes/paths/geometry_color, defaults to finite Co
 ## Canvas render time
 
 [Canvas animation intervals](canvas-rendering.md#animation-intervals-and-rectangles) use captured scaled process steps and a live typed rollover setting; ordered transform state is replayed alongside retained geometry. The clock is per Engine.Run and also supplies the optional GPU fragment [TIME built-in](shader-materials.md#render-time).
+
+[Code authoring](code-authoring.md) adds seven typed registered input settings for completion query/accept/replace, indentation and blank/above newlines; base newline also accepts Shift variants. Registries preserve these permanent built-in definitions and InputMap executes their bindings.

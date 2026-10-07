@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -1308,3 +1308,17 @@ Six typed InputUIFileDialog definitions supply independently rebindable file bro
 | `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogRefresh { get;  }` | Defines F5 for file-browser refresh. |
 | `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogShowHidden { get;  }` | Defines H for toggling hidden files. |
 | `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUIFileDialogUpOneLevel { get;  }` | Defines Backspace for file-browser parent navigation. |
+
+The [code-authoring slice](../components/code-authoring.md) registers typed InputUITextCompletionQuery (Ctrl+Space), InputUITextCompletionAccept (Tab/Enter/keypad Enter), InputUITextCompletionReplace (Shift variants), InputUITextIndent/InputUITextDedent (Tab/Shift+Tab), InputUITextNewlineBlank (command+Enter) and InputUITextNewlineAbove (command+Shift+Enter). InputUITextNewline additionally accepts Shift+Enter and Shift+keypad Enter. Commands execute through InputMap remapping.
+
+## Code-authoring input definitions
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextCompletionAccept { get;  }` | Defines the default ui_text_completion_accept keyboard action. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextCompletionQuery { get;  }` | Defines the default ui_text_completion_query keyboard action. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextCompletionReplace { get;  }` | Defines the default ui_text_completion_replace keyboard action. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextDedent { get;  }` | Defines the default ui_text_dedent keyboard action. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextIndent { get;  }` | Defines the default ui_text_indent keyboard action. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextNewlineAbove { get;  }` | Defines the default ui_text_newline_above keyboard action. |
+| `public static Electron2D.ProjectSetting<Electron2D.InputActionSettings> InputUITextNewlineBlank { get;  }` | Defines the default ui_text_newline_blank keyboard action. |

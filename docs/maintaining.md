@@ -88,3 +88,5 @@ Wiki XML lookup resolves method/type generic parameter positions and open constr
 ## Native ENet source and interoperability checks
 
 Before committing an ENet integration change, run `python3 -B tools/enet-native/check_sources.py` to verify immutable ENet/FastLZ vendor hashes and license copies. Build `Electron2DENetOracle` with the same CMake project, then point `ELECTRON2D_ENET_ORACLE` at its absolute path when running `ELECTRON2D_TEST_ENET=1` or the full executable runner. The oracle links the stock Unix socket backend and is excluded from production native payloads. No oracle process establishes foreign-platform, routed-performance or user acceptance.
+
+Release executable checks set `TieredCompilation=false` in the test project so warmed allocation intervals use a stable optimized JIT profile. Production hosts retain their own runtime configuration. This does not change allocation budgets, operation counts, warm-up/capacity requirements or native/foreign acceptance boundaries. Test runs with tiered compilation enabled are a separate runtime profile and must be labelled explicitly.

@@ -116,6 +116,7 @@ public sealed partial class ThemeDB
         ["CheckBox"] = ["CheckBox", "Button", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["CheckButton"] = ["CheckButton", "Button", "BaseButton", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["CircleShape"] = ["CircleShape", "Shape", "Resource", "ElectronObject"],
+        ["CodeEdit"] = ["CodeEdit", "TextEdit", "Control", "CanvasItem", "Node", "ElectronObject"],
         ["CodeHighlighter"] = ["CodeHighlighter", "SyntaxHighlighter", "Resource", "ElectronObject"],
         ["CollisionObject"] = ["CollisionObject", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["CollisionPolygon"] = ["CollisionPolygon", "Entity", "CanvasItem", "Node", "ElectronObject"],

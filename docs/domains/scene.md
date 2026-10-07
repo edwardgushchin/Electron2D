@@ -210,3 +210,5 @@ The [embedded popup window slice](../components/popup-windows.md) composes Windo
 The executable [multiline editing component](../components/multiline-editing.md) connects TextEdit documents, typed syntax resources, existing font/Control rendering, scene storage and input. Its cold/warm and target limits are recorded with the exercised workflow.
 
 [Hierarchical cells](../components/hierarchical-cells.md) now connect Tree/TreeItem ownership, columns, typed metadata, checks/ranges/buttons, ordinary GUI input, embedded cell editors and real canvas drawing. Stored column configuration reloads in a fresh process; runtime item graphs and semantic/native/editor gates retain their explicit limits.
+
+[Code authoring](../components/code-authoring.md) now specializes TextEdit through CodeEdit, with grouped multicaret source edits, delimiters/folds, gutter markers, typed application completion, hints and symbol callbacks. Fresh file scenes and current native rendered/input hosts execute; semantic/editor/physical/foreign gates remain explicit.

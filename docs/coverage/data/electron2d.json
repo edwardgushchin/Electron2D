@@ -2710,6 +2710,70 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CodeCompletionOption",
+    "kind": "type",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "CodeCompletionOption",
+    "signature": "public sealed class Electron2D.CodeCompletionOption",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CodeEdit",
+    "kind": "type",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "CodeEdit",
+    "signature": "public class Electron2D.CodeEdit",
+    "visibility": "public",
+    "baseType": "Electron2D.TextEdit",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CodeEdit.CodeCompletionKind",
+    "kind": "type",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "CodeCompletionKind",
+    "signature": "public enum Electron2D.CodeEdit.CodeCompletionKind",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CodeEdit.CodeCompletionLocation",
+    "kind": "type",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "name": "CodeCompletionLocation",
+    "signature": "public enum Electron2D.CodeEdit.CodeCompletionLocation",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CodeHighlighter",
     "kind": "type",
     "declaringType": "Electron2D.CodeHighlighter",
@@ -12597,6 +12661,63 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CodeCompletionOption..ctor(Electron2D.CodeEdit.CodeCompletionKind,System.String,System.String,System.Nullable\u003CElectron2D.Color\u003E,Electron2D.Texture,System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": ".ctor",
+    "signature": "public CodeCompletionOption(Electron2D.CodeEdit.CodeCompletionKind kind, System.String displayText, System.String insertText, System.Nullable\u003CElectron2D.Color\u003E fontColor = null, Electron2D.Texture icon = null, System.Int32 location = 1024)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "kind",
+        "type": "Electron2D.CodeEdit.CodeCompletionKind",
+        "default": null
+      },
+      {
+        "name": "displayText",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "insertText",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fontColor",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      },
+      {
+        "name": "location",
+        "type": "System.Int32",
+        "default": "1024"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CodeEdit..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": ".ctor",
+    "signature": "public CodeEdit()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CodeHighlighter..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CodeHighlighter",
@@ -19228,6 +19349,201 @@
     "parameters": [],
     "returnType": "Electron2D.ClockDirection",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Class()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "Class",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind Class = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Constant()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "Constant",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind Constant = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Enum()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "Enum",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind Enum = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.FilePath()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "FilePath",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind FilePath = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Function()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "Function",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind Function = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Keyword()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "Keyword",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind Keyword = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Member()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "Member",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind Member = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.NodePath()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "NodePath",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind NodePath = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.PlainText()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "PlainText",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind PlainText = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Signal()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "Signal",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind Signal = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Variable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "name": "Variable",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionKind Variable = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionLocation.Local()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "name": "Local",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionLocation Local = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionLocation.Other()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "name": "Other",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionLocation Other = 1024",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "value": "1024"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionLocation.OtherUserCode()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "name": "OtherUserCode",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionLocation OtherUserCode = 512",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "value": "512"
+  },
+  {
+    "id": "enumValue:Electron2D.CodeEdit.CodeCompletionLocation.ParentMask()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "name": "ParentMask",
+    "signature": "public const Electron2D.CodeEdit.CodeCompletionLocation ParentMask = 256",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionLocation",
+    "value": "256"
   },
   {
     "id": "enumValue:Electron2D.CollisionDisableMode.KeepActive()",
@@ -35035,6 +35351,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.CanvasLayer\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CodeEdit.BreakpointToggled()",
+    "kind": "event",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "BreakpointToggled",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E BreakpointToggled",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CodeEdit.CodeCompletionRequested()",
+    "kind": "event",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "CodeCompletionRequested",
+    "signature": "public event System.Action CodeCompletionRequested",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CodeEdit.SymbolHovered()",
+    "kind": "event",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SymbolHovered",
+    "signature": "public event System.Action\u003CSystem.String, System.Int32, System.Int32\u003E SymbolHovered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.Int32, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CodeEdit.SymbolLookup()",
+    "kind": "event",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SymbolLookup",
+    "signature": "public event System.Action\u003CSystem.String, System.Int32, System.Int32\u003E SymbolLookup",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, System.Int32, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CodeEdit.SymbolValidate()",
+    "kind": "event",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SymbolValidate",
+    "signature": "public event System.Action\u003CSystem.String\u003E SymbolValidate",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
     "value": null
   },
   {
@@ -60328,6 +60709,1614 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeCompletionOption.TryGetDefaultValue\u00601(ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "TryGetDefaultValue",
+    "signature": "public System.Boolean TryGetDefaultValue\u003CT\u003E(out T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeCompletionOption.WithDefaultValue\u00601(T)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "WithDefaultValue",
+    "signature": "public Electron2D.CodeCompletionOption WithDefaultValue\u003CT\u003E(T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CodeCompletionOption",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.AddAutoBraceCompletionPair(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "AddAutoBraceCompletionPair",
+    "signature": "public System.Void AddAutoBraceCompletionPair(System.String startKey, System.String endKey)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "startKey",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "endKey",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.AddCodeCompletionOption(Electron2D.CodeEdit.CodeCompletionKind,System.String,System.String,System.Nullable\u003CElectron2D.Color\u003E,Electron2D.Texture,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "AddCodeCompletionOption",
+    "signature": "public System.Void AddCodeCompletionOption(Electron2D.CodeEdit.CodeCompletionKind type, System.String displayText, System.String insertText, System.Nullable\u003CElectron2D.Color\u003E textColor = null, Electron2D.Texture icon = null, System.Int32 location = 1024)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "Electron2D.CodeEdit.CodeCompletionKind",
+        "default": null
+      },
+      {
+        "name": "displayText",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "insertText",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "textColor",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      },
+      {
+        "name": "location",
+        "type": "System.Int32",
+        "default": "1024"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.AddCodeCompletionOption\u00601(Electron2D.CodeEdit.CodeCompletionKind,System.String,System.String,System.Nullable\u003CElectron2D.Color\u003E,Electron2D.Texture,T,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "AddCodeCompletionOption",
+    "signature": "public System.Void AddCodeCompletionOption\u003CT\u003E(Electron2D.CodeEdit.CodeCompletionKind type, System.String displayText, System.String insertText, System.Nullable\u003CElectron2D.Color\u003E textColor = null, Electron2D.Texture icon = null, T value = null, System.Int32 location = 1024)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "Electron2D.CodeEdit.CodeCompletionKind",
+        "default": null
+      },
+      {
+        "name": "displayText",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "insertText",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "textColor",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "icon",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": "null"
+      },
+      {
+        "name": "location",
+        "type": "System.Int32",
+        "default": "1024"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.AddCommentDelimiter(System.String,System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "AddCommentDelimiter",
+    "signature": "public System.Void AddCommentDelimiter(System.String startKey, System.String endKey, System.Boolean lineOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "startKey",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "endKey",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "lineOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.AddStringDelimiter(System.String,System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "AddStringDelimiter",
+    "signature": "public System.Void AddStringDelimiter(System.String startKey, System.String endKey, System.Boolean lineOnly = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "startKey",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "endKey",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "lineOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.CanFoldLine(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "CanFoldLine",
+    "signature": "public System.Boolean CanFoldLine(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.CancelCodeCompletion()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "CancelCodeCompletion",
+    "signature": "public System.Void CancelCodeCompletion()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ClearBookmarkedLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ClearBookmarkedLines",
+    "signature": "public System.Void ClearBookmarkedLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ClearBreakpointedLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ClearBreakpointedLines",
+    "signature": "public System.Void ClearBreakpointedLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ClearCommentDelimiters()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ClearCommentDelimiters",
+    "signature": "public System.Void ClearCommentDelimiters()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ClearExecutingLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ClearExecutingLines",
+    "signature": "public System.Void ClearExecutingLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ClearStringDelimiters()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ClearStringDelimiters",
+    "signature": "public System.Void ClearStringDelimiters()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ConfirmCodeCompletion(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ConfirmCodeCompletion",
+    "signature": "public System.Void ConfirmCodeCompletion(System.Boolean replace = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "replace",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ConvertIndent(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ConvertIndent",
+    "signature": "public System.Void ConvertIndent(System.Int32 fromLine = -1, System.Int32 toLine = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromLine",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "toLine",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.CreateCodeRegion()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "CreateCodeRegion",
+    "signature": "public System.Void CreateCodeRegion()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.DeleteLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "DeleteLines",
+    "signature": "public System.Void DeleteLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.DoIndent()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "DoIndent",
+    "signature": "public System.Void DoIndent()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.DuplicateLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "DuplicateLines",
+    "signature": "public System.Void DuplicateLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.DuplicateSelection()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "DuplicateSelection",
+    "signature": "public System.Void DuplicateSelection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.FoldAllLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "FoldAllLines",
+    "signature": "public System.Void FoldAllLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.FoldLine(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "FoldLine",
+    "signature": "public System.Void FoldLine(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetAutoBraceCompletionCloseKey(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetAutoBraceCompletionCloseKey",
+    "signature": "public System.String GetAutoBraceCompletionCloseKey(System.String openKey)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "openKey",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetBookmarkedLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetBookmarkedLines",
+    "signature": "public System.Int32[] GetBookmarkedLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetBreakpointedLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetBreakpointedLines",
+    "signature": "public System.Int32[] GetBreakpointedLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetCodeCompletionOption(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetCodeCompletionOption",
+    "signature": "public Electron2D.CodeCompletionOption GetCodeCompletionOption(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CodeCompletionOption",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetCodeCompletionOptions()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetCodeCompletionOptions",
+    "signature": "public Electron2D.CodeCompletionOption[] GetCodeCompletionOptions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeCompletionOption[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetCodeCompletionSelectedIndex()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetCodeCompletionSelectedIndex",
+    "signature": "public System.Int32 GetCodeCompletionSelectedIndex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetCodeRegionEndTag()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetCodeRegionEndTag",
+    "signature": "public System.String GetCodeRegionEndTag()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetCodeRegionStartTag()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetCodeRegionStartTag",
+    "signature": "public System.String GetCodeRegionStartTag()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetDelimiterEndKey(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetDelimiterEndKey",
+    "signature": "public System.String GetDelimiterEndKey(System.Int32 delimiterIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delimiterIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetDelimiterEndPosition(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetDelimiterEndPosition",
+    "signature": "public Electron2D.Vector2 GetDelimiterEndPosition(System.Int32 line, System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetDelimiterStartKey(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetDelimiterStartKey",
+    "signature": "public System.String GetDelimiterStartKey(System.Int32 delimiterIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delimiterIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetDelimiterStartPosition(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetDelimiterStartPosition",
+    "signature": "public Electron2D.Vector2 GetDelimiterStartPosition(System.Int32 line, System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetExecutingLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetExecutingLines",
+    "signature": "public System.Int32[] GetExecutingLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetFoldedLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetFoldedLines",
+    "signature": "public System.Int32[] GetFoldedLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetTextForCodeCompletion()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetTextForCodeCompletion",
+    "signature": "public System.String GetTextForCodeCompletion()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetTextForSymbolLookup()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetTextForSymbolLookup",
+    "signature": "public System.String GetTextForSymbolLookup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.GetTextWithCursorChar(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GetTextWithCursorChar",
+    "signature": "public System.String GetTextWithCursorChar(System.Int32 line, System.Int32 column)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.HasAutoBraceCompletionCloseKey(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "HasAutoBraceCompletionCloseKey",
+    "signature": "public System.Boolean HasAutoBraceCompletionCloseKey(System.String closeKey)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "closeKey",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.HasAutoBraceCompletionOpenKey(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "HasAutoBraceCompletionOpenKey",
+    "signature": "public System.Boolean HasAutoBraceCompletionOpenKey(System.String openKey)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "openKey",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.HasCommentDelimiter(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "HasCommentDelimiter",
+    "signature": "public System.Boolean HasCommentDelimiter(System.String startKey)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "startKey",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.HasStringDelimiter(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "HasStringDelimiter",
+    "signature": "public System.Boolean HasStringDelimiter(System.String startKey)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "startKey",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IndentLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IndentLines",
+    "signature": "public System.Void IndentLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IsInComment(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IsInComment",
+    "signature": "public System.Int32 IsInComment(System.Int32 line, System.Int32 column = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IsInString(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IsInString",
+    "signature": "public System.Int32 IsInString(System.Int32 line, System.Int32 column = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IsLineBookmarked(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IsLineBookmarked",
+    "signature": "public System.Boolean IsLineBookmarked(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IsLineBreakpointed(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IsLineBreakpointed",
+    "signature": "public System.Boolean IsLineBreakpointed(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IsLineCodeRegionEnd(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IsLineCodeRegionEnd",
+    "signature": "public System.Boolean IsLineCodeRegionEnd(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IsLineCodeRegionStart(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IsLineCodeRegionStart",
+    "signature": "public System.Boolean IsLineCodeRegionStart(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IsLineExecuting(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IsLineExecuting",
+    "signature": "public System.Boolean IsLineExecuting(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.IsLineFolded(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IsLineFolded",
+    "signature": "public System.Boolean IsLineFolded(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.JoinLines(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "JoinLines",
+    "signature": "public System.Void JoinLines(System.String lineEnding = \u0022 \u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "lineEnding",
+        "type": "System.String",
+        "default": "\u0022 \u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.MoveLinesDown()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "MoveLinesDown",
+    "signature": "public System.Void MoveLinesDown()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.MoveLinesUp()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "MoveLinesUp",
+    "signature": "public System.Void MoveLinesUp()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnBackspace(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnBackspace",
+    "signature": "protected override System.Void OnBackspace(System.Int32 caretIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "caretIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnConfirmCodeCompletion(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnConfirmCodeCompletion",
+    "signature": "protected virtual System.Void OnConfirmCodeCompletion(System.Boolean replace)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "replace",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnCut(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnCut",
+    "signature": "protected override System.Void OnCut(System.Int32 caretIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "caretIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnFilterCodeCompletionCandidates(Electron2D.CodeCompletionOption[])",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnFilterCodeCompletionCandidates",
+    "signature": "protected virtual Electron2D.CodeCompletionOption[] OnFilterCodeCompletionCandidates(Electron2D.CodeCompletionOption[] candidates)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "candidates",
+        "type": "Electron2D.CodeCompletionOption[]",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CodeCompletionOption[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnGetCursorShape(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnGetCursorShape",
+    "signature": "protected override Electron2D.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnHandleUnicodeInput(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnHandleUnicodeInput",
+    "signature": "protected override System.Void OnHandleUnicodeInput(System.Int32 unicodeChar, System.Int32 caretIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "unicodeChar",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "caretIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnPaste(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnPaste",
+    "signature": "protected override System.Void OnPaste(System.Int32 caretIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "caretIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnRequestCodeCompletion(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnRequestCodeCompletion",
+    "signature": "protected virtual System.Void OnRequestCodeCompletion(System.Boolean force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.OnTextInput(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "OnTextInput",
+    "signature": "protected override System.Void OnTextInput(System.String text)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.RemoveCommentDelimiter(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "RemoveCommentDelimiter",
+    "signature": "public System.Void RemoveCommentDelimiter(System.String startKey)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "startKey",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.RemoveStringDelimiter(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "RemoveStringDelimiter",
+    "signature": "public System.Void RemoveStringDelimiter(System.String startKey)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "startKey",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.RequestCodeCompletion(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "RequestCodeCompletion",
+    "signature": "public System.Void RequestCodeCompletion(System.Boolean force = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.SetCodeCompletionSelectedIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SetCodeCompletionSelectedIndex",
+    "signature": "public System.Void SetCodeCompletionSelectedIndex(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.SetCodeHint(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SetCodeHint",
+    "signature": "public System.Void SetCodeHint(System.String codeHint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "codeHint",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.SetCodeHintDrawBelow(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SetCodeHintDrawBelow",
+    "signature": "public System.Void SetCodeHintDrawBelow(System.Boolean drawBelow)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawBelow",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.SetCodeRegionTags(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SetCodeRegionTags",
+    "signature": "public System.Void SetCodeRegionTags(System.String start = \u0022region\u0022, System.String end = \u0022endregion\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "start",
+        "type": "System.String",
+        "default": "\u0022region\u0022"
+      },
+      {
+        "name": "end",
+        "type": "System.String",
+        "default": "\u0022endregion\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.SetLineAsBookmarked(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SetLineAsBookmarked",
+    "signature": "public System.Void SetLineAsBookmarked(System.Int32 line, System.Boolean bookmarked)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "bookmarked",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.SetLineAsBreakpoint(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SetLineAsBreakpoint",
+    "signature": "public System.Void SetLineAsBreakpoint(System.Int32 line, System.Boolean breakpointed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "breakpointed",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.SetLineAsExecuting(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SetLineAsExecuting",
+    "signature": "public System.Void SetLineAsExecuting(System.Int32 line, System.Boolean executing)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "executing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.SetSymbolLookupWordAsValid(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SetSymbolLookupWordAsValid",
+    "signature": "public System.Void SetSymbolLookupWordAsValid(System.Boolean valid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "valid",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ToggleFoldableLine(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ToggleFoldableLine",
+    "signature": "public System.Void ToggleFoldableLine(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.ToggleFoldableLinesAtCarets()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "ToggleFoldableLinesAtCarets",
+    "signature": "public System.Void ToggleFoldableLinesAtCarets()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.UnfoldAllLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "UnfoldAllLines",
+    "signature": "public System.Void UnfoldAllLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.UnfoldLine(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "UnfoldLine",
+    "signature": "public System.Void UnfoldLine(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.UnindentLines()",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "UnindentLines",
+    "signature": "public System.Void UnindentLines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CodeEdit.UpdateCodeCompletionOptions(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "UpdateCodeCompletionOptions",
+    "signature": "public System.Void UpdateCodeCompletionOptions(System.Boolean force)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -144199,6 +146188,370 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CodeCompletionOption.DisplayText()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "DisplayText",
+    "signature": "public System.String DisplayText { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeCompletionOption.FontColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "FontColor",
+    "signature": "public Electron2D.Color FontColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeCompletionOption.Icon()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "Icon",
+    "signature": "public Electron2D.Texture Icon { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeCompletionOption.InsertText()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "InsertText",
+    "signature": "public System.String InsertText { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeCompletionOption.Kind()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "Kind",
+    "signature": "public Electron2D.CodeEdit.CodeCompletionKind Kind { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CodeEdit.CodeCompletionKind",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeCompletionOption.Location()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeCompletionOption",
+    "name": "Location",
+    "signature": "public System.Int32 Location { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.AutoBraceCompletionEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "AutoBraceCompletionEnabled",
+    "signature": "public System.Boolean AutoBraceCompletionEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.AutoBraceCompletionHighlightMatching()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "AutoBraceCompletionHighlightMatching",
+    "signature": "public System.Boolean AutoBraceCompletionHighlightMatching { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.AutoBraceCompletionPairs()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "AutoBraceCompletionPairs",
+    "signature": "public System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E AutoBraceCompletionPairs { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.CodeCompletionEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "CodeCompletionEnabled",
+    "signature": "public System.Boolean CodeCompletionEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.CodeCompletionPrefixes()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "CodeCompletionPrefixes",
+    "signature": "public System.String[] CodeCompletionPrefixes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.DelimiterComments()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "DelimiterComments",
+    "signature": "public System.String[] DelimiterComments { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.DelimiterStrings()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "DelimiterStrings",
+    "signature": "public System.String[] DelimiterStrings { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.GuttersDrawBookmarks()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GuttersDrawBookmarks",
+    "signature": "public System.Boolean GuttersDrawBookmarks { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.GuttersDrawBreakpointsGutter()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GuttersDrawBreakpointsGutter",
+    "signature": "public System.Boolean GuttersDrawBreakpointsGutter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.GuttersDrawExecutingLines()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GuttersDrawExecutingLines",
+    "signature": "public System.Boolean GuttersDrawExecutingLines { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.GuttersDrawFoldGutter()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GuttersDrawFoldGutter",
+    "signature": "public System.Boolean GuttersDrawFoldGutter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.GuttersDrawLineNumbers()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GuttersDrawLineNumbers",
+    "signature": "public System.Boolean GuttersDrawLineNumbers { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.GuttersLineNumbersMinDigits()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GuttersLineNumbersMinDigits",
+    "signature": "public System.Int32 GuttersLineNumbersMinDigits { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.GuttersZeroPadLineNumbers()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "GuttersZeroPadLineNumbers",
+    "signature": "public System.Boolean GuttersZeroPadLineNumbers { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.IndentAutomatic()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IndentAutomatic",
+    "signature": "public System.Boolean IndentAutomatic { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.IndentAutomaticPrefixes()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IndentAutomaticPrefixes",
+    "signature": "public System.String[] IndentAutomaticPrefixes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.IndentSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IndentSize",
+    "signature": "public System.Int32 IndentSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.IndentUseSpaces()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "IndentUseSpaces",
+    "signature": "public System.Boolean IndentUseSpaces { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.LineFolding()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "LineFolding",
+    "signature": "public System.Boolean LineFolding { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.LineLengthGuidelines()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "LineLengthGuidelines",
+    "signature": "public System.Int32[] LineLengthGuidelines { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.SymbolLookupOnClick()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SymbolLookupOnClick",
+    "signature": "public System.Boolean SymbolLookupOnClick { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CodeEdit.SymbolTooltipOnHover()",
+    "kind": "property",
+    "declaringType": "Electron2D.CodeEdit",
+    "name": "SymbolTooltipOnHover",
+    "signature": "public System.Boolean SymbolTooltipOnHover { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.CodeHighlighter.ColorRegions()",
     "kind": "property",
     "declaringType": "Electron2D.CodeHighlighter",
@@ -155951,6 +158304,58 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.InputUITextCompletionAccept()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUITextCompletionAccept",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUITextCompletionAccept { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUITextCompletionQuery()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUITextCompletionQuery",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUITextCompletionQuery { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUITextCompletionReplace()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUITextCompletionReplace",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUITextCompletionReplace { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUITextDedent()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUITextDedent",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUITextDedent { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.InputUITextDelete()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -155990,11 +158395,50 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.InputUITextIndent()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUITextIndent",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUITextIndent { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.InputUITextNewline()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
     "name": "InputUITextNewline",
     "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUITextNewline { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUITextNewlineAbove()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUITextNewlineAbove",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUITextNewlineAbove { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUITextNewlineBlank()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUITextNewlineBlank",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUITextNewlineBlank { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

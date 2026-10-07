@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" PrivateAssets="all" Publish="true" />

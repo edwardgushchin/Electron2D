@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "audio", "mesh", "networking")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "audio", "mesh", "networking")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",

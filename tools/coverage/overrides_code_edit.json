@@ -1,0 +1,1053 @@
+{
+  "mappings": [
+    {
+      "godot": "class:CodeEdit",
+      "electron2d": "T:Electron2D.CodeEdit",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum:CodeCompletionKind",
+      "electron2d": "T:Electron2D.CodeEdit.CodeCompletionKind",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum:CodeCompletionLocation",
+      "electron2d": "T:Electron2D.CodeEdit.CodeCompletionLocation",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_CLASS",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Class()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_CONSTANT",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Constant()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_ENUM",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Enum()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_FILE_PATH",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.FilePath()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_FUNCTION",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Function()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_KEYWORD",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Keyword()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_MEMBER",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Member()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_NODE_PATH",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.NodePath()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_PLAIN_TEXT",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.PlainText()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_SIGNAL",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Signal()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionKind.KIND_VARIABLE",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionKind.Variable()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionLocation.LOCATION_LOCAL",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionLocation.Local()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionLocation.LOCATION_OTHER",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionLocation.Other()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionLocation.LOCATION_OTHER_USER_CODE",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionLocation.OtherUserCode()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::enum_value:CodeCompletionLocation.LOCATION_PARENT_MASK",
+      "electron2d": "enumValue:Electron2D.CodeEdit.CodeCompletionLocation.ParentMask()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:_confirm_code_completion(bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.OnConfirmCodeCompletion(System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:_filter_code_completion_candidates(Dictionary[]:)",
+      "electron2d": "method:Electron2D.CodeEdit.OnFilterCodeCompletionCandidates(Electron2D.CodeCompletionOption[])",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:_request_code_completion(bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.OnRequestCodeCompletion(System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:add_auto_brace_completion_pair(String:,String:)",
+      "electron2d": "method:Electron2D.CodeEdit.AddAutoBraceCompletionPair(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:add_code_completion_option(int:CodeEdit.CodeCompletionKind,String:,String:,Color:,Resource:,Variant:,int:)",
+      "electron2d": "method:Electron2D.CodeEdit.AddCodeCompletionOption(Electron2D.CodeEdit.CodeCompletionKind,System.String,System.String,System.Nullable<Electron2D.Color>,Electron2D.Texture,System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:add_comment_delimiter(String:,String:,bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.AddCommentDelimiter(System.String,System.String,System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:add_string_delimiter(String:,String:,bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.AddStringDelimiter(System.String,System.String,System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:can_fold_line(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.CanFoldLine(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:cancel_code_completion()",
+      "electron2d": "method:Electron2D.CodeEdit.CancelCodeCompletion()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:clear_bookmarked_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.ClearBookmarkedLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:clear_breakpointed_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.ClearBreakpointedLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:clear_comment_delimiters()",
+      "electron2d": "method:Electron2D.CodeEdit.ClearCommentDelimiters()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:clear_executing_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.ClearExecutingLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:clear_string_delimiters()",
+      "electron2d": "method:Electron2D.CodeEdit.ClearStringDelimiters()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:confirm_code_completion(bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.ConfirmCodeCompletion(System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:convert_indent(int:,int:)",
+      "electron2d": "method:Electron2D.CodeEdit.ConvertIndent(System.Int32,System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:create_code_region()",
+      "electron2d": "method:Electron2D.CodeEdit.CreateCodeRegion()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:delete_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.DeleteLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:do_indent()",
+      "electron2d": "method:Electron2D.CodeEdit.DoIndent()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:duplicate_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.DuplicateLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:duplicate_selection()",
+      "electron2d": "method:Electron2D.CodeEdit.DuplicateSelection()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:fold_all_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.FoldAllLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:fold_line(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.FoldLine(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_auto_brace_completion_close_key(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.GetAutoBraceCompletionCloseKey(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_bookmarked_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.GetBookmarkedLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_breakpointed_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.GetBreakpointedLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_code_completion_option(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.GetCodeCompletionOption(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_code_completion_options()",
+      "electron2d": "method:Electron2D.CodeEdit.GetCodeCompletionOptions()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_code_completion_selected_index()",
+      "electron2d": "method:Electron2D.CodeEdit.GetCodeCompletionSelectedIndex()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_code_region_end_tag()",
+      "electron2d": "method:Electron2D.CodeEdit.GetCodeRegionEndTag()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_code_region_start_tag()",
+      "electron2d": "method:Electron2D.CodeEdit.GetCodeRegionStartTag()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_delimiter_end_key(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.GetDelimiterEndKey(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_delimiter_end_position(int:,int:)",
+      "electron2d": "method:Electron2D.CodeEdit.GetDelimiterEndPosition(System.Int32,System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_delimiter_start_key(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.GetDelimiterStartKey(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_delimiter_start_position(int:,int:)",
+      "electron2d": "method:Electron2D.CodeEdit.GetDelimiterStartPosition(System.Int32,System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_executing_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.GetExecutingLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_folded_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.GetFoldedLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_text_for_code_completion()",
+      "electron2d": "method:Electron2D.CodeEdit.GetTextForCodeCompletion()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_text_for_symbol_lookup()",
+      "electron2d": "method:Electron2D.CodeEdit.GetTextForSymbolLookup()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:get_text_with_cursor_char(int:,int:)",
+      "electron2d": "method:Electron2D.CodeEdit.GetTextWithCursorChar(System.Int32,System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:has_auto_brace_completion_close_key(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.HasAutoBraceCompletionCloseKey(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:has_auto_brace_completion_open_key(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.HasAutoBraceCompletionOpenKey(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:has_comment_delimiter(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.HasCommentDelimiter(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:has_string_delimiter(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.HasStringDelimiter(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:indent_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.IndentLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:is_in_comment(int:,int:)",
+      "electron2d": "method:Electron2D.CodeEdit.IsInComment(System.Int32,System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:is_in_string(int:,int:)",
+      "electron2d": "method:Electron2D.CodeEdit.IsInString(System.Int32,System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:is_line_bookmarked(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.IsLineBookmarked(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:is_line_breakpointed(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.IsLineBreakpointed(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:is_line_code_region_end(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.IsLineCodeRegionEnd(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:is_line_code_region_start(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.IsLineCodeRegionStart(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:is_line_executing(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.IsLineExecuting(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:is_line_folded(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.IsLineFolded(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:join_lines(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.JoinLines(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:move_lines_down()",
+      "electron2d": "method:Electron2D.CodeEdit.MoveLinesDown()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:move_lines_up()",
+      "electron2d": "method:Electron2D.CodeEdit.MoveLinesUp()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:remove_comment_delimiter(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.RemoveCommentDelimiter(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:remove_string_delimiter(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.RemoveStringDelimiter(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:request_code_completion(bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.RequestCodeCompletion(System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:set_code_completion_selected_index(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.SetCodeCompletionSelectedIndex(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:set_code_hint(String:)",
+      "electron2d": "method:Electron2D.CodeEdit.SetCodeHint(System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:set_code_hint_draw_below(bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.SetCodeHintDrawBelow(System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:set_code_region_tags(String:,String:)",
+      "electron2d": "method:Electron2D.CodeEdit.SetCodeRegionTags(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:set_line_as_bookmarked(int:,bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.SetLineAsBookmarked(System.Int32,System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:set_line_as_breakpoint(int:,bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.SetLineAsBreakpoint(System.Int32,System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:set_line_as_executing(int:,bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.SetLineAsExecuting(System.Int32,System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:set_symbol_lookup_word_as_valid(bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.SetSymbolLookupWordAsValid(System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:toggle_foldable_line(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.ToggleFoldableLine(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:toggle_foldable_lines_at_carets()",
+      "electron2d": "method:Electron2D.CodeEdit.ToggleFoldableLinesAtCarets()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:unfold_all_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.UnfoldAllLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:unfold_line(int:)",
+      "electron2d": "method:Electron2D.CodeEdit.UnfoldLine(System.Int32)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:unindent_lines()",
+      "electron2d": "method:Electron2D.CodeEdit.UnindentLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::method:update_code_completion_options(bool:)",
+      "electron2d": "method:Electron2D.CodeEdit.UpdateCodeCompletionOptions(System.Boolean)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:auto_brace_completion_enabled",
+      "electron2d": "property:Electron2D.CodeEdit.AutoBraceCompletionEnabled()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:auto_brace_completion_highlight_matching",
+      "electron2d": "property:Electron2D.CodeEdit.AutoBraceCompletionHighlightMatching()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:auto_brace_completion_pairs",
+      "electron2d": "property:Electron2D.CodeEdit.AutoBraceCompletionPairs()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:code_completion_enabled",
+      "electron2d": "property:Electron2D.CodeEdit.CodeCompletionEnabled()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:code_completion_prefixes",
+      "electron2d": "property:Electron2D.CodeEdit.CodeCompletionPrefixes()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:delimiter_comments",
+      "electron2d": "property:Electron2D.CodeEdit.DelimiterComments()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:delimiter_strings",
+      "electron2d": "property:Electron2D.CodeEdit.DelimiterStrings()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:gutters_draw_bookmarks",
+      "electron2d": "property:Electron2D.CodeEdit.GuttersDrawBookmarks()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:gutters_draw_breakpoints_gutter",
+      "electron2d": "property:Electron2D.CodeEdit.GuttersDrawBreakpointsGutter()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:gutters_draw_executing_lines",
+      "electron2d": "property:Electron2D.CodeEdit.GuttersDrawExecutingLines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:gutters_draw_fold_gutter",
+      "electron2d": "property:Electron2D.CodeEdit.GuttersDrawFoldGutter()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:gutters_draw_line_numbers",
+      "electron2d": "property:Electron2D.CodeEdit.GuttersDrawLineNumbers()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:gutters_line_numbers_min_digits",
+      "electron2d": "property:Electron2D.CodeEdit.GuttersLineNumbersMinDigits()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:gutters_zero_pad_line_numbers",
+      "electron2d": "property:Electron2D.CodeEdit.GuttersZeroPadLineNumbers()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:indent_automatic",
+      "electron2d": "property:Electron2D.CodeEdit.IndentAutomatic()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:indent_automatic_prefixes",
+      "electron2d": "property:Electron2D.CodeEdit.IndentAutomaticPrefixes()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:indent_size",
+      "electron2d": "property:Electron2D.CodeEdit.IndentSize()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:indent_use_spaces",
+      "electron2d": "property:Electron2D.CodeEdit.IndentUseSpaces()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:layout_direction",
+      "electron2d": "property:Electron2D.Control.LayoutDirection()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:line_folding",
+      "electron2d": "property:Electron2D.CodeEdit.LineFolding()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:line_length_guidelines",
+      "electron2d": "property:Electron2D.CodeEdit.LineLengthGuidelines()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:symbol_lookup_on_click",
+      "electron2d": "property:Electron2D.CodeEdit.SymbolLookupOnClick()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:symbol_tooltip_on_hover",
+      "electron2d": "property:Electron2D.CodeEdit.SymbolTooltipOnHover()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::property:text_direction",
+      "electron2d": "property:Electron2D.TextEdit.TextDirection()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::signal:breakpoint_toggled(int:)",
+      "electron2d": "event:Electron2D.CodeEdit.BreakpointToggled()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::signal:code_completion_requested()",
+      "electron2d": "event:Electron2D.CodeEdit.CodeCompletionRequested()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::signal:symbol_hovered(String:,int:,int:)",
+      "electron2d": "event:Electron2D.CodeEdit.SymbolHovered()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::signal:symbol_lookup(String:,int:,int:)",
+      "electron2d": "event:Electron2D.CodeEdit.SymbolLookup()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::signal:symbol_validate(String:)",
+      "electron2d": "event:Electron2D.CodeEdit.SymbolValidate()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:bookmark",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:bookmark_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:brace_mismatch_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:breakpoint",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:breakpoint_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:can_fold",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:can_fold_code_region",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:code_folding_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_background_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_color_bg",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_existing_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_lines",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_max_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_scroll_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_scroll_hovered_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_scroll_width",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:completion_selected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:executing_line",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:executing_line_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:folded",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:folded_code_region",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:folded_code_region_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:folded_eol_icon",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:line_length_guideline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "CodeEdit::theme_item:line_number_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_completion_accept",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCompletionAccept()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_completion_query",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCompletionQuery()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_completion_replace",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextCompletionReplace()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_dedent",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextDedent()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_indent",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextIndent()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_newline_above",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextNewlineAbove()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_text_newline_blank",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUITextNewlineBlank()",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.CodeCompletionOption",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CodeCompletionOption..ctor(Electron2D.CodeEdit.CodeCompletionKind,System.String,System.String,System.Nullable<Electron2D.Color>,Electron2D.Texture,System.Int32)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CodeEdit..ctor()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeCompletionOption.TryGetDefaultValue`1(ref T)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeCompletionOption.WithDefaultValue`1(T)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.AddCodeCompletionOption`1(Electron2D.CodeEdit.CodeCompletionKind,System.String,System.String,System.Nullable<Electron2D.Color>,Electron2D.Texture,T,System.Int32)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.CreateSceneInstanceFactory()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.Dispose(System.Boolean)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.GetPropertyDescriptors()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.OnBackspace(System.Int32)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.OnCut(System.Int32)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.OnGetCursorShape(Electron2D.Vector2)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.OnHandleUnicodeInput(System.Int32,System.Int32)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.OnNotification(System.Int32)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.OnPaste(System.Int32)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "method:Electron2D.CodeEdit.OnTextInput(System.String)",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.CodeCompletionOption.DisplayText()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.CodeCompletionOption.FontColor()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.CodeCompletionOption.Icon()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.CodeCompletionOption.InsertText()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.CodeCompletionOption.Kind()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    },
+    {
+      "electron2d": "property:Electron2D.CodeCompletionOption.Location()",
+      "reason": "Typed immutable completion-option dictionary/payload projection or inherited scene/input/drawing/storage lifecycle hook for CodeEdit. Preserves the applicable reference concept and borrowed-resource ownership.",
+      "adr": "ADR 0004/0038/0083"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "CodeEdit::enum:CodeCompletionKind",
+        "CodeEdit::enum:CodeCompletionLocation",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_CLASS",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_CONSTANT",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_ENUM",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_FILE_PATH",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_FUNCTION",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_KEYWORD",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_MEMBER",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_NODE_PATH",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_PLAIN_TEXT",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_SIGNAL",
+        "CodeEdit::enum_value:CodeCompletionKind.KIND_VARIABLE",
+        "CodeEdit::enum_value:CodeCompletionLocation.LOCATION_LOCAL",
+        "CodeEdit::enum_value:CodeCompletionLocation.LOCATION_OTHER",
+        "CodeEdit::enum_value:CodeCompletionLocation.LOCATION_OTHER_USER_CODE",
+        "CodeEdit::enum_value:CodeCompletionLocation.LOCATION_PARENT_MASK",
+        "CodeEdit::method:_confirm_code_completion(bool:)",
+        "CodeEdit::method:_filter_code_completion_candidates(Dictionary[]:)",
+        "CodeEdit::method:_request_code_completion(bool:)",
+        "CodeEdit::method:add_auto_brace_completion_pair(String:,String:)",
+        "CodeEdit::method:add_code_completion_option(int:CodeEdit.CodeCompletionKind,String:,String:,Color:,Resource:,Variant:,int:)",
+        "CodeEdit::method:add_comment_delimiter(String:,String:,bool:)",
+        "CodeEdit::method:add_string_delimiter(String:,String:,bool:)",
+        "CodeEdit::method:can_fold_line(int:)",
+        "CodeEdit::method:cancel_code_completion()",
+        "CodeEdit::method:clear_bookmarked_lines()",
+        "CodeEdit::method:clear_breakpointed_lines()",
+        "CodeEdit::method:clear_comment_delimiters()",
+        "CodeEdit::method:clear_executing_lines()",
+        "CodeEdit::method:clear_string_delimiters()",
+        "CodeEdit::method:confirm_code_completion(bool:)",
+        "CodeEdit::method:convert_indent(int:,int:)",
+        "CodeEdit::method:create_code_region()",
+        "CodeEdit::method:delete_lines()",
+        "CodeEdit::method:do_indent()",
+        "CodeEdit::method:duplicate_lines()",
+        "CodeEdit::method:duplicate_selection()",
+        "CodeEdit::method:fold_all_lines()",
+        "CodeEdit::method:fold_line(int:)",
+        "CodeEdit::method:get_auto_brace_completion_close_key(String:)",
+        "CodeEdit::method:get_bookmarked_lines()",
+        "CodeEdit::method:get_breakpointed_lines()",
+        "CodeEdit::method:get_code_completion_option(int:)",
+        "CodeEdit::method:get_code_completion_options()",
+        "CodeEdit::method:get_code_completion_selected_index()",
+        "CodeEdit::method:get_code_region_end_tag()",
+        "CodeEdit::method:get_code_region_start_tag()",
+        "CodeEdit::method:get_delimiter_end_key(int:)",
+        "CodeEdit::method:get_delimiter_end_position(int:,int:)",
+        "CodeEdit::method:get_delimiter_start_key(int:)",
+        "CodeEdit::method:get_delimiter_start_position(int:,int:)",
+        "CodeEdit::method:get_executing_lines()",
+        "CodeEdit::method:get_folded_lines()",
+        "CodeEdit::method:get_text_for_code_completion()",
+        "CodeEdit::method:get_text_for_symbol_lookup()",
+        "CodeEdit::method:get_text_with_cursor_char(int:,int:)",
+        "CodeEdit::method:has_auto_brace_completion_close_key(String:)",
+        "CodeEdit::method:has_auto_brace_completion_open_key(String:)",
+        "CodeEdit::method:has_comment_delimiter(String:)",
+        "CodeEdit::method:has_string_delimiter(String:)",
+        "CodeEdit::method:indent_lines()",
+        "CodeEdit::method:is_in_comment(int:,int:)",
+        "CodeEdit::method:is_in_string(int:,int:)",
+        "CodeEdit::method:is_line_bookmarked(int:)",
+        "CodeEdit::method:is_line_breakpointed(int:)",
+        "CodeEdit::method:is_line_code_region_end(int:)",
+        "CodeEdit::method:is_line_code_region_start(int:)",
+        "CodeEdit::method:is_line_executing(int:)",
+        "CodeEdit::method:is_line_folded(int:)",
+        "CodeEdit::method:join_lines(String:)",
+        "CodeEdit::method:move_lines_down()",
+        "CodeEdit::method:move_lines_up()",
+        "CodeEdit::method:remove_comment_delimiter(String:)",
+        "CodeEdit::method:remove_string_delimiter(String:)",
+        "CodeEdit::method:request_code_completion(bool:)",
+        "CodeEdit::method:set_code_completion_selected_index(int:)",
+        "CodeEdit::method:set_code_hint(String:)",
+        "CodeEdit::method:set_code_hint_draw_below(bool:)",
+        "CodeEdit::method:set_code_region_tags(String:,String:)",
+        "CodeEdit::method:set_line_as_bookmarked(int:,bool:)",
+        "CodeEdit::method:set_line_as_breakpoint(int:,bool:)",
+        "CodeEdit::method:set_line_as_executing(int:,bool:)",
+        "CodeEdit::method:set_symbol_lookup_word_as_valid(bool:)",
+        "CodeEdit::method:toggle_foldable_line(int:)",
+        "CodeEdit::method:toggle_foldable_lines_at_carets()",
+        "CodeEdit::method:unfold_all_lines()",
+        "CodeEdit::method:unfold_line(int:)",
+        "CodeEdit::method:unindent_lines()",
+        "CodeEdit::method:update_code_completion_options(bool:)",
+        "CodeEdit::property:auto_brace_completion_enabled",
+        "CodeEdit::property:auto_brace_completion_highlight_matching",
+        "CodeEdit::property:auto_brace_completion_pairs",
+        "CodeEdit::property:code_completion_enabled",
+        "CodeEdit::property:code_completion_prefixes",
+        "CodeEdit::property:delimiter_comments",
+        "CodeEdit::property:delimiter_strings",
+        "CodeEdit::property:gutters_draw_bookmarks",
+        "CodeEdit::property:gutters_draw_breakpoints_gutter",
+        "CodeEdit::property:gutters_draw_executing_lines",
+        "CodeEdit::property:gutters_draw_fold_gutter",
+        "CodeEdit::property:gutters_draw_line_numbers",
+        "CodeEdit::property:gutters_line_numbers_min_digits",
+        "CodeEdit::property:gutters_zero_pad_line_numbers",
+        "CodeEdit::property:indent_automatic",
+        "CodeEdit::property:indent_automatic_prefixes",
+        "CodeEdit::property:indent_size",
+        "CodeEdit::property:indent_use_spaces",
+        "CodeEdit::property:layout_direction",
+        "CodeEdit::property:line_folding",
+        "CodeEdit::property:line_length_guidelines",
+        "CodeEdit::property:symbol_lookup_on_click",
+        "CodeEdit::property:symbol_tooltip_on_hover",
+        "CodeEdit::property:text_direction",
+        "CodeEdit::signal:breakpoint_toggled(int:)",
+        "CodeEdit::signal:code_completion_requested()",
+        "CodeEdit::signal:symbol_hovered(String:,int:,int:)",
+        "CodeEdit::signal:symbol_lookup(String:,int:,int:)",
+        "CodeEdit::signal:symbol_validate(String:)",
+        "CodeEdit::theme_item:bookmark",
+        "CodeEdit::theme_item:bookmark_color",
+        "CodeEdit::theme_item:brace_mismatch_color",
+        "CodeEdit::theme_item:breakpoint",
+        "CodeEdit::theme_item:breakpoint_color",
+        "CodeEdit::theme_item:can_fold",
+        "CodeEdit::theme_item:can_fold_code_region",
+        "CodeEdit::theme_item:code_folding_color",
+        "CodeEdit::theme_item:completion",
+        "CodeEdit::theme_item:completion_background_color",
+        "CodeEdit::theme_item:completion_color_bg",
+        "CodeEdit::theme_item:completion_existing_color",
+        "CodeEdit::theme_item:completion_lines",
+        "CodeEdit::theme_item:completion_max_width",
+        "CodeEdit::theme_item:completion_scroll_color",
+        "CodeEdit::theme_item:completion_scroll_hovered_color",
+        "CodeEdit::theme_item:completion_scroll_width",
+        "CodeEdit::theme_item:completion_selected_color",
+        "CodeEdit::theme_item:executing_line",
+        "CodeEdit::theme_item:executing_line_color",
+        "CodeEdit::theme_item:folded",
+        "CodeEdit::theme_item:folded_code_region",
+        "CodeEdit::theme_item:folded_code_region_color",
+        "CodeEdit::theme_item:folded_eol_icon",
+        "CodeEdit::theme_item:line_length_guideline_color",
+        "CodeEdit::theme_item:line_number_color",
+        "ProjectSettings::property:input/ui_text_completion_accept",
+        "ProjectSettings::property:input/ui_text_completion_query",
+        "ProjectSettings::property:input/ui_text_completion_replace",
+        "ProjectSettings::property:input/ui_text_dedent",
+        "ProjectSettings::property:input/ui_text_indent",
+        "ProjectSettings::property:input/ui_text_newline_above",
+        "ProjectSettings::property:input/ui_text_newline_blank"
+      ],
+      "state": "Implemented",
+      "reason": "Executable code-authoring slice under ADRs 0004/0014/0038/0051/0083: TextEdit-backed scalar/multicaret grouped history, automatic indentation/brace editing, escaped longest-key delimiters, indentation/comment/string/region folds, shifting gutter markers, typed application completion/options/virtual hooks, code hints/guidelines, validated symbol lookup/hover timer, theme drawing and complete fresh-process stored configuration. CodeEditTests covers edge/model/lifetime/scene and native current Linux GPU/compatibility input/pixels with prepared zero-managed-allocation frames. Cold editing/parsing/shaping, native allocations, physical/foreign and semantic/editor acceptance remain separate."
+    },
+    {
+      "godot": [
+        "class:CodeEdit"
+      ],
+      "state": "Partial",
+      "reason": "Code authoring, completion, rendered embedded hints, symbol application callbacks and scene configuration execute on current backends. Inherited native virtual keyboard/symbol-picker and semantic accessibility require the DisplayServer session and AccessibilityServer services; concrete editor-authoring integration requires ADR 0090 authoring operations. Physical/native-allocation/foreign-platform acceptance remains separate."
+    }
+  ]
+}

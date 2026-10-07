@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CODE_EDIT_CHILD") is { } codePath) { CodeEditTests.RunChild(codePath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CODE_EDIT_HOST") == "1") { CodeEditTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CODE_EDIT") == "1") { CodeEditTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLOR_PICKER_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLOR_PICKER_CHILD") is { } colorPath) { ColorPickerTests.RunChild(colorPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLOR_PICKER") == "1") { ColorPickerTests.Run(); return; }
@@ -566,6 +569,7 @@ SubViewportContainerTests.Run();
 LineEditTests.Run();
 TextEditTests.Run();
 TreeTests.Run();
+CodeEditTests.Run();
 NetworkingTests.Run();
 UPNPTests.Run();
 DTLSTests.Run();

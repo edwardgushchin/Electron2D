@@ -123,3 +123,5 @@ The compiled native type catalog now includes FileDialog and OS. Authored defaul
 SpinBox defaults consume all current arrow state icons/colors, button backgrounds, two separators and three sizing constants. SpinBoxInnerLineEdit derives from the LineEdit theme variation; deprecated combined-arrow/min-width keys are omitted. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.
 
 Color authoring adds all 27 current ColorPicker theme keys and ColorPickerButton.bg with authored SVGs, focus styles and real picker/button consumers. See [the connected contract](../components/color-authoring.md).
+
+[CodeEdit](CodeEdit.md) defaults add marker/fold/completion icons, colors and presentation constants/styles; the native type chain includes CodeEdit → TextEdit → Control for inherited fonts and policies.
