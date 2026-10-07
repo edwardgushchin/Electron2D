@@ -7,7 +7,7 @@ public sealed partial class RenderingServer
     private static CanvasItem? ParentGroup(CanvasItem item)
     {
         // ponytail: ancestry lookup is O(depth) per item; cache on reparenting if large-scene profiling warrants it.
-        for (var parent = item.GetParentItem(); parent is not null; parent = parent.GetParentItem())
+        for (var parent = item.RenderParent; parent is not null; parent = parent.RenderParent)
             if (IsCompositor(parent)) return parent;
         return null;
     }
@@ -16,7 +16,7 @@ public sealed partial class RenderingServer
         CanvasItem? active = null; var begin = 0; var first = 0; Rect2? notifierBounds = null;
         foreach (var item in _order)
         {
-            var owner = item.Group is { } group && group.EffectiveZIndex == item.Z ? group : null;
+            var owner = item.Group is { } group && group.RenderZ == item.Z ? group : null;
             if (IsCompositor(item.Node) && owner is not null)
                 throw new NotSupportedException("Nested same-Z canvas groups and masks require independent nested backbuffer storage.");
             if (owner is not null && active is null)
@@ -63,7 +63,7 @@ public sealed partial class RenderingServer
                 else
                 {
                     var material = active.CanvasMaterial;
-                    var color = active.InheritedModulate * active.SelfModulate;
+                    var color = active.RenderInheritedModulate * active.RenderSelfModulate * (active.RenderCanvas()?.Modulate ?? Colors.White);
                     fit = GrowFinite(fit, canvasGroup.FitMargin);
                     var localFit = item.Transform.AffineInverse() * fit;
                     var drawFirst = _vertices.Count; Quad(localFit, color, pixels, item.Transform);

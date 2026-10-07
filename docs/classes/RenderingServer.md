@@ -11,7 +11,7 @@ Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/R
 
 ## Borrowed skeletal identity
 
-Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon skin replay. FreeRID rejects it on an active owner rather than disposing a scene node. Caller-created palette storage and actual scene-canvas attachment now execute through the mesh skin API below, with distinct borrowed/owned lifetime and replay callback guards. Generic owned canvas creation/command authoring retains its separate prerequisite.
+Skeleton.GetSkeleton supplies a weak scene palette identity consumed by Polygon skin replay. FreeRID rejects it on an active owner rather than disposing a scene node. Caller-created palette storage and actual scene-canvas attachment now execute through the mesh skin API below, with distinct borrowed/owned lifetime and replay callback guards. Caller-owned canvases and Mesh/MultiMesh command authoring now execute through the API below.
 
 ## Description
 
@@ -188,7 +188,7 @@ Returns owned diagnostic metadata or a borrowed resource’s ResourcePath. An em
 
 `public static void FreeRID(RID rid)`
 
-Removes a live server-owned texture RID, releases its managed payload and disposes the internal resource. Later retained commands referencing it draw nothing; a second free or lookup throws ArgumentException. Borrowed resource RIDs require resource disposal and throw InvalidOperationException here. Identity removal commits before disposal callbacks run. This method currently handles textures; canvas, material and shader RID ownership are separate incomplete families.
+Removes a live server-owned texture RID, releases its managed payload and disposes the internal resource. Later retained commands referencing it draw nothing; a second free or lookup throws ArgumentException. Borrowed resource RIDs require resource disposal and throw InvalidOperationException here. Identity removal commits before disposal callbacks run. It also releases caller-owned mesh, instance, palette, canvas and canvas-item identities. Canvas/item children survive independently and become drawable again after reparenting. Material and shader RID ownership retain separate prerequisites.
 
 All texture operations require the active scene owner thread and a live renderer. Empty, stale and wrong-kind RIDs throw ArgumentException; mutation/free/replace of borrowed or foreign identities throw InvalidOperationException. Writes are allowed during scene callbacks, canvas recording and FramePreDraw/FramePostDraw, but rejected during geometry replay/native submission and shutdown. Getter calls remain available at frame events. Renderer shutdown drains every owned texture even if disposal callbacks fail, attempts backend cleanup independently, unpublishes the active service and then propagates collected errors. Borrowed resource identities survive renderer shutdown.
 
@@ -983,3 +983,36 @@ Throws `System.ArgumentException`: The identity is absent or the base is nonfini
 Throws `System.InvalidOperationException`: Ownership or renderer owner/submission rules reject mutation.
 
 The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.
+
+## Caller-owned canvas API
+
+See [canvas lifetime and replay contract](../components/canvas-rendering.md#caller-owned-canvases-and-items). These static operations use the current retained owner.
+
+| Operation | Behavior |
+| --- | --- |
+| `CanvasCreate` | Creates an empty caller-owned canvas, attachable to multiple active viewports. |
+| `CanvasItemCreate` | Creates a caller-owned retained canvas item with no parent or commands. |
+| `CanvasItemSetParent` | Sets the native render parent to a live canvas/item RID or detaches with an empty identity; scene Node.Parent is unchanged. |
+| `CanvasItemSetTransform` | Sets a finite native local render transform without changing the scene authoring transform. |
+| `CanvasItemSetVisible` | Sets native visibility, inherited through render parents. |
+| `CanvasItemSetModulate` | Sets finite native modulation inherited by render descendants. |
+| `CanvasItemSetSelfModulate` | Sets finite native modulation for this item only. |
+| `CanvasItemSetDrawBehindParent` | Selects drawing before the render parent at equal Z. |
+| `CanvasItemSetSortChildrenByY` | Selects stable ascending Y order for render children. |
+| `CanvasItemSetZIndex` | Sets native Z within the canvas item supported range. |
+| `CanvasItemSetZAsRelativeToParent` | Selects clamped render-parent Z accumulation instead of absolute Z. |
+| `CanvasItemSetClip` | Clips this item and its render descendants to its local drawing or custom rectangle. |
+| `CanvasItemSetCustomRect` | Selects finite custom local bounds or restores automatic command bounds. |
+| `DebugCanvasItemGetRect` | Returns current custom or automatic local command bounds. |
+| `CanvasItemSetDefaultTextureFilter` | Sets native filtering with the shared typed canvas sampler contract. |
+| `CanvasItemSetDefaultTextureRepeat` | Sets native addressing with the shared typed canvas sampler contract. |
+| `CanvasItemClear` | Clears retained native commands without freeing resources or the item. |
+| `CanvasItemAddMesh` | Appends a retained borrowed mesh command with identity transform and white tint by default. |
+| `CanvasItemAddMultiMesh` | Appends a retained borrowed repeated-mesh command, consuming live instance storage. |
+| `CanvasSetModulate` | Sets finite canvas-wide native modulation. |
+| `CanvasSetItemMirroring` | Repeats a direct canvas child and its render descendants once along each nonzero finite axis. |
+| `ViewportAttachCanvas` | Attaches a live canvas to an active scene viewport; the same canvas can be attached to multiple viewports. |
+| `ViewportRemoveCanvas` | Removes one view attachment while retaining canvas/item ownership and other attachments. |
+| `ViewportSetCanvasTransform` | Sets one attached canvas view matrix without rewriting scene viewport or layer authoring. |
+| `ViewportSetCanvasStacking` | Sets signed layer/sublayer order for one canvas view before item Z/Y sorting. |
+| `CanvasItemAddNinePatch` | Records retained nine-patch geometry using shared AxisStretchMode, borrowed source texture or internal white, margins/source regions and optional center. |

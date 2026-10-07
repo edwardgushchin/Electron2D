@@ -2338,7 +2338,6 @@
     },
     {
       "godot": [
-        "World2D::property:canvas",
         "World2D::property:navigation_map"
       ],
       "state": "Blocked",
@@ -3197,6 +3196,13 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: distinct per-body Disabled/CastRay/CastShape integration, with ray-versus-full-shape sweeps and preservation of other bodies' native CCD policy (ADR 0054). Box2D bullet alone cannot represent the three branches. These values/properties/server methods enter the first complete per-body CCD slice; world activation does not implement them."
+    },
+    {
+      "godot": [
+        "World2D::property:canvas"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: integrate a stable World-owned rendering canvas with executable default-viewport World binding/replacement and shared-world identity/lifetime. Owned/layer canvases and multi-viewport attachment now execute under ADR 0028, but current viewport-owned independent default canvases do not satisfy the SceneTree-shared physics World canvas member (ADR 0063)."
     }
   ]
 }

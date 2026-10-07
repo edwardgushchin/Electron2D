@@ -20,7 +20,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             ReadOnlySpan<Transform> palette = default; var toPalette = Transform.Identity; var fromPalette = Transform.Identity;
             if (skinOwner is not null && skinOwner.AttachedSkeleton.IsValid() && RenderingSkeletonRegistry.Prepare(skinOwner.AttachedSkeleton, skinOwner, out var prepared, out var basis, out lease))
             {
-                var itemGlobal = skinOwner.GetInterpolatedGlobalVisualTransform((float)Engine.PhysicsInterpolationFraction);
+                var itemGlobal = skinOwner.RenderGlobal((float)Engine.PhysicsInterpolationFraction);
                 if (basis.Determinant() != 0 && itemGlobal.Determinant() != 0) { palette = prepared; toPalette = basis.AffineInverse() * itemGlobal; fromPalette = itemGlobal.AffineInverse() * basis; }
             }
             var arrays = mesh as ArrayMesh ?? (mesh as ImmediateMesh)?.Surfaces;
@@ -71,6 +71,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         }
         finally { _preparing = false; }
     }
+    internal Rect2 GetDrawBounds() => local * GetLocalBounds();
     internal Rect2 GetLocalBounds()
     {
         ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh); var first = true; var minimum = Vector2.Zero; var maximum = Vector2.Zero;

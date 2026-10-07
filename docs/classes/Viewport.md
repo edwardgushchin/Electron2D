@@ -531,3 +531,7 @@ See [the component](../components/popup-windows.md) for input/target ownership, 
 | `public System.Boolean TransparentBG { get; set; }` | Gets or sets whether this viewport clears to transparent black instead of opaque clear color. |
 
 SizeChanged and owned viewport texture-size callbacks use allocation-free delegate enumeration. Each callback is attempted before failures are aggregated, retaining committed geometry. This removes invocation-array allocation during active embedded dialog sizing; recreation of native render targets remains a cold resource transition.
+
+## Server canvas integration
+
+The viewport owns its borrowed default canvas and supports simultaneous attachments of caller-owned/layer canvases through RenderingServer. Attachment transforms/stacking are independent per destination; source getters keep authored state. See [the executable canvas contract](../components/canvas-rendering.md#caller-owned-canvases-and-items).

@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Places canvas descendants in an independent drawing layer.</summary>
 /// <remarks>Layer order precedes item Z order. A layer has its own transform and optional viewport following;
 /// it is a neutral scene node, not a spatial canvas item. Native ownership remains with the renderer.</remarks>
-public class CanvasLayer : Node
+public partial class CanvasLayer : Node
 {
     internal bool IsTooltipLayer { get; init; }
     private int _layer = 1;
@@ -23,7 +23,7 @@ public class CanvasLayer : Node
     /// equal-index layers is not a portable guarantee. Changes affect retained drawing on the next frame.</remarks>
     /// <exception cref="InvalidOperationException">Access is off-owner or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The layer is disposed.</exception>
-    public int Layer { get { CheckQuery(); return _layer; } set { EnsureMutable(); _layer = value; } }
+    public int Layer { get { CheckQuery(); return _layer; } set { EnsureMutable(); _layer = value; _canvasRuntime?.PublishLayer(false); } }
 
     /// <summary>Gets or sets whether direct canvas children and their canvas descendants are visible.</summary>
     /// <value>True initially. Nested CanvasLayer and neutral Node boundaries do not inherit this flag.</value>
@@ -60,7 +60,7 @@ public class CanvasLayer : Node
     public Transform Transform
     {
         get { CheckQuery(); return _transform; }
-        set { EnsureMutable(); Finite(value); _transform = value; _componentsDirty = true; }
+        set { EnsureMutable(); Finite(value); _transform = value; _canvasRuntime?.PublishLayer(true); _componentsDirty = true; }
     }
 
     /// <summary>Gets or sets the layer offset in canvas units.</summary>
@@ -182,7 +182,7 @@ public class CanvasLayer : Node
     protected override void Dispose(bool disposing)
     {
         try { base.Dispose(disposing); }
-        finally { if (disposing) { VisibilityChanged = null; _viewport = _customViewport = null; } }
+        finally { if (disposing) { if (_canvasRuntime is { } canvas) RenderingCanvasRegistry.Remove(canvas.RID); _canvasRuntime = null; VisibilityChanged = null; _viewport = _customViewport = null; } }
     }
 
     internal Viewport? CanvasViewport => _viewport;
@@ -207,7 +207,7 @@ public class CanvasLayer : Node
     private void SetComponents(Vector2 offset, float rotation, Vector2 scale)
     {
         var transform = new Transform(rotation, scale, 0, offset); Finite(transform);
-        _offset = offset; _rotation = rotation; _scale = scale; _transform = transform;
+        _offset = offset; _rotation = rotation; _scale = scale; _transform = transform; _canvasRuntime?.PublishLayer(true);
     }
     private static Node CreateLayer() => new CanvasLayer();
     private static readonly PropertyDescriptor[] LayerProperties =

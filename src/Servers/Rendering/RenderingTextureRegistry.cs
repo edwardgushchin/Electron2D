@@ -11,6 +11,8 @@ internal static class RenderingTextureRegistry
     private static readonly Lazy<ServerTexture> RenderPlaceholder = new(() => new(PlaceholderPixels));
     internal static TexturePixels PlaceholderPixels => Placeholder.Value;
     internal static Texture PlaceholderTexture => RenderPlaceholder.Value;
+    private static readonly Lazy<ServerTexture> White = new(() => { using var image = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8); image.SetPixel(0, 0, Colors.White); return new(TexturePixels.FromImage(image)); });
+    internal static Texture WhiteTexture => White.Value;
 
     private static TexturePixels CreatePlaceholderPixels()
     {

@@ -62743,6 +62743,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.GetCanvas()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetCanvas",
+    "signature": "public Electron2D.RID GetCanvas()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.GetCanvasItem()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -63216,6 +63229,19 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasLayer.GetCanvas()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasLayer",
+    "name": "GetCanvas",
+    "signature": "public Electron2D.RID GetCanvas()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {
@@ -113771,6 +113797,151 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.CanvasCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasCreate",
+    "signature": "public static Electron2D.RID CanvasCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemAddMesh(Electron2D.RID,Electron2D.RID,System.Nullable\u003CElectron2D.Transform\u003E,System.Nullable\u003CElectron2D.Color\u003E,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemAddMesh",
+    "signature": "public static System.Void CanvasItemAddMesh(Electron2D.RID item, Electron2D.RID mesh, System.Nullable\u003CElectron2D.Transform\u003E transform = null, System.Nullable\u003CElectron2D.Color\u003E modulate = null, Electron2D.RID texture = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "System.Nullable\u003CElectron2D.Transform\u003E",
+        "default": "null"
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemAddMultiMesh(Electron2D.RID,Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemAddMultiMesh",
+    "signature": "public static System.Void CanvasItemAddMultiMesh(Electron2D.RID item, Electron2D.RID mesh, Electron2D.RID texture = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemAddNinePatch(Electron2D.RID,Electron2D.Rect2,Electron2D.Rect2,Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2,Electron2D.AxisStretchMode,Electron2D.AxisStretchMode,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemAddNinePatch",
+    "signature": "public static System.Void CanvasItemAddNinePatch(Electron2D.RID item, Electron2D.Rect2 rect, Electron2D.Rect2 source, Electron2D.RID texture, Electron2D.Vector2 topLeft, Electron2D.Vector2 bottomRight, Electron2D.AxisStretchMode xAxisMode = Stretch, Electron2D.AxisStretchMode yAxisMode = Stretch, System.Boolean drawCenter = true, System.Nullable\u003CElectron2D.Color\u003E modulate = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "source",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "topLeft",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "bottomRight",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "xAxisMode",
+        "type": "Electron2D.AxisStretchMode",
+        "default": "Stretch"
+      },
+      {
+        "name": "yAxisMode",
+        "type": "Electron2D.AxisStretchMode",
+        "default": "Stretch"
+      },
+      {
+        "name": "drawCenter",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.CanvasItemAttachSkeleton(Electron2D.RID,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -113792,6 +113963,427 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemClear(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemClear",
+    "signature": "public static System.Void CanvasItemClear(Electron2D.RID item)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemCreate",
+    "signature": "public static Electron2D.RID CanvasItemCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetClip(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetClip",
+    "signature": "public static System.Void CanvasItemSetClip(Electron2D.RID item, System.Boolean clip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "clip",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetCustomRect(Electron2D.RID,System.Boolean,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetCustomRect",
+    "signature": "public static System.Void CanvasItemSetCustomRect(Electron2D.RID item, System.Boolean useCustomRect, Electron2D.Rect2 rect = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "useCustomRect",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetDefaultTextureFilter(Electron2D.RID,Electron2D.TextureFilter)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetDefaultTextureFilter",
+    "signature": "public static System.Void CanvasItemSetDefaultTextureFilter(Electron2D.RID item, Electron2D.TextureFilter filter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "filter",
+        "type": "Electron2D.TextureFilter",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetDefaultTextureRepeat(Electron2D.RID,Electron2D.TextureRepeat)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetDefaultTextureRepeat",
+    "signature": "public static System.Void CanvasItemSetDefaultTextureRepeat(Electron2D.RID item, Electron2D.TextureRepeat repeat)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "repeat",
+        "type": "Electron2D.TextureRepeat",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetDrawBehindParent(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetDrawBehindParent",
+    "signature": "public static System.Void CanvasItemSetDrawBehindParent(Electron2D.RID item, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetModulate(Electron2D.RID,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetModulate",
+    "signature": "public static System.Void CanvasItemSetModulate(Electron2D.RID item, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetParent(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetParent",
+    "signature": "public static System.Void CanvasItemSetParent(Electron2D.RID item, Electron2D.RID parent)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "parent",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetSelfModulate(Electron2D.RID,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetSelfModulate",
+    "signature": "public static System.Void CanvasItemSetSelfModulate(Electron2D.RID item, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetSortChildrenByY(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetSortChildrenByY",
+    "signature": "public static System.Void CanvasItemSetSortChildrenByY(Electron2D.RID item, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetTransform(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetTransform",
+    "signature": "public static System.Void CanvasItemSetTransform(Electron2D.RID item, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetVisible(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetVisible",
+    "signature": "public static System.Void CanvasItemSetVisible(Electron2D.RID item, System.Boolean visible)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "visible",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetZAsRelativeToParent(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetZAsRelativeToParent",
+    "signature": "public static System.Void CanvasItemSetZAsRelativeToParent(Electron2D.RID item, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetZIndex(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetZIndex",
+    "signature": "public static System.Void CanvasItemSetZIndex(Electron2D.RID item, System.Int32 zIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "zIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasSetItemMirroring(Electron2D.RID,Electron2D.RID,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasSetItemMirroring",
+    "signature": "public static System.Void CanvasSetItemMirroring(Electron2D.RID canvas, Electron2D.RID item, Electron2D.Vector2 mirroring)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mirroring",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasSetModulate(Electron2D.RID,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasSetModulate",
+    "signature": "public static System.Void CanvasSetModulate(Electron2D.RID canvas, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvas",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.DebugCanvasItemGetRect(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "DebugCanvasItemGetRect",
+    "signature": "public static Electron2D.Rect2 DebugCanvasItemGetRect(Electron2D.RID item)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "item",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -115272,6 +115864,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportAttachCanvas(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportAttachCanvas",
+    "signature": "public static System.Void ViewportAttachCanvas(Electron2D.RID viewport, Electron2D.RID canvas)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportGetTexture(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -115288,6 +115904,93 @@
       }
     ],
     "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportRemoveCanvas(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportRemoveCanvas",
+    "signature": "public static System.Void ViewportRemoveCanvas(Electron2D.RID viewport, Electron2D.RID canvas)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetCanvasStacking(Electron2D.RID,Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetCanvasStacking",
+    "signature": "public static System.Void ViewportSetCanvasStacking(Electron2D.RID viewport, Electron2D.RID canvas, System.Int32 layer, System.Int32 sublayer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "layer",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "sublayer",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.ViewportSetCanvasTransform(Electron2D.RID,Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetCanvasTransform",
+    "signature": "public static System.Void ViewportSetCanvasTransform(Electron2D.RID viewport, Electron2D.RID canvas, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

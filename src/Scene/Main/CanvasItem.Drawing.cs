@@ -27,7 +27,7 @@ public abstract partial class CanvasItem
     public Color Modulate
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _modulate; }
-        set { EnsureMutable(); ValidateCanvasColor(value); _modulate = value; }
+        set { EnsureMutable(); ValidateCanvasColor(value); _modulate = value; if (ServerState is { } state) state.Modulate = null; }
     }
 
     /// <summary>Gets or sets the color multiplier applied only to this node's drawing.</summary>
@@ -38,7 +38,7 @@ public abstract partial class CanvasItem
     public Color SelfModulate
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _selfModulate; }
-        set { EnsureMutable(); ValidateCanvasColor(value); _selfModulate = value; }
+        set { EnsureMutable(); ValidateCanvasColor(value); _selfModulate = value; if (ServerState is { } state) state.SelfModulate = null; }
     }
 
     /// <summary>Gets or sets the borrowed material for this node's canvas commands.</summary>
@@ -283,6 +283,7 @@ public abstract partial class CanvasItem
         EnsureMutable();
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
+        if (ServerState is { Commands: { } painter } state) { painter.Dispose(); state.Commands = null; }
         _canvasCommands?.Clear();
         _polygonCount = 0; _strokeCount = 0; _meshCount = 0; _multiMeshCount = 0;
         _drawing = true;
@@ -303,21 +304,22 @@ public abstract partial class CanvasItem
         finally { _drawing = false; _currentDrawingItem = previousDrawingItem; if (_meshes is not null) for (var i = _meshCount; i < _meshes.Count; i++) _meshes[i].Clear(); if (_multiMeshes is not null) for (var i = _multiMeshCount; i < _multiMeshes.Count; i++) _multiMeshes[i].Clear(); }
     }
 
-    internal bool HasCanvasCommands => _canvasCommands is { Count: > 0 };
+    internal bool HasCanvasCommands => ServerState?.Commands is { } painter ? painter.HasCanvasCommands : _canvasCommands is { Count: > 0 };
     internal virtual Rect2? CanvasClipRect => null;
     internal virtual bool CanvasUsesWorldCoordinates => false;
 
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
     internal Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
-    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null, Vector2i? outputSize = null)
+    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null, Vector2i? outputSize = null, Viewport? renderViewport = null)
     {
-        if (_canvasCommands is null) return;
-        var color = InheritedModulate * _selfModulate;
-        var viewport = CanvasViewport;
-        var filter = TextureFilterInTree;
+        var commands = ServerState?.Commands?._canvasCommands ?? _canvasCommands;
+        if (commands is null) return;
+        var color = RenderInheritedModulate * RenderSelfModulate * (RenderCanvas()?.Modulate ?? Colors.White);
+        var viewport = renderViewport ?? ServerState?.Owner?.CurrentCanvasViewport ?? CanvasViewport;
+        var filter = RenderFilter;
         if (filter == TextureFilter.ParentNode) filter = viewport?.TextureFilterInTree ?? TextureFilter.Linear;
-        var inheritedRepeat = TextureRepeatInTree;
+        var inheritedRepeat = RenderRepeat;
         if (inheritedRepeat == TextureRepeat.ParentNode) inheritedRepeat = viewport?.TextureRepeatInTree ?? TextureRepeat.Disabled;
         var anisotropy = filter >= TextureFilter.NearestWithMipmapsAnisotropic
             ? 1 << (int)(viewport?.AnisotropicFilteringLevel ?? Viewport.AnisotropicFiltering.Anisotropy4X) : 1;
@@ -328,7 +330,7 @@ public abstract partial class CanvasItem
         var skipping = false;
         var capturedParticles = false;
         (bool Enabled, int Horizontal, int Vertical, bool Loop) particlesAnimation = default;
-        foreach (var command in _canvasCommands)
+        foreach (var command in commands)
         {
             if (command.AnimationSlice is { } slice) { skipping = !slice.Includes(time); continue; }
             if (skipping || command.Texture is ServerTexture { IsDisposed: true }) continue;

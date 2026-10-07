@@ -4,7 +4,8 @@ internal sealed class CanvasMultiMesh(MultiMesh resource)
 {
     private CanvasMesh? _mesh;
     internal void Set(MultiMesh value) { resource = value; }
-    internal void Clear() { resource = null!; _mesh?.Clear(); _mesh = null; }
+    internal void Clear() { resource = null!; _mesh?.Clear(); }
+    internal Rect2 Bounds() => resource.GetAABB();
     internal void ResetInterpolation() { if (resource is { IsDisposed: false }) resource.ResetInstancesPhysicsInterpolation(); }
     internal void Append(List<CanvasVertex> vertices, List<CanvasBatch> batches, Texture? texture, Transform transform, Color color,
         MaterialState? material, BlendMode blend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, float fraction, Vector2i? outputSize, CanvasItem? skinOwner = null)

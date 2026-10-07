@@ -109,7 +109,7 @@ public enum WindowFlag
     Max = 13,
 }
 
-/// <summary>Controls how a nine-patch center region fills one axis in controls and styles.</summary>
+/// <summary>Controls how a nine-patch center region fills one axis in canvas commands, controls and styles.</summary>
 public enum AxisStretchMode
 {
     /// <summary>Stretches one source center across the destination center.</summary>

@@ -2640,12 +2640,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -3158,6 +3158,241 @@
       "electron2d": "property:Electron2D.CanvasItem.ClipChildren()",
       "state": "Implemented",
       "reason": "Pinned canvas_item.cpp/.h, renderer_canvas_cull.cpp and renderer_canvas_render_rd.cpp audit: stored Disabled/Only/AndDraw with Max sentinel, equal-write silence and commit-before-warning refresh; drawn command/texture/tint alpha masks same-Z descendants over the copied background. AndDraw inserts ordinary owner drawing before children and always uses built-in final masking; Only accepts an overriding material. No recorded commands or no captured child range preserve ordinary drawing. CanvasGroup stores policy without replacing its group mode. Physical-ancestor clipping/group warnings preserve the source boundary; nested same-Z masks/groups and writable screen reads explicitly reject under ADR 0028. CanvasClipTests verifies guards, callbacks, packing, native Wayland GPU/hardware compatibility pixels, texture/partial/overlap alpha, Y-sort, Z/TopLevel/neutral boundaries, transparent SubViewport/resize, custom HLSL/GLSL Only materials, and 64 active plus 64 idle warmed frames with zero managed bytes. Software advanced mask blending rejects before drawing. Native/driver allocations, other platforms, editor inspector hiding and owner visual acceptance remain separate gates."
+    },
+    {
+      "godot": "CanvasItem::method:get_canvas()",
+      "electron2d": "method:Electron2D.CanvasItem.GetCanvas()",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "CanvasLayer::method:get_canvas()",
+      "electron2d": "method:Electron2D.CanvasLayer.GetCanvas()",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_create()",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasCreate()",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_mesh(RID:,RID:,Transform2D:,Color:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddMesh(Electron2D.RID,Electron2D.RID,System.Nullable<Electron2D.Transform>,System.Nullable<Electron2D.Color>,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_multimesh(RID:,RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddMultiMesh(Electron2D.RID,Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_clear(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemClear(Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_create()",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemCreate()",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_clip(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetClip(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_custom_rect(RID:,bool:,Rect2:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetCustomRect(Electron2D.RID,System.Boolean,Electron2D.Rect2)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_default_texture_filter(RID:,int:RenderingServer.CanvasItemTextureFilter)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetDefaultTextureFilter(Electron2D.RID,Electron2D.TextureFilter)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_default_texture_repeat(RID:,int:RenderingServer.CanvasItemTextureRepeat)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetDefaultTextureRepeat(Electron2D.RID,Electron2D.TextureRepeat)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_draw_behind_parent(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetDrawBehindParent(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_modulate(RID:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetModulate(Electron2D.RID,Electron2D.Color)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_parent(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetParent(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_self_modulate(RID:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetSelfModulate(Electron2D.RID,Electron2D.Color)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_sort_children_by_y(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetSortChildrenByY(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_transform(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetTransform(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_visible(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetVisible(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_z_as_relative_to_parent(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetZAsRelativeToParent(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_z_index(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetZIndex(Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_set_item_mirroring(RID:,RID:,Vector2:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasSetItemMirroring(Electron2D.RID,Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_set_modulate(RID:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasSetModulate(Electron2D.RID,Electron2D.Color)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:debug_canvas_item_get_rect(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.DebugCanvasItemGetRect(Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_attach_canvas(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportAttachCanvas(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_remove_canvas(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportRemoveCanvas(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_canvas_stacking(RID:,RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetCanvasStacking(Electron2D.RID,Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_canvas_transform(RID:,RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetCanvasTransform(Electron2D.RID,Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
+    },
+    {
+      "godot": "RenderingServer::enum:CanvasItemTextureFilter",
+      "electron2d": "T:Electron2D.TextureFilter",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_DEFAULT",
+      "electron2d": "enumValue:Electron2D.TextureFilter.ParentNode()",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_LINEAR",
+      "electron2d": "enumValue:Electron2D.TextureFilter.Linear()",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS",
+      "electron2d": "enumValue:Electron2D.TextureFilter.LinearWithMipmaps()",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC",
+      "electron2d": "enumValue:Electron2D.TextureFilter.LinearWithMipmapsAnisotropic()",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_MAX",
+      "electron2d": "enumValue:Electron2D.TextureFilter.Max()",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_NEAREST",
+      "electron2d": "enumValue:Electron2D.TextureFilter.Nearest()",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS",
+      "electron2d": "enumValue:Electron2D.TextureFilter.NearestWithMipmaps()",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC",
+      "electron2d": "enumValue:Electron2D.TextureFilter.NearestWithMipmapsAnisotropic()",
+      "reason": "ADR 0051: existing shared TextureFilter covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum:CanvasItemTextureRepeat",
+      "electron2d": "T:Electron2D.TextureRepeat",
+      "reason": "ADR 0051: existing shared TextureRepeat covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_DEFAULT",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.ParentNode()",
+      "reason": "ADR 0051: existing shared TextureRepeat covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_DISABLED",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.Disabled()",
+      "reason": "ADR 0051: existing shared TextureRepeat covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_ENABLED",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.Enabled()",
+      "reason": "ADR 0051: existing shared TextureRepeat covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_MAX",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.Max()",
+      "reason": "ADR 0051: existing shared TextureRepeat covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_MIRROR",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.Mirror()",
+      "reason": "ADR 0051: existing shared TextureRepeat covers this renderer owner with identical pinned numeric sampler values. Zero inherits render-parent/destination viewport; Max remains a rejected sentinel. Backend mipmap/anisotropy/wrapping limits remain those of the shared sampler contract."
+    },
+    {
+      "godot": "RenderingServer::enum:NinePatchAxisMode",
+      "electron2d": "T:Electron2D.AxisStretchMode",
+      "reason": "ADRs 0004/0028/0051/0079: canvas/item ownership now fulfills the low-level nine-patch command trigger. CanvasItemAddNinePatch reuses real retained stretch/tile/tile-fit geometry, source regions/reflection, margins, center suppression and borrowed textures; empty texture selects internal white. Shared AxisStretchMode preserves all three pinned numeric values. Typed finite/enum guards, command/bounds lifetime and native owned-canvas pixels are exercised by RenderingCanvasTests, with existing NinePatchRenderingTests covering shared geometry/backend limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:NinePatchAxisMode.NINE_PATCH_STRETCH",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.Stretch()",
+      "reason": "ADRs 0004/0028/0051/0079: canvas/item ownership now fulfills the low-level nine-patch command trigger. CanvasItemAddNinePatch reuses real retained stretch/tile/tile-fit geometry, source regions/reflection, margins, center suppression and borrowed textures; empty texture selects internal white. Shared AxisStretchMode preserves all three pinned numeric values. Typed finite/enum guards, command/bounds lifetime and native owned-canvas pixels are exercised by RenderingCanvasTests, with existing NinePatchRenderingTests covering shared geometry/backend limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:NinePatchAxisMode.NINE_PATCH_TILE",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.Tile()",
+      "reason": "ADRs 0004/0028/0051/0079: canvas/item ownership now fulfills the low-level nine-patch command trigger. CanvasItemAddNinePatch reuses real retained stretch/tile/tile-fit geometry, source regions/reflection, margins, center suppression and borrowed textures; empty texture selects internal white. Shared AxisStretchMode preserves all three pinned numeric values. Typed finite/enum guards, command/bounds lifetime and native owned-canvas pixels are exercised by RenderingCanvasTests, with existing NinePatchRenderingTests covering shared geometry/backend limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:NinePatchAxisMode.NINE_PATCH_TILE_FIT",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.TileFit()",
+      "reason": "ADRs 0004/0028/0051/0079: canvas/item ownership now fulfills the low-level nine-patch command trigger. CanvasItemAddNinePatch reuses real retained stretch/tile/tile-fit geometry, source regions/reflection, margins, center suppression and borrowed textures; empty texture selects internal white. Shared AxisStretchMode preserves all three pinned numeric values. Typed finite/enum guards, command/bounds lifetime and native owned-canvas pixels are exercised by RenderingCanvasTests, with existing NinePatchRenderingTests covering shared geometry/backend limits."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_add_nine_patch(RID:,Rect2:,Rect2:,RID:,Vector2:,Vector2:,int:RenderingServer.NinePatchAxisMode,int:RenderingServer.NinePatchAxisMode,bool:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemAddNinePatch(Electron2D.RID,Electron2D.Rect2,Electron2D.Rect2,Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2,Electron2D.AxisStretchMode,Electron2D.AxisStretchMode,System.Boolean,System.Nullable<Electron2D.Color>)",
+      "reason": "ADRs 0004/0028/0051/0079: canvas/item ownership now fulfills the low-level nine-patch command trigger. CanvasItemAddNinePatch reuses real retained stretch/tile/tile-fit geometry, source regions/reflection, margins, center suppression and borrowed textures; empty texture selects internal white. Shared AxisStretchMode preserves all three pinned numeric values. Typed finite/enum guards, command/bounds lifetime and native owned-canvas pixels are exercised by RenderingCanvasTests, with existing NinePatchRenderingTests covering shared geometry/backend limits."
     }
   ],
   "statusGroups": [
@@ -3807,18 +4042,10 @@
     },
     {
       "state": "Partial",
-      "reason": "Root CanvasLayer rendering is executable and audited. CustomViewport targets are borrowed active same-tree viewports; null follows the XML fallback contract. Independent/offscreen/nested/multiwindow rendering and embedded-window stacking remain absent; implement these in the first independent viewport slice. Opaque canvas identity requires the separate renderer resource-identity/lifetime slice. ADRs 0004/0008/0028.",
+      "reason": "ADRs 0004/0008/0028: scene layer ordering, visibility, transforms/following, stable borrowed canvas RID and live same-tree root/SubViewport/embedded target attachment execute. Low-level canvas overrides preserve authored layer getters. Remaining prerequisite: independent native subwindow viewport hosts/presentation and their canvas target lifecycle; generic canvas creation is now implemented and is no longer the blocker.",
       "godot": [
         "class:CanvasLayer",
         "CanvasLayer::property:custom_viewport"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "First backend-neutral renderer resource-identity/lifetime slice (ADR 0028): implement canvas identity together with its typed low-level server consumers and default-canvas ownership. CanvasLayer and CanvasItem do not expose fake handles in the current retained renderer.",
-      "godot": [
-        "CanvasLayer::method:get_canvas()",
-        "CanvasItem::method:get_canvas()"
       ]
     },
     {
@@ -3938,13 +4165,6 @@
         "class:AnimatedTexture",
         "AnimatedTexture::method:set_frame_texture(int:,Texture2D:)"
       ]
-    },
-    {
-      "godot": [
-        "RenderingServer::method:canvas_item_add_nine_patch(RID:,Rect2:,Rect2:,RID:,Vector2:,Vector2:,int:RenderingServer.NinePatchAxisMode,int:RenderingServer.NinePatchAxisMode,bool:,Color:)"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0079: real nine-patch geometry executes through NinePatchRect; this public server entry requires retained canvas/item RID creation, ownership and attachment. Trigger: first complete public canvas/item RID command slice; reuse the implemented geometry there."
     },
     {
       "godot": [
@@ -4356,14 +4576,14 @@
         "RenderingServer::method:texture_replace(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Destination identity/retained references survive transfer of owned 2D pixels/size/path and source consumption. Proxy replacement operands reject, source consumption redirects existing aliases and destination aliases observe new pixels. Layered/drawable resource transfer enters those resource families\u2019 first complete lifecycle slices."
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Destination identity/retained references survive transfer of owned 2D pixels/size/path and source consumption. Proxy replacement operands reject, source consumption redirects existing aliases and destination aliases observe new pixels. Layered/drawable resource transfer enters those resource families’ first complete lifecycle slices."
     },
     {
       "godot": [
         "RenderingServer::method:free_rid(RID:)"
       ],
       "state": "Partial",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Material/shader/canvas/drawable RID registration and cleanup enter each family\u2019s first actual server-resource slice."
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Material/shader/canvas/drawable RID registration and cleanup enter each family’s first actual server-resource slice."
     },
     {
       "godot": [
@@ -4371,7 +4591,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -4564,6 +4784,65 @@
         "CanvasItem::enum_value:ClipChildrenMode.CLIP_CHILDREN_MAX",
         "CanvasItem::property:clip_children"
       ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance.",
+      "godot": [
+        "CanvasItem::method:get_canvas()",
+        "CanvasLayer::method:get_canvas()",
+        "RenderingServer::enum:CanvasItemTextureFilter",
+        "RenderingServer::enum:CanvasItemTextureRepeat",
+        "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_DEFAULT",
+        "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_LINEAR",
+        "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS",
+        "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC",
+        "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_MAX",
+        "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_NEAREST",
+        "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS",
+        "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC",
+        "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_DEFAULT",
+        "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_DISABLED",
+        "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_ENABLED",
+        "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_MAX",
+        "RenderingServer::enum_value:CanvasItemTextureRepeat.CANVAS_ITEM_TEXTURE_REPEAT_MIRROR",
+        "RenderingServer::method:canvas_create()",
+        "RenderingServer::method:canvas_item_add_mesh(RID:,RID:,Transform2D:,Color:,RID:)",
+        "RenderingServer::method:canvas_item_add_multimesh(RID:,RID:,RID:)",
+        "RenderingServer::method:canvas_item_clear(RID:)",
+        "RenderingServer::method:canvas_item_create()",
+        "RenderingServer::method:canvas_item_set_clip(RID:,bool:)",
+        "RenderingServer::method:canvas_item_set_custom_rect(RID:,bool:,Rect2:)",
+        "RenderingServer::method:canvas_item_set_default_texture_filter(RID:,int:RenderingServer.CanvasItemTextureFilter)",
+        "RenderingServer::method:canvas_item_set_default_texture_repeat(RID:,int:RenderingServer.CanvasItemTextureRepeat)",
+        "RenderingServer::method:canvas_item_set_draw_behind_parent(RID:,bool:)",
+        "RenderingServer::method:canvas_item_set_modulate(RID:,Color:)",
+        "RenderingServer::method:canvas_item_set_parent(RID:,RID:)",
+        "RenderingServer::method:canvas_item_set_self_modulate(RID:,Color:)",
+        "RenderingServer::method:canvas_item_set_sort_children_by_y(RID:,bool:)",
+        "RenderingServer::method:canvas_item_set_transform(RID:,Transform2D:)",
+        "RenderingServer::method:canvas_item_set_visible(RID:,bool:)",
+        "RenderingServer::method:canvas_item_set_z_as_relative_to_parent(RID:,bool:)",
+        "RenderingServer::method:canvas_item_set_z_index(RID:,int:)",
+        "RenderingServer::method:canvas_set_item_mirroring(RID:,RID:,Vector2:)",
+        "RenderingServer::method:canvas_set_modulate(RID:,Color:)",
+        "RenderingServer::method:debug_canvas_item_get_rect(RID:)",
+        "RenderingServer::method:viewport_attach_canvas(RID:,RID:)",
+        "RenderingServer::method:viewport_remove_canvas(RID:,RID:)",
+        "RenderingServer::method:viewport_set_canvas_stacking(RID:,RID:,int:,int:)",
+        "RenderingServer::method:viewport_set_canvas_transform(RID:,RID:,Transform2D:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::enum:NinePatchAxisMode",
+        "RenderingServer::enum_value:NinePatchAxisMode.NINE_PATCH_STRETCH",
+        "RenderingServer::enum_value:NinePatchAxisMode.NINE_PATCH_TILE",
+        "RenderingServer::enum_value:NinePatchAxisMode.NINE_PATCH_TILE_FIT",
+        "RenderingServer::method:canvas_item_add_nine_patch(RID:,Rect2:,Rect2:,RID:,Vector2:,Vector2:,int:RenderingServer.NinePatchAxisMode,int:RenderingServer.NinePatchAxisMode,bool:,Color:)"
+      ],
+      "reason": "ADRs 0004/0028/0051/0079: canvas/item ownership now fulfills the low-level nine-patch command trigger. CanvasItemAddNinePatch reuses real retained stretch/tile/tile-fit geometry, source regions/reflection, margins, center suppression and borrowed textures; empty texture selects internal white. Shared AxisStretchMode preserves all three pinned numeric values. Typed finite/enum guards, command/bounds lifetime and native owned-canvas pixels are exercised by RenderingCanvasTests, with existing NinePatchRenderingTests covering shared geometry/backend limits."
     }
   ],
   "extras": [

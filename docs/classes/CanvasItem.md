@@ -1308,3 +1308,7 @@ Throws `System.InvalidOperationException`: An attached node is read off-owner.
 Throws `System.ObjectDisposedException`: The node is disposed.
 
 The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.
+
+## Server canvas integration
+
+`GetCanvas()` returns the borrowed canvas selected by authored tree membership, or empty while detached. Server state attached to `GetCanvasItem()` changes native replay independently of authored properties; matching source setters and redraw republish their own fields/commands. See [the executable canvas contract](../components/canvas-rendering.md#caller-owned-canvases-and-items).

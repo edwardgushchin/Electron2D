@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Caller-owned canvas integration
+
+Caller-owned canvases/items and borrowed scene canvas identities now support independent native parent/property state, retained Mesh/MultiMesh/nine-patch commands and simultaneous viewport attachments on the existing rendering backends. [The canvas contract](../components/canvas-rendering.md#caller-owned-canvases-and-items) separates scene authoring, real rendering, lifetime and verification limits.
+
 ## Executable mesh skin integration
 
 CanvasItem.GetCanvasItem now supplies a stable weak scene-owned identity for actual palette attachment. It survives tree exit/reentry, closes on disposal and is protected from renderer free. Attachments are transient and do not inherit or copy.

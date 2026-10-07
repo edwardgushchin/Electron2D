@@ -67,3 +67,5 @@ Follows RID links under the existing gate, using weak source lookup and never co
 ### PlaceholderTexture
 
 A lazy internal ServerTexture over PlaceholderPixels, with no public RID. It remains a process-wide managed fallback; each renderer owns and releases any prepared native allocation. It renders actual checkerboard pixels when a live empty source has no snapshot. A disconnected alias is skipped rather than given this fallback.
+
+Low-level nine-patch commands without a texture use one lazily created internal white pixel resource. Its immutable shared source is never exposed as caller-owned RID; native uploads follow the normal per-backend texture cache lifetime.

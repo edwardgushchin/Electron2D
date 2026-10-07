@@ -12,6 +12,7 @@ internal sealed class CanvasPolygon
     private bool _skinEnabled;
     internal void SetSkin(Polygon owner, ReadOnlySpan<int> source) { (_skin ??= new()).Set(owner, source, VertexCount); _skinEnabled = true; }
 
+    internal Rect2 GetLocalBounds() { var bounds = VertexCount == 0 ? default : new Rect2(Vertices[0].Position, Vector2.Zero); for (var i = 1; i < VertexCount; i++) bounds = bounds.Expand(Vertices[i].Position); return bounds; }
     internal void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive)
     {
         _skinEnabled = false;

@@ -155,7 +155,7 @@ public sealed partial class RenderingServer : ElectronObject
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
             _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.PhysicsInterpolationFraction : 1f;
             _activeFrames.Clear(); CaptureViewports(tree.Root);
-            if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); Capture(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.IsVisibleInTree) node.PrepareCanvas(); }
+            if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderCanvas() is not null && node.RenderVisible && node.ServerState is not { Owned: true }) node.PrepareCanvas(); }
             _activeFrames.Clear(); CaptureViewports(tree.Root);
             foreach (var viewport in _canvasFrames.Keys) if (viewport.IsDisposed || !ReferenceEquals(viewport.Tree, tree)) { _backend.ReleaseTarget(viewport); viewport.RenderingOwner = null; _canvasFrames.Remove(viewport); }
             _backend.BeginFrame();
@@ -208,19 +208,17 @@ public sealed partial class RenderingServer : ElectronObject
         var framebufferTransform = ReferenceEquals(viewport, _window) ? new Transform(0f, new Vector2((float)pixels.X / _window.Size.X, (float)pixels.Y / _window.Size.Y), 0f, Vector2.Zero) : Transform.Identity;
         // Drawing callbacks may change parenting, visibility or sibling order.
         _nodes.Clear();
-        Capture(tree.Root);
-        for (var i = _nodes.Count - 1; i >= 0; i--) if (!ReferenceEquals(_nodes[i].CanvasViewport, viewport)) _nodes.RemoveAt(i);
+        CaptureCanvasScene(tree.Root);
+        for (var i = _nodes.Count - 1; i >= 0; i--) if (_nodes[i].RenderCanvas() is not { } canvas || !canvas.View(viewport, out _, out _, out _) || !_nodes[i].RenderLive(tree)) _nodes.RemoveAt(i);
         foreach (var node in _nodes)
             if (node is VisibleOnScreenNotifier notifier) notifier.ScreenCandidate = false;
         foreach (var node in _nodes)
-            if (node.GetParentItem() is null)
+            if (node.RenderParent is null && node.RenderCanvas() is { } canvas && canvas.View(viewport, out var canvasTransform, out var canvasLayer, out var sublayer, _interpolationFraction))
             {
-                var layer = node.GetCanvasLayerNode();
-                if (layer is not null && !ReferenceEquals(layer.CanvasViewport, _viewport)) continue;
-                _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex(includeInternal: true);
+                _canvasStacking = ((long)canvasLayer << 32) + (uint)(sublayer ^ int.MinValue);
                 _canvasTooltipOverlay = SceneTree.IsTooltipNode(node);
-                _canvasID = layer?.InstanceID ?? 0;
-                _canvasBasis = framebufferTransform * _viewport.GetCanvasRenderTransform(layer, _interpolationFraction);
+                _canvasID = canvas.DefaultViewport is not null ? 0 : (ulong)canvas.RID.GetID();
+                _canvasBasis = framebufferTransform * canvasTransform;
                 OrderCanvas(node, _canvasBasis);
             }
         _order.Sort(static (x, y) =>
@@ -234,12 +232,14 @@ public sealed partial class RenderingServer : ElectronObject
         ComposeFrame(pixels);
     }
 
+    private static Vector2 NativeMirror(CanvasItem item) => item.RenderParent is null && item.RenderCanvas() is { } canvas && canvas.Mirroring.Count != 0 && canvas.Mirroring.TryGetValue(item.GetCanvasItem(), out var size) ? size : Vector2.Zero;
+    private static Vector2 RepeatSize(CanvasItem item) => item is Parallax parallax ? parallax.RepeatSize : item is ParallaxLayer layer ? layer.RepeatPeriod : NativeMirror(item);
     private void AppendOrderedCanvas(RenderEntry item, Vector2i pixels)
     {
         CanvasItem? repeatSource = null;
-        for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.GetParentItem())
+        for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.RenderParent)
             if ((ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero) ||
-                (ancestor is ParallaxLayer layer && layer.RepeatPeriod != Vector2.Zero))
+                (ancestor is ParallaxLayer layer && layer.RepeatPeriod != Vector2.Zero) || NativeMirror(ancestor) != Vector2.Zero)
             {
                 repeatSource = ancestor;
                 break;
@@ -253,7 +253,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             return;
         }
-        var size = repeatSource is Parallax current ? current.RepeatSize : ((ParallaxLayer)repeatSource).RepeatPeriod;
+        var size = RepeatSize(repeatSource);
         var times = repeatSource is Parallax repeated ? repeated.RepeatTimes : 1;
         var sourceTransform = _repeatTransforms[repeatSource];
         var start = size * -(times / 2);
@@ -276,17 +276,17 @@ public sealed partial class RenderingServer : ElectronObject
 
     private void Capture(Node node)
     {
-        if (node is CanvasItem item) _nodes.Add(item);
+        if (node is CanvasItem item && _capturedCanvasItems.Add(item)) _nodes.Add(item);
         for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) Capture(node.GetChild(i, includeInternal: true));
     }
 
     private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
     {
-        if (!item.IsVisibleInTree || (item.VisibilityLayer & _viewport.CanvasCullMask) == 0) return;
+        if (!item.RenderVisible || (item.VisibilityLayer & _viewport.CanvasCullMask) == 0) return;
         if (item is ParallaxLayer layer) _repeatTransforms[layer] = transform;
         if (!alreadyYSorted)
         {
-            var local = item.GetInterpolatedVisualTransform(_interpolationFraction);
+            var local = item.RenderLocal(_interpolationFraction);
             if (_viewport.SnapTransformsToPixel)
             {
                 transform.Origin = CanvasGeometry.Snap(transform.Origin);
@@ -294,7 +294,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             transform *= local;
         }
-        if (item.YSortEnabled)
+        if (item.RenderYSort)
         {
             if (alreadyYSorted && !IsCompositor(item))
             {
@@ -321,23 +321,30 @@ public sealed partial class RenderingServer : ElectronObject
     private void AddRenderEntry(CanvasItem item, Transform transform)
     {
         if (item is Parallax parallax) _repeatTransforms[parallax] = transform;
+        else if (NativeMirror(item) != Vector2.Zero) _repeatTransforms[item] = _canvasBasis;
         _canvasTransforms[item] = transform;
-        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, item.CanvasUsesWorldCoordinates ? _canvasBasis : transform, ParentGroup(item)));
+        if (item.ServerState?.CustomRect is { } custom)
+        {
+            var area = transform * custom.Abs();
+            for (var parent = item; parent is not null; parent = parent.RenderParent)
+                if (NativeMirror(parent) != Vector2.Zero) { area = ExpandRepeatedClip(area, parent); break; }
+            var size = _backend.FindTarget(_viewport)!.Size;
+            if (!area.Intersects(new Rect2(Vector2.Zero, size), includeBorders: true)) return;
+        }
+        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.RenderZ, _order.Count, item.CanvasUsesWorldCoordinates ? _canvasBasis : transform, ParentGroup(item)));
     }
 
     private bool HasEmptyOwnClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null) =>
-        (item is Control { ClipContents: true } || item.CanvasClipRect is not null) && GetClip(item, pixels, repeatSource, includeSelf: true) is { } clip && !clip.HasArea();
+        (item.RenderClip is not null) && GetClip(item, pixels, repeatSource, includeSelf: true) is { } clip && !clip.HasArea();
 
     private Rect2i? GetClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null, bool includeSelf = false)
     {
         Rect2? clipped = null;
         var repeat = repeatSource is not null && !ReferenceEquals(item, repeatSource);
-        for (var ancestor = item; ancestor is not null; ancestor = ancestor.GetParentItem())
+        for (var ancestor = item; ancestor is not null; ancestor = ancestor.RenderParent)
         {
             if (ReferenceEquals(ancestor, repeatSource)) repeat = false;
-            var localClip = ancestor.CanvasClipRect;
-            if (localClip is null && (includeSelf || !ReferenceEquals(ancestor, item)) && ancestor is Control { ClipContents: true } control)
-                localClip = new Rect2(Vector2.Zero, control.Size);
+            var localClip = (includeSelf || !ReferenceEquals(ancestor, item) || ancestor.ServerState?.Clip == true || ancestor.CanvasClipRect is not null) ? ancestor.RenderClip : null;
             if (localClip is not { } localArea) continue;
             var transform = _canvasTransforms[ancestor];
             var area = transform * localArea;
@@ -358,7 +365,7 @@ public sealed partial class RenderingServer : ElectronObject
 
     private Rect2 ExpandRepeatedClip(Rect2 area, CanvasItem source)
     {
-        var size = source is Parallax parallax ? parallax.RepeatSize : ((ParallaxLayer)source).RepeatPeriod;
+        var size = RepeatSize(source);
         var times = source is Parallax repeated ? repeated.RepeatTimes : 1;
         var basis = _repeatTransforms[source];
         var start = size * -(times / 2);
@@ -373,21 +380,30 @@ public sealed partial class RenderingServer : ElectronObject
     private void OrderChildren(CanvasItem item, Transform transform, bool behind)
     {
         for (var index = 0; index < item.GetChildCount(includeInternal: true); index++)
-            if (item.GetChild(index, includeInternal: true) is CanvasItem { TopLevel: false } child && child.ShowBehindParent == behind)
+            if (item.GetChild(index, includeInternal: true) is CanvasItem child && ReferenceEquals(child.RenderParent, item) && child.RenderBehind == behind)
+                OrderCanvas(child, transform);
+        if (item.ServerState is not { } state) return;
+        foreach (var weak in state.Children)
+            if (weak.TryGetTarget(out var child) && !child.IsDisposed && ReferenceEquals(child.RenderParent, item) && !ReferenceEquals(child.GetParentItem(), item) && child.RenderBehind == behind)
                 OrderCanvas(child, transform);
     }
 
     private void CollectYSort(CanvasItem parent, Transform parentTransform)
     {
         for (var index = 0; index < parent.GetChildCount(includeInternal: true); index++)
-        {
-            if (parent.GetChild(index, includeInternal: true) is not CanvasItem { TopLevel: false } child || !child.Visible || (child.VisibilityLayer & _viewport.CanvasCullMask) == 0) continue;
-            var local = child.GetInterpolatedVisualTransform(_interpolationFraction);
-            if (_viewport.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
-            var transform = parentTransform * local;
-            _ySort.Add(new(child, transform, _ySort.Count));
-            if (child.YSortEnabled && !IsCompositor(child)) CollectYSort(child, transform);
-        }
+            if (parent.GetChild(index, includeInternal: true) is CanvasItem child && ReferenceEquals(child.RenderParent, parent)) AddYSorted(child, parentTransform);
+        if (parent.ServerState is not { } state) return;
+        foreach (var weak in state.Children)
+            if (weak.TryGetTarget(out var child) && !child.IsDisposed && ReferenceEquals(child.RenderParent, parent) && !ReferenceEquals(child.GetParentItem(), parent)) AddYSorted(child, parentTransform);
+    }
+    private void AddYSorted(CanvasItem child, Transform parentTransform)
+    {
+        if (!child.RenderVisible || (child.VisibilityLayer & _viewport.CanvasCullMask) == 0) return;
+        var local = child.RenderLocal(_interpolationFraction);
+        if (_viewport.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
+        var transform = parentTransform * local;
+        _ySort.Add(new(child, transform, _ySort.Count));
+        if (child.RenderYSort && !IsCompositor(child)) CollectYSort(child, transform);
     }
 
     internal Image Readback() { EnsureOwner(); return _backend.Readback(_backend.FindTarget(_window) ?? throw new InvalidOperationException("No canvas frame has completed.")); }
@@ -411,6 +427,7 @@ public sealed partial class RenderingServer : ElectronObject
             {
                 try { ReleaseOwnedMultiMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 ReleaseOwnedSkeletons();
+                ReleaseOwnedCanvasGraph();
                 try { ReleaseOwnedMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseOwnedTextures(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { _backend.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }

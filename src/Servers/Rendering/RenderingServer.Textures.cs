@@ -113,7 +113,7 @@ public sealed partial class RenderingServer
 
     internal void FreeRIDCore(RID rid)
     {
-        EnsureTextureChange(); if (RenderingCanvasItemRegistry.Contains(rid)) throw new InvalidOperationException("Canvas identities remain scene-owned."); if (RenderingSkeletonRegistry.Contains(rid)) { RenderingSkeletonRegistry.Owned(rid, this).EnsureWritable(); _ownedSkeletonRIDs.Remove(rid); RenderingSkeletonRegistry.Remove(rid); return; }
+        EnsureTextureChange(); if (ReleaseCanvasRID(rid)) return; if (RenderingSkeletonRegistry.Contains(rid)) { RenderingSkeletonRegistry.Owned(rid, this).EnsureWritable(); _ownedSkeletonRIDs.Remove(rid); RenderingSkeletonRegistry.Remove(rid); return; }
         if (RenderingMultiMeshRegistry.Contains(rid)) { var resource = RenderingMultiMeshRegistry.Owned(rid, this); _ownedMultiMeshRIDs.Remove(rid); RenderingMultiMeshRegistry.Remove(rid); resource.Dispose(); return; }
         if (RenderingMeshRegistry.Contains(rid)) { var mesh = RenderingMeshRegistry.Owned(rid, this); _ownedMeshRIDs.Remove(rid); RenderingMeshRegistry.Remove(rid); mesh.Dispose(); return; }
         var texture = RenderingTextureRegistry.Owned(rid, this);

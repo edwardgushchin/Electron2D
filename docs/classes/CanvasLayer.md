@@ -334,3 +334,7 @@ CanvasItem visibility masks inside every layer are tested against the destinatio
 The internal root-tooltip presenter is sorted above game canvas layers, including the public maximum layer index. This internal role is not a public CanvasLayer setting and is not preserved by ordinary scene copies. Normal canvas layer ordering remains unchanged.
 
 CustomViewport can now target a live SubViewport in the same scene. Its canvas items render into that target even when physically parented elsewhere, and target recording-scale changes invalidate their retained style geometry. See [offscreen targets](../components/canvas-rendering.md#offscreen-canvas-targets) for scope, tests and remaining prerequisites.
+
+## Server canvas integration
+
+`GetCanvas()` supplies the stable borrowed logical canvas RID, valid before native startup and until layer disposal. Server viewport attachment/transforms/stacking can target this canvas without rewriting authored getters; matching layer setters republish their primary view. See [the executable canvas contract](../components/canvas-rendering.md#caller-owned-canvases-and-items).

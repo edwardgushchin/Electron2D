@@ -4,6 +4,7 @@ public abstract partial class CanvasItem
 {
     private readonly object _canvasItemRIDGate = new();
     private RID _canvasItemRID;
+    internal void BindOwnedCanvasIdentity(RID rid) { _canvasItemRID = rid; }
     internal RID AttachedSkeleton { get; private set; }
     /// <summary>Returns this scene-owned stable weak canvas identity, independent of native startup.</summary>
     /// <returns>A borrowed RID valid until node disposal; renderer FreeRID cannot release scene ownership.</returns>

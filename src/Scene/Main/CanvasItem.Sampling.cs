@@ -65,7 +65,7 @@ public abstract partial class CanvasItem
             EnsureMutable();
             if ((uint)value >= (uint)TextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(value));
             if (_textureFilter == value) return;
-            _textureFilter = value;
+            _textureFilter = value; if (ServerState is { } state) state.Filter = null;
             UpdateTextureSampling(filter: true);
             NotifyPropertyListChanged();
         }
@@ -87,7 +87,7 @@ public abstract partial class CanvasItem
             EnsureMutable();
             if ((uint)value >= (uint)TextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(value));
             if (_textureRepeat == value) return;
-            _textureRepeat = value;
+            _textureRepeat = value; if (ServerState is { } state) state.Repeat = null;
             UpdateTextureSampling(filter: false);
             NotifyPropertyListChanged();
         }

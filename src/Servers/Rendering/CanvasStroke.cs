@@ -10,6 +10,7 @@ internal sealed class CanvasStroke
     private readonly List<CanvasVertex> _strip = [];
     private bool _connected;
 
+    internal Rect2 GetLocalBounds() { var found = false; var bounds = default(Rect2); foreach (var vertex in _triangles) { bounds = found ? bounds.Expand(vertex.Position) : new(vertex.Position, Vector2.Zero); found = true; } foreach (var vertex in _thin) { bounds = found ? bounds.Expand(vertex.Position) : new(vertex.Position, Vector2.Zero); found = true; } return bounds; }
     internal void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected)
     {
         _triangles.Clear(); _thin.Clear(); _connected = connected;

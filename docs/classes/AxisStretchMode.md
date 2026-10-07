@@ -30,3 +30,5 @@ The managed Electron2D suite checks the consumers and numeric values. The owner-
 ## Relevant decision
 
 [ADR 0051](../decisions/product.md#adr-0051).
+
+RenderingServer.CanvasItemAddNinePatch uses the same numeric axis values and executable geometry as controls/styles. See [owned canvases](../components/canvas-rendering.md#caller-owned-canvases-and-items).

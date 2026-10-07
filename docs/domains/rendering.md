@@ -4,6 +4,10 @@ Last updated: 2026-10-07
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
+## Caller-owned canvas integration
+
+Caller-owned canvases/items and borrowed scene canvas identities now support independent native parent/property state, retained Mesh/MultiMesh/nine-patch commands and simultaneous viewport attachments on the existing rendering backends. [The canvas contract](../components/canvas-rendering.md#caller-owned-canvases-and-items) separates scene authoring, real rendering, lifetime and verification limits.
+
 ## Executable mesh skin integration
 
 Owned/scene palettes now attach to stable scene canvas identities and deform four/eight-slot Mesh/MultiMesh skin records into real triangles on both backends. Rest-bound culling cannot discard skinned instances moved into view; prepared storage remains backend-neutral.

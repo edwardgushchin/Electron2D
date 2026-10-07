@@ -397,11 +397,11 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static string TextureGetPath(RID texture) => RequireService().TextureGetPathCore(texture);
 
-    /// <summary>Releases a caller-owned rendering texture, mesh, instance or skeleton palette identity.</summary>
+    /// <summary>Releases a caller-owned rendering texture, mesh, instance, palette, canvas or canvas-item identity.</summary>
     /// <param name="rid">A live supported RID owned by this renderer.</param>
     /// <remarks>Resource-owned identities must be released by their resource. Retained commands stop drawing freed
     /// server textures; drawing a disposed mesh reports the borrowed-resource lifetime error. Freed palettes
-    /// restore unskinned geometry; scene canvas/skeleton identities remain scene-owned. Active palette replay forbids free.</remarks>
+    /// restore unskinned geometry. Freeing a canvas/item disconnects its render children without freeing their identities; they can be reparented. Borrowed scene canvas/skeleton identities remain scene-owned. Active palette replay forbids free.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or not a supported rendering resource.</exception>
     /// <exception cref="InvalidOperationException">The owner is different or the renderer is off-owner/submitting.</exception>
     /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>

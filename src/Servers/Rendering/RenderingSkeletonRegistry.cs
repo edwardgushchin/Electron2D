@@ -13,7 +13,7 @@ internal static class RenderingSkeletonRegistry
     internal static bool Prepare(RID rid, CanvasItem consumer, out ReadOnlySpan<Transform> transforms, out Transform basis, out Palette? lease)
     {
         lease = null; lock (Gate) { if (OwnedItems.TryGetValue(rid, out var value)) { if (value.Data.Transforms.Length != 0) { lease = value.Data; lease.ReplayReaders++; } transforms = value.Data.Transforms; basis = value.Data.Base; return transforms.Length != 0; } }
-        if (Resolve(rid) is { IsInsideTree: true } scene && ReferenceEquals(scene.Tree, consumer.Tree) && ReferenceEquals(scene.CanvasViewport, consumer.CanvasViewport) && ReferenceEquals(scene.GetCanvasLayerNode(), consumer.GetCanvasLayerNode())) { transforms = scene.PrepareSkinPalette(); basis = scene.GetInterpolatedGlobalVisualTransform((float)Engine.PhysicsInterpolationFraction); return transforms.Length != 0; }
+        if (Resolve(rid) is { IsInsideTree: true } scene && ReferenceEquals(scene.Tree, consumer.Tree ?? consumer.ServerState?.Owner?.CanvasSceneTree) && ReferenceEquals(scene.RenderCanvas(), consumer.RenderCanvas())) { transforms = scene.PrepareSkinPalette(); basis = scene.RenderGlobal((float)Engine.PhysicsInterpolationFraction); return transforms.Length != 0; }
         transforms = default; basis = default; return false;
     }
     private static int _registrations;

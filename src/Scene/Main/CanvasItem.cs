@@ -100,6 +100,7 @@ public abstract partial class CanvasItem : Node
     protected void NotifyLocalTransformChanged()
     {
         EnsureMutable();
+        if (ServerState is { } state) state.Transform = null;
         PropagateGlobalTransformChanged();
         if (Tree is { IsPhysicsInterpolationActive: true, IsInPhysicsFrame: false }) ResetInterpolationSnapshot();
         if (IsInsideTree && _notifyLocalTransformChanges) DispatchNotification(NotificationLocalTransformChanged);
@@ -143,6 +144,7 @@ public abstract partial class CanvasItem : Node
             base.OnNotification(what);
             return;
         }
+        if (ServerState is { } state) state.ParentAssigned = false;
         List<Exception>? errors = null;
         try { base.OnNotification(what); }
         catch (Exception error) { CollectException(ref errors, error); }
@@ -182,6 +184,7 @@ public abstract partial class CanvasItem : Node
     {
         if (IsDisposed || _inCanvas || !IsInsideTree) return;
         _inCanvas = true;
+        if (ServerState is { } state) state.ParentAssigned = false;
         _canvasLayer = GetParentItem()?._canvasLayer;
         if (_canvasLayer is null)
             for (var ancestor = Parent; ancestor is not null && ancestor is not Viewport; ancestor = ancestor.Parent)
@@ -195,6 +198,7 @@ public abstract partial class CanvasItem : Node
     {
         if (!_inCanvas) return;
         _inCanvas = false;
+        if (ServerState is { } state) { state.ParentAssigned = true; state.Parent = default; }
         try { DispatchNotification(NotificationExitCanvas); }
         finally { _canvasLayer = null; }
     }
@@ -212,6 +216,7 @@ public abstract partial class CanvasItem : Node
             if (disposing)
             {
                 lock (_canvasItemRIDGate) { if (_canvasItemRID.IsValid()) RenderingCanvasItemRegistry.Remove(_canvasItemRID); _canvasItemRID = AttachedSkeleton = default; }
+                ServerState?.Commands?.Dispose(); ServerState = null;
                 _canvasCommands?.Clear(); _meshes?.Clear(); _meshCount = 0; _multiMeshes?.Clear(); _multiMeshCount = 0; _polygons?.Clear(); _polygonCount = 0; _strokes?.Clear(); _strokePoints = []; _strokeCount = 0; _material = null;
                 VisibilityChanged = null; Hidden = null; Draw = null; ItemRectChanged = null; LocalTransformChanged = null; TransformChanged = null;
             }
@@ -329,7 +334,7 @@ public abstract partial class CanvasItem : Node
     public bool ShowBehindParent
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _showBehindParent; }
-        set { EnsureMutable(); _showBehindParent = value; }
+        set { EnsureMutable(); _showBehindParent = value; if (ServerState is { } state) state.Behind = null; }
     }
 
     /// <summary>Gets or sets whether this item and its canvas children draw in ascending local Y order.</summary>
@@ -344,7 +349,7 @@ public abstract partial class CanvasItem : Node
     public bool YSortEnabled
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _ySortEnabled; }
-        set { EnsureMutable(); _ySortEnabled = value; }
+        set { EnsureMutable(); _ySortEnabled = value; if (ServerState is { } state) state.YSort = null; }
     }
 
     /// <summary>Gets or sets whether this node ignores its parent's transform.</summary>
@@ -409,7 +414,7 @@ public abstract partial class CanvasItem : Node
             if (_visible == value)
                 return;
 
-            _visible = value;
+            _visible = value; if (ServerState is { } state) state.Visible = null;
             if (IsInsideTree && _parentVisible) ApplyVisibilityChange();
             else DispatchNotification(NotificationVisibilityChanged);
         }
@@ -444,7 +449,7 @@ public abstract partial class CanvasItem : Node
             if (value is < MinimumZIndex or > MaximumZIndex)
                 throw new ArgumentOutOfRangeException(nameof(value), value, $"Z index must be between {MinimumZIndex} and {MaximumZIndex}.");
 
-            _zIndex = value;
+            _zIndex = value; if (ServerState is { } state) state.Z = null;
             UpdateConfigurationWarnings();
         }
     }
@@ -464,7 +469,7 @@ public abstract partial class CanvasItem : Node
         set
         {
             EnsureMutable();
-            _zAsRelative = value;
+            _zAsRelative = value; if (ServerState is { } state) state.ZRelative = null;
         }
     }
 
