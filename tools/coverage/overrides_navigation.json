@@ -334,6 +334,201 @@
       "godot": "NavigationServer2D::method:region_set_use_edge_connections(RID:,bool:)",
       "electron2d": "method:Electron2D.NavigationServer.RegionSetUseEdgeConnections(Electron2D.RID,System.Boolean)",
       "reason": "ADR 0097 typed planar authored-region kernel; static process service under ADR 0095, copied arrays/spans, fully uppercase acronyms and owning RID lifetime."
+    },
+    {
+      "godot": "NavigationLink2D::method:get_global_end_position()",
+      "electron2d": "method:Electron2D.NavigationLink.GetGlobalEndPosition()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::method:get_global_start_position()",
+      "electron2d": "method:Electron2D.NavigationLink.GetGlobalStartPosition()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::method:get_navigation_layer_value(int:)",
+      "electron2d": "method:Electron2D.NavigationLink.GetNavigationLayerValue(System.Int32)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::method:get_navigation_map()",
+      "electron2d": "method:Electron2D.NavigationLink.GetNavigationMap()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::method:get_rid()",
+      "electron2d": "method:Electron2D.NavigationLink.GetRID()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::method:set_global_end_position(Vector2:)",
+      "electron2d": "method:Electron2D.NavigationLink.SetGlobalEndPosition(Electron2D.Vector2)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::method:set_global_start_position(Vector2:)",
+      "electron2d": "method:Electron2D.NavigationLink.SetGlobalStartPosition(Electron2D.Vector2)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::method:set_navigation_layer_value(int:,bool:)",
+      "electron2d": "method:Electron2D.NavigationLink.SetNavigationLayerValue(System.Int32,System.Boolean)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::method:set_navigation_map(RID:)",
+      "electron2d": "method:Electron2D.NavigationLink.SetNavigationMap(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::property:bidirectional",
+      "electron2d": "property:Electron2D.NavigationLink.Bidirectional()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::property:enabled",
+      "electron2d": "property:Electron2D.NavigationLink.Enabled()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::property:end_position",
+      "electron2d": "property:Electron2D.NavigationLink.EndPosition()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::property:enter_cost",
+      "electron2d": "property:Electron2D.NavigationLink.EnterCost()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::property:navigation_layers",
+      "electron2d": "property:Electron2D.NavigationLink.NavigationLayers()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::property:start_position",
+      "electron2d": "property:Electron2D.NavigationLink.StartPosition()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationLink2D::property:travel_cost",
+      "electron2d": "property:Electron2D.NavigationLink.TravelCost()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_create()",
+      "electron2d": "method:Electron2D.NavigationServer.LinkCreate()",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_enabled(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetEnabled(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_end_position(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetEndPosition(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_enter_cost(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetEnterCost(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_iteration_id(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetIterationID(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_map(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetMap(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_navigation_layers(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetNavigationLayers(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_owner_id(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetOwnerID(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_start_position(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetStartPosition(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_get_travel_cost(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkGetTravelCost(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_is_bidirectional(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkIsBidirectional(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_bidirectional(RID:,bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetBidirectional(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_enabled(RID:,bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_end_position(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetEndPosition(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_enter_cost(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetEnterCost(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_map(RID:,RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetMap(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_navigation_layers(RID:,int:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetNavigationLayers(Electron2D.RID,System.UInt32)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_owner_id(RID:,int:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetOwnerID(Electron2D.RID,System.UInt64)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_start_position(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetStartPosition(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:link_set_travel_cost(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.LinkSetTravelCost(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:map_get_link_connection_radius(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.MapGetLinkConnectionRadius(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:map_get_links(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.MapGetLinks(Electron2D.RID)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
+    },
+    {
+      "godot": "NavigationServer2D::method:map_set_link_connection_radius(RID:,float:)",
+      "electron2d": "method:Electron2D.NavigationServer.MapSetLinkConnectionRadius(Electron2D.RID,System.Single)",
+      "reason": "ADR 0097 typed planar directed/bidirectional links over the existing immutable map/corridor kernel; static service operations under ADR 0095, local/global source endpoint roles and copied RID memberships."
     }
   ],
   "extras": [
@@ -431,6 +626,46 @@
       "electron2d": "method:Electron2D.NavigationServer.ValidateDisposal()",
       "reason": "Typed authored geometry constructors and inherited resource/scene lifecycle or schema hooks connect the same real navigation storage; no compatibility state.",
       "adr": "ADR 0003; ADR 0052; ADR 0095; ADR 0097"
+    },
+    {
+      "electron2d": "constructor:Electron2D.NavigationLink..ctor()",
+      "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationLink.CreateSceneInstanceFactory()",
+      "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationLink.Dispose(System.Boolean)",
+      "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationLink.GetConfigurationWarnings()",
+      "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationLink.GetPropertyDescriptors()",
+      "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationLink.OnEnterTree()",
+      "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationLink.OnExitTree()",
+      "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationLink.OnNotification(System.Int32)",
+      "reason": "Typed C# link constructor and inherited scene factory/schema/disposal/notification or configuration-warning override connect the same actual navigation link storage.",
+      "adr": "ADR 0003; ADR 0004; ADR 0097"
     }
   ],
   "statusGroups": [
@@ -525,7 +760,7 @@
         "class:NavigationRegion2D",
         "class:NavigationServer2D"
       ],
-      "reason": "ADR 0097: authored convex regions, owned maps, staged immutable iterations and real scene path following execute. Full raster/nonmanifold topology, baking/source parsing, typed query metadata, links, async work and avoidance retain the operation-specific prerequisites below."
+      "reason": "ADR 0097: authored convex regions, owned maps, staged immutable iterations and real scene path following execute. Full raster/nonmanifold topology, baking/source parsing, typed query metadata, async work and avoidance retain the operation-specific prerequisites below."
     },
     {
       "state": "Implemented",
@@ -741,30 +976,7 @@
     {
       "state": "Blocked",
       "godot": [
-        "NavigationServer2D::enum_value:ProcessInfo.INFO_LINK_COUNT",
-        "NavigationServer2D::method:link_create()",
-        "NavigationServer2D::method:link_get_enabled(RID:)",
-        "NavigationServer2D::method:link_get_end_position(RID:)",
-        "NavigationServer2D::method:link_get_enter_cost(RID:)",
-        "NavigationServer2D::method:link_get_iteration_id(RID:)",
-        "NavigationServer2D::method:link_get_map(RID:)",
-        "NavigationServer2D::method:link_get_navigation_layers(RID:)",
-        "NavigationServer2D::method:link_get_owner_id(RID:)",
-        "NavigationServer2D::method:link_get_start_position(RID:)",
-        "NavigationServer2D::method:link_get_travel_cost(RID:)",
-        "NavigationServer2D::method:link_is_bidirectional(RID:)",
-        "NavigationServer2D::method:link_set_bidirectional(RID:,bool:)",
-        "NavigationServer2D::method:link_set_enabled(RID:,bool:)",
-        "NavigationServer2D::method:link_set_end_position(RID:,Vector2:)",
-        "NavigationServer2D::method:link_set_enter_cost(RID:,float:)",
-        "NavigationServer2D::method:link_set_map(RID:,RID:)",
-        "NavigationServer2D::method:link_set_navigation_layers(RID:,int:)",
-        "NavigationServer2D::method:link_set_owner_id(RID:,int:)",
-        "NavigationServer2D::method:link_set_start_position(RID:,Vector2:)",
-        "NavigationServer2D::method:link_set_travel_cost(RID:,float:)",
-        "NavigationServer2D::method:map_get_link_connection_radius(RID:)",
-        "NavigationServer2D::method:map_get_links(RID:)",
-        "NavigationServer2D::method:map_set_link_connection_radius(RID:,float:)"
+        "NavigationServer2D::enum_value:ProcessInfo.INFO_LINK_COUNT"
       ],
       "reason": "ADR 0097 trigger: directed/bidirectional link storage, endpoint-radius attachment and path-query traversal/metadata. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
     },
@@ -894,6 +1106,58 @@
         "World2D::property:navigation_map"
       ],
       "reason": "ADR 0097 real lazy active map registered per World runtime; borrowed RID rejects caller free, scene regions share map storage, runtime release invalidates it. Managed and rendered path-following hosts verify behavior."
+    },
+    {
+      "state": "Implemented",
+      "reason": "NavigationLinkTests execute defaults, directed/reverse traversal, link plus region masks, weighted alternatives including zero cost, strict radius attachment/projection, disabled/deferred topology, counter rollback/wrap, copied memberships, borrowed/stale/wrong-kind RIDs, weak lifetime, World replacement, local/global transforms and fresh scene storage (ADR 0097). Full map raster/search parity and typed metadata remain separate query dependencies; this link setting/lifecycle consumer is real.",
+      "godot": [
+        "NavigationLink2D::method:get_global_end_position()",
+        "NavigationLink2D::method:get_global_start_position()",
+        "NavigationLink2D::method:get_navigation_layer_value(int:)",
+        "NavigationLink2D::method:get_navigation_map()",
+        "NavigationLink2D::method:get_rid()",
+        "NavigationLink2D::method:set_global_end_position(Vector2:)",
+        "NavigationLink2D::method:set_global_start_position(Vector2:)",
+        "NavigationLink2D::method:set_navigation_layer_value(int:,bool:)",
+        "NavigationLink2D::method:set_navigation_map(RID:)",
+        "NavigationLink2D::property:bidirectional",
+        "NavigationLink2D::property:enabled",
+        "NavigationLink2D::property:end_position",
+        "NavigationLink2D::property:enter_cost",
+        "NavigationLink2D::property:navigation_layers",
+        "NavigationLink2D::property:start_position",
+        "NavigationLink2D::property:travel_cost",
+        "NavigationServer2D::method:link_create()",
+        "NavigationServer2D::method:link_get_enabled(RID:)",
+        "NavigationServer2D::method:link_get_end_position(RID:)",
+        "NavigationServer2D::method:link_get_enter_cost(RID:)",
+        "NavigationServer2D::method:link_get_iteration_id(RID:)",
+        "NavigationServer2D::method:link_get_map(RID:)",
+        "NavigationServer2D::method:link_get_navigation_layers(RID:)",
+        "NavigationServer2D::method:link_get_owner_id(RID:)",
+        "NavigationServer2D::method:link_get_start_position(RID:)",
+        "NavigationServer2D::method:link_get_travel_cost(RID:)",
+        "NavigationServer2D::method:link_is_bidirectional(RID:)",
+        "NavigationServer2D::method:link_set_bidirectional(RID:,bool:)",
+        "NavigationServer2D::method:link_set_enabled(RID:,bool:)",
+        "NavigationServer2D::method:link_set_end_position(RID:,Vector2:)",
+        "NavigationServer2D::method:link_set_enter_cost(RID:,float:)",
+        "NavigationServer2D::method:link_set_map(RID:,RID:)",
+        "NavigationServer2D::method:link_set_navigation_layers(RID:,int:)",
+        "NavigationServer2D::method:link_set_owner_id(RID:,int:)",
+        "NavigationServer2D::method:link_set_start_position(RID:,Vector2:)",
+        "NavigationServer2D::method:link_set_travel_cost(RID:,float:)",
+        "NavigationServer2D::method:map_get_link_connection_radius(RID:)",
+        "NavigationServer2D::method:map_get_links(RID:)",
+        "NavigationServer2D::method:map_set_link_connection_radius(RID:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "All own applicable source properties/methods execute on NavigationLink : Entity and the shared link RID store, with rendered off-surface route following. Typed exceptions replace invalid-data logging/clamping; global transform publication uses the existing pre-sync boundary under ADR 0097. Editor debug drawings remain inherited/tooling producer work, not an unimplemented own public declaration.",
+      "godot": [
+        "class:NavigationLink2D"
+      ]
     }
   ]
 }

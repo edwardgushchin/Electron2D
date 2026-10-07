@@ -45,4 +45,6 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and fu
 
 ## Executable authored maps and regions
 
-[Navigation maps](../components/navigation-maps.md) now supply real RID ownership, World maps, convex region topology, deferred publication, projection and copied routes with a native scene path-following consumer. Baking/async/links/avoidance/query/debug capabilities remain exact separate dependencies.
+[Navigation maps](../components/navigation-maps.md) now supply real RID ownership, World maps, convex region topology, deferred publication, projection and copied routes with a native scene path-following consumer. Baking/async/avoidance/query/debug capabilities remain exact separate dependencies.
+
+NavigationLink and owned server links now provide directed/bidirectional off-surface travel, finite strict-radius attachment and weighted routes. [The map contract](../components/navigation-maps.md#links-across-separated-surfaces) records transforms, source storage, publication and remaining query metadata.

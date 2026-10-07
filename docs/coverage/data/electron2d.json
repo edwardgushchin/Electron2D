@@ -6112,6 +6112,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.NavigationLink",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "NavigationLink",
+    "signature": "public sealed class Electron2D.NavigationLink",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NavigationPolygon",
     "kind": "type",
     "declaringType": "Electron2D.NavigationPolygon",
@@ -15147,6 +15162,19 @@
     "declaringType": "Electron2D.MultiplayerSynchronizer",
     "name": ".ctor",
     "signature": "public MultiplayerSynchronizer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.NavigationLink..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": ".ctor",
+    "signature": "public NavigationLink()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -99157,6 +99185,261 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationLink.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.GetGlobalEndPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "GetGlobalEndPosition",
+    "signature": "public Electron2D.Vector2 GetGlobalEndPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.GetGlobalStartPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "GetGlobalStartPosition",
+    "signature": "public Electron2D.Vector2 GetGlobalStartPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.GetNavigationLayerValue(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "GetNavigationLayerValue",
+    "signature": "public System.Boolean GetNavigationLayerValue(System.Int32 layerNumber)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.GetNavigationMap()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "GetNavigationMap",
+    "signature": "public Electron2D.RID GetNavigationMap()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "GetRID",
+    "signature": "public Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.SetGlobalEndPosition(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "SetGlobalEndPosition",
+    "signature": "public System.Void SetGlobalEndPosition(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.SetGlobalStartPosition(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "SetGlobalStartPosition",
+    "signature": "public System.Void SetGlobalStartPosition(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.SetNavigationLayerValue(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "SetNavigationLayerValue",
+    "signature": "public System.Void SetNavigationLayerValue(System.Int32 layerNumber, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationLink.SetNavigationMap(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "SetNavigationMap",
+    "signature": "public System.Void SetNavigationMap(Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationPolygon.AddPolygon(System.ReadOnlySpan\u003CSystem.Int32\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationPolygon",
@@ -99554,6 +99837,425 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.LinkCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkCreate",
+    "signature": "public static Electron2D.RID LinkCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetEnabled(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetEnabled",
+    "signature": "public static System.Boolean LinkGetEnabled(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetEndPosition(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetEndPosition",
+    "signature": "public static Electron2D.Vector2 LinkGetEndPosition(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetEnterCost(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetEnterCost",
+    "signature": "public static System.Single LinkGetEnterCost(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetIterationID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetIterationID",
+    "signature": "public static System.UInt64 LinkGetIterationID(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetMap(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetMap",
+    "signature": "public static Electron2D.RID LinkGetMap(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetNavigationLayers(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetNavigationLayers",
+    "signature": "public static System.UInt32 LinkGetNavigationLayers(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetOwnerID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetOwnerID",
+    "signature": "public static System.UInt64 LinkGetOwnerID(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetStartPosition(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetStartPosition",
+    "signature": "public static Electron2D.Vector2 LinkGetStartPosition(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkGetTravelCost(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkGetTravelCost",
+    "signature": "public static System.Single LinkGetTravelCost(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkIsBidirectional(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkIsBidirectional",
+    "signature": "public static System.Boolean LinkIsBidirectional(Electron2D.RID link)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetBidirectional(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetBidirectional",
+    "signature": "public static System.Void LinkSetBidirectional(Electron2D.RID link, System.Boolean bidirectional)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bidirectional",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetEnabled(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetEnabled",
+    "signature": "public static System.Void LinkSetEnabled(Electron2D.RID link, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetEndPosition(Electron2D.RID,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetEndPosition",
+    "signature": "public static System.Void LinkSetEndPosition(Electron2D.RID link, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetEnterCost(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetEnterCost",
+    "signature": "public static System.Void LinkSetEnterCost(Electron2D.RID link, System.Single cost)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "cost",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetMap(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetMap",
+    "signature": "public static System.Void LinkSetMap(Electron2D.RID link, Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetNavigationLayers(Electron2D.RID,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetNavigationLayers",
+    "signature": "public static System.Void LinkSetNavigationLayers(Electron2D.RID link, System.UInt32 layers)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "layers",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetOwnerID(Electron2D.RID,System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetOwnerID",
+    "signature": "public static System.Void LinkSetOwnerID(Electron2D.RID link, System.UInt64 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "ownerID",
+        "type": "System.UInt64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetStartPosition(Electron2D.RID,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetStartPosition",
+    "signature": "public static System.Void LinkSetStartPosition(Electron2D.RID link, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.LinkSetTravelCost(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "LinkSetTravelCost",
+    "signature": "public static System.Void LinkSetTravelCost(Electron2D.RID link, System.Single cost)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "link",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "cost",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.MapCreate()",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -99650,6 +100352,44 @@
       }
     ],
     "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.MapGetLinkConnectionRadius(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapGetLinkConnectionRadius",
+    "signature": "public static System.Single MapGetLinkConnectionRadius(Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.MapGetLinks(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapGetLinks",
+    "signature": "public static Electron2D.RID[] MapGetLinks(Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID[]",
     "value": null
   },
   {
@@ -99789,6 +100529,30 @@
       },
       {
         "name": "margin",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.MapSetLinkConnectionRadius(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapSetLinkConnectionRadius",
+    "signature": "public static System.Void MapSetLinkConnectionRadius(Electron2D.RID map, System.Single radius)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "radius",
         "type": "System.Single",
         "default": null
       }
@@ -173388,6 +174152,97 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.VisibilityUpdateMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationLink.Bidirectional()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "Bidirectional",
+    "signature": "public System.Boolean Bidirectional { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationLink.Enabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "Enabled",
+    "signature": "public System.Boolean Enabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationLink.EndPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "EndPosition",
+    "signature": "public Electron2D.Vector2 EndPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationLink.EnterCost()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "EnterCost",
+    "signature": "public System.Single EnterCost { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationLink.NavigationLayers()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "NavigationLayers",
+    "signature": "public System.UInt32 NavigationLayers { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationLink.StartPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "StartPosition",
+    "signature": "public Electron2D.Vector2 StartPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationLink.TravelCost()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationLink",
+    "name": "TravelCost",
+    "signature": "public System.Single TravelCost { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

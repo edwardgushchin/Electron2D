@@ -2,13 +2,13 @@
 
 Last updated: 2026-10-07
 
-- Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs)
+- Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs), [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs)
 - Inherits: [ElectronObject](ElectronObject.md)
 - Component: [Authored navigation maps](../components/navigation-maps.md)
 
 ## Description
 
-Permanent retained navigation service with static map/region lifecycle, staged settings, committed queries and MapChanged publication.
+Permanent retained navigation service with static map/region/link lifecycle, staged settings, committed queries and MapChanged publication.
 
 The [navigation contract](../components/navigation-maps.md) defines staged versus committed state, world coordinates and ownership. Static server operations serialize configuration; scene node mutations follow the scene owner thread. Resource arrays and returned paths are copied. The current topology/query profile has explicit coverage limits.
 
@@ -407,6 +407,315 @@ Occurs after a complete dirty map iteration is published. Callbacks run on the s
 
 Configuration setters stage the next iteration; configuration getters report staged values. Geometry queries read immutable committed data. Required identities must resolve to the owning kind; absent/stale/wrong-kind RIDs throw `ArgumentException`. Caller-owned identities require `FreeRID`; borrowed World/node identities reject it.
 
+## Link operations
+
+Owned map link memberships, strict connection radius and directed/bidirectional link settings use the same staged topology and lifetime kernel. Default radius is four world units; endpoints attach strictly inside it to the nearest enabled polygon, before query masks. Link counters change only when changed attached links synchronize and wrap at uint.MaxValue. Geometry links are excluded from map surface projections.
+
+## Methods and extension points
+
+| Member | Contract |
+| --- | --- |
+| [`public static RID LinkCreate()`](#linkcreate) | Creates a caller-owned enabled, bidirectional link with no map and zero endpoints. |
+| [`public static bool LinkGetEnabled(RID link)`](#linkgetenabled) | Returns whether the link participates in committed routes from staged link settings. |
+| [`public static Vector2 LinkGetEndPosition(RID link)`](#linkgetendposition) | Returns the finite world-space end endpoint from staged link settings. |
+| [`public static float LinkGetEnterCost(RID link)`](#linkgetentercost) | Returns finite nonnegative cost paid when entering the link from staged link settings. |
+| [`public static ulong LinkGetIterationID(RID link)`](#linkgetiterationid) | Returns the link's committed version counter, initially zero. |
+| [`public static RID LinkGetMap(RID link)`](#linkgetmap) | Returns the link's staged map assignment. |
+| [`public static uint LinkGetNavigationLayers(RID link)`](#linkgetnavigationlayers) | Returns the unsigned 32-bit navigation-layer mask from staged link settings. |
+| [`public static ulong LinkGetOwnerID(RID link)`](#linkgetownerid) | Returns the logical scene owner instance identity from staged link settings. |
+| [`public static Vector2 LinkGetStartPosition(RID link)`](#linkgetstartposition) | Returns the finite world-space start endpoint from staged link settings. |
+| [`public static float LinkGetTravelCost(RID link)`](#linkgettravelcost) | Returns finite nonnegative distance multiplier inside the link from staged link settings. |
+| [`public static bool LinkIsBidirectional(RID link)`](#linkisbidirectional) | Returns whether traversal also permits end-to-start travel from staged link settings. |
+| [`public static void LinkSetBidirectional(RID link, bool bidirectional)`](#linksetbidirectional) | Stages whether traversal also permits end-to-start travel; initially true. |
+| [`public static void LinkSetEnabled(RID link, bool enabled)`](#linksetenabled) | Stages whether the link participates in committed routes; initially true. |
+| [`public static void LinkSetEndPosition(RID link, Vector2 position)`](#linksetendposition) | Stages the finite world-space end endpoint; initially Vector2.Zero. |
+| [`public static void LinkSetEnterCost(RID link, float cost)`](#linksetentercost) | Stages finite nonnegative cost paid when entering the link; initially 0. |
+| [`public static void LinkSetMap(RID link, RID map)`](#linksetmap) | Stages a link map assignment; empty detaches it. |
+| [`public static void LinkSetNavigationLayers(RID link, uint layers)`](#linksetnavigationlayers) | Stages the unsigned 32-bit navigation-layer mask; initially 1. |
+| [`public static void LinkSetOwnerID(RID link, ulong ownerID)`](#linksetownerid) | Stages the logical scene owner instance identity; initially 0. |
+| [`public static void LinkSetStartPosition(RID link, Vector2 position)`](#linksetstartposition) | Stages the finite world-space start endpoint; initially Vector2.Zero. |
+| [`public static void LinkSetTravelCost(RID link, float cost)`](#linksettravelcost) | Stages finite nonnegative distance multiplier inside the link; initially 1. |
+| [`public static float MapGetLinkConnectionRadius(RID map)`](#mapgetlinkconnectionradius) | Returns the map's staged endpoint attachment radius. |
+| [`public static RID[] MapGetLinks(RID map)`](#mapgetlinks) | Returns copied staged link memberships of the live map. |
+| [`public static void MapSetLinkConnectionRadius(RID map, float radius)`](#mapsetlinkconnectionradius) | Stages the finite nonnegative endpoint attachment radius, initially four world units. |
+
+## Member descriptions
+
+<a id="linkcreate"></a>
+### `public static RID LinkCreate()`
+
+Creates a caller-owned enabled, bidirectional link with no map and zero endpoints. A new link RID requiring FreeRID.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgetenabled"></a>
+### `public static bool LinkGetEnabled(RID link)`
+
+Returns whether the link participates in committed routes from staged link settings. Current staged value.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgetendposition"></a>
+### `public static Vector2 LinkGetEndPosition(RID link)`
+
+Returns the finite world-space end endpoint from staged link settings. Current staged value.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgetentercost"></a>
+### `public static float LinkGetEnterCost(RID link)`
+
+Returns finite nonnegative cost paid when entering the link from staged link settings. Current staged value.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgetiterationid"></a>
+### `public static ulong LinkGetIterationID(RID link)`
+
+Returns the link's committed version counter, initially zero. Counter increments on changed attached link synchronization; wraps from uint.MaxValue to one.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgetmap"></a>
+### `public static RID LinkGetMap(RID link)`
+
+Returns the link's staged map assignment. Assigned map, or empty when detached.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgetnavigationlayers"></a>
+### `public static uint LinkGetNavigationLayers(RID link)`
+
+Returns the unsigned 32-bit navigation-layer mask from staged link settings. Current staged value.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgetownerid"></a>
+### `public static ulong LinkGetOwnerID(RID link)`
+
+Returns the logical scene owner instance identity from staged link settings. Current staged value.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgetstartposition"></a>
+### `public static Vector2 LinkGetStartPosition(RID link)`
+
+Returns the finite world-space start endpoint from staged link settings. Current staged value.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkgettravelcost"></a>
+### `public static float LinkGetTravelCost(RID link)`
+
+Returns finite nonnegative distance multiplier inside the link from staged link settings. Current staged value.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linkisbidirectional"></a>
+### `public static bool LinkIsBidirectional(RID link)`
+
+Returns whether traversal also permits end-to-start travel from staged link settings. Current staged value.
+
+`link`: Live navigation link RID.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksetbidirectional"></a>
+### `public static void LinkSetBidirectional(RID link, bool bidirectional)`
+
+Stages whether traversal also permits end-to-start travel; initially true.
+
+`link`: Live navigation link RID.
+
+`bidirectional`: New staged value.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksetenabled"></a>
+### `public static void LinkSetEnabled(RID link, bool enabled)`
+
+Stages whether the link participates in committed routes; initially true.
+
+`link`: Live navigation link RID.
+
+`enabled`: New staged value.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksetendposition"></a>
+### `public static void LinkSetEndPosition(RID link, Vector2 position)`
+
+Stages the finite world-space end endpoint; initially Vector2.Zero.
+
+`link`: Live navigation link RID.
+
+`position`: New staged value.
+
+`ArgumentException`: The link RID is absent, stale or of another kind; endpoint is nonfinite.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksetentercost"></a>
+### `public static void LinkSetEnterCost(RID link, float cost)`
+
+Stages finite nonnegative cost paid when entering the link; initially 0.
+
+`link`: Live navigation link RID.
+
+`cost`: New staged value.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+`ArgumentOutOfRangeException`: Cost is nonfinite or negative.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksetmap"></a>
+### `public static void LinkSetMap(RID link, RID map)`
+
+Stages a link map assignment; empty detaches it.
+
+`link`: Live navigation link RID.
+
+`map`: Live map RID, or empty to detach.
+
+`ArgumentException`: A required RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksetnavigationlayers"></a>
+### `public static void LinkSetNavigationLayers(RID link, uint layers)`
+
+Stages the unsigned 32-bit navigation-layer mask; initially 1.
+
+`link`: Live navigation link RID.
+
+`layers`: New staged value.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksetownerid"></a>
+### `public static void LinkSetOwnerID(RID link, ulong ownerID)`
+
+Stages the logical scene owner instance identity; initially 0.
+
+`link`: Live navigation link RID.
+
+`ownerID`: New staged value.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksetstartposition"></a>
+### `public static void LinkSetStartPosition(RID link, Vector2 position)`
+
+Stages the finite world-space start endpoint; initially Vector2.Zero.
+
+`link`: Live navigation link RID.
+
+`position`: New staged value.
+
+`ArgumentException`: The link RID is absent, stale or of another kind; endpoint is nonfinite.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="linksettravelcost"></a>
+### `public static void LinkSetTravelCost(RID link, float cost)`
+
+Stages finite nonnegative distance multiplier inside the link; initially 1.
+
+`link`: Live navigation link RID.
+
+`cost`: New staged value.
+
+`ArgumentException`: The link RID is absent, stale or of another kind.
+
+`ArgumentOutOfRangeException`: Cost is nonfinite or negative.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="mapgetlinkconnectionradius"></a>
+### `public static float MapGetLinkConnectionRadius(RID map)`
+
+Returns the map's staged endpoint attachment radius. Finite nonnegative world-space distance.
+
+`map`: Live navigation map RID.
+
+`ArgumentException`: The map RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="mapgetlinks"></a>
+### `public static RID[] MapGetLinks(RID map)`
+
+Returns copied staged link memberships of the live map. Independent link identity array, including disabled links.
+
+`map`: Live navigation map RID.
+
+`ArgumentException`: The map RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
+<a id="mapsetlinkconnectionradius"></a>
+### `public static void MapSetLinkConnectionRadius(RID map, float radius)`
+
+Stages the finite nonnegative endpoint attachment radius, initially four world units.
+
+`map`: Live navigation map RID.
+
+`radius`: World distance; attachment is strictly inside this radius. Zero prevents attachment.
+
+`ArgumentOutOfRangeException`: Radius is nonfinite or negative.
+
+`ArgumentException`: The map RID is absent, stale or of another kind.
+
+Configuration reads report staged values; path/projection read immutable published topology. Caller-created link RIDs require FreeRID; node-owned identities reject consumer free. A failed map build leaves all link counters and previous queries unchanged.
+
 ## Verification and limits
 
-[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining raster, baking, async, link, query and avoidance prerequisites.
+[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining raster, baking, async, query and avoidance prerequisites.

@@ -31,6 +31,7 @@ public static partial class ResourceFileTypes
         RegisterResource("ArrayMesh", CreateArrayMesh);
         RegisterResource("NavigationPolygon", CreateNavigationPolygon);
         RegisterNode("NavigationRegion", CreateNavigationRegion);
+        RegisterNode("NavigationLink", CreateNavigationLink);
         RegisterResourceArray<Material>();
         RegisterResource("Resource", CreateResource);
         RegisterResource("PackedScene", CreatePackedScene);
@@ -83,6 +84,7 @@ public static partial class ResourceFileTypes
     private static RichTextEffect CreateRichTextEffect() => new();
     private static NavigationPolygon CreateNavigationPolygon() => new();
     private static NavigationRegion CreateNavigationRegion() => new();
+    private static NavigationLink CreateNavigationLink() => new();
     private static ArrayMesh CreateArrayMesh() => new();
     private static Resource CreateResource() => new();
     private static Curve CreateCurveResource() => new();

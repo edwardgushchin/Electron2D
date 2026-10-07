@@ -1,6 +1,6 @@
 # Electron2D navigation decisions
 
-Last updated: 2026-09-24
+Last updated: 2026-10-07
 
 This bounded document owns standalone and server-backed 2D pathfinding decisions. The [decision index](index.md) routes other domains.
 
@@ -64,7 +64,7 @@ Games can query full or partial cell paths without constructing point-edge graph
 Last updated: 2026-10-07
 
 - Status: Accepted for the user-authorized full API implementation goal
-- Scope: Initial executable map/region/polygon pathfinding backend, World registration and scene ownership
+- Scope: Executable map/region/polygon/link pathfinding backend, World registration and scene ownership
 - Depends on: [0004](product.md#adr-0004), [0005](core-object-runtime.md#adr-0005), [0052](#adr-0052), [0063](physics.md#adr-0063), [0095](singleton-services.md#adr-0095)
 
 ### Decision
@@ -73,7 +73,9 @@ Last updated: 2026-10-07
 - The initial backend consumes copied authored planar vertices and convex polygon indices from NavigationPolygon. Use existing planar math types, .NET collections and a polygon/portal search kernel; no second public AStar facade, backend-native IDs, Variant or 3D vector API is exposed. Polygon data snapshots, numeric/type/index validation and resource graph copying remain typed.
 - Commands stage configuration under one cold service gate and immutable committed map iterations supply path/closest-point queries. Synchronize commits at the beginning of the physics lane; an explicit typed Synchronize batch call exercises the same kernel without a SceneTree. It is a C# host operation, not a renamed deprecated MapForceUpdate. Queued topology changes do not silently mutate published paths. MapChanged follows committed publication; handlers may stage later commands, but recursive synchronization rejects.
 - Authored geometry connects shared edges; enabled/layer/transform/travel/entry-cost changes participate in real topology and routing. Path search projects endpoints, finds an applicable polygon corridor, and returns copied paths with portal-midpoint or funnel optimization. Keep weighted search, unreachable closest-reached behavior and supported edge-merging policy auditable against the pinned implementation; unsupported topology/property branches retain explicit coverage dependencies.
-- Do not expose bake settings, async switches or constant-result compatibility members before their consumers execute. Baking/source parsing, clearance/outlines, links, metadata query objects, agent avoidance and debug/editor producers retain exact separate prerequisites. The deprecated make_polygons_from_outlines, map_force_update and get_region_rid are excluded under ADR 0004 with pinned metadata; current authored geometry, synchronization and GetRID supply executable paths.
+- Do not expose bake settings, async switches or constant-result compatibility members before their consumers execute. Baking/source parsing, clearance/outlines, metadata query objects, agent avoidance and debug/editor producers retain exact separate prerequisites. The deprecated make_polygons_from_outlines, map_force_update and get_region_rid are excluded under ADR 0004 with pinned metadata; current authored geometry, synchronization and GetRID supply executable paths.
+- NavigationLink : Entity and server-owned link RIDs use the same directed/bidirectional off-surface connection store. Finite endpoints attach to nearest enabled polygon surfaces strictly inside the map's connection radius (default four world units), before layer filtering at query time. A synthetic segment polygon participates in the same weighted corridor search; link geometry does not become a walkable region or closest-point owner. Link enablement, layers, costs, source transforms and map replacement have real consumers. Publication includes link versions and map topology transactionally.
+- Scene link source properties are cached independently of direct server edits. Local/global endpoint conversion preserves the detached local-coordinate role; attachment publishes world coordinates. Global notifications stage both endpoints atomically before the next shared physics-boundary synchronization, following the same existing region publication boundary. This uses the accepted scene transform delivery rather than a second delayed internal-physics pass. Link versions retain the pinned 32-bit nonzero wrap, projected to ulong in the typed public identity counter.
 - World and scene nodes use the same server identities. Node exit releases borrowed region membership, stable managed region identity remains until node disposal, and user-created regions/maps require FreeRID. World-owned maps reject FreeRID and are released with runtime teardown.
 
 ### Verification

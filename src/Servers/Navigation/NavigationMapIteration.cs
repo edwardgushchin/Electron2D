@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed class NavigationMapIteration
 {
-    internal sealed record Cell(RID Region, uint Layers, float EnterCost, float TravelCost, bool Connect, Vector2[] Vertices, Vector2 Center);
+    internal sealed record Cell(RID Region, uint Layers, float EnterCost, float TravelCost, bool Connect, Vector2[] Vertices, Vector2 Center, bool IsLink = false);
     internal readonly record struct Portal(int Target, Vector2 A, Vector2 B);
     internal static readonly NavigationMapIteration Empty = new([], []);
     internal readonly Cell[] Cells;
@@ -20,7 +20,7 @@ internal sealed class NavigationMapIteration
         }
         return new(cells.ToArray(), []);
     }
-    internal static NavigationMapIteration Build(NavigationMapState map, IEnumerable<NavigationRegionState> regions, Dictionary<RID, NavigationMapIteration> pending)
+    internal static NavigationMapIteration Build(NavigationMapState map, IEnumerable<NavigationRegionState> regions, Dictionary<RID, NavigationMapIteration> pending, IEnumerable<NavigationLinkState> links)
     {
         if (!map.Active) return Empty;
         var cells = new List<Cell>();
@@ -56,7 +56,26 @@ internal sealed class NavigationMapIteration
                         void Add(Vector2 p, Vector2 q, Vector2 r, Vector2 s) { var start = p * .5f + r * .5f; var end = q * .5f + s * .5f; edges[i].Add(new(j, start, end)); edges[j].Add(new(i, start, end)); }
                     }
             }
-        return new(cells.ToArray(), edges.Select(e => e.ToArray()).ToArray());
+        var allEdges = edges.ToList();
+        var regionCount = cells.Count;
+        foreach (var link in links)
+        {
+            if (!link.Enabled || link.Map != map.RID) continue;
+            var start = Attach(link.Start, out var from); var end = Attach(link.End, out var to);
+            if (start < 0 || end < 0) continue;
+            var index = cells.Count;
+            cells.Add(new(link.RID, link.Layers, link.EnterCost, link.TravelCost, false, [from, from, to, to], from * .5f + to * .5f, IsLink: true));
+            allEdges.Add([]);
+            allEdges[start].Add(new(index, from, from)); allEdges[index].Add(new(end, to, to));
+            if (link.Bidirectional) { allEdges[end].Add(new(index, to, to)); allEdges[index].Add(new(start, from, from)); }
+        }
+        return new(cells.ToArray(), allEdges.Select(e => e.ToArray()).ToArray());
+        int Attach(Vector2 point, out Vector2 projected)
+        {
+            var index = -1; projected = default; var distance = (double)map.LinkRadius * map.LinkRadius;
+            for (var i = 0; i < regionCount; i++) { var closest = Closest(cells[i], point); var d = DistanceSquared(point, closest); if (d < distance) { distance = d; projected = closest; index = i; } }
+            return index;
+        }
     }
     private static (Vector2, Vector2) EdgeKey(Vector2 a, Vector2 b) => a.X < b.X || a.X == b.X && a.Y <= b.Y ? (a, b) : (b, a);
     private static bool Near(Vector2 a, Vector2 b, float margin) => DistanceSquared(a, b) <= (double)margin * margin;
@@ -77,7 +96,7 @@ internal sealed class NavigationMapIteration
     private int Project(Vector2 point, uint layers, out Vector2 projected)
     {
         var best = -1; projected = Vector2.Zero; var distance = double.PositiveInfinity;
-        for (var i = 0; i < Cells.Length; i++) { if ((Cells[i].Layers & layers) == 0) continue; var p = Closest(Cells[i], point); var d = DistanceSquared(p, point); if (d < distance) { distance = d; best = i; projected = p; } }
+        for (var i = 0; i < Cells.Length; i++) { if (Cells[i].IsLink || (Cells[i].Layers & layers) == 0) continue; var p = Closest(Cells[i], point); var d = DistanceSquared(p, point); if (d < distance) { distance = d; best = i; projected = p; } }
         return best;
     }
     internal (Vector2 Point, RID Owner) Closest(Vector2 point) { var index = Project(point, uint.MaxValue, out var p); return (p, index < 0 ? default : Cells[index].Region); }
@@ -93,7 +112,7 @@ internal sealed class NavigationMapIteration
         while (queue.TryDequeue(out var current, out _))
         {
             var index = current.Cell; if (current.Cost != distance[index]) continue;
-            var d = DistanceSquared(Closest(Cells[index], to), to); if (d < remaining) { remaining = d; best = index; }
+            var d = Cells[index].IsLink ? double.PositiveInfinity : DistanceSquared(Closest(Cells[index], to), to); if (d < remaining) { remaining = d; best = index; }
             if (index == finish) { best = finish; break; }
             foreach (var portal in Edges[index])
             {

@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Owns planar navigation maps, region identities and committed authored-polygon pathfinding.</summary>
+/// <summary>Owns planar navigation maps, region/link identities and committed authored-polygon pathfinding.</summary>
 /// <remarks>Static operations use one retained service. Geometry/configuration edits stage under a service gate;
 /// Synchronize and the physics lane publish immutable iterations before MapChanged. Returned paths and RID arrays are copied.</remarks>
 public sealed partial class NavigationServer : ElectronObject
@@ -9,6 +9,7 @@ public sealed partial class NavigationServer : ElectronObject
     private readonly object _gate = new();
     private readonly Dictionary<RID, NavigationMapState> _maps = [];
     private readonly Dictionary<RID, NavigationRegionState> _regions = [];
+    private readonly Dictionary<RID, NavigationLinkState> _links = [];
     private bool _synchronizing;
     private Action<RID>? _mapChanged;
     private NavigationServer() { }
@@ -21,7 +22,7 @@ public sealed partial class NavigationServer : ElectronObject
     private NavigationRegionState Region(RID rid) => _regions.TryGetValue(rid, out var region) && (region.Scene is null || region.Scene.TryGetTarget(out var node) && !node.IsDisposed) ? region : throw new ArgumentException("The RID does not identify a live navigation region.", nameof(rid));
     internal RID CreateMap(WorldRuntime? owner = null) { lock (_gate) { var rid = RID.Allocate(); _maps.Add(rid, new(rid, owner)); return rid; } }
     internal RID CreateRegion(NavigationRegion? node = null) { lock (_gate) { var rid = RID.Allocate(); _regions.Add(rid, new(rid, node)); return rid; } }
-    internal void ReleaseWorldMap(RID rid) { lock (_gate) { if (!_maps.ContainsKey(rid)) return; foreach (var region in _regions.Values) if (region.Map == rid) region.Map = default; _maps.Remove(rid); } }
+    internal void ReleaseWorldMap(RID rid) { lock (_gate) { if (!_maps.ContainsKey(rid)) return; foreach (var region in _regions.Values) if (region.Map == rid) region.Map = default; foreach (var link in _links.Values) if (link.Map == rid) { link.Map = default; link.Dirty = true; } _maps.Remove(rid); } }
     internal void ReleaseSceneRegion(RID rid) { lock (_gate) { if (_regions.Remove(rid, out var region)) { Dirty(region.Map); region.Unsubscribe(); } } }
     private void Dirty(RID rid) { if (_maps.TryGetValue(rid, out var map)) map.Dirty = true; }
     private void SetRegionMap(RID region, RID map) { var value = Region(region); if (map.IsValid()) Map(map); Dirty(value.Map); value.Map = map; Dirty(map); value.Dirty = true; }
@@ -44,6 +45,10 @@ public sealed partial class NavigationServer : ElectronObject
                 foreach (var region in _regions.Values)
                     if (region.Scene is not null && (!region.Scene.TryGetTarget(out var node) || node.IsDisposed)) (expired ??= []).Add(region.RID);
                 if (expired is not null) foreach (var rid in expired) ReleaseSceneRegion(rid);
+                expired = null;
+                foreach (var link in _links.Values)
+                    if (link.Scene is not null && (!link.Scene.TryGetTarget(out var node) || node.IsDisposed)) (expired ??= []).Add(link.RID);
+                if (expired is not null) foreach (var rid in expired) ReleaseSceneLink(rid);
                 var dirty = false;
                 foreach (var region in _regions.Values) if (region.Dirty) { dirty = true; break; }
                 if (!dirty) foreach (var map in _maps.Values) if (map.Dirty) { dirty = true; break; }
@@ -52,7 +57,7 @@ public sealed partial class NavigationServer : ElectronObject
                 foreach (var region in _regions.Values) if (region.Dirty) regionIterations.Add(region.RID, NavigationMapIteration.BuildRegion(region));
                 List<(NavigationMapState Map, NavigationMapIteration Iteration)>? pending = null;
                 foreach (var map in _maps.Values)
-                    if (map.Dirty) (pending ??= []).Add((map, NavigationMapIteration.Build(map, _regions.Values, regionIterations)));
+                    if (map.Dirty) (pending ??= []).Add((map, NavigationMapIteration.Build(map, _regions.Values, regionIterations, _links.Values)));
                 foreach (var (rid, iteration) in regionIterations) { var region = _regions[rid]; region.Iteration = iteration; region.Dirty = false; }
                 // Build every dirty map before publishing any: failed geometry leaves the previous iterations intact.
                 if (pending is not null) foreach (var (map, snapshot) in pending)
@@ -60,6 +65,7 @@ public sealed partial class NavigationServer : ElectronObject
                         map.Iteration = snapshot; map.IterationID = map.IterationID == ulong.MaxValue ? 1 : map.IterationID + 1; map.Dirty = false;
                         (changed ??= []).Add(map.RID);
                     }
+                foreach (var link in _links.Values) if (link.Dirty && link.Map.IsValid()) { link.IterationID = link.IterationID == uint.MaxValue ? 1 : link.IterationID + 1; link.Dirty = false; }
                 handlers = _mapChanged;
             }
             catch { _synchronizing = false; throw; }
@@ -82,7 +88,7 @@ internal sealed class NavigationMapState(RID rid, WorldRuntime? owner)
     internal readonly RID RID = rid;
     internal readonly WorldRuntime? Owner = owner;
     internal bool Active, UseEdgeConnections = true, Dirty = true;
-    internal float EdgeMargin = 1;
+    internal float EdgeMargin = 1, LinkRadius = 4;
     internal ulong IterationID;
     internal NavigationMapIteration Iteration = NavigationMapIteration.Empty;
 }
