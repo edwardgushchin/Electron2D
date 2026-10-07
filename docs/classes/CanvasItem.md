@@ -1316,3 +1316,7 @@ The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-
 ## Low-level primitive integration
 
 Native indexed triangle and primitive commands replay through existing storage. Command clip-ignore switches scissor state without changing authored properties; native draw-index and visibility-mask setters likewise remain separate. Matching source structure/mask edits republish their own fields. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).
+
+## Shader and material RID integration
+
+[The program RID contract](../components/shader-materials.md#shader-and-material-identities) documents caller-owned create/set/query/free operations and borrowed resource identities. `CanvasItemSetMaterial` changes native material state independently of authored `Material`; its matching source setter republishes the authored reference. Shader replacement and typed uniform/texture updates reuse retained commands.

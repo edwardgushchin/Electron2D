@@ -28,6 +28,7 @@ material.SetShaderParameter("tint", Colors.White);
 
 | Declaration | Contract |
 | --- | --- |
+| `override RID GetRID()` | Stable borrowed logical shader identity; reads use RenderingServer, mutations/free remain resource-owned. |
 | `Shader()` | Precompiled texture-times-color fragment program. |
 | `Mode GetMode()` | Returns `Mode.CanvasItem`. |
 | `static Shader CreateFromSPIRV(ReadOnlySpan<byte> bytecode)` | Copies and validates a fragment program. |

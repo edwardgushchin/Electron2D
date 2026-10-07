@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <summary>A resource selecting how canvas geometry is shaded.</summary>
 /// <remarks>Materials are borrowed by nodes; disposing a node
 /// does not dispose shared materials. Three-dimensional render priority and next-pass chains are not supported.</remarks>
-public abstract class Material : Resource
+public abstract partial class Material : Resource
 {
     private protected Material() { }
     internal abstract MaterialState? GetCanvasState();
@@ -131,6 +131,24 @@ public sealed class ShaderMaterial : Material
             for (var i = 0; i < values.Length; i++)
                 values[i] = uniform.Read<T>(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize));
             return values;
+        }
+    }
+
+    /// <summary>Copies a reflected fixed-size uniform array into caller-owned storage.</summary>
+    /// <typeparam name="T">The unmanaged type matching the reflected array element.</typeparam>
+    /// <param name="name">Exact case-sensitive array parameter name.</param>
+    /// <param name="destination">Storage with exactly the reflected array length.</param>
+    /// <remarks>Initializes/migrates state by the same policy as other typed getters; prepared copies allocate no managed memory.</remarks>
+    /// <exception cref="ArgumentException">Name, type, array shape or destination length is invalid.</exception>
+    /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
+    /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
+    public void CopyShaderParameterArray<T>(string name, Span<T> destination) where T : unmanaged
+    {
+        lock (_gate)
+        {
+            var state = RequireState(); var uniform = Find<T>(state, name, array: true);
+            if (destination.Length != uniform.ArrayLength) throw new ArgumentException("Destination length must match the reflected array.", nameof(destination));
+            for (var i = 0; i < destination.Length; i++) destination[i] = uniform.Read<T>(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize));
         }
     }
 

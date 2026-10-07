@@ -2640,12 +2640,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -3478,6 +3478,106 @@
       "godot": "RenderingServer::method:canvas_item_set_use_parent_material(RID:,bool:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetUseParentMaterial(Electron2D.RID,System.Boolean)",
       "reason": "ADRs 0004/0028/0095: native borrowed material inheritance follows the actual renderer parent for owned/source items, preserves authored UseParentMaterial and republish semantics, and executes real additive native pixels in RenderingPrimitiveTests. Direct material RID binding still requires material identity/ownership."
+    },
+    {
+      "godot": "Resource::method:get_rid()",
+      "electron2d": "method:Electron2D.Material.GetRID()",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_material(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetMaterial(Electron2D.RID,Electron2D.RID)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:get_shader_parameter_list(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.GetShaderParameterList(Electron2D.RID)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_create()",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialCreate()",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_get_param(RID:,StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialGetParam(Electron2D.RID,System.String)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_get_param(RID:,StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialGetParamArray`1(Electron2D.RID,System.String)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_get_param(RID:,StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialGetParam`1(Electron2D.RID,System.String)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_get_param(RID:,StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialGetParam`1(Electron2D.RID,System.String,Span<T>)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_set_param(RID:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialSetParam(Electron2D.RID,System.String,Electron2D.RID)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_set_param(RID:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialSetParam`1(Electron2D.RID,System.String,ReadOnlySpan<T>)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_set_param(RID:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialSetParam`1(Electron2D.RID,System.String,T)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:material_set_shader(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MaterialSetShader(Electron2D.RID,Electron2D.RID)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:shader_create()",
+      "electron2d": "method:Electron2D.RenderingServer.ShaderCreate()",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:shader_get_default_texture_parameter(RID:,StringName:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.ShaderGetDefaultTextureParameter(Electron2D.RID,System.String,System.Int32)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:shader_get_code(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.ShaderGetSPIRV(Electron2D.RID)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:shader_set_default_texture_parameter(RID:,StringName:,RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.ShaderSetDefaultTextureParameter(Electron2D.RID,System.String,Electron2D.RID,System.Int32)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:shader_set_path_hint(RID:,String:)",
+      "electron2d": "method:Electron2D.RenderingServer.ShaderSetPathHint(Electron2D.RID,System.String)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "RenderingServer::method:shader_set_code(RID:,String:)",
+      "electron2d": "method:Electron2D.RenderingServer.ShaderSetSPIRV(Electron2D.RID,System.ReadOnlySpan<System.Byte>)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "Resource::method:get_rid()",
+      "electron2d": "method:Electron2D.Shader.GetRID()",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.CopyShaderParameterArray`1(System.String,Span<T>)",
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
     }
   ],
   "statusGroups": [
@@ -4661,14 +4761,14 @@
         "RenderingServer::method:texture_replace(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Destination identity/retained references survive transfer of owned 2D pixels/size/path and source consumption. Proxy replacement operands reject, source consumption redirects existing aliases and destination aliases observe new pixels. Layered/drawable resource transfer enters those resource families’ first complete lifecycle slices."
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Destination identity/retained references survive transfer of owned 2D pixels/size/path and source consumption. Proxy replacement operands reject, source consumption redirects existing aliases and destination aliases observe new pixels. Layered/drawable resource transfer enters those resource families\u2019 first complete lifecycle slices."
     },
     {
       "godot": [
         "RenderingServer::method:free_rid(RID:)"
       ],
       "state": "Partial",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Material/shader/canvas/drawable RID registration and cleanup enter each family’s first actual server-resource slice."
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Material/shader/canvas/drawable RID registration and cleanup enter each family\u2019s first actual server-resource slice."
     },
     {
       "godot": [
@@ -4676,7 +4776,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -4992,11 +5092,118 @@
       "reason": "Trigger: real caller-owned GPU particle emitter storage, process-material execution, update/draw buffers and typed RID lifetime. Existing CPUParticles scene output is not a native emitter RID producer."
     },
     {
-      "state": "Blocked",
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:get_shader_parameter_list(RID:)"
+      ],
+      "reason": "Typed immutable descriptors execute for the current canvas scalar/vector/fixed-array/texture profile; source hints/groups, other matrix shapes and additional uniform types require expanded imported/reflected metadata and upload consumers."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:material_create()"
+      ],
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:shader_set_code(RID:,String:)"
+      ],
+      "reason": "Compiled canvas SPIR-V is copied/validated transactionally under ADR 0028; source import/cache integration and other applicable shader profiles require their own executable importer/profile consumers."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:shader_get_default_texture_parameter(RID:,StringName:,int:)"
+      ],
+      "reason": "Named single sampler defaults execute at index zero; sampler arrays require reflected array lengths, typed per-element storage and contiguous native sampler/binding consumers."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:material_set_shader(RID:,RID:)"
+      ],
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:material_get_param(RID:,StringName:)"
+      ],
+      "reason": "Typed scalar/vector/float2x2/array/texture override queries execute, including exact-length allocation-free caller copies; other matrix shapes, source initializer metadata and additional uniform types require owning ShaderMaterial profile extensions."
+    },
+    {
+      "state": "Implemented",
       "godot": [
         "RenderingServer::method:canvas_item_set_material(RID:,RID:)"
       ],
-      "reason": "Trigger: material RID identity/ownership and a real borrowed/owned resource resolver feeding the existing executable CanvasItemMaterial/ShaderMaterial state. Native parent-material inheritance now executes independently; direct RID binding remains absent."
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:shader_get_code(RID:)"
+      ],
+      "reason": "Returns an independent compiled SPIR-V copy under ADR 0028; source import/cache metadata and other applicable shader profiles remain pending."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:material_set_param(RID:,StringName:,Variant:)"
+      ],
+      "reason": "Typed scalar/vector/float2x2/fixed-array/texture values execute with validation, layout migration and native pixels; other matrix shapes, source initializer metadata, additional uniform types and named sampler state require the owning ShaderMaterial profile extensions."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingServer::method:shader_set_default_texture_parameter(RID:,StringName:,RID:,int:)"
+      ],
+      "reason": "Named single sampler defaults and clear execute at index zero; sampler arrays require reflected array lengths, typed per-element storage and contiguous native sampler/binding consumers. Named configurable sampler state remains pending."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:shader_set_path_hint(RID:,String:)"
+      ],
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:shader_create()"
+      ],
+      "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingServer::method:shader_get_parameter_default(RID:,StringName:)"
+      ],
+      "reason": "Trigger: HLSL/GLSL import/build must preserve typed authored uniform initializers in validated artifact metadata, with reflected type/layout binding and reload/descriptor consumers. Current SPIR-V modules expose storage types but not source initializer defaults; zero/identity material storage is not evidence of authored defaults (ADR 0028)."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingServer::method:material_set_next_pass(RID:,RID:)",
+        "RenderingServer::method:material_set_render_priority(RID:,int:)",
+        "RenderingServer::method:material_set_use_debanding(bool:)",
+        "Material::method:_can_do_next_pass()",
+        "Material::method:_can_use_render_priority()",
+        "Material::property:next_pass",
+        "Material::property:render_priority",
+        "Material::constant:RENDER_PRIORITY_MIN",
+        "Material::constant:RENDER_PRIORITY_MAX"
+      ],
+      "reason": "Pinned ed1daf0bf001b61586d9930840f2f1394092c079 Material.xml next_pass/render_priority descriptions restrict both to StandardMaterial3D and Spatial ShaderMaterial; their bounds and editor capability hooks belong to those same 3D operations. RenderingServer.xml material_set_use_debanding explicitly targets Mobile 3D materials. The complete related family is outside the strict 2D boundary (ADRs 0004/0028); canvas ordering and fixed blend behavior use their existing applicable APIs."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "Material::method:_get_shader_rid()",
+        "Material::method:_get_shader_mode()"
+      ],
+      "reason": "Trigger: an executable editor material-extension contract and inspector consumer under ADRs 0027/0028. These pinned required virtual hooks are documented for editor tools; runtime Material remains assembly-restricted and new program RID storage alone does not supply the editor extension workflow."
     }
   ],
   "extras": [
@@ -5871,6 +6078,11 @@
       "electron2d": "property:Electron2D.RenderingServer.IsAvailable()",
       "reason": "Observable availability gate for the session-scoped static service API; does not reserve its lifetime.",
       "adr": "ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.Material.Dispose(System.Boolean)",
+      "reason": "Inherited managed disposal releases stable borrowed material RID registration before Resource teardown; does not dispose borrowed shader/texture dependencies.",
+      "adr": "ADRs 0014/0028"
     }
   ]
 }

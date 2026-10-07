@@ -17,7 +17,7 @@ namespace Electron2D;
 /// Material uniforms use validated std140 buffers at descriptor
 /// set three and sampled 2D textures at set two. Named textures use linear/base-level/clamp sampling, independently
 /// of canvas properties. Sampler configuration, matrices other than float2x2, nested uniform structs and user vertex programs remain pending.</remarks>
-public sealed class Shader : Resource
+public sealed partial class Shader : Resource
 {
     /// <summary>Identifies the supported two-dimensional shader domain.</summary>
     public enum Mode
@@ -154,7 +154,7 @@ public sealed class Shader : Resource
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) lock (_codeGate) { _program = ShaderProgram.Default; _defaultTextures.Clear(); }
+        if (disposing) lock (_codeGate) { ReleaseRenderingRID(); _program = ShaderProgram.Default; _defaultTextures.Clear(); }
         base.Dispose(disposing);
     }
 }

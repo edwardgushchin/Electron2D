@@ -1,6 +1,6 @@
 # ShaderMaterial
 
-Last updated: 2026-10-04
+Last updated: 2026-10-07
 
 - Declaration: `public sealed class ShaderMaterial : Material`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -39,6 +39,7 @@ Color tint = material.GetShaderParameter<Color>("tint");
 | `Texture? GetShaderParameter(string name)` | Returns the explicit texture override or null. |
 | `T GetShaderParameter<T>(string name) where T : unmanaged` | Reads a matching scalar/vector/matrix. |
 | `T[] GetShaderParameterArray<T>(string name) where T : unmanaged` | Returns a copy of a complete fixed-size array. |
+| `void CopyShaderParameterArray<T>(string name, Span<T> destination) where T : unmanaged` | Copies the complete reflected array into exact-length caller storage; prepared copies allocate no managed memory. |
 
 ## Property descriptions
 
@@ -77,3 +78,5 @@ Inherited property discovery includes Shader and typed parameter descriptors nam
 [RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) checks named typed access, failure atomicity, independent copies and returned arrays, property discovery, cross-layout reload, disposal and zero allocations over warmed repeated updates. Four GPU frames per imported language check float/int/uint/vector/array values, distinct materials sharing a shader, and image changes without drawing-command regeneration. [ShaderVectorRenderingTests](../../tests/Electron2D.Tests/ShaderVectorRenderingTests.cs) covers RGB/Rect2 and unsigned vectors, scalar and arrays, defaults/descriptors, adjacent-field integrity, failures, copies, signedness resets, two-language pixels, shared materials, layout reload and warmed allocation checks. [ShaderMatrixRenderingTests](../../tests/Electron2D.Tests/ShaderMatrixRenderingTests.cs) verifies matrix storage order/stride, identity defaults versus explicit zero, Origin omission, arrays, copying, reload, invalid layouts and GPU pixels for both source languages. [ShaderBooleanRenderingTests](../../tests/Electron2D.Tests/ShaderBooleanRenderingTests.cs) verifies logical types, masks/arrays, defaults, copying, metadata rejection, reload and two-language pixels with zero warm allocation. Native coverage is Linux Wayland/Vulkan only. Texture arrays and sampler configuration, matrices other than float2x2, nested structures, other numeric mappings and per-instance parameters remain unimplemented; see [the component limits](../components/shader-materials.md).
 
 Renderer-owned SCREEN_TEXTURE and SCREEN_PIXEL_SIZE do not appear in stored material descriptors or typed user parameter/default access. They resolve per target draw; ordinary uniforms still use the existing lock/capture/migration rules. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
+
+`CopyShaderParameterArray` validates name, element type, array shape and exact destination length before touching caller storage. It uses the same locked state migration as the allocating array getter. [RenderingProgramTests](../../tests/Electron2D.Tests/RenderingProgramTests.cs) checks independent RID identities, lifetime and 2000 prepared copies.

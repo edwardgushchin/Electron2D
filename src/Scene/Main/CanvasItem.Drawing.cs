@@ -57,7 +57,7 @@ public abstract partial class CanvasItem
         {
             EnsureMutable();
             if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value));
-            _material = value;
+            _material = value; if (ServerState is { } state) state.MaterialAssigned = false;
             NotifyPropertyListChanged();
         }
     }
@@ -308,7 +308,7 @@ public abstract partial class CanvasItem
     internal virtual Rect2? CanvasClipRect => null;
     internal virtual bool CanvasUsesWorldCoordinates => false;
 
-    internal Material? CanvasMaterial => (ServerState?.UseParentMaterial ?? _useParentMaterial) ? RenderParent?.CanvasMaterial : _material;
+    internal Material? CanvasMaterial => (ServerState?.UseParentMaterial ?? _useParentMaterial) ? RenderParent?.CanvasMaterial : ServerState is { MaterialAssigned: true } state ? RenderingProgramRegistry<Material>.ResolveOrNull(state.Material) : _material;
     internal Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
     internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null, Vector2i? outputSize = null, Viewport? renderViewport = null)

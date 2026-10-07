@@ -4,6 +4,10 @@ Last updated: 2026-10-07
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
+## Executable shader and material identities
+
+Caller-owned compiled canvas programs and typed materials now bind directly to retained canvas items. Borrowed Shader/Material RIDs reuse the same parameter, texture, reload and native pipeline behavior. [The program contract](../components/shader-materials.md#shader-and-material-identities) records ownership, actual rendering and remaining initializer/sampler/profile dependencies.
+
 ## Executable low-level primitive producers
 
 Seventeen copied primitive/texture/indexed-triangle and command/order/culling operations now feed the existing owned/borrowed canvas graph. [The primitive contract](../components/canvas-rendering.md#low-level-primitive-commands) distinguishes source state, real palette/native replay, limits and explicit remaining shader/material/emitter prerequisites.

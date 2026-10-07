@@ -1,6 +1,6 @@
 # Material
 
-Last updated: 2026-09-23
+Last updated: 2026-10-07
 
 - Declaration: `public abstract class Material : Resource`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -10,10 +10,12 @@ Last updated: 2026-09-23
 
 ## Description and API
 
-The base resource for selecting canvas shading. Its `private protected Material()` constructor restricts executable material implementations to the runtime assembly. There is no added public state or consumer extension hook. Use ShaderMaterial for programmable fragments or CanvasItemMaterial for fixed blend modes, then assign the resource to `CanvasItem.Material`.
+The base resource for selecting canvas shading. Its `private protected Material()` constructor restricts executable material implementations to the runtime assembly. `override RID GetRID()` supplies a stable borrowed canvas-material identity before native startup; there is no consumer implementation hook. Use ShaderMaterial for programmable fragments or CanvasItemMaterial for fixed blend modes, then assign the resource to `CanvasItem.Material`.
 
 Nodes borrow materials. Their disposal does not dispose a shared material. Resource identity, synchronous `Changed`, graph copying and logical disposal follow the inherited Resource contract. The internal render state contains shader code/layout and uniform buffers, without exposing SDL handles to consumers.
 
 ## Limits and verification
 
-Render priorities, next-pass chains and editor shader inspection remain absent. ShaderMaterial is verified by resource and GPU frame checks in [RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs); CanvasItemMaterial is verified by [native blend checks](../../tests/Electron2D.Tests/CanvasMaterialRenderingTests.cs). Native verification covers Linux Wayland/Vulkan and the compatibility hardware backend; software accepts Mix only. See [ADR 0028](../decisions/rendering.md#adr-0028) and [ADR 0014](../decisions/resources.md#adr-0014).
+Render priorities and next-pass chains are excluded 3D-only operations by the pinned Material member descriptions and ADR 0028. Editor shader inspection remains dependency-blocked. ShaderMaterial is verified by resource and GPU frame checks in [RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs); CanvasItemMaterial is verified by [native blend checks](../../tests/Electron2D.Tests/CanvasMaterialRenderingTests.cs). Native verification covers Linux Wayland/Vulkan and the compatibility hardware backend; software accepts Mix only. See [ADR 0028](../decisions/rendering.md#adr-0028) and [ADR 0014](../decisions/resources.md#adr-0014).
+
+Direct canvas RID binding accepts both material kinds. Caller-owned server materials remain separate from borrowed resource identities; disposal removes the latter without disposing shader or texture dependencies. See [the program RID contract](../components/shader-materials.md#shader-and-material-identities).

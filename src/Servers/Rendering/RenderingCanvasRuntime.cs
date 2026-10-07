@@ -47,7 +47,8 @@ internal sealed class RenderingCanvasItemState
 {
     internal readonly RenderingServer Owner;
     internal readonly bool Owned;
-    internal RID Parent;
+    internal RID Parent, Material;
+    internal bool MaterialAssigned;
     internal bool ParentAssigned;
     internal Transform? Transform;
     internal Color? Modulate, SelfModulate;

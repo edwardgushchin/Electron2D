@@ -1040,3 +1040,24 @@ See [canvas lifetime and replay contract](../components/canvas-rendering.md#call
 | `CanvasItemSetDrawIndex` | Sets signed stable order among equal-Y/equal-Z render siblings without changing Node order. |
 | `CanvasItemSetVisibilityLayer` | Sets the native 32-bit visibility mask used by each destination viewport without changing authored getters. |
 | `CanvasItemSetUseParentMaterial` | Selects borrowed material inheritance through the actual render graph, preserving authored flags. |
+
+## Shader and material RID integration
+
+[The program RID contract](../components/shader-materials.md#shader-and-material-identities) documents caller-owned create/set/query/free operations and borrowed resource identities. `CanvasItemSetMaterial` changes native material state independently of authored `Material`; its matching source setter republishes the authored reference. Shader replacement and typed uniform/texture updates reuse retained commands.
+
+| Declaration | Contract |
+| --- | --- |
+| `static RID ShaderCreate()` / `MaterialCreate()` | Retain a unique owned compiled program or empty programmable material until free/teardown. |
+| `static void ShaderSetSPIRV(RID, ReadOnlySpan<byte>)` / `static byte[] ShaderGetSPIRV(RID)` | Validate/copy a compiled canvas program; reads accept borrowed shader RIDs. |
+| `static void ShaderSetPathHint(RID, string)` | Diagnostic validation path metadata for an owned shader. |
+| `static IReadOnlyList<PropertyDescriptor> GetShaderParameterList(RID)` | Immutable typed descriptors for current reflected user uniforms. |
+| `static void ShaderSetDefaultTextureParameter(RID, string, RID, int = 0)` / `static RID ShaderGetDefaultTextureParameter(RID, string, int = 0)` | Borrowed named single sampler default; empty clears, index zero only. |
+| `static void MaterialSetShader(RID, RID)` | Borrow a shader for an owned material; empty clears the program/value state. |
+| `static void MaterialSetParam<T>(RID, string, T)` / `(RID, string, ReadOnlySpan<T>)` | Validate/copy a reflected scalar, vector, matrix or complete fixed array. |
+| `static void MaterialSetParam(RID, string, RID)` | Borrow an explicit named texture; empty selects the shader default. |
+| `static T MaterialGetParam<T>(RID, string)` | Read a typed scalar/vector/matrix from owned or borrowed programmable material. |
+| `static T[] MaterialGetParamArray<T>(RID, string)` / `static void MaterialGetParam<T>(RID, string, Span<T>)` | Independent allocating array or prepared exact-length caller copy. |
+| `static RID MaterialGetParam(RID, string)` | Explicit texture override identity; empty means default selection. |
+| `static void CanvasItemSetMaterial(RID, RID)` | Bind either live material kind to native canvas state; empty selects ordinary canvas colors. |
+
+Generic parameter operations require `T : unmanaged` and the reflected element contract. Wrong identity/type/name/array length and invalid values reject; owner/submission/shutdown guards cover the complete family. See [RenderingServer.Programs.API.cs](../../src/Servers/Rendering/RenderingServer.Programs.API.cs) for per-member XML and [RenderingProgramTests](../../tests/Electron2D.Tests/RenderingProgramTests.cs) for native evidence.
